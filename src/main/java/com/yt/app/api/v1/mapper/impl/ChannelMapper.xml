@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yt.app.api.v1.mapper.ChannelMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,name,userid,nkname,code,status,balance,exchange,onecost,downpoint,costexchange,min,max,weight,mtorder,balancesynch,firstmatch,firstmatchmoney,apiip,apikey,apireusultip,tenant_id,remark,create_by,create_time,update_by,update_time,version
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Channel">
+	</resultMap>
+	<!-- add -->
+	<insert id="post"
+		parameterType="com.yt.app.api.v1.entity.Channel">
+		insert into
+		channel(id,userid,name,nkname,code,status,balance,exchange,onecost,downpoint,costexchange,min,max,weight,mtorder,balancesynch,firstmatch,firstmatchmoney,apiip,apikey,apireusultip,remark,create_by,create_time,update_by,update_time)
+		values
+		(#{id},#{userid},#{name},#{nkname},#{code},#{status},#{balance},#{exchange},#{onecost},#{downpoint},#{costexchange},#{min},#{max},#{weight},#{mtorder},#{balancesynch},#{firstmatch},#{firstmatchmoney},#{apiip},#{apikey},#{apireusultip},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		channel(id,name,nkname,code,status,balance,exchange,onecost,downpoint,costexchange,min,max,weight,mtorder,balancesynch,firstmatch,firstmatchmoney,apiip,apikey,apireusultip,tenant_id,remark,create_by,create_time,update_by,update_time)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{name},#{nkname},#{code},#{status},#{balance},#{exchange},#{onecost},#{downpoint},#{costexchange},#{min},#{max},#{weight},#{mtorder},#{balancesynch},#{firstmatch},#{firstmatchmoney},#{apiip},#{apikey},#{apireusultip},#{tenant_id},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from channel
+		where id =
+		#{id}
+	</delete>
+	<!-- update -->
+	<update id="put"
+		parameterType="com.yt.app.api.v1.entity.Channel">
+		update channel
+		<set>
+			<if test="name != null">
+				name= #{name},
+			</if>
+			<if test="nkname != null">
+				nkname= #{nkname},
+			</if>
+			<if test="code != null">
+				code= #{code},
+			</if>
+			<if test="status != null">
+				status= #{status},
+			</if>
+			<if test="balance != null  and balance >0">
+				balance= #{balance},
+			</if>
+			<if test="exchange != null and exchange >0">
+				exchange= #{exchange},
+			</if>
+			<if test="onecost != null and onecost >0">
+				onecost= #{onecost},
+			</if>
+			<if test="downpoint != null and downpoint >0">
+				downpoint= #{downpoint},
+			</if>
+			<if test="costexchange != null and costexchange >0">
+				costexchange= #{costexchange},
+			</if>
+			<if test="min != null">
+				min= #{min},
+			</if>
+			<if test="max != null">
+				max= #{max},
+			</if>
+			<if test="weight != null">
+				weight= #{weight},
+			</if>
+			<if test="mtorder != null">
+				mtorder= #{mtorder},
+			</if>
+			<if test="balancesynch != null">
+				balancesynch= #{balancesynch},
+			</if>
+			<if test="firstmatch != null">
+				firstmatch= #{firstmatch},
+			</if>
+			<if test="firstmatchmoney != null">
+				firstmatchmoney= #{firstmatchmoney},
+			</if>
+			<if test="apiip != null">
+				apiip= #{apiip},
+			</if>
+			<if test="apikey != null">
+				apikey= #{apikey},
+			</if>
+			<if test="apireusultip != null">
+				apireusultip= #{apireusultip},
+			</if>
+			<if test="remark != null">
+				remark= #{remark},
+			</if>
+			<if test="update_by != null">
+				update_by= #{update_by},
+			</if>
+			<if test="update_time != null">
+				update_time= #{update_time},
+			</if>
+			<if test="version != null">
+				version= #{version}+1
+			</if>
+		</set>
+		where id = #{id} and version= #{version}
+	</update>
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from channel
+		where id = #{id}
+	</select>
+	
+	<!--getByUserId -->
+	<select id="getByUserId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from channel
+		where userid = #{userid}
+	</select>
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from channel
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				AND name LIKE CONCAT( '%', #{name} , '%' )
+			</if>
+			<if test="code != null and code != ''">
+				AND code LIKE CONCAT( '%', #{code} , '%' )
+			</if>
+			<if test="status != null">
+				and status = #{status}
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="map" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from channel
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and Dir != null">
+				order by ${orderBy} ${Dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		select count(*) from channel
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				AND name LIKE CONCAT( '%', #{name} , '%' )
+			</if>
+			<if test="code != null and code != ''">
+				AND code LIKE CONCAT( '%', #{code} , '%' )
+			</if>
+			<if test="status != null">
+				and status = #{status}
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from channel
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+</mapper>

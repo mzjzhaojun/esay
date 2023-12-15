@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yt.app.api.v1.mapper.TenantMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,name,admin_user_id,admin_name,admin_phone,status,package_id,expire_time,account_count,job_num,sort,create_by,create_time,update_by,update_time,is_deleted,version
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Tenant">
+
+	</resultMap>
+	<!-- add -->
+	<insert id="post"
+		parameterType="com.yt.app.api.v1.entity.Tenant">
+		insert into
+		t_sys_tenant(id,name,admin_user_id,admin_name,admin_phone,status,package_id,expire_time,account_count,job_num,sort,create_by,create_time,update_by,update_time,is_deleted)
+		values
+		(#{id},#{name},#{admin_user_id},#{admin_name},#{admin_phone},#{status},#{package_id},#{expire_time},#{account_count},#{job_num},#{sort},#{create_by},#{create_time},#{update_by},#{update_time},#{is_deleted})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		t_sys_tenant(id,name,admin_user_id,admin_name,admin_phone,status,package_id,expire_time,account_count,job_num,sort,create_by,create_time,update_by,update_time,is_deleted)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{name},#{admin_user_id},#{admin_name},#{admin_phone},#{status},#{package_id},#{expire_time},#{account_count},#{job_num},#{sort},#{create_by},#{create_time},#{update_by},#{update_time},#{is_deleted})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from t_sys_tenant
+		where
+		id = #{id}
+	</delete>
+	<!-- update -->
+	<update id="put" parameterType="com.yt.app.api.v1.entity.Tenant">
+		update t_sys_tenant
+		<set>
+			<if test="name!= null">
+				name= #{name},
+			</if>
+			<if test="admin_user_id!= null">
+				admin_user_id= #{admin_user_id},
+			</if>
+			<if test="admin_name!= null">
+				admin_name= #{admin_name},
+			</if>
+			<if test="admin_phone!= null">
+				admin_phone= #{admin_phone},
+			</if>
+			<if test="status!= null">
+				status= #{status},
+			</if>
+			<if test="package_id!= null">
+				package_id= #{package_id},
+			</if>
+			<if test="expire_time!= null">
+				expire_time= #{expire_time},
+			</if>
+			<if test="account_count!= null">
+				account_count= #{account_count},
+			</if>
+			<if test="job_num!= null">
+				job_num= #{job_num},
+			</if>
+			<if test="sort!= null">
+				sort= #{sort},
+			</if>
+			<if test="update_by!= null">
+				update_by= #{update_by},
+			</if>
+			<if test="update_time!= null">
+				update_time= #{update_time},
+			</if>
+			<if test="is_deleted!= null">
+				is_deleted= #{is_deleted},
+			</if>
+			<if test="version != null">
+				version= #{version}+1
+			</if>
+		</set>
+		where id = #{id} and version = #{version}
+	</update>
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_tenant
+		where id = #{id}
+	</select>
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_tenant
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="map" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_tenant
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		select count(*) from t_sys_tenant
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_tenant
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+
+	<select id="selectDataPage" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		SELECT
+		tst.*, tstp.name packageName
+		FROM t_sys_tenant tst
+		LEFT JOIN
+		t_sys_tenant_package tstp ON tst.package_id = tstp.id
+		<where>
+			tst.is_deleted=0
+			<if test="filter.name!=null and filter.name!=''">
+				AND tst.name LIKE CONCAT( '%', #{filter.name} , '%' )
+			</if>
+		</where>
+		ORDER BY tst.sort ASC, tst.create_time DESC
+	</select>
+
+	<select id="selectDataList" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		SELECT id,
+		name
+		FROM t_sys_tenant
+		<where>
+			is_deleted=0 AND status=1
+			<if test="filter.name!=null and filter.name!=''">
+				AND name LIKE CONCAT( '%', #{filter.name} , '%' )
+			</if>
+			<if test="filter.packageId!=null">
+				AND package_id = #{filter.packageId}
+			</if>
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,52 @@
+package com.yt.app.api.v1.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
+import com.yt.app.api.v1.mapper.AisleMapper;
+import com.yt.app.api.v1.service.AisleService;
+import com.yt.app.common.base.impl.YtBaseServiceImpl;
+import com.yt.app.api.v1.entity.Aisle;
+import com.yt.app.common.common.yt.YtIPage;
+import com.yt.app.common.common.yt.YtPageBean;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author zj default
+ * 
+ * @version v1 @createdate2023-11-10 19:00:03
+ */
+
+@Service
+public class AisleServiceImpl extends YtBaseServiceImpl<Aisle, Long> implements AisleService {
+	@Autowired
+	private AisleMapper mapper;
+
+	@Override
+	@Transactional
+	public Integer post(Aisle t) {
+		Integer i = mapper.post(t);
+		return i;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public YtIPage<Aisle> list(Map<String, Object> param) {
+		int count = 0;
+		if (YtPageBean.isPaging(param)) {
+			count = mapper.countlist(param);
+			if (count == 0) {
+				return YtPageBean.EMPTY_PAGE;
+			}
+		}
+		List<Aisle> list = mapper.list(param);
+		return new YtPageBean<Aisle>(param, list, count);
+	}
+
+	@Override
+	public Aisle get(Long id) {
+		Aisle t = mapper.get(id);
+		return t;
+	}
+}

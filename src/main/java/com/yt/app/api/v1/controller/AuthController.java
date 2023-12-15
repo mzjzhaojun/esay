@@ -1,0 +1,105 @@
+package com.yt.app.api.v1.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.yt.app.api.v1.dbo.AuthLoginDTO;
+import com.yt.app.api.v1.entity.User;
+import com.yt.app.api.v1.service.AuthService;
+import com.yt.app.api.v1.service.PayoutService;
+import com.yt.app.api.v1.vo.AuthLoginVO;
+import com.yt.app.common.base.context.SysUserContext;
+import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
+import com.yt.app.common.common.yt.YtBody;
+import com.yt.app.common.common.yt.YtRequestDecryptEntity;
+import com.yt.app.common.common.yt.YtResponseEncryptEntity;
+import com.yt.app.common.common.yt.YtResponseEntity;
+import com.yt.app.common.util.AuthUtil;
+import com.yt.app.common.util.RsaUtil;
+
+import io.swagger.annotations.ApiOperation;
+
+/**
+ * @author zj defaulttest
+ * 
+ * @version v1 @createdate2018-09-27 09:52:46
+ */
+
+@RestController
+@RequestMapping("/rest/v1/auth")
+public class AuthController extends YtBaseEncipherControllerImpl<User, Long> {
+
+	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@Autowired
+	private AuthService authservice;
+
+	@Autowired
+	private PayoutService service;
+
+	@ApiOperation(value = "login", response = User.class)
+	@RequestMapping(value = "/loginvue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> loginvue(YtRequestDecryptEntity<AuthLoginDTO> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		AuthLoginVO u = authservice.login(requestEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(u));
+	}
+
+	// YtResponseEncryptEntity
+	@ApiOperation(value = "logout", response = User.class)
+	@RequestMapping(value = "/logoutvue", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public YtResponseEncryptEntity<Object> logoutvue(YtRequestDecryptEntity<User> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		AuthUtil.logout(SysUserContext.getUserId());
+		return new YtResponseEncryptEntity<Object>(new YtBody(1));
+	}
+
+	@ApiOperation(value = "getrsakey", response = User.class)
+	@RequestMapping(value = "/getrsakey", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> getrsakey(HttpServletRequest request, HttpServletResponse response) {
+		return new YtResponseEntity<Object>(new YtBody(RsaUtil.getPublicKey()));
+	}
+
+	@ApiOperation(value = "qrcode", response = User.class)
+	@RequestMapping(value = "/qrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> qrcode(YtRequestDecryptEntity<AuthLoginDTO> requestEntity,
+			HttpServletResponse response) {
+		String qrcode = authservice.genQRImage(requestEntity.getBody().getUsername());
+		return new YtResponseEncryptEntity<Object>(new YtBody(qrcode));
+	}
+
+	@ApiOperation(value = "verqrcode", response = User.class)
+	@RequestMapping(value = "/verqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> verqrcode(YtRequestDecryptEntity<AuthLoginDTO> requestEntity,
+			HttpServletResponse response) {
+		Integer i = authservice.verqrcode(requestEntity.getBody().getUsername(), requestEntity.getBody().getCode(),
+				requestEntity.getBody().getTwocode());
+		return new YtResponseEncryptEntity<Object>(new YtBody(i));
+	}
+
+	@ApiOperation(value = "checkgoogle", response = User.class)
+	@RequestMapping(value = "/checkgoogle/{id}/{code}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> checkgoogle(@PathVariable Long id, @PathVariable Long code,
+			HttpServletResponse response) {
+		Integer i = authservice.checkgoogle(id, code);
+		return new YtResponseEncryptEntity<Object>(new YtBody(i));
+	}
+
+	@ApiOperation(value = "callbackpay", response = User.class)
+	@RequestMapping(value = "/callbackpay/{ordernum}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> callbackpay(@PathVariable String ordernum, HttpServletRequest request,
+			HttpServletResponse response) {
+		service.callbackpaySuccess(ordernum);
+		return new YtResponseEntity<Object>(new YtBody(1));
+	}
+
+}

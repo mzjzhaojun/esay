@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yt.app.api.v1.mapper.RoleMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,tenant_id,parent_id,name,code,status,is_fixed,sort,is_refresh_all_tenant,create_by,create_time,update_by,update_time,version
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Role">
+
+	</resultMap>
+	<!-- add -->
+	<insert id="post" parameterType="com.yt.app.api.v1.entity.Role">
+		insert into
+		t_sys_role(id,parent_id,name,code,status,is_fixed,sort,is_refresh_all_tenant,create_by,create_time,update_by,update_time)
+		values
+		(#{id},#{parent_id},#{name},#{code},#{status},#{is_fixed},#{sort},#{is_refresh_all_tenant},#{create_by},#{create_time},#{update_by},#{update_time})
+	</insert>
+	<insert id="postAndTanantId"
+		parameterType="com.yt.app.api.v1.entity.Role">
+		insert into
+		t_sys_role(id,parent_id,name,code,status,is_fixed,sort,is_refresh_all_tenant,create_by,create_time,update_by,update_time)
+		values
+		(#{id},#{parent_id},#{name},#{code},#{status},#{is_fixed},#{sort},#{is_refresh_all_tenant},#{create_by},#{create_time},#{update_by},#{update_time})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		t_sys_role(id,parent_id,name,code,status,is_fixed,sort,is_refresh_all_tenant,create_by,create_time,update_by,update_time)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{parent_id},#{name},#{code},#{status},#{is_fixed},#{sort},#{is_refresh_all_tenant},#{create_by},#{create_time},#{update_by},#{update_time})
+		</foreach>
+	</insert>
+
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from t_sys_role
+		where id
+		= #{id}
+	</delete>
+	<!-- update -->
+	<update id="put" parameterType="com.yt.app.api.v1.entity.Role">
+		update t_sys_role
+		<set>
+			<if test="parent_id!= null">
+				parent_id= #{parent_id},
+			</if>
+			<if test="name!= null">
+				name= #{name},
+			</if>
+			<if test="code!= null">
+				code= #{code},
+			</if>
+			<if test="status!= null">
+				status= #{status},
+			</if>
+			<if test="is_fixed!= null">
+				is_fixed= #{is_fixed},
+			</if>
+			<if test="sort!= null">
+				sort= #{sort},
+			</if>
+			<if test="is_refresh_all_tenant!= null">
+				is_refresh_all_tenant= #{is_refresh_all_tenant},
+			</if>
+			<if test="update_by!= null">
+				update_by= #{update_by},
+			</if>
+			<if test="update_time!= null">
+				update_time= #{update_time},
+			</if>
+			<if test="version!= null">
+				version= #{version}+1
+			</if>
+		</set>
+		where id = #{id} and version = #{version}
+	</update>
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_role
+		where id = #{id}
+	</select>
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_role
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="map" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_role
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		select count(*) from t_sys_role
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_role
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+
+	<!-- 超管 不让其它用户看到 -->
+	<select id="selectDataList"
+		resultType="com.yt.app.api.v1.vo.SysRoleBaseVO">
+		SELECT
+		*
+		FROM t_sys_role
+		<where>
+			<if test="filter.currentUserId!=1">
+				AND id != 1
+			</if>
+			<if test="filter.name != null and filter.name != ''">
+				AND name LIKE CONCAT( '%', #{filter.name} , '%' )
+			</if>
+			<if test="filter.excludeRoleId!=null">
+				AND id != #{filter.excludeRoleId}
+			</if>
+		</where>
+		ORDER BY is_fixed DESC, sort ASC, create_time DESC
+	</select>
+
+	<select id="selectRoleIdByCode" resultType="java.lang.Long">
+		SELECT id
+		FROM
+		t_sys_role
+		WHERE code = #{code} LIMIT 1
+	</select>
+</mapper>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yt.app.api.v1.mapper.ScopedataMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,menu_id,scope_name,scope_column,scope_visible_field,scope_class,scope_type,scope_value,remark,create_by,create_time,update_by,update_time,is_deleted,version
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Scopedata">
+
+	</resultMap>
+	<!-- add -->
+	<insert id="post"
+		parameterType="com.yt.app.api.v1.entity.Scopedata">
+		insert into
+		t_sys_scope_data(id,menu_id,scope_name,scope_column,scope_visible_field,scope_class,scope_type,scope_value,remark,create_by,create_time,update_by,update_time,is_deleted)
+		values
+		(#{id},#{menu_id},#{scope_name},#{scope_column},#{scope_visible_field},#{scope_class},#{scope_type},#{scope_value},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{is_deleted})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		t_sys_scope_data(id,menu_id,scope_name,scope_column,scope_visible_field,scope_class,scope_type,scope_value,remark,create_by,create_time,update_by,update_time,is_deleted)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{menu_id},#{scope_name},#{scope_column},#{scope_visible_field},#{scope_class},#{scope_type},#{scope_value},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{is_deleted})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from t_sys_scope_data
+		where id = #{id}
+	</delete>
+	<!-- update -->
+	<update id="put"
+		parameterType="com.yt.app.api.v1.entity.Scopedata">
+		update t_sys_scope_data
+		<set>
+			<if test="menu_id!= null">
+				menu_id= #{menu_id},
+			</if>
+			<if test="scope_name!= null">
+				scope_name= #{scope_name},
+			</if>
+			<if test="scope_column!= null">
+				scope_column= #{scope_column},
+			</if>
+			<if test="scope_visible_field!= null">
+				scope_visible_field= #{scope_visible_field},
+			</if>
+			<if test="scope_class!= null">
+				scope_class= #{scope_class},
+			</if>
+			<if test="scope_type!= null">
+				scope_type= #{scope_type},
+			</if>
+			<if test="scope_value!= null">
+				scope_value= #{scope_value},
+			</if>
+			<if test="remark!= null">
+				remark= #{remark},
+			</if>
+			<if test="update_by != null">
+				update_by= #{update_by},
+			</if>
+			<if test="update_time!= null">
+				update_time= #{update_time},
+			</if>
+			<if test="is_deleted!= null">
+				is_deleted= #{is_deleted},
+			</if>
+			<if test="version!= null">
+				version= #{version}+1
+			</if>
+			<if test="version != null">
+				version= #{version}+1
+			</if>
+		</set>
+		where id = #{id} and version = #{version}
+	</update>
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_scope_data
+		where id = #{id}
+	</select>
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_scope_data
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="map" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_scope_data
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		select count(*) from t_sys_scope_data
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_scope_data
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<resultMap id="reusltm"
+		type="com.yt.app.api.v1.entity.Scopedata">
+		<id property="id" column="id" />
+		<id property="menu_id" column="menu_id" />
+		<id property="scope_name" column="scope_name" />
+		<id property="scope_column" column="scope_column" />
+		<id property="scope_visible_field" column="scope_visible_field" />
+		<id property="scope_class" column="scope_class" />
+		<id property="scope_type" column="scope_type" />
+		<id property="scope_value" column="scope_value" />
+		<id property="remark" column="remark" />
+		<id property="create_by" column="create_by" />
+		<id property="create_time" column="create_time" />
+		<id property="update_by" column="update_by" />
+		<id property="update_time" column="update_time" />
+		<id property="is_deleted" column="is_deleted" />
+		<id property="custom_id" column="customId" />
+		<id property="custom_name" column="customName" />
+	</resultMap>
+
+	<select id="selectDataList"
+		parameterType="com.yt.app.api.v1.dbo.SysScopeDataBaseDTO"
+		resultMap="reusltm">
+		SELECT
+		tssd.*, tssd.id customId, tssd.scope_name customName
+		FROM
+		t_sys_scope_data tssd
+		<where>
+			tssd.is_deleted=0
+			<if test="menuId != null">
+				AND tssd.menu_id = #{menuId}
+			</if>
+			<if test="scopeName != null and scopeName != ''">
+				AND tssd.scope_name LIKE CONCAT( '%', #{scopeName} , '%'
+				)
+			</if>
+			<if test="scopeType != null">
+				AND tssd.scope_type = #{scopeType}
+			</if>
+		</where>
+		ORDER BY tssd.menu_id ASC, tssd.create_time ASC
+	</select>
+</mapper>

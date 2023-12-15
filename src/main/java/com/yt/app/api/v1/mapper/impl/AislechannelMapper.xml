@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yt.app.api.v1.mapper.AislechannelMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,aisleid,channelid,create_by,create_time,update_by,update_time,version
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Aislechannel">
+	</resultMap>
+	<!-- add -->
+	<insert id="post"
+		parameterType="com.yt.app.api.v1.entity.Aislechannel">
+		insert into
+		aislechannel(id,aisleid,channelid,create_by,create_time,update_by,update_time)
+		values
+		(#{id},#{aisleid},#{channelid},#{create_by},#{create_time},#{update_by},#{update_time})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		aislechannel(id,aisleid,channelid,create_by,create_time,update_by,update_time)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{aisleid},#{channelid},#{create_by},#{create_time},#{update_by},#{update_time})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from aislechannel
+		where
+		id = #{id}
+	</delete>
+	<!-- update -->
+	<update id="put"
+		parameterType="com.yt.app.api.v1.entity.Aislechannel">
+		update aislechannel
+		<set>
+			<if test="aisleid != null">
+				aisleid= #{aisleid},
+			</if>
+			<if test="channelid != null">
+				channelid= #{channelid},
+			</if>
+			<if test="update_by != null">
+				update_by= #{update_by},
+			</if>
+			<if test="update_time != null">
+				update_time= #{update_time},
+			</if>
+			<if test="version != null">
+				version= #{version}+1
+			</if>
+		</set>
+		where id = #{id} and version= #{version}
+	</update>
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from aislechannel
+		where id = #{id}
+	</select>
+	
+	<!--getByAisleId -->
+	<select id="getByAisleId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from aislechannel
+		where aisleid = #{aisleid}
+	</select>
+
+	<select id="getByAidCid" resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from aislechannel
+		where aisleid = #{aisleid} and channelid=
+		#{channelid}
+	</select>
+
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from aislechannel
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="map" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		SELECT
+		ac.id id,
+		ac.channelid channelid,
+		ac.aisleid aisleid,
+		c.name name,
+		c.code code,
+		c.status status,
+		c.exchange exchange,
+		c.onecost onecost,
+		c.remark remark
+		FROM
+		aislechannel ac
+		JOIN aisle ae
+		ON ae.id = ac.aisleid
+		JOIN channel c
+		ON ac.channelid = c.id
+		<where>
+			1=1
+			<if test="aisleid != null and aisleid != ''">
+				AND ac.aisleid = #{aisleid}
+			</if>
+			<if test="merchantid != null and merchantid != ''">
+				AND ac.channelid = #{merchantid}
+			</if>
+			<if test="name != null and name != ''">
+				AND c.name LIKE CONCAT( '%', #{name} , '%' )
+			</if>
+			<if test="code != null and code != ''">
+				AND c.code LIKE CONCAT( '%', #{code} , '%' )
+			</if>
+			<if test="status != null">
+				AND c.status = #{status}
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		select count(*) FROM
+		aislechannel ac
+		JOIN aisle ae
+		ON ae.id = ac.aisleid
+		JOIN channel c
+		ON ac.channelid = c.id
+		<where>
+			1=1
+			<if test="aisleid != null and aisleid != ''">
+				AND ac.aisleid = #{aisleid}
+			</if>
+			<if test="merchantid != null and merchantid != ''">
+				AND ac.channelid = #{merchantid}
+			</if>
+			<if test="name != null and name != ''">
+				AND c.name LIKE CONCAT( '%', #{name} , '%' )
+			</if>
+			<if test="code != null and code != ''">
+				AND c.code LIKE CONCAT( '%', #{code} , '%' )
+			</if>
+			<if test="status != null">
+				AND c.status = #{status}
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from aislechannel
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+</mapper>

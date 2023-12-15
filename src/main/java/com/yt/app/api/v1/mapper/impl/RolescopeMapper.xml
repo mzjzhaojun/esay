@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yt.app.api.v1.mapper.RolescopeMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,tenant_id,role_id,scope_id,create_by,create_time,update_by,update_time,version
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Rolescope">
+
+	</resultMap>
+	<!-- add -->
+	<insert id="post"
+		parameterType="com.yt.app.api.v1.entity.Rolescope">
+		insert into
+		t_sys_role_scope(id,role_id,scope_id,create_by,create_time,update_by,update_time)
+		values
+		(#{id},#{role_id},#{scope_id},#{create_by},#{create_time},#{update_by},#{update_time})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		t_sys_role_scope(id,role_id,scope_id,create_by,create_time,update_by,update_time)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.id},#{item.tenant_id},#{item.role_id},#{item.scope_id},#{item.create_by},#{item.create_time},#{item.update_by},#{item.update_time})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from t_sys_role_scope
+		where id = #{id}
+	</delete>
+	<!-- delByRoleId -->
+	<delete id="delByRoleId" parameterType="java.lang.Long">
+		delete from
+		t_sys_role_scope
+		where role_id = #{id}
+	</delete>
+
+	<!-- update -->
+	<update id="put"
+		parameterType="com.yt.app.api.v1.entity.Rolescope">
+		update t_sys_role_scope
+		<set>
+			<if test="role_id!= null">
+				role_id= #{role_id},
+			</if>
+			<if test="scope_id!= null">
+				scope_id= #{scope_id},
+			</if>
+			<if test="update_by!= null">
+				update_by= #{update_by},
+			</if>
+			<if test="update_time!= null">
+				update_time= #{update_time},
+			</if>
+			<if test="version!= null">
+				version= #{version}+1
+			</if>
+		</set>
+		where id = #{id} and version = #{version}
+	</update>
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_role_scope
+		where id = #{id}
+	</select>
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_role_scope
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="map" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_role_scope
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		select count(*) from t_sys_role_scope
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_role_scope
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+
+	<select id="selectListByRoleId"
+		resultType="com.yt.app.api.v1.vo.SysRoleScopeListVO"
+		parameterType="java.lang.Long">
+		SELECT
+		tsrs.*
+		FROM t_sys_role_scope tsrs
+		<where>
+			1=1 AND tsrs.role_id = #{roleId}
+		</where>
+		ORDER BY tsrs.create_time DESC
+	</select>
+
+	<select id="selectScopeListReRoleIdList"
+		resultType="com.yt.app.api.v1.bo.SysScopeDataBO">
+		SELECT
+		tssd.*
+		FROM t_sys_role_scope tsrs
+		join t_sys_scope_data tssd on
+		tssd.id = tsrs.scope_id
+		<where>
+			tsrs.role_id in
+			<foreach item="roleId" index="index" collection="roleIdList"
+				open="(" separator="," close=")">
+				#{roleId}
+			</foreach>
+		</where>
+	</select>
+
+	<delete id="delReMenuIdList">
+		<if test="delMenuIdList != null and delMenuIdList.size() > 0">
+			delete
+			from t_sys_role_scope
+			where scope_id in
+			(
+			select id from
+			t_sys_scope_data tssd
+			where tssd.menu_id in
+			<foreach item="delMenuId" index="index"
+				collection="delMenuIdList" open="(" separator="," close=")">
+				#{delMenuId}
+			</foreach>
+			)
+		</if>
+	</delete>
+</mapper>

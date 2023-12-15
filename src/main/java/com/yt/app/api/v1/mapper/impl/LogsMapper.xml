@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yt.app.api.v1.mapper.LogsMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,optname,optdate,type,method,requesturl,requestparams,requestip,time
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Logs">
+
+	</resultMap>
+	<!-- add -->
+	<insert id="post" parameterType="com.yt.app.api.v1.entity.Logs">
+		insert into
+		t_sys_logs(id,optname,optdate,type,method,requesturl,requestparams,requestip,time)
+		values
+		(#{id},#{optname},#{optdate},#{type},#{method},#{requesturl},#{requestparams},#{requestip},#{time})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		t_sys_logs(id,optname,optdate,type,method,requesturl,requestparams,requestip,time)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{optname},#{optdate},#{type},#{method},#{requesturl},#{requestparams},#{requestip},#{time})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from t_sys_logs
+		where id
+		= #{id}
+	</delete>
+	<!-- update -->
+	<update id="put" parameterType="com.yt.app.api.v1.entity.Logs">
+		update t_sys_logs
+		<set>
+			<if test="optname!= null">
+				optname= #{optname},
+			</if>
+			<if test="optdate!= null">
+				optdate= #{optdate},
+			</if>
+			<if test="type!= null">
+				type= #{type},
+			</if>
+			<if test="method!= null">
+				method= #{method},
+			</if>
+			<if test="requesturl!= null">
+				requesturl= #{requesturl},
+			</if>
+			<if test="requestparams!= null">
+				requestparams= #{requestparams},
+			</if>
+			<if test="requestip!= null">
+				requestip= #{requestip},
+			</if>
+			<if test="time!= null">
+				time= #{time}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_logs
+		where id = #{id}
+	</select>
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_logs
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="map" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_logs
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		select count(*) from t_sys_logs
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_logs
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+</mapper>

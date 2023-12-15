@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yt.app.api.v1.mapper.MenuMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,parent_id,name,icon,path,btn_perm,sort,component,redirect,is_show,is_show_breadcrumb,type,create_by,create_time,update_by,update_time,is_deleted,version
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Menu">
+
+	</resultMap>
+	<!-- add -->
+	<insert id="post" parameterType="com.yt.app.api.v1.entity.Menu">
+		insert into
+		t_sys_menu(id,parent_id,name,icon,path,btn_perm,sort,component,redirect,is_show,is_show_breadcrumb,type,create_by,create_time,update_by,update_time,is_deleted)
+		values
+		(#{id},#{parent_id},#{name},#{icon},#{path},#{btn_perm},#{sort},#{component},#{redirect},#{is_show},#{is_show_breadcrumb},#{type},#{create_by},#{create_time},#{update_by},#{update_time},#{is_deleted})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		t_sys_menu(id,parent_id,name,icon,path,btn_perm,sort,component,redirect,is_show,is_show_breadcrumb,type,create_by,create_time,update_by,update_time,is_deleted)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{parent_id},#{name},#{icon},#{path},#{btn_perm},#{sort},#{component},#{redirect},#{is_show},#{is_show_breadcrumb},#{type},#{create_by},#{create_time},#{update_by},#{update_time},#{is_deleted})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from t_sys_menu
+		where id
+		= #{id}
+	</delete>
+	<!-- update -->
+	<update id="put" parameterType="com.yt.app.api.v1.entity.Menu">
+		update t_sys_menu
+		<set>
+			<if test="parent_id!= null">
+				parent_id= #{parent_id},
+			</if>
+			<if test="name!= null">
+				name= #{name},
+			</if>
+			<if test="icon!= null">
+				icon= #{icon},
+			</if>
+			<if test="path!= null">
+				path= #{path},
+			</if>
+			<if test="btn_perm!= null">
+				btn_perm= #{btn_perm},
+			</if>
+			<if test="sort!= null">
+				sort= #{sort},
+			</if>
+			<if test="component!= null">
+				component= #{component},
+			</if>
+			<if test="redirect!= null">
+				redirect= #{redirect},
+			</if>
+			<if test="is_show!= null">
+				is_show= #{is_show},
+			</if>
+			<if test="is_show_breadcrumb!= null">
+				is_show_breadcrumb= #{is_show_breadcrumb},
+			</if>
+			<if test="type!= null">
+				type= #{type},
+			</if>
+			<if test="update_by!= null">
+				update_by= #{update_by},
+			</if>
+			<if test="update_time!= null">
+				update_time= #{update_time},
+			</if>
+			<if test="is_deleted!= null">
+				is_deleted= #{is_deleted},
+			</if>
+			<if test="version!= null">
+				version= #{version}+1
+			</if>
+		</set>
+		where id = #{id} and version = #{version}
+	</update>
+	<!--getById -->
+	<select id="getByParentId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_menu
+		where parent_id = #{parentid}
+	</select>
+
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_menu
+		where id = #{id}
+	</select>
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_menu
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="map" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_menu
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		select count(*) from t_sys_menu
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_menu
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<select id="selectMenuTree" parameterType="java.util.HashMap"
+		resultType="com.yt.app.api.v1.vo.SysMenuTreeVO">
+		SELECT
+		sm.*,
+		<choose>
+			<when test="roleIdList!=null and roleIdList.size>0">
+				IF(srm.id IS NULL, 0, 1) isHasPerm
+			</when>
+			<otherwise>
+				1 isHasPerm
+			</otherwise>
+		</choose>
+		FROM t_sys_menu sm
+		<if test="roleIdList!=null and roleIdList.size>0">
+			<if test="!isOnlyShowPerm">
+				LEFT
+			</if>
+			JOIN t_sys_role_menu srm ON srm.menu_id = sm.id
+			AND srm.role_id IN
+			<foreach collection="roleIdList" separator="," open="("
+				close=")" item="roleId">
+				#{roleId}
+			</foreach>
+		</if>
+		WHERE sm.is_deleted = 0
+		<if test="name!=null and name!=''">
+			AND sm.name = #{name}
+		</if>
+		<if test="parentId!=null">
+			AND sm.parent_id = #{parentId}
+		</if>
+		<if test="excludeMenuId!=null">
+			AND sm.id != #{excludeMenuId}
+		</if>
+		<if test="type!=null">
+			AND sm.type = #{type}
+		</if>
+		<if test="menuIdList!=null and menuIdList.size>0">
+			AND sm.id IN
+			<foreach collection="menuIdList" separator="," open="("
+				close=")" item="menuId">
+				#{menuId}
+			</foreach>
+		</if>
+		GROUP BY sm.id
+		ORDER BY sm.sort ASC
+	</select>
+
+	<select id="selectAllMenuId" resultType="java.lang.Long">
+		SELECT id
+		FROM t_sys_menu
+	</select>
+</mapper>

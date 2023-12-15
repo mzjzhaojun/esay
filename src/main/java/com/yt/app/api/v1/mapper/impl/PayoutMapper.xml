@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yt.app.api.v1.mapper.PayoutMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,tenant_id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankname,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income,version,remark
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Payout">
+	</resultMap>
+	<!-- add -->
+	<insert id="post"
+		parameterType="com.yt.app.api.v1.entity.Payout">
+		insert into
+		payout(id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankname,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income,remark)
+		values
+		(#{id},#{userid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantcost},#{merchantdeal},#{merchantpay},#{aisleid},#{aislename},#{agentid},#{agentordernum},#{agentincome},#{channelid},#{channelname},#{channelordernum},#{channelcost},#{channeldeal},#{channelpay},#{accname},#{accnumer},#{bankname},#{amount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{imgurl},#{income},#{remark})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		payout(id,tenant_id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankname,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{tenant_id},#{userid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantcost},#{merchantdeal},#{merchantpay},#{aisleid},#{aislename},#{agentid},#{agentordernum},#{agentincome},#{channelid},#{channelname},#{channelordernum},#{channelcost},#{channeldeal},#{channelpay},#{accname},#{accnumer},#{bankname},#{amount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{imgurl},#{income})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from payout
+		where id = #{id}
+	</delete>
+	<!-- update -->
+	<update id="put" parameterType="com.yt.app.api.v1.entity.Payout">
+		update payout
+		<set>
+			<if test="userid != null">
+				userid= #{userid},
+			</if>
+			<if test="ordernum != null">
+				ordernum= #{ordernum},
+			</if>
+			<if test="merchantid != null">
+				merchantid= #{merchantid},
+			</if>
+			<if test="merchantname != null">
+				merchantname= #{merchantname},
+			</if>
+			<if test="merchantcode != null">
+				merchantcode= #{merchantcode},
+			</if>
+			<if test="merchantordernum != null">
+				merchantordernum= #{merchantordernum},
+			</if>
+			<if test="merchantcost != null">
+				merchantcost= #{merchantcost},
+			</if>
+			<if test="merchantdeal != null">
+				merchantdeal= #{merchantdeal},
+			</if>
+			<if test="merchantpay != null">
+				merchantpay= #{merchantpay},
+			</if>
+			<if test="aisleid != null">
+				aisleid= #{aisleid},
+			</if>
+			<if test="aislename != null">
+				aislename= #{aislename},
+			</if>
+			<if test="agentid != null">
+				agentid= #{agentid},
+			</if>
+			<if test="agentordernum != null">
+				agentordernum= #{agentordernum},
+			</if>
+			<if test="agentincome != null">
+				agentincome= #{agentincome},
+			</if>
+			<if test="channelid != null">
+				channelid= #{channelid},
+			</if>
+			<if test="channelname != null">
+				channelname= #{channelname},
+			</if>
+			<if test="channelordernum != null">
+				channelordernum= #{channelordernum},
+			</if>
+			<if test="channelcost != null">
+				channelcost= #{channelcost},
+			</if>
+			<if test="channeldeal != null">
+				channeldeal= #{channeldeal},
+			</if>
+			<if test="channelpay != null">
+				channelpay= #{channelpay},
+			</if>
+			<if test="accname != null">
+				accname= #{accname},
+			</if>
+			<if test="accnumer != null">
+				accnumer= #{accnumer},
+			</if>
+			<if test="bankname != null">
+				bankname= #{bankname},
+			</if>
+			<if test="amount != null">
+				amount= #{amount},
+			</if>
+			<if test="status != null">
+				status= #{status},
+			</if>
+			<if test="successtime != null">
+				successtime= #{successtime},
+			</if>
+			<if test="backlong != null">
+				backlong= #{backlong},
+			</if>
+			<if test="update_by != null">
+				update_by= #{update_by},
+			</if>
+			<if test="update_time != null">
+				update_time= #{update_time},
+			</if>
+			<if test="imgurl != null">
+				imgurl= #{imgurl},
+			</if>
+			<if test="income != null">
+				income= #{income},
+			</if>
+			<if test="remark != null">
+				remark= #{remark},
+			</if>
+			<if test="version != null">
+				version= #{version}+1
+			</if>
+		</set>
+		where id = #{id} and version = #{version}
+	</update>
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from payout
+		where id = #{id}
+	</select>
+	
+	<!--getByChannelOrdernum -->
+	<select id="getByChannelOrdernum" parameterType="java.lang.String"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from payout
+		where channelordernum= #{channelordernum}
+	</select>
+	
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from payout
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="map" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from payout
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and Dir != null">
+				order by ${orderBy} ${Dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		select count(*) from payout
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from payout
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+</mapper>

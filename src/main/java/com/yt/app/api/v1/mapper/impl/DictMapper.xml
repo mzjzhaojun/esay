@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yt.app.api.v1.mapper.DictMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,dict_type_id,code,name,value,status,sort,remark,create_by,create_time,update_by,update_time,is_deleted,version
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Dict">
+
+	</resultMap>
+	<!-- add -->
+	<insert id="post" parameterType="com.yt.app.api.v1.entity.Dict">
+		insert into
+		t_sys_dict(id,dict_type_id,code,name,value,sort,remark,create_by,create_time,update_by,update_time,is_deleted)
+		values
+		(#{id},#{dict_type_id},#{code},#{name},#{value},#{sort},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{is_deleted})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		t_sys_dict(id,dict_type_id,code,name,value,status,sort,remark,create_by,create_time,update_by,update_time,is_deleted)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{dict_type_id},#{code},#{name},#{value},#{status},#{sort},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{is_deleted})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from t_sys_dict
+		where id
+		= #{id}
+	</delete>
+	<!-- deleteById -->
+	<delete id="deletebytypid" parameterType="java.lang.Long">
+		delete from t_sys_dict
+		where dict_type_id = #{id}
+	</delete>
+
+	<!-- update -->
+	<update id="put" parameterType="com.yt.app.api.v1.entity.Dict">
+		update t_sys_dict
+		<set>
+			<if test="dict_type_id!= null">
+				dict_type_id= #{dict_type_id},
+			</if>
+			<if test="code!= null">
+				code= #{code},
+			</if>
+			<if test="name!= null">
+				name= #{name},
+			</if>
+			<if test="value!= null">
+				value= #{value},
+			</if>
+			<if test="status!= null">
+				status= #{status},
+			</if>
+			<if test="sort!= null">
+				sort= #{sort},
+			</if>
+			<if test="remark!= null">
+				remark= #{remark},
+			</if>
+			<if test="update_by!= null">
+				update_by= #{update_by},
+			</if>
+			<if test="update_time!= null">
+				update_time= #{update_time},
+			</if>
+			<if test="is_deleted!= null">
+				is_deleted= #{is_deleted}
+			</if>
+			<if test="version != null">
+				version = #{version}+1
+			</if>
+		</set>
+		where id = #{id} and version = #{version}
+	</update>
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_dict
+		where id = #{id}
+	</select>
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_dict
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="code != null and code != ''">
+				and code =#{code}
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="map" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_dict
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		select count(*) from t_sys_dict
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_dict
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	<select id="listByCode" parameterType="java.lang.String"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_dict
+		<where>
+			1=1 and code =#{code}
+		</where>
+	</select>
+
+</mapper>

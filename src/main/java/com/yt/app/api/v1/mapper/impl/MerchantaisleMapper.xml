@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yt.app.api.v1.mapper.MerchantaisleMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,aisleid,merchantid,create_by,create_time,update_by,update_time,version
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Merchantaisle">
+	</resultMap>
+	<!-- add -->
+	<insert id="post"
+		parameterType="com.yt.app.api.v1.entity.Merchantaisle">
+		insert into
+		merchantaisle(id,aisleid,merchantid,create_by,create_time,update_by,update_time)
+		values
+		(#{id},#{aisleid},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		merchantaisle(id,aisleid,merchantid,create_by,create_time,update_by,update_time)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{aisleid},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from merchantaisle
+		where id = #{id}
+	</delete>
+	<!-- update -->
+	<update id="put"
+		parameterType="com.yt.app.api.v1.entity.Merchantaisle">
+		update merchantaisle
+		<set>
+			<if test="aisleid != null">
+				aisleid= #{aisleid},
+			</if>
+			<if test="merchantid != null">
+				merchantid= #{merchantid},
+			</if>
+			<if test="update_by != null">
+				update_by= #{update_by},
+			</if>
+			<if test="update_time != null">
+				update_time= #{update_time},
+			</if>
+			<if test="version != null">
+				version= #{version}+1
+			</if>
+		</set>
+		where id = #{id} and version = #{version}
+	</update>
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from merchantaisle
+		where id = #{id}
+	</select>
+
+	<select id="getByMidAid" resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from merchantaisle
+		where aisleid = #{aisleid} and merchantid=
+		#{merchantid}
+	</select>
+
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		SELECT
+		ma.id id,
+		ma.merchantid merchantid,
+		ma.aisleid aisleid,
+		a.name
+		NAME,
+		a.code CODE,
+		a.status STATUS,
+		a.exchange exchange,
+		a.onecost
+		onecost,
+		a.remark remark
+		FROM
+		merchantaisle ma
+		JOIN merchant m
+		ON m.id =
+		ma.merchantid
+		JOIN aisle a
+		ON ma.aisleid = a.id
+		<where>
+			1=1
+			<if test="aisleid != null and aisleid != ''">
+				AND ma.aisleid = #{aisleid}
+			</if>
+			<if test="merchantid != null and merchantid != ''">
+				AND ma.merchantid = #{merchantid}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE CONCAT( '%', #{name} , '%' )
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code LIKE CONCAT( '%', #{code} , '%' )
+			</if>
+			<if test="status != null">
+				AND a.status = #{status}
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="map" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from merchantaisle
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and Dir != null">
+				order by ${orderBy} ${Dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		merchantaisle ma
+		JOIN merchant m
+		ON m.id =
+		ma.merchantid
+		JOIN aisle a
+		ON ma.aisleid = a.id
+		<where>
+			1=1
+			<if test="aisleid != null and aisleid != ''">
+				and a.id = #{aisleid}
+			</if>
+			<if test="merchantid != null and merchantid != ''">
+				and m.id = #{merchantid}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE CONCAT( '%', #{name} , '%' )
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code LIKE CONCAT( '%', #{code} , '%' )
+			</if>
+			<if test="status != null">
+				and a.status = #{status}
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from merchantaisle
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+</mapper>

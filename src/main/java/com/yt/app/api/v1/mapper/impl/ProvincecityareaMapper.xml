@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.yt.app.api.v1.mapper.ProvincecityareaMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,parent_id,parent_code,name,code,type,is_shop,version
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Provincecityarea">
+
+	</resultMap>
+	<!-- add -->
+	<insert id="post"
+		parameterType="com.yt.app.api.v1.entity.Provincecityarea">
+		insert into
+		t_sys_province_city_area(id,parent_id,parent_code,name,code,type,is_shop)
+		values
+		(#{id},#{parent_id},#{parent_code},#{name},#{code},#{type},#{is_shop})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		t_sys_province_city_area(id,parent_id,parent_code,name,code,type,is_shop)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{parent_id},#{parent_code},#{name},#{code},#{type},#{is_shop})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from
+		t_sys_province_city_area
+		where id = #{id}
+	</delete>
+	<!-- update -->
+	<update id="put"
+		parameterType="com.yt.app.api.v1.entity.Provincecityarea">
+		update t_sys_province_city_area
+		<set>
+			<if test="parent_id != null">
+				parent_id= #{parent_id},
+			</if>
+			<if test="parent_code != null">
+				parent_code= #{parent_code},
+			</if>
+			<if test="name != null">
+				name= #{name},
+			</if>
+			<if test="code != null">
+				code= #{code},
+			</if>
+			<if test="type != null">
+				type= #{type},
+			</if>
+			<if test="is_shop != null">
+				is_shop= #{is_shop},
+			</if>
+			<if test="version != null">
+				version= #{version}+1
+			</if>
+		</set>
+		where id = #{id} and version = #{version}
+	</update>
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_province_city_area
+		where id = #{id}
+	</select>
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_province_city_area
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="map" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_province_city_area
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and Dir != null">
+				order by ${orderBy} ${Dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		select count(*) from t_sys_province_city_area
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_province_city_area
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<select id="selectDataList" resultMap="ResultMap">
+		SELECT *
+		FROM t_sys_province_city_area
+		<where>
+			<if test="isShop != null">
+				AND is_shop = #{isShop}
+			</if>
+			<if test="type != null">
+				AND type >= #{type}
+			</if>
+		</where>
+		ORDER BY code ASC
+	</select>
+</mapper>

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yt.app.api.v1.mapper.UserMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,tenant_id,username,nickname,twofactorcode,sex,phone,email,avatar_url,dept_id,post_id_list,is_fixed,accounttype,create_by,create_time,update_by,update_time,is_deleted,version
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.User">
+		<result property="post_idlist" column="post_id_list"
+			typeHandler="com.yt.app.common.mybatis.handler.ListJsonLongTypeHandler" />
+	</resultMap>
+	<!-- add -->
+	<insert id="post" parameterType="com.yt.app.api.v1.entity.User">
+		insert into
+		t_sys_user(id,username,password,nickname,sex,phone,email,avatar_url,dept_id,post_id_list,is_fixed,accounttype,create_by,create_time,update_by,update_time,is_deleted)
+		values
+		(#{id},#{username},#{password},#{nickname},#{sex},#{phone},#{email},#{avatar_url},#{dept_id},#{post_idlist,jdbcType=OTHER,typeHandler=com.yt.app.common.mybatis.handler.ListJsonLongTypeHandler},#{is_fixed},#{accounttype},#{create_by},#{create_time},#{update_by},#{update_time},#{is_deleted})
+	</insert>
+	<insert id="postAndTanantId"
+		parameterType="com.yt.app.api.v1.entity.User">
+		insert into
+		t_sys_user(id,username,password,nickname,sex,phone,email,avatar_url,dept_id,post_id_list,is_fixed,accounttype,create_by,create_time,update_by,update_time,is_deleted)
+		values
+		(#{id},#{username},#{password},#{nickname},#{sex},#{phone},#{email},#{avatar_url},#{dept_id},#{post_idlist,jdbcType=OTHER,typeHandler=com.yt.app.common.mybatis.handler.ListJsonLongTypeHandler},#{is_fixed},#{accounttype},#{create_by},#{create_time},#{update_by},#{update_time},#{is_deleted})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		t_sys_user(id,username,tenant_id,password,nickname,sex,phone,email,avatar_url,dept_id,post_id_list,is_fixed,accounttype,create_by,create_time,update_by,update_time,is_deleted)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{username},#{tenant_id},#{password},#{nickname},#{sex},#{phone},#{email},#{avatar_url},#{dept_id},#{post_id_list},#{is_fixed},#{accounttype},#{create_by},#{create_time},#{update_by},#{update_time},#{is_deleted})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from t_sys_user
+		where id
+		= #{id}
+	</delete>
+	<!-- update -->
+	<update id="put" parameterType="com.yt.app.api.v1.entity.User">
+		update t_sys_user
+		<set>
+			<if test="username!= null">
+				username= #{username},
+			</if>
+			<if test="password!= null">
+				password= #{password},
+			</if>
+			<if test="twofactorcode != null">
+				twofactorcode= #{twofactorcode},
+			</if>
+			<if test="nickname!= null">
+				nickname= #{nickname},
+			</if>
+			<if test="sex!= null">
+				sex= #{sex},
+			</if>
+			<if test="phone!= null">
+				phone= #{phone},
+			</if>
+			<if test="email!= null">
+				email= #{email},
+			</if>
+			<if test="avatar_url!= null">
+				avatar_url= #{avatar_url},
+			</if>
+			<if test="dept_id!= null">
+				dept_id= #{dept_id},
+			</if>
+			<if test="post_idlist!= null">
+				post_id_list=
+				#{post_idlist,jdbcType=OTHER,typeHandler=com.yt.app.common.mybatis.handler.ListJsonLongTypeHandler},
+			</if>
+			<if test="is_fixed!= null">
+				is_fixed= #{is_fixed},
+			</if>
+			<if test="accounttype != null">
+				accounttype= #{accounttype},
+			</if>
+			<if test="update_by != null">
+				update_by= #{update_by},
+			</if>
+			<if test="update_time!= null">
+				update_time= #{update_time},
+			</if>
+			<if test="is_deleted!= null">
+				is_deleted= #{is_deleted},
+			</if>
+			<if test="version != null">
+				version= #{version}+1
+			</if>
+		</set>
+		where id = #{id} and version = #{version}
+	</update>
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_user
+		where id = #{id}
+	</select>
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_user
+		<where>
+			1=1
+			<if test="username != null and username != ''">
+				and username like CONCAT( '%', #{username} , '%' )
+			</if>
+			<if test="dept_id != null and dept_id != ''">
+				and dept_id = #{dept_id}
+			</if>
+			<if test="nickname!=null and nickname!=''">
+				and nickname LIKE CONCAT( '%', #{nickname} , '%' )
+			</if>
+			<if test="phone!=null  and phone!=''">
+				and phone LIKE CONCAT( '%', #{phone} , '%' )
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="map" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_user
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		select count(*) from t_sys_user
+		<where>
+			1=1
+			<if test="username != null and username != ''">
+				and username like CONCAT( '%', #{username} , '%' )
+			</if>
+			<if test="dept_id != null and dept_id != ''">
+				and dept_id = #{dept_id}
+			</if>
+			<if test="nickname!=null and nickname!=''">
+				and nickname LIKE CONCAT( '%', #{nickname} , '%' )
+			</if>
+			<if test="phone!=null  and phone!=''">
+				and phone LIKE CONCAT( '%', #{phone} , '%' )
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_sys_user
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+
+	<resultMap id="selectUserPerm"
+		type="com.yt.app.api.v1.vo.SysUserPermVO">
+		<result property="id" column="userId" />
+		<result property="tenantId" column="tenantId" />
+		<result property="username" column="username" />
+		<result property="twofactorcode" column="twofactorcode" />
+		<result property="password" column="password" />
+		<result property="nickname" column="nickname" />
+		<result property="phone" column="phone" />
+		<result property="email" column="email" />
+		<result property="avatar_url" column="avatar_url" />
+		<result property="create_time" column="create_time" />
+		<result property="dept_id" column="dept_id" />
+		<result property="accounttype" column="accounttype" />
+		<collection property="roleIdList" ofType="java.lang.Long"
+			javaType="list">
+			<result column="roleId" />
+		</collection>
+		<collection property="roleCodeList" ofType="String"
+			javaType="list">
+			<result column="roleCode" />
+		</collection>
+	</resultMap>
+
+	<select id="selectUserPerm" parameterType="java.util.HashMap"
+		resultMap="selectUserPerm">
+		SELECT
+		su.id userId,
+		su.twofactorcode,
+		su.accounttype,
+		su.tenant_id
+		tenantId,
+		su.username,
+		su.password,
+		su.nickname,
+		su.sex,
+		su.phone,
+		su.email,
+		su.avatar_url,
+		su.create_time,
+		su.dept_id,
+		su.post_id_list,
+		sr.id roleId,
+		sr.code roleCode
+		FROM t_sys_user su
+		JOIN t_sys_user_role
+		sur ON sur.user_id = su.id
+		JOIN t_sys_role sr ON sr.id = sur.role_id
+		WHERE
+		su.is_deleted = 0
+		<if test="userId != null">
+			AND su.id = #{userId}
+		</if>
+		<if test="username!=null and username!=''">
+			AND su.username = #{username}
+		</if>
+	</select>
+
+	<select id="selectUserNumByDeptId" resultType="java.lang.Long">
+		select count(1)
+		from t_sys_user
+		where is_deleted = 0
+		and dept_id = #{deptId}
+	</select>
+
+	<select id="getByUserName" parameterType="java.lang.String"
+		resultMap="ResultMap">
+		select *
+		from t_sys_user
+		where is_deleted = 0
+		and username =
+		#{username}
+	</select>
+
+</mapper>
