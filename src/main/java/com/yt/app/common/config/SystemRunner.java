@@ -11,7 +11,6 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import com.yt.app.api.v1.service.DictService;
 import com.yt.app.api.v1.service.RoleService;
 import com.yt.app.common.base.constant.AppConstant;
-import com.yt.app.common.base.context.AuthRsaKeyContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.Tbot;
 import com.yt.app.common.util.RsaUtil;
@@ -46,7 +45,7 @@ public class SystemRunner implements CommandLineRunner {
 		TenantIdContext.setTenantId(AppConstant.SYSTEM_TENANT_ID);
 
 		// 初始化加密key
-		AuthRsaKeyContext.setKey(RsaUtil.getPublicKey());
+		RsaUtil.InitKeys();
 
 		// 数据字典
 		dictservice.initCache();
