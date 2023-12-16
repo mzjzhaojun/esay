@@ -53,7 +53,6 @@ public class RsaUtil {
 	 */
 	private static final int INITIALIZE_LENGTH = 2048;
 	
-	
 
 	public static void InitKeys() throws Exception {
 		KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(KEY_ALGORITHM);
