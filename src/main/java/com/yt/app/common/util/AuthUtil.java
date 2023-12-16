@@ -46,6 +46,9 @@ public class AuthUtil {
 	public static AuthLoginVO login(JwtUserBO jwtUserBO) {
 		Long userId = jwtUserBO.getUserId();
 		Assert.notNull(userId, "用户id不能为空！");
+
+		StpUtil.login(userId);
+
 		String tokenValue = StpUtil.getTokenValue();
 		// 将登录信息存储到redis
 		RedisUtil.setEx(JWT_USER_KEY + tokenValue, JSONUtil.toJsonStr(jwtUserBO), StpUtil.getTokenTimeout(),
@@ -65,6 +68,8 @@ public class AuthUtil {
 	 * @date 2020/4/15 11:33
 	 */
 	public static void logout(String tokenValue) {
+		JwtUserBO ju = getLoginUser(tokenValue);
+		StpUtil.logout(ju.getUserId());
 		RedisUtil.delete(JWT_USER_KEY + tokenValue);
 	}
 
