@@ -46,15 +46,11 @@ public class AuthUtil {
 	public static AuthLoginVO login(JwtUserBO jwtUserBO) {
 		Long userId = jwtUserBO.getUserId();
 		Assert.notNull(userId, "用户id不能为空！");
-
-		// 登录
-		StpUtil.login(userId);
-
+		String tokenValue = StpUtil.getTokenValue();
 		// 将登录信息存储到redis
-		RedisUtil.setEx(JWT_USER_KEY + userId, JSONUtil.toJsonStr(jwtUserBO), StpUtil.getTokenTimeout(),
+		RedisUtil.setEx(JWT_USER_KEY + tokenValue, JSONUtil.toJsonStr(jwtUserBO), StpUtil.getTokenTimeout(),
 				TimeUnit.SECONDS);
 
-		String tokenValue = StpUtil.getTokenValue();
 		return AuthLoginVO.builder().tokenName(StpUtil.getTokenName())
 				.tokenValue(StrUtil.isNotBlank(tokenPrefix) ? tokenPrefix + " " + tokenValue : tokenValue)
 				.tenantId(jwtUserBO.getTenantId()).build();
@@ -68,8 +64,8 @@ public class AuthUtil {
 	 * @author zhengqingya
 	 * @date 2020/4/15 11:33
 	 */
-	public static void logout(Object userId) {
-		StpUtil.logout(userId);
+	public static void logout(String tokenValue) {
+		RedisUtil.delete(JWT_USER_KEY + tokenValue);
 	}
 
 	/**
@@ -79,9 +75,8 @@ public class AuthUtil {
 	 * @author zhengqingya
 	 * @date 2020/4/15 11:33
 	 */
-	public static JwtUserBO getLoginUser() {
-		String userId = StpUtil.getLoginId().toString();
-		String userObj = RedisUtil.get(JWT_USER_KEY + userId);
+	public static JwtUserBO getLoginUser(String tokenValue) {
+		String userObj = RedisUtil.get(JWT_USER_KEY + tokenValue);
 		if (StrUtil.isBlank(userObj)) {
 			throw NotLoginException.newInstance(StpUtil.getLoginType(), NotLoginException.NOT_TOKEN);
 		}

@@ -17,7 +17,7 @@ import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.service.AuthService;
 import com.yt.app.api.v1.service.PayoutService;
 import com.yt.app.api.v1.vo.AuthLoginVO;
-import com.yt.app.common.base.context.SysUserContext;
+import com.yt.app.common.base.constant.SecurityConstant;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtRequestDecryptEntity;
@@ -59,7 +59,8 @@ public class AuthController extends YtBaseEncipherControllerImpl<User, Long> {
 	@RequestMapping(value = "/logoutvue", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public YtResponseEncryptEntity<Object> logoutvue(YtRequestDecryptEntity<User> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		AuthUtil.logout(SysUserContext.getUserId());
+		String token = request.getHeader(SecurityConstant.AUTHORIZATION_KEY);
+		AuthUtil.logout(token);
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
 

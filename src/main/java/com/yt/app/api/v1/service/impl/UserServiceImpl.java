@@ -86,7 +86,7 @@ public class UserServiceImpl extends YtBaseServiceImpl<User, Long> implements Us
 	public Integer put(User t) {
 		if (t.getPassword() != null && t.getPassword().length() < 30) {
 			t.setPassword(PasswordUtil.encodePassword(t.getPassword()));
-			AuthUtil.logout(t.getId());
+			AuthUtil.logout(t.getToken());
 		}
 		Integer i = mapper.put(t);
 		if (t.getRoleIdList() != null && t.getRoleIdList().size() > 0) {
@@ -177,7 +177,7 @@ public class UserServiceImpl extends YtBaseServiceImpl<User, Long> implements Us
 		}
 		Integer i = mapper.put(t);
 		Assert.equals(i, 1, ServiceConstant.UPDATE_FAIL_MSG);
-		AuthUtil.logout(t.getId());
+		AuthUtil.logout(t.getToken());
 		return i;
 	}
 }

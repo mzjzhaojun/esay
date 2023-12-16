@@ -16,6 +16,7 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
 import io.swagger.annotations.ApiOperation;
 
+import com.yt.app.common.base.constant.SecurityConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.UserService;
@@ -46,6 +47,16 @@ public class UserController extends YtBaseEncipherControllerImpl<User, Long> {
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
+	@Override
+	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> put(YtRequestDecryptEntity<User> YtRequestDecryptEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		User u = YtRequestDecryptEntity.getBody();
+		u.setToken(request.getHeader(SecurityConstant.AUTHORIZATION_KEY));
+		Integer i = service.put(u);
+		return new YtResponseEncryptEntity<Object>(new YtBody(i));
+	}
+
 	@RequestMapping(value = "/getUserPerm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> getUserPerm(YtRequestDecryptEntity<SysUserPermDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -55,9 +66,11 @@ public class UserController extends YtBaseEncipherControllerImpl<User, Long> {
 	}
 
 	@RequestMapping(value = "/resetpassword", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> resetpassword(YtRequestDecryptEntity<User> requestEntity,
+	public YtResponseEncryptEntity<Object> resetpassword(YtRequestDecryptEntity<User> YtRequestDecryptEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		Integer i = service.resetpassword(requestEntity.getBody());
+		User u = YtRequestDecryptEntity.getBody();
+		u.setToken(request.getHeader(SecurityConstant.AUTHORIZATION_KEY));
+		Integer i = service.resetpassword(u);
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 

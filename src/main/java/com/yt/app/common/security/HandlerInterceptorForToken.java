@@ -110,7 +110,7 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 			throw new MyException(YtCodeEnum.YT303.getDesc(), YtCodeEnum.YT303);
 		}
 		// 获取登录用户信息
-		JwtUserBO jwtUserBO = AuthUtil.getLoginUser();
+		JwtUserBO jwtUserBO = AuthUtil.getLoginUser(token);
 		String method = request.getMethod();
 		String path = request.getRequestURI();
 		// "GET:/web/api/user/*"

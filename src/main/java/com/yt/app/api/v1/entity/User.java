@@ -43,6 +43,7 @@ public class User extends YtBaseEntity<User> {
 	String sexName;
 	String roleNames;
 	String deptName;
+	String token;
 
 	public User() {
 	}
