@@ -10,4 +10,5 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface TgmerchantgroupService extends YtIBaseService<Tgmerchantgroup, Long> {
+	Integer putmerchant(Tgmerchantgroup t);
 }

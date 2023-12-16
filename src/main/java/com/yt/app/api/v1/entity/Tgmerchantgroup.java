@@ -17,12 +17,14 @@ public class Tgmerchantgroup extends YtBaseEntity<Tgmerchantgroup> {
 
 	Long id;
 	Long tenant_id;
+	Long merchantid;
 	String merchantname;
 	String merchantcode;
 	Boolean status;
 	Long tgid;
 	String tggroupname;
 	String remark;
+	String mangers;
 	Integer version;
 
 	public Tgmerchantgroup() {

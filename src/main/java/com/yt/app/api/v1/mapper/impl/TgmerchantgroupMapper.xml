@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.TgmerchantgroupMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,merchantname,merchantcode,status,tgid,tggroupname,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,create_by,create_time,update_by,update_time,remark,mangers,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -14,9 +14,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Tgmerchantgroup">
 		insert into
-		tgmerchantgroup(id,merchantname,merchantcode,status,tgid,tggroupname,create_by,create_time,update_by,update_time,remark)
+		tgmerchantgroup(id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,create_by,create_time,update_by,update_time,remark,mangers)
 		values
-		(#{id},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{merchantid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{remark},#{mangers})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -38,6 +38,9 @@
 		parameterType="com.yt.app.api.v1.entity.Tgmerchantgroup">
 		update tgmerchantgroup
 		<set>
+			<if test="merchantid != null">
+				merchantid= #{merchantid},
+			</if>
 			<if test="merchantname != null">
 				merchantname= #{merchantname},
 			</if>
@@ -62,6 +65,9 @@
 			<if test="remark != null">
 				remark= #{remark},
 			</if>
+			<if test="mangers != null">
+				mangers= #{mangers},
+			</if>
 			<if test="version != null">
 				version= #{version}+1
 			</if>
@@ -84,6 +90,14 @@
 		<include refid="Base_Column_List" />
 		from tgmerchantgroup
 		where tggroupname= #{tggroupname}
+	</select>
+	<!--getById -->
+	<select id="getByTgGroupId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmerchantgroup
+		where tgid= #{tgid}
 	</select>
 	
 	<!-- getList -->

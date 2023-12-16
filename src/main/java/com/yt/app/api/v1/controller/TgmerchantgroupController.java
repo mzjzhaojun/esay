@@ -41,4 +41,16 @@ public class TgmerchantgroupController extends YtBaseEncipherControllerImpl<Tgme
 		YtIPage<Tgmerchantgroup> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
+
+	/**
+	 * 
+	 * 
+	 * @version 1.1
+	 */
+	@RequestMapping(value = "/putmerchant", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> putmerchant(YtRequestDecryptEntity<Tgmerchantgroup> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		Integer t = service.putmerchant(requestEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(t));
+	}
 }

@@ -41,9 +41,14 @@ public class Tbot extends TelegramLongPollingBot {
 			Long chatid = update.getMessage().getChat().getId();
 			TenantIdContext.removeFlag();
 			Tgmerchantgroup tmg = tgmerchantgroupmapper.getByTgGroupName(update.getMessage().getChat().getTitle());
+			// 根据tgid查询
+			if (tmg == null) {
+				tmg = tgmerchantgroupmapper.getByTgGroupId(chatid);
+			}
 			if (tmg != null && tmg.getTgid() == null) {
 				tmg.setTgid(chatid);
 				tgmerchantgroupmapper.put(tmg);
+
 			}
 			String message = update.getMessage().getText();
 			switch (message) {

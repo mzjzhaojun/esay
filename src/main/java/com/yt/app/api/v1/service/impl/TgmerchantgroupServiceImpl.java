@@ -3,9 +3,12 @@ package com.yt.app.api.v1.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+
+import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.service.TgmerchantgroupService;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
+import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -23,6 +26,9 @@ public class TgmerchantgroupServiceImpl extends YtBaseServiceImpl<Tgmerchantgrou
 		implements TgmerchantgroupService {
 	@Autowired
 	private TgmerchantgroupMapper mapper;
+
+	@Autowired
+	private MerchantMapper merchantmapper;
 
 	@Override
 	@Transactional
@@ -49,5 +55,13 @@ public class TgmerchantgroupServiceImpl extends YtBaseServiceImpl<Tgmerchantgrou
 	public Tgmerchantgroup get(Long id) {
 		Tgmerchantgroup t = mapper.get(id);
 		return t;
+	}
+
+	@Override
+	@Transactional
+	public Integer putmerchant(Tgmerchantgroup t) {
+		Merchant mt = merchantmapper.get(t.getMerchantid());
+		t.setMerchantname(mt.getName());
+		return mapper.put(t);
 	}
 }
