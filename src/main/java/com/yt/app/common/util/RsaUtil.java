@@ -15,9 +15,6 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class RsaUtil {
 
@@ -56,35 +53,33 @@ public class RsaUtil {
 	 */
 	private static final int INITIALIZE_LENGTH = 2048;
 
-	/**
-	 * 后端RSA的密钥对(公钥和私钥)Map，由静态代码块赋值
-	 */
-	private static Map<String, Object> genKeyPair = new LinkedHashMap<>();
-
-	static {
-		try {
-			genKeyPair.putAll(genKeyPair());
-		} catch (Exception e) {
-			// 输出到日志文件中
-			System.err.println(e.getMessage());
-		}
+	public static void InitKeys() throws Exception {
+		RedisUtil.set(PUBLIC_KEY, Base64.encodeBase64String(genKeyPublic().getEncoded()));
+		RedisUtil.set(PRIVATE_KEY, Base64.encodeBase64String(genKeyPrivate().getEncoded()));
 	}
 
 	/**
 	 * 生成密钥对(公钥和私钥)
 	 */
-	private static Map<String, Object> genKeyPair() throws Exception {
+	private static RSAPublicKey genKeyPublic() throws Exception {
 		KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(KEY_ALGORITHM);
 		keyPairGen.initialize(INITIALIZE_LENGTH);
 		KeyPair keyPair = keyPairGen.generateKeyPair();
 		RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-		RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-		Map<String, Object> keyMap = new HashMap<>(2);
 		// 公钥
-		keyMap.put(PUBLIC_KEY, publicKey);
+		return publicKey;
+	}
+
+	/**
+	 * 生成密钥对(公钥和私钥)
+	 */
+	private static RSAPrivateKey genKeyPrivate() throws Exception {
+		KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(KEY_ALGORITHM);
+		keyPairGen.initialize(INITIALIZE_LENGTH);
+		KeyPair keyPair = keyPairGen.generateKeyPair();
+		RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
 		// 私钥
-		keyMap.put(PRIVATE_KEY, privateKey);
-		return keyMap;
+		return privateKey;
 	}
 
 	/**
@@ -152,16 +147,14 @@ public class RsaUtil {
 	 * 获取私钥
 	 */
 	public static String getPrivateKey() {
-		Key key = (Key) genKeyPair.get(PRIVATE_KEY);
-		return Base64.encodeBase64String(key.getEncoded());
+		return RedisUtil.get(PRIVATE_KEY);
 	}
 
 	/**
 	 * 获取公钥
 	 */
 	public static String getPublicKey() {
-		Key key = (Key) genKeyPair.get(PUBLIC_KEY);
-		return Base64.encodeBase64String(key.getEncoded());
+		return RedisUtil.get(PUBLIC_KEY);
 	}
 
 	/**
