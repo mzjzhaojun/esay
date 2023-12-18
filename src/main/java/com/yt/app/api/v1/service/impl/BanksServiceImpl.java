@@ -5,10 +5,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.BanksMapper;
 import com.yt.app.api.v1.service.BanksService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Banks;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -30,14 +34,14 @@ public class BanksServiceImpl extends YtBaseServiceImpl<Banks, Long> implements 
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Banks> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Banks>(Collections.emptyList());
 			}
 		}
 		List<Banks> list = mapper.list(param);
@@ -45,6 +49,7 @@ public class BanksServiceImpl extends YtBaseServiceImpl<Banks, Long> implements 
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Banks get(Long id) {
 		Banks t = mapper.get(id);
 		return t;

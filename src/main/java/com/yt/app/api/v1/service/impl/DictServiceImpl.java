@@ -13,9 +13,12 @@ import com.yt.app.api.v1.entity.Dict;
 import com.yt.app.api.v1.entity.Dicttype;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.RedisUtil;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,14 +44,14 @@ public class DictServiceImpl extends YtBaseServiceImpl<Dict, Long> implements Di
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Dict> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Dict>(Collections.emptyList());
 			}
 		}
 		List<Dict> list = mapper.list(param);
@@ -56,12 +59,14 @@ public class DictServiceImpl extends YtBaseServiceImpl<Dict, Long> implements Di
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Dict get(Long id) {
 		Dict t = mapper.get(id);
 		return t;
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public List<Dict> listfromcachebycode(String code) {
 		String strs = RedisUtil.get(SystemConstant.CACHE_SYS_DICTTYPE_PREFIX + code);
 		List<Dict> listd = JSON.parseArray(strs, Dict.class);
@@ -69,6 +74,7 @@ public class DictServiceImpl extends YtBaseServiceImpl<Dict, Long> implements Di
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public List<Dict> listbycode(Map<String, Object> param) {
 		return mapper.list(param);
 	}

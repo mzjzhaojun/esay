@@ -5,13 +5,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.SystemcapitalrecordMapper;
 import com.yt.app.api.v1.service.SystemcapitalrecordService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Systemcapitalrecord;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.RedisUtil;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -34,14 +37,14 @@ public class SystemcapitalrecordServiceImpl extends YtBaseServiceImpl<Systemcapi
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Systemcapitalrecord> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Systemcapitalrecord>(Collections.emptyList());
 			}
 		}
 		List<Systemcapitalrecord> list = mapper.list(param);
@@ -52,6 +55,7 @@ public class SystemcapitalrecordServiceImpl extends YtBaseServiceImpl<Systemcapi
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Systemcapitalrecord get(Long id) {
 		Systemcapitalrecord t = mapper.get(id);
 		return t;

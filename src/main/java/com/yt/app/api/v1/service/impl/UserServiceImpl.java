@@ -12,6 +12,7 @@ import com.yt.app.api.v1.mapper.UserroleMapper;
 import com.yt.app.api.v1.service.MenuService;
 import com.yt.app.api.v1.service.UserService;
 import com.yt.app.api.v1.vo.SysUserPermVO;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.context.JwtUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
@@ -25,12 +26,14 @@ import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.entity.Userrole;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.AuthUtil;
 import com.yt.app.common.util.PasswordUtil;
 
 import cn.hutool.core.lang.Assert;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
@@ -103,14 +106,14 @@ public class UserServiceImpl extends YtBaseServiceImpl<User, Long> implements Us
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<User> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<User>(Collections.emptyList());
 			}
 		}
 		List<User> list = mapper.list(param);
@@ -149,12 +152,14 @@ public class UserServiceImpl extends YtBaseServiceImpl<User, Long> implements Us
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public User get(Long id) {
 		User t = mapper.get(id);
 		return t;
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public SysUserPermVO getUserPerm(SysUserPermDTO params) {
 		// 1.
 		SysUserPermVO userPerm = mapper.selectUserPerm(params);
@@ -171,6 +176,7 @@ public class UserServiceImpl extends YtBaseServiceImpl<User, Long> implements Us
 	}
 
 	@Override
+	@Transactional
 	public Integer resetpassword(User t) {
 		if (t.getPassword() != null && t.getPassword().length() < 30) {
 			t.setPassword(PasswordUtil.encodePassword(t.getPassword()));

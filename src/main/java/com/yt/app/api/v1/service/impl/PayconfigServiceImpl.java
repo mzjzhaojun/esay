@@ -5,11 +5,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.PayconfigMapper;
 import com.yt.app.api.v1.service.PayconfigService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Payconfig;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -31,14 +35,14 @@ public class PayconfigServiceImpl extends YtBaseServiceImpl<Payconfig, Long> imp
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Payconfig> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Payconfig>(Collections.emptyList());
 			}
 		}
 		List<Payconfig> list = mapper.list(param);
@@ -46,12 +50,14 @@ public class PayconfigServiceImpl extends YtBaseServiceImpl<Payconfig, Long> imp
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Payconfig get(Long id) {
 		Payconfig t = mapper.get(id);
 		return t;
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Payconfig getData() {
 		return mapper.get(ServiceConstant.SYSTEM_PAYCONFIG_EXCHANGE);
 	}

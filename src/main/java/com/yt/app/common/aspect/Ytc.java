@@ -35,7 +35,7 @@ public class Ytc {
 	@Autowired
 	LogsMapper logsmapper;
 
-	@Pointcut("(execution(* com.yt.app.api.v1.controller.*Controller.*(..)))")
+	@Pointcut("(execution(* com.yt.app.api.v1.controller.*Controller.*(..))) || (execution(* com.yt.app.common.base.YtIBaseEncipherController.*(..))) || (execution(* com.yt.app.common.base.YtIBaseController.*(..)))")
 	public void controllerPointCut() {
 	}
 

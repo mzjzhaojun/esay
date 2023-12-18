@@ -10,6 +10,7 @@ import com.yt.app.api.v1.mapper.MerchantaccountorderMapper;
 import com.yt.app.api.v1.service.MerchantaccountService;
 import com.yt.app.api.v1.service.MerchantaccountorderService;
 import com.yt.app.api.v1.service.SystemaccountService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
@@ -18,10 +19,12 @@ import com.yt.app.api.v1.entity.Merchantaccountbank;
 import com.yt.app.api.v1.entity.Merchantaccountorder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.RedisUtil;
 import com.yt.app.common.util.StringUtil;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -115,14 +118,14 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Merchantaccountorder> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Merchantaccountorder>(Collections.emptyList());
 			}
 		}
 		List<Merchantaccountorder> list = mapper.list(param);
@@ -133,6 +136,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Merchantaccountorder get(Long id) {
 		Merchantaccountorder t = mapper.get(id);
 		return t;

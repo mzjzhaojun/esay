@@ -10,6 +10,7 @@ import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.MerchantaccountMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.MerchantService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.context.JwtUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
@@ -21,6 +22,7 @@ import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.PasswordUtil;
 import com.yt.app.common.util.RedissonUtil;
@@ -28,6 +30,7 @@ import com.yt.app.common.util.StringUtil;
 
 import cn.hutool.core.lang.Assert;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -95,14 +98,14 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Merchant> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Merchant>(Collections.emptyList());
 			}
 		}
 		List<Merchant> list = mapper.list(param);
@@ -110,6 +113,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Merchant get(Long id) {
 		Merchant t = mapper.get(id);
 		return t;
@@ -124,25 +128,28 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	}
 
 	@Override
-	public Integer removeagent(Long id) {
-		Integer i = mapper.removeagent(id);
-		return i;
-	}
-
-	@Override
+	@Transactional
 	public Integer putagent(Merchant m) {
 		Integer i = 0;
 		Merchant t = mapper.get(m.getId());
-		Agent ag = agentmapper.get(m.getAgentid());
-		ag.setDownmerchantcount(ag.getDownmerchantcount() + 1);
-		agentmapper.put(ag);
-		t.setAgentname(ag.getName());
-		i = mapper.putagent(t);
+		if (m.getAgentid() == null) {
+			Agent ag = agentmapper.get(t.getAgentid());
+			ag.setDownmerchantcount(ag.getDownmerchantcount() - 1);
+			agentmapper.put(ag);
+			i = mapper.removeagent(t.getId());
+		} else {
+			Agent ag = agentmapper.get(m.getAgentid());
+			ag.setDownmerchantcount(ag.getDownmerchantcount() + 1);
+			agentmapper.put(ag);
+			t.setAgentname(ag.getName());
+			i = mapper.putagent(t);
+		}
 		Assert.equals(i, 1, ServiceConstant.UPDATE_FAIL_MSG);
 		return i;
 	}
 
 	@Override
+	@Transactional
 	public void updateInCome(Merchantaccount ma) {
 		Merchant m = mapper.get(ma.getMerchantid());
 		RLock lock = RedissonUtil.getLock(m.getId());
@@ -157,6 +164,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	}
 
 	@Override
+	@Transactional
 	public void updatePayout(Payout t) {
 		Merchant m = mapper.get(t.getMerchantid());
 		Merchantaccount ma = merchantaccountmapper.getByUserId(m.getUserid());
@@ -175,6 +183,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Merchant getData() {
 		Merchant t = mapper.getByUserId(JwtUserContext.get().getUserId());
 		return t;

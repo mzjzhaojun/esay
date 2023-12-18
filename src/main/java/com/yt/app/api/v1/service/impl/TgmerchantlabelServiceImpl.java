@@ -5,10 +5,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.TgmerchantlabelMapper;
 import com.yt.app.api.v1.service.TgmerchantlabelService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Tgmerchantlabel;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -31,14 +35,14 @@ public class TgmerchantlabelServiceImpl extends YtBaseServiceImpl<Tgmerchantlabe
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Tgmerchantlabel> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Tgmerchantlabel>(Collections.emptyList());
 			}
 		}
 		List<Tgmerchantlabel> list = mapper.list(param);
@@ -46,6 +50,7 @@ public class TgmerchantlabelServiceImpl extends YtBaseServiceImpl<Tgmerchantlabe
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tgmerchantlabel get(Long id) {
 		Tgmerchantlabel t = mapper.get(id);
 		return t;

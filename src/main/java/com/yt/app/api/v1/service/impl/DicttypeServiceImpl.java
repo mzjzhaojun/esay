@@ -7,10 +7,14 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.DictMapper;
 import com.yt.app.api.v1.mapper.DicttypeMapper;
 import com.yt.app.api.v1.service.DicttypeService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Dicttype;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -35,14 +39,14 @@ public class DicttypeServiceImpl extends YtBaseServiceImpl<Dicttype, Long> imple
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Dicttype> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Dicttype>(Collections.emptyList());
 			}
 		}
 		List<Dicttype> list = mapper.list(param);
@@ -50,6 +54,7 @@ public class DicttypeServiceImpl extends YtBaseServiceImpl<Dicttype, Long> imple
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Dicttype get(Long id) {
 		Dicttype t = mapper.get(id);
 		return t;

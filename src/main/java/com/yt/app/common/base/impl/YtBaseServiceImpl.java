@@ -1,6 +1,7 @@
 package com.yt.app.common.base.impl;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,14 +68,13 @@ public abstract class YtBaseServiceImpl<T, ID extends Serializable> implements Y
 		return i;
 	}
 
-	@SuppressWarnings({ "unchecked" })
 	@Override
 	public YtIPage<T> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<T>(Collections.emptyList());
 			}
 		}
 		return new YtPageBean<T>(param, mapper.list(param), count);
@@ -86,14 +86,13 @@ public abstract class YtBaseServiceImpl<T, ID extends Serializable> implements Y
 		return mapper.list(param);
 	}
 
-	@SuppressWarnings({ "unchecked" })
 	@Override
 	public YtIPage<List<Map<String, Object>>> map(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<List<Map<String, Object>>>(Collections.emptyList());
 			}
 		}
 		return new YtPageBean<List<Map<String, Object>>>(param, count, mapper.map(param));

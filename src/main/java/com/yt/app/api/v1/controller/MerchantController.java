@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtIPage;
@@ -41,18 +40,6 @@ public class MerchantController extends YtBaseEncipherControllerImpl<Merchant, L
 			HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<Merchant> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
-	}
-
-	/**
-	 * 
-	 * 
-	 * @version 1.1
-	 */
-	@RequestMapping(value = "/removeagent/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> removeagent(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
-		Integer t = service.removeagent(id);
-		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}
 
 	/**

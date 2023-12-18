@@ -13,8 +13,6 @@ import com.yt.app.common.base.YtIBaseService;
 
 public interface MerchantService extends YtIBaseService<Merchant, Long> {
 
-	Integer removeagent(Long id);
-
 	Integer putagent(Merchant m);
 
 	void updatePayout(Payout t);

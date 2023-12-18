@@ -6,13 +6,16 @@ import org.springframework.stereotype.Service;
 
 import com.yt.app.api.v1.mapper.MerchantaisleMapper;
 import com.yt.app.api.v1.service.MerchantaisleService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Merchantaisle;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 
 import cn.hutool.core.lang.Assert;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -36,14 +39,14 @@ public class MerchantaisleServiceImpl extends YtBaseServiceImpl<Merchantaisle, L
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Merchantaisle> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Merchantaisle>(Collections.emptyList());
 			}
 		}
 		List<Merchantaisle> list = mapper.list(param);
@@ -51,6 +54,7 @@ public class MerchantaisleServiceImpl extends YtBaseServiceImpl<Merchantaisle, L
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Merchantaisle get(Long id) {
 		Merchantaisle t = mapper.get(id);
 		return t;

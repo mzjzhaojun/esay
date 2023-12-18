@@ -512,7 +512,7 @@ public class Ytk {
 					this.L.write("if (YtPageBean.isPaging(param)) {\r\n");
 					this.L.write("count = mapper.countlist(param);\r\n");
 					this.L.write(" if (count == 0) {\r\n");
-					this.L.write("return YtPageBean.EMPTY_PAGE;\r\n");
+					this.L.write("return new YtPageBean<" + bt + ">(Collections.emptyList());\r\n");
 					this.L.write("}\r\n");
 					this.L.write("}\r\n");
 					this.L.write("List<" + bt + "> list = mapper.list(param);\r\n");

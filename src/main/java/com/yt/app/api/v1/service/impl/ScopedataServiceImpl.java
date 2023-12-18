@@ -7,6 +7,7 @@ import com.yt.app.api.v1.mapper.ScopedataMapper;
 import com.yt.app.api.v1.service.MenuService;
 import com.yt.app.api.v1.service.ScopedataService;
 import com.yt.app.api.v1.vo.SysMenuTreeVO;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.google.common.collect.Lists;
 import com.yt.app.api.v1.dbo.SysMenuTreeDTO;
@@ -14,9 +15,11 @@ import com.yt.app.api.v1.dbo.SysScopeDataBaseDTO;
 import com.yt.app.api.v1.entity.Scopedata;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 
 import cn.hutool.core.collection.CollUtil;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -41,14 +44,14 @@ public class ScopedataServiceImpl extends YtBaseServiceImpl<Scopedata, Long> imp
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Scopedata> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Scopedata>(Collections.emptyList());
 			}
 		}
 		List<Scopedata> list = mapper.list(param);
@@ -56,6 +59,7 @@ public class ScopedataServiceImpl extends YtBaseServiceImpl<Scopedata, Long> imp
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Scopedata get(Long id) {
 		Scopedata t = mapper.get(id);
 		return t;
@@ -66,6 +70,7 @@ public class ScopedataServiceImpl extends YtBaseServiceImpl<Scopedata, Long> imp
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public List<Scopedata> tree(SysScopeDataBaseDTO params) {
 		// 数据权限
 		List<Scopedata> scopeList = this.list(params);

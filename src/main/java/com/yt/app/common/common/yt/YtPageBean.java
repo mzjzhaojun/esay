@@ -2,7 +2,6 @@ package com.yt.app.common.common.yt;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -54,9 +53,6 @@ public class YtPageBean<T> implements YtIPage<T>, Serializable {
 		this.values = elements;
 		this.totalCount = totalCount;
 	}
-
-	@SuppressWarnings({ "rawtypes" })
-	public static final YtPageBean EMPTY_PAGE = new YtPageBean(Collections.emptyList());
 
 	public int getNextPageNo() {
 		return getCurrent() + 1;

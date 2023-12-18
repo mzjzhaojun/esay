@@ -16,8 +16,10 @@ import com.yt.app.api.v1.service.RoleService;
 import com.yt.app.api.v1.service.RolescopeService;
 import com.yt.app.api.v1.vo.AuthLoginVO;
 import com.yt.app.api.v1.vo.SysUserPermVO;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.enums.AuthSourceEnum;
 import com.yt.app.common.enums.SysRoleCodeEnum;
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.AuthUtil;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PasswordUtil;
@@ -99,10 +101,12 @@ public class AuthServiceImpl implements AuthService {
 						.systemaccountId(sca.getId()).accounttype(userPerm.getAccounttype()).build());
 	}
 
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public String genQRImage(String username) {
 		return GoogleAuthenticatorUtil.getQrCodeText(GoogleAuthenticatorUtil.getSecretKey(), username, "");
 	}
-
+	
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Integer verqrcode(String username, String code, String twocode) {
 		Integer i = 0;
 		User u = usermapper.getByUserName(username);
@@ -118,6 +122,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Integer checkgoogle(Long id, Long code) {
 		User u = usermapper.get(id);
 		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), code, System.currentTimeMillis());

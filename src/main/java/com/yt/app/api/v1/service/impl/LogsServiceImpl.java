@@ -5,10 +5,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.LogsMapper;
 import com.yt.app.api.v1.service.LogsService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Logs;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -30,14 +34,14 @@ public class LogsServiceImpl extends YtBaseServiceImpl<Logs, Long> implements Lo
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Logs> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Logs>(Collections.emptyList());
 			}
 		}
 		List<Logs> list = mapper.list(param);
@@ -45,6 +49,7 @@ public class LogsServiceImpl extends YtBaseServiceImpl<Logs, Long> implements Lo
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Logs get(Long id) {
 		Logs t = mapper.get(id);
 		return t;

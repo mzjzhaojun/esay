@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.yt.app.common.common.yt.YtIPage;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
-import com.yt.app.common.enums.YtDataSourceEnum;
 
 /**
  * 
@@ -23,7 +21,6 @@ public interface YtIBaseService<T, ID extends Serializable> {
 	 * @param o 要持久化的对象
 	 * @return 执行成功的记录个数
 	 */
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	public Integer post(T t);
 
 	/**
@@ -32,7 +29,6 @@ public interface YtIBaseService<T, ID extends Serializable> {
 	 * @param o 要持久化的对象
 	 * @return 执行成功的记录个数
 	 */
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	public Integer put(T t);
 
 	/**
@@ -41,7 +37,6 @@ public interface YtIBaseService<T, ID extends Serializable> {
 	 * @param id 指定的唯一标识符
 	 * @return 指定的唯一标识符对应的持久化对象，如果没有对应的持久化对象，则返回null。
 	 */
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public T get(Long id);
 
 	/**
@@ -50,7 +45,6 @@ public interface YtIBaseService<T, ID extends Serializable> {
 	 * @param ids 指定的唯一标识符数组
 	 * @return 删除的对象数量
 	 */
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	public Integer delete(Long id);
 
 	/**
@@ -59,7 +53,6 @@ public interface YtIBaseService<T, ID extends Serializable> {
 	 * @param param
 	 * @return
 	 */
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<T> list(Map<String, Object> param);
 
 	/**
@@ -68,7 +61,6 @@ public interface YtIBaseService<T, ID extends Serializable> {
 	 * @param param
 	 * @return
 	 */
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public List<T> list();
 
 	/**
@@ -77,7 +69,6 @@ public interface YtIBaseService<T, ID extends Serializable> {
 	 * @param param
 	 * @return
 	 */
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<List<Map<String, Object>>> map(Map<String, Object> param);
 
 	/**
@@ -85,7 +76,6 @@ public interface YtIBaseService<T, ID extends Serializable> {
 	 * 
 	 * @return
 	 */
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public List<Map<String, Object>> map();
 
 	/**
@@ -94,7 +84,6 @@ public interface YtIBaseService<T, ID extends Serializable> {
 	 * @param id
 	 * @return
 	 */
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public List<T> listByArrayId(long[] id);
 
 }

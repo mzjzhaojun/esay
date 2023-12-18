@@ -5,14 +5,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.MerchantaccountbankMapper;
 import com.yt.app.api.v1.service.MerchantaccountbankService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Merchantaccountbank;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.RedisUtil;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -37,14 +40,14 @@ public class MerchantaccountbankServiceImpl extends YtBaseServiceImpl<Merchantac
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Merchantaccountbank> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Merchantaccountbank>(Collections.emptyList());
 			}
 		}
 		List<Merchantaccountbank> list = mapper.list(param);
@@ -55,6 +58,7 @@ public class MerchantaccountbankServiceImpl extends YtBaseServiceImpl<Merchantac
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Merchantaccountbank get(Long id) {
 		Merchantaccountbank t = mapper.get(id);
 		return t;

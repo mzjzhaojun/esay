@@ -8,6 +8,7 @@ import com.yt.app.api.v1.mapper.AgentMapper;
 import com.yt.app.api.v1.mapper.AgentaccountMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.AgentService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
@@ -17,12 +18,14 @@ import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.PasswordUtil;
 import com.yt.app.common.util.RedissonUtil;
 
 import cn.hutool.core.lang.Assert;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -86,14 +89,14 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Agent> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Agent>(Collections.emptyList());
 			}
 		}
 		List<Agent> list = mapper.list(param);
@@ -101,6 +104,7 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Agent get(Long id) {
 		Agent t = mapper.get(id);
 		return t;

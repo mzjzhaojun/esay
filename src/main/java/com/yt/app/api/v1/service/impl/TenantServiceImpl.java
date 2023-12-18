@@ -12,6 +12,7 @@ import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.mapper.UserroleMapper;
 import com.yt.app.api.v1.service.MenuService;
 import com.yt.app.api.v1.service.TenantService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.BaseConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Role;
@@ -23,12 +24,14 @@ import com.yt.app.api.v1.entity.Userrole;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.SysRoleCodeEnum;
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.PasswordUtil;
 
 import cn.hutool.core.lang.Snowflake;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -123,14 +126,14 @@ public class TenantServiceImpl extends YtBaseServiceImpl<Tenant, Long> implement
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Tenant> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Tenant>(Collections.emptyList());
 			}
 		}
 		List<Tenant> list = mapper.list(param);
@@ -138,6 +141,7 @@ public class TenantServiceImpl extends YtBaseServiceImpl<Tenant, Long> implement
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tenant get(Long id) {
 		Tenant t = mapper.get(id);
 		return t;

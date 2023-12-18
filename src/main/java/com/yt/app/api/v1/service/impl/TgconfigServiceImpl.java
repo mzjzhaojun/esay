@@ -5,10 +5,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.TgconfigMapper;
 import com.yt.app.api.v1.service.TgconfigService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Tgconfig;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -30,14 +34,14 @@ public class TgconfigServiceImpl extends YtBaseServiceImpl<Tgconfig, Long> imple
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Tgconfig> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Tgconfig>(Collections.emptyList());
 			}
 		}
 		List<Tgconfig> list = mapper.list(param);
@@ -45,6 +49,7 @@ public class TgconfigServiceImpl extends YtBaseServiceImpl<Tgconfig, Long> imple
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tgconfig get(Long id) {
 		Tgconfig t = mapper.get(id);
 		return t;

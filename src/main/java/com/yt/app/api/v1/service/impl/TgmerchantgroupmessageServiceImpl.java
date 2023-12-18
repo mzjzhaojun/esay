@@ -5,10 +5,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.TgmerchantgroupmessageMapper;
 import com.yt.app.api.v1.service.TgmerchantgroupmessageService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Tgmerchantgroupmessage;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -31,14 +35,14 @@ public class TgmerchantgroupmessageServiceImpl extends YtBaseServiceImpl<Tgmerch
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Tgmerchantgroupmessage> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Tgmerchantgroupmessage>(Collections.emptyList());
 			}
 		}
 		List<Tgmerchantgroupmessage> list = mapper.list(param);
@@ -46,6 +50,7 @@ public class TgmerchantgroupmessageServiceImpl extends YtBaseServiceImpl<Tgmerch
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tgmerchantgroupmessage get(Long id) {
 		Tgmerchantgroupmessage t = mapper.get(id);
 		return t;

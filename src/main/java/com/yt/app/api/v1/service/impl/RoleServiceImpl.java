@@ -15,6 +15,7 @@ import com.yt.app.api.v1.vo.SysMenuTreeVO;
 import com.yt.app.api.v1.vo.SysRoleAllPermissionDetailVO;
 import com.yt.app.api.v1.vo.SysRoleBaseVO;
 import com.yt.app.api.v1.vo.SysUserPermVO;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.context.JwtUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
@@ -34,6 +35,7 @@ import com.yt.app.api.v1.entity.Userrole;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.SysRoleCodeEnum;
+import com.yt.app.common.enums.YtDataSourceEnum;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
@@ -41,6 +43,7 @@ import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -97,14 +100,14 @@ public class RoleServiceImpl extends YtBaseServiceImpl<Role, Long> implements Ro
 		return sysRoleMapper.delete(id);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Role> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = sysRoleMapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Role>(Collections.emptyList());
 			}
 		}
 		List<Role> list = sysRoleMapper.list(param);
@@ -112,6 +115,7 @@ public class RoleServiceImpl extends YtBaseServiceImpl<Role, Long> implements Ro
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Role get(Long id) {
 		Role t = sysRoleMapper.get(id);
 		Assert.notNull(t, "角色不存在！");
@@ -123,20 +127,24 @@ public class RoleServiceImpl extends YtBaseServiceImpl<Role, Long> implements Ro
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public IPage<SysRoleBaseVO> listPage(SysRoleBaseDTO params) {
 		return this.sysRoleMapper.selectDataList(new Page<>(), params);
 	}
 
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public List<Long> selectListByRoleId(Long roleid) {
 		return tsysrolescopeservice.getScopeIdListByRoleId(roleid);
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public List<SysRoleBaseVO> list(SysRoleBaseDTO params) {
 		return this.sysRoleMapper.selectDataList(params);
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Role detail(Long roleId) {
 		Role sysRole = this.sysRoleMapper.selectById(roleId);
 		Assert.notNull(sysRole, "角色不存在！");
@@ -144,12 +152,14 @@ public class RoleServiceImpl extends YtBaseServiceImpl<Role, Long> implements Ro
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Map<Long, String> mapByRoleIdList(List<Long> roleIdList) {
 		List<Role> list = this.sysRoleMapper.selectList(new LambdaQueryWrapper<Role>().in(Role::getId, roleIdList));
 		return list.stream().collect(Collectors.toMap(Role::getId, Role::getName, (oldData, newData) -> newData));
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public List<SysRoleBaseVO> tree(SysRoleBaseDTO params) {
 		List<SysRoleBaseVO> list = this.list(params);
 		if (CollUtil.isEmpty(list)) {
@@ -187,6 +197,7 @@ public class RoleServiceImpl extends YtBaseServiceImpl<Role, Long> implements Ro
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public List<Long> getChildRoleIdList(Long roleId) {
 		return this.recurveRoleId(roleId, this.list(), Lists.newArrayList());
 	}
@@ -215,6 +226,7 @@ public class RoleServiceImpl extends YtBaseServiceImpl<Role, Long> implements Ro
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Long getRoleIdByCode(SysRoleCodeEnum sysRoleCodeEnum) {
 		return this.sysRoleMapper.selectRoleIdByCode(sysRoleCodeEnum.getCode());
 	}
@@ -251,6 +263,7 @@ public class RoleServiceImpl extends YtBaseServiceImpl<Role, Long> implements Ro
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public SysUserPermVO getUserPerm(SysUserPermDTO params) {
 		// 1、拿到用户基础信息
 		SysUserPermVO userPerm = this.isysuserservice.getUserPerm(params);
@@ -264,6 +277,7 @@ public class RoleServiceImpl extends YtBaseServiceImpl<Role, Long> implements Ro
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public SysRoleAllPermissionDetailVO permissionDetail(Long roleId) {
 		// 1、角色基本信息
 		Role sysRole = this.get(roleId);

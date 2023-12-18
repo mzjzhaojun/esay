@@ -44,13 +44,16 @@ public class Ytb {
 					proxyMethod.getParameterTypes());
 			annotation = mes.getAnnotations().length > 0 ? mes.getAnnotations()[0] : null;
 			if (annotation == null) {
+				System.out.println("主主主主主主主主主主主主主主主主主主主主");
 				this.j.o();
 			}
 		} else if (annotation.annotationType().equals(YtDataSourceAnnotation.class)) {
 			YtDataSourceAnnotation rcea = (YtDataSourceAnnotation) annotation;
 			if (rcea.datasource().equals(YtDataSourceEnum.SLAVE)) {
 				this.j.n();
+				System.out.println("从从从从从从从从从从从从从从从从从从从从从从从从从");
 			} else {
+				System.out.println("主主主主主主主主主主主主主主主主主主主主");
 				this.j.o();
 			}
 		}

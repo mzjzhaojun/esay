@@ -11,6 +11,7 @@ import com.yt.app.api.v1.mapper.MerchantaccountapplyjournalMapper;
 import com.yt.app.api.v1.mapper.MerchantaccountbankMapper;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.MerchantaccountService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.context.JwtUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Merchant;
@@ -20,9 +21,11 @@ import com.yt.app.api.v1.entity.Merchantaccountbank;
 import com.yt.app.api.v1.entity.Merchantaccountorder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.RedissonUtil;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -58,14 +61,14 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Merchantaccount> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Merchantaccount>(Collections.emptyList());
 			}
 		}
 		List<Merchantaccount> list = mapper.list(param);
@@ -73,18 +76,21 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Merchantaccount get(Long id) {
 		Merchantaccount t = mapper.get(id);
 		return t;
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Merchantaccount getData() {
 		Merchantaccount t = mapper.getByUserId(JwtUserContext.get().getUserId());
 		return t;
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Merchantaccount getDataBank() {
 		Merchantaccount t = mapper.getByUserId(JwtUserContext.get().getUserId());
 		List<Merchantaccountbank> listbanks = merchantaccountbankmapper.listByUserid(JwtUserContext.get().getUserId());
@@ -93,6 +99,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Merchantaccount getDataBank(Long id) {
 		Merchant m = merchantmapper.get(id);
 		Merchantaccount t = mapper.getByUserId(m.getUserid());

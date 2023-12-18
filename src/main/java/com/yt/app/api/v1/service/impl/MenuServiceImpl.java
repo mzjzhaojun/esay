@@ -8,6 +8,7 @@ import com.yt.app.api.v1.mapper.RolemenuMapper;
 import com.yt.app.api.v1.service.MenuService;
 import com.yt.app.api.v1.service.RolemenuService;
 import com.yt.app.api.v1.vo.SysMenuTreeVO;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.context.JwtUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
@@ -16,11 +17,13 @@ import com.yt.app.api.v1.dbo.SysMenuTreeDTO;
 import com.yt.app.api.v1.entity.Menu;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -50,14 +53,14 @@ public class MenuServiceImpl extends YtBaseServiceImpl<Menu, Long> implements Me
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Menu> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Menu>(Collections.emptyList());
 			}
 		}
 		List<Menu> list = mapper.list(param);
@@ -65,6 +68,7 @@ public class MenuServiceImpl extends YtBaseServiceImpl<Menu, Long> implements Me
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Menu get(Long id) {
 		Menu t = mapper.get(id);
 		return t;
@@ -80,6 +84,7 @@ public class MenuServiceImpl extends YtBaseServiceImpl<Menu, Long> implements Me
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public List<SysMenuTreeVO> list(SysMenuTreeDTO params) {
 		if (params.getIsOnlyShowPerm() == null) {
 			params.setIsOnlyShowPerm(false);
@@ -88,6 +93,7 @@ public class MenuServiceImpl extends YtBaseServiceImpl<Menu, Long> implements Me
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public List<SysMenuTreeVO> tree(SysMenuTreeDTO params) {
 		/*
 		 * // 1、查询租户权限 （排除超管） if (!JwtUserContext.hasSuperOrSystemAdmin()) {
@@ -182,6 +188,7 @@ public class MenuServiceImpl extends YtBaseServiceImpl<Menu, Long> implements Me
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public List<Long> allMenuId() {
 		return mapper.selectAllMenuId();
 	}

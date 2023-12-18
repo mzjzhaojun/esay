@@ -9,6 +9,7 @@ import com.yt.app.api.v1.mapper.ChannelaccountorderMapper;
 import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.api.v1.service.ChannelaccountorderService;
 import com.yt.app.api.v1.service.SystemaccountService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
@@ -16,10 +17,12 @@ import com.yt.app.api.v1.entity.Channelaccountorder;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.RedisUtil;
 import com.yt.app.common.util.StringUtil;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -74,14 +77,14 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Channelaccountorder> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return YtPageBean.EMPTY_PAGE;
+				return new YtPageBean<Channelaccountorder>(Collections.emptyList());
 			}
 		}
 		List<Channelaccountorder> list = mapper.list(param);
