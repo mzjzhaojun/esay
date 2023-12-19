@@ -5,7 +5,7 @@ import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
 import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.config.YtRedis;
-import com.yt.app.common.util.RedisUtil;
+import com.yt.app.common.util.RedisHashUtil;
 
 import cn.hutool.core.lang.Snowflake;
 
@@ -32,6 +32,9 @@ import org.springframework.stereotype.Component;
 public class Yta {
 
 	@Autowired
+	RedisHashUtil rs;
+
+	@Autowired
 	YtRedis c;
 
 	@Autowired
@@ -53,8 +56,8 @@ public class Yta {
 		Annotation annotation = null;
 		String methodName = joinPoint.getSignature().getName();
 		Object[] args = joinPoint.getArgs();
-		String key = getCacheKey(joinPoint.getSignature().getDeclaringType().getCanonicalName(), methodName,
-				joinPoint.getArgs());
+		String classname = joinPoint.getSignature().getDeclaringType().getCanonicalName();
+		String key = getCacheKey(classname, methodName, joinPoint.getArgs());
 		Method me = ((MethodSignature) joinPoint.getSignature()).getMethod();
 		annotation = me.getAnnotations().length > 0 ? me.getAnnotations()[0] : null;
 		if (annotation == null) {
@@ -68,7 +71,6 @@ public class Yta {
 			}
 		}
 		if (annotation.annotationType().equals(YtRedisCacheEvictAnnotation.class)) {
-			YtRedisCacheEvictAnnotation rcea = (YtRedisCacheEvictAnnotation) annotation;
 			if (getMethodMatchesPost(methodName)) {
 				Method mg = args[0].getClass().getDeclaredMethod("getId");
 				Long id = (Long) mg.invoke(args[0]);
@@ -78,21 +80,18 @@ public class Yta {
 				}
 			}
 			if (d.isCache()) {
-				Class<?>[] classs = rcea.classs();
-				for (Class<?> cl : classs) {
-					RedisUtil.delete(cl.getName());
-				}
+				rs.deleteObjectEx(classname);
 			}
 			result = joinPoint.proceed(args);
 		} else if (annotation.annotationType().equals(YtRedisCacheAnnotation.class)) {
 			if (d.isCache())
-				result = RedisUtil.getExpire(key, TimeUnit.SECONDS);
+				result = rs.getObjectEx(classname, key);
 			if (result != null) {
 				return result;
 			} else {
 				result = joinPoint.proceed(args);
 				if (result != null && d.isCache()) {
-					RedisUtil.setEx(key, result, (long) c.getExpire(), TimeUnit.SECONDS);
+					rs.setObjectEx(classname, key, result, c.getExpire(), TimeUnit.SECONDS);
 				}
 			}
 		}
@@ -108,8 +107,7 @@ public class Yta {
 
 	private String getCacheKey(String targetName, String methodName, Object[] arguments) {
 		StringBuffer sbu = new StringBuffer();
-		sbu.append(targetName).append("_" + d.getWorkerId() + "_").append(methodName);
-		sbu.append("_").append(g.toJson(arguments));
+		sbu.append("payboot:" + targetName).append(methodName).append(":").append(g.toJson(arguments));
 		return sbu.toString();
 	}
 }

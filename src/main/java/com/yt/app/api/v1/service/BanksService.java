@@ -10,4 +10,5 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface BanksService extends YtIBaseService<Banks, Long> {
+	void initdata();
 }

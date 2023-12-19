@@ -16,16 +16,13 @@ public class SecurityUtil {
 	 */
 	public static String decrypt(String data) {
 		try {
-			// 后端RSA公钥加密后的AES的key
 			String aesKey = AuthRsaKeyContext.getKey();
-			// 后端私钥解密的到AES的key
 			byte[] plaintext = RsaUtil.decryptByPrivateKey(Base64.decodeBase64(aesKey), RsaUtil.getPrivateKey());
 			aesKey = new String(plaintext);
 			data = AesUtil.decrypt(data, aesKey);
 			System.out.println(data);
 			return data;
 		} catch (Throwable e) {
-			// 输出到日志文件中
 			throw new RuntimeException("ApiSecurityUtil.decrypt：解密异常！");
 		}
 	}
@@ -41,10 +38,8 @@ public class SecurityUtil {
 			serializeConfig.put(Date.class, new SimpleDateFormatSerializer("yyyy-MM-dd HH:mm:ss"));
 			String dataString = JSON.toJSONString(object, serializeConfig, SerializerFeature.PrettyFormat);
 			String data = AesUtil.encrypt(dataString, AuthRsaKeyContext.getAesKey());
-			System.out.println(dataString);
 			return data;
 		} catch (Throwable e) {
-			// 输出到日志文件中
 			throw new RuntimeException("ApiSecurityUtil.encrypt：加密异常！");
 		}
 	}

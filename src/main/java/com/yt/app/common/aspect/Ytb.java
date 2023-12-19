@@ -1,6 +1,5 @@
 package com.yt.app.common.aspect;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import org.aspectj.lang.JoinPoint;
@@ -35,27 +34,16 @@ public class Ytb {
 
 	@Before("a()")
 	public void a(JoinPoint paramJoinPoint) throws Throwable {
-		Annotation annotation = null;
 		Method me = ((MethodSignature) paramJoinPoint.getSignature()).getMethod();
-		annotation = me.getAnnotations().length > 0 ? me.getAnnotations()[0] : null;
-		if (annotation == null) {
-			Method proxyMethod = ((MethodSignature) paramJoinPoint.getSignature()).getMethod();
-			Method mes = proxyMethod.getDeclaringClass().getMethod(proxyMethod.getName(),
-					proxyMethod.getParameterTypes());
-			annotation = mes.getAnnotations().length > 0 ? mes.getAnnotations()[0] : null;
-			if (annotation == null) {
-				System.out.println("主主主主主主主主主主主主主主主主主主主主");
-				this.j.o();
-			}
-		} else if (annotation.annotationType().equals(YtDataSourceAnnotation.class)) {
-			YtDataSourceAnnotation rcea = (YtDataSourceAnnotation) annotation;
+		YtDataSourceAnnotation rcea = me.getAnnotation(YtDataSourceAnnotation.class);
+		if (rcea != null) {
 			if (rcea.datasource().equals(YtDataSourceEnum.SLAVE)) {
 				this.j.n();
-				System.out.println("从从从从从从从从从从从从从从从从从从从从从从从从从");
 			} else {
-				System.out.println("主主主主主主主主主主主主主主主主主主主主");
 				this.j.o();
 			}
+		} else {
+			this.j.o();
 		}
 	}
 

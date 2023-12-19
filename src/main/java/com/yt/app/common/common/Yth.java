@@ -1,10 +1,13 @@
 package com.yt.app.common.common;
 
+import java.time.Duration;
+
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -18,7 +21,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import redis.clients.jedis.JedisPoolConfig;
 
-import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,13 +34,14 @@ import com.yt.app.common.config.YtRedis;
  */
 
 @Configuration
+@EnableCaching
 public class Yth extends CachingConfigurerSupport {
 
 	@Autowired
 	YtRedis c;
 
-	@Bean(name = "JedisConnectionFactory")
-	public JedisConnectionFactory redisConnectionFactory() {
+	@Bean
+	public RedisConnectionFactory redisConnectionFactory() {
 
 		RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
 		redisStandaloneConfiguration.setPort(this.c.getPort());
@@ -47,7 +50,8 @@ public class Yth extends CachingConfigurerSupport {
 		redisStandaloneConfiguration.setDatabase(2);
 		JedisClientConfiguration.JedisClientConfigurationBuilder configurationBuilder = JedisClientConfiguration
 				.builder();
-		JedisClientConfiguration jedisClientConfiguration = configurationBuilder.usePooling().poolConfig(m()).build();
+		JedisClientConfiguration jedisClientConfiguration = configurationBuilder.usePooling().poolConfig(m()).and()
+				.readTimeout(Duration.ofMillis(this.c.getExpire())).build();
 		return new JedisConnectionFactory(redisStandaloneConfiguration, jedisClientConfiguration);
 	}
 
@@ -60,38 +64,35 @@ public class Yth extends CachingConfigurerSupport {
 		localJedisPoolConfig.setLifo(true);
 		localJedisPoolConfig.setJmxEnabled(true);
 		localJedisPoolConfig.setBlockWhenExhausted(false);
-
 		localJedisPoolConfig.setTestOnBorrow(false);
 		localJedisPoolConfig.setTestOnReturn(false);
-
 		return localJedisPoolConfig;
 	}
 
-	@Bean(name = "RedisTemplate")
-	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory paramRedisConnectionFactory) {
+	@Bean
+	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisconnectionfactory) {
 		RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
-		RedisSerializer<String> stringRedisSerializer = new StringRedisSerializer();
-		FastJsonRedisSerializer<Object> redisSerializer = new FastJsonRedisSerializer<Object>(Object.class);
-		template.setDefaultSerializer(redisSerializer);
-		template.setEnableDefaultSerializer(true);
-		template.setKeySerializer(stringRedisSerializer);
-		template.setValueSerializer(redisSerializer);
-		template.setHashValueSerializer(redisSerializer);
-		template.setHashKeySerializer(stringRedisSerializer);
-		a(template);
-		template.setConnectionFactory(paramRedisConnectionFactory);
-		template.afterPropertiesSet();
-		return template;
-	}
 
-	private void a(RedisTemplate<String, Object> paramRedisTemplate) {
-		Jackson2JsonRedisSerializer<Object> localJackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<Object>(
-				Object.class);
 		ObjectMapper localObjectMapper = new ObjectMapper();
 		localObjectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
 		localObjectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-		localJackson2JsonRedisSerializer.setObjectMapper(localObjectMapper);
-		paramRedisTemplate.setValueSerializer(localJackson2JsonRedisSerializer);
+
+		template.setConnectionFactory(redisconnectionfactory);
+
+		RedisSerializer<String> stringRedisSerializer = new StringRedisSerializer();
+
+		Jackson2JsonRedisSerializer<Object> redisSerializer = new Jackson2JsonRedisSerializer<Object>(Object.class);
+
+		redisSerializer.setObjectMapper(localObjectMapper);
+
+		template.setKeySerializer(stringRedisSerializer);
+		template.setValueSerializer(redisSerializer);
+
+		template.setHashKeySerializer(stringRedisSerializer);
+		template.setHashValueSerializer(redisSerializer);
+
+		template.afterPropertiesSet();
+		return template;
 	}
 
 	@Bean

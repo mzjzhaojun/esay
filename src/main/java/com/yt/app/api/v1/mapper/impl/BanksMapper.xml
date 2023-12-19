@@ -23,7 +23,7 @@
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{userid},#{accname},#{accnumber},#{bankname},#{create_by},#{create_time},#{update_by},#{update_time})
+			(#{item.id},#{item.tenant_id},#{item.userid},#{item.accname},#{item.accnumber},#{item.bankname},#{item.create_by},#{item.create_time},#{item.update_by},#{item.update_time})
 		</foreach>
 	</insert>
 	<!-- deleteById -->

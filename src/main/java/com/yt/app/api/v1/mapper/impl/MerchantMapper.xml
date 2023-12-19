@@ -50,28 +50,28 @@
 			<if test="remark != null">
 				remark= #{remark},
 			</if>
-			<if test="balance != null and balance>0">
+			<if test="balance != null">
 				balance= #{balance},
 			</if>
 			<if test="status != null">
 				status= #{status},
 			</if>
-			<if test="todaycost != null and todaycost>0">
+			<if test="todaycost != null">
 				todaycost= #{todaycost},
 			</if>
-			<if test="todaycount != null and todaycount>0">
+			<if test="todaycount != null">
 				todaycount= #{todaycount},
 			</if>
-			<if test="count != null and count>0">
+			<if test="count != null">
 				count= #{count},
 			</if>
-			<if test="exchange != null and exchange>0">
+			<if test="exchange != null">
 				exchange= #{exchange},
 			</if>
 			<if test="onecost != null">
 				onecost= #{onecost},
 			</if>
-			<if test="downpoint != null and downpoint >0">
+			<if test="downpoint != null">
 				downpoint= #{downpoint},
 			</if>
 			<if test="agentid != null">

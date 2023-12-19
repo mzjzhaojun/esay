@@ -146,7 +146,6 @@ public interface UserroleMapper extends YtIBaseMapper<Userrole> {
 	 * @param id id
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Userrole.class })
 	public Integer deleteabyUid(Long userid);
 
 	/**
@@ -155,7 +154,6 @@ public interface UserroleMapper extends YtIBaseMapper<Userrole> {
 	 * @param id id
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Userrole.class })
 	public List<Userrole> getByRoleIdUserId(Userrole ur);
 
 }

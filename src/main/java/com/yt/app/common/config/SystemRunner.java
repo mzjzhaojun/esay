@@ -44,19 +44,14 @@ public class SystemRunner implements CommandLineRunner {
 		//
 		TenantIdContext.setTenantId(AppConstant.SYSTEM_TENANT_ID);
 
-		// 初始化加密key
 		RsaUtil.InitKeys();
 
-		// 数据字典
 		dictservice.initCache();
 
-		// 系统配置
-		// this.iSysConfigService.initCache();
+		//banksservice.initdata();
 
-		// 刷新超级管理员权限
 		roleservice.refreshSuperAdminPerm();
 
-		// 启动机器人
 		TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
 		botsApi.registerBot(tbot);
 

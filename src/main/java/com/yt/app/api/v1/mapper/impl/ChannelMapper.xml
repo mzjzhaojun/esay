@@ -50,19 +50,19 @@
 			<if test="status != null">
 				status= #{status},
 			</if>
-			<if test="balance != null  and balance >0">
+			<if test="balance != null">
 				balance= #{balance},
 			</if>
-			<if test="exchange != null and exchange >0">
+			<if test="exchange != null">
 				exchange= #{exchange},
 			</if>
-			<if test="onecost != null and onecost >0">
+			<if test="onecost != null">
 				onecost= #{onecost},
 			</if>
-			<if test="downpoint != null and downpoint >0">
+			<if test="downpoint != null">
 				downpoint= #{downpoint},
 			</if>
-			<if test="costexchange != null and costexchange >0">
+			<if test="costexchange != null">
 				costexchange= #{costexchange},
 			</if>
 			<if test="min != null">

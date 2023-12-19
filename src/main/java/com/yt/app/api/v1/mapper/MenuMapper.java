@@ -103,14 +103,12 @@ public interface MenuMapper extends YtIBaseMapper<Menu> {
 	 * @param param
 	 * @return
 	 */
-	@YtRedisCacheAnnotation(classs = Menu.class)
 	public List<SysMenuTreeVO> selectMenuTree(SysMenuTreeDTO param);
 
 	/**
 	 * 
 	 * @return
 	 */
-	@YtRedisCacheAnnotation(classs = Menu.class)
 	public List<Long> selectAllMenuId();
 
 	/**
@@ -119,7 +117,6 @@ public interface MenuMapper extends YtIBaseMapper<Menu> {
 	 * @param id id
 	 * @return TSysmenu
 	 */
-	@YtRedisCacheAnnotation(classs = Menu.class)
 	public List<SysMenuTreeVO> getByParentId(Long parentid);
 
 }

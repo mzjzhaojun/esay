@@ -29,6 +29,9 @@ public class AuthUtil {
 	private final static String JWT_USER_KEY = "payboot:login:";
 
 	private static String tokenPrefix;
+	
+	@Autowired
+	RedisUtil rs;
 
 	@Autowired
 	public AuthUtil(@Value("${sa-token.token-prefix:}") String tokenPrefix) {

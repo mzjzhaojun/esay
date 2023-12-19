@@ -134,8 +134,10 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		Merchant t = mapper.get(m.getId());
 		if (m.getAgentid() == null) {
 			Agent ag = agentmapper.get(t.getAgentid());
-			ag.setDownmerchantcount(ag.getDownmerchantcount() - 1);
-			agentmapper.put(ag);
+			if (ag != null) {
+				ag.setDownmerchantcount(ag.getDownmerchantcount() - 1);
+				agentmapper.put(ag);
+			}
 			i = mapper.removeagent(t.getId());
 		} else {
 			Agent ag = agentmapper.get(m.getAgentid());
