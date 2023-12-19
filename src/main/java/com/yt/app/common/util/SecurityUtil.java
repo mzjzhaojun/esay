@@ -20,7 +20,6 @@ public class SecurityUtil {
 			byte[] plaintext = RsaUtil.decryptByPrivateKey(Base64.decodeBase64(aesKey), RsaUtil.getPrivateKey());
 			aesKey = new String(plaintext);
 			data = AesUtil.decrypt(data, aesKey);
-			System.out.println(data);
 			return data;
 		} catch (Throwable e) {
 			throw new RuntimeException("ApiSecurityUtil.decrypt：解密异常！");

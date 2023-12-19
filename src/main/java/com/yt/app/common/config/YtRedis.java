@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 @Getter
 @ConfigurationProperties(prefix = "redis")
 public class YtRedis {
+	
+	private int database;
 
 	private String host;
 

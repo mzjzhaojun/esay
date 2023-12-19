@@ -96,6 +96,9 @@
 		ON ma.aisleid = a.id
 		<where>
 			1=1
+			<if test="userid != null and userid != ''">
+				AND m.userid = #{userid}
+			</if>
 			<if test="aisleid != null and aisleid != ''">
 				AND ma.aisleid = #{aisleid}
 			</if>
