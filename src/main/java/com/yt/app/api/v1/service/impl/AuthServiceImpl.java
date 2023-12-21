@@ -66,11 +66,10 @@ public class AuthServiceImpl implements AuthService {
 		// 校验原始密码是否正确
 		Assert.isTrue(isValid, "密码错误！");
 
-		/*
-		 * isValid = GoogleAuthenticatorUtil.checkCode(userPerm.getTwofactorcode(),
-		 * Long.parseLong(params.getCode()), System.currentTimeMillis());
-		 * Assert.isTrue(isValid, "验证码错误！");
-		 */
+		isValid = GoogleAuthenticatorUtil.checkCode(userPerm.getTwofactorcode(), Long.parseLong(params.getCode()),
+				System.currentTimeMillis());
+		Assert.isTrue(isValid, "验证码错误！");
+
 		// 拿到下级角色ids
 		List<Long> roleIdList = userPerm.getRoleIdList();
 		Assert.isTrue(CollUtil.isNotEmpty(roleIdList), "无权限，请先分配权限！");
@@ -105,7 +104,7 @@ public class AuthServiceImpl implements AuthService {
 	public String genQRImage(String username) {
 		return GoogleAuthenticatorUtil.getQrCodeText(GoogleAuthenticatorUtil.getSecretKey(), username, "");
 	}
-	
+
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Integer verqrcode(String username, String code, String twocode) {
 		Integer i = 0;
@@ -120,13 +119,5 @@ public class AuthServiceImpl implements AuthService {
 		}
 		return i;
 	}
-
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public Integer checkgoogle(Long id, Long code) {
-		User u = usermapper.get(id);
-		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), code, System.currentTimeMillis());
-		Assert.isTrue(isValid, "验证码错误！");
-		return 1;
-	}
+	
 }

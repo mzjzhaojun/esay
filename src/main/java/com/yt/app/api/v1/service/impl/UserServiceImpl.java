@@ -15,6 +15,7 @@ import com.yt.app.api.v1.vo.SysUserPermVO;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.context.JwtUserContext;
+import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.bo.SysUserReRoleIdListBO;
 import com.yt.app.api.v1.dbo.SysMenuTreeDTO;
@@ -28,6 +29,7 @@ import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.AuthUtil;
+import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PasswordUtil;
 
 import cn.hutool.core.lang.Assert;
@@ -185,5 +187,14 @@ public class UserServiceImpl extends YtBaseServiceImpl<User, Long> implements Us
 		Assert.equals(i, 1, ServiceConstant.UPDATE_FAIL_MSG);
 		AuthUtil.logout(t.getToken());
 		return i;
+	}
+	
+	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+	public Integer checkgoogle(Long code) {
+		User u = mapper.get(SysUserContext.getUserId());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), code, System.currentTimeMillis());
+		Assert.isTrue(isValid, "验证码错误！");
+		return 1;
 	}
 }

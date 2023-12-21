@@ -36,11 +36,11 @@ public class Agentaccountapplyjourna extends YtBaseEntity<Agentaccountapplyjourn
 	public Agentaccountapplyjourna() {
 	}
 
-	public Agentaccountapplyjourna(Long id, Long tenant_id, Long userid, String agentname, String ordernum, Integer type,
-			Double pretotalincome, Double prewithdrawamount, Double pretowithdrawamount, Double pretoincomeamount,
-			Double posttotalincome, Double postwithdrawamount, Double posttowithdrawamount, Double posttoincomeamount,
-			String remark, Long create_by, java.util.Date create_time, Long update_by, java.util.Date update_time,
-			Integer version) {
+	public Agentaccountapplyjourna(Long id, Long tenant_id, Long userid, String agentname, String ordernum,
+			Integer type, Double pretotalincome, Double prewithdrawamount, Double pretowithdrawamount,
+			Double pretoincomeamount, Double posttotalincome, Double postwithdrawamount, Double posttowithdrawamount,
+			Double posttoincomeamount, String remark, Long create_by, java.util.Date create_time, Long update_by,
+			java.util.Date update_time, Integer version) {
 		this.id = id;
 		this.tenant_id = tenant_id;
 		this.userid = userid;

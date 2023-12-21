@@ -56,9 +56,9 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("systemcapitalrecord");
 
 		MybatisPlusConfig.TENANT_ID_TABLE.add("banks");
-		
+
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tgchannelgroup");
-		
+
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tgconfig");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tgmerchantgroup");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tgmerchantgroupmessage");

@@ -110,9 +110,6 @@ public interface RolemenuMapper extends YtIBaseMapper<Rolemenu> {
 	@YtRedisCacheEvictAnnotation(classs = { Rolemenu.class })
 	public Integer delByRoleId(Long id);
 
-	
-	
-	
 	@YtRedisCacheEvictAnnotation(classs = { Rolescope.class })
 	public Integer delByMenuId(Long id);
 

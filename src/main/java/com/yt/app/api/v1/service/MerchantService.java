@@ -16,8 +16,8 @@ public interface MerchantService extends YtIBaseService<Merchant, Long> {
 	Integer putagent(Merchant m);
 
 	void updatePayout(Payout t);
-	
+
 	void updateInCome(Merchantaccount t);
-	
+
 	Merchant getData();
 }

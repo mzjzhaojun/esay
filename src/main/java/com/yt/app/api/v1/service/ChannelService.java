@@ -12,10 +12,10 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface ChannelService extends YtIBaseService<Channel, Long> {
-	
+
 	String sendChannel(Channel cl);
-	
+
 	void updatePayout(Payout t);
-	
+
 	void updateIncome(Channelaccount t);
 }

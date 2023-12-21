@@ -16,5 +16,7 @@ public interface UserService extends YtIBaseService<User, Long> {
 	SysUserPermVO getUserPerm(SysUserPermDTO params);
 
 	Integer resetpassword(User u);
+	
+	Integer checkgoogle(Long code);
 
 }

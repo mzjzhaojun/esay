@@ -28,6 +28,4 @@ public interface AuthService {
 
 	Integer verqrcode(String username, String code, String twocode);
 
-	Integer checkgoogle(Long id, Long code);
-
 }

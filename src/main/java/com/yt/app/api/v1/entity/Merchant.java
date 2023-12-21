@@ -38,11 +38,11 @@ public class Merchant extends YtBaseEntity<Merchant> {
 	Long tenant_id;
 	Long userid;
 	Integer version;
-	
+
 	//
 	String appkey;
 	String apireusultip;
-	
+
 	public Merchant() {
 	}
 

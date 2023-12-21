@@ -164,7 +164,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		}
 
-		/////////////////////////////////////////////////////cordernum/////////////////////////////////////////////////////
+		///////////////////////////////////////////////////// cordernum/////////////////////////////////////////////////////
 		String cordernum = channelservice.sendChannel(cl);
 		t.setChannelordernum(cordernum);
 
@@ -184,7 +184,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		mao.setRemark("操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
 				+ m.getOnecost());
 		merchantaccountordermapper.post(mao);
-		// 
+		//
 		merchantaccountservice.payout(mao);
 
 		///////////////////////////////////////////////////// /////////////////////////////////////////////////////

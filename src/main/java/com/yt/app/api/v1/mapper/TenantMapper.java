@@ -94,8 +94,6 @@ public interface TenantMapper extends YtIBaseMapper<Tenant> {
 	 */
 	@YtRedisCacheAnnotation(classs = Tenant.class)
 	public List<Tenant> listByArrayId(long[] id);
-	
-	
 
 	public List<Tenant> selectDataPage(Map<String, Object> param);
 

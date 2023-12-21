@@ -54,7 +54,6 @@ public class AuthController extends YtBaseEncipherControllerImpl<User, Long> {
 		return new YtResponseEncryptEntity<Object>(new YtBody(u));
 	}
 
-	// YtResponseEncryptEntity
 	@ApiOperation(value = "logout", response = User.class)
 	@RequestMapping(value = "/logoutvue", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public YtResponseEncryptEntity<Object> logoutvue(YtRequestDecryptEntity<User> requestEntity,
@@ -87,13 +86,6 @@ public class AuthController extends YtBaseEncipherControllerImpl<User, Long> {
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 
-	@ApiOperation(value = "checkgoogle", response = User.class)
-	@RequestMapping(value = "/checkgoogle/{id}/{code}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> checkgoogle(@PathVariable Long id, @PathVariable Long code,
-			HttpServletResponse response) {
-		Integer i = authservice.checkgoogle(id, code);
-		return new YtResponseEncryptEntity<Object>(new YtBody(i));
-	}
 
 	@ApiOperation(value = "callbackpay", response = User.class)
 	@RequestMapping(value = "/callbackpay/{ordernum}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

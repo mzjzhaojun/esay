@@ -48,7 +48,7 @@ public class SystemRunner implements CommandLineRunner {
 
 		dictservice.initCache();
 
-		//banksservice.initdata();
+		// banksservice.initdata();
 
 		roleservice.refreshSuperAdminPerm();
 

@@ -30,9 +30,9 @@ public class Tgmerchantgroup extends YtBaseEntity<Tgmerchantgroup> {
 	public Tgmerchantgroup() {
 	}
 
-	public Tgmerchantgroup(Long id, Long tenant_id, String merchantname, String merchantcode, Boolean status,
-			Long tgid, String tggroupname, Long create_by, java.util.Date create_time, Long update_by,
-			java.util.Date update_time, String remark, Integer version) {
+	public Tgmerchantgroup(Long id, Long tenant_id, String merchantname, String merchantcode, Boolean status, Long tgid,
+			String tggroupname, Long create_by, java.util.Date create_time, Long update_by, java.util.Date update_time,
+			String remark, Integer version) {
 		this.id = id;
 		this.tenant_id = tenant_id;
 		this.merchantname = merchantname;

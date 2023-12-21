@@ -10,6 +10,7 @@ import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtBody;
@@ -71,6 +72,13 @@ public class UserController extends YtBaseEncipherControllerImpl<User, Long> {
 		User u = YtRequestDecryptEntity.getBody();
 		u.setToken(request.getHeader(SecurityConstant.AUTHORIZATION_KEY));
 		Integer i = service.resetpassword(u);
+		return new YtResponseEncryptEntity<Object>(new YtBody(i));
+	}
+	
+	@ApiOperation(value = "checkgoogle", response = User.class)
+	@RequestMapping(value = "/checkgoogle/{code}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> checkgoogle(@PathVariable Long code, HttpServletResponse response) {
+		Integer i = service.checkgoogle(code);
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 

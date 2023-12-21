@@ -35,9 +35,9 @@ public class DictionaryResource implements Serializable {
 	/**
 	 * 详情类型
 	 */
-	public static final Integer ORDERTYPE_20 = 20; // 
-	public static final Integer ORDERTYPE_21 = 21; // 
-	public static final Integer ORDERTYPE_22 = 22; // 
+	public static final Integer ORDERTYPE_20 = 20; //
+	public static final Integer ORDERTYPE_21 = 21; //
+	public static final Integer ORDERTYPE_22 = 22; //
 
 	/**
 	 * 明细类型

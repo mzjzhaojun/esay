@@ -13,5 +13,6 @@ import com.yt.app.common.base.YtIBaseService;
 
 public interface AgentService extends YtIBaseService<Agent, Long> {
 	void updateWithdraw(Agentaccount t);
+
 	void updatePayout(Payout t);
 }

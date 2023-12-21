@@ -99,8 +99,6 @@ public interface RolescopeMapper extends YtIBaseMapper<Rolescope> {
 	 */
 	@YtRedisCacheAnnotation(classs = Rolescope.class)
 	public List<Rolescope> listByArrayId(long[] id);
-	
-	
 
 	@YtRedisCacheEvictAnnotation(classs = { Rolescope.class })
 	public Integer delByRoleId(Long id);

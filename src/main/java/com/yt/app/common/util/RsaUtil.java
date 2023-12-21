@@ -52,7 +52,7 @@ public class RsaUtil {
 	 * 1024 117 128 RSA 位数 如果采用2048 上面最大加密和最大解密则须填写: 245 256
 	 */
 	private static final int INITIALIZE_LENGTH = 2048;
-	
+
 	/**
 	 * 
 	 * @throws Exception
