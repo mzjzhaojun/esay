@@ -111,7 +111,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
 
-		// 通道
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
 
@@ -121,15 +120,12 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		Assert.notEmpty(listac, "没有设置渠道!");
 		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
 		List<Channel> listc = channelmapper.listByArrayId(cids);
-		// 判断是否在限额内的渠道
 		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount())
 				.collect(Collectors.toList());
 		Assert.notEmpty(listcmm, "支付额度不匹配!");
-		// 判断是否有优先匹配
 		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 		Channel cl = null;
 		if (listcf.size() > 0) {
-			// 进入优先匹配操作
 			for (int j = 0; j < listcf.size(); j++) {
 				Channel cc = listcf.get(j);
 				String[] match = cc.getFirstmatchmoney().split(",");
@@ -153,7 +149,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			for (Channel cml : listcmm) {
 				count = count + cml.getWeight();
 			}
-			// 计算权重分配
 			for (Channel cmm : listcmm) {
 				weightList.add(new WeightRandom.WeightObj<String>(cmm.getCode(), (cmm.getWeight() / count) * 100));
 			}
@@ -164,16 +159,16 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setChannelid(cl.getId());
 			t.setChannelname(cl.getName());
 			t.setChannelcost(cl.getOnecost());// 渠道手续费
-			t.setChanneldeal(t.getAmount() * (cl.getExchange() / 1000));// 渠道交易费
+			t.setChanneldeal(t.getAmount() * (cl.getExchange() / 1000));
 			t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		}
 
-		///////////////////////////////////////////////////// 发起渠道获得cordernum/////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////cordernum/////////////////////////////////////////////////////
 		String cordernum = channelservice.sendChannel(cl);
 		t.setChannelordernum(cordernum);
 
-		///////////////////////////////////////////////////// 计算商户订单/////////////////////////////////////////////////////
+		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
 		Merchantaccountorder mao = new Merchantaccountorder();
 		mao.setUserid(m.getUserid());
 		mao.setMerchantid(m.getId());
@@ -186,18 +181,18 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
 		mao.setType(DictionaryResource.ORDERTYPE_21);
 		mao.setOrdernum(t.getMerchantordernum());
-		mao.setRemark("资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
+		mao.setRemark("操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
 				+ m.getOnecost());
 		merchantaccountordermapper.post(mao);
-		// 处理商户账户
+		// 
 		merchantaccountservice.payout(mao);
 
-		///////////////////////////////////////////////////// 计算代理订单/////////////////////////////////////////////////////
+		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
 		if (m.getAgentid() != null) {
 			Agent ag = agentmapper.get(m.getAgentid());
 			t.setAgentid(ag.getId());
 			Agentaccountorder aat = new Agentaccountorder();
-			// 处理代理交易记录
+			//
 			aat.setAgentid(ag.getId());
 			aat.setUserid(ag.getUserid());
 			aat.setUsername(ag.getName());
@@ -208,22 +203,22 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			aat.setAmountreceived(aat.getAmount() + ag.getOnecost());// 总费用
 			aat.setType(DictionaryResource.ORDERTYPE_20);
 			aat.setOrdernum("DFA" + StringUtil.getOrderNum());
-			aat.setRemark("资金：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getAmount()) + " 手续费："
+			aat.setRemark("操作资金：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getAmount()) + " 手续费："
 					+ ag.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
 			t.setAgentordernum(aat.getOrdernum());
 			agentaccountordermapper.post(aat);
-			// 处理代理账户
+			//
 			agentaccountservice.totalincome(aat);
 		} else {
 			t.setAgentincome(0.00);
 		}
 
-		///////////////////////////////////////////////////// 计算渠道订单/////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		Channel cll = channelmapper.get(t.getChannelid());
 		Channelaccountorder cat = new Channelaccountorder();
 		cat.setUserid(cll.getUserid());
-		// 处理渠道交易记录
+		//
 		cat.setChannelid(cll.getId());
 		cat.setUsername(cll.getName());
 		cat.setNkname(cll.getNkname());
@@ -239,13 +234,13 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				"资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", cat.getAmount()) + " 手续费：" + cll.getOnecost());
 		channelaccountordermapper.post(cat);
 
-		// 处理渠道账户
+		//
 		channelaccountservice.withdrawamount(cat);
 
-		// 回调处理渠道信息
+		//
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 
-		// 增加代付订单
+		//
 		Integer i = mapper.post(t);
 		return i;
 	}

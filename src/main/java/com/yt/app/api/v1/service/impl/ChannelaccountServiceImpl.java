@@ -250,7 +250,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 		aaaj.setPosttoincomeamount(ma.getToincomeamount());// 待确认收入
 		aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 		aaaj.setPosttowithdrawamount(0.00);// 待确认支出
-		aaaj.setRemark("渠道代付，支出金额：" + String.format("%.2f", t.getAmountreceived()));
+		aaaj.setRemark("待确认渠道代付：" + t.getRemark());
 		//
 		channelaccountapplyjournamapper.post(aaaj);
 

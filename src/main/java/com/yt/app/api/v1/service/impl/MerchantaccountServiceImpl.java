@@ -444,8 +444,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		maaj.setPosttoincomeamount(ma.getToincomeamount());// 待确认收入
 		maaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 		maaj.setPosttowithdrawamount(0.00);// 待确认支出
-		maaj.setRemark(t.getRemark());
-		maaj.setRemark("商户发起代付，支出金额：" + String.format("%.2f", t.getAmountreceived()));
+		maaj.setRemark("待确认代付："+t.getRemark());
 		//
 		merchantaccountapplyjournalmapper.post(maaj);
 

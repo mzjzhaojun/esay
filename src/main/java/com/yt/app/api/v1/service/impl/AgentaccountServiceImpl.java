@@ -48,7 +48,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	@Autowired
 	private AgentaccountapplyjournaMapper agentaccountapplyjournamapper;
-	
+
 	@Autowired
 	private AgentService agentservice;
 
@@ -133,7 +133,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 		aaaj.setPosttoincomeamount(0.00);// 确认收入
 		aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 		aaaj.setPosttowithdrawamount(ma.getWithdrawamount());// 确认支出
-		aaaj.setRemark("待确认收入金额：" + String.format("%.2f", t.getAmountreceived()));
+		aaaj.setRemark("待确认代理收入金额：" + t.getRemark());
 		//
 		agentaccountapplyjournamapper.post(aaaj);
 		RLock lock = RedissonUtil.getLock(t.getId());
