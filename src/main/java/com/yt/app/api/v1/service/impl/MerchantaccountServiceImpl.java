@@ -109,11 +109,11 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	}
 
 	/**
-	 * =============================================================充值
+	 * =============================================================
 	 * 
 	 */
 
-	// 待确认收入
+	//
 	@Override
 	@Transactional
 	public void totalincome(Merchantaccountorder t) {
@@ -298,7 +298,9 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		RLock lock = RedissonUtil.getLock(t.getId());
 		try {
 			lock.lock();
-			ma.setTowithdrawamount(maaj.getPretowithdrawamount());
+			ma.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
+			ma.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
+			ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
 			mapper.put(ma);
 		} catch (Exception e) {
 		} finally {
@@ -345,7 +347,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		}
 	}
 
-	// 拒絕支出
+	// 拒�^支出
 	@Override
 	@Transactional
 	public void turndownWithdrawamount(Merchantaccountorder mao) {
@@ -444,7 +446,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		maaj.setPosttoincomeamount(ma.getToincomeamount());// 待确认收入
 		maaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 		maaj.setPosttowithdrawamount(0.00);// 待确认支出
-		maaj.setRemark("待确认代付："+t.getRemark());
+		maaj.setRemark("待确认代付：" + t.getRemark());
 		//
 		merchantaccountapplyjournalmapper.post(maaj);
 
@@ -499,7 +501,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		}
 	}
 
-	// 拒絕支出
+	// 拒�^支出
 	@Override
 	@Transactional
 	public void turndownPayout(Merchantaccountorder mao) {

@@ -18,6 +18,7 @@ public class Banks extends YtBaseEntity<Banks> {
 	Long id;
 	Long tenant_id;
 	Long userid;
+	String value;
 	String accname;
 	String accnumber;
 	String bankname;

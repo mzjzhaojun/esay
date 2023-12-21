@@ -54,6 +54,9 @@ public class BanksServiceImpl extends YtBaseServiceImpl<Banks, Long> implements 
 			}
 		}
 		List<Banks> list = mapper.list(param);
+		list.forEach(t -> {
+			t.setValue(t.getAccname());
+		});
 		return new YtPageBean<Banks>(param, list, count);
 	}
 
