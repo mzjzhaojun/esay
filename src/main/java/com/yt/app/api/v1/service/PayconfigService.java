@@ -1,5 +1,7 @@
 package com.yt.app.api.v1.service;
 
+import java.util.List;
+
 import com.yt.app.api.v1.entity.Payconfig;
 import com.yt.app.common.base.YtIBaseService;
 
@@ -10,5 +12,8 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface PayconfigService extends YtIBaseService<Payconfig, Long> {
+
 	Payconfig getData();
+
+	List<Payconfig> getDatas();
 }

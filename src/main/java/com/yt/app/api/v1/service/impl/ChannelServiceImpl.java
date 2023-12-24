@@ -119,7 +119,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	@Override
 	@Transactional
 	public void updatePayout(Payout t) {
-		Channel c = mapper.get(t.getMerchantid());
+		Channel c = mapper.get(t.getChannelid());
 		RLock lock = RedissonUtil.getLock(c.getId());
 		try {
 			lock.lock();

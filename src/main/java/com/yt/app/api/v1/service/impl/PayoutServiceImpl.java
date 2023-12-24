@@ -24,6 +24,7 @@ import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
+import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccountorder;
@@ -277,9 +278,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Override
 	@Transactional
 	public void callbackpaySuccess(String ordernum) {
-
 		Payout t = mapper.getByChannelOrdernum(ordernum);
-
+		TenantIdContext.setTenantId(t.getTenant_id());
 		// 计算商户订单/////////////////////////////////////////////////////
 		Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
 		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
@@ -320,8 +320,12 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setRemark("代付成功！");
 		t.setSuccesstime(DateTimeUtil.getNow());
 		t.setBacklong(DateUtil.between(t.getSuccesstime(), t.getCreate_time(), DateUnit.SECOND));
+		
 		//
 		mapper.put(t);
+		
+		//
+		TenantIdContext.remove();
 	}
 
 	/**

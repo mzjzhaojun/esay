@@ -44,7 +44,7 @@ public class SysUserPermVO {
 	@ApiModelProperty(value = "昵称")
 	private String nickname;
 
-	private Byte sex;
+	private Integer sex;
 	@ApiModelProperty(value = "性别")
 	private String sexname;
 

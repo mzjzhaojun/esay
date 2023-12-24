@@ -76,7 +76,7 @@ public class Ytv extends WebMvcConfigurationSupport {
 		localSimpleModule.addSerializer(Long.class, ToStringSerializer.instance);
 		localSimpleModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
 		localSimpleModule.addSerializer(BigInteger.class, ToStringSerializer.instance);
-		localObjectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+		localObjectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm"));
 		localObjectMapper.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 
 		localObjectMapper.registerModule(localSimpleModule);

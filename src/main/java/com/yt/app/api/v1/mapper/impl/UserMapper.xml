@@ -200,6 +200,7 @@
 		<result property="password" column="password" />
 		<result property="nickname" column="nickname" />
 		<result property="phone" column="phone" />
+		<result property="sex" column="sex" />
 		<result property="email" column="email" />
 		<result property="avatar_url" column="avatar_url" />
 		<result property="create_time" column="create_time" />
