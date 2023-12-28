@@ -1,23 +1,20 @@
 package com.yt.app.common.bot;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.CopyMessage;
 import org.telegram.telegrambots.meta.api.methods.ForwardMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import com.yt.app.api.v1.entity.Payconfig;
-import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
-import com.yt.app.api.v1.mapper.PayoutMapper;
+import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
-import com.yt.app.api.v1.service.PayconfigService;
+import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
 import com.yt.app.common.base.context.TenantIdContext;
 
 @Component
@@ -27,10 +24,10 @@ public class Cbot extends TelegramLongPollingBot {
 	private TgchannelgroupMapper tgchannelgroupmapper;
 
 	@Autowired
-	private PayconfigService payconfigservice;
+	private TgmerchantchannelmsgMapper tgmerchantchannelmsgmapper;
 
 	@Autowired
-	private PayoutMapper payoutmapper;
+	private Mbot mbot;
 
 	@Override
 	public String getBotUsername() {
@@ -48,45 +45,31 @@ public class Cbot extends TelegramLongPollingBot {
 		TenantIdContext.removeFlag();
 		Tgchannelgroup tmg = tgchannelgroupmapper.getByTgGroupId(chatid);
 		String message = update.getMessage().getText();
-		Integer replyid = update.getMessage().getMessageId();
-		System.out.println("cccccccc" + update.toString());
+		Message replymsg = update.getMessage().getReplyToMessage();
 		if (tmg == null) {
 			tmg = tgchannelgroupmapper.getByTgGroupName(update.getMessage().getChat().getTitle());
 			if (tmg != null) {
 				tmg.setTgid(chatid);
 				tgchannelgroupmapper.put(tmg);
-				handlemessage(message, chatid, replyid);
 			}
 		} else {
-			handlemessage(message, chatid, replyid);
-		}
-	}
-
-	private void handlemessage(String message, Long chatid, Integer replyid) {
-		if (message.equals("lx")) {// 汇率
-			List<Payconfig> list = payconfigservice.getDatas();
-			StringBuffer sb = new StringBuffer();
-			Integer i = 1;
-			for (Payconfig pc : list) {
-				sb.append(i + "" + pc.getName() + "，价格:" + pc.getExchange() + "\n");
-				i++;
+			if (replymsg != null) {
+				Integer replyid = replymsg.getMessageId();
+				Tgmerchantchannelmsg tmcm = tgmerchantchannelmsgmapper.getCidReplyid(chatid.toString(), replyid);
+				if (tmcm != null) {
+					mbot.sendReplyText(tmcm.getMid(), tmcm.getMreplyid(), message);
+					sendReplyText(tmcm.getCid(),tmcm.getCreplyid(),"收到，谢谢");
+				}
 			}
-			sendText(chatid, sb.toString());
-		} else if (message.equals("cz")) {// 充值
-		} else if (message.indexOf("cd=") >= 0) {// 催单
-			String orderno = message.substring(message.indexOf("="));
-			Payout po = payoutmapper.getByOrdernum(orderno);
-			String msg = "订单号：" + orderno + "\n  名字:" + po.getAccname() + "\n 卡号:" + po.getAccnumer()
-					+ "\n 已经联系通道部加急处理，稍后查看回复你结果。";
-			sendReplyText(chatid, replyid, msg);
 		}
 	}
 
 	// 发送消息
-	public void sendText(Long who, String what) {
+	public Message sendText(Long who, String what) {
 		SendMessage sm = SendMessage.builder().chatId(who.toString()).text(what).build();
 		try {
-			execute(sm);
+			Message msg = execute(sm);
+			return msg;
 		} catch (TelegramApiException e) {
 			throw new RuntimeException(e);
 		}

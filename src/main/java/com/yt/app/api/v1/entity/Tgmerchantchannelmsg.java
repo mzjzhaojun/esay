@@ -16,24 +16,26 @@ public class Tgmerchantchannelmsg extends YtBaseEntity<Tgmerchantchannelmsg> {
 	private static final long serialVersionUID = 1L;
 
 	Long id;
-	String mid;
-	String cid;
+	Long mid;
+	Long cid;
 	String mmanger;
 	String cmanger;
-	String remark;
+	String ordernum;
+	Integer mreplyid;
+	Integer creplyid;
 	Integer version;
 
 	public Tgmerchantchannelmsg() {
 	}
 
-	public Tgmerchantchannelmsg(Long id, String mid, String cid, String mmanger, String cmanger, Long create_by,
-			java.util.Date create_time, Long update_by, java.util.Date update_time, String remark, Integer version) {
+	public Tgmerchantchannelmsg(Long id, Long mid, Long cid, String mmanger, String cmanger, Long create_by,
+			java.util.Date create_time, Long update_by, java.util.Date update_time, String ordernum, Integer version) {
 		this.id = id;
 		this.mid = mid;
 		this.cid = cid;
 		this.mmanger = mmanger;
 		this.cmanger = cmanger;
-		this.remark = remark;
+		this.ordernum = ordernum;
 		this.version = version;
 	}
 }

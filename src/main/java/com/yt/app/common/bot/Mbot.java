@@ -8,6 +8,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.CopyMessage;
 import org.telegram.telegrambots.meta.api.methods.ForwardMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -15,9 +16,11 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.yt.app.api.v1.entity.Payconfig;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
+import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
+import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.service.PayconfigService;
 import com.yt.app.common.base.context.TenantIdContext;
@@ -36,6 +39,9 @@ public class Mbot extends TelegramLongPollingBot {
 
 	@Autowired
 	private PayoutMapper payoutmapper;
+
+	@Autowired
+	private TgmerchantchannelmsgMapper tgmerchantchannelmsgmapper;
 
 	@Autowired
 	private Cbot cbot;
@@ -63,14 +69,14 @@ public class Mbot extends TelegramLongPollingBot {
 			if (tmg != null) {
 				tmg.setTgid(chatid);
 				tgmerchantgroupmapper.put(tmg);
-				handlemessage(message, chatid, replyid);
+				handlemessage(message, chatid, replyid, tmg);
 			}
 		} else {
-			handlemessage(message, chatid, replyid);
+			handlemessage(message, chatid, replyid, tmg);
 		}
 	}
 
-	private void handlemessage(String message, Long chatid, Integer replyid) {
+	private void handlemessage(String message, Long chatid, Integer replyid, Tgmerchantgroup tmg) {
 		if (message.equals("lx")) {// 汇率
 			List<Payconfig> list = payconfigservice.getDatas();
 			StringBuffer sb = new StringBuffer();
@@ -101,9 +107,23 @@ public class Mbot extends TelegramLongPollingBot {
 
 				// 查询渠道
 				Tgchannelgroup tcg = tgchannelgroupmapper.getByChannelId(po.getChannelid());
-				String cmsg = "订单号：" + po.getChannelordernum() + "\n 名字:" + po.getAccname() + "\n卡号:" + po.getAccnumer()
-						+ "\n金额:" + po.getAmount() + "\n客户加急催单。";
-				cbot.sendText(tcg.getTgid(), cmsg);
+				String cmsg = "订单号：" + po.getChannelordernum() + "\n名字:" + po.getAccname() + "\n卡号:" + po.getAccnumer()
+						+ "\n金额:" + po.getAmount() + "\n客户加急催单。请回复！";
+				Message messag = cbot.sendText(tcg.getTgid(), cmsg);
+				System.out.println(messag.toString());
+				Tgmerchantchannelmsg t = tgmerchantchannelmsgmapper.getOrderNum(orderno);
+				if (t == null) {
+					// 插入关联关系
+					t = new Tgmerchantchannelmsg();
+					t.setMid(chatid);
+					t.setCid(tcg.getTgid());
+					t.setMmanger(tmg.getMangers());
+					t.setCmanger(tcg.getMangers());
+					t.setOrdernum(orderno);
+					t.setMreplyid(replyid);
+					t.setCreplyid(messag.getMessageId());
+					tgmerchantchannelmsgmapper.post(t);
+				}
 			}
 		}
 	}

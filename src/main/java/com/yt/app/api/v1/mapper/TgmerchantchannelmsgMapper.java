@@ -2,6 +2,9 @@ package com.yt.app.api.v1.mapper;
 
 import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
@@ -94,4 +97,23 @@ public interface TgmerchantchannelmsgMapper extends YtIBaseMapper<Tgmerchantchan
 	 */
 	@YtRedisCacheAnnotation(classs = Tgmerchantchannelmsg.class)
 	public List<Tgmerchantchannelmsg> listByArrayId(long[] id);
+
+	/**
+	 * get
+	 *
+	 * @param id id
+	 * @return Tgmerchantchannelmsg
+	 */
+	@YtRedisCacheAnnotation(classs = Tgmerchantchannelmsg.class)
+	public Tgmerchantchannelmsg getOrderNum(String ordernum);
+
+	/**
+	 * get
+	 *
+	 * @param id id
+	 * @return Tgmerchantchannelmsg
+	 */
+	@YtRedisCacheAnnotation(classs = Tgmerchantchannelmsg.class)
+	public Tgmerchantchannelmsg getCidReplyid(@Param("cid") String cid, @Param("creplyid") Integer creplyid);
+
 }

@@ -1,134 +1,170 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper">
-<!-- Base_Column_List -->
-<sql id="Base_Column_List">
-id,mid,cid,mmanger,cmanger,create_by,create_time,update_by,update_time,remark,version
-</sql>
-<!-- ResultMap -->
-<resultMap id="ResultMap" type="com.yt.app.api.v1.entity.Tgmerchantchannelmsg">
-</resultMap>
-<!-- add -->
-<insert id="post" parameterType="com.yt.app.api.v1.entity.Tgmerchantchannelmsg">
-insert into tgmerchantchannelmsg(id,mid,cid,mmanger,cmanger,create_by,create_time,update_by,update_time,remark)
-values (#{id},#{mid},#{cid},#{mmanger},#{cmanger},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
-</insert>
-<!-- batchSava -->
-<insert id="batchSava" parameterType="java.util.List">
-insert into tgmerchantchannelmsg(id,mid,cid,mmanger,cmanger,create_by,create_time,update_by,update_time,remark)
-values
-<foreach collection="list" item="item" index="index" separator="," >
-(#{id},#{mid},#{cid},#{mmanger},#{cmanger},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
-</foreach>
-</insert>
-<!-- deleteById -->
-<delete id="delete" parameterType="java.lang.Long">
-delete from tgmerchantchannelmsg
-where id = #{id}
-</delete>
-<!-- update -->
-<update id="put" parameterType="com.yt.app.api.v1.entity.Tgmerchantchannelmsg">
-update tgmerchantchannelmsg
-<set>
-<if test="mid != null">
-mid= #{mid},
-</if>
-<if test="cid != null">
-cid= #{cid},
-</if>
-<if test="mmanger != null">
-mmanger= #{mmanger},
-</if>
-<if test="cmanger != null">
-cmanger= #{cmanger},
-</if>
-<if test="create_by != null">
-create_by= #{create_by},
-</if>
-<if test="create_time != null">
-create_time= #{create_time},
-</if>
-<if test="update_by != null">
-update_by= #{update_by},
-</if>
-<if test="update_time != null">
-update_time= #{update_time},
-</if>
-<if test="remark != null">
-remark= #{remark},
-</if>
-<if test="version != null">
-version= #{version}+1
-</if>
-</set>
-where id = #{id} and version = #{version}
-</update>
-<!--getById -->
-<select id="get" parameterType="java.lang.Long" resultMap="ResultMap">
-select
-<include refid="Base_Column_List"/>
-from tgmerchantchannelmsg
-where id = #{id}
-</select>
-<!-- getList -->
-<select id="list" parameterType="java.util.HashMap" resultMap="ResultMap">
-select
-<include refid="Base_Column_List"/>
-from tgmerchantchannelmsg
-<where>
-1=1
-<if test="name != null and name != ''">
-and name like "%"#{name}"%"
-</if>
-<if test="orderBy != null and dir != null">
-order by ${orderBy} ${dir}
-</if>
-<if test="pageStart != null and pageEnd != null">
-LIMIT #{pageStart},#{pageEnd}
-</if>
-</where>
-</select>
-<!-- getMap -->
-<select id="map" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-select
-<include refid="Base_Column_List"/>
-from tgmerchantchannelmsg
-<where>
-1=1
-<if test="name != null and name != ''">
-and name like "%"#{name}"%"
-</if>
-<if test="orderBy != null and Dir != null">
-order by ${orderBy} ${Dir}
-</if>
-<if test="pageStart != null and pageEnd != null">
-LIMIT #{pageStart},#{pageEnd}
-</if>
-</where>
-</select>
-<!-- getCount -->
-<select id="countlist" parameterType="java.util.HashMap" resultType="int">
-select count(*) from tgmerchantchannelmsg
-<where>
-1=1
-<if test="name != null and name != ''">
-and name like "%"#{name}"%"
-</if>
-</where>
-</select>
-<!-- listByArrayId -->
-<select id="listByArrayId" parameterType="java.util.HashMap" resultMap="ResultMap">
-select
-<include refid="Base_Column_List"/>
-from tgmerchantchannelmsg
-<where>
-1=1
-<if test="array != null and array.length > 0">
-and id in
-<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
-#{item}
-</foreach>
-</if>
-</where>
-</select>
+<mapper
+	namespace="com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,mid,cid,mmanger,cmanger,create_by,create_time,update_by,update_time,ordernum,mreplyid,creplyid,version
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Tgmerchantchannelmsg">
+	</resultMap>
+	<!-- add -->
+	<insert id="post"
+		parameterType="com.yt.app.api.v1.entity.Tgmerchantchannelmsg">
+		insert into
+		tgmerchantchannelmsg(id,mid,cid,mmanger,cmanger,create_by,create_time,update_by,update_time,ordernum,mreplyid,creplyid)
+		values
+		(#{id},#{mid},#{cid},#{mmanger},#{cmanger},#{create_by},#{create_time},#{update_by},#{update_time},#{ordernum},#{mreplyid},#{creplyid})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		tgmerchantchannelmsg(id,mid,cid,mmanger,cmanger,create_by,create_time,update_by,update_time,ordernum)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{mid},#{cid},#{mmanger},#{cmanger},#{create_by},#{create_time},#{update_by},#{update_time},#{ordernum})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from
+		tgmerchantchannelmsg
+		where id = #{id}
+	</delete>
+	<!-- update -->
+	<update id="put"
+		parameterType="com.yt.app.api.v1.entity.Tgmerchantchannelmsg">
+		update tgmerchantchannelmsg
+		<set>
+			<if test="mid != null">
+				mid= #{mid},
+			</if>
+			<if test="cid != null">
+				cid= #{cid},
+			</if>
+			<if test="mmanger != null">
+				mmanger= #{mmanger},
+			</if>
+			<if test="cmanger != null">
+				cmanger= #{cmanger},
+			</if>
+			<if test="create_by != null">
+				create_by= #{create_by},
+			</if>
+			<if test="create_time != null">
+				create_time= #{create_time},
+			</if>
+			<if test="update_by != null">
+				update_by= #{update_by},
+			</if>
+			<if test="update_time != null">
+				update_time= #{update_time},
+			</if>
+			<if test="ordernum != null">
+				ordernum= #{ordernum},
+			</if>
+			<if test="mreplyid != null">
+				mreplyid= #{mreplyid},
+			</if>
+			<if test="version != null">
+				version= #{version}+1
+			</if>
+		</set>
+		where id = #{id} and version = #{version}
+	</update>
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmerchantchannelmsg
+		where id = #{id}
+	</select>
+
+	<!--getByordernum -->
+	<select id="getOrderNum" parameterType="java.lang.String"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmerchantchannelmsg
+		where ordernum = #{ordernum}
+	</select>
+	
+	<!--getByordernum -->
+	<select id="getCidReplyid"  resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmerchantchannelmsg
+		where cid = #{cid} and creplyid = #{creplyid}
+	</select>
+	
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmerchantchannelmsg
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="map" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmerchantchannelmsg
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and Dir != null">
+				order by ${orderBy} ${Dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		select count(*) from tgmerchantchannelmsg
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmerchantchannelmsg
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
 </mapper>
