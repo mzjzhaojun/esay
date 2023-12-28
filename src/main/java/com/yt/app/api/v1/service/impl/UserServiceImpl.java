@@ -188,7 +188,7 @@ public class UserServiceImpl extends YtBaseServiceImpl<User, Long> implements Us
 		AuthUtil.logout(t.getToken());
 		return i;
 	}
-	
+
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Integer checkgoogle(Long code) {

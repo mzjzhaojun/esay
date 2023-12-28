@@ -12,7 +12,8 @@ import com.yt.app.api.v1.service.DictService;
 import com.yt.app.api.v1.service.RoleService;
 import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.context.TenantIdContext;
-import com.yt.app.common.bot.Tbot;
+import com.yt.app.common.bot.Cbot;
+import com.yt.app.common.bot.Mbot;
 import com.yt.app.common.util.RsaUtil;
 
 /**
@@ -34,26 +35,32 @@ public class SystemRunner implements CommandLineRunner {
 	private DictService dictservice;
 
 	@Autowired
-	private Tbot tbot;
+	private Mbot mbot;
+
+	@Autowired
+	private Cbot cbot;
 
 	@Override
 	public void run(String... args) throws Exception {
 
 		log.info("服务初始化之后，执行方法 start...");
 
-		//
+		// 设置默认租户
 		TenantIdContext.setTenantId(AppConstant.SYSTEM_TENANT_ID);
 
+		// 生成密钥
 		RsaUtil.InitKeys();
 
+		// 加载字典
 		dictservice.initCache();
 
-		// banksservice.initdata();
-
+		// 刷新初始权限
 		roleservice.refreshSuperAdminPerm();
 
+		// 注册机器人
 		TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-		botsApi.registerBot(tbot);
+		botsApi.registerBot(mbot);
+		botsApi.registerBot(cbot);
 
 		log.info("服务初始化之后，执行方法 end...");
 	}

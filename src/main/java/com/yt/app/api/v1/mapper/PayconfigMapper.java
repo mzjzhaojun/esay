@@ -104,4 +104,13 @@ public interface PayconfigMapper extends YtIBaseMapper<Payconfig> {
 	@YtRedisCacheEvictAnnotation(classs = { Payconfig.class })
 	public Integer putExchange(Double value);
 
+	/**
+	 * get
+	 *
+	 * @param id id
+	 * @return Payconfig
+	 */
+	@YtRedisCacheAnnotation(classs = Payconfig.class)
+	public Payconfig getByName(String name);
+
 }

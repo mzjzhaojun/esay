@@ -79,7 +79,7 @@ public class PayconfigServiceImpl extends YtBaseServiceImpl<Payconfig, Long> imp
 		SysOxxVo data = sov.getBody();
 		List<Object> list = data.getData().getSell();
 		mapper.putExchange(Double.valueOf(BeanUtil.beanToMap(list.get(0)).get("price").toString()));
-		return mapper.get(ServiceConstant.SYSTEM_PAYCONFIG_EXCHANGE);
+		return mapper.getByName(ServiceConstant.SYSTEM_PAYCONFIG_EXCHANGE);
 	}
 
 	@Override

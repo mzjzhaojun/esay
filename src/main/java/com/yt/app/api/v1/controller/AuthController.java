@@ -86,7 +86,6 @@ public class AuthController extends YtBaseEncipherControllerImpl<User, Long> {
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 
-
 	@ApiOperation(value = "callbackpay", response = User.class)
 	@RequestMapping(value = "/callbackpay/{ordernum}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> callbackpay(@PathVariable String ordernum, HttpServletRequest request,

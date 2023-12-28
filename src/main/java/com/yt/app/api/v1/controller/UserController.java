@@ -74,7 +74,7 @@ public class UserController extends YtBaseEncipherControllerImpl<User, Long> {
 		Integer i = service.resetpassword(u);
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
-	
+
 	@ApiOperation(value = "checkgoogle", response = User.class)
 	@RequestMapping(value = "/checkgoogle/{code}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> checkgoogle(@PathVariable Long code, HttpServletResponse response) {

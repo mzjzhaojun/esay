@@ -16,29 +16,41 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
 import io.swagger.annotations.ApiOperation;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
-import com.yt.app.api.v1.service.TgconfigService;
-import com.yt.app.api.v1.entity.Tgconfig;
+import com.yt.app.api.v1.service.TgchannelgroupService;
+import com.yt.app.api.v1.entity.Tgchannelgroup;
 
 /**
  * @author zj defaulttest
  * 
- * @version v1 @createdate2023-11-26 13:46:43
+ * @version v1 @createdate2023-12-27 21:37:32
  */
 
 @RestController
-@RequestMapping("/rest/v1/tgconfig")
-public class TgconfigController extends YtBaseEncipherControllerImpl<Tgconfig, Long> {
+@RequestMapping("/rest/v1/tgchannelgroup")
+public class TgchannelgroupController extends YtBaseEncipherControllerImpl<Tgchannelgroup, Long> {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
-	private TgconfigService service;
+	private TgchannelgroupService service;
 
 	@Override
-	@ApiOperation(value = "list", response = Tgconfig.class)
+	@ApiOperation(value = "list", response = Tgchannelgroup.class)
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Tgconfig> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		YtIPage<Tgchannelgroup> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
+	}
+
+	/**
+	 * 
+	 * 
+	 * @version 1.1
+	 */
+	@RequestMapping(value = "/putchannel", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> putmerchant(YtRequestDecryptEntity<Tgchannelgroup> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		Integer t = service.putchannel(requestEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}
 }

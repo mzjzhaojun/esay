@@ -156,6 +156,15 @@
 		where channelordernum= #{channelordernum}
 	</select>
 	
+	<!--getByOrdernum -->
+	<select id="getByOrdernum" parameterType="java.lang.String"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from payout
+		where ordernum= #{ordernum}
+	</select>
+	
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">

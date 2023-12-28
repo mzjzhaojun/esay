@@ -11,7 +11,7 @@ package com.yt.app.common.base.constant;
  */
 public interface ServiceConstant {
 
-	Long SYSTEM_PAYCONFIG_EXCHANGE = 1L; // 汇率
+	String SYSTEM_PAYCONFIG_EXCHANGE = "exchange"; // 汇率
 
 	String UPDATE_FAIL_MSG = "修改失败!";
 

@@ -104,4 +104,13 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 	@YtRedisCacheAnnotation(classs = Payout.class)
 	public Payout getByChannelOrdernum(String channelordernum);
 
+	/**
+	 * get
+	 *
+	 * @param id id
+	 * @return Payout
+	 */
+	@YtRedisCacheAnnotation(classs = Payout.class)
+	public Payout getByOrdernum(String ordernum);
+
 }

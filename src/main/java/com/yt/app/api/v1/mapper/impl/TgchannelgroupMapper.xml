@@ -1,63 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yt.app.api.v1.mapper.PayconfigMapper">
+<mapper namespace="com.yt.app.api.v1.mapper.TgchannelgroupMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,name,usdt,exchange,tenant_id,create_by,create_time,update_by,update_time,version
+		id,tenant_id,channelid,channelname,channelnkname,status,tgid,tggroupname,create_by,create_time,update_by,update_time,pushstatus,pushname,mangers,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Payconfig">
+		type="com.yt.app.api.v1.entity.Tgchannelgroup">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Payconfig">
+		parameterType="com.yt.app.api.v1.entity.Tgchannelgroup">
 		insert into
-		payconfig(id,name,usdt,exchange,create_by,create_time,update_by,update_time)
+		tgchannelgroup(id,channelid,channelname,channelnkname,status,tgid,tggroupname,create_by,create_time,update_by,update_time,pushstatus,pushname,mangers,remark)
 		values
-		(#{id},#{name},#{usdt},#{exchange},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{channelid},#{channelname},#{channelnkname},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{pushstatus},#{pushname},#{mangers},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		payconfig(id,name,usdt,exchange,tenant_id,create_by,create_time,update_by,update_time)
+		tgchannelgroup(id,tenant_id,channelid,channelname,channelnkname,status,tgid,tggroupname,create_by,create_time,update_by,update_time,pushstatus,pushname,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{name},#{usdt},#{exchange},#{tenant_id},#{create_by},#{create_time},#{update_by},#{update_time})
+			(#{id},#{tenant_id},#{channelid},#{channelname},#{channelnkname},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{pushstatus},#{pushname},#{remark})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from payconfig
-		where id
-		= #{id}
+		delete from tgchannelgroup
+		where id = #{id}
 	</delete>
-
-	<update id="putExchange" parameterType="java.lang.Double">
-		update payconfig set
-		exchange = #{value} where id = 1
-	</update>
-
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Payconfig">
-		update payconfig
+		parameterType="com.yt.app.api.v1.entity.Tgchannelgroup">
+		update tgchannelgroup
 		<set>
-			<if test="name != null">
-				name= #{name},
+			<if test="tenant_id != null">
+				tenant_id= #{tenant_id},
 			</if>
-			<if test="usdt != null">
-				usdt= #{usdt},
+			<if test="channelid != null">
+				channelid= #{channelid},
 			</if>
-			<if test="exchange != null">
-				exchange= #{exchange},
+			<if test="channelname != null">
+				channelname= #{channelname},
+			</if>
+			<if test="channelnkname != null">
+				channelnkname= #{channelnkname},
+			</if>
+			<if test="status != null">
+				status= #{status},
+			</if>
+			<if test="tgid != null">
+				tgid= #{tgid},
+			</if>
+			<if test="tggroupname != null">
+				tggroupname= #{tggroupname},
+			</if>
+			<if test="create_by != null">
+				create_by= #{create_by},
+			</if>
+			<if test="create_time != null">
+				create_time= #{create_time},
 			</if>
 			<if test="update_by != null">
 				update_by= #{update_by},
 			</if>
 			<if test="update_time != null">
 				update_time= #{update_time},
+			</if>
+			<if test="pushstatus != null">
+				pushstatus= #{pushstatus},
+			</if>
+			<if test="pushname != null">
+				pushname= #{pushname},
+			</if>
+			<if test="mangers != null">
+				mangers= #{mangers},
+			</if>
+			<if test="remark != null">
+				remark= #{remark},
 			</if>
 			<if test="version != null">
 				version= #{version}+1
@@ -70,23 +93,41 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from payconfig
+		from tgchannelgroup
 		where id = #{id}
 	</select>
-	<!--getByName -->
-	<select id="getByName" parameterType="java.lang.String"
+	<!--getById -->
+	<select id="getByTgGroupName" parameterType="java.lang.String"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from payconfig
-		where name = #{name}
+		from tgchannelgroup
+		where tggroupname= #{tggroupname}
 	</select>
+	<!--getById -->
+	<select id="getByTgGroupId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgchannelgroup
+		where tgid= #{tgid}
+	</select>
+
+	<!--getById -->
+	<select id="getByChannelId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgchannelgroup
+		where channelid= #{channelid}
+	</select>
+	
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from payconfig
+		from tgchannelgroup
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -105,7 +146,7 @@
 		resultType="java.util.HashMap">
 		select
 		<include refid="Base_Column_List" />
-		from payconfig
+		from tgchannelgroup
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -122,7 +163,7 @@
 	<!-- getCount -->
 	<select id="countlist" parameterType="java.util.HashMap"
 		resultType="int">
-		select count(*) from payconfig
+		select count(*) from tgchannelgroup
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -135,7 +176,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from payconfig
+		from tgchannelgroup
 		<where>
 			1=1
 			<if test="array != null and array.length > 0">

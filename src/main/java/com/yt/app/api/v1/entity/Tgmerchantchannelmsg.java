@@ -7,32 +7,32 @@ import com.yt.app.common.base.YtBaseEntity;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2023-11-26 13:46:43
+ * @version v1 @createdate2023-12-28 15:01:59
  */
 @Getter
 @Setter
-public class Tgconfig extends YtBaseEntity<Tgconfig> {
+public class Tgmerchantchannelmsg extends YtBaseEntity<Tgmerchantchannelmsg> {
 
 	private static final long serialVersionUID = 1L;
 
 	Long id;
-	Long tenant_id;
-	String setname;
-	String setvalues;
-	String fieldname;
+	String mid;
+	String cid;
+	String mmanger;
+	String cmanger;
 	String remark;
 	Integer version;
 
-	public Tgconfig() {
+	public Tgmerchantchannelmsg() {
 	}
 
-	public Tgconfig(Long id, Long tenant_id, String setname, String setvalues, String fieldname, Long create_by,
+	public Tgmerchantchannelmsg(Long id, String mid, String cid, String mmanger, String cmanger, Long create_by,
 			java.util.Date create_time, Long update_by, java.util.Date update_time, String remark, Integer version) {
 		this.id = id;
-		this.tenant_id = tenant_id;
-		this.setname = setname;
-		this.setvalues = setvalues;
-		this.fieldname = fieldname;
+		this.mid = mid;
+		this.cid = cid;
+		this.mmanger = mmanger;
+		this.cmanger = cmanger;
 		this.remark = remark;
 		this.version = version;
 	}
