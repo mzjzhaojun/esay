@@ -26,6 +26,7 @@ import com.yt.app.common.util.RsaUtil;
  * @date 2020/5/22 19:29
  */
 @Slf4j
+@Component
 public class SystemRunner implements CommandLineRunner {
 	@Autowired
 	private RoleService roleservice;

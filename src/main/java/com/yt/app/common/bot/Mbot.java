@@ -60,19 +60,21 @@ public class Mbot extends TelegramLongPollingBot {
 	public void onUpdateReceived(Update update) {
 		Long chatid = update.getMessage().getChat().getId();
 		TenantIdContext.removeFlag();
-		Tgmerchantgroup tmg = tgmerchantgroupmapper.getByTgGroupId(chatid);
 		String message = update.getMessage().getText();
-		Integer replyid = update.getMessage().getMessageId();
-		System.out.println("cccccccc" + update.toString());
-		if (tmg == null) {
-			tmg = tgmerchantgroupmapper.getByTgGroupName(update.getMessage().getChat().getTitle());
-			if (tmg != null) {
-				tmg.setTgid(chatid);
-				tgmerchantgroupmapper.put(tmg);
+		if (message != null) {
+			Tgmerchantgroup tmg = tgmerchantgroupmapper.getByTgGroupId(chatid);
+			Integer replyid = update.getMessage().getMessageId();
+			System.out.println("cccccccc" + update.toString());
+			if (tmg == null) {
+				tmg = tgmerchantgroupmapper.getByTgGroupName(update.getMessage().getChat().getTitle());
+				if (tmg != null) {
+					tmg.setTgid(chatid);
+					tgmerchantgroupmapper.put(tmg);
+					handlemessage(message, chatid, replyid, tmg);
+				}
+			} else {
 				handlemessage(message, chatid, replyid, tmg);
 			}
-		} else {
-			handlemessage(message, chatid, replyid, tmg);
 		}
 	}
 

@@ -43,22 +43,24 @@ public class Cbot extends TelegramLongPollingBot {
 	public void onUpdateReceived(Update update) {
 		Long chatid = update.getMessage().getChat().getId();
 		TenantIdContext.removeFlag();
-		Tgchannelgroup tmg = tgchannelgroupmapper.getByTgGroupId(chatid);
 		String message = update.getMessage().getText();
 		Message replymsg = update.getMessage().getReplyToMessage();
-		if (tmg == null) {
-			tmg = tgchannelgroupmapper.getByTgGroupName(update.getMessage().getChat().getTitle());
-			if (tmg != null) {
-				tmg.setTgid(chatid);
-				tgchannelgroupmapper.put(tmg);
-			}
-		} else {
-			if (replymsg != null) {
-				Integer replyid = replymsg.getMessageId();
-				Tgmerchantchannelmsg tmcm = tgmerchantchannelmsgmapper.getCidReplyid(chatid.toString(), replyid);
-				if (tmcm != null) {
-					mbot.sendReplyText(tmcm.getMid(), tmcm.getMreplyid(), message);
-					sendReplyText(tmcm.getCid(),tmcm.getCreplyid(),"收到，谢谢");
+		if (message != null && replymsg != null) {
+			Tgchannelgroup tmg = tgchannelgroupmapper.getByTgGroupId(chatid);
+			if (tmg == null) {
+				tmg = tgchannelgroupmapper.getByTgGroupName(update.getMessage().getChat().getTitle());
+				if (tmg != null) {
+					tmg.setTgid(chatid);
+					tgchannelgroupmapper.put(tmg);
+				}
+			} else {
+				if (replymsg != null) {
+					Integer replyid = replymsg.getMessageId();
+					Tgmerchantchannelmsg tmcm = tgmerchantchannelmsgmapper.getCidReplyid(chatid.toString(), replyid);
+					if (tmcm != null) {
+						mbot.sendReplyText(tmcm.getMid(), tmcm.getMreplyid(), message);
+						sendReplyText(tmcm.getCid(), tmcm.getCreplyid(), "收到，谢谢你的回复.");
+					}
 				}
 			}
 		}
