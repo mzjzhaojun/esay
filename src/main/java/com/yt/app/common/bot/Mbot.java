@@ -138,19 +138,9 @@ public class Mbot extends TelegramLongPollingBot {
 		}
 	}
 
-	// 发送消息
+	// 发送回复消息
 	public void sendReplyText(Long who, Integer replyid, String what) {
 		SendMessage sm = SendMessage.builder().chatId(who.toString()).text(what).replyToMessageId(replyid).build();
-		try {
-			execute(sm);
-		} catch (TelegramApiException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	// 发送消息
-	public void sendAtText(Long who, String what) {
-		SendMessage sm = SendMessage.builder().chatId(who.toString()).text(what).build();
 		try {
 			execute(sm);
 		} catch (TelegramApiException e) {
