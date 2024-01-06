@@ -64,7 +64,7 @@ public class Mbot extends TelegramLongPollingBot {
 		if (message != null) {
 			Tgmerchantgroup tmg = tgmerchantgroupmapper.getByTgGroupId(chatid);
 			Integer replyid = update.getMessage().getMessageId();
-			System.out.println("cccccccc" + update.toString());
+			System.out.println("mmmmmm" + update.toString());
 			if (tmg == null) {
 				tmg = tgmerchantgroupmapper.getByTgGroupName(update.getMessage().getChat().getTitle());
 				if (tmg != null) {

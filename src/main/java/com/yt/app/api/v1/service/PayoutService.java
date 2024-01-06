@@ -14,4 +14,6 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 	void callbackpaySuccess(String ordernum);
 
 	void callbackpayFail(String ordernum);
+
+	void callbackpaySuccess(Payout pt);
 }

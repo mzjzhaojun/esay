@@ -1,5 +1,7 @@
 package com.yt.app.common.bot;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -11,10 +13,12 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import com.yt.app.api.v1.entity.Payconfig;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
+import com.yt.app.api.v1.service.PayconfigService;
 import com.yt.app.common.base.context.TenantIdContext;
 
 @Component
@@ -22,6 +26,9 @@ public class Cbot extends TelegramLongPollingBot {
 
 	@Autowired
 	private TgchannelgroupMapper tgchannelgroupmapper;
+
+	@Autowired
+	private PayconfigService payconfigservice;
 
 	@Autowired
 	private TgmerchantchannelmsgMapper tgmerchantchannelmsgmapper;
@@ -45,7 +52,8 @@ public class Cbot extends TelegramLongPollingBot {
 		TenantIdContext.removeFlag();
 		String message = update.getMessage().getText();
 		Message replymsg = update.getMessage().getReplyToMessage();
-		if (message != null && replymsg != null) {
+		System.out.println("cccccccc" + update.toString());
+		if (message != null) {
 			Tgchannelgroup tmg = tgchannelgroupmapper.getByTgGroupId(chatid);
 			if (tmg == null) {
 				tmg = tgchannelgroupmapper.getByTgGroupName(update.getMessage().getChat().getTitle());
@@ -53,6 +61,7 @@ public class Cbot extends TelegramLongPollingBot {
 					tmg.setTgid(chatid);
 					tgchannelgroupmapper.put(tmg);
 				}
+				handlemessage(message, chatid, tmg);
 			} else {
 				if (replymsg != null) {
 					Integer replyid = replymsg.getMessageId();
@@ -62,7 +71,21 @@ public class Cbot extends TelegramLongPollingBot {
 						sendReplyText(tmcm.getCid(), tmcm.getCreplyid(), "收到，谢谢你的回复.");
 					}
 				}
+				handlemessage(message, chatid, tmg);
 			}
+		}
+	}
+
+	private void handlemessage(String message, Long chatid, Tgchannelgroup tmg) {
+		if (message.equals("lx")) {// 汇率
+			List<Payconfig> list = payconfigservice.getDatas();
+			StringBuffer sb = new StringBuffer();
+			Integer i = 1;
+			for (Payconfig pc : list) {
+				sb.append(i + "" + pc.getName() + "，价格:" + pc.getExchange() + "\n");
+				i++;
+			}
+			sendText(chatid, sb.toString());
 		}
 	}
 
