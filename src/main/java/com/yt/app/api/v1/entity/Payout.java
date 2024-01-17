@@ -39,11 +39,12 @@ public class Payout extends YtBaseEntity<Payout> {
 	Double channelpay;
 	String accname;
 	String accnumer;
+	String bankcode;
 	String bankname;
 	Double amount;
 	Integer status;
 	String statusname;
-	java.util.Date successtime;
+	java.util.Date successtime; 
 	Long backlong;
 	String imgurl;
 	Double income;

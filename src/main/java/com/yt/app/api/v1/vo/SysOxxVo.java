@@ -12,7 +12,7 @@ public class SysOxxVo {
 	SellData data;
 
 	public SysOxxVo() {
-	};
+	}
 
 	public SysOxxVo(Integer code, SellData data) {
 		super();

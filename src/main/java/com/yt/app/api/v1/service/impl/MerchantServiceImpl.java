@@ -68,7 +68,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 
 		//
 		t.setUserid(u.getId());
-		t.setAppkey(StringUtil.getNonceStr(32));
+		t.setAppkey(StringUtil.getUUID());
 		Integer i = mapper.post(t);
 
 		//

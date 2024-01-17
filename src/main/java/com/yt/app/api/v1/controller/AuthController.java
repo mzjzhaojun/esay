@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yt.app.api.v1.dbo.AuthLoginDTO;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.service.AuthService;
-import com.yt.app.api.v1.service.PayoutService;
 import com.yt.app.api.v1.vo.AuthLoginVO;
 import com.yt.app.common.base.constant.SecurityConstant;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
@@ -42,9 +40,6 @@ public class AuthController extends YtBaseEncipherControllerImpl<User, Long> {
 
 	@Autowired
 	private AuthService authservice;
-
-	@Autowired
-	private PayoutService service;
 
 	@ApiOperation(value = "login", response = User.class)
 	@RequestMapping(value = "/loginvue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -85,13 +80,4 @@ public class AuthController extends YtBaseEncipherControllerImpl<User, Long> {
 				requestEntity.getBody().getTwocode());
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
-
-	@ApiOperation(value = "callbackpay", response = User.class)
-	@RequestMapping(value = "/callbackpay/{ordernum}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> callbackpay(@PathVariable String ordernum, HttpServletRequest request,
-			HttpServletResponse response) {
-		service.callbackpaySuccess(ordernum);
-		return new YtResponseEntity<Object>(new YtBody(1));
-	}
-
 }

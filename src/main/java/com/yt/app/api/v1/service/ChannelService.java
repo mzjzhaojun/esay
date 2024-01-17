@@ -13,7 +13,7 @@ import com.yt.app.common.base.YtIBaseService;
 
 public interface ChannelService extends YtIBaseService<Channel, Long> {
 
-	String sendChannel(Channel cl);
+	String getChannelOrder(Payout pt, Channel cl);
 
 	void updatePayout(Payout t);
 

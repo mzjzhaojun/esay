@@ -13,11 +13,14 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import com.yt.app.api.v1.entity.Merchantaccount;
 import com.yt.app.api.v1.entity.Payconfig;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
+import com.yt.app.api.v1.mapper.MerchantMapper;
+import com.yt.app.api.v1.mapper.MerchantaccountMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
@@ -45,6 +48,12 @@ public class Mbot extends TelegramLongPollingBot {
 
 	@Autowired
 	private Cbot cbot;
+
+	@Autowired
+	private MerchantaccountMapper merchantaccountmapper;
+
+	@Autowired
+	private MerchantMapper merchantmapper;
 
 	@Override
 	public String getBotUsername() {
@@ -94,7 +103,17 @@ public class Mbot extends TelegramLongPollingBot {
 				String msg = "USDT地址：" + pc.getUsdt() + "\n实时汇率：" + pc.getExchange();
 				sendReplyText(chatid, replyid, msg);
 			} else {
-				sendText(chatid, "系统出错了！");
+				sendText(chatid, "正在更新地址，请稍后再试！");
+			}
+		} else if (message.equals("bc")) {// 余额
+			Merchantaccount merchantaccount = merchantaccountmapper
+					.getByUserId(merchantmapper.get(tmg.getMerchantid()).getUserid());
+			if (merchantaccount != null) {
+				String msg = "账户可用余额：" + merchantaccount.getBalance() + "\n总充值金额：" + merchantaccount.getTotalincome()
+						+ "\n总支出金额：" + merchantaccount.getWithdrawamount();
+				sendReplyText(chatid, replyid, msg);
+			}else {
+				sendText(chatid, "没有查询到账户信息！");
 			}
 		} else if (message.indexOf("cd#") >= 0) {// 催单
 			String orderno = message.substring(message.indexOf("#") + 1);

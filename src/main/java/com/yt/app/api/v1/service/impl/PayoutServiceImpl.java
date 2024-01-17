@@ -21,6 +21,7 @@ import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.MerchantaccountService;
 import com.yt.app.api.v1.service.PayoutService;
 import com.yt.app.api.v1.service.SystemaccountService;
+import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
@@ -42,6 +43,7 @@ import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.RedisUtil;
 import com.yt.app.common.util.StringUtil;
+import com.yt.app.common.util.TyPayUtil;
 
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
@@ -165,9 +167,10 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		}
 
-		///////////////////////////////////////////////////// cordernum/////////////////////////////////////////////////////
-		String cordernum = channelservice.sendChannel(cl);
-		t.setChannelordernum(cordernum);
+		///////////////////////////////////////////////////// channelcordernum/////////////////////////////////////////////////////
+		String channelcordernum = channelservice.getChannelOrder(t, cl);
+
+		t.setChannelordernum(channelcordernum);
 
 		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
 		Merchantaccountorder mao = new Merchantaccountorder();
@@ -272,12 +275,12 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	/**
 	 * 
-	 * 回调成功
+	 * 手动回调成功
 	 * 
 	 */
 	@Override
 	@Transactional
-	public void callbackpaySuccess(Payout pt) {
+	public void paySuccess(Payout pt) {
 		Payout t = mapper.get(pt.getId());
 		// 计算商户订单/////////////////////////////////////////////////////
 		Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
@@ -316,7 +319,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 		// ------------------更新代付订单-----------------
 		t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
-		t.setRemark("代付成功！"+pt.getRemark());
+		t.setRemark("代付成功！" + pt.getRemark());
 		t.setSuccesstime(DateTimeUtil.getNow());
 		t.setBacklong(DateUtil.between(t.getSuccesstime(), t.getCreate_time(), DateUnit.SECOND));
 
@@ -333,8 +336,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	 */
 	@Override
 	@Transactional
-	public void callbackpaySuccess(String ordernum) {
-		Payout t = mapper.getByChannelOrdernum(ordernum);
+	public void callbackpaySuccess(Payout t) {
 		TenantIdContext.setTenantId(t.getTenant_id());
 		// 计算商户订单/////////////////////////////////////////////////////
 		Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
@@ -391,9 +393,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	 */
 	@Override
 	@Transactional
-	public void callbackpayFail(String ordernum) {
-
-		Payout t = mapper.getByChannelOrdernum(ordernum);
+	public void callbackpayFail(Payout t) {
 
 		// 计算商户订单/////////////////////////////////////////////////////
 		Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
@@ -424,6 +424,34 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setSuccesstime(DateTimeUtil.getNow());
 		t.setBacklong(DateTimeUtil.diffDays(t.getSuccesstime(), t.getCreate_time()));
 		mapper.put(t);
+	}
+
+	@Override
+	public Payout query(String channelordernum) {
+		Payout pt = mapper.getByChannelOrdernum(channelordernum);
+		Channel cl = channelmapper.get(pt.getChannelid());
+		if (cl.getNkname().equals("天下TY")) {
+			SysTyOrder so = TyPayUtil.SendTySelect(channelordernum, Integer.parseInt(cl.getCode()), cl.getApikey());
+			pt.setRemark(so.getRemark());
+			// md5值是否被篡改
+		}
+		return pt;
+	}
+
+	@Override
+	public void tycallbackpay(SysTyOrder so) {
+		Payout pt = mapper.getByChannelOrdernum(so.getTypay_order_id());
+		Channel cl = channelmapper.get(pt.getChannelid());
+		if (cl.getNkname().equals("天下TY")) {
+			// md5值是否被篡改
+			if (TyPayUtil.valMd5(so, cl.getApikey())) {
+				if (so.getPay_message() == 1) {
+					callbackpaySuccess(pt);
+				} else if (so.getPay_message() == -2) {
+					callbackpayFail(pt);
+				}
+			}
+		}
 	}
 
 }

@@ -23,6 +23,7 @@ import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.PasswordUtil;
 import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.StringUtil;
+import com.yt.app.common.util.TyPayUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -103,16 +104,10 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	}
 
 	@Override
-	public String sendChannel(Channel cl) {
-		/// HttpHeaders headers = new HttpHeaders();
-		// headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)
-		/// AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		// HttpEntity<Resource> httpEntity = new HttpEntity<Resource>(headers);
-		// RestTemplate resttemplate = new RestTemplate();
-		// ResponseEntity<SysOxxVo> sov = resttemplate.exchange(cl.getApiip(),
-		/// HttpMethod.GET, httpEntity, SysOxxVo.class);
-		// SysOxxVo data = sov.getBody();
-		// List<Object> list = data.getData().getSell();
+	public String getChannelOrder(Payout pt, Channel cl) {
+		if (cl.getNkname().equals("天下TY")) {
+			return TyPayUtil.SendTySubmit(pt, cl);
+		}
 		return "C" + StringUtil.getOrderNum();
 	}
 
