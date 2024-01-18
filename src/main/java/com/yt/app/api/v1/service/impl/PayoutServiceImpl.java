@@ -1,5 +1,6 @@
 package com.yt.app.api.v1.service.impl;
 
+import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
@@ -36,12 +37,14 @@ import com.yt.app.api.v1.entity.Channelaccountorder;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Merchantaccountorder;
 import com.yt.app.api.v1.entity.Payout;
+import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.RedisUtil;
+import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.StringUtil;
 import com.yt.app.common.util.TyPayUtil;
 
@@ -439,19 +442,28 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
-	public void tycallbackpay(SysTyOrder so) {
+	public YtBody tycallbackpay(SysTyOrder so) {
 		Payout pt = mapper.getByChannelOrdernum(so.getTypay_order_id());
-		Channel cl = channelmapper.get(pt.getChannelid());
-		if (cl.getNkname().equals("天下TY")) {
-			// md5值是否被篡改
-			if (TyPayUtil.valMd5(so, cl.getApikey())) {
-				if (so.getPay_message() == 1) {
-					callbackpaySuccess(pt);
-				} else if (so.getPay_message() == -2) {
-					callbackpayFail(pt);
+		RLock lock = RedissonUtil.getLock(pt.getId() );
+		try {
+			lock.lock();
+			if (pt.getStatus() != DictionaryResource.PAYOUTSTATUS_52) {
+				Channel cl = channelmapper.get(pt.getChannelid());
+				// md5值是否被篡改
+				if (TyPayUtil.valMd5(so, cl.getApikey())) {
+					if (so.getPay_message() == 1) {
+						callbackpaySuccess(pt);
+						return new YtBody("成功", 200);
+					} else if (so.getPay_message() == -2) {
+						callbackpayFail(pt);
+					}
 				}
 			}
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
 		}
+		return new YtBody("失败", 100);
 	}
 
 }

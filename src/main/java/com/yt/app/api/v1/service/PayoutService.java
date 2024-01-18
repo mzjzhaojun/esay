@@ -3,6 +3,7 @@ package com.yt.app.api.v1.service;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.base.YtIBaseService;
+import com.yt.app.common.common.yt.YtBody;
 
 /**
  * @author zj default
@@ -16,7 +17,7 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 
 	void callbackpayFail(Payout pt);
 
-	void tycallbackpay(SysTyOrder so);
+	YtBody tycallbackpay(SysTyOrder so);
 
 	void paySuccess(Payout pt);
 

@@ -11,7 +11,7 @@ public class SysTyOrder {
 	String typay_order_id;
 	String merchant_order_id;
 	Integer pay_type;
-	Integer pay_amt;
+	Double pay_amt;
 	Integer pay_message;
 	String pay_result;
 	String bank_code;
@@ -27,7 +27,7 @@ public class SysTyOrder {
 	}
 
 	public SysTyOrder(Integer merchant_id, String typay_order_id, String merchant_order_id, Integer pay_type,
-			Integer pay_amt, Integer pay_message, String pay_result, String bank_code, String remark,
+			Double pay_amt, Integer pay_message, String pay_result, String bank_code, String remark,
 			String payment_time, String bank_account, Integer order_status, String member_account, String sign,
 			String image_address) {
 		super();

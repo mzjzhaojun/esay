@@ -50,11 +50,10 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	@RequestMapping(value = "/tycallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
-		service.tycallbackpay(requestEntity.getBody());
-		return new YtResponseEntity<Object>(new YtBody(1));
+		YtBody yb = service.tycallbackpay(requestEntity.getBody());
+		return new YtResponseEntity<Object>(yb);
 	}
 
-	
 	@ApiOperation(value = "submit", response = User.class)
 	@RequestMapping(value = "/submit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submit(YtRequestEntity<Payout> requestEntity, HttpServletRequest request,

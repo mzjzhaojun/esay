@@ -19,7 +19,7 @@ public class TyPayUtil {
 
 		String signParams = "merchant_id=" + so.getMerchant_id() + "&merchant_order_id=" + so.getMerchant_order_id()
 				+ "&typay_order_id=" + so.getTypay_order_id() + "&pay_type=" + so.getPay_type() + "&pay_amt="
-				+ so.getPay_amt() + "&pay_message=" + so.getPay_message() + "&remark=" + so.getRemark() + "&key=" + key;
+				+ String.format("%.2f", so.getPay_amt()) + "&pay_message=" + so.getPay_message() + "&remark=" + so.getRemark() + "&key=" + key;
 
 		if (so.getSign().equals(MD5Utils.md5(signParams))) {
 			return true;
