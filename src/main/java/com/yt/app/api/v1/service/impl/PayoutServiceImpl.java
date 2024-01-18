@@ -444,7 +444,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Override
 	public YtBody tycallbackpay(SysTyOrder so) {
 		Payout pt = mapper.getByChannelOrdernum(so.getTypay_order_id());
-		RLock lock = RedissonUtil.getLock(pt.getId() );
+		RLock lock = RedissonUtil.getLock(pt.getId());
 		try {
 			lock.lock();
 			if (pt.getStatus() != DictionaryResource.PAYOUTSTATUS_52) {

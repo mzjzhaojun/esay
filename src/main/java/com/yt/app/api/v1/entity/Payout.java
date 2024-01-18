@@ -44,7 +44,7 @@ public class Payout extends YtBaseEntity<Payout> {
 	Double amount;
 	Integer status;
 	String statusname;
-	java.util.Date successtime; 
+	java.util.Date successtime;
 	Long backlong;
 	String imgurl;
 	Double income;
@@ -58,9 +58,9 @@ public class Payout extends YtBaseEntity<Payout> {
 			String merchantcode, String merchantordernum, Double merchantcost, Double merchantdeal, Double merchantpay,
 			Long aisleid, String aislename, Long agentid, String agentordernum, Double agentincome, Long channelid,
 			String channelname, String channelordernum, Double channelcost, Double channeldeal, Double channelpay,
-			String accname, String accnumer, String bankaddress, Double amount, Integer status, java.util.Date successtime,
-			Long backlong, Long create_by, java.util.Date create_time, Long update_by, java.util.Date update_time,
-			String imgurl, Double income, Integer version) {
+			String accname, String accnumer, String bankaddress, Double amount, Integer status,
+			java.util.Date successtime, Long backlong, Long create_by, java.util.Date create_time, Long update_by,
+			java.util.Date update_time, String imgurl, Double income, Integer version) {
 		this.id = id;
 		this.tenant_id = tenant_id;
 		this.userid = userid;

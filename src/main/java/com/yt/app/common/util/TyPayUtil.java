@@ -19,7 +19,8 @@ public class TyPayUtil {
 
 		String signParams = "merchant_id=" + so.getMerchant_id() + "&merchant_order_id=" + so.getMerchant_order_id()
 				+ "&typay_order_id=" + so.getTypay_order_id() + "&pay_type=" + so.getPay_type() + "&pay_amt="
-				+ String.format("%.2f", so.getPay_amt()) + "&pay_message=" + so.getPay_message() + "&remark=" + so.getRemark() + "&key=" + key;
+				+ String.format("%.2f", so.getPay_amt()) + "&pay_message=" + so.getPay_message() + "&remark="
+				+ so.getRemark() + "&key=" + key;
 
 		if (so.getSign().equals(MD5Utils.md5(signParams))) {
 			return true;
@@ -35,10 +36,10 @@ public class TyPayUtil {
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 
 		String signParams = "merchant_id=" + cl.getCode() + "&merchant_order_id=" + pt.getOrdernum()
-				+ "&pay_type=912&pay_amt=" + String.format("%.2f", pt.getAmount()) + "&notify_url=" + cl.getApireusultip()
-				+ "&return_url=127.0.0.1&bank_code=" + pt.getBankcode() + "&bank_num=" + pt.getAccnumer()
-				+ "&bank_owner=" + pt.getAccname() + "&bank_address=" + pt.getBankaddress() + "&remark=" + pt.getRemark()
-				+ "&key=" + cl.getApikey();
+				+ "&pay_type=912&pay_amt=" + String.format("%.2f", pt.getAmount()) + "&notify_url="
+				+ cl.getApireusultip() + "&return_url=127.0.0.1&bank_code=" + pt.getBankcode() + "&bank_num="
+				+ pt.getAccnumer() + "&bank_owner=" + pt.getAccname() + "&bank_address=" + pt.getBankaddress()
+				+ "&remark=" + pt.getRemark() + "&key=" + cl.getApikey();
 
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		map.add("merchant_id", cl.getCode());

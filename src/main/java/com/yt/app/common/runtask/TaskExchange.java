@@ -8,6 +8,6 @@ public class TaskExchange {
 
 	@Scheduled(cron = "0/30 * * * * ?")
 	public void exchange() {
-		
+
 	}
 }

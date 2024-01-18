@@ -16,29 +16,30 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
 import io.swagger.annotations.ApiOperation;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
-import com.yt.app.api.v1.service.BanksService;
-import com.yt.app.api.v1.entity.Banks;
+import com.yt.app.api.v1.service.MerchantcustomerbanksService;
+import com.yt.app.api.v1.entity.Merchantcustomerbanks;
 
 /**
  * @author zj defaulttest
  * 
- * @version v1 @createdate2023-11-19 13:11:56
+ * @version v1 @createdate2024-01-18 18:43:33
  */
 
 @RestController
-@RequestMapping("/rest/v1/banks")
-public class BanksController extends YtBaseEncipherControllerImpl<Banks, Long> {
+@RequestMapping("/rest/v1/merchantcustomerbanks")
+public class MerchantcustomerbanksController extends YtBaseEncipherControllerImpl<Merchantcustomerbanks, Long> {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
-	private BanksService service;
+	private MerchantcustomerbanksService service;
 
 	@Override
-	@ApiOperation(value = "list", response = Banks.class)
+	@ApiOperation(value = "list", response = Merchantcustomerbanks.class)
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Banks> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		YtIPage<Merchantcustomerbanks> pagebean = service
+				.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 }

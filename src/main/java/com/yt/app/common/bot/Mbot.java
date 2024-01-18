@@ -112,7 +112,7 @@ public class Mbot extends TelegramLongPollingBot {
 				String msg = "账户可用余额：" + merchantaccount.getBalance() + "\n总充值金额：" + merchantaccount.getTotalincome()
 						+ "\n总支出金额：" + merchantaccount.getWithdrawamount();
 				sendReplyText(chatid, replyid, msg);
-			}else {
+			} else {
 				sendText(chatid, "没有查询到账户信息！");
 			}
 		} else if (message.indexOf("cd#") >= 0) {// 催单

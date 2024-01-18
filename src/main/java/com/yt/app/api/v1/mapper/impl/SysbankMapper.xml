@@ -81,6 +81,15 @@
 		from sysbank
 		where id = #{id}
 	</select>
+	
+	<!--getById -->
+	<select id="getByCode" parameterType="java.lang.String"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sysbank
+		where code= #{code}
+	</select>
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">

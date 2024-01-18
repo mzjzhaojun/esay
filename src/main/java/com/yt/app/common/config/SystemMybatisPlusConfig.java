@@ -44,6 +44,7 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantaccountbank");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantaccountapplyjournal");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantaccountorder");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantcustomerbanks");
 
 		MybatisPlusConfig.TENANT_ID_TABLE.add("agent");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("agentaccount");
@@ -54,8 +55,6 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("payout");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("systemaccount");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("systemcapitalrecord");
-
-		MybatisPlusConfig.TENANT_ID_TABLE.add("banks");
 
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tgchannelgroup");
 
