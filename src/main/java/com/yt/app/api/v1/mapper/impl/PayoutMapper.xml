@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.PayoutMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankcode,bankname,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income,version,remark
+		id,tenant_id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankcode,bankaddress,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income,version,remark
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -13,18 +13,18 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Payout">
 		insert into
-		payout(id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankcode,bankname,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income,remark)
+		payout(id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankcode,bankaddress,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income,remark)
 		values
-		(#{id},#{userid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantcost},#{merchantdeal},#{merchantpay},#{aisleid},#{aislename},#{agentid},#{agentordernum},#{agentincome},#{channelid},#{channelname},#{channelordernum},#{channelcost},#{channeldeal},#{channelpay},#{accname},#{accnumer},#{bankcode},#{bankname},#{amount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{imgurl},#{income},#{remark})
+		(#{id},#{userid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantcost},#{merchantdeal},#{merchantpay},#{aisleid},#{aislename},#{agentid},#{agentordernum},#{agentincome},#{channelid},#{channelname},#{channelordernum},#{channelcost},#{channeldeal},#{channelpay},#{accname},#{accnumer},#{bankcode},#{bankaddress},#{amount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{imgurl},#{income},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		payout(id,tenant_id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankname,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income)
+		payout(id,tenant_id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankaddress,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{userid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantcost},#{merchantdeal},#{merchantpay},#{aisleid},#{aislename},#{agentid},#{agentordernum},#{agentincome},#{channelid},#{channelname},#{channelordernum},#{channelcost},#{channeldeal},#{channelpay},#{accname},#{accnumer},#{bankname},#{amount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{imgurl},#{income})
+			(#{id},#{tenant_id},#{userid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantcost},#{merchantdeal},#{merchantpay},#{aisleid},#{aislename},#{agentid},#{agentordernum},#{agentincome},#{channelid},#{channelname},#{channelordernum},#{channelcost},#{channeldeal},#{channelpay},#{accname},#{accnumer},#{bankaddress},#{amount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{imgurl},#{income})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -102,8 +102,8 @@
 			<if test="accnumer != null">
 				accnumer= #{accnumer},
 			</if>
-			<if test="bankname != null">
-				bankname= #{bankname},
+			<if test="bankaddress != null">
+				bankaddress= #{bankaddress},
 			</if>
 			<if test="amount != null">
 				amount= #{amount},
