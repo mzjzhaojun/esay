@@ -116,7 +116,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
-		t.setRemark("payout");
+		t.setRemark("发起代付");
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
 
