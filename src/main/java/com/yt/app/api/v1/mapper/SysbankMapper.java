@@ -11,7 +11,7 @@ import com.yt.app.common.base.YtIBaseMapper;
 * @author zj default
 * 
 * @version v1
-* @createdate2024-01-18 10:33:32
+* @createdate2024-01-18 11:28:36
 */
 
 public interface SysbankMapper extends YtIBaseMapper<Sysbank> {

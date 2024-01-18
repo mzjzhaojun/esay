@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.SysbankMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,name,code,spname,create_by,create_time,update_by,update_time,status,remark,version
+		id,name,code,spname,create_by,create_time,update_by,update_time,status,remark,sort,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -13,18 +13,18 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Sysbank">
 		insert into
-		sysbank(id,name,code,spname,create_by,create_time,update_by,update_time,status,remark)
+		sysbank(id,name,code,spname,create_by,create_time,update_by,update_time,status,remark,sort)
 		values
-		(#{id},#{name},#{code},#{spname},#{create_by},#{create_time},#{update_by},#{update_time},#{status},#{remark})
+		(#{id},#{name},#{code},#{spname},#{create_by},#{create_time},#{update_by},#{update_time},#{status},#{remark},#{sort})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		sysbank(id,name,code,spname,create_by,create_time,update_by,update_time,status,remark)
+		sysbank(id,name,code,spname,create_by,create_time,update_by,update_time,status,remark,sort)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{name},#{code},#{spname},#{create_by},#{create_time},#{update_by},#{update_time},#{status},#{remark})
+			(#{id},#{name},#{code},#{spname},#{create_by},#{create_time},#{update_by},#{update_time},#{status},#{remark},#{sort})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -63,6 +63,9 @@
 			</if>
 			<if test="remark != null">
 				remark= #{remark},
+			</if>
+			<if test="sort != null">
+				sort= #{sort},
 			</if>
 			<if test="version != null">
 				version= #{version}+1

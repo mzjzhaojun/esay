@@ -22,7 +22,7 @@ import com.yt.app.api.v1.entity.Sysbank;
 /**
  * @author zj defaulttest
  * 
- * @version v1 @createdate2024-01-18 10:33:32
+ * @version v1 @createdate2024-01-18 11:28:36
  */
 
 @RestController
