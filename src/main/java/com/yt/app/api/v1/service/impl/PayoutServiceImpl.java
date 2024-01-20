@@ -485,6 +485,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		if (ma.getBalance() < ss.getPayamt()) {
 			new MyException("余额不足", YtCodeEnum.YT888);
 		}
+		
 		Boolean val = PayUtil.valMd5Submit(ss, mc.getAppkey());
 		Assert.isTrue(val, "签名不正确!");
 
@@ -501,7 +502,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		pt.setAmount(ss.getPayamt());
 		pt.setNotifyurl(ss.getNotifyurl());
 		pt.setAisleid(listmc.get(0).getAisleid());
-		post(pt);
+		add(pt, mc);
 
 		SysResult sr = new SysResult();
 		sr.setBankcode(ss.getBankcode());
@@ -514,6 +515,155 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		sr.setSign(PayUtil.Md5Result(sr, mc.getAppkey()));
 
 		return sr;
+	}
+
+	@Transactional
+	public Integer add(Payout t, Merchant m) {
+
+		///////////////////////////////////////////////////// 录入代付订单/////////////////////////////////////////////////////
+		t.setUserid(m.getUserid());
+		t.setMerchantid(m.getId());
+		t.setMerchantcode(m.getCode());
+		t.setMerchantname(m.getName());
+		t.setOrdernum(StringUtil.getOrderNum());// 系统单号
+		t.setMerchantordernum("DFS" + StringUtil.getOrderNum());// 商户单号
+		t.setMerchantcost(m.getOnecost());// 手续费
+		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
+		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
+		t.setRemark("发起代付");
+		Aisle a = aislemapper.get(t.getAisleid());
+		t.setAislename(a.getName());
+
+		////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
+		////////////////////////////////////////////////////// ////////////////////////////////////////////////////////////
+		List<Aislechannel> listac = aislechannelmapper.getByAisleId(t.getAisleid());
+		Assert.notEmpty(listac, "没有设置渠道!");
+		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
+		List<Channel> listc = channelmapper.listByArrayId(cids);
+		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount())
+				.collect(Collectors.toList());
+		Assert.notEmpty(listcmm, "支付额度不匹配!");
+		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
+		Channel cl = null;
+		if (listcf.size() > 0) {
+			for (int j = 0; j < listcf.size(); j++) {
+				Channel cc = listcf.get(j);
+				String[] match = cc.getFirstmatchmoney().split(",");
+				for (int i = 0; i < match.length; i++) {
+					String number = match[i];
+					if (number.indexOf("-") == -1 && t.getAmount().intValue() == Integer.parseInt(number)) {
+						cl = cc;
+					} else {
+						String[] matchs = number.split("-");
+						Integer min = Integer.parseInt(matchs[0]);
+						Integer max = Integer.parseInt(matchs[1]);
+						if (t.getAmount().intValue() >= min && t.getAmount().intValue() <= max) {
+							cl = cc;
+						}
+					}
+				}
+			}
+		} else {
+			List<WeightRandom.WeightObj<String>> weightList = new ArrayList<>(); //
+			double count = 0;
+			for (Channel cml : listcmm) {
+				count = count + cml.getWeight();
+			}
+			for (Channel cmm : listcmm) {
+				weightList.add(new WeightRandom.WeightObj<String>(cmm.getCode(), (cmm.getWeight() / count) * 100));
+			}
+			WeightRandom<String> wr = RandomUtil.weightRandom(weightList);
+			String code = wr.next();
+			cl = listc.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
+			Assert.notNull(cl, "没有匹配的渠道!");
+			t.setChannelid(cl.getId());
+			t.setChannelname(cl.getName());
+			t.setChannelcost(cl.getOnecost());// 渠道手续费
+			t.setChanneldeal(t.getAmount() * (cl.getExchange() / 1000));
+			t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
+			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
+		}
+
+		///////////////////////////////////////////////////// channelcordernum/////////////////////////////////////////////////////
+		String channelcordernum = channelservice.getChannelOrder(t, cl);
+		Assert.notNull(channelcordernum, "通道单号获取失败!");
+		t.setChannelordernum(channelcordernum);
+
+		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
+		Merchantaccountorder mao = new Merchantaccountorder();
+		mao.setUserid(m.getUserid());
+		mao.setMerchantid(m.getId());
+		mao.setUsername(m.getName());
+		mao.setNkname(m.getNikname());
+		mao.setMerchantcode(m.getCode());
+		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		mao.setExchange(m.getExchange());
+		mao.setAmount(t.getMerchantdeal());// 交易费用
+		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
+		mao.setType(DictionaryResource.ORDERTYPE_21);
+		mao.setOrdernum(t.getMerchantordernum());
+		mao.setRemark("操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
+				+ m.getOnecost());
+		merchantaccountordermapper.post(mao);
+		//
+		merchantaccountservice.payout(mao);
+
+		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
+		if (m.getAgentid() != null) {
+			Agent ag = agentmapper.get(m.getAgentid());
+			t.setAgentid(ag.getId());
+			Agentaccountorder aat = new Agentaccountorder();
+			//
+			aat.setAgentid(ag.getId());
+			aat.setUserid(ag.getUserid());
+			aat.setUsername(ag.getName());
+			aat.setNkname(ag.getNkname());
+			aat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+			aat.setExchange(ag.getExchange());
+			aat.setAmount(t.getMerchantdeal() * (ag.getExchange() / 100));// 交易费
+			aat.setAmountreceived(aat.getAmount() + ag.getOnecost());// 总费用
+			aat.setType(DictionaryResource.ORDERTYPE_20);
+			aat.setOrdernum("DFA" + StringUtil.getOrderNum());
+			aat.setRemark("操作资金：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getAmount()) + " 手续费："
+					+ ag.getOnecost());
+			t.setAgentincome(aat.getAmountreceived());
+			t.setAgentordernum(aat.getOrdernum());
+			agentaccountordermapper.post(aat);
+			//
+			agentaccountservice.totalincome(aat);
+		} else {
+			t.setAgentincome(0.00);
+		}
+
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////
+		Channel cll = channelmapper.get(t.getChannelid());
+		Channelaccountorder cat = new Channelaccountorder();
+		cat.setUserid(cll.getUserid());
+		//
+		cat.setChannelid(cll.getId());
+		cat.setUsername(cll.getName());
+		cat.setNkname(cll.getNkname());
+		cat.setChannelcode(cll.getCode());
+		cat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		cat.setAmount(t.getChanneldeal());
+		cat.setExchange(cll.getExchange());
+		cat.setChannelexchange(cll.getExchange());
+		cat.setAmountreceived(t.getChannelpay());
+		cat.setType(DictionaryResource.ORDERTYPE_21);
+		cat.setOrdernum(t.getChannelordernum());
+		cat.setRemark(
+				"资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", cat.getAmount()) + " 手续费：" + cll.getOnecost());
+		channelaccountordermapper.post(cat);
+
+		//
+		channelaccountservice.withdrawamount(cat);
+
+		//
+		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
+
+		//
+		Integer i = mapper.post(t);
+		return i;
 	}
 
 }

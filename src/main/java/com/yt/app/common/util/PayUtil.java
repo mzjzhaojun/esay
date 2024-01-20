@@ -36,7 +36,7 @@ public class PayUtil {
 				+ "&notify_url=" + ss.getNotifyurl() + "&bank_code=" + ss.getBankcode() + "&bank_num=" + ss.getBanknum()
 				+ "&bank_owner=" + ss.getBankowner() + "&paytype=" + ss.getPaytype() + "&payamt=" + ss.getPayamt()
 				+ "&remark=" + ss.getRemark() + "&key=" + key;
-
+		System.out.println(MD5Utils.md5(signParams));
 		if (ss.getSign().equals(MD5Utils.md5(signParams))) {
 			return true;
 		}
@@ -64,7 +64,7 @@ public class PayUtil {
 				+ cl.getApireusultip() + "&return_url=127.0.0.1&bank_code=" + pt.getBankcode() + "&bank_num="
 				+ pt.getAccnumer() + "&bank_owner=" + pt.getAccname() + "&bank_address=" + pt.getBankaddress()
 				+ "&remark=" + pt.getRemark() + "&key=" + cl.getApikey();
-
+		System.out.println(signParams);
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		map.add("merchant_id", cl.getCode());
 		map.add("merchant_order_id", pt.getOrdernum());
