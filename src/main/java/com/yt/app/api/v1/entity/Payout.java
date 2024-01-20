@@ -48,6 +48,7 @@ public class Payout extends YtBaseEntity<Payout> {
 	Long backlong;
 	String imgurl;
 	Double income;
+	String notifyurl;
 	String remark;
 	Integer version;
 

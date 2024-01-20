@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.service.PayoutService;
+import com.yt.app.api.v1.vo.SysSubmit;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.common.common.yt.YtBody;
@@ -38,15 +39,17 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	@Autowired
 	private PayoutService service;
 
+	// 手动回调成功
 	@ApiOperation(value = "callbackpay", response = User.class)
 	@RequestMapping(value = "/callbackpay/{ordernum}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> callbackpay(@PathVariable String ordernum, HttpServletRequest request,
 			HttpServletResponse response) {
-		// service.callbackpaySuccess(ordernum);
+		service.paySuccess(ordernum);
 		return new YtResponseEntity<Object>(new YtBody(1));
 	}
 
-	@ApiOperation(value = "callback", response = User.class)
+	// 天下代付回调
+	@ApiOperation(value = "tycallback", response = User.class)
 	@RequestMapping(value = "/tycallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -54,19 +57,29 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		return new YtResponseEntity<Object>(yb);
 	}
 
-	@ApiOperation(value = "submit", response = User.class)
-	@RequestMapping(value = "/submit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> submit(YtRequestEntity<Payout> requestEntity, HttpServletRequest request,
-			HttpServletResponse response) {
-//		service.callbackpay(requestEntity.getBody().getOrdernum());
-		return new YtResponseEntity<Object>(new YtBody(1));
-	}
-
+	// 接口查单
 	@ApiOperation(value = "query", response = User.class)
-	@RequestMapping(value = "/query/{ordernum}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> query(@PathVariable String ordernum, HttpServletRequest request,
+	@RequestMapping(value = "/query", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> tyquery(@PathVariable String ordernum, HttpServletRequest request,
 			HttpServletResponse response) {
 		Payout pt = service.query(ordernum);
 		return new YtResponseEntity<Object>(new YtBody(pt));
 	}
+
+	@ApiOperation(value = "submit", response = User.class)
+	@RequestMapping(value = "/submit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> submit(YtRequestEntity<SysSubmit> requestEntity, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		return new YtResponseEntity<Object>(new YtBody(1));
+	}
+
+	@ApiOperation(value = "query", response = User.class)
+	@RequestMapping(value = "/querybalance", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> query(YtRequestEntity<Payout> requestEntity, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		return new YtResponseEntity<Object>(new YtBody(1));
+	}
+
 }

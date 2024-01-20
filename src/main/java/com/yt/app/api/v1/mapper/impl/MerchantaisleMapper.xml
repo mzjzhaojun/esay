@@ -71,6 +71,13 @@
 		where aisleid = #{aisleid} and merchantid=
 		#{merchantid}
 	</select>
+	
+	<select id="getByMid" resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from merchantaisle
+		where merchantid=#{merchantid}
+	</select>
 
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"

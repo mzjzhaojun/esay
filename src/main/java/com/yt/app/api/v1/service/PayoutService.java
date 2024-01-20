@@ -1,6 +1,8 @@
 package com.yt.app.api.v1.service;
 
 import com.yt.app.api.v1.entity.Payout;
+import com.yt.app.api.v1.vo.SysResult;
+import com.yt.app.api.v1.vo.SysSubmit;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.common.yt.YtBody;
@@ -19,7 +21,10 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 
 	YtBody tycallbackpay(SysTyOrder so);
 
-	void paySuccess(Payout pt);
+	void paySuccess(String ordernum);
 
+	//
 	Payout query(String ordernum);
+
+	SysResult submit(SysSubmit ss);
 }

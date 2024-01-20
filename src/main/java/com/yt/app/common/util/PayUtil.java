@@ -11,11 +11,13 @@ import org.springframework.web.client.RestTemplate;
 
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Payout;
+import com.yt.app.api.v1.vo.SysResult;
+import com.yt.app.api.v1.vo.SysSubmit;
 import com.yt.app.api.v1.vo.SysTyOrder;
 
-public class TyPayUtil {
+public class PayUtil {
 
-	public static boolean valMd5(SysTyOrder so, String key) {
+	public static boolean valMd5TyOrder(SysTyOrder so, String key) {
 
 		String signParams = "merchant_id=" + so.getMerchant_id() + "&merchant_order_id=" + so.getMerchant_order_id()
 				+ "&typay_order_id=" + so.getTypay_order_id() + "&pay_type=" + so.getPay_type() + "&pay_amt="
@@ -26,6 +28,28 @@ public class TyPayUtil {
 			return true;
 		}
 		return false;
+	}
+
+	public static boolean valMd5Submit(SysSubmit ss, String key) {
+
+		String signParams = "merchantid=" + ss.getMerchantid() + "&merchantorderid=" + ss.getMerchantorderid()
+				+ "&notify_url=" + ss.getNotifyurl() + "&bank_code=" + ss.getBankcode() + "&bank_num=" + ss.getBanknum()
+				+ "&bank_owner=" + ss.getBankowner() + "&paytype=" + ss.getPaytype() + "&payamt=" + ss.getPayamt()
+				+ "&remark=" + ss.getRemark() + "&key=" + key;
+
+		if (ss.getSign().equals(MD5Utils.md5(signParams))) {
+			return true;
+		}
+		return false;
+	}
+
+	public static String Md5Result(SysResult ss, String key) {
+
+		String signParams = "merchantid=" + ss.getMerchantid() + "&payorderid=" + ss.getPayorderid()
+				+ "&merchantorderid=" + ss.getMerchantorderid() + "&bank_code=" + ss.getBankcode() + "&paytype="
+				+ ss.getPaytype() + "&payamt=" + ss.getPayamt() + "&remark=" + ss.getRemark() + "&key=" + key;
+
+		return MD5Utils.md5(signParams);
 	}
 
 	public static String SendTySubmit(Payout pt, Channel cl) {

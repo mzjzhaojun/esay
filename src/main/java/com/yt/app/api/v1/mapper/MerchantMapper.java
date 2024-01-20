@@ -113,6 +113,15 @@ public interface MerchantMapper extends YtIBaseMapper<Merchant> {
 	public Merchant getByUserId(Long userid);
 
 	/**
+	 * getByUserId
+	 *
+	 * @param id id
+	 * @return Merchantaccount
+	 */
+	@YtRedisCacheAnnotation(classs = Merchant.class)
+	public Merchant getByCode(String code);
+
+	/**
 	 * update
 	 * 
 	 * @param o Merchant

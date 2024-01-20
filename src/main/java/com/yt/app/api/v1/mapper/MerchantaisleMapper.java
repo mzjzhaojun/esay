@@ -101,4 +101,13 @@ public interface MerchantaisleMapper extends YtIBaseMapper<Merchantaisle> {
 	@YtRedisCacheAnnotation(classs = Merchantaisle.class)
 	public Merchantaisle getByMidAid(@Param("aisleid") Long aisleid, @Param("merchantid") Long merchantid);
 
+	/**
+	 * listbyids
+	 * 
+	 * @param id long[]ids
+	 * @return listMerchantaisle
+	 */
+	@YtRedisCacheAnnotation(classs = Merchantaisle.class)
+	public List<Merchantaisle> getByMid(Long mid);
+
 }

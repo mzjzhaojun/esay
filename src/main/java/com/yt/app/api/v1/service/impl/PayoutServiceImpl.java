@@ -12,7 +12,9 @@ import com.yt.app.api.v1.mapper.AislechannelMapper;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ChannelaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
+import com.yt.app.api.v1.mapper.MerchantaccountMapper;
 import com.yt.app.api.v1.mapper.MerchantaccountorderMapper;
+import com.yt.app.api.v1.mapper.MerchantaisleMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.service.AgentService;
 import com.yt.app.api.v1.service.AgentaccountService;
@@ -22,6 +24,8 @@ import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.MerchantaccountService;
 import com.yt.app.api.v1.service.PayoutService;
 import com.yt.app.api.v1.service.SystemaccountService;
+import com.yt.app.api.v1.vo.SysResult;
+import com.yt.app.api.v1.vo.SysSubmit;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
@@ -35,18 +39,22 @@ import com.yt.app.api.v1.entity.Aislechannel;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccountorder;
 import com.yt.app.api.v1.entity.Merchant;
+import com.yt.app.api.v1.entity.Merchantaccount;
 import com.yt.app.api.v1.entity.Merchantaccountorder;
+import com.yt.app.api.v1.entity.Merchantaisle;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.enums.YtDataSourceEnum;
+import com.yt.app.common.exption.MyException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
+import com.yt.app.common.util.PayUtil;
 import com.yt.app.common.util.RedisUtil;
 import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.StringUtil;
-import com.yt.app.common.util.TyPayUtil;
 
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
@@ -100,6 +108,10 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	private ChannelaccountService channelaccountservice;
 	@Autowired
 	private SystemaccountService systemaccountservice;
+	@Autowired
+	private MerchantaccountMapper merchantaccountmapper;
+	@Autowired
+	private MerchantaisleMapper merchantaislemapper;
 
 	@Override
 	@Transactional
@@ -172,7 +184,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 		///////////////////////////////////////////////////// channelcordernum/////////////////////////////////////////////////////
 		String channelcordernum = channelservice.getChannelOrder(t, cl);
-
+		Assert.notNull(channelcordernum, "通道单号获取失败!");
 		t.setChannelordernum(channelcordernum);
 
 		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
@@ -283,7 +295,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	 */
 	@Override
 	@Transactional
-	public void paySuccess(Payout pt) {
+	public void paySuccess(String ordernum) {
+		Payout pt = mapper.getByOrdernum(ordernum);
 		Payout t = mapper.get(pt.getId());
 		// 计算商户订单/////////////////////////////////////////////////////
 		Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
@@ -432,25 +445,21 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Override
 	public Payout query(String channelordernum) {
 		Payout pt = mapper.getByChannelOrdernum(channelordernum);
-		Channel cl = channelmapper.get(pt.getChannelid());
-		if (cl.getNkname().equals("天下TY")) {
-			SysTyOrder so = TyPayUtil.SendTySelect(channelordernum, Integer.parseInt(cl.getCode()), cl.getApikey());
-			pt.setRemark(so.getRemark());
-			// md5值是否被篡改
-		}
 		return pt;
 	}
 
 	@Override
 	public YtBody tycallbackpay(SysTyOrder so) {
 		Payout pt = mapper.getByChannelOrdernum(so.getTypay_order_id());
+		if (pt == null)
+			return new YtBody("失败", 100);
 		RLock lock = RedissonUtil.getLock(pt.getId());
 		try {
 			lock.lock();
 			if (pt.getStatus() != DictionaryResource.PAYOUTSTATUS_52) {
 				Channel cl = channelmapper.get(pt.getChannelid());
 				// md5值是否被篡改
-				if (TyPayUtil.valMd5(so, cl.getApikey())) {
+				if (PayUtil.valMd5TyOrder(so, cl.getApikey())) {
 					if (so.getPay_message() == 1) {
 						callbackpaySuccess(pt);
 						return new YtBody("成功", 200);
@@ -464,6 +473,47 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			lock.unlock();
 		}
 		return new YtBody("失败", 100);
+	}
+
+	@Override
+	public SysResult submit(SysSubmit ss) {
+		Integer code = ss.getMerchantid();
+		Merchant mc = merchantmapper.getByCode(code.toString());
+		Assert.notNull(mc, "商户不存在!");
+
+		Merchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
+		if (ma.getBalance() < ss.getPayamt()) {
+			new MyException("余额不足", YtCodeEnum.YT888);
+		}
+		Boolean val = PayUtil.valMd5Submit(ss, mc.getAppkey());
+		Assert.isTrue(val, "签名不正确!");
+
+		List<Merchantaisle> listmc = merchantaislemapper.getByMid(mc.getId());
+		if (listmc == null || listmc.size() == 0) {
+			new MyException("商戶沒有配置通道!", YtCodeEnum.YT888);
+		}
+
+		Payout pt = new Payout();
+		pt.setAccname(ss.getBankowner());
+		pt.setAccnumer(ss.getBanknum());
+		pt.setBankcode(ss.getBankcode());
+		pt.setBankaddress(ss.getBankaddress());
+		pt.setAmount(ss.getPayamt());
+		pt.setNotifyurl(ss.getNotifyurl());
+		pt.setAisleid(listmc.get(0).getAisleid());
+		post(pt);
+
+		SysResult sr = new SysResult();
+		sr.setBankcode(ss.getBankcode());
+		sr.setMerchantid(ss.getMerchantid());
+		sr.setMerchantorderid(ss.getMerchantorderid());
+		sr.setPayamt(ss.getPayamt());
+		sr.setPayorderid(pt.getChannelordernum());
+		sr.setRemark(ss.getRemark());
+		sr.setPaytype(ss.getPaytype());
+		sr.setSign(PayUtil.Md5Result(sr, mc.getAppkey()));
+
+		return sr;
 	}
 
 }

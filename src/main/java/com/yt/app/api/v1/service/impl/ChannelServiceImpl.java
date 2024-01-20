@@ -23,7 +23,7 @@ import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.PasswordUtil;
 import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.StringUtil;
-import com.yt.app.common.util.TyPayUtil;
+import com.yt.app.common.util.PayUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -106,7 +106,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	@Override
 	public String getChannelOrder(Payout pt, Channel cl) {
 		if (cl.getNkname().equals("天下TY")) {
-			return TyPayUtil.SendTySubmit(pt, cl);
+			return PayUtil.SendTySubmit(pt, cl);
 		}
 		return "C" + StringUtil.getOrderNum();
 	}
