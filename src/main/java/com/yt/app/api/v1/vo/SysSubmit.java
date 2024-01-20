@@ -14,6 +14,7 @@ public class SysSubmit {
 	String notifyurl;
 	String banknum;
 	String bankcode;
+	String bankname;
 	String bankowner;
 	String bankaddress;
 	String remark;

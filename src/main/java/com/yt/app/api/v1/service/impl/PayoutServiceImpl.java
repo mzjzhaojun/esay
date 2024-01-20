@@ -502,6 +502,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		pt.setAmount(ss.getPayamt());
 		pt.setNotifyurl(ss.getNotifyurl());
 		pt.setAisleid(listmc.get(0).getAisleid());
+		pt.setBankname(ss.getBankname());
 		add(pt, mc);
 
 		SysResult sr = new SysResult();
