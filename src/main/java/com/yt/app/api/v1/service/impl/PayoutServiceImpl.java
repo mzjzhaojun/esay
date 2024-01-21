@@ -121,6 +121,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		Merchant m = merchantmapper.getByUserId(SysUserContext.getUserId());
 		t.setUserid(m.getUserid());
 		t.setMerchantid(m.getId());
+		t.setNotifyurl(m.getApireusultip());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
 		t.setOrdernum(StringUtil.getOrderNum());// 系统单号
@@ -500,7 +501,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		pt.setBankcode(ss.getBankcode());
 		pt.setBankaddress(ss.getBankaddress());
 		pt.setAmount(ss.getPayamt());
-		pt.setNotifyurl(ss.getNotifyurl());
+		pt.setNotifyurl(mc.getApireusultip());
 		pt.setAisleid(listmc.get(0).getAisleid());
 		pt.setBankname(ss.getBankname());
 		add(pt, mc);
@@ -520,7 +521,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	@Transactional
 	public Integer add(Payout t, Merchant m) {
-
+		TenantIdContext.setTenantId(m.getTenant_id());
 		///////////////////////////////////////////////////// 录入代付订单/////////////////////////////////////////////////////
 		t.setUserid(m.getUserid());
 		t.setMerchantid(m.getId());
@@ -664,6 +665,9 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 		//
 		Integer i = mapper.post(t);
+		
+		TenantIdContext.remove();
+		
 		return i;
 	}
 
