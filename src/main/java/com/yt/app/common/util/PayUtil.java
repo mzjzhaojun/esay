@@ -33,9 +33,9 @@ public class PayUtil {
 	public static boolean valMd5Submit(SysSubmit ss, String key) {
 
 		String signParams = "merchantid=" + ss.getMerchantid() + "&merchantorderid=" + ss.getMerchantorderid()
-				+ "&notify_url=" + ss.getNotifyurl() + "&bank_code=" + ss.getBankcode() + "&bank_num=" + ss.getBanknum()
-				+ "&bank_owner=" + ss.getBankowner() + "&paytype=" + ss.getPaytype() + "&payamt=" + ss.getPayamt()
-				+ "&remark=" + ss.getRemark() + "&key=" + key;
+				+ "&notifyurl=" + ss.getNotifyurl() + "&bankname=" + ss.getBankname() + "&bankcode=" + ss.getBankcode()
+				+ "&banknum=" + ss.getBanknum() + "&bankowner=" + ss.getBankowner() + "&paytype=" + ss.getPaytype()
+				+ "&payamt=" + ss.getPayamt() + "&remark=" + ss.getRemark() + "&key=" + key;
 		System.out.println(MD5Utils.md5(signParams));
 		if (ss.getSign().equals(MD5Utils.md5(signParams))) {
 			return true;
@@ -46,7 +46,7 @@ public class PayUtil {
 	public static String Md5Result(SysResult ss, String key) {
 
 		String signParams = "merchantid=" + ss.getMerchantid() + "&payorderid=" + ss.getPayorderid()
-				+ "&merchantorderid=" + ss.getMerchantorderid() + "&bank_code=" + ss.getBankcode() + "&paytype="
+				+ "&merchantorderid=" + ss.getMerchantorderid() + "&bankcode=" + ss.getBankcode() + "&paytype="
 				+ ss.getPaytype() + "&payamt=" + ss.getPayamt() + "&remark=" + ss.getRemark() + "&key=" + key;
 
 		return MD5Utils.md5(signParams);

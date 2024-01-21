@@ -50,6 +50,7 @@ public class Payout extends YtBaseEntity<Payout> {
 	String imgurl;
 	Double income;
 	String notifyurl;
+	Integer notifystatus;
 	String remark;
 	Integer version;
 
