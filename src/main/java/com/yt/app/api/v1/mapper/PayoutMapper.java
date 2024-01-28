@@ -3,6 +3,7 @@ package com.yt.app.api.v1.mapper;
 import java.util.List;
 import java.util.Map;
 import com.yt.app.api.v1.entity.Payout;
+import com.yt.app.api.v1.vo.PayoutVO;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
 import com.yt.app.common.base.YtIBaseMapper;
@@ -76,6 +77,15 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 	 */
 	@YtRedisCacheAnnotation(classs = Payout.class)
 	public List<Payout> list(Map<String, Object> param);
+
+	/**
+	 * list
+	 * 
+	 * @param param map
+	 * @return listPayout
+	 */
+	@YtRedisCacheAnnotation(classs = Payout.class)
+	public List<PayoutVO> page(Map<String, Object> param);
 
 	/**
 	 * map

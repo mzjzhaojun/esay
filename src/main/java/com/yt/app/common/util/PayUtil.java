@@ -9,10 +9,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import com.yt.app.api.v1.dbo.SysSubmitDTO;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Payout;
-import com.yt.app.api.v1.vo.SysResult;
-import com.yt.app.api.v1.vo.SysSubmit;
+import com.yt.app.api.v1.vo.SysResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
 
 public class PayUtil {
@@ -30,7 +30,7 @@ public class PayUtil {
 		return false;
 	}
 
-	public static boolean valMd5Submit(SysSubmit ss, String key) {
+	public static boolean valMd5Submit(SysSubmitDTO ss, String key) {
 
 		String signParams = "merchantid=" + ss.getMerchantid() + "&merchantorderid=" + ss.getMerchantorderid()
 				+ "&notifyurl=" + ss.getNotifyurl() + "&bankname=" + ss.getBankname() + "&bankcode=" + ss.getBankcode()
@@ -43,7 +43,7 @@ public class PayUtil {
 		return false;
 	}
 
-	public static String Md5Result(SysResult ss, String key) {
+	public static String Md5Result(SysResultVO ss, String key) {
 
 		String signParams = "merchantid=" + ss.getMerchantid() + "&payorderid=" + ss.getPayorderid()
 				+ "&merchantorderid=" + ss.getMerchantorderid() + "&bankcode=" + ss.getBankcode() + "&paytype="

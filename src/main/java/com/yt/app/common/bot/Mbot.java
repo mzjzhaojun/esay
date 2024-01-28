@@ -68,7 +68,7 @@ public class Mbot extends TelegramLongPollingBot {
 	@Override
 	public void onUpdateReceived(Update update) {
 		Long chatid = update.getMessage().getChat().getId();
-		TenantIdContext.removeFlag();
+		TenantIdContext.setTenantId(1720395906240614400L);
 		String message = update.getMessage().getText();
 		if (message != null) {
 			Tgmerchantgroup tmg = tgmerchantgroupmapper.getByTgGroupId(chatid);
@@ -85,6 +85,7 @@ public class Mbot extends TelegramLongPollingBot {
 				handlemessage(message, chatid, replyid, tmg);
 			}
 		}
+		TenantIdContext.remove();
 	}
 
 	private void handlemessage(String message, Long chatid, Integer replyid, Tgmerchantgroup tmg) {

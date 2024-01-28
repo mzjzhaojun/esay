@@ -18,11 +18,12 @@ import io.swagger.annotations.ApiOperation;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.TgmerchantgroupmessageService;
 import com.yt.app.api.v1.entity.Tgmerchantgroupmessage;
+import com.yt.app.api.v1.vo.TgmerchantgroupmessageVO;
 
 /**
  * @author zj defaulttest
  * 
- * @version v1 @createdate2023-11-26 13:20:46
+ * @version v1 @createdate2024-01-28 21:06:01
  */
 
 @RestController
@@ -40,6 +41,15 @@ public class TgmerchantgroupmessageController extends YtBaseEncipherControllerIm
 			HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<Tgmerchantgroupmessage> pagebean = service
 				.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
+	}
+
+	@ApiOperation(value = "page", response = Tgmerchantgroupmessage.class)
+	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<TgmerchantgroupmessageVO> pagebean = service
+				.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 }

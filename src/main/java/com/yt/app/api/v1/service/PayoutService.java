@@ -1,11 +1,15 @@
 package com.yt.app.api.v1.service;
 
+import java.util.Map;
+
+import com.yt.app.api.v1.dbo.SysSubmitDTO;
 import com.yt.app.api.v1.entity.Payout;
-import com.yt.app.api.v1.vo.SysResult;
-import com.yt.app.api.v1.vo.SysSubmit;
+import com.yt.app.api.v1.vo.PayoutVO;
+import com.yt.app.api.v1.vo.SysResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.common.yt.YtBody;
+import com.yt.app.common.common.yt.YtIPage;
 
 /**
  * @author zj default
@@ -26,5 +30,7 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 	//
 	Payout query(String ordernum);
 
-	SysResult submit(SysSubmit ss);
+	SysResultVO submit(SysSubmitDTO ss);
+
+	YtIPage<PayoutVO> page(Map<String, Object> param);
 }

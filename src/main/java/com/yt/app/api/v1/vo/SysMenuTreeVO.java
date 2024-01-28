@@ -63,6 +63,9 @@ public class SysMenuTreeVO {
 	@ApiModelProperty("是否显示面包屑(1:显示 0:隐藏)")
 	private Integer is_show_breadcrumb;
 
+	@ApiModelProperty("是否显示(1:显示 0:隐藏)")
+	private Integer version;
+
 	@ApiModelProperty("下级菜单")
 	private List<SysMenuTreeVO> children;
 

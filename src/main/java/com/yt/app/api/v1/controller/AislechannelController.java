@@ -1,8 +1,5 @@
 package com.yt.app.api.v1.controller;
 
-import java.util.List;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -41,8 +38,7 @@ public class AislechannelController extends YtBaseEncipherControllerImpl<Aislech
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<List<Map<String, Object>>> pagebean = service
-				.map(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		YtIPage<Aislechannel> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 }

@@ -41,6 +41,5 @@ public class Merchantcustomerbanks extends YtBaseEntity<Merchantcustomerbanks> {
 		this.bankaddress = bankaddress;
 		this.version = version;
 	}
-	
-	
+
 }

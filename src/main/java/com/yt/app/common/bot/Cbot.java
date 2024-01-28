@@ -49,7 +49,7 @@ public class Cbot extends TelegramLongPollingBot {
 	@Override
 	public void onUpdateReceived(Update update) {
 		Long chatid = update.getMessage().getChat().getId();
-		TenantIdContext.removeFlag();
+		TenantIdContext.setTenantId(1720395906240614400L);
 		String message = update.getMessage().getText();
 		Message replymsg = update.getMessage().getReplyToMessage();
 		System.out.println("cccccccc" + update.toString());
@@ -74,6 +74,7 @@ public class Cbot extends TelegramLongPollingBot {
 				handlemessage(message, chatid, tmg);
 			}
 		}
+		TenantIdContext.remove();
 	}
 
 	private void handlemessage(String message, Long chatid, Tgchannelgroup tmg) {

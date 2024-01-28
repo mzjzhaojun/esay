@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yt.app.api.v1.dbo.SysSubmitDTO;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.service.PayoutService;
-import com.yt.app.api.v1.vo.SysResult;
-import com.yt.app.api.v1.vo.SysSubmit;
+import com.yt.app.api.v1.vo.SysResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.common.common.yt.YtBody;
@@ -69,9 +69,9 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 
 	@ApiOperation(value = "submit", response = User.class)
 	@RequestMapping(value = "/submit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> submit(YtRequestEntity<SysSubmit> requestEntity, HttpServletRequest request,
+	public YtResponseEntity<Object> submit(YtRequestEntity<SysSubmitDTO> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
-		SysResult sr = service.submit(requestEntity.getBody());
+		SysResultVO sr = service.submit(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(sr));
 	}
 

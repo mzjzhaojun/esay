@@ -1,4 +1,4 @@
-package com.yt.app.api.v1.entity;
+package com.yt.app.api.v1.vo;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,10 +11,12 @@ import com.yt.app.common.base.YtBaseEntity;
  */
 @Getter
 @Setter
-public class Tgmerchantgroupmessage extends YtBaseEntity<Tgmerchantgroupmessage> {
+public class TgmerchantgroupmessageVO extends YtBaseEntity<TgmerchantgroupmessageVO> {
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
-
 	Long id;
 	Long tenant_id;
 	String message;
@@ -28,10 +30,10 @@ public class Tgmerchantgroupmessage extends YtBaseEntity<Tgmerchantgroupmessage>
 	String remark;
 	Integer version;
 
-	public Tgmerchantgroupmessage() {
+	public TgmerchantgroupmessageVO() {
 	}
 
-	public Tgmerchantgroupmessage(Long id, Long tenant_id, String message, Integer type, Object labelids,
+	public TgmerchantgroupmessageVO(Long id, Long tenant_id, String message, Integer type, Object labelids,
 			java.util.Date senttime, Long create_by, java.util.Date create_time, Long update_by,
 			java.util.Date update_time, String remark, Integer version) {
 		this.id = id;

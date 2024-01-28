@@ -43,15 +43,10 @@ public class YtPageBean<T> implements YtIPage<T>, Serializable {
 		this.totalCount = totalCount;
 	}
 
-	public YtPageBean(Map<String, Object> param, int totalCount, List<Map<String, Object>> elements) {
-		this.pageNo = param.get(YtPageBeanEnum.PAGENO.getValue()) == null ? 0
-				: Integer.parseInt(param.get(YtPageBeanEnum.PAGENO.getValue()).toString());
-		this.pageSize = param.get(YtPageBeanEnum.PAGESIZE.getValue()) == null ? 0
-				: Integer.parseInt(param.get(YtPageBeanEnum.PAGESIZE.getValue()).toString());
+	public YtPageBean(List<T> elements) {
 		if (elements == null)
 			elements = new ArrayList<>();
 		this.values = elements;
-		this.totalCount = totalCount;
 	}
 
 	public int getNextPageNo() {

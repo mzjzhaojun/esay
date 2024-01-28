@@ -1,8 +1,9 @@
-package com.yt.app.api.v1.entity;
+package com.yt.app.api.v1.dbo;
 
 import lombok.Getter;
 import lombok.Setter;
-import com.yt.app.common.base.YtBaseEntity;
+
+import com.yt.app.api.v1.dbo.base.BaseDTO;
 
 /**
  * @author zj default
@@ -11,7 +12,7 @@ import com.yt.app.common.base.YtBaseEntity;
  */
 @Getter
 @Setter
-public class Payout extends YtBaseEntity<Payout> {
+public class PayoutDTO extends BaseDTO {
 
 	private static final long serialVersionUID = 1L;
 
@@ -53,10 +54,10 @@ public class Payout extends YtBaseEntity<Payout> {
 	String remark;
 	Integer version;
 
-	public Payout() {
+	public PayoutDTO() {
 	}
 
-	public Payout(Long id, Long tenant_id, Long userid, String ordernum, Long merchantid, String merchantname,
+	public PayoutDTO(Long id, Long tenant_id, Long userid, String ordernum, Long merchantid, String merchantname,
 			String merchantcode, String merchantordernum, Double merchantcost, Double merchantdeal, Double merchantpay,
 			Long aisleid, String aislename, Long agentid, String agentordernum, Double agentincome, Long channelid,
 			String channelname, String channelordernum, Double channelcost, Double channeldeal, Double channelpay,

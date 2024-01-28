@@ -68,6 +68,9 @@ public class SysDeptTreeVO {
 	@ApiModelProperty("创建时间")
 	private Date create_time;
 
+	@ApiModelProperty("版本")
+	private Integer version;
+
 	@ApiModelProperty("子级")
 	private List<SysDeptTreeVO> children;
 

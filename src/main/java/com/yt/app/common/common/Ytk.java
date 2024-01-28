@@ -201,6 +201,117 @@ public class Ytk {
 					insertValue = (insertValue + ",").replace(",,", "");
 					this.L.flush();
 
+					file = dt(bt);
+					this.K = new FileWriter(file);
+					this.L = new BufferedWriter(this.K);
+					this.L.write("package " + DbConnectionUtil.basePage + ".dbo;\r\n\n");
+					this.L.write("import lombok.Getter;\r\n");
+					this.L.write("import lombok.Setter;\r\n");
+					this.L.write("/**\r\n");
+					this.L.write("* @author zj default\r\n");
+					this.L.write("* \r\n");
+					this.L.write("* @version " + DbConnectionUtil.version + "\r\n");
+					this.L.write("* @createdate" + DateTimeUtil.getDateTime() + "\r\n");
+					this.L.write("*/\r\n");
+					this.L.write("@Getter\r\n");
+					this.L.write("@Setter\r\n");
+					this.L.write("public class " + bt + "DTO {\r\n");
+					this.L.write("\r\n");
+					this.L.write("\r\n");
+					for (int l = 0; l < r.length; l++) {
+						this.L.write("" + ts[l][0] + " " + ts[l][1] + ";\r\n");
+					}
+					this.L.write("public " + bt + "DTO(){\r\n");
+					this.L.write("}\r\n");
+					gz = "";
+					for (int i = 0; i < r.length; i++)
+						gz += "," + ts[i][0] + " " + ts[i][1];
+					this.L.write("public " + bt + "DTO(" + gz.substring(1) + "){\r\n");
+					for (int i = 0; i < r.length; i++)
+						this.L.write("this." + ts[i][1] + "=" + ts[i][1] + ";\r\n");
+					this.L.write("}\r\n");
+					this.L.write("}");
+					this.L.flush();
+					column = "";
+					value = "";
+					update = "";
+					insertColumn = "";
+					insertValue = "";
+					for (int i = 0; i < r.length; i++) {
+						column += "" + ts[i][1] + ",";
+						value += "#{" + ts[i][1] + "},";
+						update += "" + ts[i][1] + "" + "=#{" + ts[i][1] + "},";
+						if (i >= 0) {
+							if (!ts[i][1].equals("version")) {
+								insertColumn += "" + ts[i][1] + ",";
+								insertValue += "#{" + ts[i][1] + "},";
+							}
+						}
+					}
+					column = (column + ",").replace(",,", "");
+					value = (value + ",").replace(",,", "");
+					update = (update + ",").replace(",,", "");
+
+					insertColumn = (insertColumn + ",").replace(",,", "");
+					insertValue = (insertValue + ",").replace(",,", "");
+					this.L.flush();
+
+					file = v(bt);
+					this.K = new FileWriter(file);
+					this.L = new BufferedWriter(this.K);
+					this.L.write("package " + DbConnectionUtil.basePage + ".vo;\r\n\n");
+					this.L.write("import lombok.Getter;\r\n");
+					this.L.write("import lombok.Setter;\r\n");
+					this.L.write("import com.yt.app.common.base.YtBaseEntity;\r\n");
+					this.L.write("/**\r\n");
+					this.L.write("* @author zj default\r\n");
+					this.L.write("* \r\n");
+					this.L.write("* @version " + DbConnectionUtil.version + "\r\n");
+					this.L.write("* @createdate" + DateTimeUtil.getDateTime() + "\r\n");
+					this.L.write("*/\r\n");
+					this.L.write("@Getter\r\n");
+					this.L.write("@Setter\r\n");
+					this.L.write("public class " + bt + "VO extends YtBaseEntity<" + bt + "VO>{\r\n");
+					this.L.write("\r\n");
+					this.L.write("\r\n");
+					for (int l = 0; l < r.length; l++) {
+						this.L.write("" + ts[l][0] + " " + ts[l][1] + ";\r\n");
+					}
+					this.L.write("public " + bt + "VO(){\r\n");
+					this.L.write("}\r\n");
+					gz = "";
+					for (int i = 0; i < r.length; i++)
+						gz += "," + ts[i][0] + " " + ts[i][1];
+					this.L.write("public " + bt + "VO(" + gz.substring(1) + "){\r\n");
+					for (int i = 0; i < r.length; i++)
+						this.L.write("this." + ts[i][1] + "=" + ts[i][1] + ";\r\n");
+					this.L.write("}\r\n");
+					this.L.write("}");
+					this.L.flush();
+					column = "";
+					value = "";
+					update = "";
+					insertColumn = "";
+					insertValue = "";
+					for (int i = 0; i < r.length; i++) {
+						column += "" + ts[i][1] + ",";
+						value += "#{" + ts[i][1] + "},";
+						update += "" + ts[i][1] + "" + "=#{" + ts[i][1] + "},";
+						if (i >= 0) {
+							if (!ts[i][1].equals("version")) {
+								insertColumn += "" + ts[i][1] + ",";
+								insertValue += "#{" + ts[i][1] + "},";
+							}
+						}
+					}
+					column = (column + ",").replace(",,", "");
+					value = (value + ",").replace(",,", "");
+					update = (update + ",").replace(",,", "");
+
+					insertColumn = (insertColumn + ",").replace(",,", "");
+					insertValue = (insertValue + ",").replace(",,", "");
+					this.L.flush();
+
 					file = h(bt);
 					this.K = new FileWriter(file);
 					this.L = new BufferedWriter(this.K);
@@ -214,8 +325,8 @@ public class Ytk {
 					this.L.write("" + column + "\r\n");
 					this.L.write("</sql>\r\n");
 					this.L.write("<!-- ResultMap -->\r\n");
-					this.L.write("<resultMap id=\"ResultMap\" type=\"" + DbConnectionUtil.basePage + ".entity." + bt
-							+ "\">\r\n");
+					this.L.write("<resultMap id=\"ResultMap\" type=\"" + DbConnectionUtil.basePage + ".vo." + bt
+							+ "VO\">\r\n");
 					this.L.write("</resultMap>\r\n");
 					this.L.write("<!-- add -->\r\n");
 					this.L.write("<insert id=\"post\" parameterType=\"" + DbConnectionUtil.basePage + ".entity." + bt
@@ -291,7 +402,7 @@ public class Ytk {
 					this.L.write("</select>\r\n");
 					this.L.write("<!-- getMap -->\r\n");
 					this.L.write(
-							"<select id=\"map\" parameterType=\"java.util.HashMap\" resultType=\"java.util.HashMap\">\r\n");
+							"<select id=\"page\" parameterType=\"java.util.HashMap\" resultType=\"ResultMap\">\r\n");
 					this.L.write("select\r\n");
 					this.L.write("<include refid=\"Base_Column_List\"/>\r\n");
 					this.L.write("from " + tb + "\r\n");
@@ -346,6 +457,7 @@ public class Ytk {
 					this.L.write("import java.util.List;\r\n");
 					this.L.write("import java.util.Map;\r\n");
 					this.L.write("import " + DbConnectionUtil.basePage + "." + "entity." + bt + ";\r\n");
+					this.L.write("import " + DbConnectionUtil.basePage + "." + "vo." + bt + "VO;\r\n");
 					this.L.write("import com.yt.app.common.annotation.YtRedisCacheAnnotation;\r\n");
 					this.L.write("import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;\r\n");
 					this.L.write("import " + DbConnectionUtil.commndPage + ".YtIBaseMapper;\r\n");
@@ -435,7 +547,7 @@ public class Ytk {
 					this.L.write("* @return map" + bt + "\r\n");
 					this.L.write("*/\r\n");
 					this.L.write("@YtRedisCacheAnnotation(classs = " + bt + ".class)\r\n");
-					this.L.write("public List<Map<String, Object>> map(Map<String, Object> param);\r\n");
+					this.L.write("public List<" + bt + "VO> page(Map<String, Object> param);\r\n");
 					this.L.write("\r\n");
 					this.L.write("/**\r\n");
 					this.L.write("* listbyids\r\n");
@@ -454,9 +566,12 @@ public class Ytk {
 					this.L = new BufferedWriter(this.K);
 					this.L.write("package " + DbConnectionUtil.basePage + ".service;\r\n");
 					this.L.write("\r\n");
+					this.L.write("import java.util.Map;\r\n");
 					this.L.write("\r\n");
 					this.L.write("import " + DbConnectionUtil.basePage + "." + "entity." + bt + ";\r\n");
+					this.L.write("import " + DbConnectionUtil.basePage + "." + "vo." + bt + "VO;\r\n");
 					this.L.write("import " + DbConnectionUtil.commndPage + ".YtIBaseService;\r\n");
+					this.L.write("import com.yt.app.common.common.yt.YtIPage;\r\n");
 					this.L.write("/**\r\n");
 					this.L.write("* @author zj default\r\n");
 					this.L.write("* \r\n");
@@ -465,6 +580,7 @@ public class Ytk {
 					this.L.write("*/\r\n");
 					this.L.write("\r\n");
 					this.L.write("public interface " + bt + "Service extends YtIBaseService<" + bt + ", Long>{\r\n");
+					this.L.write("YtIPage<" + bt + "VO> page(Map<String, Object> param);\r\n");
 					this.L.write("}");
 					this.L.flush();
 
@@ -480,8 +596,10 @@ public class Ytk {
 					this.L.write("import " + DbConnectionUtil.basePage + "." + "service." + bt + "Service;\r\n");
 					this.L.write("import " + DbConnectionUtil.commndPage + ".impl.YtBaseServiceImpl;\r\n");
 					this.L.write("import " + DbConnectionUtil.basePage + "." + "entity." + bt + ";\r\n");
+					this.L.write("import " + DbConnectionUtil.basePage + "." + "vo." + bt + "VO;\r\n");
 					this.L.write("import com.yt.app.common.common.yt.YtIPage;\r\n");
 					this.L.write("import com.yt.app.common.common.yt.YtPageBean;\r\n");
+					this.L.write("import java.util.Collections;\r\n");
 					this.L.write("import java.util.List;\r\n");
 					this.L.write("import java.util.Map;\r\n");
 					this.L.write("\r\n");
@@ -505,24 +623,28 @@ public class Ytk {
 					this.L.write("return i;\r\n");
 					this.L.write("}\r\n");
 					this.L.write("\r\n");
-					this.L.write("@SuppressWarnings(\"unchecked\")\r\n");
 					this.L.write("@Override\r\n");
 					this.L.write("public YtIPage<" + bt + "> list(Map<String, Object> param) {\r\n");
-					this.L.write("int count = 0;\r\n");
-					this.L.write("if (YtPageBean.isPaging(param)) {\r\n");
-					this.L.write("count = mapper.countlist(param);\r\n");
-					this.L.write(" if (count == 0) {\r\n");
-					this.L.write("return new YtPageBean<" + bt + ">(Collections.emptyList());\r\n");
-					this.L.write("}\r\n");
-					this.L.write("}\r\n");
 					this.L.write("List<" + bt + "> list = mapper.list(param);\r\n");
-					this.L.write("return new YtPageBean<" + bt + ">(param, list, count);\r\n");
+					this.L.write("return new YtPageBean<" + bt + ">(list);\r\n");
 					this.L.write("}\r\n");
 					this.L.write("\r\n");
 					this.L.write("@Override\r\n");
 					this.L.write("public " + bt + " get(Long id) {\r\n");
 					this.L.write("" + bt + " t = mapper.get(id);\r\n");
 					this.L.write("return t;\r\n");
+					this.L.write("}\r\n");
+					this.L.write("@Override\r\n");
+					this.L.write("public YtIPage<" + bt + "VO> page(Map<String, Object> param) {\r\n");
+					this.L.write("int count = 0;\r\n");
+					this.L.write("if (YtPageBean.isPaging(param)) {\r\n");
+					this.L.write("count = mapper.countlist(param);\r\n");
+					this.L.write("if (count == 0) {\r\n");
+					this.L.write("return new YtPageBean<" + bt + "VO>(Collections.emptyList());\r\n");
+					this.L.write("}\r\n");
+					this.L.write("}\r\n");
+					this.L.write("List<" + bt + "VO> list = mapper.page(param);\r\n");
+					this.L.write("return new YtPageBean<" + bt + "VO>(param, list, count);\r\n");
 					this.L.write("}\r\n");
 					this.L.write("}");
 					this.L.flush();
@@ -549,6 +671,7 @@ public class Ytk {
 					this.L.write("import " + DbConnectionUtil.commndPage + ".impl.YtBaseEncipherControllerImpl;\r\n");
 					this.L.write("import " + DbConnectionUtil.basePage + "." + "service." + bt + "Service;\r\n");
 					this.L.write("import " + DbConnectionUtil.basePage + "." + "entity." + bt + ";\r\n");
+					this.L.write("import " + DbConnectionUtil.basePage + "." + "vo." + bt + "VO;\r\n");
 					this.L.write("\r\n");
 					this.L.write("/**\r\n");
 					this.L.write("* @author zj defaulttest\r\n");
@@ -578,7 +701,19 @@ public class Ytk {
 					this.L.write(
 							"public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {\r\n");
 					this.L.write("YtIPage<" + bt
-							+ "> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));\r\n");
+							+ "> list = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));\r\n");
+					this.L.write("return new YtResponseEncryptEntity<Object>(new YtBody(list));\r\n");
+					this.L.write("}\r\n");
+					this.L.write("\r\n");
+					this.L.write("\r\n");
+					this.L.write("\r\n");
+					this.L.write("@ApiOperation(value = \"page\", response = " + bt + ".class)\r\n");
+					this.L.write(
+							"@RequestMapping(value = \"/page\", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)\r\n");
+					this.L.write(
+							"public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {\r\n");
+					this.L.write("YtIPage<" + bt
+							+ "VO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));\r\n");
 					this.L.write("return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));\r\n");
 					this.L.write("}\r\n");
 					this.L.write("}\r\n");
@@ -638,6 +773,24 @@ public class Ytk {
 
 	private File g(String paramString) throws Exception {
 		this.file = new File(DbConnectionUtil.filePath + "/entity/" + paramString + ".java");
+		if (this.file.exists())
+			this.file.delete();
+		else
+			this.file.createNewFile();
+		return this.file;
+	}
+
+	private File v(String paramString) throws Exception {
+		this.file = new File(DbConnectionUtil.filePath + "/vo/" + paramString + "VO.java");
+		if (this.file.exists())
+			this.file.delete();
+		else
+			this.file.createNewFile();
+		return this.file;
+	}
+
+	private File dt(String paramString) throws Exception {
+		this.file = new File(DbConnectionUtil.filePath + "/dbo/" + paramString + "DTO.java");
 		if (this.file.exists())
 			this.file.delete();
 		else

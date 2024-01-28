@@ -1,8 +1,7 @@
-package com.yt.app.api.v1.entity;
+package com.yt.app.api.v1.dbo;
 
 import lombok.Getter;
 import lombok.Setter;
-import com.yt.app.common.base.YtBaseEntity;
 
 /**
  * @author zj default
@@ -11,9 +10,7 @@ import com.yt.app.common.base.YtBaseEntity;
  */
 @Getter
 @Setter
-public class Tgmerchantgroupmessage extends YtBaseEntity<Tgmerchantgroupmessage> {
-
-	private static final long serialVersionUID = 1L;
+public class TgmerchantgroupmessageDTO {
 
 	Long id;
 	Long tenant_id;
@@ -28,10 +25,10 @@ public class Tgmerchantgroupmessage extends YtBaseEntity<Tgmerchantgroupmessage>
 	String remark;
 	Integer version;
 
-	public Tgmerchantgroupmessage() {
+	public TgmerchantgroupmessageDTO() {
 	}
 
-	public Tgmerchantgroupmessage(Long id, Long tenant_id, String message, Integer type, Object labelids,
+	public TgmerchantgroupmessageDTO(Long id, Long tenant_id, String message, Integer type, Object labelids,
 			java.util.Date senttime, Long create_by, java.util.Date create_time, Long update_by,
 			java.util.Date update_time, String remark, Integer version) {
 		this.id = id;

@@ -64,21 +64,6 @@ public interface YtIBaseService<T, ID extends Serializable> {
 	public List<T> list();
 
 	/**
-	 * 获取满足查询参数条件的Map数据，如果存在分页参数则返回分页数据
-	 * 
-	 * @param param
-	 * @return
-	 */
-	public YtIPage<List<Map<String, Object>>> map(Map<String, Object> param);
-
-	/**
-	 * 获取满足查询参数条件的List数据
-	 * 
-	 * @return
-	 */
-	public List<Map<String, Object>> map();
-
-	/**
 	 * 获取满足查询参数条件的数据
 	 * 
 	 * @param id

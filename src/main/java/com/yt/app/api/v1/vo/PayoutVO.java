@@ -1,8 +1,7 @@
-package com.yt.app.api.v1.entity;
+package com.yt.app.api.v1.vo;
 
 import lombok.Getter;
 import lombok.Setter;
-import com.yt.app.common.base.YtBaseEntity;
 
 /**
  * @author zj default
@@ -11,9 +10,7 @@ import com.yt.app.common.base.YtBaseEntity;
  */
 @Getter
 @Setter
-public class Payout extends YtBaseEntity<Payout> {
-
-	private static final long serialVersionUID = 1L;
+public class PayoutVO {
 
 	Long id;
 	Long tenant_id;
@@ -44,6 +41,7 @@ public class Payout extends YtBaseEntity<Payout> {
 	String bankaddress;
 	Double amount;
 	Integer status;
+	String statusname;
 	java.util.Date successtime;
 	Long backlong;
 	String imgurl;
@@ -53,10 +51,10 @@ public class Payout extends YtBaseEntity<Payout> {
 	String remark;
 	Integer version;
 
-	public Payout() {
+	public PayoutVO() {
 	}
 
-	public Payout(Long id, Long tenant_id, Long userid, String ordernum, Long merchantid, String merchantname,
+	public PayoutVO(Long id, Long tenant_id, Long userid, String ordernum, Long merchantid, String merchantname,
 			String merchantcode, String merchantordernum, Double merchantcost, Double merchantdeal, Double merchantpay,
 			Long aisleid, String aislename, Long agentid, String agentordernum, Double agentincome, Long channelid,
 			String channelname, String channelordernum, Double channelcost, Double channeldeal, Double channelpay,

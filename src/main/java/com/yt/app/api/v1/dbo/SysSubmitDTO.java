@@ -1,11 +1,11 @@
-package com.yt.app.api.v1.vo;
+package com.yt.app.api.v1.dbo;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class SysSubmit {
+public class SysSubmitDTO {
 
 	Integer merchantid;
 	String merchantorderid;
@@ -21,14 +21,12 @@ public class SysSubmit {
 	String merchantip;
 	String sign;
 
-
-	public SysSubmit() {
+	public SysSubmitDTO() {
 	}
 
-
-	public SysSubmit(Integer merchantid, String merchantorderid, Integer paytype, Double payamt,
-			String notifyurl, String banknum, String bankcode, String bankowner, String bankaddress, String remark,
-			String merchantip, String sign) {
+	public SysSubmitDTO(Integer merchantid, String merchantorderid, Integer paytype, Double payamt, String notifyurl,
+			String banknum, String bankcode, String bankowner, String bankaddress, String remark, String merchantip,
+			String sign) {
 		super();
 		this.merchantid = merchantid;
 		this.merchantorderid = merchantorderid;
@@ -43,7 +41,5 @@ public class SysSubmit {
 		this.merchantip = merchantip;
 		this.sign = sign;
 	}
-
-	
 
 }

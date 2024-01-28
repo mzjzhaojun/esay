@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SysResult {
+public class SysResultVO {
 
 	Integer merchantid;
 	String payorderid;
@@ -16,10 +16,10 @@ public class SysResult {
 	String remark;
 	String sign;
 
-	public SysResult() {
+	public SysResultVO() {
 	}
 
-	public SysResult(Integer merchantid, String payorderid, String merchantorderid, Integer paytype, Double payamt,
+	public SysResultVO(Integer merchantid, String payorderid, String merchantorderid, Integer paytype, Double payamt,
 			String bankcode, String remark, String sign) {
 		super();
 		this.merchantid = merchantid;

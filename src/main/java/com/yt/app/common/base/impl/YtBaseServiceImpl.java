@@ -87,24 +87,6 @@ public abstract class YtBaseServiceImpl<T, ID extends Serializable> implements Y
 	}
 
 	@Override
-	public YtIPage<List<Map<String, Object>>> map(Map<String, Object> param) {
-		int count = 0;
-		if (YtPageBean.isPaging(param)) {
-			count = mapper.countlist(param);
-			if (count == 0) {
-				return new YtPageBean<List<Map<String, Object>>>(Collections.emptyList());
-			}
-		}
-		return new YtPageBean<List<Map<String, Object>>>(param, count, mapper.map(param));
-	}
-
-	@Override
-	public List<Map<String, Object>> map() {
-		Map<String, Object> param = new HashMap<String, Object>();
-		return mapper.map(param);
-	}
-
-	@Override
 	public List<T> listByArrayId(long[] id) {
 		return mapper.listByArrayId(id);
 	}

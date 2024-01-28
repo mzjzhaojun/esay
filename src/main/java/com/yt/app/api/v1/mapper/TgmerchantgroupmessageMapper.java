@@ -3,6 +3,7 @@ package com.yt.app.api.v1.mapper;
 import java.util.List;
 import java.util.Map;
 import com.yt.app.api.v1.entity.Tgmerchantgroupmessage;
+import com.yt.app.api.v1.vo.TgmerchantgroupmessageVO;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
 import com.yt.app.common.base.YtIBaseMapper;
@@ -10,7 +11,7 @@ import com.yt.app.common.base.YtIBaseMapper;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2023-11-26 13:20:46
+ * @version v1 @createdate2024-01-28 21:06:01
  */
 
 public interface TgmerchantgroupmessageMapper extends YtIBaseMapper<Tgmerchantgroupmessage> {
@@ -84,7 +85,7 @@ public interface TgmerchantgroupmessageMapper extends YtIBaseMapper<Tgmerchantgr
 	 * @return mapTgmerchantgroupmessage
 	 */
 	@YtRedisCacheAnnotation(classs = Tgmerchantgroupmessage.class)
-	public List<Map<String, Object>> map(Map<String, Object> param);
+	public List<TgmerchantgroupmessageVO> page(Map<String, Object> param);
 
 	/**
 	 * listbyids

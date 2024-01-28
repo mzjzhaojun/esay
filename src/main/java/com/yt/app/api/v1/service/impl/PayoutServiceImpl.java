@@ -24,14 +24,15 @@ import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.MerchantaccountService;
 import com.yt.app.api.v1.service.PayoutService;
 import com.yt.app.api.v1.service.SystemaccountService;
-import com.yt.app.api.v1.vo.SysResult;
-import com.yt.app.api.v1.vo.SysSubmit;
+import com.yt.app.api.v1.vo.PayoutVO;
+import com.yt.app.api.v1.vo.SysResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
+import com.yt.app.api.v1.dbo.SysSubmitDTO;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Aisle;
@@ -129,6 +130,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
+		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);
 		t.setRemark("发起代付");
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
@@ -277,7 +279,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		}
 		List<Payout> list = mapper.list(param);
 		list.forEach(mco -> {
-			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
+			// mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX +
+			// mco.getStatus()));
 		});
 		return new YtPageBean<Payout>(param, list, count);
 	}
@@ -395,7 +398,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setRemark("代付成功！");
 		t.setSuccesstime(DateTimeUtil.getNow());
 		t.setBacklong(DateUtil.between(t.getSuccesstime(), t.getCreate_time(), DateUnit.SECOND));
-
+		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
 		//
 		mapper.put(t);
 
@@ -440,6 +443,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setRemark("代付失败！");
 		t.setSuccesstime(DateTimeUtil.getNow());
 		t.setBacklong(DateTimeUtil.diffDays(t.getSuccesstime(), t.getCreate_time()));
+		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 		mapper.put(t);
 	}
 
@@ -477,7 +481,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
-	public SysResult submit(SysSubmit ss) {
+	public SysResultVO submit(SysSubmitDTO ss) {
 		Integer code = ss.getMerchantid();
 		Merchant mc = merchantmapper.getByCode(code.toString());
 		Assert.notNull(mc, "商户不存在!");
@@ -486,7 +490,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		if (ma.getBalance() < ss.getPayamt()) {
 			new MyException("余额不足", YtCodeEnum.YT888);
 		}
-		
+
 		Boolean val = PayUtil.valMd5Submit(ss, mc.getAppkey());
 		Assert.isTrue(val, "签名不正确!");
 
@@ -506,7 +510,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		pt.setBankname(ss.getBankname());
 		add(pt, mc);
 
-		SysResult sr = new SysResult();
+		SysResultVO sr = new SysResultVO();
 		sr.setBankcode(ss.getBankcode());
 		sr.setMerchantid(ss.getMerchantid());
 		sr.setMerchantorderid(ss.getMerchantorderid());
@@ -532,6 +536,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
+		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);
 		t.setRemark("发起代付");
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
@@ -665,10 +670,26 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 		//
 		Integer i = mapper.post(t);
-		
+
 		TenantIdContext.remove();
-		
+
 		return i;
+	}
+
+	@Override
+	public YtIPage<PayoutVO> page(Map<String, Object> param) {
+		int count = 0;
+		if (YtPageBean.isPaging(param)) {
+			count = mapper.countlist(param);
+			if (count == 0) {
+				return new YtPageBean<PayoutVO>(Collections.emptyList());
+			}
+		}
+		List<PayoutVO> list = mapper.page(param);
+		list.forEach(mco -> {
+			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
+		});
+		return new YtPageBean<PayoutVO>(param, list, count);
 	}
 
 }

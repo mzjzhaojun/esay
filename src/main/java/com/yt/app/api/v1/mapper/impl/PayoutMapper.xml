@@ -7,7 +7,7 @@
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Payout">
+		type="com.yt.app.api.v1.vo.PayoutVO">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
@@ -170,6 +170,26 @@
 	
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from payout
+		<where>
+			1=1
+			<if test="userid != null and userid != ''">
+				and userid = #{userid}
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	
+	<!-- getList -->
+	<select id="page" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />

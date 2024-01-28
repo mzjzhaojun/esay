@@ -94,7 +94,7 @@ public interface SysbankMapper extends YtIBaseMapper<Sysbank> {
 	 */
 	@YtRedisCacheAnnotation(classs = Sysbank.class)
 	public List<Sysbank> listByArrayId(long[] id);
-	
+
 	/**
 	 * 
 	 * @param code
