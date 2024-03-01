@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
-import com.yt.app.common.common.yt.YtResponseEntity;
 
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +20,6 @@ import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.PayoutService;
 import com.yt.app.api.v1.vo.PayoutVO;
 import com.yt.app.api.v1.entity.Payout;
-import com.yt.app.api.v1.entity.User;
 
 /**
  * @author zj defaulttest
@@ -55,11 +53,4 @@ public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long>
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
-	@ApiOperation(value = "callbackpay", response = User.class)
-	@RequestMapping(value = "/callbackpay", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> callbackpay(YtRequestDecryptEntity<Payout> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
-		service.callbackpaySuccess(requestEntity.getBody());
-		return new YtResponseEntity<Object>(new YtBody(1));
-	}
 }

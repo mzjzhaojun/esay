@@ -49,7 +49,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		return new YtResponseEntity<Object>(new YtBody(1));
 	}
 
-	// 天下代付回调
+	// 菲律宾代付回调
 	@ApiOperation(value = "tycallback", response = User.class)
 	@RequestMapping(value = "/tycallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request,
@@ -58,7 +58,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		return new YtResponseEntity<Object>(yb);
 	}
 
-	// 接口查单
+	// 盘口查单
 	@ApiOperation(value = "query", response = User.class)
 	@RequestMapping(value = "/query", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tyquery(@PathVariable String ordernum, HttpServletRequest request,
@@ -67,6 +67,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		return new YtResponseEntity<Object>(new YtBody(pt));
 	}
 
+	//盘口下单
 	@ApiOperation(value = "submit", response = User.class)
 	@RequestMapping(value = "/submit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submit(YtRequestEntity<SysSubmitDTO> requestEntity, HttpServletRequest request,

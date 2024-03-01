@@ -123,4 +123,11 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 	@YtRedisCacheAnnotation(classs = Payout.class)
 	public Payout getByOrdernum(String ordernum);
 
+	/**
+	 * 
+	 * @return
+	 */
+	@YtRedisCacheAnnotation(classs = Payout.class)
+	public List<PayoutVO> selectNotifylist();
+
 }

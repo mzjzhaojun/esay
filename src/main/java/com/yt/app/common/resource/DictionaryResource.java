@@ -73,7 +73,7 @@ public class DictionaryResource implements Serializable {
 	 * 回调状态
 	 */
 
-	public static final Integer PAYOUTNOTIFYSTATUS_60 = 60; // 新增
+	public static final Integer PAYOUTNOTIFYSTATUS_60 = 60; // 商户发起 不需要通知
 	public static final Integer PAYOUTNOTIFYSTATUS_61 = 61; // 待通知
 	public static final Integer PAYOUTNOTIFYSTATUS_62 = 62; // 已通知
 	public static final Integer PAYOUTNOTIFYSTATUS_63 = 63; // 通知三次后失败

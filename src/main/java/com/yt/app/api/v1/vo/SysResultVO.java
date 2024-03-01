@@ -7,19 +7,20 @@ import lombok.Setter;
 @Setter
 public class SysResultVO {
 
-	Integer merchantid;
+	String merchantid;
 	String payorderid;
 	String merchantorderid;
 	Integer paytype;
 	Double payamt;
 	String bankcode;
+	Integer code;
 	String remark;
 	String sign;
 
 	public SysResultVO() {
 	}
 
-	public SysResultVO(Integer merchantid, String payorderid, String merchantorderid, Integer paytype, Double payamt,
+	public SysResultVO(String merchantid, String payorderid, String merchantorderid, Integer paytype, Double payamt,
 			String bankcode, String remark, String sign) {
 		super();
 		this.merchantid = merchantid;

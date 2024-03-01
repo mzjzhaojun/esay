@@ -14,6 +14,7 @@ import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.vo.SysResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
+import com.yt.app.common.common.yt.YtBody;
 
 public class PayUtil {
 
@@ -46,8 +47,8 @@ public class PayUtil {
 	public static String Md5Result(SysResultVO ss, String key) {
 
 		String signParams = "merchantid=" + ss.getMerchantid() + "&payorderid=" + ss.getPayorderid()
-				+ "&merchantorderid=" + ss.getMerchantorderid() + "&bankcode=" + ss.getBankcode() + "&paytype="
-				+ ss.getPaytype() + "&payamt=" + ss.getPayamt() + "&remark=" + ss.getRemark() + "&key=" + key;
+				+ "&merchantorderid=" + ss.getMerchantorderid() + "&bankcode=" + ss.getBankcode() + "&payamt="
+				+ ss.getPayamt() + "&remark=" + ss.getRemark() + "&code=" + ss.getCode() + "&key=" + key;
 
 		return MD5Utils.md5(signParams);
 	}
@@ -115,6 +116,35 @@ public class PayUtil {
 				httpEntity, SysTyOrder.class);
 		SysTyOrder data = sov.getBody();
 		System.out.println(data.getTypay_order_id());
+		return data;
+	}
+
+	public static YtBody SendNotify(SysResultVO ss, String key) {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.add("user-agent",
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+
+		String signParams = Md5Result(ss, key);
+
+		System.out.println("查詢签名：" + signParams);
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("merchantid", ss.getMerchantid());
+		map.add("payorderid", ss.getPayorderid());
+		map.add("merchantorderid", ss.getMerchantorderid());
+		map.add("payamt", ss.getPayamt());
+		map.add("bankcode", ss.getBankcode());
+		map.add("code", ss.getCode());
+		map.add("remark", ss.getRemark());
+
+		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		ResponseEntity<YtBody> sov = resttemplate.exchange(
+				"http://txfat-api.fbnma.com/api/query/withdraw/view?sign=" + signParams, HttpMethod.POST, httpEntity,
+				YtBody.class);
+		YtBody data = sov.getBody();
+		System.out.println(sov.getBody());
 		return data;
 	}
 

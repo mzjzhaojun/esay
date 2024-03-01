@@ -189,6 +189,17 @@
 	</select>
 	
 	<!-- getList -->
+	<select id="selectNotifylist" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from payout
+		<where>
+			notifystatus = 61
+		</where>
+	</select>
+	
+	<!-- getList -->
 	<select id="page" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
 		select

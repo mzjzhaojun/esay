@@ -51,6 +51,8 @@ import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.MyException;
 import com.yt.app.common.resource.DictionaryResource;
+import com.yt.app.common.runnable.NotifyThread;
+import com.yt.app.common.runnable.TaskExecutor;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.PayUtil;
 import com.yt.app.common.util.RedisUtil;
@@ -130,7 +132,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
-		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);
+		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);// 商戶發起
 		t.setRemark("发起代付");
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
@@ -463,6 +465,11 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				if (PayUtil.valMd5TyOrder(so, cl.getApikey())) {
 					if (so.getPay_message() == 1) {
 						callbackpaySuccess(pt);
+						// 执行通知
+						if (pt.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61) {
+							NotifyThread notifythread = new NotifyThread(mapper, merchantmapper, pt);
+							TaskExecutor.tastpool.execute(notifythread);
+						}
 						return new YtBody("成功", 200);
 					} else if (so.getPay_message() == -2) {
 						callbackpayFail(pt);
@@ -476,6 +483,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		return new YtBody("失败", 100);
 	}
 
+	// 盘口提交订单
 	@Override
 	public SysResultVO submit(SysSubmitDTO ss) {
 		Integer code = ss.getMerchantid();
@@ -508,7 +516,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 		SysResultVO sr = new SysResultVO();
 		sr.setBankcode(ss.getBankcode());
-		sr.setMerchantid(ss.getMerchantid());
+		sr.setMerchantid(sr.getMerchantid());
 		sr.setMerchantorderid(ss.getMerchantorderid());
 		sr.setPayamt(ss.getPayamt());
 		sr.setPayorderid(pt.getChannelordernum());
@@ -532,7 +540,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
-		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);
+		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61); // 盘口发起
 		t.setRemark("发起代付");
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
