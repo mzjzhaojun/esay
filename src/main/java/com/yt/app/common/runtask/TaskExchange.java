@@ -17,6 +17,7 @@ public class TaskExchange {
 	@Autowired
 	private PayoutMapper mapper;
 
+	
 	@Scheduled(cron = "0/20 * * * * ?")
 	public void exchange() throws InterruptedException {
 		TenantIdContext.setTenantId(1720395906240614400L);

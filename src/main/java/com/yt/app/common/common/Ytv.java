@@ -133,8 +133,8 @@ public class Ytv extends WebMvcConfigurationSupport {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		// 可添加多个
-		registry.addInterceptor(new HandlerInterceptorForToken(g)).addPathPatterns("/rest/**");
-		registry.addInterceptor(new HandlerInterceptorForTenantId(g)).addPathPatterns("/rest/**");
-		registry.addInterceptor(new HandlerInterceptorForRsaKey(g)).addPathPatterns("/rest/**");
+		registry.addInterceptor(new HandlerInterceptorForToken(g)).addPathPatterns("/rest/**", "/app/**");
+		registry.addInterceptor(new HandlerInterceptorForTenantId(g)).addPathPatterns("/rest/**", "/app/**");
+		registry.addInterceptor(new HandlerInterceptorForRsaKey(g)).addPathPatterns("/rest/**", "/app/**");
 	}
 }

@@ -402,7 +402,7 @@ public class Ytk {
 					this.L.write("</select>\r\n");
 					this.L.write("<!-- getMap -->\r\n");
 					this.L.write(
-							"<select id=\"page\" parameterType=\"java.util.HashMap\" resultType=\"ResultMap\">\r\n");
+							"<select id=\"page\" parameterType=\"java.util.HashMap\" resultMap=\"ResultMap\">\r\n");
 					this.L.write("select\r\n");
 					this.L.write("<include refid=\"Base_Column_List\"/>\r\n");
 					this.L.write("from " + tb + "\r\n");

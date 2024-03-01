@@ -278,10 +278,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			}
 		}
 		List<Payout> list = mapper.list(param);
-		list.forEach(mco -> {
-			// mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX +
-			// mco.getStatus()));
-		});
 		return new YtPageBean<Payout>(param, list, count);
 	}
 

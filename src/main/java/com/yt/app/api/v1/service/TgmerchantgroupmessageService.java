@@ -10,7 +10,7 @@ import com.yt.app.common.common.yt.YtIPage;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-01-28 21:06:01
+ * @version v1 @createdate2024-02-26 11:59:44
  */
 
 public interface TgmerchantgroupmessageService extends YtIBaseService<Tgmerchantgroupmessage, Long> {

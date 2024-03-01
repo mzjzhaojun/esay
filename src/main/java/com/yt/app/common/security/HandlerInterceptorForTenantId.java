@@ -1,11 +1,14 @@
 package com.yt.app.common.security;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.config.YtConfig;
+
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +26,10 @@ public class HandlerInterceptorForTenantId implements HandlerInterceptor {
 
 	public HandlerInterceptorForTenantId(YtConfig config) {
 	}
+
+	private Pattern allowedMethods = Pattern.compile("^(HEAD|TRACE|OPTIONS)$");
+
+	private AntPathRequestMatcher[] requestMatchers = { new AntPathRequestMatcher("/app/v1/auth/**") };
 
 	/**
 	 * 租户ID字段名称
@@ -49,6 +56,11 @@ public class HandlerInterceptorForTenantId implements HandlerInterceptor {
 				TenantIdContext.removeFlag();
 			}
 		}
+		// 判断是否放行接口
+		if (this.isOpenApi(request)) {
+			TenantIdContext.removeFlag();
+		}
+
 		// 是否排除租户ID标识
 		String tenantIdFlag = request.getHeader(TENANT_ID_FLAG);
 		String isTenantIdFlag = "true";
@@ -76,6 +88,32 @@ public class HandlerInterceptorForTenantId implements HandlerInterceptor {
 			throws Exception {
 		HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
 		TenantIdContext.remove();
+	}
+
+	/**
+	 * 判断是否放行接口
+	 *
+	 * @param request 请求
+	 * @return void
+	 * @author zhengqingya
+	 * @date 2023/2/13 15:52
+	 */
+	private boolean isOpenApi(HttpServletRequest request) {
+		boolean isOpen = false;
+		if (this.matches(request)) {
+			TenantIdContext.removeFlag();
+			return true;
+		}
+		return isOpen;
+	}
+
+	public boolean matches(HttpServletRequest request) {
+		for (AntPathRequestMatcher rm : requestMatchers) {
+			if (rm.matches(request)) {
+				return true;
+			}
+		}
+		return allowedMethods.matcher(request.getMethod()).matches();
 	}
 
 }

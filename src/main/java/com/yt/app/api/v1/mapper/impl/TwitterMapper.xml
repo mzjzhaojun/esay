@@ -1,57 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper
-	namespace="com.yt.app.api.v1.mapper.TgmerchantgroupmessageMapper">
+<mapper namespace="com.yt.app.api.v1.mapper.TwitterMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,message,type,labelids,senttime,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,type,label,name,code,remark,create_by,create_time,img,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.vo.TgmerchantgroupmessageVO">
+		type="com.yt.app.api.v1.vo.TwitterVO">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Tgmerchantgroupmessage">
+		parameterType="com.yt.app.api.v1.entity.Twitter">
 		insert into
-		Tgmerchantgroupmessage(id,tenant_id,message,type,labelids,senttime,create_by,create_time,update_by,update_time,remark)
+		twitter(id,tenant_id,type,label,name,code,remark,create_by,create_time,img)
 		values
-		(#{id},#{tenant_id},#{message},#{type},#{labelids},#{senttime},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{tenant_id},#{type},#{label},#{name},#{code},#{remark},#{create_by},#{create_time},#{img})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		Tgmerchantgroupmessage(id,tenant_id,message,type,labelids,senttime,create_by,create_time,update_by,update_time,remark)
+		twitter(id,tenant_id,type,label,name,code,remark,create_by,create_time,img)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{message},#{type},#{labelids},#{senttime},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+			(#{id},#{tenant_id},#{type},#{label},#{name},#{code},#{remark},#{create_by},#{create_time},#{img})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from Tgmerchantgroupmessage
+		delete from twitter
 		where id = #{id}
 	</delete>
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Tgmerchantgroupmessage">
-		update Tgmerchantgroupmessage
+		parameterType="com.yt.app.api.v1.entity.Twitter">
+		update twitter
 		<set>
 			<if test="tenant_id != null">
 				tenant_id= #{tenant_id},
 			</if>
-			<if test="message != null">
-				message= #{message},
-			</if>
 			<if test="type != null">
 				type= #{type},
 			</if>
-			<if test="labelids != null">
-				labelids= #{labelids},
+			<if test="label != null">
+				label= #{label},
 			</if>
-			<if test="senttime != null">
-				senttime= #{senttime},
+			<if test="name != null">
+				name= #{name},
+			</if>
+			<if test="code != null">
+				code= #{code},
+			</if>
+			<if test="remark != null">
+				remark= #{remark},
 			</if>
 			<if test="create_by != null">
 				create_by= #{create_by},
@@ -59,14 +61,8 @@
 			<if test="create_time != null">
 				create_time= #{create_time},
 			</if>
-			<if test="update_by != null">
-				update_by= #{update_by},
-			</if>
-			<if test="update_time != null">
-				update_time= #{update_time},
-			</if>
-			<if test="remark != null">
-				remark= #{remark},
+			<if test="img != null">
+				img= #{img},
 			</if>
 			<if test="version != null">
 				version= #{version}+1
@@ -79,7 +75,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from Tgmerchantgroupmessage
+		from twitter
 		where id = #{id}
 	</select>
 	<!-- getList -->
@@ -87,7 +83,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from Tgmerchantgroupmessage
+		from twitter
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -106,7 +102,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from Tgmerchantgroupmessage
+		from twitter
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -123,7 +119,7 @@
 	<!-- getCount -->
 	<select id="countlist" parameterType="java.util.HashMap"
 		resultType="int">
-		select count(*) from Tgmerchantgroupmessage
+		select count(*) from twitter
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -136,7 +132,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from Tgmerchantgroupmessage
+		from twitter
 		<where>
 			1=1
 			<if test="array != null and array.length > 0">

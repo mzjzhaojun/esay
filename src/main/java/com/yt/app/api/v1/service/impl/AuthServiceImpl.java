@@ -14,6 +14,7 @@ import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.AuthService;
 import com.yt.app.api.v1.service.RoleService;
 import com.yt.app.api.v1.service.RolescopeService;
+import com.yt.app.api.v1.service.UserService;
 import com.yt.app.api.v1.vo.AuthLoginVO;
 import com.yt.app.api.v1.vo.SysUserPermVO;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
@@ -47,6 +48,9 @@ public class AuthServiceImpl implements AuthService {
 	private RoleService sysroleservice;
 
 	@Autowired
+	private UserService isysuserservice;
+
+	@Autowired
 	private UserMapper usermapper;
 
 	@Autowired
@@ -66,9 +70,9 @@ public class AuthServiceImpl implements AuthService {
 		// 校验原始密码是否正确
 		Assert.isTrue(isValid, "密码错误！");
 
-//		isValid = GoogleAuthenticatorUtil.checkCode(userPerm.getTwofactorcode(), Long.parseLong(params.getCode()),
-//				System.currentTimeMillis());
-//		Assert.isTrue(isValid, "验证码错误！");
+		isValid = GoogleAuthenticatorUtil.checkCode(userPerm.getTwofactorcode(), Long.parseLong(params.getCode()),
+				System.currentTimeMillis());
+		Assert.isTrue(isValid, "验证码错误！");
 
 		// 拿到下级角色ids
 		List<Long> roleIdList = userPerm.getRoleIdList();
@@ -118,6 +122,19 @@ public class AuthServiceImpl implements AuthService {
 			return 1;
 		}
 		return i;
+	}
+
+	@Override
+	public AuthLoginVO loginapp(AuthLoginDTO params) {
+		String username = params.getUsername();
+		String password = params.getPassword();
+		SysUserPermVO userPerm = this.isysuserservice.getUserPerm(SysUserPermDTO.builder().username(username).build());
+		boolean isValid = PasswordUtil.isValidPassword(password, userPerm.getPassword());
+		// 校验原始密码是否正确
+		Assert.isTrue(isValid, "密码错误！");
+		return AuthUtil.login(JwtUserBO.builder().authSourceEnum(AuthSourceEnum.B)
+				.userId(Long.valueOf(userPerm.getId())).username(userPerm.getUsername()).deptId(userPerm.getDept_id())
+				.tenantId(userPerm.getTenantId()).accounttype(userPerm.getAccounttype()).build());
 	}
 
 }

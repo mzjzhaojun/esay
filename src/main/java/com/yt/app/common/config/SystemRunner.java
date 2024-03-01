@@ -46,21 +46,21 @@ public class SystemRunner implements CommandLineRunner {
 		log.info("服务初始化之后，执行方法 start...");
 
 		// 设置默认租户
-		// TenantIdContext.setTenantId(AppConstant.SYSTEM_TENANT_ID);
+		TenantIdContext.setTenantId(AppConstant.SYSTEM_TENANT_ID);
 
 		// 生成密钥
-		// RsaUtil.InitKeys();
+		RsaUtil.InitKeys();
 
 		// 加载字典
-		// dictservice.initCache();
+		dictservice.initCache();
 
 		// 刷新初始权限
-		// roleservice.refreshSuperAdminPerm();
+		roleservice.refreshSuperAdminPerm();
 
 		// 注册机器人
-		// TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-		// botsApi.registerBot(mbot);
-		// botsApi.registerBot(cbot);
+		TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
+		botsApi.registerBot(mbot);
+		botsApi.registerBot(cbot);
 
 		log.info("服务初始化之后，执行方法 end...");
 	}

@@ -28,4 +28,6 @@ public interface AuthService {
 
 	Integer verqrcode(String username, String code, String twocode);
 
+	AuthLoginVO loginapp(AuthLoginDTO params);
+
 }
