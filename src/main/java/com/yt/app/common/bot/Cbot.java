@@ -19,6 +19,7 @@ import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
 import com.yt.app.api.v1.service.PayconfigService;
+import com.yt.app.common.util.DateTimeUtil;
 
 @Component
 public class Cbot extends TelegramLongPollingBot {
@@ -62,6 +63,7 @@ public class Cbot extends TelegramLongPollingBot {
 					Tgchannelgroup t = new Tgchannelgroup();
 					t.setTgid(chatid);
 					t.setStatus(true);
+					t.setCreate_time(DateTimeUtil.getNow());
 					t.setTggroupname(update.getMessage().getChat().getTitle());
 					tgchannelgroupmapper.post(t);
 				}
