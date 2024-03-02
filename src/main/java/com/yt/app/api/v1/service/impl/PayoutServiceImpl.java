@@ -467,11 +467,15 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 						callbackpaySuccess(pt);
 						// 执行通知
 						if (pt.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61) {
-							NotifyThread notifythread = new NotifyThread(mapper, merchantmapper, pt);
+							NotifyThread notifythread = new NotifyThread(mapper, merchantmapper, pt, 200);
 							TaskExecutor.tastpool.execute(notifythread);
 						}
 						return new YtBody("成功", 200);
 					} else if (so.getPay_message() == -2) {
+						if (pt.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61) {
+							NotifyThread notifythread = new NotifyThread(mapper, merchantmapper, pt, 100);
+							TaskExecutor.tastpool.execute(notifythread);
+						}
 						callbackpayFail(pt);
 					}
 				}

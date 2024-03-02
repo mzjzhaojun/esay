@@ -26,7 +26,6 @@ import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.service.PayconfigService;
-import com.yt.app.common.base.context.TenantIdContext;
 
 @Component
 public class Mbot extends TelegramLongPollingBot {
@@ -68,7 +67,6 @@ public class Mbot extends TelegramLongPollingBot {
 	@Override
 	public void onUpdateReceived(Update update) {
 		Long chatid = update.getMessage().getChat().getId();
-		TenantIdContext.setTenantId(1720395906240614400L);
 		String message = update.getMessage().getText();
 		if (message != null) {
 			Tgmerchantgroup tmg = tgmerchantgroupmapper.getByTgGroupId(chatid);
@@ -80,12 +78,18 @@ public class Mbot extends TelegramLongPollingBot {
 					tmg.setTgid(chatid);
 					tgmerchantgroupmapper.put(tmg);
 					handlemessage(message, chatid, replyid, tmg);
+				} else {
+					Tgmerchantgroup t = new Tgmerchantgroup();
+					t.setTgid(chatid);
+					t.setStatus(true);
+					t.setTggroupname(update.getMessage().getChat().getTitle());
+					tgmerchantgroupmapper.post(t);
 				}
 			} else {
 				handlemessage(message, chatid, replyid, tmg);
 			}
 		}
-		TenantIdContext.remove();
+
 	}
 
 	private void handlemessage(String message, Long chatid, Integer replyid, Tgmerchantgroup tmg) {

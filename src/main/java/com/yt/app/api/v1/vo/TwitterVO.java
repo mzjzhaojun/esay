@@ -7,16 +7,14 @@ import com.yt.app.common.base.YtBaseEntity;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-02-26 11:42:42
+ * @version v1 @createdate2024-03-02 18:47:41
  */
 @Getter
 @Setter
 public class TwitterVO extends YtBaseEntity<TwitterVO> {
 
-	/**
-		 * 
-		 */
 	private static final long serialVersionUID = 1L;
+
 	Long id;
 	Long tenant_id;
 	Integer type;

@@ -7,7 +7,7 @@ import com.yt.app.common.base.YtBaseEntity;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-02-26 11:42:42
+ * @version v1 @createdate2024-03-02 18:47:41
  */
 @Getter
 @Setter

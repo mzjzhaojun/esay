@@ -39,6 +39,6 @@ public class Run extends SpringBootServletInitializer {
 		// "merchantaccountapply", "merchantaccountapplyjournal",
 		// "merchantaccountorder","systemaccount", "systemcapitalrecord"
 
-		Ytk.u().p(Arrays.asList("tgmerchantgroupmessage"));
+		Ytk.u().p(Arrays.asList("twitter"));
 	}
 }

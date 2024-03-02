@@ -19,11 +19,13 @@ public class NotifyThread implements Runnable {
 	private PayoutMapper mapper;
 	private MerchantMapper merchantmapper;
 	private Payout payout;
+	private Integer code;
 
-	public NotifyThread(PayoutMapper _mapper, MerchantMapper _merchantmapper, Payout pt) {
+	public NotifyThread(PayoutMapper _mapper, MerchantMapper _merchantmapper, Payout pt, Integer _code) {
 		mapper = _mapper;
 		merchantmapper = _merchantmapper;
 		payout = pt;
+		code = _code;
 	}
 
 	@Override
@@ -35,9 +37,9 @@ public class NotifyThread implements Runnable {
 		ss.setMerchantorderid(payout.getMerchantordernum());
 		ss.setPayamt(payout.getAmount());
 		ss.setBankcode(payout.getBankcode());
-		ss.setCode(200);
-		ss.setRemark("200");
-		logger.info("通知 start---------------------商户单号："+payout.getMerchantordernum());
+		ss.setCode(code);
+		ss.setRemark("remark");
+		logger.info("通知 start---------------------商户单号：" + payout.getMerchantordernum());
 		int i = 1;
 		while (true) {
 			if (i > 3) {

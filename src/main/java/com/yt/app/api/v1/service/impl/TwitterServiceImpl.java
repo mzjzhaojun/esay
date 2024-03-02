@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-02-26 11:42:42
+ * @version v1 @createdate2024-03-02 18:47:41
  */
 
 @Service
@@ -46,14 +46,11 @@ public class TwitterServiceImpl extends YtBaseServiceImpl<Twitter, Long> impleme
 
 	@Override
 	public YtIPage<TwitterVO> page(Map<String, Object> param) {
-		int count = 0;
-		if (YtPageBean.isPaging(param)) {
-			count = mapper.countlist(param);
-			if (count == 0) {
-				return new YtPageBean<TwitterVO>(Collections.emptyList());
-			}
+		int count = mapper.countlist(param);
+		if (count == 0) {
+			return new YtPageBean<TwitterVO>(Collections.emptyList());
 		}
-		List<TwitterVO> list = mapper.pages(param);
+		List<TwitterVO> list = mapper.page(param);
 		return new YtPageBean<TwitterVO>(param, list, count);
 	}
 }

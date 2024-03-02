@@ -1,7 +1,5 @@
 package com.yt.app.api.v1.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -25,7 +23,7 @@ import com.yt.app.api.v1.vo.TwitterVO;
 /**
  * @author zj defaulttest
  * 
- * @version v1 @createdate2024-02-26 11:42:42
+ * @version v1 @createdate2024-03-02 18:47:41
  */
 
 @RestController
@@ -41,7 +39,7 @@ public class TwitterController extends YtBaseEncipherControllerImpl<Twitter, Lon
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		List<Twitter> list = service.list();
+		YtIPage<Twitter> list = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}
 

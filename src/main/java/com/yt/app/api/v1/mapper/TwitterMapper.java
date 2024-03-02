@@ -11,7 +11,7 @@ import com.yt.app.common.base.YtIBaseMapper;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-02-26 11:42:42
+ * @version v1 @createdate2024-03-02 18:47:41
  */
 
 public interface TwitterMapper extends YtIBaseMapper<Twitter> {
@@ -85,7 +85,7 @@ public interface TwitterMapper extends YtIBaseMapper<Twitter> {
 	 * @return mapTwitter
 	 */
 	@YtRedisCacheAnnotation(classs = Twitter.class)
-	public List<TwitterVO> pages(Map<String, Object> param);
+	public List<TwitterVO> page(Map<String, Object> param);
 
 	/**
 	 * listbyids

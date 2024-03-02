@@ -273,6 +273,7 @@ public class Ytk {
 					this.L.write("@Setter\r\n");
 					this.L.write("public class " + bt + "VO extends YtBaseEntity<" + bt + "VO>{\r\n");
 					this.L.write("\r\n");
+					this.L.write("private static final long serialVersionUID = 1L;\r\n");
 					this.L.write("\r\n");
 					for (int l = 0; l < r.length; l++) {
 						this.L.write("" + ts[l][0] + " " + ts[l][1] + ";\r\n");
@@ -636,12 +637,9 @@ public class Ytk {
 					this.L.write("}\r\n");
 					this.L.write("@Override\r\n");
 					this.L.write("public YtIPage<" + bt + "VO> page(Map<String, Object> param) {\r\n");
-					this.L.write("int count = 0;\r\n");
-					this.L.write("if (YtPageBean.isPaging(param)) {\r\n");
-					this.L.write("count = mapper.countlist(param);\r\n");
+					this.L.write("int count = mapper.countlist(param);\r\n");
 					this.L.write("if (count == 0) {\r\n");
 					this.L.write("return new YtPageBean<" + bt + "VO>(Collections.emptyList());\r\n");
-					this.L.write("}\r\n");
 					this.L.write("}\r\n");
 					this.L.write("List<" + bt + "VO> list = mapper.page(param);\r\n");
 					this.L.write("return new YtPageBean<" + bt + "VO>(param, list, count);\r\n");

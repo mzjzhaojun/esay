@@ -19,7 +19,6 @@ import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
 import com.yt.app.api.v1.service.PayconfigService;
-import com.yt.app.common.base.context.TenantIdContext;
 
 @Component
 public class Cbot extends TelegramLongPollingBot {
@@ -49,7 +48,6 @@ public class Cbot extends TelegramLongPollingBot {
 	@Override
 	public void onUpdateReceived(Update update) {
 		Long chatid = update.getMessage().getChat().getId();
-		TenantIdContext.setTenantId(1720395906240614400L);
 		String message = update.getMessage().getText();
 		Message replymsg = update.getMessage().getReplyToMessage();
 		System.out.println("cccccccc" + update.toString());
@@ -60,6 +58,12 @@ public class Cbot extends TelegramLongPollingBot {
 				if (tmg != null) {
 					tmg.setTgid(chatid);
 					tgchannelgroupmapper.put(tmg);
+				} else {
+					Tgchannelgroup t = new Tgchannelgroup();
+					t.setTgid(chatid);
+					t.setStatus(true);
+					t.setTggroupname(update.getMessage().getChat().getTitle());
+					tgchannelgroupmapper.post(t);
 				}
 				handlemessage(message, chatid, tmg);
 			} else {
@@ -74,7 +78,6 @@ public class Cbot extends TelegramLongPollingBot {
 				handlemessage(message, chatid, tmg);
 			}
 		}
-		TenantIdContext.remove();
 	}
 
 	private void handlemessage(String message, Long chatid, Tgchannelgroup tmg) {
