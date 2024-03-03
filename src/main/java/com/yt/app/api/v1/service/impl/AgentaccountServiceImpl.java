@@ -132,7 +132,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 		aaaj.setPosttotalincome(ma.getTotalincome());// 总收入
 		aaaj.setPosttoincomeamount(0.00);// 确认收入
 		aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(ma.getWithdrawamount());// 确认支出
+		aaaj.setPosttowithdrawamount(0.00);// 确认支出
 		aaaj.setRemark("待确认代理收入金额：" + t.getRemark());
 		//
 		agentaccountapplyjournamapper.post(aaaj);
@@ -169,7 +169,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 		aaaj.setPosttotalincome(t.getTotalincome() + mao.getAmountreceived());// 总收入
 		aaaj.setPosttoincomeamount(mao.getAmountreceived());// 确认收入
 		aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(t.getWithdrawamount());// 确认支出
+		aaaj.setPosttowithdrawamount(0.00);// 确认支出
 		aaaj.setRemark("收入成功金额：" + String.format("%.2f", mao.getAmountreceived()));
 		//
 		agentaccountapplyjournamapper.post(aaaj);
@@ -185,6 +185,8 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 		} finally {
 			lock.unlock();
 		}
+
+		agentservice.updateIncome(t);
 	}
 
 	// 拒绝收入
@@ -206,9 +208,9 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 		aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
 		// 变更后
 		aaaj.setPosttotalincome(t.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(0.00);// 待确认收入
+		aaaj.setPosttoincomeamount(0.00);// 确认收入
 		aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(t.getWithdrawamount());// 待确认支出
+		aaaj.setPosttowithdrawamount(0.00);// 确认支出
 		aaaj.setRemark("收入失败，金额：" + String.format("%.2f", mao.getAmountreceived()));
 		//
 		agentaccountapplyjournamapper.post(aaaj);
@@ -243,9 +245,9 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 		aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
 		// 变更后
 		aaaj.setPosttotalincome(t.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(0.00);// 待确认收入
+		aaaj.setPosttoincomeamount(0.00);// 确认收入
 		aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(t.getWithdrawamount());// 待确认支出
+		aaaj.setPosttowithdrawamount(0.00);// 确认支出
 		aaaj.setRemark("收入取消，金额：" + String.format("%.2f", mao.getAmountreceived()));
 		//
 		agentaccountapplyjournamapper.post(aaaj);
@@ -284,9 +286,9 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 		aaaj.setPretowithdrawamount(ma.getTowithdrawamount() + t.getAmountreceived());// 待确认支出
 		// 变更后
 		aaaj.setPosttotalincome(ma.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(ma.getToincomeamount());// 待确认收入
+		aaaj.setPosttoincomeamount(0.00);// 确认收入
 		aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(0.00);// 待确认支出
+		aaaj.setPosttowithdrawamount(0.00);// 确认支出
 		aaaj.setRemark("冻结待提现金额：" + String.format("%.2f", t.getAmountreceived()));
 		//
 		agentaccountapplyjournamapper.post(aaaj);
@@ -322,9 +324,9 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 		aaaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
 		// 变更后
 		aaaj.setPosttotalincome(t.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(t.getToincomeamount());// 待确认收入
+		aaaj.setPosttoincomeamount(0.00);// 确认收入
 		aaaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());// 总支出
-		aaaj.setPosttowithdrawamount(mao.getAmountreceived());// 待确认支出
+		aaaj.setPosttowithdrawamount(mao.getAmountreceived());// 确认支出
 		aaaj.setRemark("提现成功，金额：" + String.format("%.2f", mao.getAmountreceived()));
 		//
 		agentaccountapplyjournamapper.post(aaaj);
@@ -361,9 +363,9 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 		aaaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
 		// 变更后
 		aaaj.setPosttotalincome(t.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(t.getToincomeamount());// 待确认收入
+		aaaj.setPosttoincomeamount(0.00);// 确认收入
 		aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(0.00);// 待确认支出
+		aaaj.setPosttowithdrawamount(0.00);// 确认支出
 		aaaj.setRemark("审核拒绝，提现失败，金额：" + String.format("%.2f", mao.getAmountreceived()));
 		//
 		agentaccountapplyjournamapper.post(aaaj);
@@ -398,9 +400,9 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 		aaaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
 		// 变更后
 		aaaj.setPosttotalincome(t.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(t.getToincomeamount());// 待确认收入
+		aaaj.setPosttoincomeamount(0.00);// 确认收入
 		aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(0.00);// 待确认支出
+		aaaj.setPosttowithdrawamount(0.00);// 确认支出
 		aaaj.setRemark("客户取消提现，金额：" + String.format("%.2f", mao.getAmountreceived()));
 		//
 		agentaccountapplyjournamapper.post(aaaj);

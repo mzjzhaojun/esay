@@ -26,6 +26,7 @@ public class Systemcapitalrecord extends YtBaseEntity<Systemcapitalrecord> {
 	Double posttotalincome;
 	Double postwithdrawamount;
 	Double amount;
+	Double balance;
 	String remark;
 	Integer version;
 

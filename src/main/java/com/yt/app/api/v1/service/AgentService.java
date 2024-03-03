@@ -15,4 +15,6 @@ public interface AgentService extends YtIBaseService<Agent, Long> {
 	void updateWithdraw(Agentaccount t);
 
 	void updatePayout(Payout t);
+	
+	void updateIncome(Agentaccount t);
 }

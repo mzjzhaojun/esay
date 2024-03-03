@@ -82,11 +82,9 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		scr.setSystemaccountid(t.getId());
 		scr.setName(mao.getUsername());
 		scr.setType(DictionaryResource.ORDERTYPE_20);
-		scr.setPretotalincome(t.getTotalincome());
-		scr.setPosttotalincome(t.getTotalincome() + mao.getAmountreceived());
-		scr.setAmount(mao.getAmountreceived());
-		scr.setRemark("商户充值金额：" + String.format("%.2f", mao.getAmountreceived()));
-		systemcapitalrecordmapper.post(scr);
+		scr.setPretotalincome(t.getTotalincome());// 总收入
+		scr.setPosttotalincome(t.getTotalincome() + mao.getAmountreceived());// 待确认收入
+		scr.setAmount(mao.getAmountreceived());// 操作金额
 		RLock lock = RedissonUtil.getLock(t.getId());
 		try {
 			lock.lock();
@@ -97,6 +95,9 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		} finally {
 			lock.unlock();
 		}
+		scr.setBalance(t.getBalance());//
+		scr.setRemark("商户充值金额：" + String.format("%.2f", mao.getAmountreceived()));
+		systemcapitalrecordmapper.post(scr);
 	}
 
 	// 商户支出
@@ -112,8 +113,6 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		scr.setPrewithdrawamount(t.getWithdrawamount());
 		scr.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
 		scr.setAmount(mao.getAmountreceived());
-		scr.setRemark("商户提现金额：" + String.format("%.2f", mao.getAmountreceived()));
-		systemcapitalrecordmapper.post(scr);
 		RLock lock = RedissonUtil.getLock(t.getId());
 		try {
 			lock.lock();
@@ -124,6 +123,9 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		} finally {
 			lock.unlock();
 		}
+		scr.setBalance(t.getBalance());//
+		scr.setRemark("商户提现金额：" + String.format("%.2f", mao.getAmountreceived()));
+		systemcapitalrecordmapper.post(scr);
 	}
 
 	// 商户代付支出
@@ -139,8 +141,6 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		scr.setPrewithdrawamount(t.getWithdrawamount());
 		scr.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
 		scr.setAmount(mao.getAmountreceived());
-		scr.setRemark("商戶代付金额：" + String.format("%.2f", mao.getAmountreceived()));
-		systemcapitalrecordmapper.post(scr);
 		RLock lock = RedissonUtil.getLock(t.getId());
 		try {
 			lock.lock();
@@ -151,6 +151,9 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		} finally {
 			lock.unlock();
 		}
+		scr.setBalance(t.getBalance());//
+		scr.setRemark("商戶代付金额：" + String.format("%.2f", mao.getAmountreceived()));
+		systemcapitalrecordmapper.post(scr);
 	}
 
 	// 渠道支出
@@ -166,8 +169,6 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		scr.setPrewithdrawamount(t.getWithdrawamount());
 		scr.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
 		scr.setAmount(mao.getAmountreceived());
-		scr.setRemark("渠道支付金额：" + String.format("%.2f", mao.getAmountreceived()));
-		systemcapitalrecordmapper.post(scr);
 		RLock lock = RedissonUtil.getLock(t.getId());
 		try {
 			lock.lock();
@@ -178,7 +179,9 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		} finally {
 			lock.unlock();
 		}
-
+		scr.setBalance(t.getBalance());//
+		scr.setRemark("渠道支付金额：" + String.format("%.2f", mao.getAmountreceived()));
+		systemcapitalrecordmapper.post(scr);
 	}
 
 	// 代理支出
@@ -194,8 +197,6 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		scr.setPrewithdrawamount(t.getWithdrawamount());
 		scr.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
 		scr.setAmount(mao.getAmountreceived());
-		scr.setRemark("代理提现金额：" + String.format("%.2f", mao.getAmountreceived()));
-		systemcapitalrecordmapper.post(scr);
 		RLock lock = RedissonUtil.getLock(t.getId());
 		try {
 			lock.lock();
@@ -206,5 +207,8 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		} finally {
 			lock.unlock();
 		}
+		scr.setBalance(t.getBalance());//
+		scr.setRemark("代理提现金额：" + String.format("%.2f", mao.getAmountreceived()));
+		systemcapitalrecordmapper.post(scr);
 	}
 }

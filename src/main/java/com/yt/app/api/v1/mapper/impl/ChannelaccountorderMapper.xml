@@ -124,6 +124,9 @@
 			<if test="name != null and name != ''">
 				and name like "%"#{name}"%"
 			</if>
+			<if test="type != null and type != ''">
+				and type = ${type}
+			</if>
 			<if test="orderBy != null and dir != null">
 				order by ${orderBy} ${dir}
 			</if>
@@ -159,6 +162,9 @@
 			1=1
 			<if test="name != null and name != ''">
 				and name like "%"#{name}"%"
+			</if>
+			<if test="type != null and type != ''">
+				and type = ${type}
 			</if>
 		</where>
 	</select>

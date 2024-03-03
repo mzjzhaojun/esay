@@ -26,6 +26,7 @@ public class PayoutVO extends YtBaseEntity<Aislechannel>  {
 	Long merchantid;
 	String merchantname;
 	String merchantcode;
+	Double merchantbalance;
 	String merchantordernum;
 	Double merchantcost;
 	Double merchantdeal;
@@ -38,6 +39,7 @@ public class PayoutVO extends YtBaseEntity<Aislechannel>  {
 	Long channelid;
 	String channelname;
 	String channelordernum;
+	Double channelbalance;
 	Double channelcost;
 	Double channeldeal;
 	Double channelpay;

@@ -6,6 +6,8 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.yt.app.api.v1.entity.Aislechannel;
+import com.yt.app.api.v1.entity.Twitter;
+import com.yt.app.api.v1.vo.AislechannelVO;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
 import com.yt.app.common.base.YtIBaseMapper;
@@ -84,10 +86,10 @@ public interface AislechannelMapper extends YtIBaseMapper<Aislechannel> {
 	 * map
 	 * 
 	 * @param param map
-	 * @return mapAislechannel
+	 * @return mapTwitter
 	 */
-	@YtRedisCacheAnnotation(classs = Aislechannel.class)
-	public List<Map<String, Object>> map(Map<String, Object> param);
+	@YtRedisCacheAnnotation(classs = Twitter.class)
+	public List<AislechannelVO> page(Map<String, Object> param);
 
 	/**
 	 * listbyids

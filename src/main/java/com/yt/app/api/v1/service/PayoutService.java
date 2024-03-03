@@ -26,6 +26,8 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 	YtBody tycallbackpay(SysTyOrder so);
 
 	void paySuccess(String ordernum);
+	
+	void paySuccess(Payout pt);
 
 	//
 	Payout query(String ordernum);

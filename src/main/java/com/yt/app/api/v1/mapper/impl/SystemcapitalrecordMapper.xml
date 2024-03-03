@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.SystemcapitalrecordMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,systemaccountid,name,type,pretotalincome,prewithdrawamount,posttotalincome,postwithdrawamount,amount,update_time,update_by,create_time,create_by,remark,version
+		id,tenant_id,systemaccountid,name,type,pretotalincome,prewithdrawamount,posttotalincome,postwithdrawamount,amount,balance,update_time,update_by,create_time,create_by,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -14,9 +14,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Systemcapitalrecord">
 		insert into
-		systemcapitalrecord(id,systemaccountid,name,type,pretotalincome,prewithdrawamount,posttotalincome,postwithdrawamount,amount,update_time,update_by,create_time,create_by,remark)
+		systemcapitalrecord(id,systemaccountid,name,type,pretotalincome,prewithdrawamount,posttotalincome,postwithdrawamount,amount,balance,update_time,update_by,create_time,create_by,remark)
 		values
-		(#{id},#{systemaccountid},#{name},#{type},#{pretotalincome},#{prewithdrawamount},#{posttotalincome},#{postwithdrawamount},#{amount},#{update_time},#{update_by},#{create_time},#{create_by},#{remark})
+		(#{id},#{systemaccountid},#{name},#{type},#{pretotalincome},#{prewithdrawamount},#{posttotalincome},#{postwithdrawamount},#{amount},#{balance},#{update_time},#{update_by},#{create_time},#{create_by},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">

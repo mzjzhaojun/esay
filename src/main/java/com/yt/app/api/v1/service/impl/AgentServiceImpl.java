@@ -147,4 +147,19 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 			lock.unlock();
 		}
 	}
+	
+	@Override
+	@Transactional
+	public void updateIncome(Agentaccount t) {
+		Agent a = mapper.get(t.getAgentid());
+		RLock lock = RedissonUtil.getLock(a.getId());
+		try {
+			lock.lock();
+			a.setBalance(t.getBalance());
+			mapper.put(a);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+	}
 }

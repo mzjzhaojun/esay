@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.AisleMapper;
 import com.yt.app.api.v1.mapper.AislechannelMapper;
 import com.yt.app.api.v1.service.AislechannelService;
+import com.yt.app.api.v1.vo.AislechannelVO;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Aisle;
@@ -76,5 +77,18 @@ public class AislechannelServiceImpl extends YtBaseServiceImpl<Aislechannel, Lon
 		as.setChannelcount(as.getChannelcount() - 1);
 		aislemapper.put(as);
 		return mapper.delete(id);
+	}
+
+	@Override
+	public YtIPage<AislechannelVO> page(Map<String, Object> param) {
+		int count = 0;
+		if (YtPageBean.isPaging(param)) {
+			count = mapper.countlist(param);
+			if (count == 0) {
+				return new YtPageBean<AislechannelVO>(Collections.emptyList());
+			}
+		}
+		List<AislechannelVO> list = mapper.page(param);
+		return new YtPageBean<AislechannelVO>(param, list, count);
 	}
 }

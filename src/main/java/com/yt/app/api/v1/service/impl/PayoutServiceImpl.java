@@ -257,13 +257,12 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		cat.setRemark(
 				"资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", cat.getAmount()) + " 手续费：" + cll.getOnecost());
 		channelaccountordermapper.post(cat);
-
 		//
 		channelaccountservice.withdrawamount(cat);
-
+		//渠道余额
+		t.setChannelbalance(cl.getBalance());
 		//
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
-
 		//
 		Integer i = mapper.post(t);
 		return i;
@@ -698,6 +697,56 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
 		});
 		return new YtPageBean<PayoutVO>(param, list, count);
+	}
+
+	@Override
+	public void paySuccess(Payout pt) {
+		Payout t = mapper.get(pt.getId());
+		// 计算商户订单/////////////////////////////////////////////////////
+		Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
+		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+		// 商户订单
+		merchantaccountordermapper.put(mao);
+		// 商户账户
+		merchantaccountservice.updatePayout(mao);
+		// 系统账户
+		systemaccountservice.updatePayout(mao);
+
+		// 计算商户数据
+		merchantservice.updatePayout(t);
+
+		// 计算代理
+		if (t.getAgentid() != null) {
+			Agentaccountorder aao = agentaccountordermapper.getByOrdernum(t.getAgentordernum());
+			aao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+			// 代理订单
+			agentaccountordermapper.put(aao);
+			// 代理账户
+			agentaccountservice.updateTotalincome(aao);
+			// 计算代理数据
+			agentservice.updatePayout(t);
+		}
+
+		// 计算渠道
+		Channelaccountorder cao = channelaccountordermapper.getByOrdernum(t.getChannelordernum());
+		cao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+		// 渠道订单
+		channelaccountordermapper.put(cao);
+		// 渠道账户
+		channelaccountservice.updateWithdrawamount(cao);
+		// 计算渠道数据
+		channelservice.updatePayout(t);
+
+		// ------------------更新代付订单-----------------
+		t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+		t.setRemark("代付成功！" + pt.getRemark());
+		t.setSuccesstime(DateTimeUtil.getNow());
+		t.setBacklong(DateUtil.between(t.getSuccesstime(), t.getCreate_time(), DateUnit.SECOND));
+
+		t.setImgurl(pt.getImgurl());
+		//
+		mapper.put(t);
+
 	}
 
 }
