@@ -183,7 +183,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		} finally {
 			lock.unlock();
 		}
-
+		//更新商户余额
 		merchantservice.updateInCome(t);
 	}
 
@@ -303,6 +303,8 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		} finally {
 			lock.unlock();
 		}
+		
+		merchantservice.withdrawamount(ma);
 	}
 
 	// 确认支出

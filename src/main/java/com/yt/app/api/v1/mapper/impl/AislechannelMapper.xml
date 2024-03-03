@@ -7,7 +7,7 @@
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Aislechannel">
+		type="com.yt.app.api.v1.vo.AislechannelVO">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
@@ -85,13 +85,38 @@
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from aislechannel
+		SELECT
+		ac.id id,
+		ac.channelid channelid,
+		ac.aisleid aisleid,
+		c.name name,
+		c.code code,
+		c.status status,
+		c.exchange exchange,
+		c.onecost onecost,
+		c.remark remark
+		FROM
+		aislechannel ac
+		JOIN aisle ae
+		ON ae.id = ac.aisleid
+		JOIN channel c
+		ON ac.channelid = c.id
 		<where>
 			1=1
+			<if test="aisleid != null and aisleid != ''">
+				AND ac.aisleid = #{aisleid}
+			</if>
+			<if test="merchantid != null and merchantid != ''">
+				AND ac.channelid = #{merchantid}
+			</if>
 			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+				AND c.name LIKE CONCAT( '%', #{name} , '%' )
+			</if>
+			<if test="code != null and code != ''">
+				AND c.code LIKE CONCAT( '%', #{code} , '%' )
+			</if>
+			<if test="status != null">
+				AND c.status = #{status}
 			</if>
 			<if test="orderBy != null and dir != null">
 				order by ${orderBy} ${dir}

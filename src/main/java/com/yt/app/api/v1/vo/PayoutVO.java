@@ -1,5 +1,8 @@
 package com.yt.app.api.v1.vo;
 
+import com.yt.app.api.v1.entity.Aislechannel;
+import com.yt.app.common.base.YtBaseEntity;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,8 +13,12 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class PayoutVO {
+public class PayoutVO extends YtBaseEntity<Aislechannel>  {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Long id;
 	Long tenant_id;
 	Long userid;

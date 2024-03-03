@@ -18,4 +18,6 @@ public interface ChannelService extends YtIBaseService<Channel, Long> {
 	void updatePayout(Payout t);
 
 	void updateIncome(Channelaccount t);
+	
+	void withdrawamount(Channelaccount t);
 }

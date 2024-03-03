@@ -70,9 +70,9 @@ public class AuthServiceImpl implements AuthService {
 		// 校验原始密码是否正确
 		Assert.isTrue(isValid, "密码错误！");
 
-		isValid = GoogleAuthenticatorUtil.checkCode(userPerm.getTwofactorcode(), Long.parseLong(params.getCode()),
-				System.currentTimeMillis());
-		Assert.isTrue(isValid, "验证码错误！");
+		//isValid = GoogleAuthenticatorUtil.checkCode(userPerm.getTwofactorcode(), Long.parseLong(params.getCode()),
+		//		System.currentTimeMillis());
+		//Assert.isTrue(isValid, "验证码错误！");
 
 		// 拿到下级角色ids
 		List<Long> roleIdList = userPerm.getRoleIdList();

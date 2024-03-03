@@ -191,4 +191,19 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		Merchant t = mapper.getByUserId(JwtUserContext.get().getUserId());
 		return t;
 	}
+
+	@Override
+	public void withdrawamount(Merchantaccount ma) {
+		Merchant m = mapper.get(ma.getMerchantid());
+		RLock lock = RedissonUtil.getLock(m.getId());
+		try {
+			lock.lock();
+			m.setBalance(ma.getBalance());
+			mapper.put(m);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+		
+	}
 }

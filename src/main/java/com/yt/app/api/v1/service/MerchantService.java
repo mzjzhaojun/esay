@@ -18,6 +18,8 @@ public interface MerchantService extends YtIBaseService<Merchant, Long> {
 	void updatePayout(Payout t);
 
 	void updateInCome(Merchantaccount t);
+	
+	void withdrawamount(Merchantaccount t);
 
 	Merchant getData();
 }

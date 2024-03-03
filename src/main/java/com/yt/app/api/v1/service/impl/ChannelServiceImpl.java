@@ -140,4 +140,18 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 			lock.unlock();
 		}
 	}
+
+	@Override
+	public void withdrawamount(Channelaccount t) {
+		Channel a = mapper.get(t.getChannelid());
+		RLock lock = RedissonUtil.getLock(a.getId());
+		try {
+			lock.lock();
+			a.setBalance(t.getBalance());
+			mapper.put(a);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+	}
 }

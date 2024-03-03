@@ -263,6 +263,8 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 		} finally {
 			lock.unlock();
 		}
+		
+		channelservice.withdrawamount(ma);
 	}
 
 	// 确认支出
