@@ -121,17 +121,17 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		maaj.setMerchantname(t.getUsername());
 		maaj.setOrdernum(t.getOrdernum());
 		maaj.setType(DictionaryResource.RECORDTYPE_30);
-		//变更前
+		// 变更前
 		maaj.setPretotalincome(ma.getTotalincome());// 总收入
 		maaj.setPretoincomeamount(ma.getToincomeamount() + t.getAmountreceived());// 待确认收入
 		maaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
 		maaj.setPretowithdrawamount(ma.getWithdrawamount());// 待确认支出
-		//变更后
+		// 变更后
 		maaj.setPosttotalincome(ma.getTotalincome());// 总收入
-		maaj.setPosttoincomeamount(0.00);//确认收入金额
+		maaj.setPosttoincomeamount(0.00);// 确认收入金额
 		maaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 		maaj.setPosttowithdrawamount(0.00);// 确认支出金额
-		
+
 		maaj.setRemark("待确认充值金额：" + String.format("%.2f", t.getAmountreceived()));
 		//
 		merchantaccountapplyjournalmapper.post(maaj);
@@ -186,7 +186,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		} finally {
 			lock.unlock();
 		}
-		//更新商户余额
+		// 更新商户余额
 		merchantservice.updateInCome(t);
 	}
 
@@ -306,7 +306,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		} finally {
 			lock.unlock();
 		}
-		
+
 		merchantservice.withdrawamount(ma);
 	}
 
@@ -506,7 +506,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		}
 	}
 
-	//拒绝代付
+	// 拒绝代付
 	@Override
 	@Transactional
 	public void turndownPayout(Merchantaccountorder mao) {

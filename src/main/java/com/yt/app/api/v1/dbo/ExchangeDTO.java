@@ -1,7 +1,4 @@
-package com.yt.app.api.v1.vo;
-
-import com.yt.app.api.v1.entity.Aislechannel;
-import com.yt.app.common.base.YtBaseEntity;
+package com.yt.app.api.v1.dbo;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,16 +6,12 @@ import lombok.Setter;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2023-11-21 09:56:42
+ * @version v1 @createdate2024-03-07 20:55:20
  */
 @Getter
 @Setter
-public class PayoutVO extends YtBaseEntity<Aislechannel> {
+public class ExchangeDTO {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	Long id;
 	Long tenant_id;
 	Long userid;
@@ -26,50 +19,53 @@ public class PayoutVO extends YtBaseEntity<Aislechannel> {
 	Long merchantid;
 	String merchantname;
 	String merchantcode;
-	Double merchantbalance;
 	String merchantordernum;
-	Double merchantcost;
-	Double merchantdeal;
-	Double merchantpay;
+	Object merchantcost;
+	Object merchantdeal;
+	Object merchantpay;
 	Long aisleid;
 	String aislename;
 	Long agentid;
 	String agentordernum;
-	Double agentincome;
+	Object agentincome;
 	Long channelid;
 	String channelname;
 	String channelordernum;
-	Double channelbalance;
-	Double channelcost;
-	Double channeldeal;
-	Double channelpay;
+	Object channelcost;
+	Object channeldeal;
+	Object channelpay;
 	String accname;
 	String accnumer;
-	String bankname;
 	String bankcode;
+	String bankname;
 	String bankaddress;
-	Double amount;
+	Object amount;
 	Integer status;
-	String statusname;
 	java.util.Date successtime;
 	Long backlong;
+	Long create_by;
+	java.util.Date create_time;
+	Long update_by;
+	java.util.Date update_time;
 	String imgurl;
-	Double income;
+	Object income;
 	String notifyurl;
 	Integer notifystatus;
 	String remark;
+	Object channelbalance;
 	Integer version;
 
-	public PayoutVO() {
+	public ExchangeDTO() {
 	}
 
-	public PayoutVO(Long id, Long tenant_id, Long userid, String ordernum, Long merchantid, String merchantname,
-			String merchantcode, String merchantordernum, Double merchantcost, Double merchantdeal, Double merchantpay,
-			Long aisleid, String aislename, Long agentid, String agentordernum, Double agentincome, Long channelid,
-			String channelname, String channelordernum, Double channelcost, Double channeldeal, Double channelpay,
-			String accname, String accnumer, String bankaddress, Double amount, Integer status,
-			java.util.Date successtime, Long backlong, Long create_by, java.util.Date create_time, Long update_by,
-			java.util.Date update_time, String imgurl, Double income, Integer version) {
+	public ExchangeDTO(Long id, Long tenant_id, Long userid, String ordernum, Long merchantid, String merchantname,
+			String merchantcode, String merchantordernum, Object merchantcost, Object merchantdeal, Object merchantpay,
+			Long aisleid, String aislename, Long agentid, String agentordernum, Object agentincome, Long channelid,
+			String channelname, String channelordernum, Object channelcost, Object channeldeal, Object channelpay,
+			String accname, String accnumer, String bankcode, String bankname, String bankaddress, Object amount,
+			Integer status, java.util.Date successtime, Long backlong, Long create_by, java.util.Date create_time,
+			Long update_by, java.util.Date update_time, String imgurl, Object income, String notifyurl,
+			Integer notifystatus, String remark, Object channelbalance, Integer version) {
 		this.id = id;
 		this.tenant_id = tenant_id;
 		this.userid = userid;
@@ -94,13 +90,23 @@ public class PayoutVO extends YtBaseEntity<Aislechannel> {
 		this.channelpay = channelpay;
 		this.accname = accname;
 		this.accnumer = accnumer;
+		this.bankcode = bankcode;
+		this.bankname = bankname;
 		this.bankaddress = bankaddress;
 		this.amount = amount;
 		this.status = status;
 		this.successtime = successtime;
 		this.backlong = backlong;
+		this.create_by = create_by;
+		this.create_time = create_time;
+		this.update_by = update_by;
+		this.update_time = update_time;
 		this.imgurl = imgurl;
 		this.income = income;
+		this.notifyurl = notifyurl;
+		this.notifystatus = notifystatus;
+		this.remark = remark;
+		this.channelbalance = channelbalance;
 		this.version = version;
 	}
 }

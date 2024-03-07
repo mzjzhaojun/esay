@@ -40,15 +40,6 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	@Autowired
 	private PayoutService service;
 
-	// 手动回调成功
-	@ApiOperation(value = "callbackpay", response = User.class)
-	@RequestMapping(value = "/callbackpay/{ordernum}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> callbackpay(@PathVariable String ordernum, HttpServletRequest request,
-			HttpServletResponse response) {
-		service.paySuccess(ordernum);
-		return new YtResponseEntity<Object>(new YtBody(1));
-	}
-
 	// 菲律宾代付回调
 	@ApiOperation(value = "tycallback", response = User.class)
 	@RequestMapping(value = "/tycallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

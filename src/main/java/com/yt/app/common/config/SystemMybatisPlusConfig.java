@@ -53,6 +53,7 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("agentaccountorder");
 
 		MybatisPlusConfig.TENANT_ID_TABLE.add("payout");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("exchange");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("systemaccount");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("systemcapitalrecord");
 

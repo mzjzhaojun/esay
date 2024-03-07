@@ -14,6 +14,7 @@ import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccount;
+import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtIPage;
@@ -107,7 +108,8 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 
 	@Override
 	public String getChannelOrder(Payout pt, Channel cl) {
-		if (cl.getNkname().equals("天下TY")) {
+		// 代付渠道1
+		if (cl.getCode().equals("C000001")) {
 			return PayUtil.SendTySubmit(pt, cl);
 		}
 		return "C" + StringUtil.getOrderNum();
@@ -151,6 +153,29 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 			lock.lock();
 			a.setBalance(t.getBalance());
 			mapper.put(a);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	@Override
+	public String getChannelOrder(Exchange pt, Channel cl) {
+		// 换汇渠道1
+		if (cl.getCode().equals("H000001")) {
+			return "H" + StringUtil.getOrderNum();
+		}
+		return "C" + StringUtil.getOrderNum();
+	}
+
+	@Override
+	public void updateExchange(Exchange t) {
+		Channel c = mapper.get(t.getChannelid());
+		RLock lock = RedissonUtil.getLock(c.getId());
+		try {
+			lock.lock();
+			c.setBalance(c.getBalance() - t.getChannelpay());
+			mapper.put(c);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();

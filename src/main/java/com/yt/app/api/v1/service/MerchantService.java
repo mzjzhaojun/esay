@@ -1,5 +1,6 @@
 package com.yt.app.api.v1.service;
 
+import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Merchantaccount;
 import com.yt.app.api.v1.entity.Payout;
@@ -17,8 +18,10 @@ public interface MerchantService extends YtIBaseService<Merchant, Long> {
 
 	void updatePayout(Payout t);
 
+	void updateExchange(Exchange t);
+
 	void updateInCome(Merchantaccount t);
-	
+
 	void withdrawamount(Merchantaccount t);
 
 	Merchant getData();

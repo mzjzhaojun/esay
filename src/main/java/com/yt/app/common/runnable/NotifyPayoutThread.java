@@ -12,16 +12,16 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.PayUtil;
 
-public class NotifyThread implements Runnable {
+public class NotifyPayoutThread implements Runnable {
 
-	private static final Logger logger = LoggerFactory.getLogger(NotifyThread.class);
+	private static final Logger logger = LoggerFactory.getLogger(NotifyPayoutThread.class);
 
 	private PayoutMapper mapper;
 	private MerchantMapper merchantmapper;
 	private Payout payout;
 	private Integer code;
 
-	public NotifyThread(PayoutMapper _mapper, MerchantMapper _merchantmapper, Payout pt, Integer _code) {
+	public NotifyPayoutThread(PayoutMapper _mapper, MerchantMapper _merchantmapper, Payout pt, Integer _code) {
 		mapper = _mapper;
 		merchantmapper = _merchantmapper;
 		payout = pt;

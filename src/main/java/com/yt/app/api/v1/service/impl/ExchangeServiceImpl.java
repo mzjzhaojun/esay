@@ -11,22 +11,19 @@ import com.yt.app.api.v1.mapper.AisleMapper;
 import com.yt.app.api.v1.mapper.AislechannelMapper;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ChannelaccountorderMapper;
+import com.yt.app.api.v1.mapper.ExchangeMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.MerchantaccountMapper;
 import com.yt.app.api.v1.mapper.MerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantaisleMapper;
-import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.service.AgentService;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.ChannelaccountService;
+import com.yt.app.api.v1.service.ExchangeService;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.MerchantaccountService;
-import com.yt.app.api.v1.service.PayoutService;
 import com.yt.app.api.v1.service.SystemaccountService;
-import com.yt.app.api.v1.vo.PayoutVO;
-import com.yt.app.api.v1.vo.SysResultVO;
-import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
@@ -39,11 +36,14 @@ import com.yt.app.api.v1.entity.Aisle;
 import com.yt.app.api.v1.entity.Aislechannel;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccountorder;
+import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Merchantaccount;
 import com.yt.app.api.v1.entity.Merchantaccountorder;
 import com.yt.app.api.v1.entity.Merchantaisle;
-import com.yt.app.api.v1.entity.Payout;
+import com.yt.app.api.v1.vo.ExchangeVO;
+import com.yt.app.api.v1.vo.SysResultVO;
+import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -51,7 +51,7 @@ import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.MyException;
 import com.yt.app.common.resource.DictionaryResource;
-import com.yt.app.common.runnable.NotifyPayoutThread;
+import com.yt.app.common.runnable.NotifyExchangeThread;
 import com.yt.app.common.runnable.TaskExecutor;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.PayUtil;
@@ -74,13 +74,13 @@ import java.util.stream.Collectors;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2023-11-15 09:51:11
+ * @version v1 @createdate2024-03-07 20:55:20
  */
 
 @Service
-public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implements PayoutService {
+public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> implements ExchangeService {
 	@Autowired
-	private PayoutMapper mapper;
+	private ExchangeMapper mapper;
 	@Autowired
 	private MerchantMapper merchantmapper;
 	@Autowired
@@ -118,7 +118,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	@Override
 	@Transactional
-	public Integer post(Payout t) {
+	public Integer post(Exchange t) {
 
 		///////////////////////////////////////////////////// 录入代付订单/////////////////////////////////////////////////////
 		Merchant m = merchantmapper.getByUserId(SysUserContext.getUserId());
@@ -133,7 +133,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);// 商戶發起
-		t.setRemark("商户新增代付");
+		t.setRemark("新增换汇");
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
 
@@ -203,7 +203,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		mao.setExchange(m.getExchange());
 		mao.setAmount(t.getMerchantdeal());// 交易费用
 		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
-		mao.setType(DictionaryResource.ORDERTYPE_21);
+		mao.setType(DictionaryResource.ORDERTYPE_22);
 		mao.setOrdernum(t.getMerchantordernum());
 		mao.setRemark("操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
 				+ m.getOnecost());
@@ -252,7 +252,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		cat.setExchange(cll.getExchange());
 		cat.setChannelexchange(cll.getExchange());
 		cat.setAmountreceived(t.getChannelpay());
-		cat.setType(DictionaryResource.ORDERTYPE_21);
+		cat.setType(DictionaryResource.ORDERTYPE_22);
 		cat.setOrdernum(t.getChannelordernum());
 		cat.setRemark(
 				"资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", cat.getAmount()) + " 手续费：" + cll.getOnecost());
@@ -270,34 +270,34 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Payout> list(Map<String, Object> param) {
+	public YtIPage<Exchange> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return new YtPageBean<Payout>(Collections.emptyList());
+				return new YtPageBean<Exchange>(Collections.emptyList());
 			}
 		}
-		List<Payout> list = mapper.list(param);
-		return new YtPageBean<Payout>(param, list, count);
+		List<Exchange> list = mapper.list(param);
+		return new YtPageBean<Exchange>(param, list, count);
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public Payout get(Long id) {
-		Payout t = mapper.get(id);
+	public Exchange get(Long id) {
+		Exchange t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-	public Payout query(String channelordernum) {
-		Payout pt = mapper.getByChannelOrdernum(channelordernum);
+	public Exchange query(String channelordernum) {
+		Exchange pt = mapper.getByChannelOrdernum(channelordernum);
 		return pt;
 	}
 
 	@Override
 	public YtBody tycallbackpay(SysTyOrder so) {
-		Payout pt = mapper.getByChannelOrdernum(so.getTypay_order_id());
+		Exchange pt = mapper.getByChannelOrdernum(so.getTypay_order_id());
 		if (pt == null)
 			return new YtBody("失败", 100);
 		RLock lock = RedissonUtil.getLock(pt.getId());
@@ -311,13 +311,15 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 						paySuccess(pt);
 						// 执行通知
 						if (pt.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61) {
-							NotifyPayoutThread notifythread = new NotifyPayoutThread(mapper, merchantmapper, pt, 200);
+							NotifyExchangeThread notifythread = new NotifyExchangeThread(mapper, merchantmapper, pt,
+									200);
 							TaskExecutor.tastpool.execute(notifythread);
 						}
 						return new YtBody("成功", 200);
 					} else if (so.getPay_message() == -2) {
 						if (pt.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61) {
-							NotifyPayoutThread notifythread = new NotifyPayoutThread(mapper, merchantmapper, pt, 100);
+							NotifyExchangeThread notifythread = new NotifyExchangeThread(mapper, merchantmapper, pt,
+									100);
 							TaskExecutor.tastpool.execute(notifythread);
 						}
 						payFail(pt);
@@ -351,7 +353,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			new MyException("商戶沒有配置通道!", YtCodeEnum.YT888);
 		}
 
-		Payout pt = new Payout();
+		Exchange pt = new Exchange();
 		pt.setAccname(ss.getBankowner());
 		pt.setAccnumer(ss.getBanknum());
 		pt.setBankcode(ss.getBankcode());
@@ -376,7 +378,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Transactional
-	public Integer add(Payout t, Merchant m) {
+	public Integer add(Exchange t, Merchant m) {
 		TenantIdContext.setTenantId(m.getTenant_id());
 		///////////////////////////////////////////////////// 录入代付订单/////////////////////////////////////////////////////
 		t.setUserid(m.getUserid());
@@ -389,7 +391,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61); // 盘口发起
-		t.setRemark("盘口新增代付");
+		t.setRemark("新增换汇");
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
 
@@ -459,7 +461,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		mao.setExchange(m.getExchange());
 		mao.setAmount(t.getMerchantdeal());// 交易费用
 		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
-		mao.setType(DictionaryResource.ORDERTYPE_21);
+		mao.setType(DictionaryResource.ORDERTYPE_22);
 		mao.setOrdernum(t.getMerchantordernum());
 		mao.setRemark("操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
 				+ m.getOnecost());
@@ -508,7 +510,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		cat.setExchange(cll.getExchange());
 		cat.setChannelexchange(cll.getExchange());
 		cat.setAmountreceived(t.getChannelpay());
-		cat.setType(DictionaryResource.ORDERTYPE_21);
+		cat.setType(DictionaryResource.ORDERTYPE_22);
 		cat.setOrdernum(t.getChannelordernum());
 		cat.setRemark(
 				"资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", cat.getAmount()) + " 手续费：" + cll.getOnecost());
@@ -529,27 +531,24 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
-	public YtIPage<PayoutVO> page(Map<String, Object> param) {
+	public YtIPage<ExchangeVO> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return new YtPageBean<PayoutVO>(Collections.emptyList());
+				return new YtPageBean<ExchangeVO>(Collections.emptyList());
 			}
 		}
-		List<PayoutVO> list = mapper.page(param);
+		List<ExchangeVO> list = mapper.page(param);
 		list.forEach(mco -> {
 			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
 		});
-		return new YtPageBean<PayoutVO>(param, list, count);
+		return new YtPageBean<ExchangeVO>(param, list, count);
 	}
 
-	/***
-	 * 手动成功
-	 */
 	@Override
-	public void paySuccess(Payout pt) {
-		Payout t = mapper.get(pt.getId());
+	public void paySuccess(Exchange pt) {
+		Exchange t = mapper.get(pt.getId());
 		// 计算商户订单/////////////////////////////////////////////////////
 		Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
 		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
@@ -561,7 +560,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		systemaccountservice.updatePayout(mao);
 
 		// 计算商户数据
-		merchantservice.updatePayout(t);
+		merchantservice.updateExchange(t);
 
 		// 计算代理
 		if (t.getAgentid() != null) {
@@ -572,7 +571,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			// 代理账户
 			agentaccountservice.updateTotalincome(aao);
 			// 计算代理数据
-			agentservice.updatePayout(t);
+			agentservice.updateExchange(t);
 		}
 
 		// 计算渠道
@@ -583,28 +582,27 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		// 渠道账户
 		channelaccountservice.updateWithdrawamount(cao);
 		// 计算渠道数据
-		channelservice.updatePayout(t);
+		channelservice.updateExchange(t);
 
 		// ------------------更新代付订单-----------------
 		t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
-		t.setRemark("代付成功！" + pt.getRemark());
+		t.setRemark("换汇成功！" + pt.getRemark());
 		t.setSuccesstime(DateTimeUtil.getNow());
 		t.setBacklong(DateUtil.between(t.getSuccesstime(), t.getCreate_time(), DateUnit.SECOND));
 
 		t.setImgurl(pt.getImgurl());
 		//
 		mapper.put(t);
-
 	}
 
 	/**
 	 * 
-	 * 手动回调失败
+	 * 回调失败
 	 * 
 	 */
 	@Override
 	@Transactional
-	public void payFail(Payout t) {
+	public void payFail(Exchange t) {
 
 		// 计算商户订单/////////////////////////////////////////////////////
 		Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
@@ -631,11 +629,10 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 		//
 		t.setStatus(DictionaryResource.PAYOUTSTATUS_53);
-		t.setRemark("代付失败！");
+		t.setRemark("换汇失败！");
 		t.setSuccesstime(DateTimeUtil.getNow());
 		t.setBacklong(DateTimeUtil.diffDays(t.getSuccesstime(), t.getCreate_time()));
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 		mapper.put(t);
 	}
-
 }

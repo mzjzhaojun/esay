@@ -18,30 +18,47 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
 import io.swagger.annotations.ApiOperation;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
-import com.yt.app.api.v1.service.PayoutService;
-import com.yt.app.api.v1.vo.PayoutVO;
-import com.yt.app.api.v1.entity.Payout;
+import com.yt.app.api.v1.service.ExchangeService;
+import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.User;
+import com.yt.app.api.v1.vo.ExchangeVO;
 
 /**
  * @author zj defaulttest
  * 
- * @version v1 @createdate2023-11-21 09:56:42
+ * @version v1 @createdate2024-03-07 20:55:20
  */
 
 @RestController
-@RequestMapping("/rest/v1/payout")
-public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long> {
+@RequestMapping("/rest/v1/exchange")
+public class ExchangeController extends YtBaseEncipherControllerImpl<Exchange, Long> {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
-	private PayoutService service;
+	private ExchangeService service;
+
+	@Override
+	@ApiOperation(value = "list", response = Exchange.class)
+	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<Exchange> list = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		return new YtResponseEncryptEntity<Object>(new YtBody(list));
+	}
+
+	@ApiOperation(value = "page", response = Exchange.class)
+	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<ExchangeVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
+	}
 
 	// 手动回调成功
 	@ApiOperation(value = "paysuccess", response = User.class)
 	@RequestMapping(value = "/paysuccess", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> paysuccess(YtRequestDecryptEntity<Payout> requestEntity, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEntity<Object> paysuccess(YtRequestDecryptEntity<Exchange> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
 		service.paySuccess(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(1));
 	}
@@ -49,27 +66,9 @@ public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long>
 	// 手动回调失败
 	@ApiOperation(value = "payfail", response = User.class)
 	@RequestMapping(value = "/payfail", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> payfail(YtRequestDecryptEntity<Payout> requestEntity, HttpServletRequest request,
+	public YtResponseEntity<Object> payfail(YtRequestDecryptEntity<Exchange> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
 		service.payFail(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(1));
 	}
-
-	@Override
-	@ApiOperation(value = "list", response = Payout.class)
-	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Payout> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
-		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
-	}
-
-	@ApiOperation(value = "page", response = Payout.class)
-	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<PayoutVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
-		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
-	}
-
 }

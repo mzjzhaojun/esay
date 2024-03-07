@@ -33,11 +33,11 @@ public class DictionaryResource implements Serializable {
 	public static final Integer MERCHANTORDERSTATUS_13 = 13; // 取消
 
 	/**
-	 * 详情类型
+	 * 订单类型类型
 	 */
-	public static final Integer ORDERTYPE_20 = 20; //
-	public static final Integer ORDERTYPE_21 = 21; //
-	public static final Integer ORDERTYPE_22 = 22; //
+	public static final Integer ORDERTYPE_20 = 20; //充值
+	public static final Integer ORDERTYPE_21 = 21; //支出
+	public static final Integer ORDERTYPE_22 = 22; //换汇
 
 	/**
 	 * 明细类型
@@ -53,6 +53,10 @@ public class DictionaryResource implements Serializable {
 
 	public static final Integer RECORDTYPE_36 = 36; // 收入取消
 	public static final Integer RECORDTYPE_37 = 37; // 支出取消
+	
+	public static final Integer RECORDTYPE_38 = 38; //换汇待确认
+	public static final Integer RECORDTYPE_39 = 39; //换汇通过
+	
 
 	/**
 	 * 银行卡类型

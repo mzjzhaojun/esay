@@ -16,6 +16,7 @@ import com.yt.app.common.base.context.JwtUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agent;
+import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Merchantaccount;
 import com.yt.app.api.v1.entity.Payout;
@@ -67,7 +68,6 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		u.setAccounttype(DictionaryResource.SYSTEM_ADMINTYPE_4);
 		u.setTwofactorcode(GoogleAuthenticatorUtil.getSecretKey());
 		usermapper.postAndTanantId(u);
-		
 
 		//
 		t.setUserid(u.getId());
@@ -207,6 +207,24 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		} finally {
 			lock.unlock();
 		}
-		
+
+	}
+
+	@Override
+	public void updateExchange(Exchange t) {
+		Merchant m = mapper.get(t.getMerchantid());
+		Merchantaccount ma = merchantaccountmapper.getByUserId(m.getUserid());
+		RLock lock = RedissonUtil.getLock(m.getId());
+		try {
+			lock.lock();
+			m.setCount(m.getCount() + t.getAmount());// 总量不包含手续费和交易费
+			m.setTodaycount(m.getTodaycount() + t.getAmount());
+			m.setTodaycost(m.getTodaycost() + t.getMerchantcost());
+			m.setBalance(ma.getBalance());
+			mapper.put(m);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
 	}
 }

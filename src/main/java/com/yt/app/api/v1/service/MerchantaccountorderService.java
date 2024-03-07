@@ -12,7 +12,7 @@ import com.yt.app.common.base.YtIBaseService;
 public interface MerchantaccountorderService extends YtIBaseService<Merchantaccountorder, Long> {
 
 	Integer save(Merchantaccountorder t);
-	
+
 	Integer appsave(Merchantaccountorder t);
 
 	Integer pass(Long id);
