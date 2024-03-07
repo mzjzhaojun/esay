@@ -20,6 +20,7 @@ import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
+import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PasswordUtil;
 import com.yt.app.common.util.RedissonUtil;
 
@@ -56,6 +57,7 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 		u.setNickname(t.getName());
 		u.setPassword(PasswordUtil.encodePassword(t.getPassword()));
 		u.setAccounttype(DictionaryResource.SYSTEM_ADMINTYPE_5);
+		u.setTwofactorcode(GoogleAuthenticatorUtil.getSecretKey());
 		usermapper.postAndTanantId(u);
 
 		t.setUserid(u.getId());

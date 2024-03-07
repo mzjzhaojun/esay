@@ -72,6 +72,7 @@ public class UserServiceImpl extends YtBaseServiceImpl<User, Long> implements Us
 	public Integer post(User t) {
 		t.setPassword(PasswordUtil.encodePassword(t.getPassword()));
 		t.setAccounttype(JwtUserContext.get().getAccounttype());
+		t.setTwofactorcode(GoogleAuthenticatorUtil.getSecretKey());
 		Integer i = mapper.post(t);
 		if (t.getRoleIdList().size() > 0) {
 			Userrole tsur = new Userrole();

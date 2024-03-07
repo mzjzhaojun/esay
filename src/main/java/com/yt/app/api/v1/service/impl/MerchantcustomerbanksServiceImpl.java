@@ -36,9 +36,11 @@ public class MerchantcustomerbanksServiceImpl extends YtBaseServiceImpl<Merchant
 	@Transactional
 	public Integer post(Merchantcustomerbanks t) {
 		t.setUserid(SysUserContext.getUserId());
-		Sysbank sb = sysbankmapper.getByCode(t.getBankcode());
-		if (sb != null) {
-			t.setBankname(sb.getName());
+		if(t.getBankname()==null) {
+			Sysbank sb = sysbankmapper.getByCode(t.getBankcode());
+			if (sb != null) {
+				t.setBankname(sb.getName());
+			}
 		}
 		Integer i = mapper.post(t);
 		return i;

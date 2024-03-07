@@ -24,6 +24,7 @@ import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
+import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PasswordUtil;
 import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.StringUtil;
@@ -64,7 +65,9 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		u.setNickname(t.getName());
 		u.setPassword(PasswordUtil.encodePassword(t.getPassword()));
 		u.setAccounttype(DictionaryResource.SYSTEM_ADMINTYPE_4);
+		u.setTwofactorcode(GoogleAuthenticatorUtil.getSecretKey());
 		usermapper.postAndTanantId(u);
+		
 
 		//
 		t.setUserid(u.getId());

@@ -96,9 +96,45 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 			m = merchantmapper.get(t.getMerchantid());
 			t.setUserid(m.getUserid());
 		}
+
 		Merchantaccountbank mab = merchantaccountbankmapper.get(Long.valueOf(t.getAccnumber()));
 		t.setAccname(mab.getAccname());
 		t.setAccnumber(mab.getAccnumber());
+		// 支出订单
+		t.setMerchantid(m.getId());
+		t.setUsername(m.getName());
+		t.setNkname(m.getNikname());
+		t.setMerchantcode(m.getCode());
+		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		t.setExchange(t.getMerchantexchange());
+		t.setAmountreceived((t.getAmount()));
+		t.setType(DictionaryResource.ORDERTYPE_22);
+		t.setOrdernum("TXS" + StringUtil.getOrderNum());
+		t.setRemark("提现金额：" + String.format("%.2f", t.getAmountreceived()));
+		Integer i = mapper.post(t);
+
+		// 支出账户和记录
+		merchantaccountservice.withdrawamount(t);
+		//
+		return i;
+	}
+
+	// 支出
+	@Override
+	@Transactional
+	public Integer appsave(Merchantaccountorder t) {
+
+		Merchant m = null;
+		if (t.getMerchantid() == null) {
+			m = merchantmapper.getByUserId(SysUserContext.getUserId());
+			t.setUserid(SysUserContext.getUserId());
+		} else {
+			m = merchantmapper.get(t.getMerchantid());
+			t.setUserid(m.getUserid());
+		}
+
+		t.setAccname("app提现");
+
 		// 支出订单
 		t.setMerchantid(m.getId());
 		t.setUsername(m.getName());

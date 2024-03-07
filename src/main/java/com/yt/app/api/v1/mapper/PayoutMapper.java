@@ -88,15 +88,6 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 	public List<PayoutVO> page(Map<String, Object> param);
 
 	/**
-	 * map
-	 * 
-	 * @param param map
-	 * @return mapPayout
-	 */
-	@YtRedisCacheAnnotation(classs = Payout.class)
-	public List<Map<String, Object>> map(Map<String, Object> param);
-
-	/**
 	 * listbyids
 	 * 
 	 * @param id long[]ids

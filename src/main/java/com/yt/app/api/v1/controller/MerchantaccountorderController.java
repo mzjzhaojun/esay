@@ -91,6 +91,19 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 		Integer i = service.save(YtRequestDecryptEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
+	
+	
+	/**
+	 * 
+	 * 
+	 * @version 1.1
+	 */
+	@RequestMapping(value = "/appwithdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> appwithdraw(YtRequestDecryptEntity<Merchantaccountorder> YtRequestDecryptEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		Integer i = service.appsave(YtRequestDecryptEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(i));
+	}
 
 	/**
 	 * 
