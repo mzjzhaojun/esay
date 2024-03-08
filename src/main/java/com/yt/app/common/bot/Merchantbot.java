@@ -28,7 +28,7 @@ import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.service.PayconfigService;
 
 @Component
-public class Mbot extends TelegramLongPollingBot {
+public class Merchantbot extends TelegramLongPollingBot {
 
 	@Autowired
 	private TgmerchantgroupMapper tgmerchantgroupmapper;
@@ -46,7 +46,7 @@ public class Mbot extends TelegramLongPollingBot {
 	private TgmerchantchannelmsgMapper tgmerchantchannelmsgmapper;
 
 	@Autowired
-	private Cbot cbot;
+	private Channelbot cbot;
 
 	@Autowired
 	private MerchantaccountMapper merchantaccountmapper;

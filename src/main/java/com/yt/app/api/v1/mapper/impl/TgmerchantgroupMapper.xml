@@ -99,6 +99,13 @@
 		from tgmerchantgroup
 		where tgid= #{tgid}
 	</select>
+	<select id="getByMerchantId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmerchantgroup
+		where merchantid= #{merchantid}
+	</select>
 	
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"

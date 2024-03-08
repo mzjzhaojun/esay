@@ -16,6 +16,8 @@ import com.yt.app.api.v1.mapper.MerchantaccountMapper;
 import com.yt.app.api.v1.mapper.MerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantaisleMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
+import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
+import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.service.AgentService;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.ChannelService;
@@ -32,6 +34,8 @@ import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
+import com.yt.app.common.bot.Channelbot;
+import com.yt.app.common.bot.Merchantbot;
 import com.yt.app.api.v1.dbo.SysSubmitDTO;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccountorder;
@@ -44,6 +48,8 @@ import com.yt.app.api.v1.entity.Merchantaccount;
 import com.yt.app.api.v1.entity.Merchantaccountorder;
 import com.yt.app.api.v1.entity.Merchantaisle;
 import com.yt.app.api.v1.entity.Payout;
+import com.yt.app.api.v1.entity.Tgchannelgroup;
+import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -115,6 +121,14 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	private MerchantaccountMapper merchantaccountmapper;
 	@Autowired
 	private MerchantaisleMapper merchantaislemapper;
+	@Autowired
+	private Channelbot cbot;
+	@Autowired
+	private TgchannelgroupMapper tgchannelgroupmapper;
+	@Autowired
+	private Merchantbot mbot;
+	@Autowired
+	private TgmerchantgroupMapper tgmerchantgroupmapper;
 
 	@Override
 	@Transactional
@@ -265,6 +279,18 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 		//
 		Integer i = mapper.post(t);
+		if (i > 0) {
+			Tgchannelgroup tgchannelgroup = tgchannelgroupmapper.getByChannelId(t.getChannelid());
+			StringBuffer what = new StringBuffer();
+			what.append("状态：新增代付\n");
+			what.append("单号：" + t.getChannelordernum() + "\n");
+			what.append("姓名：" + t.getAccname() + "\n");
+			what.append("卡号：" + t.getAccnumer() + "\n");
+			what.append("金额：" + t.getAmount() + "\n");
+			what.append("发起时间：" + DateTimeUtil.getDateTime() + "\n");
+			what.append("客户请你们尽快处理\n");
+			cbot.sendText(tgchannelgroup.getTgid(), what.toString());
+		}
 		return i;
 	}
 
@@ -523,6 +549,19 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		//
 		Integer i = mapper.post(t);
 
+		if (i > 0) {
+			Tgchannelgroup tgchannelgroup = tgchannelgroupmapper.getByChannelId(t.getChannelid());
+			StringBuffer what = new StringBuffer();
+			what.append("状态：新增代付\n");
+			what.append("单号：" + t.getChannelordernum() + "\n");
+			what.append("姓名：" + t.getAccname() + "\n");
+			what.append("卡号：" + t.getAccnumer() + "\n");
+			what.append("金额：" + t.getAmount() + "\n");
+			what.append("发起时间：" + DateTimeUtil.getDateTime() + "\n");
+			what.append("客户请你们尽快处理\n");
+			cbot.sendText(tgchannelgroup.getTgid(), what.toString());
+		}
+
 		TenantIdContext.remove();
 
 		return i;
@@ -587,14 +626,25 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 		// ------------------更新代付订单-----------------
 		t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
-		t.setRemark("代付成功！" + pt.getRemark());
+		t.setRemark("手动回调代付成功！" + pt.getRemark());
 		t.setSuccesstime(DateTimeUtil.getNow());
 		t.setBacklong(DateUtil.between(t.getSuccesstime(), t.getCreate_time(), DateUnit.SECOND));
 
 		t.setImgurl(pt.getImgurl());
 		//
-		mapper.put(t);
-
+		int i = mapper.put(t);
+		if (i > 0) {
+			Tgmerchantgroup tgmerchantgroup = tgmerchantgroupmapper.getByMerchantId(t.getMerchantid());
+			StringBuffer what = new StringBuffer();
+			what.append("状态：代付成功\n");
+			what.append("单号：" + t.getMerchantordernum()+ "\n");
+			what.append("姓名：" + t.getAccname() + "\n");
+			what.append("卡号：" + t.getAccnumer() + "\n");
+			what.append("金额：" + t.getAmount() + "\n");
+			what.append("成功时间：" + DateTimeUtil.getDateTime() + "\n");
+			what.append("业务部已处理完毕，请你们核实查看\n");
+			mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
+		}
 	}
 
 	/**
@@ -631,11 +681,23 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 		//
 		t.setStatus(DictionaryResource.PAYOUTSTATUS_53);
-		t.setRemark("代付失败！");
+		t.setRemark("手动代付失败！");
 		t.setSuccesstime(DateTimeUtil.getNow());
 		t.setBacklong(DateTimeUtil.diffDays(t.getSuccesstime(), t.getCreate_time()));
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
-		mapper.put(t);
+		int i = mapper.put(t);
+		if (i > 0) {
+			Tgmerchantgroup tgmerchantgroup = tgmerchantgroupmapper.getByMerchantId(t.getMerchantid());
+			StringBuffer what = new StringBuffer();
+			what.append("状态：代付失败\n");
+			what.append("单号：" + t.getMerchantordernum()+ "\n");
+			what.append("姓名：" + t.getAccname() + "\n");
+			what.append("卡号：" + t.getAccnumer() + "\n");
+			what.append("金额：" + t.getAmount() + "\n");
+			what.append("失败时间：" + DateTimeUtil.getDateTime() + "\n");
+			what.append("业务部已处理完毕，请你们核实查看\n");
+			mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
+		}
 	}
 
 }

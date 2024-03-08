@@ -19,7 +19,6 @@ import com.yt.app.common.base.constant.SecurityConstant;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtRequestDecryptEntity;
-import com.yt.app.common.common.yt.YtRequestEntity;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
 import com.yt.app.common.common.yt.YtResponseEntity;
 import com.yt.app.common.util.AuthUtil;
@@ -43,7 +42,7 @@ public class AuthAppController extends YtBaseEncipherControllerImpl<User, Long> 
 
 	@ApiOperation(value = "loginapp", response = User.class)
 	@RequestMapping(value = "/loginapp", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> loginapp(YtRequestEntity<AuthLoginDTO> requestEntity, HttpServletRequest request,
+	public YtResponseEntity<Object> loginapp(YtRequestDecryptEntity<AuthLoginDTO> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
 		AuthLoginVO u = authservice.loginapp(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(u));

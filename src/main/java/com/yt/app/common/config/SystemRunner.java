@@ -12,8 +12,8 @@ import com.yt.app.api.v1.service.DictService;
 import com.yt.app.api.v1.service.RoleService;
 import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.context.TenantIdContext;
-import com.yt.app.common.bot.Cbot;
-import com.yt.app.common.bot.Mbot;
+import com.yt.app.common.bot.Channelbot;
+import com.yt.app.common.bot.Merchantbot;
 import com.yt.app.common.runnable.TaskExecutor;
 import com.yt.app.common.util.RsaUtil;
 
@@ -36,10 +36,10 @@ public class SystemRunner implements CommandLineRunner {
 	private DictService dictservice;
 
 	@Autowired
-	private Mbot mbot;
+	private Merchantbot mbot;
 
 	@Autowired
-	private Cbot cbot;
+	private Channelbot cbot;
 
 	@Override
 	public void run(String... args) throws Exception {

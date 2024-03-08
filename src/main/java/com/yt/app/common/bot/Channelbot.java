@@ -21,7 +21,7 @@ import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
 import com.yt.app.api.v1.service.PayconfigService;
 
 @Component
-public class Cbot extends TelegramLongPollingBot {
+public class Channelbot extends TelegramLongPollingBot {
 
 	@Autowired
 	private TgchannelgroupMapper tgchannelgroupmapper;
@@ -33,7 +33,7 @@ public class Cbot extends TelegramLongPollingBot {
 	private TgmerchantchannelmsgMapper tgmerchantchannelmsgmapper;
 
 	@Autowired
-	private Mbot mbot;
+	private Merchantbot mbot;
 
 	@Override
 	public String getBotUsername() {
@@ -65,7 +65,7 @@ public class Cbot extends TelegramLongPollingBot {
 					t.setTggroupname(update.getMessage().getChat().getTitle());
 					tgchannelgroupmapper.post(t);
 				}
-				handlemessage(message, chatid, tmg);
+				handlemessage(message, tmg);
 			} else {
 				if (replymsg != null) {
 					Integer replyid = replymsg.getMessageId();
@@ -75,12 +75,12 @@ public class Cbot extends TelegramLongPollingBot {
 						sendReplyText(tmcm.getCid(), tmcm.getCreplyid(), "收到，谢谢你的回复.");
 					}
 				}
-				handlemessage(message, chatid, tmg);
+				handlemessage(message, tmg);
 			}
 		}
 	}
 
-	private void handlemessage(String message, Long chatid, Tgchannelgroup tmg) {
+	private void handlemessage(String message, Tgchannelgroup tmg) {
 		if (message.equals("lx")) {// 汇率
 			List<Payconfig> list = payconfigservice.getDatas();
 			StringBuffer sb = new StringBuffer();
@@ -89,7 +89,7 @@ public class Cbot extends TelegramLongPollingBot {
 				sb.append(i + "" + pc.getName() + "，价格:" + pc.getExchange() + "\n");
 				i++;
 			}
-			sendText(chatid, sb.toString());
+			sendText(tmg.getTgid(), sb.toString());
 		}
 	}
 

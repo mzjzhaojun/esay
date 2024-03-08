@@ -2,6 +2,8 @@ package com.yt.app.api.v1.mapper;
 
 import java.util.List;
 import java.util.Map;
+
+import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
@@ -112,5 +114,15 @@ public interface TgmerchantgroupMapper extends YtIBaseMapper<Tgmerchantgroup> {
 	 */
 	@YtRedisCacheAnnotation(classs = Tgmerchantgroup.class)
 	public Tgmerchantgroup getByTgGroupId(Long tgid);
+	
+	
+	/**
+	 * getByTgId
+	 *
+	 * @param id id
+	 * @return Tgmerchantgroup
+	 */
+	@YtRedisCacheAnnotation(classs = Tgchannelgroup.class)
+	public Tgmerchantgroup getByMerchantId(Long merchantId);
 
 }
