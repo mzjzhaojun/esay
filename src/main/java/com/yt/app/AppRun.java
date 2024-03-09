@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableHypermediaSupport(type = { HypermediaType.HAL })
 @EnableAspectJAutoProxy(proxyTargetClass = false)
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 60 * 60 * 24 * 30)
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 60 * 60 * 1)
 public class AppRun extends SpringBootServletInitializer {
 
 	@Override

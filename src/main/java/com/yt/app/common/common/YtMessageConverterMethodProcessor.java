@@ -26,18 +26,18 @@ import com.yt.app.common.common.yt.YtHttpEntity;
 import com.yt.app.common.common.yt.YtRequestEntity;
 import com.yt.app.common.common.yt.YtResponseEntity;
 
-public class Ytd extends AbstractMessageConverterMethodProcessor {
+public class YtMessageConverterMethodProcessor extends AbstractMessageConverterMethodProcessor {
 
-	public Ytd(List<HttpMessageConverter<?>> converters) {
+	public YtMessageConverterMethodProcessor(List<HttpMessageConverter<?>> converters) {
 		super(converters);
 	}
 
-	public Ytd(List<HttpMessageConverter<?>> converters, ContentNegotiationManager manager) {
+	public YtMessageConverterMethodProcessor(List<HttpMessageConverter<?>> converters, ContentNegotiationManager manager) {
 
 		super(converters, manager);
 	}
 
-	public Ytd(List<HttpMessageConverter<?>> converters, List<Object> requestResponseBodyAdvice) {
+	public YtMessageConverterMethodProcessor(List<HttpMessageConverter<?>> converters, List<Object> requestResponseBodyAdvice) {
 
 		super(converters, null, requestResponseBodyAdvice);
 	}

@@ -14,10 +14,10 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-public class Yti extends CommonsMultipartResolver {
+public class YtMultipartResolver extends CommonsMultipartResolver {
 
 	@Autowired
-	private Yty uploadProgressListener;
+	private YtProgressListener uploadProgressListener;
 
 	@Override
 	protected MultipartParsingResult parseRequest(HttpServletRequest request) throws MultipartException {

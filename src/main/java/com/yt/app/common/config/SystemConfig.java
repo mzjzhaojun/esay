@@ -1,4 +1,4 @@
-package com.yt.app.common.common;
+package com.yt.app.common.config;
 
 import javax.servlet.MultipartConfigElement;
 
@@ -14,14 +14,8 @@ import com.yt.app.common.config.YtConfig;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
 
-/**
- * 
- * @author zj
- * 
- * @version 1.0
- */
 @Configuration
-public class Ytj {
+public class SystemConfig {
 
 	@Autowired
 	YtConfig g;

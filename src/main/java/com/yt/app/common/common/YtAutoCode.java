@@ -23,14 +23,14 @@ import com.yt.app.common.util.DbConnectionUtil;
  * 
  * @version 1.0
  */
-public class Ytk {
+public class YtAutoCode {
 
 	File file;
 	FileWriter K;
 	BufferedWriter L;
 	private DbConnectionUtil M = DbConnectionUtil.getInstance();
 
-	private Ytk() {
+	private YtAutoCode() {
 	}
 
 	public List<String> getTables() {
@@ -818,8 +818,8 @@ public class Ytk {
 		this.file.mkdirs();
 	}
 
-	public static Ytk u() {
+	public static YtAutoCode u() {
 
-		return new Ytk();
+		return new YtAutoCode();
 	}
 }

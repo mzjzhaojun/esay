@@ -42,7 +42,7 @@ import com.yt.app.common.util.SecurityUtil;
  * 
  * @author zj AbstractJackson2HttpMessageConverter
  */
-public class Yto extends MappingJackson2HttpMessageConverter {
+public class YtDecryptJackson2HttpMessageConverter extends MappingJackson2HttpMessageConverter {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -60,7 +60,7 @@ public class Yto extends MappingJackson2HttpMessageConverter {
 
 	private Boolean prettyPrint;
 
-	protected Yto(ObjectMapper objectMapper, YtConfig g) {
+	protected YtDecryptJackson2HttpMessageConverter(ObjectMapper objectMapper, YtConfig g) {
 		this.objectMapper = objectMapper;
 		this.ca = g;
 	}

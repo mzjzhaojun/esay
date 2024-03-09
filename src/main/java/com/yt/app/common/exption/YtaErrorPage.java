@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @version 1.0
  */
 @Component
-public class Ytaa implements ErrorPageRegistrar {
+public class YtaErrorPage implements ErrorPageRegistrar {
 
 	@Override
 	public void registerErrorPages(ErrorPageRegistry registry) {

@@ -25,7 +25,7 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 
 import com.yt.app.common.base.context.TenantIdContext;
-import com.yt.app.common.common.Yte;
+import com.yt.app.common.common.YtRoutingDataSource;
 import com.yt.app.common.config.YtMysql;
 
 import cn.hutool.core.lang.Assert;
@@ -112,12 +112,12 @@ public class MybatisPlusConfig implements TransactionManagementConfigurer {
 
 	@Primary
 	@Bean(name = "YtAbstractRoutingDataSource")
-	public Yte ytabstractroutingdatasource() {
+	public YtRoutingDataSource ytabstractroutingdatasource() {
 		Map<String, DataSource> localHashMap1 = new HashMap<String, DataSource>();
 		localHashMap1.put("slaveDataSource", dataSource1());
 		Map<String, DataSource> localHashMap2 = new HashMap<String, DataSource>();
 		localHashMap2.put("masterDataSource", dataSource2());
-		return new Yte(localHashMap1, localHashMap2, dataSource2());
+		return new YtRoutingDataSource(localHashMap1, localHashMap2, dataSource2());
 	}
 
 	/**

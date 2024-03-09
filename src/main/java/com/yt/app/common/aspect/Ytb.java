@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
-import com.yt.app.common.common.Yte;
+import com.yt.app.common.common.YtRoutingDataSource;
 import com.yt.app.common.enums.YtDataSourceEnum;
 
 /**
@@ -26,7 +26,7 @@ import com.yt.app.common.enums.YtDataSourceEnum;
 public class Ytb {
 
 	@Autowired
-	private Yte j;
+	private YtRoutingDataSource j;
 
 	@Pointcut("(execution(* com.yt.app.api.v1.service..*(..))) || (execution(* com.yt.app.common.base.YtIBaseService.*(..))) ")
 	public void a() {

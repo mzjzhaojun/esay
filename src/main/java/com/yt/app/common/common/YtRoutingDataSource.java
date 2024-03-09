@@ -17,14 +17,14 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
  * 
  * @version 1.0
  */
-public class Yte extends AbstractRoutingDataSource {
+public class YtRoutingDataSource extends AbstractRoutingDataSource {
 	private static final ThreadLocal<String> y = new ThreadLocal<String>();
 	private List<String> z;
 	private List<String> A;
 	private Map<String, DataSource> B;
 	private Map<String, DataSource> C;
 
-	public Yte(Map<String, DataSource> paramMap1, Map<String, DataSource> paramMap2, Object paramObject) {
+	public YtRoutingDataSource(Map<String, DataSource> paramMap1, Map<String, DataSource> paramMap2, Object paramObject) {
 		a(paramMap1);
 		b(paramMap2);
 		setDefaultTargetDataSource(paramObject);

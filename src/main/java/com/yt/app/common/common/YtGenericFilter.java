@@ -19,7 +19,7 @@ import com.yt.app.common.config.YtConfig;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class Ytl extends GenericFilterBean {
+public class YtGenericFilter extends GenericFilterBean {
 
 	@Autowired
 	YtConfig ytconfig;

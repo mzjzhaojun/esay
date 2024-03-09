@@ -13,7 +13,7 @@ import lombok.Setter;
  */
 @Setter
 @Getter
-public class Ytz implements Serializable {
+public class YtProgressListenerVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private long bytesRead;

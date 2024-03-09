@@ -37,7 +37,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
  * 
  * @author zj AbstractJackson2HttpMessageConverter
  */
-public class Ytq extends MappingJackson2HttpMessageConverter {
+public class YtJackson2HttpMessageConverter extends MappingJackson2HttpMessageConverter {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -53,7 +53,7 @@ public class Ytq extends MappingJackson2HttpMessageConverter {
 
 	private Boolean prettyPrint;
 
-	protected Ytq(ObjectMapper objectMapper) {
+	protected YtJackson2HttpMessageConverter(ObjectMapper objectMapper) {
 		this.objectMapper = objectMapper;
 	}
 

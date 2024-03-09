@@ -12,19 +12,19 @@ import org.springframework.stereotype.Component;
  * @version 1.0
  */
 @Component
-public class Yty implements ProgressListener {
+public class YtProgressListener implements ProgressListener {
 
 	private HttpSession aa;
 
 	public void setSession(HttpSession paramHttpSession) {
 		this.aa = paramHttpSession;
-		Ytz localProgress = new Ytz();
+		YtProgressListenerVO localProgress = new YtProgressListenerVO();
 		paramHttpSession.setAttribute("status", localProgress);
 	}
 
 	@Override
 	public void update(long paramLong1, long paramLong2, int paramInt) {
-		Ytz localProgress = (Ytz) this.aa.getAttribute("status");
+		YtProgressListenerVO localProgress = (YtProgressListenerVO) this.aa.getAttribute("status");
 		localProgress.setBytesRead(paramLong1);
 		localProgress.setContentLength(paramLong2);
 		localProgress.setItems(paramInt);

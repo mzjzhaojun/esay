@@ -11,7 +11,7 @@ import org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.yt.app.common.common.Ytk;
+import com.yt.app.common.common.YtAutoCode;
 
 /**
  * by jz
@@ -39,6 +39,6 @@ public class Run extends SpringBootServletInitializer {
 		// "merchantaccountapply", "merchantaccountapplyjournal",
 		// "merchantaccountorder","systemaccount", "systemcapitalrecord"
 
-		Ytk.u().p(Arrays.asList("exchange"));
+		YtAutoCode.u().p(Arrays.asList("exchange"));
 	}
 }

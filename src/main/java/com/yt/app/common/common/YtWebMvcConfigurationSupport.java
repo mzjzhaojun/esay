@@ -36,13 +36,13 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
  * @version 1.0
  */
 @Configuration
-public class Ytv extends WebMvcConfigurationSupport {
+public class YtWebMvcConfigurationSupport extends WebMvcConfigurationSupport {
 
 	@Autowired
 	YtConfig g;
 
 	@Bean(name = "YtMappingJackson2HttpMessageConverter")
-	public Ytq t() {
+	public YtJackson2HttpMessageConverter t() {
 		ObjectMapper localObjectMapper = new ObjectMapper();
 		localObjectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		localObjectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -54,20 +54,20 @@ public class Ytv extends WebMvcConfigurationSupport {
 		localObjectMapper.registerModule(localSimpleModule);
 		localObjectMapper.setDateFormat(new SimpleDateFormat("YY-MM-dd HH:mm:ss"));
 		localObjectMapper.setTimeZone(TimeZone.getTimeZone("GMT+7"));
-		Ytq localMappingJackson2HttpMessageConverter = new Ytq(localObjectMapper);
+		YtJackson2HttpMessageConverter localMappingJackson2HttpMessageConverter = new YtJackson2HttpMessageConverter(localObjectMapper);
 		return localMappingJackson2HttpMessageConverter;
 	}
 
 	@Bean(name = "YtAbstractMessageConverterMethodProcessor")
-	public Ytd n() {
+	public YtMessageConverterMethodProcessor n() {
 		List<HttpMessageConverter<?>> paramList = new ArrayList<HttpMessageConverter<?>>();
 		paramList.add(t());
-		Ytd localythttpentitymethodprocessor = new Ytd(paramList);
+		YtMessageConverterMethodProcessor localythttpentitymethodprocessor = new YtMessageConverterMethodProcessor(paramList);
 		return localythttpentitymethodprocessor;
 	}
 
 	@Bean(name = "YtDecryptMappingJackson2HttpMessageConverter")
-	public Yto k() {
+	public YtDecryptJackson2HttpMessageConverter k() {
 		ObjectMapper localObjectMapper = new ObjectMapper();
 		localObjectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		localObjectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -80,15 +80,15 @@ public class Ytv extends WebMvcConfigurationSupport {
 		localObjectMapper.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 
 		localObjectMapper.registerModule(localSimpleModule);
-		Yto localMappingJackson2HttpMessageConverter = new Yto(localObjectMapper, g);
+		YtDecryptJackson2HttpMessageConverter localMappingJackson2HttpMessageConverter = new YtDecryptJackson2HttpMessageConverter(localObjectMapper, g);
 		return localMappingJackson2HttpMessageConverter;
 	}
 
 	@Bean(name = "YtDecryptAbstractMessageConverterMethodProcessor")
-	public Ytn m() {
+	public YtDecryptMessageConverterMethodProcessor m() {
 		List<HttpMessageConverter<?>> paramList = new ArrayList<HttpMessageConverter<?>>();
 		paramList.add(k());
-		Ytn localrequestdecryptresponseencryptbodymethodprocessor = new Ytn(paramList);
+		YtDecryptMessageConverterMethodProcessor localrequestdecryptresponseencryptbodymethodprocessor = new YtDecryptMessageConverterMethodProcessor(paramList);
 		return localrequestdecryptresponseencryptbodymethodprocessor;
 	}
 
@@ -110,7 +110,6 @@ public class Ytv extends WebMvcConfigurationSupport {
 	public void addResourceHandlers(ResourceHandlerRegistry paramResourceHandlerRegistry) {
 		paramResourceHandlerRegistry.addResourceHandler(new String[] { "/**" })
 				.addResourceLocations(new String[] { "classpath:/template/" });
-		// paramResourceHandlerRegistry.addResourceHandler("/**").addResourceLocations("classpath:/assets/");
 		paramResourceHandlerRegistry.addResourceHandler("/").addResourceLocations("classpath:/index.html");
 		super.addResourceHandlers(paramResourceHandlerRegistry);
 	}
@@ -133,8 +132,8 @@ public class Ytv extends WebMvcConfigurationSupport {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		// 可添加多个
-		registry.addInterceptor(new HandlerInterceptorForToken(g)).addPathPatterns("/rest/**", "/app/**");
-		registry.addInterceptor(new HandlerInterceptorForTenantId(g)).addPathPatterns("/rest/**", "/app/**");
-		registry.addInterceptor(new HandlerInterceptorForRsaKey(g)).addPathPatterns("/rest/**", "/app/**");
+		registry.addInterceptor(new HandlerInterceptorForToken(g)).addPathPatterns("/**");
+		registry.addInterceptor(new HandlerInterceptorForTenantId(g)).addPathPatterns("/**");
+		registry.addInterceptor(new HandlerInterceptorForRsaKey(g)).addPathPatterns("/**");
 	}
 }

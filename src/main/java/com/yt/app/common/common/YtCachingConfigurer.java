@@ -35,7 +35,7 @@ import com.yt.app.common.config.YtRedis;
 
 @Configuration
 @EnableCaching
-public class Yth extends CachingConfigurerSupport {
+public class YtCachingConfigurer extends CachingConfigurerSupport {
 
 	@Autowired
 	YtRedis c;

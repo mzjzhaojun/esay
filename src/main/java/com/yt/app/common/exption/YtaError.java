@@ -15,7 +15,7 @@ import com.yt.app.common.enums.YtCodeEnum;
 
 @RestController
 @RequestMapping("/error")
-public class Ytab {
+public class YtaError {
 
 	@RequestMapping(produces = MediaType.TEXT_HTML_VALUE, value = "/401")
 	public ModelAndView errorHtml404(HttpServletRequest request, HttpServletResponse response) {

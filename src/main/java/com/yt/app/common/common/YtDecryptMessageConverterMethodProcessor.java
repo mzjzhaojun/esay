@@ -26,18 +26,18 @@ import com.yt.app.common.common.yt.YtHttpEntity;
 import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
 
-public class Ytn extends AbstractMessageConverterMethodProcessor {
+public class YtDecryptMessageConverterMethodProcessor extends AbstractMessageConverterMethodProcessor {
 
-	public Ytn(List<HttpMessageConverter<?>> converters) {
+	public YtDecryptMessageConverterMethodProcessor(List<HttpMessageConverter<?>> converters) {
 		super(converters);
 	}
 
-	public Ytn(List<HttpMessageConverter<?>> converters, ContentNegotiationManager manager) {
+	public YtDecryptMessageConverterMethodProcessor(List<HttpMessageConverter<?>> converters, ContentNegotiationManager manager) {
 
 		super(converters, manager);
 	}
 
-	public Ytn(List<HttpMessageConverter<?>> converters, List<Object> requestResponseBodyAdvice) {
+	public YtDecryptMessageConverterMethodProcessor(List<HttpMessageConverter<?>> converters, List<Object> requestResponseBodyAdvice) {
 
 		super(converters, null, requestResponseBodyAdvice);
 	}

@@ -21,7 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBody
  * @version 1.0
  */
 @Component
-public class Yts implements ServletContextListener {
+public class YtServletContextListener implements ServletContextListener {
 
 	@Autowired
 	private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
@@ -33,19 +33,19 @@ public class Yts implements ServletContextListener {
 		int encryptIndex = 0;
 		int requestIndex = 0;
 		int responseIndex = 0;
-		Ytn requestDecryptResponseEncryptBodyMethodProcessor = null;
-		Ytd ythttpentitymethodprocessor = null;
+		YtDecryptMessageConverterMethodProcessor requestDecryptResponseEncryptBodyMethodProcessor = null;
+		YtMessageConverterMethodProcessor ythttpentitymethodprocessor = null;
 		for (int i = 0, length = handlers.size(); i < length; i++) {
 			HandlerMethodReturnValueHandler handler = handlers.get(i);
-			if (handler instanceof Ytn) {
-				requestDecryptResponseEncryptBodyMethodProcessor = (Ytn) handler;
+			if (handler instanceof YtDecryptMessageConverterMethodProcessor) {
+				requestDecryptResponseEncryptBodyMethodProcessor = (YtDecryptMessageConverterMethodProcessor) handler;
 				encryptIndex = i;
 			} else if (handler instanceof HttpEntityMethodProcessor) {
 				decryptIndex = i;
 			}
 
-			if (handler instanceof Ytd) {
-				ythttpentitymethodprocessor = (Ytd) handler;
+			if (handler instanceof YtMessageConverterMethodProcessor) {
+				ythttpentitymethodprocessor = (YtMessageConverterMethodProcessor) handler;
 				requestIndex = i;
 			} else if (handler instanceof HttpEntityMethodProcessor) {
 				responseIndex = i;
@@ -63,18 +63,18 @@ public class Yts implements ServletContextListener {
 
 		List<HandlerMethodArgumentResolver> argumentResolvers = new ArrayList<HandlerMethodArgumentResolver>(
 				requestMappingHandlerAdapter.getArgumentResolvers());
-		Ytn requestDecryptResponseEncryptBodyMethodProcessor2 = null;
+		YtDecryptMessageConverterMethodProcessor requestDecryptResponseEncryptBodyMethodProcessor2 = null;
 		for (int i = 0, length = argumentResolvers.size(); i < length; i++) {
 			HandlerMethodArgumentResolver argumentResolver = argumentResolvers.get(i);
-			if (argumentResolver instanceof Ytn) {
-				requestDecryptResponseEncryptBodyMethodProcessor2 = (Ytn) argumentResolver;
+			if (argumentResolver instanceof YtDecryptMessageConverterMethodProcessor) {
+				requestDecryptResponseEncryptBodyMethodProcessor2 = (YtDecryptMessageConverterMethodProcessor) argumentResolver;
 				encryptIndex = i;
 			} else if (argumentResolver instanceof RequestResponseBodyMethodProcessor) {
 				decryptIndex = i;
 			}
 
-			if (argumentResolver instanceof Ytd) {
-				ythttpentitymethodprocessor = (Ytd) argumentResolver;
+			if (argumentResolver instanceof YtMessageConverterMethodProcessor) {
+				ythttpentitymethodprocessor = (YtMessageConverterMethodProcessor) argumentResolver;
 				requestIndex = i;
 			} else if (argumentResolver instanceof RequestResponseBodyMethodProcessor) {
 				responseIndex = i;
