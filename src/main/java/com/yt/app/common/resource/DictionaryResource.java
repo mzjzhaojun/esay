@@ -35,9 +35,9 @@ public class DictionaryResource implements Serializable {
 	/**
 	 * 订单类型类型
 	 */
-	public static final Integer ORDERTYPE_20 = 20; //充值
-	public static final Integer ORDERTYPE_21 = 21; //支出
-	public static final Integer ORDERTYPE_22 = 22; //换汇
+	public static final Integer ORDERTYPE_20 = 20; // 充值
+	public static final Integer ORDERTYPE_21 = 21; // 支出
+	public static final Integer ORDERTYPE_22 = 22; // 换汇
 
 	/**
 	 * 明细类型
@@ -53,10 +53,9 @@ public class DictionaryResource implements Serializable {
 
 	public static final Integer RECORDTYPE_36 = 36; // 收入取消
 	public static final Integer RECORDTYPE_37 = 37; // 支出取消
-	
-	public static final Integer RECORDTYPE_38 = 38; //换汇待确认
-	public static final Integer RECORDTYPE_39 = 39; //换汇通过
-	
+
+	public static final Integer RECORDTYPE_38 = 38; // 换汇待确认
+	public static final Integer RECORDTYPE_39 = 39; // 换汇通过
 
 	/**
 	 * 银行卡类型
@@ -72,13 +71,16 @@ public class DictionaryResource implements Serializable {
 	public static final Integer PAYOUTSTATUS_51 = 51; // 代付钟
 	public static final Integer PAYOUTSTATUS_52 = 52; // 成功
 	public static final Integer PAYOUTSTATUS_53 = 53; // 失败或异常
+	public static final Integer PAYOUTSTATUS_54 = 54; // 获取单号失败
 
 	/**
 	 * 回调状态
 	 */
 
 	public static final Integer PAYOUTNOTIFYSTATUS_60 = 60; // 商户发起 不需要通知
-	public static final Integer PAYOUTNOTIFYSTATUS_61 = 61; // 待通知
-	public static final Integer PAYOUTNOTIFYSTATUS_62 = 62; // 已通知
-	public static final Integer PAYOUTNOTIFYSTATUS_63 = 63; // 通知三次后失败
+	public static final Integer PAYOUTNOTIFYSTATUS_61 = 61; // 盘口发起
+	public static final Integer PAYOUTNOTIFYSTATUS_62 = 62; // 待通知
+	public static final Integer PAYOUTNOTIFYSTATUS_63 = 63; // 已通知
+	public static final Integer PAYOUTNOTIFYSTATUS_64 = 64; // 通知三次后失败
+	public static final Integer PAYOUTNOTIFYSTATUS_65 = 65; // 通知中
 }

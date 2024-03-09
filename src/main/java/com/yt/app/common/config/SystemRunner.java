@@ -14,7 +14,6 @@ import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.Channelbot;
 import com.yt.app.common.bot.Merchantbot;
-import com.yt.app.common.runnable.TaskExecutor;
 import com.yt.app.common.util.RsaUtil;
 
 /**
@@ -62,9 +61,6 @@ public class SystemRunner implements CommandLineRunner {
 		TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
 		botsApi.registerBot(mbot);
 		botsApi.registerBot(cbot);
-
-		// 线程池
-		TaskExecutor.newThreadPool();
 
 		log.info("服务初始化之后，执行方法 end...");
 	}

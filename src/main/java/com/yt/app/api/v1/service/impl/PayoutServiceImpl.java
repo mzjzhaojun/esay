@@ -57,8 +57,6 @@ import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.MyException;
 import com.yt.app.common.resource.DictionaryResource;
-import com.yt.app.common.runnable.NotifyPayoutThread;
-import com.yt.app.common.runnable.TaskExecutor;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.PayUtil;
 import com.yt.app.common.util.RedisUtil;
@@ -323,29 +321,19 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	@Override
 	public YtBody tycallbackpay(SysTyOrder so) {
-		Payout pt = mapper.getByChannelOrdernum(so.getTypay_order_id());
-		if (pt == null)
-			return new YtBody("失败", 100);
-		RLock lock = RedissonUtil.getLock(pt.getId());
+		RLock lock = RedissonUtil.getLock(so.getTypay_order_id());
 		try {
 			lock.lock();
+			Payout pt = mapper.getByChannelOrdernum(so.getTypay_order_id());
+			if (pt == null)
+				return new YtBody("失败", 100);
 			if (pt.getStatus() != DictionaryResource.PAYOUTSTATUS_52) {
 				Channel cl = channelmapper.get(pt.getChannelid());
 				// md5值是否被篡改
 				if (PayUtil.valMd5TyOrder(so, cl.getApikey())) {
 					if (so.getPay_message() == 1) {
 						paySuccess(pt);
-						// 执行通知
-						if (pt.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61) {
-							NotifyPayoutThread notifythread = new NotifyPayoutThread(mapper, merchantmapper, pt, 200);
-							TaskExecutor.tastpool.execute(notifythread);
-						}
-						return new YtBody("成功", 200);
-					} else if (so.getPay_message() == -2) {
-						if (pt.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61) {
-							NotifyPayoutThread notifythread = new NotifyPayoutThread(mapper, merchantmapper, pt, 100);
-							TaskExecutor.tastpool.execute(notifythread);
-						}
+					} else {
 						payFail(pt);
 					}
 				}
@@ -354,7 +342,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		} finally {
 			lock.unlock();
 		}
-		return new YtBody("失败", 100);
+		return new YtBody("成功", 200);
 	}
 
 	// 盘口提交订单
@@ -588,62 +576,76 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	 */
 	@Override
 	public void paySuccess(Payout pt) {
-		Payout t = mapper.get(pt.getId());
-		// 计算商户订单/////////////////////////////////////////////////////
-		Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
-		// 商户订单
-		merchantaccountordermapper.put(mao);
-		// 商户账户
-		merchantaccountservice.updatePayout(mao);
-		// 系统账户
-		systemaccountservice.updatePayout(mao);
+		RLock lock = RedissonUtil.getLock(pt.getId());
+		try {
+			lock.lock();
+			Payout t = mapper.get(pt.getId());
+			if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+				// 计算商户订单/////////////////////////////////////////////////////
+				Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
+				mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+				// 商户订单
+				merchantaccountordermapper.put(mao);
+				// 商户账户
+				merchantaccountservice.updatePayout(mao);
+				// 系统账户
+				systemaccountservice.updatePayout(mao);
 
-		// 计算商户数据
-		merchantservice.updatePayout(t);
+				// 计算商户数据
+				merchantservice.updatePayout(t);
 
-		// 计算代理
-		if (t.getAgentid() != null) {
-			Agentaccountorder aao = agentaccountordermapper.getByOrdernum(t.getAgentordernum());
-			aao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
-			// 代理订单
-			agentaccountordermapper.put(aao);
-			// 代理账户
-			agentaccountservice.updateTotalincome(aao);
-			// 计算代理数据
-			agentservice.updatePayout(t);
-		}
+				// 计算代理
+				if (t.getAgentid() != null) {
+					Agentaccountorder aao = agentaccountordermapper.getByOrdernum(t.getAgentordernum());
+					aao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+					// 代理订单
+					agentaccountordermapper.put(aao);
+					// 代理账户
+					agentaccountservice.updateTotalincome(aao);
+					// 计算代理数据
+					agentservice.updatePayout(t);
+				}
 
-		// 计算渠道
-		Channelaccountorder cao = channelaccountordermapper.getByOrdernum(t.getChannelordernum());
-		cao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
-		// 渠道订单
-		channelaccountordermapper.put(cao);
-		// 渠道账户
-		channelaccountservice.updateWithdrawamount(cao);
-		// 计算渠道数据
-		channelservice.updatePayout(t);
+				// 计算渠道
+				Channelaccountorder cao = channelaccountordermapper.getByOrdernum(t.getChannelordernum());
+				cao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+				// 渠道订单
+				channelaccountordermapper.put(cao);
+				// 渠道账户
+				channelaccountservice.updateWithdrawamount(cao);
+				// 计算渠道数据
+				channelservice.updatePayout(t);
 
-		// ------------------更新代付订单-----------------
-		t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
-		t.setRemark("手动回调代付成功！" + pt.getRemark());
-		t.setSuccesstime(DateTimeUtil.getNow());
-		t.setBacklong(DateUtil.between(t.getSuccesstime(), t.getCreate_time(), DateUnit.SECOND));
+				// ------------------更新代付订单-----------------
+				t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+				if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
+					t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
+				}
+				t.setRemark("手动回调代付成功！" + pt.getRemark());
+				t.setSuccesstime(DateTimeUtil.getNow());
+				t.setBacklong(DateUtil.between(t.getSuccesstime(), t.getCreate_time(), DateUnit.SECOND));
 
-		t.setImgurl(pt.getImgurl());
-		//
-		int i = mapper.put(t);
-		if (i > 0) {
-			Tgmerchantgroup tgmerchantgroup = tgmerchantgroupmapper.getByMerchantId(t.getMerchantid());
-			StringBuffer what = new StringBuffer();
-			what.append("状态：代付成功\n");
-			what.append("单号：" + t.getMerchantordernum()+ "\n");
-			what.append("姓名：" + t.getAccname() + "\n");
-			what.append("卡号：" + t.getAccnumer() + "\n");
-			what.append("金额：" + t.getAmount() + "\n");
-			what.append("成功时间：" + DateTimeUtil.getDateTime() + "\n");
-			what.append("业务部已处理完毕，请你们核实查看\n");
-			mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
+				t.setImgurl(pt.getImgurl());
+				//
+				int i = mapper.put(t);
+				if (i > 0) {
+					Tgmerchantgroup tgmerchantgroup = tgmerchantgroupmapper.getByMerchantId(t.getMerchantid());
+					StringBuffer what = new StringBuffer();
+					what.append("状态：代付成功\n");
+					what.append("单号：" + t.getMerchantordernum() + "\n");
+					what.append("姓名：" + t.getAccname() + "\n");
+					what.append("卡号：" + t.getAccnumer() + "\n");
+					what.append("金额：" + t.getAmount() + "\n");
+					what.append("成功时间：" + DateTimeUtil.getDateTime() + "\n");
+					what.append("业务部已处理完毕，请你们核实查看\n");
+					mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
+				}
+			} else {
+				new MyException("已经处理完成，不要重复处理", YtCodeEnum.YT888);
+			}
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -655,48 +657,61 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Override
 	@Transactional
 	public void payFail(Payout t) {
+		RLock lock = RedissonUtil.getLock(t.getId());
+		try {
+			lock.lock();
+			if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+				// 计算商户订单/////////////////////////////////////////////////////
+				Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
+				mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
+				merchantaccountordermapper.put(mao);
+				//
+				merchantaccountservice.turndownPayout(mao);
 
-		// 计算商户订单/////////////////////////////////////////////////////
-		Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
-		merchantaccountordermapper.put(mao);
-		//
-		merchantaccountservice.turndownPayout(mao);
+				// 计算代理
+				if (t.getAgentid() != null) {
+					Agentaccountorder aao = agentaccountordermapper.getByOrdernum(t.getAgentordernum());
+					aao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
+					agentaccountordermapper.put(aao);
+					//
+					agentaccountservice.turndownTotalincome(aao);
+				}
 
-		// 计算代理
-		if (t.getAgentid() != null) {
-			Agentaccountorder aao = agentaccountordermapper.getByOrdernum(t.getAgentordernum());
-			aao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
-			agentaccountordermapper.put(aao);
-			//
-			agentaccountservice.turndownTotalincome(aao);
-		}
+				// 计算渠道
+				Channelaccountorder cao = channelaccountordermapper.getByOrdernum(t.getChannelordernum());
+				cao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
+				channelaccountordermapper.put(cao);
+				//
+				channelaccountservice.turndownWithdrawamount(cao);
 
-		// 计算渠道
-		Channelaccountorder cao = channelaccountordermapper.getByOrdernum(t.getChannelordernum());
-		cao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
-		channelaccountordermapper.put(cao);
-		//
-		channelaccountservice.turndownWithdrawamount(cao);
+				//
+				t.setStatus(DictionaryResource.PAYOUTSTATUS_53);
+				if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
+					t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
+				}
+				t.setRemark("手动代付失败！");
+				t.setSuccesstime(DateTimeUtil.getNow());
+				t.setBacklong(DateTimeUtil.diffDays(t.getSuccesstime(), t.getCreate_time()));
+				int i = mapper.put(t);
+				if (i > 0) {
+					Tgmerchantgroup tgmerchantgroup = tgmerchantgroupmapper.getByMerchantId(t.getMerchantid());
+					StringBuffer what = new StringBuffer();
+					what.append("状态：代付失败\n");
+					what.append("单号：" + t.getMerchantordernum() + "\n");
+					what.append("姓名：" + t.getAccname() + "\n");
+					what.append("卡号：" + t.getAccnumer() + "\n");
+					what.append("金额：" + t.getAmount() + "\n");
+					what.append("失败时间：" + DateTimeUtil.getDateTime() + "\n");
+					what.append("业务部已处理完毕，请你们核实查看\n");
+					mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
+				}
+			} else {
+				new MyException("已经处理完成，不要重复处理", YtCodeEnum.YT888);
+			}
 
-		//
-		t.setStatus(DictionaryResource.PAYOUTSTATUS_53);
-		t.setRemark("手动代付失败！");
-		t.setSuccesstime(DateTimeUtil.getNow());
-		t.setBacklong(DateTimeUtil.diffDays(t.getSuccesstime(), t.getCreate_time()));
-		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
-		int i = mapper.put(t);
-		if (i > 0) {
-			Tgmerchantgroup tgmerchantgroup = tgmerchantgroupmapper.getByMerchantId(t.getMerchantid());
-			StringBuffer what = new StringBuffer();
-			what.append("状态：代付失败\n");
-			what.append("单号：" + t.getMerchantordernum()+ "\n");
-			what.append("姓名：" + t.getAccname() + "\n");
-			what.append("卡号：" + t.getAccnumer() + "\n");
-			what.append("金额：" + t.getAmount() + "\n");
-			what.append("失败时间：" + DateTimeUtil.getDateTime() + "\n");
-			what.append("业务部已处理完毕，请你们核实查看\n");
-			mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
 		}
 	}
 

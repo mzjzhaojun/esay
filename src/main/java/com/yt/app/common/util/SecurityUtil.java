@@ -35,9 +35,8 @@ public class SecurityUtil {
 			SerializeConfig serializeConfig = new SerializeConfig();
 			serializeConfig.put(Long.class, ToStringSerializer.instance);
 			serializeConfig.put(Long.TYPE, ToStringSerializer.instance);
-			serializeConfig.put(Date.class, new SimpleDateFormatSerializer("YY-MM-dd HH:mm:ss"));
+			serializeConfig.put(Date.class, new SimpleDateFormatSerializer("YY-MM-dd HH:mm"));
 			String dataString = JSON.toJSONString(object, serializeConfig, SerializerFeature.PrettyFormat);
-			System.out.println("==========" + dataString);
 			String data = AesUtil.encrypt(dataString, AuthRsaKeyContext.getAesKey());
 			return data;
 		} catch (Throwable e) {

@@ -5,12 +5,12 @@
 	<sql id="Base_Column_List">
 		id,tenant_id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankcode,bankname,bankaddress,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income,notifyurl,notifystatus,channelbalance,remark,version
 	</sql>
-	
+
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
 		type="com.yt.app.api.v1.entity.Payout">
 	</resultMap>
-	
+
 	<!-- ResultMap -->
 	<resultMap id="ResultMapVO"
 		type="com.yt.app.api.v1.vo.PayoutVO">
@@ -36,7 +36,8 @@
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
 		delete from payout
-		where id = #{id}
+		where id =
+		#{id}
 	</delete>
 	<!-- update -->
 	<update id="put" parameterType="com.yt.app.api.v1.entity.Payout">
@@ -155,16 +156,16 @@
 		from payout
 		where id = #{id}
 	</select>
-	
+
 	<!--getByChannelOrdernum -->
-	<select id="getByChannelOrdernum" parameterType="java.lang.String"
-		resultMap="ResultMap">
+	<select id="getByChannelOrdernum"
+		parameterType="java.lang.String" resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from payout
 		where channelordernum= #{channelordernum}
 	</select>
-	
+
 	<!--getByOrdernum -->
 	<select id="getByOrdernum" parameterType="java.lang.String"
 		resultMap="ResultMap">
@@ -173,7 +174,7 @@
 		from payout
 		where ordernum= #{ordernum}
 	</select>
-	
+
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
@@ -193,7 +194,7 @@
 			</if>
 		</where>
 	</select>
-	
+
 	<!-- getList -->
 	<select id="selectNotifylist" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
@@ -201,10 +202,10 @@
 		<include refid="Base_Column_List" />
 		from payout
 		<where>
-			notifystatus = 61
+			notifystatus = 62
 		</where>
 	</select>
-	
+
 	<!-- getList -->
 	<select id="page" parameterType="java.util.HashMap"
 		resultMap="ResultMapVO">

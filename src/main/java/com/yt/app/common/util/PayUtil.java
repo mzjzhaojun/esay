@@ -119,7 +119,7 @@ public class PayUtil {
 		return data;
 	}
 
-	public static YtBody SendNotify(SysResultVO ss, String key) {
+	public static YtBody SendNotify(String url, SysResultVO ss, String key) {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -140,8 +140,7 @@ public class PayUtil {
 
 		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
-		ResponseEntity<YtBody> sov = resttemplate.exchange(
-				"http://txfat-api.fbnma.com/api/query/withdraw/view?sign=" + signParams, HttpMethod.POST, httpEntity,
+		ResponseEntity<YtBody> sov = resttemplate.exchange(url + "?sign=" + signParams, HttpMethod.POST, httpEntity,
 				YtBody.class);
 		YtBody data = sov.getBody();
 		System.out.println(sov.getBody());

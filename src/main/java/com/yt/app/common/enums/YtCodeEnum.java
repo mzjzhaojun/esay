@@ -137,7 +137,10 @@ public enum YtCodeEnum {
 	 */
 	YT701(701, "修改失败，请查询最新数据重新修改"),
 
-	YT888(888, "not know");
+	/**
+	 * 
+	 */
+	YT888(888, "当前操作不成立，请刷新后重试!");
 
 	@EnumValue
 	private final Integer code;

@@ -57,8 +57,6 @@ import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.MyException;
 import com.yt.app.common.resource.DictionaryResource;
-import com.yt.app.common.runnable.NotifyExchangeThread;
-import com.yt.app.common.runnable.TaskExecutor;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.PayUtil;
 import com.yt.app.common.util.RedisUtil;
@@ -129,7 +127,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	private Merchantbot mbot;
 	@Autowired
 	private TgmerchantgroupMapper tgmerchantgroupmapper;
-
+	
 	@Override
 	@Transactional
 	public Integer post(Exchange t) {
@@ -335,19 +333,8 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 				if (PayUtil.valMd5TyOrder(so, cl.getApikey())) {
 					if (so.getPay_message() == 1) {
 						paySuccess(pt);
-						// 执行通知
-						if (pt.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61) {
-							NotifyExchangeThread notifythread = new NotifyExchangeThread(mapper, merchantmapper, pt,
-									200);
-							TaskExecutor.tastpool.execute(notifythread);
-						}
 						return new YtBody("成功", 200);
 					} else if (so.getPay_message() == -2) {
-						if (pt.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61) {
-							NotifyExchangeThread notifythread = new NotifyExchangeThread(mapper, merchantmapper, pt,
-									100);
-							TaskExecutor.tastpool.execute(notifythread);
-						}
 						payFail(pt);
 					}
 				}
@@ -356,7 +343,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		} finally {
 			lock.unlock();
 		}
-		return new YtBody("失败", 100);
+		return new YtBody("成功", 200);
 	}
 
 	// 盘口提交订单

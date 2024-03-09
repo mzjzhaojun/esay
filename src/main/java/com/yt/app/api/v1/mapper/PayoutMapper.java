@@ -119,6 +119,6 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 	 * @return
 	 */
 	@YtRedisCacheAnnotation(classs = Payout.class)
-	public List<PayoutVO> selectNotifylist();
+	public List<Payout> selectNotifylist();
 
 }

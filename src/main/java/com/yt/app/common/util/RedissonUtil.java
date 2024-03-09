@@ -27,5 +27,10 @@ public class RedissonUtil {
 		RLock lock = redissonclient.getLock(key.toString());
 		return lock;
 	}
+	
+	public static RLock getLock(String key) {
+		RLock lock = redissonclient.getLock(key.toString());
+		return lock;
+	}
 
 }
