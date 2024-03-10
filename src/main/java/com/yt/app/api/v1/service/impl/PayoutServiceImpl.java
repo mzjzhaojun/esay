@@ -16,7 +16,6 @@ import com.yt.app.api.v1.mapper.MerchantaccountMapper;
 import com.yt.app.api.v1.mapper.MerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantaisleMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
-import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.service.AgentService;
 import com.yt.app.api.v1.service.AgentaccountService;
@@ -34,7 +33,6 @@ import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
-import com.yt.app.common.bot.Channelbot;
 import com.yt.app.common.bot.Merchantbot;
 import com.yt.app.api.v1.dbo.SysSubmitDTO;
 import com.yt.app.api.v1.entity.Agent;
@@ -48,7 +46,6 @@ import com.yt.app.api.v1.entity.Merchantaccount;
 import com.yt.app.api.v1.entity.Merchantaccountorder;
 import com.yt.app.api.v1.entity.Merchantaisle;
 import com.yt.app.api.v1.entity.Payout;
-import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtIPage;
@@ -119,10 +116,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	private MerchantaccountMapper merchantaccountmapper;
 	@Autowired
 	private MerchantaisleMapper merchantaislemapper;
-	@Autowired
-	private Channelbot cbot;
-	@Autowired
-	private TgchannelgroupMapper tgchannelgroupmapper;
 	@Autowired
 	private Merchantbot mbot;
 	@Autowired
@@ -199,11 +192,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		}
 
-		///////////////////////////////////////////////////// channelcordernum/////////////////////////////////////////////////////
-		String channelcordernum = channelservice.getChannelOrder(t, cl);
-		Assert.notNull(channelcordernum, "通道单号获取失败!");
-		t.setChannelordernum(channelcordernum);
-
 		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
 		Merchantaccountorder mao = new Merchantaccountorder();
 		mao.setUserid(m.getUserid());
@@ -277,18 +265,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 		//
 		Integer i = mapper.post(t);
-		if (i > 0) {
-			Tgchannelgroup tgchannelgroup = tgchannelgroupmapper.getByChannelId(t.getChannelid());
-			StringBuffer what = new StringBuffer();
-			what.append("状态：新增代付\n");
-			what.append("单号：" + t.getChannelordernum() + "\n");
-			what.append("姓名：" + t.getAccname() + "\n");
-			what.append("卡号：" + t.getAccnumer() + "\n");
-			what.append("金额：" + t.getAmount() + "\n");
-			what.append("发起时间：" + DateTimeUtil.getDateTime() + "\n");
-			what.append("客户请你们尽快处理\n");
-			cbot.sendText(tgchannelgroup.getTgid(), what.toString());
-		}
 		return i;
 	}
 
@@ -457,11 +433,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		}
 
-		///////////////////////////////////////////////////// channelcordernum/////////////////////////////////////////////////////
-		String channelcordernum = channelservice.getChannelOrder(t, cl);
-		Assert.notNull(channelcordernum, "通道单号获取失败!");
-		t.setChannelordernum(channelcordernum);
-
 		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
 		Merchantaccountorder mao = new Merchantaccountorder();
 		mao.setUserid(m.getUserid());
@@ -527,31 +498,13 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		cat.setRemark(
 				"资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", cat.getAmount()) + " 手续费：" + cll.getOnecost());
 		channelaccountordermapper.post(cat);
-
 		//
 		channelaccountservice.withdrawamount(cat);
-
 		//
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
-
 		//
 		Integer i = mapper.post(t);
-
-		if (i > 0) {
-			Tgchannelgroup tgchannelgroup = tgchannelgroupmapper.getByChannelId(t.getChannelid());
-			StringBuffer what = new StringBuffer();
-			what.append("状态：新增代付\n");
-			what.append("单号：" + t.getChannelordernum() + "\n");
-			what.append("姓名：" + t.getAccname() + "\n");
-			what.append("卡号：" + t.getAccnumer() + "\n");
-			what.append("金额：" + t.getAmount() + "\n");
-			what.append("发起时间：" + DateTimeUtil.getDateTime() + "\n");
-			what.append("客户请你们尽快处理\n");
-			cbot.sendText(tgchannelgroup.getTgid(), what.toString());
-		}
-
 		TenantIdContext.remove();
-
 		return i;
 	}
 

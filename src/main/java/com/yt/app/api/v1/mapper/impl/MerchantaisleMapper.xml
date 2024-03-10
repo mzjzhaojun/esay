@@ -90,9 +90,8 @@
 		NAME,
 		a.code CODE,
 		a.status STATUS,
-		a.exchange exchange,
-		a.onecost
-		onecost,
+		a.nikname nikname,
+		a.type type,
 		a.remark remark
 		FROM
 		merchantaisle ma

@@ -84,14 +84,14 @@
 			<if test="update_time != null">
 				update_time= #{update_time},
 			</if>
-			<if test="version != null">
-				version= #{version}+1,
-			</if>
 			<if test="ordernum != null">
 				ordernum= #{ordernum},
 			</if>
 			<if test="imgurl != null">
 				imgurl= #{imgurl}
+			</if>
+			<if test="version != null">
+				version= #{version}+1,
 			</if>
 		</set>
 		where id = #{id} and version= #{version}

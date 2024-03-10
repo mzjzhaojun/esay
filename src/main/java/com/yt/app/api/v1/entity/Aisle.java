@@ -19,8 +19,9 @@ public class Aisle extends YtBaseEntity<Aisle> {
 	String name;
 	String code;
 	Boolean status;
-	Double exchange;
-	Double onecost;
+	String nikname;
+	String type;
+	String typename;
 	Integer channelcount;
 	String remark;
 	Long tenant_id;
@@ -29,15 +30,15 @@ public class Aisle extends YtBaseEntity<Aisle> {
 	public Aisle() {
 	}
 
-	public Aisle(Long id, String name, String code, Boolean status, Double exchange, Double onecost,
-			Integer channelcount, String remark, Long create_by, java.util.Date create_time, Long update_by,
-			java.util.Date update_time, Long tenant_id, Integer version) {
+	public Aisle(Long id, String name, String code, Boolean status, String nikname, String type, Integer channelcount,
+			String remark, Long create_by, java.util.Date create_time, Long update_by, java.util.Date update_time,
+			Long tenant_id, Integer version) {
 		this.id = id;
 		this.name = name;
 		this.code = code;
 		this.status = status;
-		this.exchange = exchange;
-		this.onecost = onecost;
+		this.nikname = nikname;
+		this.type = type;
 		this.channelcount = channelcount;
 		this.remark = remark;
 		this.tenant_id = tenant_id;

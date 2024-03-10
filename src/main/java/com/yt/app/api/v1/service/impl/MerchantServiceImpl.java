@@ -178,8 +178,8 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		try {
 			lock.lock();
 			m.setCount(m.getCount() + t.getAmount());// 总量不包含手续费和交易费
-			m.setTodaycount(m.getTodaycount() + t.getAmount());
-			m.setTodaycost(m.getTodaycost() + t.getMerchantcost());
+			m.setTodaycount(m.getTodaycount() + t.getAmount());//当日
+			m.setTodaycost(m.getTodaycost() + t.getMerchantcost());//当日手续费
 			m.setBalance(ma.getBalance());
 			mapper.put(m);
 		} catch (Exception e) {

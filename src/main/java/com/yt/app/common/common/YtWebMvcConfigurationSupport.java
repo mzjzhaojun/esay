@@ -52,7 +52,7 @@ public class YtWebMvcConfigurationSupport extends WebMvcConfigurationSupport {
 		localSimpleModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
 		localSimpleModule.addSerializer(BigInteger.class, ToStringSerializer.instance);
 		localObjectMapper.registerModule(localSimpleModule);
-		localObjectMapper.setDateFormat(new SimpleDateFormat("YY-MM-dd HH:mm:ss"));
+		localObjectMapper.setDateFormat(new SimpleDateFormat("YY-MM-dd HH:mm"));
 		localObjectMapper.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		YtJackson2HttpMessageConverter localMappingJackson2HttpMessageConverter = new YtJackson2HttpMessageConverter(localObjectMapper);
 		return localMappingJackson2HttpMessageConverter;
@@ -76,7 +76,7 @@ public class YtWebMvcConfigurationSupport extends WebMvcConfigurationSupport {
 		localSimpleModule.addSerializer(Long.class, ToStringSerializer.instance);
 		localSimpleModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
 		localSimpleModule.addSerializer(BigInteger.class, ToStringSerializer.instance);
-		localObjectMapper.setDateFormat(new SimpleDateFormat("YY-MM-dd HH:mm:ss"));
+		localObjectMapper.setDateFormat(new SimpleDateFormat("YY-MM-dd HH:mm"));
 		localObjectMapper.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 
 		localObjectMapper.registerModule(localSimpleModule);

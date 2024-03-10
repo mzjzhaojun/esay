@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.yt.app.api.v1.dbo.SysSubmitDTO;
 import com.yt.app.api.v1.entity.Channel;
+import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.vo.SysResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
@@ -89,7 +90,45 @@ public class PayUtil {
 		ResponseEntity<SysTyOrder> sov = resttemplate.exchange(cl.getApiip() + "?sign=" + MD5Utils.md5(signParams),
 				HttpMethod.POST, httpEntity, SysTyOrder.class);
 		SysTyOrder data = sov.getBody();
-		System.out.println(data.getTypay_order_id());
+		return data.getTypay_order_id();
+	}
+
+	public static String SendTySubmit(Exchange pt, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+		headers.add("user-agent",
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+
+		String signParams = "merchant_id=" + cl.getCode() + "&merchant_order_id=" + pt.getOrdernum()
+				+ "&pay_type=912&pay_amt=" + String.format("%.2f", pt.getAmount()) + "&notify_url="
+				+ cl.getApireusultip() + "&return_url=127.0.0.1&bank_code=" + pt.getBankcode() + "&bank_num="
+				+ pt.getAccnumer() + "&bank_owner=" + pt.getAccname() + "&bank_address=" + pt.getBankaddress()
+				+ "&remark=" + pt.getRemark() + "&key=" + cl.getApikey();
+		System.out.println(signParams);
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("merchant_id", cl.getCode());
+		map.add("merchant_order_id", pt.getOrdernum());
+		map.add("user_id", pt.getAccnumer());
+		map.add("user_credit_level", "-9_9");
+		map.add("pay_amt", String.format("%.2f", pt.getAmount()));
+		map.add("user_level", 0);
+		map.add("pay_type", 912);
+		map.add("notify_url", cl.getApireusultip());
+		map.add("return_url", "127.0.0.1");
+		map.add("bank_code", pt.getBankcode());
+		map.add("bank_num", pt.getAccnumer());
+		map.add("bank_owner", pt.getAccname());
+		map.add("bank_address", pt.getBankaddress());
+		map.add("user_ip", "103.151.116.235");
+		map.add("member_account", pt.getAccname());
+		map.add("remark", pt.getRemark());
+
+		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		ResponseEntity<SysTyOrder> sov = resttemplate.exchange(cl.getApiip() + "?sign=" + MD5Utils.md5(signParams),
+				HttpMethod.POST, httpEntity, SysTyOrder.class);
+		SysTyOrder data = sov.getBody();
 		return data.getTypay_order_id();
 	}
 

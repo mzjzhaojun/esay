@@ -24,8 +24,6 @@ import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PasswordUtil;
 import com.yt.app.common.util.RedissonUtil;
-import com.yt.app.common.util.StringUtil;
-import com.yt.app.common.util.PayUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -107,15 +105,6 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	}
 
 	@Override
-	public String getChannelOrder(Payout pt, Channel cl) {
-		// 代付渠道1
-		if (cl.getCode().equals("C000001")) {
-			return PayUtil.SendTySubmit(pt, cl);
-		}
-		return "C" + StringUtil.getOrderNum();
-	}
-
-	@Override
 	@Transactional
 	public void updatePayout(Payout t) {
 		Channel c = mapper.get(t.getChannelid());
@@ -157,15 +146,6 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 		} finally {
 			lock.unlock();
 		}
-	}
-
-	@Override
-	public String getChannelOrder(Exchange pt, Channel cl) {
-		// 换汇渠道1
-		if (cl.getCode().equals("H000001")) {
-			return "H" + StringUtil.getOrderNum();
-		}
-		return "C" + StringUtil.getOrderNum();
 	}
 
 	@Override

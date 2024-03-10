@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.MerchantaisleMapper;
 import com.yt.app.api.v1.service.MerchantaisleService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
+import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Merchantaisle;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
+import com.yt.app.common.util.RedisUtil;
 
 import cn.hutool.core.lang.Assert;
 
@@ -50,6 +52,9 @@ public class MerchantaisleServiceImpl extends YtBaseServiceImpl<Merchantaisle, L
 			}
 		}
 		List<Merchantaisle> list = mapper.list(param);
+		list.forEach(al -> {
+			al.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + al.getType()));
+		});
 		return new YtPageBean<Merchantaisle>(param, list, count);
 	}
 

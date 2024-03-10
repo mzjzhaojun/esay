@@ -23,8 +23,9 @@ public class Merchantaisle extends YtBaseEntity<Merchantaisle> {
 	String name;
 	String code;
 	Boolean status;
-	Double exchange;
-	Double onecost;
+	String nikname;
+	String type;
+	String typename;
 	String remark;
 
 	public Merchantaisle() {

@@ -8,6 +8,7 @@ import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.vo.SysResultVO;
+import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.resource.DictionaryResource;
@@ -17,19 +18,17 @@ public class NotifyTyThread implements Runnable {
 
 	private static final Logger logger = LoggerFactory.getLogger(NotifyTyThread.class);
 
-	private PayoutMapper mapper;
-	private MerchantMapper merchantmapper;
 	private Long id;
 
-	public NotifyTyThread(PayoutMapper _mapper, MerchantMapper _merchantmapper, Long _id) {
-		mapper = _mapper;
-		merchantmapper = _merchantmapper;
+	public NotifyTyThread(Long _id) {
 		id = _id;
 	}
 
 	@Override
 	public void run() {
 		TenantIdContext.removeFlag();
+		PayoutMapper mapper = BeanContext.getApplicationContext().getBean(PayoutMapper.class);
+		MerchantMapper merchantmapper = BeanContext.getApplicationContext().getBean(MerchantMapper.class);
 		Payout payout = mapper.get(id);
 		Merchant merchant = merchantmapper.get(payout.getMerchantid());
 		SysResultVO ss = new SysResultVO();

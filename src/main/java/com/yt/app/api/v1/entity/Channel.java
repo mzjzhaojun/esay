@@ -31,7 +31,7 @@ public class Channel extends YtBaseEntity<Channel> {
 	Integer max;
 	Integer weight;
 	Integer mtorder;
-	Boolean balancesynch;
+	Boolean ifordernum;
 	Boolean firstmatch;
 	String firstmatchmoney;
 	String apiip;
@@ -45,7 +45,7 @@ public class Channel extends YtBaseEntity<Channel> {
 
 	public Channel(Long id, String name, String nkname, String code, Boolean status, Double balance, Double exchange,
 			Double onecost, Double downpoint, Double costexchange, Integer min, Integer max, Integer weight,
-			Integer mtorder, Boolean balancesynch, Boolean firstmatch, String firstmatchmoney, String apiip,
+			Integer mtorder, Boolean ifordernum, Boolean firstmatch, String firstmatchmoney, String apiip,
 			String apikey, String apireusultip, Long tenant_id, String remark, Long create_by,
 			java.util.Date create_time, Long update_by, java.util.Date update_time, Integer version) {
 		this.id = id;
@@ -62,7 +62,7 @@ public class Channel extends YtBaseEntity<Channel> {
 		this.max = max;
 		this.weight = weight;
 		this.mtorder = mtorder;
-		this.balancesynch = balancesynch;
+		this.ifordernum = ifordernum;
 		this.firstmatch = firstmatch;
 		this.firstmatchmoney = firstmatchmoney;
 		this.apiip = apiip;

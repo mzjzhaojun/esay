@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.AisleMapper;
 import com.yt.app.api.v1.service.AisleService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
+import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Aisle;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
+import com.yt.app.common.util.RedisUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -45,6 +47,9 @@ public class AisleServiceImpl extends YtBaseServiceImpl<Aisle, Long> implements 
 			}
 		}
 		List<Aisle> list = mapper.list(param);
+		list.forEach(al -> {
+			al.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + al.getType()));
+		});
 		return new YtPageBean<Aisle>(param, list, count);
 	}
 

@@ -74,9 +74,6 @@
 			<if test="version!= null">
 				version= #{version}+1
 			</if>
-			<if test="version != null">
-				version= #{version}+1
-			</if>
 		</set>
 		where id = #{id} and version = #{version}
 	</update>

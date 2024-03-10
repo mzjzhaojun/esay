@@ -54,9 +54,6 @@ public class DictionaryResource implements Serializable {
 	public static final Integer RECORDTYPE_36 = 36; // 收入取消
 	public static final Integer RECORDTYPE_37 = 37; // 支出取消
 
-	public static final Integer RECORDTYPE_38 = 38; // 换汇待确认
-	public static final Integer RECORDTYPE_39 = 39; // 换汇通过
-
 	/**
 	 * 银行卡类型
 	 */
@@ -72,6 +69,7 @@ public class DictionaryResource implements Serializable {
 	public static final Integer PAYOUTSTATUS_52 = 52; // 成功
 	public static final Integer PAYOUTSTATUS_53 = 53; // 失败或异常
 	public static final Integer PAYOUTSTATUS_54 = 54; // 获取单号失败
+	public static final Integer PAYOUTSTATUS_55 = 55; // 获取單號中
 
 	/**
 	 * 回调状态
@@ -83,4 +81,28 @@ public class DictionaryResource implements Serializable {
 	public static final Integer PAYOUTNOTIFYSTATUS_63 = 63; // 已通知
 	public static final Integer PAYOUTNOTIFYSTATUS_64 = 64; // 通知三次后失败
 	public static final Integer PAYOUTNOTIFYSTATUS_65 = 65; // 通知中
+	
+	/**
+	 * 通道类型
+	 */
+	public static final Integer AISLE_TYPE_PAYOUT_70 = 70;// 代付
+	public static final Integer AISLE_TYPE_EXCHANGE_71 = 71;// 换汇
+
+	
+	
+	/**
+	 * 换汇资金明细类型
+	 */
+	public static final Integer EXCHANGETYPE_80 = 80; // 换汇待确认
+	public static final Integer EXCHANGETYPE_81 = 81; // 换汇通过
+	
+	public static final Integer EXCHANGETYPE_82 = 82; // 收入通过
+	public static final Integer EXCHANGETYPE_83 = 83; // 支出通过
+
+	public static final Integer EXCHANGETYPE_84 = 84; // 收入拒絕
+	public static final Integer EXCHANGETYPE_85 = 85; // 支出拒絕
+
+	public static final Integer EXCHANGETYPE_86 = 86; // 收入取消
+	public static final Integer EXCHANGETYPE_87 = 87; // 支出取消
+
 }

@@ -206,7 +206,19 @@
 		</where>
 	</select>
 
-	<!-- getList -->
+
+<!-- selectAddlist -->
+	<select id="selectAddlist" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from payout
+		<where>
+			status = 50
+		</where>
+	</select>
+	
+	<!-- page -->
 	<select id="page" parameterType="java.util.HashMap"
 		resultMap="ResultMapVO">
 		select

@@ -119,5 +119,12 @@ public interface ExchangeMapper extends YtIBaseMapper<Exchange> {
 	 * @return
 	 */
 	@YtRedisCacheAnnotation(classs = Exchange.class)
-	public List<ExchangeVO> selectNotifylist();
+	public List<Exchange> selectNotifylist();
+
+	/**
+	 * 
+	 * @return
+	 */
+	@YtRedisCacheAnnotation(classs = Exchange.class)
+	public List<Exchange> selectAddlist();
 }

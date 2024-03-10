@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.AisleMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,name,code,status,exchange,onecost,channelcount,remark,create_by,create_time,update_by,update_time,tenant_id,version
+		id,name,code,status,nikname,type,channelcount,remark,create_by,create_time,update_by,update_time,tenant_id,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -12,18 +12,18 @@
 	<!-- add -->
 	<insert id="post" parameterType="com.yt.app.api.v1.entity.Aisle">
 		insert into
-		aisle(id,name,code,status,exchange,onecost,remark,create_by,create_time,update_by,update_time)
+		aisle(id,name,code,status,nikname,type,remark,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{name},#{code},#{status},#{exchange},#{onecost},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{name},#{code},#{status},#{nikname},#{type},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		aisle(id,name,code,status,exchange,onecost,remark,create_by,create_time,update_by,update_time,tenant_id)
+		aisle(id,name,code,status,nikname,type,remark,create_by,create_time,update_by,update_time,tenant_id)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{name},#{code},#{status},#{exchange},#{onecost},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{tenant_id})
+			(#{id},#{name},#{code},#{status},#{nikname},#{type},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{tenant_id})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -45,11 +45,11 @@
 			<if test="status != null">
 				status= #{status},
 			</if>
-			<if test="exchange != null">
-				exchange= #{exchange},
+			<if test="nikname != null">
+				nikname= #{nikname},
 			</if>
-			<if test="onecost != null">
-				onecost= #{onecost},
+			<if test="type != null">
+				type= #{type},
 			</if>
 			<if test="channelcount != null">
 				channelcount= #{channelcount},

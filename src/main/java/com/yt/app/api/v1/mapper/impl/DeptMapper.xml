@@ -80,7 +80,7 @@
 				update_time= #{update_time},
 			</if>
 			<if test="is_deleted!= null">
-				is_deleted= #{is_deleted}
+				is_deleted= #{is_deleted},
 			</if>
 			<if test="version != null">
 				version = #{version}+1

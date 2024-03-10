@@ -14,10 +14,6 @@ import com.yt.app.common.base.YtIBaseService;
 
 public interface ChannelService extends YtIBaseService<Channel, Long> {
 
-	String getChannelOrder(Payout pt, Channel cl);
-
-	String getChannelOrder(Exchange pt, Channel cl);
-
 	void updatePayout(Payout t);
 
 	void updateExchange(Exchange t);

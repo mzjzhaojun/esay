@@ -127,7 +127,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	private Merchantbot mbot;
 	@Autowired
 	private TgmerchantgroupMapper tgmerchantgroupmapper;
-	
+
 	@Override
 	@Transactional
 	public Integer post(Exchange t) {
@@ -198,11 +198,6 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		}
-
-		///////////////////////////////////////////////////// channelcordernum/////////////////////////////////////////////////////
-		String channelcordernum = channelservice.getChannelOrder(t, cl);
-		Assert.notNull(channelcordernum, "通道单号获取失败!");
-		t.setChannelordernum(channelcordernum);
 
 		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
 		Merchantaccountorder mao = new Merchantaccountorder();
@@ -458,11 +453,6 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		}
 
-		///////////////////////////////////////////////////// channelcordernum/////////////////////////////////////////////////////
-		String channelcordernum = channelservice.getChannelOrder(t, cl);
-		Assert.notNull(channelcordernum, "通道单号获取失败!");
-		t.setChannelordernum(channelcordernum);
-
 		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
 		Merchantaccountorder mao = new Merchantaccountorder();
 		mao.setUserid(m.getUserid());
@@ -534,7 +524,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 		//
 		Integer i = mapper.post(t);
-		
+
 		if (i > 0) {
 			Tgchannelgroup tgchannelgroup = tgchannelgroupmapper.getByChannelId(t.getChannelid());
 			StringBuffer what = new StringBuffer();
@@ -547,7 +537,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			what.append("用户请你们尽快处理\n");
 			cbot.sendText(tgchannelgroup.getTgid(), what.toString());
 		}
-		
+
 		TenantIdContext.remove();
 		return i;
 	}
@@ -619,7 +609,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			Tgmerchantgroup tgmerchantgroup = tgmerchantgroupmapper.getByMerchantId(t.getMerchantid());
 			StringBuffer what = new StringBuffer();
 			what.append("状态：换汇成功\n");
-			what.append("单号：" + t.getMerchantordernum()+ "\n");
+			what.append("单号：" + t.getMerchantordernum() + "\n");
 			what.append("姓名：" + t.getAccname() + "\n");
 			what.append("卡号：" + t.getAccnumer() + "\n");
 			what.append("金额：" + t.getAmount() + "\n");
@@ -672,7 +662,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			Tgmerchantgroup tgmerchantgroup = tgmerchantgroupmapper.getByMerchantId(t.getMerchantid());
 			StringBuffer what = new StringBuffer();
 			what.append("状态：换汇失败\n");
-			what.append("单号：" + t.getMerchantordernum()+ "\n");
+			what.append("单号：" + t.getMerchantordernum() + "\n");
 			what.append("姓名：" + t.getAccname() + "\n");
 			what.append("卡号：" + t.getAccnumer() + "\n");
 			what.append("金额：" + t.getAmount() + "\n");
