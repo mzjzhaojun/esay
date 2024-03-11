@@ -64,12 +64,12 @@ public class DictionaryResource implements Serializable {
 	/**
 	 * 代付状态
 	 */
-	public static final Integer PAYOUTSTATUS_50 = 50; // 待处理
-	public static final Integer PAYOUTSTATUS_51 = 51; // 代付钟
+	public static final Integer PAYOUTSTATUS_50 = 50; // 新增
+	public static final Integer PAYOUTSTATUS_51 = 51; // 代付ing
 	public static final Integer PAYOUTSTATUS_52 = 52; // 成功
 	public static final Integer PAYOUTSTATUS_53 = 53; // 失败或异常
-	public static final Integer PAYOUTSTATUS_54 = 54; // 获取单号失败
-	public static final Integer PAYOUTSTATUS_55 = 55; // 获取單號中
+	public static final Integer PAYOUTSTATUS_54 = 54; // 审核失败
+	public static final Integer PAYOUTSTATUS_55 = 55; // 正在审核
 
 	/**
 	 * 回调状态

@@ -325,7 +325,7 @@ public class StringUtil {
 	 * @return
 	 */
 	public static String getOrderNum() {
-		String now = DateUtil.format("yyyyMMddHHmmssSSS", new Date());
+		String now = DateUtil.format("yyMMddHHmmssSSS", new Date());
 		int num = NumberUtil.random(6);
 		return now + num;
 	}

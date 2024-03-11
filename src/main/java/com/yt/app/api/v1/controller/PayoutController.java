@@ -38,20 +38,11 @@ public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long>
 	private PayoutService service;
 
 	// 手动回调成功
-	@ApiOperation(value = "paysuccess", response = User.class)
-	@RequestMapping(value = "/paysuccess", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> paysuccess(YtRequestDecryptEntity<Payout> requestEntity, HttpServletRequest request,
+	@ApiOperation(value = "payoutmanual", response = User.class)
+	@RequestMapping(value = "/payoutmanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> payoutmanual(YtRequestDecryptEntity<Payout> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
-		service.paySuccess(requestEntity.getBody());
-		return new YtResponseEntity<Object>(new YtBody(1));
-	}
-
-	// 手动回调失败
-	@ApiOperation(value = "payfail", response = User.class)
-	@RequestMapping(value = "/payfail", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> payfail(YtRequestDecryptEntity<Payout> requestEntity, HttpServletRequest request,
-			HttpServletResponse response) {
-		service.payFail(requestEntity.getBody());
+		service.payoutmanual(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(1));
 	}
 

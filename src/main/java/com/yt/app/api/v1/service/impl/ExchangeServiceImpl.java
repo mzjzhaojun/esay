@@ -18,6 +18,7 @@ import com.yt.app.api.v1.mapper.MerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantaisleMapper;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
+import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.AgentService;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.ChannelService;
@@ -47,6 +48,7 @@ import com.yt.app.api.v1.entity.Merchantaccountorder;
 import com.yt.app.api.v1.entity.Merchantaisle;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
+import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.vo.ExchangeVO;
 import com.yt.app.api.v1.vo.SysResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
@@ -58,6 +60,7 @@ import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.MyException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
+import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PayUtil;
 import com.yt.app.common.util.RedisUtil;
 import com.yt.app.common.util.RedissonUtil;
@@ -85,6 +88,8 @@ import java.util.stream.Collectors;
 public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> implements ExchangeService {
 	@Autowired
 	private ExchangeMapper mapper;
+	@Autowired
+	private UserMapper usermapper;
 	@Autowired
 	private MerchantMapper merchantmapper;
 	@Autowired
@@ -140,7 +145,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
 		t.setOrdernum(StringUtil.getOrderNum());// 系统单号
-		t.setMerchantordernum("DFS" + StringUtil.getOrderNum());// 商户单号
+		t.setMerchantordernum("EM" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
@@ -233,7 +238,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			aat.setAmount(t.getMerchantdeal() * (ag.getExchange() / 100));// 交易费
 			aat.setAmountreceived(aat.getAmount() + ag.getOnecost());// 总费用
 			aat.setType(DictionaryResource.ORDERTYPE_20);
-			aat.setOrdernum("DFA" + StringUtil.getOrderNum());
+			aat.setOrdernum("EA" + StringUtil.getOrderNum());
 			aat.setRemark("操作资金：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getAmount()) + " 手续费："
 					+ ag.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
@@ -394,7 +399,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
 		t.setOrdernum(StringUtil.getOrderNum());// 系统单号
-		t.setMerchantordernum("DFS" + StringUtil.getOrderNum());// 商户单号
+		t.setMerchantordernum("EM" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
@@ -487,7 +492,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			aat.setAmount(t.getMerchantdeal() * (ag.getExchange() / 100));// 交易费
 			aat.setAmountreceived(aat.getAmount() + ag.getOnecost());// 总费用
 			aat.setType(DictionaryResource.ORDERTYPE_20);
-			aat.setOrdernum("DFA" + StringUtil.getOrderNum());
+			aat.setOrdernum("EA" + StringUtil.getOrderNum());
 			aat.setRemark("操作资金：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getAmount()) + " 手续费："
 					+ ag.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
@@ -558,7 +563,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		return new YtPageBean<ExchangeVO>(param, list, count);
 	}
 
-	@Override
+	@Transactional
 	public void paySuccess(Exchange pt) {
 		Exchange t = mapper.get(pt.getId());
 		// 计算商户订单/////////////////////////////////////////////////////
@@ -624,7 +629,6 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	 * 回调失败
 	 * 
 	 */
-	@Override
 	@Transactional
 	public void payFail(Exchange t) {
 
@@ -669,6 +673,19 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			what.append("失败时间：" + DateTimeUtil.getDateTime() + "\n");
 			what.append("兑换部已处理完毕，请你们核实查看\n");
 			mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
+		}
+	}
+	
+	@Override
+	public void exchangemanual(Exchange pt) {
+		User u = usermapper.get(SysUserContext.getUserId());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(pt.getRemark()),
+				System.currentTimeMillis());
+		Assert.isTrue(isValid, "验证码错误！");
+		if (pt.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
+			paySuccess(pt);
+		} else {
+			payFail(pt);
 		}
 	}
 }

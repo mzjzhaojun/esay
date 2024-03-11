@@ -55,20 +55,11 @@ public class ExchangeController extends YtBaseEncipherControllerImpl<Exchange, L
 	}
 
 	// 手动回调成功
-	@ApiOperation(value = "paysuccess", response = User.class)
-	@RequestMapping(value = "/paysuccess", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> paysuccess(YtRequestDecryptEntity<Exchange> requestEntity,
+	@ApiOperation(value = "exchangemanual", response = User.class)
+	@RequestMapping(value = "/exchangemanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> exchangemanual(YtRequestDecryptEntity<Exchange> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		service.paySuccess(requestEntity.getBody());
-		return new YtResponseEntity<Object>(new YtBody(1));
-	}
-
-	// 手动回调失败
-	@ApiOperation(value = "payfail", response = User.class)
-	@RequestMapping(value = "/payfail", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> payfail(YtRequestDecryptEntity<Exchange> requestEntity, HttpServletRequest request,
-			HttpServletResponse response) {
-		service.payFail(requestEntity.getBody());
+		service.exchangemanual(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(1));
 	}
 }

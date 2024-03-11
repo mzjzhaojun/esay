@@ -19,9 +19,7 @@ import com.yt.app.common.common.yt.YtIPage;
 
 public interface PayoutService extends YtIBaseService<Payout, Long> {
 
-	void payFail(Payout pt);
-
-	void paySuccess(Payout pt);
+	void payoutmanual(Payout pt);
 
 	YtBody tycallbackpay(SysTyOrder so);
 

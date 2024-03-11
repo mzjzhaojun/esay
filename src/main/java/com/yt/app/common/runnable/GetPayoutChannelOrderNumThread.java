@@ -49,7 +49,7 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 				break;
 			}
 			try {
-				String channelordernum = "C" + StringUtil.getOrderNum();
+				String channelordernum = "PC" + StringUtil.getOrderNum();
 				if (channel.getIfordernum()) {
 					channelordernum = PayUtil.SendTySubmit(payout, channel);
 				}

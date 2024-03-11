@@ -49,7 +49,7 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 				break;
 			}
 			try {
-				String channelordernum = "C" + StringUtil.getOrderNum();
+				String channelordernum = "EC" + StringUtil.getOrderNum();
 				if (channel.getIfordernum()) {
 					channelordernum = PayUtil.SendTySubmit(exchange, channel);
 				}

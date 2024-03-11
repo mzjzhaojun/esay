@@ -19,11 +19,9 @@ import com.yt.app.common.common.yt.YtIPage;
 
 public interface ExchangeService extends YtIBaseService<Exchange, Long> {
 
-	void payFail(Exchange pt);
-
 	YtBody tycallbackpay(SysTyOrder so);
 
-	void paySuccess(Exchange pt);
+	void exchangemanual(Exchange pt);
 
 	//
 	Exchange query(String ordernum);
