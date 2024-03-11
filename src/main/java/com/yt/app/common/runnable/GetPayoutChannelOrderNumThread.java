@@ -43,11 +43,6 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 		logger.info("代付获取渠道单号 start---------------------商户单号：" + payout.getMerchantordernum());
 		int i = 1;
 		while (true) {
-			if (i > 3) {
-				payout.setStatus(DictionaryResource.PAYOUTSTATUS_54);
-				mapper.put(payout);
-				break;
-			}
 			try {
 				String channelordernum = "PC" + StringUtil.getOrderNum();
 				if (channel.getIfordernum()) {
@@ -79,6 +74,11 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+			}
+			if (i > 3) {
+				payout.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+				mapper.put(payout);
+				break;
 			}
 		}
 		logger.info("获取 end---------------------");

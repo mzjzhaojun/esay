@@ -42,11 +42,6 @@ public class NotifyTyThread implements Runnable {
 		logger.info("通知 start---------------------商户单号：" + payout.getMerchantordernum());
 		int i = 1;
 		while (true) {
-			if (i > 3) {
-				payout.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_64);
-				mapper.put(payout);
-				break;
-			}
 			YtBody result;
 			try {
 				result = PayUtil.SendNotify(payout.getNotifyurl(), ss, merchant.getAppkey());
@@ -65,6 +60,11 @@ public class NotifyTyThread implements Runnable {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+			}
+			if (i > 3) {
+				payout.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_64);
+				mapper.put(payout);
+				break;
 			}
 		}
 		logger.info("通知 end---------------------");

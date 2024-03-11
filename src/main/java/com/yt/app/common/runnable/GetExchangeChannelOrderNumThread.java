@@ -43,11 +43,6 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 		logger.info("换汇获取渠道单号 start---------------------商户单号：" + exchange.getMerchantordernum());
 		int i = 1;
 		while (true) {
-			if (i > 3) {
-				exchange.setStatus(DictionaryResource.PAYOUTSTATUS_54);
-				mapper.put(exchange);
-				break;
-			}
 			try {
 				String channelordernum = "EC" + StringUtil.getOrderNum();
 				if (channel.getIfordernum()) {
@@ -81,6 +76,11 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+			}
+			if (i > 3) {
+				exchange.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+				mapper.put(exchange);
+				break;
 			}
 		}
 		logger.info("获取 end---------------------");
