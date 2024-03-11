@@ -281,13 +281,13 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 	@Override
 	public YtBody tycallbackpay(SysTyOrder so) {
-		Exchange pt = mapper.getByChannelOrdernum(so.getTypay_order_id());
-		if (pt == null)
-			return new YtBody("失败", 100);
-		RLock lock = RedissonUtil.getLock(pt.getId());
+		RLock lock = RedissonUtil.getLock(so.getTypay_order_id());
 		try {
 			lock.lock();
-			if (pt.getStatus() != DictionaryResource.PAYOUTSTATUS_52) {
+			Exchange pt = mapper.getByChannelOrdernum(so.getTypay_order_id());
+			if (pt == null)
+				return new YtBody("失败", 100);
+			if (pt.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51)) {
 				Channel cl = channelmapper.get(pt.getChannelid());
 				// md5值是否被篡改
 				if (PayUtil.valMd5TyOrder(so, cl.getApikey())) {

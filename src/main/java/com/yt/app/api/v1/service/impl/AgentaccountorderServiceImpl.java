@@ -106,7 +106,7 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 		t.setExchange(t.getAgentexchange());
 		t.setAmountreceived((t.getAmount()));
 		t.setType(DictionaryResource.ORDERTYPE_21);
-		t.setOrdernum("TXD" + StringUtil.getOrderNum());
+		t.setOrdernum("AW" + StringUtil.getOrderNum());
 		t.setRemark("提现金额：" + String.format("%.2f", t.getAmountreceived()));
 		Integer i = mapper.post(t);
 
@@ -152,7 +152,7 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 		return i;
 	}
 
-////////////////////////////////////////////////// 支出 /////////////////////////
+////////////////////////////////////////////////// 提现 /////////////////////////
 
 	@Override
 	@Transactional

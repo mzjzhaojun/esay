@@ -107,10 +107,10 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	@Override
 	@Transactional
 	public void updatePayout(Payout t) {
-		Channel c = mapper.get(t.getChannelid());
-		RLock lock = RedissonUtil.getLock(c.getId());
+		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
 			lock.lock();
+			Channel c = mapper.get(t.getChannelid());
 			c.setBalance(c.getBalance() - t.getChannelpay());
 			mapper.put(c);
 		} catch (Exception e) {
@@ -122,10 +122,10 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	@Override
 	@Transactional
 	public void updateIncome(Channelaccount t) {
-		Channel a = mapper.get(t.getChannelid());
-		RLock lock = RedissonUtil.getLock(a.getId());
+		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
 			lock.lock();
+			Channel a = mapper.get(t.getChannelid());
 			a.setBalance(t.getBalance());
 			mapper.put(a);
 		} catch (Exception e) {
@@ -136,10 +136,10 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 
 	@Override
 	public void withdrawamount(Channelaccount t) {
-		Channel a = mapper.get(t.getChannelid());
-		RLock lock = RedissonUtil.getLock(a.getId());
+		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
 			lock.lock();
+			Channel a = mapper.get(t.getChannelid());
 			a.setBalance(t.getBalance());
 			mapper.put(a);
 		} catch (Exception e) {
@@ -150,10 +150,10 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 
 	@Override
 	public void updateExchange(Exchange t) {
-		Channel c = mapper.get(t.getChannelid());
-		RLock lock = RedissonUtil.getLock(c.getId());
+		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
 			lock.lock();
+			Channel c = mapper.get(t.getChannelid());
 			c.setBalance(c.getBalance() - t.getChannelpay());
 			mapper.put(c);
 		} catch (Exception e) {

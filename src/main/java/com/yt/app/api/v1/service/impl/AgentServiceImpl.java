@@ -124,10 +124,10 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 	@Override
 	@Transactional
 	public void updateWithdraw(Agentaccount t) {
-		Agent a = mapper.get(t.getAgentid());
-		RLock lock = RedissonUtil.getLock(a.getId());
+		RLock lock = RedissonUtil.getLock(t.getAgentid());
 		try {
 			lock.lock();
+			Agent a = mapper.get(t.getAgentid());
 			a.setBalance(t.getBalance());
 			mapper.put(a);
 		} catch (Exception e) {
@@ -139,10 +139,10 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 	@Override
 	@Transactional
 	public void updatePayout(Payout t) {
-		Agent a = mapper.get(t.getAgentid());
-		RLock lock = RedissonUtil.getLock(a.getId());
+		RLock lock = RedissonUtil.getLock(t.getAgentid());
 		try {
 			lock.lock();
+			Agent a = mapper.get(t.getAgentid());
 			a.setBalance(a.getBalance() + t.getAgentincome());
 			mapper.put(a);
 		} catch (Exception e) {
@@ -154,10 +154,10 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 	@Override
 	@Transactional
 	public void updateIncome(Agentaccount t) {
-		Agent a = mapper.get(t.getAgentid());
-		RLock lock = RedissonUtil.getLock(a.getId());
+		RLock lock = RedissonUtil.getLock(t.getAgentid());
 		try {
 			lock.lock();
+			Agent a = mapper.get(t.getAgentid());
 			a.setBalance(t.getBalance());
 			mapper.put(a);
 		} catch (Exception e) {
@@ -168,10 +168,10 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 
 	@Override
 	public void updateExchange(Exchange t) {
-		Agent a = mapper.get(t.getAgentid());
-		RLock lock = RedissonUtil.getLock(a.getId());
+		RLock lock = RedissonUtil.getLock(t.getAgentid());
 		try {
 			lock.lock();
+			Agent a = mapper.get(t.getAgentid());
 			a.setBalance(a.getBalance() + t.getAgentincome());
 			mapper.put(a);
 		} catch (Exception e) {

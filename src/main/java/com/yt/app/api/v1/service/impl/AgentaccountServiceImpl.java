@@ -136,7 +136,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
 			aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
-			aaaj.setRemark("待确认代理收入金额：" + t.getRemark());
+			aaaj.setRemark("代理待收入金额：" + t.getRemark());
 			//
 			agentaccountapplyjournamapper.post(aaaj);
 			ma.setToincomeamount(aaaj.getPretoincomeamount());
@@ -181,7 +181,6 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			t.setToincomeamount(aaaj.getPretoincomeamount());// 待收入减去金额.
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 			mapper.put(t);
-			agentservice.updateIncome(t);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();

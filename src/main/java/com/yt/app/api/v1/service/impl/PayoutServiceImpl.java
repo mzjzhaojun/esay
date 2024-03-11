@@ -285,23 +285,31 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		try {
 			lock.lock();
 			Payout pt = mapper.getByChannelOrdernum(so.getTypay_order_id());
-			if (pt == null)
-				return new YtBody("失败", 100);
-			if (pt.getStatus() != DictionaryResource.PAYOUTSTATUS_52) {
-				Channel cl = channelmapper.get(pt.getChannelid());
-				// md5值是否被篡改
-				if (PayUtil.valMd5TyOrder(so, cl.getApikey())) {
-					if (so.getPay_message() == 1) {
-						paySuccess(pt);
-					} else {
-						payFail(pt);
+			if (pt != null) {
+				SysUserContext.setUserId(pt.getUserid());
+				TenantIdContext.setTenantId(pt.getTenant_id());
+				if (pt.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51)) {
+					Channel cl = channelmapper.get(pt.getChannelid());
+					// md5值是否被篡改
+					if (PayUtil.valMd5TyOrder(so, cl.getApikey())) {
+						if (so.getPay_message() == 1) {
+							paySuccess(pt);
+						} else {
+							payFail(pt);
+						}
 					}
 				}
+			} else {
+				SysUserContext.remove();
+				TenantIdContext.remove();
+				return new YtBody("失败", 100);
 			}
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
 		}
+		SysUserContext.remove();
+		TenantIdContext.remove();
 		return new YtBody("成功", 200);
 	}
 
@@ -482,6 +490,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		List<PayoutVO> list = mapper.page(param);
 		list.forEach(mco -> {
 			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
+			mco.setNotifystatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getNotifystatus()));
 		});
 		return new YtPageBean<PayoutVO>(param, list, count);
 	}
@@ -495,7 +504,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		try {
 			lock.lock();
 			Payout t = mapper.get(pt.getId());
-			if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51)) {
 				// 计算商户订单/////////////////////////////////////////////////////
 				Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
 				mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
@@ -575,7 +584,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		RLock lock = RedissonUtil.getLock(t.getId());
 		try {
 			lock.lock();
-			if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51)) {
 				// 计算商户订单/////////////////////////////////////////////////////
 				Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
 				mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);

@@ -98,9 +98,6 @@
 			<if test="userid != null">
 				userid= #{userid},
 			</if>
-			<if test="appkey != null">
-				appkey= #{appkey},
-			</if>
 			<if test="apireusultip != null">
 				apireusultip= #{apireusultip},
 			</if>

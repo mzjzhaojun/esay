@@ -157,10 +157,10 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	@Override
 	@Transactional
 	public void updateInCome(Merchantaccount ma) {
-		Merchant m = mapper.get(ma.getMerchantid());
-		RLock lock = RedissonUtil.getLock(m.getId());
+		RLock lock = RedissonUtil.getLock(ma.getMerchantid());
 		try {
 			lock.lock();
+			Merchant m = mapper.get(ma.getMerchantid());
 			m.setBalance(ma.getBalance());
 			mapper.put(m);
 		} catch (Exception e) {
@@ -172,14 +172,14 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	@Override
 	@Transactional
 	public void updatePayout(Payout t) {
-		Merchant m = mapper.get(t.getMerchantid());
-		Merchantaccount ma = merchantaccountmapper.getByUserId(m.getUserid());
-		RLock lock = RedissonUtil.getLock(m.getId());
+		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
+			Merchant m = mapper.get(t.getMerchantid());
+			Merchantaccount ma = merchantaccountmapper.getByUserId(m.getUserid());
 			m.setCount(m.getCount() + t.getAmount());// 总量不包含手续费和交易费
-			m.setTodaycount(m.getTodaycount() + t.getAmount());//当日
-			m.setTodaycost(m.getTodaycost() + t.getMerchantcost());//当日手续费
+			m.setTodaycount(m.getTodaycount() + t.getAmount());// 当日
+			m.setTodaycost(m.getTodaycost() + t.getMerchantcost());// 当日手续费
 			m.setBalance(ma.getBalance());
 			mapper.put(m);
 		} catch (Exception e) {
@@ -197,10 +197,10 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 
 	@Override
 	public void withdrawamount(Merchantaccount ma) {
-		Merchant m = mapper.get(ma.getMerchantid());
-		RLock lock = RedissonUtil.getLock(m.getId());
+		RLock lock = RedissonUtil.getLock(ma.getMerchantid());
 		try {
 			lock.lock();
+			Merchant m = mapper.get(ma.getMerchantid());
 			m.setBalance(ma.getBalance());
 			mapper.put(m);
 		} catch (Exception e) {
@@ -212,11 +212,11 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 
 	@Override
 	public void updateExchange(Exchange t) {
-		Merchant m = mapper.get(t.getMerchantid());
-		Merchantaccount ma = merchantaccountmapper.getByUserId(m.getUserid());
-		RLock lock = RedissonUtil.getLock(m.getId());
+		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
+			Merchant m = mapper.get(t.getMerchantid());
+			Merchantaccount ma = merchantaccountmapper.getByUserId(m.getUserid());
 			m.setCount(m.getCount() + t.getAmount());// 总量不包含手续费和交易费
 			m.setTodaycount(m.getTodaycount() + t.getAmount());
 			m.setTodaycost(m.getTodaycost() + t.getMerchantcost());

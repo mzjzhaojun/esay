@@ -69,18 +69,18 @@ public class DictionaryResource implements Serializable {
 	public static final Integer PAYOUTSTATUS_52 = 52; // 成功
 	public static final Integer PAYOUTSTATUS_53 = 53; // 失败或异常
 	public static final Integer PAYOUTSTATUS_54 = 54; // 审核失败
-	public static final Integer PAYOUTSTATUS_55 = 55; // 正在审核
+	public static final Integer PAYOUTSTATUS_55 = 55; // 待处理
 
 	/**
 	 * 回调状态
 	 */
 
-	public static final Integer PAYOUTNOTIFYSTATUS_60 = 60; // 商户发起 不需要通知
-	public static final Integer PAYOUTNOTIFYSTATUS_61 = 61; // 盘口发起
+	public static final Integer PAYOUTNOTIFYSTATUS_60 = 60; // 无需通知
+	public static final Integer PAYOUTNOTIFYSTATUS_61 = 61; // 需要通知
 	public static final Integer PAYOUTNOTIFYSTATUS_62 = 62; // 待通知
 	public static final Integer PAYOUTNOTIFYSTATUS_63 = 63; // 已通知
-	public static final Integer PAYOUTNOTIFYSTATUS_64 = 64; // 通知三次后失败
-	public static final Integer PAYOUTNOTIFYSTATUS_65 = 65; // 通知中
+	public static final Integer PAYOUTNOTIFYSTATUS_64 = 64; // 通知失败
+	public static final Integer PAYOUTNOTIFYSTATUS_65 = 65; // 正在通知
 	
 	/**
 	 * 通道类型

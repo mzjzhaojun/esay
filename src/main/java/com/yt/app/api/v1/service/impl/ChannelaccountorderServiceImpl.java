@@ -8,7 +8,6 @@ import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ChannelaccountorderMapper;
 import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.api.v1.service.ChannelaccountorderService;
-import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
@@ -42,9 +41,6 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 	private ChannelMapper channelmapper;
 
 	@Autowired
-	private SystemaccountService systemaccountservice;
-
-	@Autowired
 	private ChannelaccountService channelaccountservice;
 
 	@Override
@@ -66,7 +62,7 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
 		t.setAmountreceived((t.getAmount() * (t.getExchange() + t.getChannelexchange())));
 		t.setType(DictionaryResource.ORDERTYPE_20);
-		t.setOrdernum("CZQ" + StringUtil.getOrderNum());
+		t.setOrdernum("CT" + StringUtil.getOrderNum());
 		t.setRemark("充值金额：" + String.format("%.2f", t.getAmountreceived()));
 		Integer i = mapper.post(t);
 
@@ -100,7 +96,7 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 		return t;
 	}
 
-//////////////////////////////////////////////////////////////收入
+//////////////////////////////////////////////////////////////充值到渠道
 	@Override
 	@Transactional
 	public Integer pass(Long id) {
@@ -133,45 +129,6 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 		Integer i = mapper.put(mao);
 //
 		channelaccountservice.cancleTotalincome(mao);
-		return i;
-	}
-
-//////////////////////////////////////////////////支出 /////////////////////////
-
-	@Override
-	@Transactional
-	public Integer passWithdraw(Long id) {
-//
-		Channelaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
-		Integer i = mapper.put(mao);
-//
-		channelaccountservice.updateWithdrawamount(mao);
-//
-		systemaccountservice.updateWithdrawamount(mao);
-//
-		return i;
-	}
-
-	@Override
-	@Transactional
-	public Integer turndownWithdraw(Long id) {
-		Channelaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
-		Integer i = mapper.put(mao);
-//
-		channelaccountservice.turndownWithdrawamount(mao);
-		return i;
-	}
-
-	@Override
-	@Transactional
-	public Integer cancleWithdraw(Long id) {
-		Channelaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_13);
-		Integer i = mapper.put(mao);
-//
-		channelaccountservice.cancleWithdrawamount(mao);
 		return i;
 	}
 

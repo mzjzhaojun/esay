@@ -113,7 +113,6 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Override
 	@Transactional
 	public void updateTotalincome(Channelaccountorder mao) {
-
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
@@ -297,7 +296,6 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			t.setTowithdrawamount(aaaj.getPretowithdrawamount());// 待支出减去金额
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 			mapper.put(t);
-			channelservice.withdrawamount(t);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();

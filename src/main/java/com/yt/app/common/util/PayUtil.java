@@ -1,5 +1,7 @@
 package com.yt.app.common.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,6 +21,8 @@ import com.yt.app.common.common.yt.YtBody;
 
 public class PayUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(PayUtil.class);
+
 	public static boolean valMd5TyOrder(SysTyOrder so, String key) {
 
 		String signParams = "merchant_id=" + so.getMerchant_id() + "&merchant_order_id=" + so.getMerchant_order_id()
@@ -29,6 +33,7 @@ public class PayUtil {
 		if (so.getSign().equals(MD5Utils.md5(signParams))) {
 			return true;
 		}
+		logger.info(signParams);
 		return false;
 	}
 
@@ -42,6 +47,7 @@ public class PayUtil {
 		if (ss.getSign().equals(MD5Utils.md5(signParams))) {
 			return true;
 		}
+		logger.info(signParams);
 		return false;
 	}
 
@@ -50,7 +56,7 @@ public class PayUtil {
 		String signParams = "merchantid=" + ss.getMerchantid() + "&payorderid=" + ss.getPayorderid()
 				+ "&merchantorderid=" + ss.getMerchantorderid() + "&bankcode=" + ss.getBankcode() + "&payamt="
 				+ ss.getPayamt() + "&remark=" + ss.getRemark() + "&code=" + ss.getCode() + "&key=" + key;
-
+		logger.info(signParams);
 		return MD5Utils.md5(signParams);
 	}
 
@@ -90,6 +96,7 @@ public class PayUtil {
 		ResponseEntity<SysTyOrder> sov = resttemplate.exchange(cl.getApiip() + "?sign=" + MD5Utils.md5(signParams),
 				HttpMethod.POST, httpEntity, SysTyOrder.class);
 		SysTyOrder data = sov.getBody();
+		logger.info(data.getTypay_order_id());
 		return data.getTypay_order_id();
 	}
 
@@ -129,6 +136,7 @@ public class PayUtil {
 		ResponseEntity<SysTyOrder> sov = resttemplate.exchange(cl.getApiip() + "?sign=" + MD5Utils.md5(signParams),
 				HttpMethod.POST, httpEntity, SysTyOrder.class);
 		SysTyOrder data = sov.getBody();
+		logger.info(data.getTypay_order_id());
 		return data.getTypay_order_id();
 	}
 
@@ -154,7 +162,7 @@ public class PayUtil {
 				"http://txfat-api.fbnma.com/api/query/withdraw/view?sign=" + MD5Utils.md5(signParams), HttpMethod.POST,
 				httpEntity, SysTyOrder.class);
 		SysTyOrder data = sov.getBody();
-		System.out.println(data.getTypay_order_id());
+		logger.info(data.getTypay_order_id());
 		return data;
 	}
 
@@ -182,7 +190,7 @@ public class PayUtil {
 		ResponseEntity<YtBody> sov = resttemplate.exchange(url + "?sign=" + signParams, HttpMethod.POST, httpEntity,
 				YtBody.class);
 		YtBody data = sov.getBody();
-		System.out.println(sov.getBody());
+		logger.info(data.getMsg());
 		return data;
 	}
 

@@ -15,12 +15,14 @@ public interface MerchantaccountorderService extends YtIBaseService<Merchantacco
 
 	Integer appsave(Merchantaccountorder t);
 
+	//充值
 	Integer pass(Long id);
 
 	Integer turndown(Long id);
 
 	Integer cancle(Long id);
 
+	//提现
 	Integer passWithdraw(Long id);
 
 	Integer turndownWithdraw(Long id);

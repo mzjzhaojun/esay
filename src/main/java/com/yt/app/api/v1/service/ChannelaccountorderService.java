@@ -17,9 +17,4 @@ public interface ChannelaccountorderService extends YtIBaseService<Channelaccoun
 
 	Integer cancle(Long id);
 
-	Integer passWithdraw(Long id);
-
-	Integer turndownWithdraw(Long id);
-
-	Integer cancleWithdraw(Long id);
 }

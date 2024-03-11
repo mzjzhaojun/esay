@@ -73,7 +73,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
 		t.setAmountreceived((t.getAmount() * (t.getExchange() + t.getMerchantexchange())));
 		t.setType(DictionaryResource.ORDERTYPE_20);
-		t.setOrdernum("CZS" + StringUtil.getOrderNum());
+		t.setOrdernum("MT" + StringUtil.getOrderNum());
 		t.setRemark("充值金额：" + String.format("%.2f", t.getAmountreceived()));
 		Integer i = mapper.post(t);
 
@@ -109,7 +109,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		t.setExchange(t.getMerchantexchange());
 		t.setAmountreceived((t.getAmount()));
 		t.setType(DictionaryResource.ORDERTYPE_21);
-		t.setOrdernum("TXS" + StringUtil.getOrderNum());
+		t.setOrdernum("MW" + StringUtil.getOrderNum());
 		t.setRemark("提现金额：" + String.format("%.2f", t.getAmountreceived()));
 		Integer i = mapper.post(t);
 

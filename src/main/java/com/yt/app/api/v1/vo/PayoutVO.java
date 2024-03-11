@@ -57,6 +57,7 @@ public class PayoutVO extends YtBaseEntity<Aislechannel> {
 	Double income;
 	String notifyurl;
 	Integer notifystatus;
+	String notifystatusname;
 	String remark;
 	Integer version;
 

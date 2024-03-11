@@ -88,10 +88,10 @@
 				ordernum= #{ordernum},
 			</if>
 			<if test="imgurl != null">
-				imgurl= #{imgurl}
+				imgurl= #{imgurl},
 			</if>
 			<if test="version != null">
-				version= #{version}+1,
+				version= #{version}+1
 			</if>
 		</set>
 		where id = #{id} and version= #{version}
