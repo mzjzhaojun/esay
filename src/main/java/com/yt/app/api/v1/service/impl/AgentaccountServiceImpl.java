@@ -115,30 +115,30 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	@Override
 	@Transactional
 	public void totalincome(Agentaccountorder t) {
-		Agentaccount ma = mapper.getByUserId(t.getUserid());
-		// 资金记录
-		Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
-
-		aaaj.setUserid(t.getUserid());
-		aaaj.setAgentname(t.getUsername());
-		aaaj.setOrdernum(t.getOrdernum());
-		aaaj.setType(DictionaryResource.RECORDTYPE_30);
-		// 变更前
-		aaaj.setPretotalincome(ma.getTotalincome());// 总收入
-		aaaj.setPretoincomeamount(ma.getToincomeamount() + t.getAmountreceived());// 待确认收入
-		aaaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
-		aaaj.setPretowithdrawamount(ma.getWithdrawamount());// 待确认支出
-		// 变更后
-		aaaj.setPosttotalincome(ma.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(0.00);// 确认收入
-		aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(0.00);// 确认支出
-		aaaj.setRemark("待确认代理收入金额：" + t.getRemark());
-		//
-		agentaccountapplyjournamapper.post(aaaj);
-		RLock lock = RedissonUtil.getLock(t.getId());
+		RLock lock = RedissonUtil.getLock(t.getAgentid());
 		try {
 			lock.lock();
+			Agentaccount ma = mapper.getByUserId(t.getUserid());
+			// 资金记录
+			Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
+
+			aaaj.setUserid(t.getUserid());
+			aaaj.setAgentname(t.getUsername());
+			aaaj.setOrdernum(t.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_30);
+			// 变更前
+			aaaj.setPretotalincome(ma.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(ma.getToincomeamount() + t.getAmountreceived());// 待确认收入
+			aaaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(ma.getWithdrawamount());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(ma.getTotalincome());// 总收入
+			aaaj.setPosttoincomeamount(0.00);// 确认收入
+			aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
+			aaaj.setPosttowithdrawamount(0.00);// 确认支出
+			aaaj.setRemark("待确认代理收入金额：" + t.getRemark());
+			//
+			agentaccountapplyjournamapper.post(aaaj);
 			ma.setToincomeamount(aaaj.getPretoincomeamount());
 			mapper.put(ma);
 		} catch (Exception e) {
@@ -151,73 +151,72 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	@Override
 	@Transactional
 	public void updateTotalincome(Agentaccountorder mao) {
-		Agentaccount t = mapper.getByUserId(mao.getUserid());
-
-		//
-		Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
-		aaaj.setUserid(t.getUserid());
-		aaaj.setAgentname(mao.getUsername());
-		aaaj.setOrdernum(mao.getOrdernum());
-		aaaj.setType(DictionaryResource.RECORDTYPE_32);
-
-		// 变更前
-		aaaj.setPretotalincome(t.getTotalincome());// 总收入
-		aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
-		aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
-		// 变更后
-		aaaj.setPosttotalincome(t.getTotalincome() + mao.getAmountreceived());// 总收入
-		aaaj.setPosttoincomeamount(mao.getAmountreceived());// 确认收入
-		aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(0.00);// 确认支出
-		aaaj.setRemark("收入成功金额：" + String.format("%.2f", mao.getAmountreceived()));
-		//
-		agentaccountapplyjournamapper.post(aaaj);
-
-		RLock lock = RedissonUtil.getLock(t.getId());
+		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();
+			Agentaccount t = mapper.getByUserId(mao.getUserid());
+
+			//
+			Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
+			aaaj.setUserid(t.getUserid());
+			aaaj.setAgentname(mao.getUsername());
+			aaaj.setOrdernum(mao.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_32);
+
+			// 变更前
+			aaaj.setPretotalincome(t.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
+			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(t.getTotalincome() + mao.getAmountreceived());// 总收入
+			aaaj.setPosttoincomeamount(mao.getAmountreceived());// 确认收入
+			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPosttowithdrawamount(0.00);// 确认支出
+			aaaj.setRemark("收入成功金额：" + String.format("%.2f", mao.getAmountreceived()));
+			//
+			agentaccountapplyjournamapper.post(aaaj);
+
 			t.setTotalincome(aaaj.getPosttotalincome());// 收入增加金额
 			t.setToincomeamount(aaaj.getPretoincomeamount());// 待收入减去金额.
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 			mapper.put(t);
+			agentservice.updateIncome(t);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
 		}
-
-		agentservice.updateIncome(t);
 	}
 
 	// 拒绝收入
 	@Override
 	@Transactional
 	public void turndownTotalincome(Agentaccountorder mao) {
-		Agentaccount t = mapper.getByUserId(mao.getUserid());
-		//
-		Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
-		aaaj.setUserid(t.getUserid());
-		aaaj.setAgentname(mao.getUsername());
-		aaaj.setOrdernum(mao.getOrdernum());
-		aaaj.setType(DictionaryResource.RECORDTYPE_34);
-
-		// 变更前
-		aaaj.setPretotalincome(t.getTotalincome());// 总收入
-		aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
-		aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
-		// 变更后
-		aaaj.setPosttotalincome(t.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(0.00);// 确认收入
-		aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(0.00);// 确认支出
-		aaaj.setRemark("收入失败，金额：" + String.format("%.2f", mao.getAmountreceived()));
-		//
-		agentaccountapplyjournamapper.post(aaaj);
-
-		RLock lock = RedissonUtil.getLock(t.getId());
+		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();
+			Agentaccount t = mapper.getByUserId(mao.getUserid());
+			//
+			Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
+			aaaj.setUserid(t.getUserid());
+			aaaj.setAgentname(mao.getUsername());
+			aaaj.setOrdernum(mao.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_34);
+
+			// 变更前
+			aaaj.setPretotalincome(t.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
+			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(t.getTotalincome());// 总收入
+			aaaj.setPosttoincomeamount(0.00);// 确认收入
+			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPosttowithdrawamount(0.00);// 确认支出
+			aaaj.setRemark("收入失败，金额：" + String.format("%.2f", mao.getAmountreceived()));
+			//
+			agentaccountapplyjournamapper.post(aaaj);
+
 			t.setToincomeamount(aaaj.getPretoincomeamount());
 			mapper.put(t);
 		} catch (Exception e) {
@@ -230,31 +229,31 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	@Override
 	@Transactional
 	public void cancleTotalincome(Agentaccountorder mao) {
-		Agentaccount t = mapper.getByUserId(mao.getUserid());
-		//
-		Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
-		aaaj.setUserid(t.getUserid());
-		aaaj.setAgentname(mao.getUsername());
-		aaaj.setOrdernum(mao.getOrdernum());
-		aaaj.setType(DictionaryResource.RECORDTYPE_36);
-
-		// 变更前
-		aaaj.setPretotalincome(t.getTotalincome());// 总收入
-		aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
-		aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
-		// 变更后
-		aaaj.setPosttotalincome(t.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(0.00);// 确认收入
-		aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(0.00);// 确认支出
-		aaaj.setRemark("收入取消，金额：" + String.format("%.2f", mao.getAmountreceived()));
-		//
-		agentaccountapplyjournamapper.post(aaaj);
-
-		RLock lock = RedissonUtil.getLock(t.getId());
+		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();
+			Agentaccount t = mapper.getByUserId(mao.getUserid());
+			//
+			Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
+			aaaj.setUserid(t.getUserid());
+			aaaj.setAgentname(mao.getUsername());
+			aaaj.setOrdernum(mao.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_36);
+
+			// 变更前
+			aaaj.setPretotalincome(t.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
+			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(t.getTotalincome());// 总收入
+			aaaj.setPosttoincomeamount(0.00);// 确认收入
+			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPosttowithdrawamount(0.00);// 确认支出
+			aaaj.setRemark("收入取消，金额：" + String.format("%.2f", mao.getAmountreceived()));
+			//
+			agentaccountapplyjournamapper.post(aaaj);
+
 			t.setToincomeamount(aaaj.getPretoincomeamount());
 			mapper.put(t);
 		} catch (Exception e) {
@@ -272,30 +271,30 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	@Override
 	@Transactional
 	public void withdrawamount(Agentaccountorder t) {
-		Agentaccount ma = mapper.getByUserId(t.getUserid());
-		Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
-
-		aaaj.setUserid(t.getUserid());
-		aaaj.setAgentname(t.getUsername());
-		aaaj.setOrdernum(t.getOrdernum());
-		aaaj.setType(DictionaryResource.RECORDTYPE_31);
-		// 变更前
-		aaaj.setPretotalincome(ma.getTotalincome());// 总收入
-		aaaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
-		aaaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
-		aaaj.setPretowithdrawamount(ma.getTowithdrawamount() + t.getAmountreceived());// 待确认支出
-		// 变更后
-		aaaj.setPosttotalincome(ma.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(0.00);// 确认收入
-		aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(0.00);// 确认支出
-		aaaj.setRemark("冻结待提现金额：" + String.format("%.2f", t.getAmountreceived()));
-		//
-		agentaccountapplyjournamapper.post(aaaj);
-
-		RLock lock = RedissonUtil.getLock(t.getId());
+		RLock lock = RedissonUtil.getLock(t.getAgentid());
 		try {
 			lock.lock();
+			Agentaccount ma = mapper.getByUserId(t.getUserid());
+			Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
+
+			aaaj.setUserid(t.getUserid());
+			aaaj.setAgentname(t.getUsername());
+			aaaj.setOrdernum(t.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_31);
+			// 变更前
+			aaaj.setPretotalincome(ma.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
+			aaaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(ma.getTowithdrawamount() + t.getAmountreceived());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(ma.getTotalincome());// 总收入
+			aaaj.setPosttoincomeamount(0.00);// 确认收入
+			aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
+			aaaj.setPosttowithdrawamount(0.00);// 确认支出
+			aaaj.setRemark("冻结待提现金额：" + String.format("%.2f", t.getAmountreceived()));
+			//
+			agentaccountapplyjournamapper.post(aaaj);
+
 			ma.setTowithdrawamount(aaaj.getPretowithdrawamount());
 			mapper.put(ma);
 		} catch (Exception e) {
@@ -308,70 +307,70 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	@Override
 	@Transactional
 	public void updateWithdrawamount(Agentaccountorder mao) {
-		Agentaccount t = mapper.getByUserId(mao.getUserid());
-		//
-		Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
-		//
-		aaaj.setUserid(t.getUserid());
-		aaaj.setAgentname(mao.getUsername());
-		aaaj.setOrdernum(mao.getOrdernum());
-		aaaj.setType(DictionaryResource.RECORDTYPE_33);
-
-		// 变更前
-		aaaj.setPretotalincome(t.getTotalincome());// 总收入
-		aaaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
-		aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
-		// 变更后
-		aaaj.setPosttotalincome(t.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(0.00);// 确认收入
-		aaaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());// 总支出
-		aaaj.setPosttowithdrawamount(mao.getAmountreceived());// 确认支出
-		aaaj.setRemark("提现成功，金额：" + String.format("%.2f", mao.getAmountreceived()));
-		//
-		agentaccountapplyjournamapper.post(aaaj);
-		RLock lock = RedissonUtil.getLock(t.getId());
+		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();
+			Agentaccount t = mapper.getByUserId(mao.getUserid());
+			//
+			Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
+			//
+			aaaj.setUserid(t.getUserid());
+			aaaj.setAgentname(mao.getUsername());
+			aaaj.setOrdernum(mao.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_33);
+
+			// 变更前
+			aaaj.setPretotalincome(t.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
+			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(t.getTotalincome());// 总收入
+			aaaj.setPosttoincomeamount(0.00);// 确认收入
+			aaaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());// 总支出
+			aaaj.setPosttowithdrawamount(mao.getAmountreceived());// 确认支出
+			aaaj.setRemark("提现成功，金额：" + String.format("%.2f", mao.getAmountreceived()));
+			//
+			agentaccountapplyjournamapper.post(aaaj);
 			t.setWithdrawamount(aaaj.getPostwithdrawamount());// 支出增加金额
 			t.setTowithdrawamount(aaaj.getPretowithdrawamount());// 待支出减去金额
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 			mapper.put(t);
+			agentservice.updateWithdraw(t);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
 		}
-		agentservice.updateWithdraw(t);
 	}
 
 	// 拒絕支出
 	@Override
 	@Transactional
 	public void turndownWithdrawamount(Agentaccountorder mao) {
-		Agentaccount t = mapper.getByUserId(mao.getUserid());
-		//
-		Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
-		aaaj.setUserid(t.getUserid());
-		aaaj.setAgentname(mao.getUsername());
-		aaaj.setOrdernum(mao.getOrdernum());
-		aaaj.setType(DictionaryResource.RECORDTYPE_35);
-
-		// 变更前
-		aaaj.setPretotalincome(t.getTotalincome());// 总收入
-		aaaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
-		aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
-		// 变更后
-		aaaj.setPosttotalincome(t.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(0.00);// 确认收入
-		aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(0.00);// 确认支出
-		aaaj.setRemark("审核拒绝，提现失败，金额：" + String.format("%.2f", mao.getAmountreceived()));
-		//
-		agentaccountapplyjournamapper.post(aaaj);
-		RLock lock = RedissonUtil.getLock(t.getId());
+		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();
+			Agentaccount t = mapper.getByUserId(mao.getUserid());
+			//
+			Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
+			aaaj.setUserid(t.getUserid());
+			aaaj.setAgentname(mao.getUsername());
+			aaaj.setOrdernum(mao.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_35);
+
+			// 变更前
+			aaaj.setPretotalincome(t.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
+			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(t.getTotalincome());// 总收入
+			aaaj.setPosttoincomeamount(0.00);// 确认收入
+			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPosttowithdrawamount(0.00);// 确认支出
+			aaaj.setRemark("审核拒绝，提现失败，金额：" + String.format("%.2f", mao.getAmountreceived()));
+			//
+			agentaccountapplyjournamapper.post(aaaj);
 			t.setTowithdrawamount(aaaj.getPretowithdrawamount());
 			mapper.put(t);
 		} catch (Exception e) {
@@ -384,32 +383,32 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	@Override
 	@Transactional
 	public void cancleWithdrawamount(Agentaccountorder mao) {
-		Agentaccount t = mapper.getByUserId(mao.getUserid());
-		//
-		//
-		Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
-		aaaj.setUserid(t.getUserid());
-		aaaj.setAgentname(mao.getUsername());
-		aaaj.setOrdernum(mao.getOrdernum());
-		aaaj.setType(DictionaryResource.RECORDTYPE_37);
-
-		// 变更前
-		aaaj.setPretotalincome(t.getTotalincome());// 总收入
-		aaaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
-		aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
-		// 变更后
-		aaaj.setPosttotalincome(t.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(0.00);// 确认收入
-		aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(0.00);// 确认支出
-		aaaj.setRemark("客户取消提现，金额：" + String.format("%.2f", mao.getAmountreceived()));
-		//
-		agentaccountapplyjournamapper.post(aaaj);
-
-		RLock lock = RedissonUtil.getLock(t.getId());
+		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();
+			Agentaccount t = mapper.getByUserId(mao.getUserid());
+			//
+			//
+			Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
+			aaaj.setUserid(t.getUserid());
+			aaaj.setAgentname(mao.getUsername());
+			aaaj.setOrdernum(mao.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_37);
+
+			// 变更前
+			aaaj.setPretotalincome(t.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
+			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(t.getTotalincome());// 总收入
+			aaaj.setPosttoincomeamount(0.00);// 确认收入
+			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPosttowithdrawamount(0.00);// 确认支出
+			aaaj.setRemark("客户取消提现，金额：" + String.format("%.2f", mao.getAmountreceived()));
+			//
+			agentaccountapplyjournamapper.post(aaaj);
+
 			t.setTowithdrawamount(aaaj.getPretowithdrawamount());
 			mapper.put(t);
 		} catch (Exception e) {

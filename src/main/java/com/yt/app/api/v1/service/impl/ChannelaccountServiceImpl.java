@@ -76,30 +76,31 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Override
 	@Transactional
 	public void totalincome(Channelaccountorder t) {
-		Channelaccount ma = mapper.getByUserId(t.getUserid());
-		// 资金记录
-		Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
-
-		aaaj.setUserid(t.getUserid());
-		aaaj.setChannelname(t.getUsername());
-		aaaj.setOrdernum(t.getOrdernum());
-		aaaj.setType(DictionaryResource.RECORDTYPE_30);
-		// 变更前
-		aaaj.setPretotalincome(ma.getTotalincome());// 总收入
-		aaaj.setPretoincomeamount(ma.getToincomeamount() + t.getAmountreceived());// 待确认收入
-		aaaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
-		aaaj.setPretowithdrawamount(ma.getWithdrawamount());// 待确认支出
-		// 变更后
-		aaaj.setPosttotalincome(ma.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(0.00);// 确认收入
-		aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(0.00);// 确认支出
-		aaaj.setRemark("待确认充值金额：" + String.format("%.2f", t.getAmountreceived()));
-		//
-		channelaccountapplyjournamapper.post(aaaj);
-		RLock lock = RedissonUtil.getLock(t.getId());
+		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
 			lock.lock();
+			Channelaccount ma = mapper.getByUserId(t.getUserid());
+			// 资金记录
+			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+
+			aaaj.setUserid(t.getUserid());
+			aaaj.setChannelname(t.getUsername());
+			aaaj.setOrdernum(t.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_30);
+			// 变更前
+			aaaj.setPretotalincome(ma.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(ma.getToincomeamount() + t.getAmountreceived());// 待确认收入
+			aaaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(ma.getWithdrawamount());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(ma.getTotalincome());// 总收入
+			aaaj.setPosttoincomeamount(0.00);// 确认收入
+			aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
+			aaaj.setPosttowithdrawamount(0.00);// 确认支出
+			aaaj.setRemark("待确认充值金额：" + String.format("%.2f", t.getAmountreceived()));
+			//
+			channelaccountapplyjournamapper.post(aaaj);
+
 			ma.setToincomeamount(aaaj.getPretoincomeamount());
 			mapper.put(ma);
 		} catch (Exception e) {
@@ -112,73 +113,72 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Override
 	@Transactional
 	public void updateTotalincome(Channelaccountorder mao) {
-		Channelaccount t = mapper.getByUserId(mao.getUserid());
 
-		//
-		Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
-		aaaj.setUserid(t.getUserid());
-		aaaj.setChannelname(mao.getUsername());
-		aaaj.setOrdernum(mao.getOrdernum());
-		aaaj.setType(DictionaryResource.RECORDTYPE_32);
-
-		// 变更前
-		aaaj.setPretotalincome(t.getTotalincome());// 总收入
-		aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
-		aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
-		// 变更后
-		aaaj.setPosttotalincome(t.getTotalincome() + mao.getAmountreceived());// 总收入
-		aaaj.setPosttoincomeamount(mao.getAmountreceived());// 确认收入
-		aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(0.00);// 确认支出
-		aaaj.setRemark("充值成功金额：" + String.format("%.2f", mao.getAmountreceived()));
-		//
-		channelaccountapplyjournamapper.post(aaaj);
-
-		RLock lock = RedissonUtil.getLock(t.getId());
+		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
+			Channelaccount t = mapper.getByUserId(mao.getUserid());
+
+			//
+			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			aaaj.setUserid(t.getUserid());
+			aaaj.setChannelname(mao.getUsername());
+			aaaj.setOrdernum(mao.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_32);
+
+			// 变更前
+			aaaj.setPretotalincome(t.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
+			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(t.getTotalincome() + mao.getAmountreceived());// 总收入
+			aaaj.setPosttoincomeamount(mao.getAmountreceived());// 确认收入
+			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPosttowithdrawamount(0.00);// 确认支出
+			aaaj.setRemark("充值成功金额：" + String.format("%.2f", mao.getAmountreceived()));
+			//
+			channelaccountapplyjournamapper.post(aaaj);
+
 			t.setTotalincome(aaaj.getPosttotalincome());// 收入增加金额
 			t.setToincomeamount(aaaj.getPretoincomeamount());// 待收入减去金额.
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 			mapper.put(t);
+			channelservice.updateIncome(t);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
 		}
-
-		channelservice.updateIncome(t);
 	}
 
 	// 拒绝收入
 	@Override
 	@Transactional
 	public void turndownTotalincome(Channelaccountorder mao) {
-		Channelaccount t = mapper.getByUserId(mao.getUserid());
-		//
-		Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
-		aaaj.setUserid(t.getUserid());
-		aaaj.setChannelname(mao.getUsername());
-		aaaj.setOrdernum(mao.getOrdernum());
-		aaaj.setType(DictionaryResource.RECORDTYPE_34);
-
-		// 变更前
-		aaaj.setPretotalincome(t.getTotalincome());// 总收入
-		aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
-		aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
-		// 变更后
-		aaaj.setPosttotalincome(t.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(0.00);// 待确认收入
-		aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(0.00);// 待确认支出
-		aaaj.setRemark("审核拒绝，充值失败，金额：" + String.format("%.2f", mao.getAmountreceived()));
-		//
-		channelaccountapplyjournamapper.post(aaaj);
-
-		RLock lock = RedissonUtil.getLock(t.getId());
+		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
+			Channelaccount t = mapper.getByUserId(mao.getUserid());
+			//
+			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			aaaj.setUserid(t.getUserid());
+			aaaj.setChannelname(mao.getUsername());
+			aaaj.setOrdernum(mao.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_34);
+
+			// 变更前
+			aaaj.setPretotalincome(t.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
+			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(t.getTotalincome());// 总收入
+			aaaj.setPosttoincomeamount(0.00);// 待确认收入
+			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPosttowithdrawamount(0.00);// 待确认支出
+			aaaj.setRemark("审核拒绝，充值失败，金额：" + String.format("%.2f", mao.getAmountreceived()));
+			//
+			channelaccountapplyjournamapper.post(aaaj);
 			t.setToincomeamount(aaaj.getPretoincomeamount());
 			mapper.put(t);
 		} catch (Exception e) {
@@ -191,31 +191,31 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Override
 	@Transactional
 	public void cancleTotalincome(Channelaccountorder mao) {
-		Channelaccount t = mapper.getByUserId(mao.getUserid());
-		//
-		Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
-		aaaj.setUserid(t.getUserid());
-		aaaj.setChannelname(mao.getUsername());
-		aaaj.setOrdernum(mao.getOrdernum());
-		aaaj.setType(DictionaryResource.RECORDTYPE_36);
-
-		// 变更前
-		aaaj.setPretotalincome(t.getTotalincome());// 总收入
-		aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
-		aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
-		// 变更后
-		aaaj.setPosttotalincome(t.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(0.00);// 待确认收入
-		aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(0.00);// 待确认支出
-		aaaj.setRemark("客户取消充值，金额：" + String.format("%.2f", mao.getAmountreceived()));
-		//
-		channelaccountapplyjournamapper.post(aaaj);
-
-		RLock lock = RedissonUtil.getLock(t.getId());
+		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
+			Channelaccount t = mapper.getByUserId(mao.getUserid());
+			//
+			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			aaaj.setUserid(t.getUserid());
+			aaaj.setChannelname(mao.getUsername());
+			aaaj.setOrdernum(mao.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_36);
+
+			// 变更前
+			aaaj.setPretotalincome(t.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
+			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(t.getTotalincome());// 总收入
+			aaaj.setPosttoincomeamount(0.00);// 待确认收入
+			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPosttowithdrawamount(0.00);// 待确认支出
+			aaaj.setRemark("客户取消充值，金额：" + String.format("%.2f", mao.getAmountreceived()));
+			//
+			channelaccountapplyjournamapper.post(aaaj);
+
 			t.setToincomeamount(aaaj.getPretoincomeamount());
 			mapper.put(t);
 		} catch (Exception e) {
@@ -233,30 +233,29 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Override
 	@Transactional
 	public void withdrawamount(Channelaccountorder t) {
-		Channelaccount ma = mapper.getByUserId(t.getUserid());
-		Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
-
-		aaaj.setUserid(t.getUserid());
-		aaaj.setChannelname(t.getUsername());
-		aaaj.setOrdernum(t.getOrdernum());
-		aaaj.setType(DictionaryResource.RECORDTYPE_31);
-		// 变更前
-		aaaj.setPretotalincome(ma.getTotalincome());// 总收入
-		aaaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
-		aaaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
-		aaaj.setPretowithdrawamount(ma.getTowithdrawamount() + t.getAmountreceived());// 待确认支出
-		// 变更后
-		aaaj.setPosttotalincome(ma.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(0.00);// 待确认收入
-		aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(0.00);// 待确认支出
-		aaaj.setRemark("待确认渠道代付：" + t.getRemark());
-		//
-		channelaccountapplyjournamapper.post(aaaj);
-
-		RLock lock = RedissonUtil.getLock(t.getId());
+		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
 			lock.lock();
+			Channelaccount ma = mapper.getByUserId(t.getUserid());
+			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+
+			aaaj.setUserid(t.getUserid());
+			aaaj.setChannelname(t.getUsername());
+			aaaj.setOrdernum(t.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_31);
+			// 变更前
+			aaaj.setPretotalincome(ma.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
+			aaaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(ma.getTowithdrawamount() + t.getAmountreceived());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(ma.getTotalincome());// 总收入
+			aaaj.setPosttoincomeamount(0.00);// 待确认收入
+			aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
+			aaaj.setPosttowithdrawamount(0.00);// 待确认支出
+			aaaj.setRemark("待确认渠道代付：" + t.getRemark());
+			//
+			channelaccountapplyjournamapper.post(aaaj);
 			ma.setTowithdrawamount(aaaj.getPretowithdrawamount());
 			mapper.put(ma);
 		} catch (Exception e) {
@@ -269,70 +268,71 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Override
 	@Transactional
 	public void updateWithdrawamount(Channelaccountorder mao) {
-		Channelaccount t = mapper.getByUserId(mao.getUserid());
-		//
-		Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
-		//
-		aaaj.setUserid(t.getUserid());
-		aaaj.setChannelname(mao.getUsername());
-		aaaj.setOrdernum(mao.getOrdernum());
-		aaaj.setType(DictionaryResource.RECORDTYPE_33);
-
-		// 变更前
-		aaaj.setPretotalincome(t.getTotalincome());// 总收入
-		aaaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
-		aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
-		// 变更后
-		aaaj.setPosttotalincome(t.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(0.00);// 待确认收入
-		aaaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());// 总支出
-		aaaj.setPosttowithdrawamount(mao.getAmountreceived());// 待确认支出
-		aaaj.setRemark("渠道代付成功，金额：" + String.format("%.2f", mao.getAmountreceived()));
-		//
-		channelaccountapplyjournamapper.post(aaaj);
-		RLock lock = RedissonUtil.getLock(t.getId());
+		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
+			Channelaccount t = mapper.getByUserId(mao.getUserid());
+			//
+			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			//
+			aaaj.setUserid(t.getUserid());
+			aaaj.setChannelname(mao.getUsername());
+			aaaj.setOrdernum(mao.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_33);
+
+			// 变更前
+			aaaj.setPretotalincome(t.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
+			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(t.getTotalincome());// 总收入
+			aaaj.setPosttoincomeamount(0.00);// 待确认收入
+			aaaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());// 总支出
+			aaaj.setPosttowithdrawamount(mao.getAmountreceived());// 待确认支出
+			aaaj.setRemark("渠道代付成功，金额：" + String.format("%.2f", mao.getAmountreceived()));
+			//
+			channelaccountapplyjournamapper.post(aaaj);
 			t.setWithdrawamount(aaaj.getPostwithdrawamount());// 支出增加金额
 			t.setTowithdrawamount(aaaj.getPretowithdrawamount());// 待支出减去金额
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 			mapper.put(t);
+			channelservice.withdrawamount(t);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
 		}
-		channelservice.withdrawamount(t);
 	}
 
 	// 拒絕支出
 	@Override
 	@Transactional
 	public void turndownWithdrawamount(Channelaccountorder mao) {
-		Channelaccount t = mapper.getByUserId(mao.getUserid());
-		//
-		Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
-		aaaj.setUserid(t.getUserid());
-		aaaj.setChannelname(mao.getUsername());
-		aaaj.setOrdernum(mao.getOrdernum());
-		aaaj.setType(DictionaryResource.RECORDTYPE_35);
-
-		// 变更前
-		aaaj.setPretotalincome(t.getTotalincome());// 总收入
-		aaaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
-		aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
-		// 变更后
-		aaaj.setPosttotalincome(t.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(0.00);// 待确认收入
-		aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(0.00);// 待确认支出
-		aaaj.setRemark("渠道代付失败，金额：" + String.format("%.2f", mao.getAmountreceived()));
-		//
-		channelaccountapplyjournamapper.post(aaaj);
-		RLock lock = RedissonUtil.getLock(t.getId());
+		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
+			Channelaccount t = mapper.getByUserId(mao.getUserid());
+			//
+			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			aaaj.setUserid(t.getUserid());
+			aaaj.setChannelname(mao.getUsername());
+			aaaj.setOrdernum(mao.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_35);
+
+			// 变更前
+			aaaj.setPretotalincome(t.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
+			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(t.getTotalincome());// 总收入
+			aaaj.setPosttoincomeamount(0.00);// 待确认收入
+			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPosttowithdrawamount(0.00);// 待确认支出
+			aaaj.setRemark("渠道代付失败，金额：" + String.format("%.2f", mao.getAmountreceived()));
+			//
+			channelaccountapplyjournamapper.post(aaaj);
+
 			t.setTowithdrawamount(aaaj.getPretowithdrawamount());
 			mapper.put(t);
 		} catch (Exception e) {
@@ -345,32 +345,31 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Override
 	@Transactional
 	public void cancleWithdrawamount(Channelaccountorder mao) {
-		Channelaccount t = mapper.getByUserId(mao.getUserid());
-		//
-		//
-		Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
-		aaaj.setUserid(t.getUserid());
-		aaaj.setChannelname(mao.getUsername());
-		aaaj.setOrdernum(mao.getOrdernum());
-		aaaj.setType(DictionaryResource.RECORDTYPE_37);
-
-		// 变更前
-		aaaj.setPretotalincome(t.getTotalincome());// 总收入
-		aaaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
-		aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
-		// 变更后
-		aaaj.setPosttotalincome(t.getTotalincome());// 总收入
-		aaaj.setPosttoincomeamount(0.00);// 待确认收入
-		aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-		aaaj.setPosttowithdrawamount(0.00);// 待确认支出
-		aaaj.setRemark("客户取消代付，金额：" + String.format("%.2f", mao.getAmountreceived()));
-		//
-		channelaccountapplyjournamapper.post(aaaj);
-
-		RLock lock = RedissonUtil.getLock(t.getId());
+		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
+			Channelaccount t = mapper.getByUserId(mao.getUserid());
+			//
+			//
+			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			aaaj.setUserid(t.getUserid());
+			aaaj.setChannelname(mao.getUsername());
+			aaaj.setOrdernum(mao.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_37);
+
+			// 变更前
+			aaaj.setPretotalincome(t.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
+			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(t.getTotalincome());// 总收入
+			aaaj.setPosttoincomeamount(0.00);// 待确认收入
+			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPosttowithdrawamount(0.00);// 待确认支出
+			aaaj.setRemark("客户取消代付，金额：" + String.format("%.2f", mao.getAmountreceived()));
+			//
+			channelaccountapplyjournamapper.post(aaaj);
 			t.setTowithdrawamount(aaaj.getPretowithdrawamount());
 			mapper.put(t);
 		} catch (Exception e) {

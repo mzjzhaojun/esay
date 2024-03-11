@@ -243,27 +243,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setAgentincome(0.00);
 		}
 
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		Channel cll = channelmapper.get(t.getChannelid());
-		Channelaccountorder cat = new Channelaccountorder();
-		cat.setUserid(cll.getUserid());
-		//
-		cat.setChannelid(cll.getId());
-		cat.setUsername(cll.getName());
-		cat.setNkname(cll.getNkname());
-		cat.setChannelcode(cll.getCode());
-		cat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
-		cat.setAmount(t.getChanneldeal());
-		cat.setExchange(cll.getExchange());
-		cat.setChannelexchange(cll.getExchange());
-		cat.setAmountreceived(t.getChannelpay());
-		cat.setType(DictionaryResource.ORDERTYPE_21);
-		cat.setOrdernum(t.getChannelordernum());
-		cat.setRemark(
-				"资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", cat.getAmount()) + " 手续费：" + cll.getOnecost());
-		channelaccountordermapper.post(cat);
-		//
-		channelaccountservice.withdrawamount(cat);
 		// 渠道余额
 		t.setChannelbalance(cl.getBalance());
 		//
@@ -483,28 +462,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		} else {
 			t.setAgentincome(0.00);
 		}
-
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		Channel cll = channelmapper.get(t.getChannelid());
-		Channelaccountorder cat = new Channelaccountorder();
-		cat.setUserid(cll.getUserid());
-		//
-		cat.setChannelid(cll.getId());
-		cat.setUsername(cll.getName());
-		cat.setNkname(cll.getNkname());
-		cat.setChannelcode(cll.getCode());
-		cat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
-		cat.setAmount(t.getChanneldeal());
-		cat.setExchange(cll.getExchange());
-		cat.setChannelexchange(cll.getExchange());
-		cat.setAmountreceived(t.getChannelpay());
-		cat.setType(DictionaryResource.ORDERTYPE_21);
-		cat.setOrdernum(t.getChannelordernum());
-		cat.setRemark(
-				"资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", cat.getAmount()) + " 手续费：" + cll.getOnecost());
-		channelaccountordermapper.post(cat);
-		//
-		channelaccountservice.withdrawamount(cat);
 		//
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 		//
@@ -596,7 +553,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 					what.append("金额：" + t.getAmount() + "\n");
 					what.append("成功时间：" + DateTimeUtil.getDateTime() + "\n");
 					what.append("业务部已处理完毕，请你们核实查看\n");
-					mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
+					if (tgmerchantgroup != null)
+						mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
 				}
 			} else {
 				new MyException("已经处理完成，不要重复处理", YtCodeEnum.YT888);
@@ -660,7 +618,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 					what.append("金额：" + t.getAmount() + "\n");
 					what.append("失败时间：" + DateTimeUtil.getDateTime() + "\n");
 					what.append("业务部已处理完毕，请你们核实查看\n");
-					mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
+					if (tgmerchantgroup != null)
+						mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
 				}
 			} else {
 				new MyException("已经处理完成，不要重复处理", YtCodeEnum.YT888);

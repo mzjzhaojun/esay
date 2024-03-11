@@ -6,11 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yt.app.api.v1.entity.Channel;
+import com.yt.app.api.v1.entity.Channelaccountorder;
 import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.mapper.ChannelMapper;
+import com.yt.app.api.v1.mapper.ChannelaccountorderMapper;
 import com.yt.app.api.v1.mapper.ExchangeMapper;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
+import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.Channelbot;
@@ -36,6 +39,10 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 		ChannelMapper channelmapper = BeanContext.getApplicationContext().getBean(ChannelMapper.class);
 		TgchannelgroupMapper tgchannelgroupmapper = BeanContext.getApplicationContext()
 				.getBean(TgchannelgroupMapper.class);
+		ChannelaccountorderMapper channelaccountordermapper = BeanContext.getApplicationContext()
+				.getBean(ChannelaccountorderMapper.class);
+		ChannelaccountService channelaccountservice = BeanContext.getApplicationContext()
+				.getBean(ChannelaccountService.class);
 		Channelbot cbot = BeanContext.getApplicationContext().getBean(Channelbot.class);
 		Exchange exchange = mapper.get(id);
 		Channel channel = channelmapper.get(exchange.getChannelid());
@@ -53,6 +60,28 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 				exchange.setStatus(DictionaryResource.PAYOUTSTATUS_51);
 				int j = mapper.put(exchange);
 				if (j > 0) {
+					TenantIdContext.setTenantId(exchange.getTenant_id());
+					Channel cll = channelmapper.get(exchange.getChannelid());
+					Channelaccountorder cat = new Channelaccountorder();
+					cat.setUserid(cll.getUserid());
+//
+					cat.setChannelid(cll.getId());
+					cat.setUsername(cll.getName());
+					cat.setNkname(cll.getNkname());
+					cat.setChannelcode(cll.getCode());
+					cat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+					cat.setAmount(exchange.getChanneldeal());
+					cat.setExchange(cll.getExchange());
+					cat.setChannelexchange(cll.getExchange());
+					cat.setAmountreceived(exchange.getChannelpay());
+					cat.setType(DictionaryResource.ORDERTYPE_22);
+					cat.setOrdernum(exchange.getChannelordernum());
+					cat.setRemark("资金：" + exchange.getAmount() + " 交易费：" + String.format("%.2f", cat.getAmount())
+							+ " 手续费：" + cll.getOnecost());
+					channelaccountordermapper.post(cat);
+//
+					channelaccountservice.withdrawamount(cat);
+
 					Tgchannelgroup tgchannelgroup = tgchannelgroupmapper.getByChannelId(exchange.getChannelid());
 					StringBuffer what = new StringBuffer();
 					what.append("状态：新增代付\n");
@@ -83,6 +112,7 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 				break;
 			}
 		}
+		TenantIdContext.remove();
 		logger.info("获取 end---------------------");
 	}
 
