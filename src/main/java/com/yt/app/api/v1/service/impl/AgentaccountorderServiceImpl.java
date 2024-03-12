@@ -105,6 +105,7 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
 		t.setExchange(t.getAgentexchange());
 		t.setAmountreceived((t.getAmount()));
+		t.setUsdtval(t.getAmount() / t.getAgentexchange());
 		t.setType(DictionaryResource.ORDERTYPE_21);
 		t.setOrdernum("AW" + StringUtil.getOrderNum());
 		t.setRemark("提现金额：" + String.format("%.2f", t.getAmountreceived()));
@@ -116,68 +117,25 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 		return i;
 	}
 
-//////////////////////////////////////////////////////////////收入
-	@Override
-	@Transactional
-	public Integer pass(Long id) {
-//
-		Agentaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
-		Integer i = mapper.put(mao);
-//
-		agentaccountservice.updateTotalincome(mao);
-//
-		return i;
-	}
-
-	@Override
-	@Transactional
-	public Integer turndown(Long id) {
-		Agentaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
-		Integer i = mapper.put(mao);
-//
-		agentaccountservice.turndownTotalincome(mao);
-		return i;
-	}
-
-	@Override
-	@Transactional
-	public Integer cancle(Long id) {
-		Agentaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_13);
-		Integer i = mapper.put(mao);
-//
-		agentaccountservice.cancleTotalincome(mao);
-		return i;
-	}
-
 ////////////////////////////////////////////////// 提现 /////////////////////////
 
 	@Override
 	@Transactional
-	public Integer passWithdraw(Long id) {
-//
-		Agentaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+	public void withdrawmanual(Agentaccountorder aco) {
+		Agentaccountorder mao = mapper.get(aco.getId());
+		mao.setStatus(aco.getStatus());
+		mao.setImgurl(aco.getImgurl());
 		Integer i = mapper.put(mao);
+		if (i > 0) {
+			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
+				agentaccountservice.updateWithdrawamount(mao);
+				//
+				systemaccountservice.updateWithdrawamount(mao);
+			} else {
+				agentaccountservice.turndownWithdrawamount(mao);
+			}
+		}
 //
-		agentaccountservice.updateWithdrawamount(mao);
-//
-		systemaccountservice.updateWithdrawamount(mao);
-//
-		return i;
-	}
-
-	@Override
-	@Transactional
-	public Integer turndownWithdraw(Long id) {
-		Agentaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
-		Integer i = mapper.put(mao);
-//
-		agentaccountservice.turndownWithdrawamount(mao);
-		return i;
 	}
 
 	@Override

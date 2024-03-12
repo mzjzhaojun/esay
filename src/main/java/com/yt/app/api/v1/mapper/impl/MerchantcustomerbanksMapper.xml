@@ -82,6 +82,14 @@
 		from merchantcustomerbanks
 		where id = #{id}
 	</select>
+	<!--getById -->
+	<select id="getByAccNumber" parameterType="java.lang.String"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from merchantcustomerbanks
+		where accnumber = #{accnumber}
+	</select>
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">

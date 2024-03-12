@@ -52,7 +52,9 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	@Autowired
 	private SystemaccountService systemaccountservice;
 
-	// 收入
+	/**
+	 * 充值
+	 */
 	@Override
 	@Transactional
 	public Integer post(Merchantaccountorder t) {
@@ -66,6 +68,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 			t.setUserid(m.getUserid());
 		}
 		// 收入订单
+		t.setUsdtval(t.getAmount());
 		t.setMerchantid(m.getId());
 		t.setUsername(m.getName());
 		t.setNkname(m.getNikname());
@@ -83,7 +86,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		return i;
 	}
 
-	// 支出
+	// 提现
 	@Override
 	@Transactional
 	public Integer save(Merchantaccountorder t) {
@@ -108,6 +111,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
 		t.setExchange(t.getMerchantexchange());
 		t.setAmountreceived((t.getAmount()));
+		t.setUsdtval(t.getAmount() / t.getMerchantexchange());
 		t.setType(DictionaryResource.ORDERTYPE_21);
 		t.setOrdernum("MW" + StringUtil.getOrderNum());
 		t.setRemark("提现金额：" + String.format("%.2f", t.getAmountreceived()));
@@ -119,7 +123,9 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		return i;
 	}
 
-	// 支出
+	/**
+	 * app提现
+	 */
 	@Override
 	@Transactional
 	public Integer appsave(Merchantaccountorder t) {
@@ -178,33 +184,28 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		return t;
 	}
 
-	////////////////////////////////////////////////////////////// 收入
+	////////////////////////////////////////////////////////////// 充值处理
 	@Override
 	@Transactional
-	public Integer pass(Long id) {
-		//
-		Merchantaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+	public void incomemanual(Merchantaccountorder mco) {
+		Merchantaccountorder mao = mapper.get(mco.getId());
+		mao.setStatus(mco.getStatus());
 		Integer i = mapper.put(mao);
-		//
-		merchantaccountservice.updateTotalincome(mao);
-		//
-		systemaccountservice.updateTotalincome(mao);
-		//
-		return i;
+		if (i > 0) {
+			if (mco.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
+				//
+				merchantaccountservice.updateTotalincome(mao);
+				//
+				systemaccountservice.updateTotalincome(mao);
+			} else {
+				merchantaccountservice.turndownTotalincome(mao);
+			}
+		}
 	}
 
-	@Override
-	@Transactional
-	public Integer turndown(Long id) {
-		Merchantaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
-		Integer i = mapper.put(mao);
-		//
-		merchantaccountservice.turndownTotalincome(mao);
-		return i;
-	}
-
+	/**
+	 * 充值取消
+	 */
 	@Override
 	@Transactional
 	public Integer cancle(Long id) {
@@ -216,34 +217,30 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		return i;
 	}
 
-	////////////////////////////////////////////////// 支出 /////////////////////////
+//////////////////////////////////////////////////////////////提现处理
 
 	@Override
 	@Transactional
-	public Integer passWithdraw(Long id) {
-		//
-		Merchantaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+	public void withdrawmanual(Merchantaccountorder mco) {
+		Merchantaccountorder mao = mapper.get(mco.getId());
+		mao.setStatus(mco.getStatus());
+		mao.setImgurl(mco.getImgurl());
 		Integer i = mapper.put(mao);
-		//
-		merchantaccountservice.updateWithdrawamount(mao);
-		//
-		systemaccountservice.updateWithdrawamount(mao);
-		//
-		return i;
+		if (i > 0) {
+			if (mco.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
+				//
+				merchantaccountservice.updateWithdrawamount(mao);
+				//
+				systemaccountservice.updateWithdrawamount(mao);
+			} else {
+				merchantaccountservice.turndownWithdrawamount(mao);
+			}
+		}
 	}
 
-	@Override
-	@Transactional
-	public Integer turndownWithdraw(Long id) {
-		Merchantaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
-		Integer i = mapper.put(mao);
-		//
-		merchantaccountservice.turndownWithdrawamount(mao);
-		return i;
-	}
-
+	/**
+	 * 提现取消
+	 */
 	@Override
 	@Transactional
 	public Integer cancleWithdraw(Long id) {

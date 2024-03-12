@@ -11,10 +11,6 @@ import com.yt.app.common.base.YtIBaseService;
 
 public interface ChannelaccountorderService extends YtIBaseService<Channelaccountorder, Long> {
 
-	Integer pass(Long id);
-
-	Integer turndown(Long id);
-
-	Integer cancle(Long id);
+	void incomemanual(Channelaccountorder cco);
 
 }

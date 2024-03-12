@@ -24,6 +24,7 @@ import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.MerchantaccountService;
+import com.yt.app.api.v1.service.MerchantcustomerbanksService;
 import com.yt.app.api.v1.service.PayoutService;
 import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.api.v1.vo.PayoutVO;
@@ -125,6 +126,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	private Merchantbot mbot;
 	@Autowired
 	private TgmerchantgroupMapper tgmerchantgroupmapper;
+	@Autowired
+	private MerchantcustomerbanksService merchantcustomerbanksservice;
 
 	@Override
 	@Transactional
@@ -565,6 +568,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 					if (tgmerchantgroup != null)
 						mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
 				}
+				//保存客户信息
+				merchantcustomerbanksservice.add(t);
 			} else {
 				new MyException("已经处理完成，不要重复处理", YtCodeEnum.YT888);
 			}
@@ -630,6 +635,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 					if (tgmerchantgroup != null)
 						mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
 				}
+				//保存客户信息
+				merchantcustomerbanksservice.add(t);
 			} else {
 				new MyException("已经处理完成，不要重复处理", YtCodeEnum.YT888);
 			}

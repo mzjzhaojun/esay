@@ -7,9 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
+import com.yt.app.common.common.yt.YtResponseEntity;
+
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtIPage;
@@ -19,6 +20,7 @@ import io.swagger.annotations.ApiOperation;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.ChannelaccountorderService;
 import com.yt.app.api.v1.entity.Channelaccountorder;
+import com.yt.app.api.v1.entity.User;
 
 /**
  * @author zj defaulttest
@@ -44,26 +46,18 @@ public class ChannelaccountorderController extends YtBaseEncipherControllerImpl<
 	}
 
 	/**
+	 * 处理充值
 	 * 
-	 * 
-	 * @version 1.1
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
 	 */
-	@RequestMapping(value = "/pass/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> pass(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
-		Object t = service.pass(id);
-		return new YtResponseEncryptEntity<Object>(new YtBody(t));
-	}
-
-	/**
-	 * 
-	 * 
-	 * @version 1.1
-	 */
-	@RequestMapping(value = "/turndown/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> turndown(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
-		Object t = service.turndown(id);
-		return new YtResponseEncryptEntity<Object>(new YtBody(t));
+	@ApiOperation(value = "incomemanual", response = User.class)
+	@RequestMapping(value = "/incomemanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> incomemanual(YtRequestDecryptEntity<Channelaccountorder> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		service.incomemanual(requestEntity.getBody());
+		return new YtResponseEntity<Object>(new YtBody(1));
 	}
 }

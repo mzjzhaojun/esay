@@ -1,6 +1,7 @@
 package com.yt.app.api.v1.service;
 
 import com.yt.app.api.v1.entity.Merchantcustomerbanks;
+import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.common.base.YtIBaseService;
 
 /**
@@ -10,4 +11,5 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface MerchantcustomerbanksService extends YtIBaseService<Merchantcustomerbanks, Long> {
+	Integer add(Payout t);
 }

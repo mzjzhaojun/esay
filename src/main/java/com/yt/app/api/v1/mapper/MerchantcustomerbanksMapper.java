@@ -94,4 +94,12 @@ public interface MerchantcustomerbanksMapper extends YtIBaseMapper<Merchantcusto
 	 */
 	@YtRedisCacheAnnotation(classs = Merchantcustomerbanks.class)
 	public List<Merchantcustomerbanks> listByArrayId(long[] id);
+
+	/**
+	 * 
+	 * @param accnumber
+	 * @return
+	 */
+	@YtRedisCacheAnnotation(classs = Merchantcustomerbanks.class)
+	public Merchantcustomerbanks getByAccNumber(String accnumber);
 }

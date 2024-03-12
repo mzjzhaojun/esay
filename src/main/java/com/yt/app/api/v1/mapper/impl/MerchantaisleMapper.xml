@@ -120,6 +120,9 @@
 			<if test="status != null">
 				AND a.status = #{status}
 			</if>
+			<if test="type != null">
+				AND a.type = #{type}
+			</if>
 			<if test="orderBy != null and dir != null">
 				order by ${orderBy} ${dir}
 			</if>

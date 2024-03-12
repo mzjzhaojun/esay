@@ -29,6 +29,7 @@ public class Channelaccountorder extends YtBaseEntity<Channelaccountorder> {
 	Double exchange;
 	Double channelexchange;
 	Double amountreceived;
+	Double usdtval;
 	Integer status;
 	String statusname;
 	String remark;

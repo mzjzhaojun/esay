@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
+import com.yt.app.common.common.yt.YtResponseEntity;
+
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,34 +45,22 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 				.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
-
+	
 	/**
-	 * 
+	 * app提现
 	 * 
 	 * @version 1.1
 	 */
-	@RequestMapping(value = "/pass/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> pass(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
-		Object t = service.pass(id);
-		return new YtResponseEncryptEntity<Object>(new YtBody(t));
+	@RequestMapping(value = "/appwithdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> appwithdraw(YtRequestDecryptEntity<Merchantaccountorder> YtRequestDecryptEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		Integer i = service.appsave(YtRequestDecryptEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 
 	/**
 	 * 
-	 * 
-	 * @version 1.1
-	 */
-	@RequestMapping(value = "/turndown/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> turndown(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
-		Object t = service.turndown(id);
-		return new YtResponseEncryptEntity<Object>(new YtBody(t));
-	}
-
-	/**
-	 * 
-	 * 
+	 * 取消充值
 	 * @version 1.1
 	 */
 	@RequestMapping(value = "/cancle/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -82,7 +72,7 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 
 	/**
 	 * 
-	 * 
+	 * 提现
 	 * @version 1.1
 	 */
 	@RequestMapping(value = "/withdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -93,44 +83,7 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 	}
 
 	/**
-	 * 
-	 * 
-	 * @version 1.1
-	 */
-	@RequestMapping(value = "/appwithdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> appwithdraw(
-			YtRequestDecryptEntity<Merchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request,
-			HttpServletResponse response) {
-		Integer i = service.appsave(YtRequestDecryptEntity.getBody());
-		return new YtResponseEncryptEntity<Object>(new YtBody(i));
-	}
-
-	/**
-	 * 
-	 * 
-	 * @version 1.1
-	 */
-	@RequestMapping(value = "/passwithdraw/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> passwithdraw(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
-		Object t = service.passWithdraw(id);
-		return new YtResponseEncryptEntity<Object>(new YtBody(t));
-	}
-
-	/**
-	 * 
-	 * 
-	 * @version 1.1
-	 */
-	@RequestMapping(value = "/turndownwithdraw/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> turndownwithdraw(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
-		Object t = service.turndownWithdraw(id);
-		return new YtResponseEncryptEntity<Object>(new YtBody(t));
-	}
-
-	/**
-	 * 
+	 * 取消提现
 	 * 
 	 * @version 1.1
 	 */
@@ -139,5 +92,34 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 			HttpServletResponse response) {
 		Object t = service.cancleWithdraw(id);
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
+	}
+
+	/**
+	 * 处理提现
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/withdrawmanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> withdrawmanual(YtRequestDecryptEntity<Merchantaccountorder> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		service.withdrawmanual(requestEntity.getBody());
+		return new YtResponseEntity<Object>(new YtBody(1));
+	}
+	
+	
+	/**
+	 * 处理充值
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/incomemanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> incomemanual(YtRequestDecryptEntity<Merchantaccountorder> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		service.incomemanual(requestEntity.getBody());
+		return new YtResponseEntity<Object>(new YtBody(1));
 	}
 }

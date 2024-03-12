@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.AgentaccountorderMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,agentid,username,nkname,type,amount,accname,accnumber,exchange,agentexchange,amountreceived,status,remark,create_by,create_time,update_by,update_time,version,ordernum,imgurl
+		id,tenant_id,userid,agentid,username,nkname,type,amount,accname,accnumber,exchange,agentexchange,amountreceived,status,usdtval,remark,create_by,create_time,update_by,update_time,version,ordernum,imgurl
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -14,9 +14,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Agentaccountorder">
 		insert into
-		agentaccountorder(id,userid,agentid,username,nkname,type,amount,accname,accnumber,exchange,agentexchange,amountreceived,status,remark,create_by,create_time,update_by,update_time,ordernum,imgurl)
+		agentaccountorder(id,userid,agentid,username,nkname,type,amount,accname,accnumber,exchange,agentexchange,amountreceived,status,usdtval,remark,create_by,create_time,update_by,update_time,ordernum,imgurl)
 		values
-		(#{id},#{userid},#{agentid},#{username},#{nkname},#{type},#{amount},#{accname},#{accnumber},#{exchange},#{agentexchange},#{amountreceived},#{status},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{ordernum},#{imgurl})
+		(#{id},#{userid},#{agentid},#{username},#{nkname},#{type},#{amount},#{accname},#{accnumber},#{exchange},#{agentexchange},#{amountreceived},#{status},#{usdtval},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{ordernum},#{imgurl})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -73,6 +73,9 @@
 			</if>
 			<if test="status != null">
 				status= #{status},
+			</if>
+			<if test="usdtval != null">
+				usdtval= #{usdtval},
 			</if>
 			<if test="remark != null">
 				remark= #{remark},

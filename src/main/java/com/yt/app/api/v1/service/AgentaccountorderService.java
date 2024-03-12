@@ -13,18 +13,8 @@ public interface AgentaccountorderService extends YtIBaseService<Agentaccountord
 
 	Integer save(Agentaccountorder t);
 
-	
-	//充值
-	Integer pass(Long id);
-
-	Integer turndown(Long id);
-
-	Integer cancle(Long id);
-
-	//提现
-	Integer passWithdraw(Long id);
-
-	Integer turndownWithdraw(Long id);
+	// 提现
+	void withdrawmanual(Agentaccountorder aco);
 
 	Integer cancleWithdraw(Long id);
 }

@@ -29,11 +29,11 @@ public class Merchantaccountorder extends YtBaseEntity<Merchantaccountorder> {
 	Double exchange;
 	Double merchantexchange;
 	Double amountreceived;
+	Double usdtval;
 	Integer status;
 	String statusname;
 	String remark;
 	String imgurl;
-
 	Integer version;
 	String ordernum;
 

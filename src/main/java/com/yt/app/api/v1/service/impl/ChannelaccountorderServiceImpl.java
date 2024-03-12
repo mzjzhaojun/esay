@@ -62,6 +62,7 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
 		t.setAmountreceived((t.getAmount() * (t.getExchange() + t.getChannelexchange())));
 		t.setType(DictionaryResource.ORDERTYPE_20);
+		t.setUsdtval(t.getAmount());
 		t.setOrdernum("CT" + StringUtil.getOrderNum());
 		t.setRemark("充值金额：" + String.format("%.2f", t.getAmountreceived()));
 		Integer i = mapper.post(t);
@@ -99,37 +100,18 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 //////////////////////////////////////////////////////////////充值到渠道
 	@Override
 	@Transactional
-	public Integer pass(Long id) {
-//
-		Channelaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+	public void incomemanual(Channelaccountorder cco) {
+		Channelaccountorder mao = mapper.get(cco.getId());
+		mao.setStatus(cco.getStatus());
 		Integer i = mapper.put(mao);
+		if (i > 0) {
+			if (cco.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
+				channelaccountservice.updateTotalincome(mao);
+			} else {
+				channelaccountservice.turndownTotalincome(mao);
+			}
+		}
 //
-		channelaccountservice.updateTotalincome(mao);
-//
-		return i;
-	}
-
-	@Override
-	@Transactional
-	public Integer turndown(Long id) {
-		Channelaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
-		Integer i = mapper.put(mao);
-//
-		channelaccountservice.turndownTotalincome(mao);
-		return i;
-	}
-
-	@Override
-	@Transactional
-	public Integer cancle(Long id) {
-		Channelaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_13);
-		Integer i = mapper.put(mao);
-//
-		channelaccountservice.cancleTotalincome(mao);
-		return i;
 	}
 
 }
