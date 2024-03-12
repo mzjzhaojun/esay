@@ -44,4 +44,13 @@ public interface MerchantaccountService extends YtIBaseService<Merchantaccount, 
 	void turndownPayout(Merchantaccountorder mao);
 
 	void canclePayout(Merchantaccountorder mao);
+
+	// 代付
+	void exchange(Merchantaccountorder t);
+
+	void updateExchange(Merchantaccountorder mao);
+
+	void turndownExchange(Merchantaccountorder mao);
+
+	void cancleExchange(Merchantaccountorder mao);
 }

@@ -77,7 +77,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		t.setAmountreceived((t.getAmount() * (t.getExchange() + t.getMerchantexchange())));
 		t.setType(DictionaryResource.ORDERTYPE_20);
 		t.setOrdernum("MT" + StringUtil.getOrderNum());
-		t.setRemark("充值金额：" + String.format("%.2f", t.getAmountreceived()));
+		t.setRemark("商户充值￥：" + String.format("%.2f", t.getAmountreceived()) + " 单号:" + t.getOrdernum());
 		Integer i = mapper.post(t);
 
 		// 收入账户和记录
@@ -114,7 +114,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		t.setUsdtval(t.getAmount() / t.getMerchantexchange());
 		t.setType(DictionaryResource.ORDERTYPE_21);
 		t.setOrdernum("MW" + StringUtil.getOrderNum());
-		t.setRemark("提现金额：" + String.format("%.2f", t.getAmountreceived()));
+		t.setRemark("商户提现￥：" + String.format("%.2f", t.getAmountreceived()) + " 单号:" + t.getOrdernum());
 		Integer i = mapper.post(t);
 
 		// 支出账户和记录
@@ -139,7 +139,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 			t.setUserid(m.getUserid());
 		}
 
-		t.setAccname("app提现");
+		t.setAccname("App提现");
 
 		// 支出订单
 		t.setMerchantid(m.getId());
@@ -151,7 +151,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		t.setAmountreceived((t.getAmount()));
 		t.setType(DictionaryResource.ORDERTYPE_21);
 		t.setOrdernum("TXS" + StringUtil.getOrderNum());
-		t.setRemark("提现金额：" + String.format("%.2f", t.getAmountreceived()));
+		t.setRemark("商户App提现￥：" + String.format("%.2f", t.getAmountreceived()) + " 单号:" + t.getOrdernum());
 		Integer i = mapper.post(t);
 
 		// 支出账户和记录

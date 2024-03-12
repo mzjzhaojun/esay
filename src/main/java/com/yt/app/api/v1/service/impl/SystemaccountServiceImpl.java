@@ -11,7 +11,6 @@ import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.context.JwtUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agentaccountorder;
-import com.yt.app.api.v1.entity.Channelaccountorder;
 import com.yt.app.api.v1.entity.Merchantaccountorder;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.api.v1.entity.Systemcapitalrecord;
@@ -91,7 +90,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount());
 			mapper.put(t);
 			scr.setBalance(t.getBalance());//
-			scr.setRemark("商户充值金额：" + String.format("%.2f", mao.getAmountreceived()));
+			scr.setRemark("商户充值金额：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 		} catch (Exception e) {
 		} finally {
@@ -118,7 +117,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount());
 			mapper.put(t);
 			scr.setBalance(t.getBalance());//
-			scr.setRemark("商户提现金额：" + String.format("%.2f", mao.getAmountreceived()));
+			scr.setRemark("商户提现金额：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 		} catch (Exception e) {
 		} finally {
@@ -145,7 +144,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount());
 			mapper.put(t);
 			scr.setBalance(t.getBalance());//
-			scr.setRemark("商戶代付金额：" + String.format("%.2f", mao.getAmountreceived()));
+			scr.setRemark("商戶代付金额：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 		} catch (Exception e) {
 		} finally {
@@ -153,10 +152,10 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		}
 	}
 
-	// 渠道支出
+	// 商户代付支出
 	@Override
 	@Transactional
-	public void updateWithdrawamount(Channelaccountorder mao) {
+	public void updateExchange(Merchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
@@ -164,7 +163,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			Systemcapitalrecord scr = new Systemcapitalrecord();
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getUsername());
-			scr.setType(DictionaryResource.ORDERTYPE_21);
+			scr.setType(DictionaryResource.ORDERTYPE_22);
 			scr.setPrewithdrawamount(t.getWithdrawamount());
 			scr.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
 			scr.setAmount(mao.getAmountreceived());
@@ -172,7 +171,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount());
 			mapper.put(t);
 			scr.setBalance(t.getBalance());//
-			scr.setRemark("渠道支付金额：" + String.format("%.2f", mao.getAmountreceived()));
+			scr.setRemark("商戶换汇金额：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 		} catch (Exception e) {
 		} finally {
@@ -199,7 +198,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount());
 			mapper.put(t);
 			scr.setBalance(t.getBalance());//
-			scr.setRemark("代理提现金额：" + String.format("%.2f", mao.getAmountreceived()));
+			scr.setRemark("代理提现金额：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 		} catch (Exception e) {
 		} finally {

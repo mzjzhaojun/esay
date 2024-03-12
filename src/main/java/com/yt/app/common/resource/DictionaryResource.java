@@ -36,23 +36,40 @@ public class DictionaryResource implements Serializable {
 	 * 订单类型类型
 	 */
 	public static final Integer ORDERTYPE_20 = 20; // 充值
-	public static final Integer ORDERTYPE_21 = 21; // 支出
+	public static final Integer ORDERTYPE_21 = 21; // 代付
 	public static final Integer ORDERTYPE_22 = 22; // 换汇
 
 	/**
-	 * 明细类型
+	 * 代付资金明细类型
 	 */
-	public static final Integer RECORDTYPE_30 = 30; // 收入待确认
-	public static final Integer RECORDTYPE_31 = 31; // 支出待确认
+	public static final Integer RECORDTYPE_30 = 30; // 代付收入待确认
+	public static final Integer RECORDTYPE_31 = 31; // 代付支出待确认
 
-	public static final Integer RECORDTYPE_32 = 32; // 收入通过
-	public static final Integer RECORDTYPE_33 = 33; // 支出通过
+	public static final Integer RECORDTYPE_32 = 32; // 代付收入通过
+	public static final Integer RECORDTYPE_33 = 33; // 代付支出通过
 
-	public static final Integer RECORDTYPE_34 = 34; // 收入拒絕
-	public static final Integer RECORDTYPE_35 = 35; // 支出拒絕
+	public static final Integer RECORDTYPE_34 = 34; // 代付收入拒絕
+	public static final Integer RECORDTYPE_35 = 35; // 代付支出拒絕
 
-	public static final Integer RECORDTYPE_36 = 36; // 收入取消
-	public static final Integer RECORDTYPE_37 = 37; // 支出取消
+	public static final Integer RECORDTYPE_36 = 36; // 代付收入取消
+	public static final Integer RECORDTYPE_37 = 37; // 代付支出取消
+	
+	
+	
+	/**
+	 * 换汇资金明细类型
+	 */
+	public static final Integer RECORDTYPE_90 = 90; // 代付收入待确认
+	public static final Integer RECORDTYPE_91 = 91; // 代付支出待确认
+
+	public static final Integer RECORDTYPE_92 = 92; // 代付收入通过
+	public static final Integer RECORDTYPE_93 = 93; // 代付支出通过
+
+	public static final Integer RECORDTYPE_94 = 94; // 代付收入拒絕
+	public static final Integer RECORDTYPE_95 = 95; // 代付支出拒絕
+
+	public static final Integer RECORDTYPE_96 = 96; // 代付收入取消
+	public static final Integer RECORDTYPE_97 = 97; // 代付支出取消
 
 	/**
 	 * 银行卡类型

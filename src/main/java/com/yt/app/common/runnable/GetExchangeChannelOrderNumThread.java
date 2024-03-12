@@ -55,6 +55,11 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 				if (channel.getIfordernum()) {
 					channelordernum = PayUtil.SendTySubmit(exchange, channel);
 				}
+				if (channelordernum == null || channelordernum.equals("")) {
+					exchange.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+					mapper.put(exchange);
+					break;
+				}
 				// 获取到单号
 				exchange.setChannelordernum(channelordernum);
 				exchange.setStatus(DictionaryResource.PAYOUTSTATUS_51);
@@ -76,7 +81,7 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 					cat.setAmountreceived(exchange.getChannelpay());
 					cat.setType(DictionaryResource.ORDERTYPE_22);
 					cat.setOrdernum(exchange.getChannelordernum());
-					cat.setRemark("资金：" + exchange.getAmount() + " 交易费：" + String.format("%.2f", cat.getAmount())
+					cat.setRemark("换汇资金：" + exchange.getAmount() + " 交易费：" + String.format("%.2f", cat.getAmount())
 							+ " 手续费：" + cll.getOnecost());
 					channelaccountordermapper.post(cat);
 //
@@ -84,7 +89,7 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 
 					Tgchannelgroup tgchannelgroup = tgchannelgroupmapper.getByChannelId(exchange.getChannelid());
 					StringBuffer what = new StringBuffer();
-					what.append("状态：新增代付\n");
+					what.append("状态：新增换汇\n");
 					what.append("单号：" + exchange.getChannelordernum() + "\n");
 					what.append("姓名：" + exchange.getAccname() + "\n");
 					what.append("卡号：" + exchange.getAccnumer() + "\n");
@@ -94,8 +99,16 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 					if (tgchannelgroup != null) {
 						cbot.sendText(tgchannelgroup.getTgid(), what.toString());
 					}
+				} else {
+					exchange.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+					mapper.put(exchange);
+					break;
 				}
-				break;
+				if (i > 3) {
+					exchange.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+					mapper.put(exchange);
+					break;
+				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			} finally {
@@ -105,11 +118,6 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			}
-			if (i > 3) {
-				exchange.setStatus(DictionaryResource.PAYOUTSTATUS_54);
-				mapper.put(exchange);
-				break;
 			}
 		}
 		TenantIdContext.remove();

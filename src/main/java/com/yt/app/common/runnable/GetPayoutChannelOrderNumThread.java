@@ -55,6 +55,11 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 				if (channel.getIfordernum()) {
 					channelordernum = PayUtil.SendTySubmit(payout, channel);
 				}
+				if (channelordernum == null || channelordernum.equals("")) {
+					payout.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+					mapper.put(payout);
+					break;
+				}
 				// 获取到单号
 				payout.setChannelordernum(channelordernum);
 				payout.setStatus(DictionaryResource.PAYOUTSTATUS_51);
@@ -76,7 +81,7 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 					cat.setAmountreceived(payout.getChannelpay());
 					cat.setType(DictionaryResource.ORDERTYPE_22);
 					cat.setOrdernum(payout.getChannelordernum());
-					cat.setRemark("资金：" + payout.getAmount() + " 交易费：" + String.format("%.2f", cat.getAmount())
+					cat.setRemark("代付资金：" + payout.getAmount() + " 交易费：" + String.format("%.2f", cat.getAmount())
 							+ " 手续费：" + cll.getOnecost());
 					channelaccountordermapper.post(cat);
 //
@@ -93,8 +98,16 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 					what.append("客户请你们尽快处理\n");
 					if (tgchannelgroup != null)
 						cbot.sendText(tgchannelgroup.getTgid(), what.toString());
+				} else {
+					payout.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+					mapper.put(payout);
+					break;
 				}
-				break;
+				if (i > 3) {
+					payout.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+					mapper.put(payout);
+					break;
+				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			} finally {
@@ -104,11 +117,6 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			}
-			if (i > 3) {
-				payout.setStatus(DictionaryResource.PAYOUTSTATUS_54);
-				mapper.put(payout);
-				break;
 			}
 		}
 		TenantIdContext.remove();

@@ -64,7 +64,7 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 		t.setType(DictionaryResource.ORDERTYPE_20);
 		t.setUsdtval(t.getAmount());
 		t.setOrdernum("CT" + StringUtil.getOrderNum());
-		t.setRemark("充值金额：" + String.format("%.2f", t.getAmountreceived()));
+		t.setRemark("渠道充值￥：" + String.format("%.2f", t.getAmountreceived()) + " 单号:" + t.getOrdernum());
 		Integer i = mapper.post(t);
 
 		// 收入账户和记录

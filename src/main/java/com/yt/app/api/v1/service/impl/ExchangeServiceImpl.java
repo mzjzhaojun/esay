@@ -130,7 +130,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	@Transactional
 	public Integer post(Exchange t) {
 
-		///////////////////////////////////////////////////// 录入代付订单/////////////////////////////////////////////////////
+		///////////////////////////////////////////////////// 录入换汇订单/////////////////////////////////////////////////////
 		Merchant m = merchantmapper.getByUserId(SysUserContext.getUserId());
 		t.setUserid(m.getUserid());
 		t.setMerchantid(m.getId());
@@ -143,7 +143,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);// 商戶發起
-		t.setRemark("新增换汇");
+		t.setRemark("换汇新增￥：" + String.format("%.2f", t.getAmount()) + " 单号:" + t.getOrdernum());
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
 
@@ -210,11 +210,11 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
 		mao.setType(DictionaryResource.ORDERTYPE_22);
 		mao.setOrdernum(t.getMerchantordernum());
-		mao.setRemark("操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
+		mao.setRemark("换汇操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
 				+ m.getOnecost());
 		merchantaccountordermapper.post(mao);
 		//
-		merchantaccountservice.payout(mao);
+		merchantaccountservice.exchange(mao);
 
 		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
 		if (m.getAgentid() != null) {
@@ -232,7 +232,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			aat.setAmountreceived(aat.getAmount() + ag.getOnecost());// 总费用
 			aat.setType(DictionaryResource.ORDERTYPE_20);
 			aat.setOrdernum("EA" + StringUtil.getOrderNum());
-			aat.setRemark("操作资金：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getAmount()) + " 手续费："
+			aat.setRemark("换汇操作资金：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getAmount()) + " 手续费："
 					+ ag.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
 			t.setAgentordernum(aat.getOrdernum());
@@ -242,7 +242,6 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		} else {
 			t.setAgentincome(0.00);
 		}
-
 		// 渠道余额
 		t.setChannelbalance(cl.getBalance());
 		//
@@ -364,7 +363,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61); // 盘口发起
-		t.setRemark("新增换汇");
+		t.setRemark("盘口换汇新增￥：" + String.format("%.2f", t.getAmount()) + " 单号:" + t.getOrdernum());
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
 
@@ -431,11 +430,11 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
 		mao.setType(DictionaryResource.ORDERTYPE_22);
 		mao.setOrdernum(t.getMerchantordernum());
-		mao.setRemark("操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
+		mao.setRemark("盘口换汇操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
 				+ m.getOnecost());
 		merchantaccountordermapper.post(mao);
 		//
-		merchantaccountservice.payout(mao);
+		merchantaccountservice.exchange(mao);
 
 		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
 		if (m.getAgentid() != null) {
@@ -453,7 +452,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			aat.setAmountreceived(aat.getAmount() + ag.getOnecost());// 总费用
 			aat.setType(DictionaryResource.ORDERTYPE_20);
 			aat.setOrdernum("EA" + StringUtil.getOrderNum());
-			aat.setRemark("操作资金：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getAmount()) + " 手续费："
+			aat.setRemark("换汇操作资金：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getAmount()) + " 手续费："
 					+ ag.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
 			t.setAgentordernum(aat.getOrdernum());
@@ -463,29 +462,8 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		} else {
 			t.setAgentincome(0.00);
 		}
-
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		Channel cll = channelmapper.get(t.getChannelid());
-		Channelaccountorder cat = new Channelaccountorder();
-		cat.setUserid(cll.getUserid());
-		//
-		cat.setChannelid(cll.getId());
-		cat.setUsername(cll.getName());
-		cat.setNkname(cll.getNkname());
-		cat.setChannelcode(cll.getCode());
-		cat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
-		cat.setAmount(t.getChanneldeal());
-		cat.setExchange(cll.getExchange());
-		cat.setChannelexchange(cll.getExchange());
-		cat.setAmountreceived(t.getChannelpay());
-		cat.setType(DictionaryResource.ORDERTYPE_22);
-		cat.setOrdernum(t.getChannelordernum());
-		cat.setRemark(
-				"资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", cat.getAmount()) + " 手续费：" + cll.getOnecost());
-		channelaccountordermapper.post(cat);
-		//
-		channelaccountservice.withdrawamount(cat);
-		//
+		// 渠道余额
+		t.setChannelbalance(cl.getBalance());
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 		//
 		Integer i = mapper.post(t);
@@ -518,9 +496,9 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		// 商户订单
 		merchantaccountordermapper.put(mao);
 		// 商户账户
-		merchantaccountservice.updatePayout(mao);
+		merchantaccountservice.updateExchange(mao);
 		// 系统账户
-		systemaccountservice.updatePayout(mao);
+		systemaccountservice.updateExchange(mao);
 
 		// 计算商户数据
 		merchantservice.updateExchange(t);
@@ -549,7 +527,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 		// ------------------更新代付订单-----------------
 		t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
-		t.setRemark("换汇成功！" + pt.getRemark());
+		t.setRemark("换汇成功￥:" + pt.getAmount() + " 单号:" + pt.getOrdernum());
 		t.setSuccesstime(DateTimeUtil.getNow());
 		t.setBacklong(DateUtil.between(t.getSuccesstime(), t.getCreate_time(), DateUnit.SECOND));
 
@@ -584,7 +562,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
 		merchantaccountordermapper.put(mao);
 		//
-		merchantaccountservice.turndownPayout(mao);
+		merchantaccountservice.turndownExchange(mao);
 
 		// 计算代理
 		if (t.getAgentid() != null) {
@@ -604,7 +582,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 		//
 		t.setStatus(DictionaryResource.PAYOUTSTATUS_53);
-		t.setRemark("换汇失败！");
+		t.setRemark("换汇成功￥:" + t.getAmount() + " 单号:" + t.getOrdernum());
 		t.setSuccesstime(DateTimeUtil.getNow());
 		t.setBacklong(DateTimeUtil.diffDays(t.getSuccesstime(), t.getCreate_time()));
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);

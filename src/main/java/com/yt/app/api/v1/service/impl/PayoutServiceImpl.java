@@ -146,7 +146,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);// 商戶發起
-		t.setRemark("商户新增代付");
+		t.setRemark("商户代付新增" + String.format("%.2f", t.getAmount()) + " 单号:" + t.getOrdernum());
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
 
@@ -213,7 +213,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
 		mao.setType(DictionaryResource.ORDERTYPE_21);
 		mao.setOrdernum(t.getMerchantordernum());
-		mao.setRemark("操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
+		mao.setRemark("商户代付操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
 				+ m.getOnecost());
 		merchantaccountordermapper.post(mao);
 		//
@@ -235,7 +235,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			aat.setAmountreceived(aat.getAmount() + ag.getOnecost());// 总费用
 			aat.setType(DictionaryResource.ORDERTYPE_20);
 			aat.setOrdernum("PA" + StringUtil.getOrderNum());
-			aat.setRemark("操作资金：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getAmount()) + " 手续费："
+			aat.setRemark("商户代付操作资金：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getAmount()) + " 手续费："
 					+ ag.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
 			t.setAgentordernum(aat.getOrdernum());
@@ -374,7 +374,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61); // 盘口发起
-		t.setRemark("盘口新增代付");
+		t.setRemark("盘口代付新增");
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
 
@@ -441,7 +441,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
 		mao.setType(DictionaryResource.ORDERTYPE_21);
 		mao.setOrdernum(t.getMerchantordernum());
-		mao.setRemark("操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
+		mao.setRemark("盘口代付操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
 				+ m.getOnecost());
 		merchantaccountordermapper.post(mao);
 		//
@@ -463,7 +463,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			aat.setAmountreceived(aat.getAmount() + ag.getOnecost());// 总费用
 			aat.setType(DictionaryResource.ORDERTYPE_20);
 			aat.setOrdernum("PA" + StringUtil.getOrderNum());
-			aat.setRemark("操作资金：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getAmount()) + " 手续费："
+			aat.setRemark("盘口代付操作资金：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getAmount()) + " 手续费："
 					+ ag.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
 			t.setAgentordernum(aat.getOrdernum());
@@ -548,7 +548,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
 					t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 				}
-				t.setRemark("手动回调代付成功！" + pt.getRemark());
+				t.setRemark("代付成功！" + pt.getAmount() + "单号:" + pt.getOrdernum());
 				t.setSuccesstime(DateTimeUtil.getNow());
 				t.setBacklong(DateUtil.between(t.getSuccesstime(), t.getCreate_time(), DateUnit.SECOND));
 
@@ -568,7 +568,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 					if (tgmerchantgroup != null)
 						mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
 				}
-				//保存客户信息
+				// 保存客户信息
 				merchantcustomerbanksservice.add(t);
 			} else {
 				new MyException("已经处理完成，不要重复处理", YtCodeEnum.YT888);
@@ -618,7 +618,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
 					t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 				}
-				t.setRemark("手动代付失败！");
+				t.setRemark("代付失败！" + t.getAmount() + "单号:" + t.getOrdernum());
 				t.setSuccesstime(DateTimeUtil.getNow());
 				t.setBacklong(DateTimeUtil.diffDays(t.getSuccesstime(), t.getCreate_time()));
 				int i = mapper.put(t);
@@ -635,7 +635,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 					if (tgmerchantgroup != null)
 						mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
 				}
-				//保存客户信息
+				// 保存客户信息
 				merchantcustomerbanksservice.add(t);
 			} else {
 				new MyException("已经处理完成，不要重复处理", YtCodeEnum.YT888);
