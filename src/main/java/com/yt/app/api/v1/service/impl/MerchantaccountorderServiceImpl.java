@@ -157,6 +157,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
 		t.setExchange(t.getMerchantexchange());
 		t.setAmountreceived((t.getAmount()));
+		t.setUsdtval(t.getAmount() / t.getMerchantexchange());
 		t.setType(DictionaryResource.ORDERTYPE_21);
 		t.setOrdernum("MW" + StringUtil.getOrderNum());
 		t.setRemark("商户提现￥：" + String.format("%.2f", t.getAmountreceived()) );
