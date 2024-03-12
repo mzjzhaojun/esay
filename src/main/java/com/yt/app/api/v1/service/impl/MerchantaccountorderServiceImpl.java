@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.MerchantaccountbankMapper;
 import com.yt.app.api.v1.mapper.MerchantaccountorderMapper;
+import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.MerchantaccountService;
 import com.yt.app.api.v1.service.MerchantaccountorderService;
 import com.yt.app.api.v1.service.SystemaccountService;
@@ -17,12 +18,16 @@ import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Merchantaccountbank;
 import com.yt.app.api.v1.entity.Merchantaccountorder;
+import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
+import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.RedisUtil;
 import com.yt.app.common.util.StringUtil;
+
+import cn.hutool.core.lang.Assert;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,6 +44,9 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		implements MerchantaccountorderService {
 	@Autowired
 	private MerchantaccountorderMapper mapper;
+
+	@Autowired
+	private UserMapper usermapper;
 
 	@Autowired
 	private MerchantMapper merchantmapper;
@@ -188,6 +196,10 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	@Override
 	@Transactional
 	public void incomemanual(Merchantaccountorder mco) {
+		User u = usermapper.get(SysUserContext.getUserId());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()),
+				System.currentTimeMillis());
+		Assert.isTrue(isValid, "验证码错误！");
 		Merchantaccountorder mao = mapper.get(mco.getId());
 		mao.setStatus(mco.getStatus());
 		Integer i = mapper.put(mao);
@@ -222,6 +234,10 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	@Override
 	@Transactional
 	public void withdrawmanual(Merchantaccountorder mco) {
+		User u = usermapper.get(SysUserContext.getUserId());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()),
+				System.currentTimeMillis());
+		Assert.isTrue(isValid, "验证码错误！");
 		Merchantaccountorder mao = mapper.get(mco.getId());
 		mao.setStatus(mco.getStatus());
 		mao.setImgurl(mco.getImgurl());

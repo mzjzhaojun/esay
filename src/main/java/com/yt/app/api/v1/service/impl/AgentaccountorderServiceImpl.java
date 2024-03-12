@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.AgentMapper;
 import com.yt.app.api.v1.mapper.AgentaccountbankMapper;
 import com.yt.app.api.v1.mapper.AgentaccountorderMapper;
+import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.AgentaccountorderService;
 import com.yt.app.api.v1.service.SystemaccountService;
@@ -15,14 +16,18 @@ import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agentaccountorder;
+import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccountbank;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
+import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.RedisUtil;
 import com.yt.app.common.util.StringUtil;
+
+import cn.hutool.core.lang.Assert;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +44,8 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 		implements AgentaccountorderService {
 	@Autowired
 	private AgentaccountorderMapper mapper;
-
+	@Autowired
+	private UserMapper usermapper;
 	@Autowired
 	private AgentMapper agentmapper;
 
@@ -118,10 +124,13 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 	}
 
 ////////////////////////////////////////////////// 提现 /////////////////////////
-
 	@Override
 	@Transactional
 	public void withdrawmanual(Agentaccountorder aco) {
+		User u = usermapper.get(SysUserContext.getUserId());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(aco.getRemark()),
+				System.currentTimeMillis());
+		Assert.isTrue(isValid, "验证码错误！");
 		Agentaccountorder mao = mapper.get(aco.getId());
 		mao.setStatus(aco.getStatus());
 		mao.setImgurl(aco.getImgurl());
@@ -135,7 +144,6 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 				agentaccountservice.turndownWithdrawamount(mao);
 			}
 		}
-//
 	}
 
 	@Override
@@ -144,7 +152,6 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 		Agentaccountorder mao = mapper.get(id);
 		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_13);
 		Integer i = mapper.put(mao);
-//
 		agentaccountservice.cancleWithdrawamount(mao);
 		return i;
 	}

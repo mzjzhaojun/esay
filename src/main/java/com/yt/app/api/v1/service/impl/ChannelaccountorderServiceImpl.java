@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ChannelaccountorderMapper;
+import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.api.v1.service.ChannelaccountorderService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
@@ -13,13 +14,17 @@ import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Channelaccountorder;
+import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
+import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.RedisUtil;
 import com.yt.app.common.util.StringUtil;
+
+import cn.hutool.core.lang.Assert;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +42,9 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 	@Autowired
 	private ChannelaccountorderMapper mapper;
 
+	@Autowired
+	private UserMapper usermapper;
+	
 	@Autowired
 	private ChannelMapper channelmapper;
 
@@ -101,6 +109,10 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 	@Override
 	@Transactional
 	public void incomemanual(Channelaccountorder cco) {
+		User u = usermapper.get(SysUserContext.getUserId());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(cco.getRemark()),
+				System.currentTimeMillis());
+		Assert.isTrue(isValid, "验证码错误！");
 		Channelaccountorder mao = mapper.get(cco.getId());
 		mao.setStatus(cco.getStatus());
 		Integer i = mapper.put(mao);
