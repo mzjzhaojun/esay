@@ -233,9 +233,9 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			aat.setExchange(ag.getExchange());
 			aat.setAmount(t.getMerchantdeal() * (ag.getExchange() / 100));// 交易费
 			aat.setAmountreceived(aat.getAmount() + ag.getOnecost());// 总费用
-			aat.setType(DictionaryResource.ORDERTYPE_20);
+			aat.setType(DictionaryResource.ORDERTYPE_22);
 			aat.setOrdernum("EA" + StringUtil.getOrderNum());
-			aat.setRemark("换汇操作资金：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getAmount()) + " 手续费："
+			aat.setRemark("换汇代理交易费：" + String.format("%.2f", aat.getAmount()) + " 手续费："
 					+ ag.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
 			t.setAgentordernum(aat.getOrdernum());
@@ -455,12 +455,11 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			aat.setAmountreceived(aat.getAmount() + ag.getOnecost());// 总费用
 			aat.setType(DictionaryResource.ORDERTYPE_20);
 			aat.setOrdernum("EA" + StringUtil.getOrderNum());
-			aat.setRemark("换汇操作资金：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getAmount()) + " 手续费："
+			aat.setRemark("盘亏换汇代理交易费：" + String.format("%.2f", aat.getAmount()) + " 手续费："
 					+ ag.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
 			t.setAgentordernum(aat.getOrdernum());
 			agentaccountordermapper.post(aat);
-			//
 			agentaccountservice.totalincome(aat);
 		} else {
 			t.setAgentincome(0.00);
