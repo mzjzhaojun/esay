@@ -8,6 +8,7 @@ import com.yt.app.api.v1.mapper.SysbankMapper;
 import com.yt.app.api.v1.service.MerchantcustomerbanksService;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
+import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.Merchantcustomerbanks;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Sysbank;
@@ -53,6 +54,25 @@ public class MerchantcustomerbanksServiceImpl extends YtBaseServiceImpl<Merchant
 		Merchantcustomerbanks mccb = mapper.getByAccNumber(t.getAccnumer());
 		if (mccb == null) {
 			mccb = new Merchantcustomerbanks();
+			mccb.setUserid(t.getUserid());
+			mccb.setAccname(t.getAccname());
+			mccb.setAccnumber(t.getAccnumer());
+			mccb.setBankcode(t.getBankcode());
+			mccb.setBankname(t.getBankname());
+			mccb.setBankaddress(t.getBankaddress());
+			Integer i = mapper.post(mccb);
+			return i;
+		}
+		return 0;
+	}
+
+	@Override
+	@Transactional
+	public Integer add(Exchange t) {
+		Merchantcustomerbanks mccb = mapper.getByAccNumber(t.getAccnumer());
+		if (mccb == null) {
+			mccb = new Merchantcustomerbanks();
+			mccb.setUserid(t.getUserid());
 			mccb.setAccname(t.getAccname());
 			mccb.setAccnumber(t.getAccnumer());
 			mccb.setBankcode(t.getBankcode());

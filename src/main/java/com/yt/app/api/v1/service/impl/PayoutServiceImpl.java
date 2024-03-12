@@ -146,7 +146,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);// 商戶發起
-		t.setRemark("商户代付新增" + String.format("%.2f", t.getAmount()) + " 单号:" + t.getOrdernum());
+		t.setRemark("商户代付新增" + String.format("%.2f", t.getAmount()));
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
 
@@ -211,7 +211,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		mao.setExchange(m.getExchange());
 		mao.setAmount(t.getMerchantdeal());// 交易费用
 		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
-		mao.setType(DictionaryResource.ORDERTYPE_21);
+		mao.setType(DictionaryResource.ORDERTYPE_23);
 		mao.setOrdernum(t.getMerchantordernum());
 		mao.setRemark("商户代付操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
 				+ m.getOnecost());
@@ -439,7 +439,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		mao.setExchange(m.getExchange());
 		mao.setAmount(t.getMerchantdeal());// 交易费用
 		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
-		mao.setType(DictionaryResource.ORDERTYPE_21);
+		mao.setType(DictionaryResource.ORDERTYPE_23);
 		mao.setOrdernum(t.getMerchantordernum());
 		mao.setRemark("盘口代付操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
 				+ m.getOnecost());
@@ -548,7 +548,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
 					t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 				}
-				t.setRemark("代付成功！" + pt.getAmount() + "单号:" + pt.getOrdernum());
+				t.setRemark("代付成功！" + pt.getAmount());
 				t.setSuccesstime(DateTimeUtil.getNow());
 				t.setBacklong(DateUtil.between(t.getSuccesstime(), t.getCreate_time(), DateUnit.SECOND));
 
@@ -618,7 +618,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
 					t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 				}
-				t.setRemark("代付失败！" + t.getAmount() + "单号:" + t.getOrdernum());
+				t.setRemark("代付失败！" + t.getAmount() );
 				t.setSuccesstime(DateTimeUtil.getNow());
 				t.setBacklong(DateTimeUtil.diffDays(t.getSuccesstime(), t.getCreate_time()));
 				int i = mapper.put(t);

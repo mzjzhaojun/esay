@@ -125,7 +125,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(t.getUsername());
 			aaaj.setOrdernum(t.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_30);
+			aaaj.setType(DictionaryResource.RECORDTYPE_34);
 			// 变更前
 			aaaj.setPretotalincome(ma.getTotalincome());// 总收入
 			aaaj.setPretoincomeamount(ma.getToincomeamount() + t.getAmountreceived());// 待确认收入
@@ -136,7 +136,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
 			aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
-			aaaj.setRemark("代理待收入￥:" + String.format("%.2f", t.getAmountreceived()) + " 单号:" + t.getOrdernum());
+			aaaj.setRemark("代理收入待确认￥:" + String.format("%.2f", t.getAmountreceived()));
 			//
 			agentaccountapplyjournamapper.post(aaaj);
 			ma.setToincomeamount(aaaj.getPretoincomeamount());
@@ -161,7 +161,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(mao.getUsername());
 			aaaj.setOrdernum(mao.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_32);
+			aaaj.setType(DictionaryResource.RECORDTYPE_35);
 
 			// 变更前
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -173,7 +173,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttoincomeamount(mao.getAmountreceived());// 确认收入
 			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
-			aaaj.setRemark("代理收入￥：" + String.format("%.2f", mao.getAmountreceived()) + " 单号:" + mao.getOrdernum());
+			aaaj.setRemark("代理收入￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
 			agentaccountapplyjournamapper.post(aaaj);
 
@@ -200,7 +200,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(mao.getUsername());
 			aaaj.setOrdernum(mao.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_34);
+			aaaj.setType(DictionaryResource.RECORDTYPE_36);
 
 			// 变更前
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -212,7 +212,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
 			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
-			aaaj.setRemark("代理收入失败￥：" + String.format("%.2f", mao.getAmountreceived()) + " 单号:" + mao.getOrdernum());
+			aaaj.setRemark("代理收入失败￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
 			agentaccountapplyjournamapper.post(aaaj);
 
@@ -237,7 +237,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(mao.getUsername());
 			aaaj.setOrdernum(mao.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_36);
+			aaaj.setType(DictionaryResource.RECORDTYPE_37);
 
 			// 变更前
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -249,7 +249,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
 			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
-			aaaj.setRemark("代理收入取消￥：" + String.format("%.2f", mao.getAmountreceived()) + " 单号:" + mao.getOrdernum());
+			aaaj.setRemark("代理收入取消￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
 			agentaccountapplyjournamapper.post(aaaj);
 
@@ -279,7 +279,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(t.getUsername());
 			aaaj.setOrdernum(t.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_31);
+			aaaj.setType(DictionaryResource.RECORDTYPE_90);
 			// 变更前
 			aaaj.setPretotalincome(ma.getTotalincome());// 总收入
 			aaaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
@@ -290,7 +290,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
 			aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
-			aaaj.setRemark("冻结待提现￥：" + String.format("%.2f", t.getAmountreceived()) + " 单号:" + t.getOrdernum());
+			aaaj.setRemark("冻结待提现￥：" + String.format("%.2f", t.getAmountreceived()));
 			//
 			agentaccountapplyjournamapper.post(aaaj);
 
@@ -316,7 +316,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(mao.getUsername());
 			aaaj.setOrdernum(mao.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_33);
+			aaaj.setType(DictionaryResource.RECORDTYPE_91);
 
 			// 变更前
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -328,7 +328,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
 			aaaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());// 总支出
 			aaaj.setPosttowithdrawamount(mao.getAmountreceived());// 确认支出
-			aaaj.setRemark("提现成功￥：" + String.format("%.2f", mao.getAmountreceived()) + " 单号:" + mao.getOrdernum());
+			aaaj.setRemark("提现成功￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
 			agentaccountapplyjournamapper.post(aaaj);
 			t.setWithdrawamount(aaaj.getPostwithdrawamount());// 支出增加金额
@@ -355,7 +355,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(mao.getUsername());
 			aaaj.setOrdernum(mao.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_35);
+			aaaj.setType(DictionaryResource.RECORDTYPE_92);
 
 			// 变更前
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -367,7 +367,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
 			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
-			aaaj.setRemark("提现审核拒绝￥：" + String.format("%.2f", mao.getAmountreceived()) + " 单号:" + mao.getOrdernum());
+			aaaj.setRemark("审核拒绝提现￥：" + String.format("%.2f", mao.getAmountreceived()));
 			agentaccountapplyjournamapper.post(aaaj);
 			t.setTowithdrawamount(aaaj.getPretowithdrawamount());
 			mapper.put(t);
@@ -391,7 +391,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(mao.getUsername());
 			aaaj.setOrdernum(mao.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_37);
+			aaaj.setType(DictionaryResource.RECORDTYPE_93);
 
 			// 变更前
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -403,7 +403,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
 			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
-			aaaj.setRemark("提现客户取消￥：" + String.format("%.2f", mao.getAmountreceived()) + " 单号:" + mao.getOrdernum());
+			aaaj.setRemark("代理取消提现￥：" + String.format("%.2f", mao.getAmountreceived()));
 			agentaccountapplyjournamapper.post(aaaj);
 
 			t.setTowithdrawamount(aaaj.getPretowithdrawamount());

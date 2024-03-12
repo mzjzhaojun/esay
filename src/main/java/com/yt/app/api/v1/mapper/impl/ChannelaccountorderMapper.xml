@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.ChannelaccountorderMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,channelid,username,nkname,channelcode,type,amount,accname,accnumber,exchange,channelexchange,amountreceived,status,usdtval,remark,create_by,create_time,update_by,update_time,version,ordernum,imgurl
+		id,tenant_id,userid,channelid,channelname,nkname,channelcode,type,amount,onecost,accname,accnumber,exchange,channelexchange,amountreceived,status,usdtval,remark,create_by,create_time,update_by,update_time,version,ordernum,imgurl
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -14,18 +14,18 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Channelaccountorder">
 		insert into
-		channelaccountorder(id,userid,channelid,username,nkname,channelcode,type,amount,accname,accnumber,exchange,channelexchange,amountreceived,status,usdtval,remark,create_by,create_time,update_by,update_time,ordernum,imgurl)
+		channelaccountorder(id,userid,channelid,channelname,nkname,channelcode,type,amount,onecost,accname,accnumber,exchange,channelexchange,amountreceived,status,usdtval,remark,create_by,create_time,update_by,update_time,ordernum,imgurl)
 		values
-		(#{id},#{userid},#{channelid},#{username},#{nkname},#{channelcode},#{type},#{amount},#{accname},#{accnumber},#{exchange},#{channelexchange},#{amountreceived},#{status},#{usdtval},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{ordernum},#{imgurl})
+		(#{id},#{userid},#{channelid},#{channelname},#{nkname},#{channelcode},#{type},#{amount},#{onecost},#{accname},#{accnumber},#{exchange},#{channelexchange},#{amountreceived},#{status},#{usdtval},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{ordernum},#{imgurl})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		channelaccountorder(id,tenant_id,userid,channelid,username,nkname,channelcode,type,amount,accname,accnumber,exchange,channelexchange,amountreceived,status,remark,create_by,create_time,update_by,update_time,ordernum,imgurl)
+		channelaccountorder(id,tenant_id,userid,channelid,channelname,nkname,channelcode,type,amount,accname,accnumber,exchange,channelexchange,amountreceived,status,remark,create_by,create_time,update_by,update_time,ordernum,imgurl)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{userid},#{channelid},#{username},#{nkname},#{channelcode},#{type},#{amount},#{accname},#{accnumber},#{exchange},#{channelexchange},#{amountreceived},#{status},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{ordernum},#{imgurl})
+			(#{id},#{tenant_id},#{userid},#{channelid},#{channelname},#{nkname},#{channelcode},#{type},#{amount},#{accname},#{accnumber},#{exchange},#{channelexchange},#{amountreceived},#{status},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{ordernum},#{imgurl})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -44,8 +44,8 @@
 			<if test="channelid != null">
 				channelid= #{channelid},
 			</if>
-			<if test="username != null">
-				username= #{username},
+			<if test="channelname != null">
+				channelname= #{channelname},
 			</if>
 			<if test="nkname != null">
 				nkname= #{nkname},
@@ -58,6 +58,9 @@
 			</if>
 			<if test="amount != null">
 				amount= #{amount},
+			</if>
+			<if test="onecost != null">
+				onecost= #{onecost},
 			</if>
 			<if test="accname != null">
 				accname= #{accname},

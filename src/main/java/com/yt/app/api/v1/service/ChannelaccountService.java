@@ -11,7 +11,7 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface ChannelaccountService extends YtIBaseService<Channelaccount, Long> {
-	// 收入
+	// 充值
 	void totalincome(Channelaccountorder t);
 
 	void updateTotalincome(Channelaccountorder mao);
@@ -20,7 +20,7 @@ public interface ChannelaccountService extends YtIBaseService<Channelaccount, Lo
 
 	void cancleTotalincome(Channelaccountorder mao);
 
-	// 支出
+	// 代付
 	void withdrawamount(Channelaccountorder t);
 
 	void updateWithdrawamount(Channelaccountorder mao);
@@ -28,4 +28,13 @@ public interface ChannelaccountService extends YtIBaseService<Channelaccount, Lo
 	void turndownWithdrawamount(Channelaccountorder mao);
 
 	void cancleWithdrawamount(Channelaccountorder mao);
+	
+	// 换汇
+		void exchangeamount(Channelaccountorder t);
+
+		void updateexchangeamount(Channelaccountorder mao);
+
+		void turndownexchangeamount(Channelaccountorder mao);
+
+		void cancleexchangeamount(Channelaccountorder mao);
 }

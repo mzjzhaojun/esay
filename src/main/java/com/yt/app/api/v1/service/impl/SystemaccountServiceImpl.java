@@ -90,7 +90,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount());
 			mapper.put(t);
 			scr.setBalance(t.getBalance());//
-			scr.setRemark("商户充值金额：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
+			scr.setRemark("商户充值金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 		} catch (Exception e) {
 		} finally {
@@ -117,7 +117,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount());
 			mapper.put(t);
 			scr.setBalance(t.getBalance());//
-			scr.setRemark("商户提现金额：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
+			scr.setRemark("商户提现金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 		} catch (Exception e) {
 		} finally {
@@ -144,7 +144,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount());
 			mapper.put(t);
 			scr.setBalance(t.getBalance());//
-			scr.setRemark("商戶代付金额：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
+			scr.setRemark("商戶代付金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 		} catch (Exception e) {
 		} finally {
@@ -171,7 +171,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount());
 			mapper.put(t);
 			scr.setBalance(t.getBalance());//
-			scr.setRemark("商戶换汇金额：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
+			scr.setRemark("商戶换汇金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 		} catch (Exception e) {
 		} finally {
@@ -198,7 +198,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount());
 			mapper.put(t);
 			scr.setBalance(t.getBalance());//
-			scr.setRemark("代理提现金额：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
+			scr.setRemark("代理提现金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 		} catch (Exception e) {
 		} finally {

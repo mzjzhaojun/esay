@@ -135,7 +135,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出金额
 
-			maaj.setRemark("商户待确认充值￥：" + String.format("%.2f", t.getAmountreceived()) + "单号:" + t.getOrdernum());
+			maaj.setRemark("商户待确认充值￥：" + String.format("%.2f", t.getAmountreceived()) );
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
 			ma.setToincomeamount(maaj.getPretoincomeamount());
@@ -162,7 +162,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_32);
+			maaj.setType(DictionaryResource.RECORDTYPE_31);
 			//
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
@@ -173,7 +173,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(mao.getAmountreceived());// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("商户充值成功￥：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
+			maaj.setRemark("商户充值成功￥：" + String.format("%.2f", mao.getAmountreceived()) );
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
 
@@ -189,7 +189,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		}
 	}
 
-	// 拒绝收入
+	// 拒绝充值
 	@Override
 	@Transactional
 	public void turndownTotalincome(Merchantaccountorder mao) {
@@ -202,7 +202,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_34);
+			maaj.setType(DictionaryResource.RECORDTYPE_32);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -214,7 +214,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("商户充值审核拒绝￥：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
+			maaj.setRemark("审核拒绝商户充值￥：" + String.format("%.2f", mao.getAmountreceived()) );
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
 
@@ -239,7 +239,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_36);
+			maaj.setType(DictionaryResource.RECORDTYPE_33);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -251,7 +251,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("商户充值客户取消￥：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
+			maaj.setRemark("商户取消充值￥：" + String.format("%.2f", mao.getAmountreceived()) );
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
 
@@ -281,7 +281,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(t.getUsername());
 			maaj.setOrdernum(t.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_31);
+			maaj.setType(DictionaryResource.RECORDTYPE_90);
 			// 变更前
 			maaj.setPretotalincome(ma.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
@@ -292,7 +292,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("商户冻结待提现￥：" + String.format("%.2f", t.getAmountreceived()) + "单号:" + t.getOrdernum());
+			maaj.setRemark("冻结商户待提现￥：" + String.format("%.2f", t.getAmountreceived()) );
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
 
@@ -308,7 +308,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		}
 	}
 
-	// 确认支出
+	// 提现成功
 	@Override
 	@Transactional
 	public void updateWithdrawamount(Merchantaccountorder mao) {
@@ -322,7 +322,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_33);
+			maaj.setType(DictionaryResource.RECORDTYPE_91);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -334,7 +334,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());// 总支出
 			maaj.setPosttowithdrawamount(mao.getAmountreceived());// 确认支出
-			maaj.setRemark("商户提现成功￥：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
+			maaj.setRemark("商户提现成功￥：" + String.format("%.2f", mao.getAmountreceived()) );
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
 			t.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
@@ -347,7 +347,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		}
 	}
 
-	// 拒绝支出
+	// 提现失败
 	@Override
 	@Transactional
 	public void turndownWithdrawamount(Merchantaccountorder mao) {
@@ -360,7 +360,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_35);
+			maaj.setType(DictionaryResource.RECORDTYPE_92);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -372,7 +372,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("商户提现审核拒绝￥：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
+			maaj.setRemark("审核拒绝商户提现￥：" + String.format("%.2f", mao.getAmountreceived()) );
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
 			t.setTowithdrawamount(maaj.getPretowithdrawamount());
@@ -384,7 +384,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		}
 	}
 
-	// 取消支出
+	// 取消提现
 	@Override
 	@Transactional
 	public void cancleWithdrawamount(Merchantaccountorder mao) {
@@ -398,7 +398,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_37);
+			maaj.setType(DictionaryResource.RECORDTYPE_93);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -410,7 +410,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("商户提现客户取消￥：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
+			maaj.setRemark("商户取消提现￥：" + String.format("%.2f", mao.getAmountreceived()) );
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
 			t.setTowithdrawamount(maaj.getPretowithdrawamount());
@@ -439,7 +439,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(t.getUsername());
 			maaj.setOrdernum(t.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_31);
+			maaj.setType(DictionaryResource.RECORDTYPE_34);
 			// 变更前
 			maaj.setPretotalincome(ma.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
@@ -450,7 +450,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("商户待确认代付￥：" + String.format("%.2f", t.getAmountreceived()) + "单号:" + t.getOrdernum());
+			maaj.setRemark("商户代付待确认￥：" + String.format("%.2f", t.getAmountreceived()) );
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
 			ma.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出金额
@@ -476,7 +476,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_33);
+			maaj.setType(DictionaryResource.RECORDTYPE_35);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -488,7 +488,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());// 总支出
 			maaj.setPosttowithdrawamount(mao.getAmountreceived());// 确认支出
-			maaj.setRemark("商户代付成功￥：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
+			maaj.setRemark("商户代付成功￥：" + String.format("%.2f", mao.getAmountreceived()) );
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
 			//
@@ -515,7 +515,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_35);
+			maaj.setType(DictionaryResource.RECORDTYPE_36);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -527,7 +527,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("商户代付失败￥：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
+			maaj.setRemark("商户代付失败￥：" + String.format("%.2f", mao.getAmountreceived()) );
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
 			t.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
@@ -567,7 +567,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("商户代付客户取消￥：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
+			maaj.setRemark("商户取消代付￥：" + String.format("%.2f", mao.getAmountreceived()) );
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
 			t.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
@@ -582,7 +582,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	
 	
 	/**
-	 * =============================================================代付
+	 * =============================================================换汇
 	 * 
 	 */
 	// 待确认代付
@@ -598,7 +598,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(t.getUsername());
 			maaj.setOrdernum(t.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_91);
+			maaj.setType(DictionaryResource.RECORDTYPE_94);
 			// 变更前
 			maaj.setPretotalincome(ma.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
@@ -609,7 +609,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("商户待确认换汇￥：" + String.format("%.2f", t.getAmountreceived()) + "单号:" + t.getOrdernum());
+			maaj.setRemark("商户换汇待确认￥：" + String.format("%.2f", t.getAmountreceived()) );
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
 			ma.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出金额
@@ -635,7 +635,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_93);
+			maaj.setType(DictionaryResource.RECORDTYPE_95);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -647,7 +647,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());// 总支出
 			maaj.setPosttowithdrawamount(mao.getAmountreceived());// 确认支出
-			maaj.setRemark("商户换汇成功￥：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
+			maaj.setRemark("商户换汇成功￥：" + String.format("%.2f", mao.getAmountreceived()) );
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
 			//
@@ -674,7 +674,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_95);
+			maaj.setType(DictionaryResource.RECORDTYPE_96);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -686,7 +686,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("商户换汇失败￥：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
+			maaj.setRemark("商户换汇失败￥：" + String.format("%.2f", mao.getAmountreceived()) );
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
 			t.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
@@ -726,7 +726,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("商户换汇客户取消￥：" + String.format("%.2f", mao.getAmountreceived()) + "单号:" + mao.getOrdernum());
+			maaj.setRemark("商户取消换汇￥：" + String.format("%.2f", mao.getAmountreceived()) );
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
 			t.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额

@@ -114,7 +114,7 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 		t.setUsdtval(t.getAmount() / t.getAgentexchange());
 		t.setType(DictionaryResource.ORDERTYPE_21);
 		t.setOrdernum("AW" + StringUtil.getOrderNum());
-		t.setRemark("提现￥:" + String.format("%.2f", t.getAmountreceived()) + " 单号:" + t.getOrdernum());
+		t.setRemark("提现￥:" + String.format("%.2f", t.getAmountreceived()));
 		Integer i = mapper.post(t);
 
 		// 支出账户和记录

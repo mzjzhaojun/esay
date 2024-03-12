@@ -64,7 +64,7 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 		}
 		// 插入充值记录
 		t.setChannelid(m.getId());
-		t.setUsername(m.getName());
+		t.setChannelname(m.getName());
 		t.setNkname(m.getNkname());
 		t.setChannelcode(m.getCode());
 		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
@@ -72,7 +72,7 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 		t.setType(DictionaryResource.ORDERTYPE_20);
 		t.setUsdtval(t.getAmount());
 		t.setOrdernum("CT" + StringUtil.getOrderNum());
-		t.setRemark("渠道充值￥：" + String.format("%.2f", t.getAmountreceived()) + " 单号:" + t.getOrdernum());
+		t.setRemark("渠道充值￥：" + String.format("%.2f", t.getAmountreceived()));
 		Integer i = mapper.post(t);
 
 		// 收入账户和记录

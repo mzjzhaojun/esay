@@ -19,11 +19,12 @@ public class Channelaccountorder extends YtBaseEntity<Channelaccountorder> {
 	Long tenant_id;
 	Long userid;
 	Long channelid;
-	String username;
+	String channelname;
 	String nkname;
 	String channelcode;
 	Integer type;
 	Double amount;
+	Double onecost;
 	String accname;
 	String accnumber;
 	Double exchange;
@@ -40,7 +41,7 @@ public class Channelaccountorder extends YtBaseEntity<Channelaccountorder> {
 	public Channelaccountorder() {
 	}
 
-	public Channelaccountorder(Long id, Long tenant_id, Long userid, Long channelid, String username, String nkname,
+	public Channelaccountorder(Long id, Long tenant_id, Long userid, Long channelid, String channelname, String nkname,
 			String channelcode, Integer type, Double amount, String accname, String accnumber, Double exchange,
 			Double channelexchange, Double amountreceived, Integer status, String remark, Long create_by,
 			java.util.Date create_time, Long update_by, java.util.Date update_time, Integer version, String ordernum,
@@ -49,7 +50,7 @@ public class Channelaccountorder extends YtBaseEntity<Channelaccountorder> {
 		this.tenant_id = tenant_id;
 		this.userid = userid;
 		this.channelid = channelid;
-		this.username = username;
+		this.channelname = channelname;
 		this.nkname = nkname;
 		this.channelcode = channelcode;
 		this.type = type;

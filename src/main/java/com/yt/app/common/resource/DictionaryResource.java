@@ -36,40 +36,41 @@ public class DictionaryResource implements Serializable {
 	 * 订单类型类型
 	 */
 	public static final Integer ORDERTYPE_20 = 20; // 充值
-	public static final Integer ORDERTYPE_21 = 21; // 代付
+	public static final Integer ORDERTYPE_21 = 21; // 提现
 	public static final Integer ORDERTYPE_22 = 22; // 换汇
+	public static final Integer ORDERTYPE_23 = 23; // 代付
 
 	/**
 	 * 代付资金明细类型
 	 */
-	public static final Integer RECORDTYPE_30 = 30; // 代付收入待确认
-	public static final Integer RECORDTYPE_31 = 31; // 代付支出待确认
+	public static final Integer RECORDTYPE_30 = 30; // 充值待确认
+	public static final Integer RECORDTYPE_31 = 31; // 充值成功
 
-	public static final Integer RECORDTYPE_32 = 32; // 代付收入通过
-	public static final Integer RECORDTYPE_33 = 33; // 代付支出通过
+	public static final Integer RECORDTYPE_32 = 32; // 充值失败
+	public static final Integer RECORDTYPE_33 = 33; // 充值取消
 
-	public static final Integer RECORDTYPE_34 = 34; // 代付收入拒絕
-	public static final Integer RECORDTYPE_35 = 35; // 代付支出拒絕
+	public static final Integer RECORDTYPE_34 = 34; // 代付待确认
+	public static final Integer RECORDTYPE_35 = 35; // 代付成功
 
-	public static final Integer RECORDTYPE_36 = 36; // 代付收入取消
-	public static final Integer RECORDTYPE_37 = 37; // 代付支出取消
+	public static final Integer RECORDTYPE_36 = 36; // 代付失败
+	public static final Integer RECORDTYPE_37 = 37; // 代付取消
 	
 	
 	
 	/**
 	 * 换汇资金明细类型
 	 */
-	public static final Integer RECORDTYPE_90 = 90; // 代付收入待确认
-	public static final Integer RECORDTYPE_91 = 91; // 代付支出待确认
+	public static final Integer RECORDTYPE_90 = 90; // 提现待确认
+	public static final Integer RECORDTYPE_91 = 91; // 提现成功
 
-	public static final Integer RECORDTYPE_92 = 92; // 代付收入通过
-	public static final Integer RECORDTYPE_93 = 93; // 代付支出通过
+	public static final Integer RECORDTYPE_92 = 92; //  提现失败
+	public static final Integer RECORDTYPE_93 = 93; // 提现取消
 
-	public static final Integer RECORDTYPE_94 = 94; // 代付收入拒絕
-	public static final Integer RECORDTYPE_95 = 95; // 代付支出拒絕
+	public static final Integer RECORDTYPE_94 = 94; //  换汇待确认
+	public static final Integer RECORDTYPE_95 = 95; //  换汇成功
 
-	public static final Integer RECORDTYPE_96 = 96; // 代付收入取消
-	public static final Integer RECORDTYPE_97 = 97; // 代付支出取消
+	public static final Integer RECORDTYPE_96 = 96; //  换汇失败
+	public static final Integer RECORDTYPE_97 = 97; //  换汇取消
 
 	/**
 	 * 银行卡类型

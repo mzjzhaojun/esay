@@ -71,7 +71,8 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 					cat.setUserid(cll.getUserid());
 //
 					cat.setChannelid(cll.getId());
-					cat.setUsername(cll.getName());
+					cat.setChannelname(cll.getName());
+					cat.setOnecost(cll.getOnecost());
 					cat.setNkname(cll.getNkname());
 					cat.setChannelcode(cll.getCode());
 					cat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
@@ -79,7 +80,7 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 					cat.setExchange(cll.getExchange());
 					cat.setChannelexchange(cll.getExchange());
 					cat.setAmountreceived(payout.getChannelpay());
-					cat.setType(DictionaryResource.ORDERTYPE_22);
+					cat.setType(DictionaryResource.ORDERTYPE_23);
 					cat.setOrdernum(payout.getChannelordernum());
 					cat.setRemark("代付资金：" + payout.getAmount() + " 交易费：" + String.format("%.2f", cat.getAmount())
 							+ " 手续费：" + cll.getOnecost());
