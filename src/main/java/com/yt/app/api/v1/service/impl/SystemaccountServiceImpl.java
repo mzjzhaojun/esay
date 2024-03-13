@@ -98,7 +98,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		}
 	}
 
-	// 商户支出
+	// 商户提现
 	@Override
 	@Transactional
 	public void updateWithdrawamount(Merchantaccountorder mao) {
@@ -125,7 +125,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		}
 	}
 
-	// 商户代付支出
+	// 商户代付
 	@Override
 	@Transactional
 	public void updatePayout(Merchantaccountorder mao) {
@@ -136,7 +136,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			Systemcapitalrecord scr = new Systemcapitalrecord();
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getUsername());
-			scr.setType(DictionaryResource.ORDERTYPE_21);
+			scr.setType(DictionaryResource.ORDERTYPE_23);
 			scr.setPrewithdrawamount(t.getWithdrawamount());
 			scr.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
 			scr.setAmount(mao.getAmountreceived());
@@ -152,7 +152,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		}
 	}
 
-	// 商户代付支出
+	// 商户换汇
 	@Override
 	@Transactional
 	public void updateExchange(Merchantaccountorder mao) {
@@ -179,7 +179,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		}
 	}
 
-	// 代理支出
+	// 代理提现支出
 	@Override
 	@Transactional
 	public void updateWithdrawamount(Agentaccountorder mao) {
