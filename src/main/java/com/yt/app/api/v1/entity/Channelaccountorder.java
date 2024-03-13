@@ -23,6 +23,7 @@ public class Channelaccountorder extends YtBaseEntity<Channelaccountorder> {
 	String nkname;
 	String channelcode;
 	Integer type;
+	Double deal;
 	Double amount;
 	Double onecost;
 	String accname;

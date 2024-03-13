@@ -22,7 +22,9 @@ public class Merchantaccountorder extends YtBaseEntity<Merchantaccountorder> {
 	String username;
 	String nkname;
 	String merchantcode;
+	Double deal;
 	Double amount;
+	Double onecost;
 	String accname;
 	String accnumber;
 	Integer type;

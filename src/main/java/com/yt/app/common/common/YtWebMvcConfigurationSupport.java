@@ -19,15 +19,11 @@ import java.util.TimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 /**
  * 
@@ -106,28 +102,28 @@ public class YtWebMvcConfigurationSupport extends WebMvcConfigurationSupport {
 		returnValueHandlers.add(m());
 	}
 
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry paramResourceHandlerRegistry) {
-		paramResourceHandlerRegistry.addResourceHandler(new String[] { "/**" })
-				.addResourceLocations(new String[] { "classpath:/template/" });
-		paramResourceHandlerRegistry.addResourceHandler("/").addResourceLocations("classpath:/index.html");
-		super.addResourceHandlers(paramResourceHandlerRegistry);
-	}
+//	@Override
+//	public void addResourceHandlers(ResourceHandlerRegistry paramResourceHandlerRegistry) {
+//		paramResourceHandlerRegistry.addResourceHandler(new String[] { "/**" })
+//				.addResourceLocations(new String[] { "classpath:/template/" });
+//		paramResourceHandlerRegistry.addResourceHandler("/").addResourceLocations("classpath:/index.html");
+//		super.addResourceHandlers(paramResourceHandlerRegistry);
+//	}
 
-	@Bean(name = "InternalResourceViewResolver")
-	public InternalResourceViewResolver l() {
-		InternalResourceViewResolver localInternalResourceViewResolver = new InternalResourceViewResolver();
-		localInternalResourceViewResolver.setPrefix("/");
-		localInternalResourceViewResolver.setSuffix(".html");
-		return localInternalResourceViewResolver;
-	}
+//	@Bean(name = "InternalResourceViewResolver")
+//	public InternalResourceViewResolver l() {
+//		InternalResourceViewResolver localInternalResourceViewResolver = new InternalResourceViewResolver();
+//		localInternalResourceViewResolver.setPrefix("/");
+//		localInternalResourceViewResolver.setSuffix(".html");
+//		return localInternalResourceViewResolver;
+//	}
 
-	@Override
-	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addViewController("/").setViewName("forward:/static/index.html");
-		registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
-		super.addViewControllers(registry);
-	}
+//	@Override
+//	public void addViewControllers(ViewControllerRegistry registry) {
+//		registry.addViewController("/").setViewName("forward:/static/index.html");
+//		registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+//		super.addViewControllers(registry);
+//	}
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {

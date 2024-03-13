@@ -69,25 +69,24 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 					Channel cll = channelmapper.get(exchange.getChannelid());
 					Channelaccountorder cat = new Channelaccountorder();
 					cat.setUserid(cll.getUserid());
-//
 					cat.setChannelid(cll.getId());
 					cat.setChannelname(cll.getName());
 					cat.setOnecost(cll.getOnecost());
 					cat.setNkname(cll.getNkname());
 					cat.setChannelcode(cll.getCode());
 					cat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
-					cat.setAmount(exchange.getChanneldeal());
+					cat.setAmount(exchange.getAmount());//操作资金
+					cat.setDeal(exchange.getChanneldeal());//交易费
+					cat.setOnecost(exchange.getChannelcost());//手续费
 					cat.setExchange(cll.getExchange());
 					cat.setChannelexchange(cll.getExchange());
 					cat.setAmountreceived(exchange.getChannelpay());
 					cat.setType(DictionaryResource.ORDERTYPE_22);
 					cat.setOrdernum(exchange.getChannelordernum());
-					cat.setRemark("换汇资金：" + exchange.getAmount() + " 交易费：" + String.format("%.2f", cat.getAmount())
-							+ " 手续费：" + cll.getOnecost());
+					cat.setRemark("代付资金￥：" + cat.getAmount() + " 交易费：" + String.format("%.2f", cat.getDeal())
+					+ " 手续费：" + cat.getOnecost());
 					channelaccountordermapper.post(cat);
-//
 					channelaccountservice.exchangeamount(cat);
-
 					Tgchannelgroup tgchannelgroup = tgchannelgroupmapper.getByChannelId(exchange.getChannelid());
 					StringBuffer what = new StringBuffer();
 					what.append("状态：新增换汇\n");

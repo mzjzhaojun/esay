@@ -29,6 +29,8 @@ public class Agentaccountorder extends YtBaseEntity<Agentaccountorder> {
 	Double agentexchange;
 	Double amountreceived;
 	Double usdtval;
+	Double onecost;
+	Double deal;
 	Integer status;
 	String statusname;
 	String remark;

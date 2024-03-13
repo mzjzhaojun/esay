@@ -1,5 +1,6 @@
 package com.yt.app;
 
+
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -32,5 +33,6 @@ public class AppRun extends SpringBootServletInitializer {
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(new Class[] { AppRun.class }, args);
+		//YtAutoCode.u().p(Arrays.asList("exchange"));
 	}
 }
