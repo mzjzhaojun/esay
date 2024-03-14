@@ -79,6 +79,8 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 					cat.setDeal(exchange.getChanneldeal());//交易费
 					cat.setOnecost(exchange.getChannelcost());//手续费
 					cat.setExchange(cll.getExchange());
+					cat.setAccname(exchange.getAccname());
+					cat.setAccnumber(exchange.getAccnumer());
 					cat.setChannelexchange(cll.getExchange());
 					cat.setAmountreceived(exchange.getChannelpay());
 					cat.setType(DictionaryResource.ORDERTYPE_22);

@@ -46,7 +46,7 @@ public class TaskConfig {
 		}
 	}
 
-	@Scheduled(cron = "0/20 * * * * ?")
+	@Scheduled(cron = "0/10 * * * * ?")
 	public void payout() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		// 查询需要下单的单号
@@ -61,7 +61,7 @@ public class TaskConfig {
 		}
 	}
 
-	@Scheduled(cron = "0/60 * * * * ?")
+	@Scheduled(cron = "0/10 * * * * ?")
 	public void exchange() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		// 查询需要下单的单号

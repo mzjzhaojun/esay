@@ -208,6 +208,8 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		mao.setMerchantcode(m.getCode());
 		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
 		mao.setExchange(m.getExchange());
+		mao.setAccname(t.getAccname());
+		mao.setAccnumber(t.getAccnumer());
 		mao.setDeal(t.getMerchantdeal());//交易费
 		mao.setOnecost(m.getOnecost());//手续费
 		mao.setAmount(t.getAmount());// 操作资金
@@ -230,6 +232,8 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			aat.setNkname(ag.getNkname());
 			aat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
 			aat.setExchange(ag.getExchange());
+			aat.setAccname(t.getAccname());
+			aat.setAccnumber(t.getAccnumer());
 			aat.setAmount(t.getMerchantdeal());//金额
 			aat.setDeal(t.getMerchantdeal() * (ag.getExchange() / 100));// 交易费
 			aat.setAmountreceived(aat.getDeal() + ag.getOnecost());// 总费用
@@ -426,6 +430,8 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		mao.setMerchantcode(m.getCode());
 		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
 		mao.setExchange(m.getExchange());
+		mao.setAccname(t.getAccname());
+		mao.setAccnumber(t.getAccnumer());
 		mao.setDeal(t.getMerchantdeal());//交易费
 		mao.setOnecost(m.getOnecost());//手续费
 		mao.setAmount(t.getAmount());// 操作资金
@@ -448,6 +454,8 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			aat.setNkname(ag.getNkname());
 			aat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
 			aat.setExchange(ag.getExchange());
+			aat.setAccname(t.getAccname());
+			aat.setAccnumber(t.getAccnumer());
 			aat.setAmount(t.getMerchantdeal());//金额
 			aat.setDeal(t.getMerchantdeal() * (ag.getExchange() / 100));// 交易费
 			aat.setAmountreceived(aat.getDeal() + ag.getOnecost());// 总费用

@@ -78,6 +78,8 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 					cat.setAmount(payout.getAmount());// 操作资金
 					cat.setDeal(payout.getChanneldeal());// 交易费
 					cat.setOnecost(payout.getChannelcost());// 手续费
+					cat.setAccname(payout.getAccname());
+					cat.setAccnumber(payout.getAccnumer());
 					cat.setExchange(cll.getExchange());
 					cat.setChannelexchange(cll.getExchange());
 					cat.setAmountreceived(payout.getChannelpay());

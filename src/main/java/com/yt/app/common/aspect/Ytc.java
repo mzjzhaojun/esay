@@ -59,8 +59,7 @@ public class Ytc {
 		Object result = pjp.proceed(args);
 		long time = System.currentTimeMillis() - beginTime;
 		log.setTime(Long.signum(time));
-		if (log.getMethod() != null && !allowedMethods.matcher(log.getMethod()).matches()
-				&& !log.getRequestparams().equals("{}")) {
+		if (log.getMethod() != null && !allowedMethods.matcher(log.getMethod()).matches()) {
 			logsmapper.post(log);
 		}
 		logger.info(">>>>>>>>>>>>>>>>>>>> OUT  T={}", time);

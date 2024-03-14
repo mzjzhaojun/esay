@@ -47,7 +47,7 @@
 		<includeCallerData>true</includeCallerData>
 	</appender>
 
-    <logger name="com.yt.app" level="debug">		
+    <logger name="com.yt.app" level="info">		
 	</logger>
 	<root level="info"><!-- debug error -->
 		<appender-ref ref="ASYNC-FILE" />
