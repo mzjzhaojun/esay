@@ -482,13 +482,10 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 	@Override
 	public YtIPage<ExchangeVO> page(Map<String, Object> param) {
-		int count = 0;
-		if (YtPageBean.isPaging(param)) {
-			count = mapper.countlist(param);
+		int count = mapper.countlist(param);
 			if (count == 0) {
 				return new YtPageBean<ExchangeVO>(Collections.emptyList());
 			}
-		}
 		List<ExchangeVO> list = mapper.page(param);
 		list.forEach(mco -> {
 			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
