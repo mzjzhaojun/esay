@@ -76,8 +76,8 @@ public class AuthController extends YtBaseEncipherControllerImpl<User, Long> {
 	@RequestMapping(value = "/verqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> verqrcode(YtRequestDecryptEntity<AuthLoginDTO> requestEntity,
 			HttpServletResponse response) {
-		Integer i = authservice.verqrcode(requestEntity.getBody().getUsername(), requestEntity.getBody().getCode(),
-				requestEntity.getBody().getTwocode());
+		Integer i = authservice.verqrcode(requestEntity.getBody().getUsername(), requestEntity.getBody().getPassword(),
+				requestEntity.getBody().getCode(), requestEntity.getBody().getTwocode());
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 }

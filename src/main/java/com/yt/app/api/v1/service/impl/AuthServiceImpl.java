@@ -110,10 +110,15 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public Integer verqrcode(String username, String code, String twocode) {
+	public Integer verqrcode(String username, String password, String code, String twocode) {
 		Integer i = 0;
 		User u = usermapper.getByUserName(username);
 		Assert.notNull(u, "用户没找到！");
+		
+		boolean isValid = PasswordUtil.isValidPassword(password, u.getPassword());
+		// 校验原始密码是否正确
+		Assert.isTrue(isValid, "密码错误！");
+
 		u.setTwofactorcode(twocode);
 		boolean flag = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(code),
 				System.currentTimeMillis());

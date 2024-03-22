@@ -26,7 +26,7 @@ public interface AuthService {
 
 	String genQRImage(String username);
 
-	Integer verqrcode(String username, String code, String twocode);
+	Integer verqrcode(String username, String password,String code, String twocode);
 
 	AuthLoginVO loginapp(AuthLoginDTO params);
 
