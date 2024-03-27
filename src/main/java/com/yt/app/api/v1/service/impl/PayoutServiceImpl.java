@@ -199,7 +199,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		}
 
-		/////////////////////////////////////////////////////计算商户订单 /////////////////////////////////////////////////////
+		///////////////////////////////////////////////////// 计算商户订单
+		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
 		Merchantaccountorder mao = new Merchantaccountorder();
 		mao.setUserid(m.getUserid());
 		mao.setMerchantid(m.getId());
@@ -250,7 +251,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		}
 		// 渠道余额
 		t.setChannelbalance(cl.getBalance());
-		//小计
+		// 小计
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 		return mapper.post(t);
 	}
@@ -321,21 +322,25 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	public SysResultVO submit(SysSubmitDTO ss) {
 		Integer code = ss.getMerchantid();
 		Merchant mc = merchantmapper.getByCode(code.toString());
-		Assert.notNull(mc, "商户不存在!");
+		if (mc == null) {
+			new MyException("商户不存在!", YtCodeEnum.YT888);
+		}
 
 		Merchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
 		if (ma.getBalance() < ss.getPayamt()) {
-			new MyException("余额不足", YtCodeEnum.YT888);
+			new MyException("余额不足!", YtCodeEnum.YT888);
 		}
 
 		Boolean val = PayUtil.valMd5Submit(ss, mc.getAppkey());
-		Assert.isTrue(val, "签名不正确!");
+		if (!val) {
+			new MyException("签名不正确!", YtCodeEnum.YT888);
+		}
 
 		List<Merchantaisle> listmc = merchantaislemapper.getByMid(mc.getId());
 		if (listmc == null || listmc.size() == 0) {
 			new MyException("商戶沒有配置通道!", YtCodeEnum.YT888);
 		}
-
+		// 下單
 		Payout pt = new Payout();
 		pt.setAccname(ss.getBankowner());
 		pt.setAccnumer(ss.getBanknum());
@@ -345,18 +350,19 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		pt.setNotifyurl(mc.getApireusultip());
 		pt.setAisleid(listmc.get(0).getAisleid());
 		pt.setBankname(ss.getBankname());
+		pt.setMerchantorderid(ss.getMerchantorderid());
 		add(pt, mc);
-
+		// 返回
 		SysResultVO sr = new SysResultVO();
 		sr.setBankcode(ss.getBankcode());
 		sr.setMerchantid(sr.getMerchantid());
 		sr.setMerchantorderid(ss.getMerchantorderid());
 		sr.setPayamt(ss.getPayamt());
-		sr.setPayorderid(pt.getChannelordernum());
+		sr.setPayorderid(pt.getMerchantordernum());
 		sr.setRemark(ss.getRemark());
 		sr.setPaytype(ss.getPaytype());
 		sr.setSign(PayUtil.Md5Result(sr, mc.getAppkey()));
-
+		// 返回给盘口订单号
 		return sr;
 	}
 
@@ -449,7 +455,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		merchantaccountordermapper.post(mao);
 		merchantaccountservice.payout(mao);
 
-		/////////////////////////////////////////////////////计算代理订单 /////////////////////////////////////////////////////
+		///////////////////////////////////////////////////// 计算代理订单
+		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
 		if (m.getAgentid() != null) {
 			Agent ag = agentmapper.get(m.getAgentid());
 			t.setAgentid(ag.getId());
@@ -479,7 +486,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		}
 		// 渠道余额
 		t.setChannelbalance(cl.getBalance());
-		//小计
+		// 小计
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 		//
 		Integer i = mapper.post(t);

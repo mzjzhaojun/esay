@@ -33,12 +33,12 @@ public class NotifyTyThread implements Runnable {
 		Merchant merchant = merchantmapper.get(payout.getMerchantid());
 		SysResultVO ss = new SysResultVO();
 		ss.setMerchantid(payout.getMerchantcode());
-		ss.setPayorderid(payout.getChannelordernum());
-		ss.setMerchantorderid(payout.getMerchantordernum());
+		ss.setPayorderid(payout.getMerchantordernum());
+		ss.setMerchantorderid(payout.getMerchantorderid());
 		ss.setPayamt(payout.getAmount());
 		ss.setBankcode(payout.getBankcode());
 		ss.setCode(payout.getStatus());
-		ss.setRemark("remark");
+		ss.setRemark(payout.getRemark());
 		logger.info("通知 start---------------------商户单号：" + payout.getMerchantordernum());
 		int i = 1;
 		while (true) {

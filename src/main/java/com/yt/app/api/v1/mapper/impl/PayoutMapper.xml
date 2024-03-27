@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.PayoutMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankcode,bankname,bankaddress,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income,notifyurl,notifystatus,channelbalance,remark,version
+		id,tenant_id,userid,merchantorderid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankcode,bankname,bankaddress,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income,notifyurl,notifystatus,channelbalance,remark,version
 	</sql>
 
 	<!-- ResultMap -->
@@ -19,9 +19,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Payout">
 		insert into
-		payout(id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankcode,bankname,bankaddress,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income,notifyurl,notifystatus,channelbalance,remark)
+		payout(id,userid,merchantorderid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankcode,bankname,bankaddress,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income,notifyurl,notifystatus,channelbalance,remark)
 		values
-		(#{id},#{userid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantcost},#{merchantdeal},#{merchantpay},#{aisleid},#{aislename},#{agentid},#{agentordernum},#{agentincome},#{channelid},#{channelname},#{channelordernum},#{channelcost},#{channeldeal},#{channelpay},#{accname},#{accnumer},#{bankcode},#{bankname},#{bankaddress},#{amount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{imgurl},#{income},#{notifyurl},#{notifystatus},#{channelbalance},#{remark})
+		(#{id},#{userid},#{merchantorderid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantcost},#{merchantdeal},#{merchantpay},#{aisleid},#{aislename},#{agentid},#{agentordernum},#{agentincome},#{channelid},#{channelname},#{channelordernum},#{channelcost},#{channeldeal},#{channelpay},#{accname},#{accnumer},#{bankcode},#{bankname},#{bankaddress},#{amount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{imgurl},#{income},#{notifyurl},#{notifystatus},#{channelbalance},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">

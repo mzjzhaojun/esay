@@ -18,6 +18,7 @@ public class Payout extends YtBaseEntity<Payout> {
 	Long id;
 	Long tenant_id;
 	Long userid;
+	String merchantorderid;
 	String ordernum;
 	Long merchantid;
 	String merchantname;

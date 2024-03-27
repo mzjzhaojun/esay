@@ -19,7 +19,6 @@ import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.Channelbot;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
-import com.yt.app.common.util.PayUtil;
 import com.yt.app.common.util.StringUtil;
 
 public class GetExchangeChannelOrderNumThread implements Runnable {
@@ -45,16 +44,12 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 				.getBean(ChannelaccountService.class);
 		Channelbot cbot = BeanContext.getApplicationContext().getBean(Channelbot.class);
 		Exchange exchange = mapper.get(id);
-		Channel channel = channelmapper.get(exchange.getChannelid());
 		Random rd = new Random();
 		logger.info("换汇获取渠道单号 start---------------------商户单号：" + exchange.getMerchantordernum());
 		int i = 1;
 		while (true) {
 			try {
 				String channelordernum = "EC" + StringUtil.getOrderNum();
-				if (channel.getIfordernum()) {
-					channelordernum = PayUtil.SendTySubmit(exchange, channel);
-				}
 				if (channelordernum == null || channelordernum.equals("")) {
 					exchange.setStatus(DictionaryResource.PAYOUTSTATUS_54);
 					mapper.put(exchange);
