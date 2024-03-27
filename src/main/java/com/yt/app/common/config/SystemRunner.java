@@ -14,6 +14,7 @@ import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.Channelbot;
 import com.yt.app.common.bot.Merchantbot;
+import com.yt.app.common.bot.Messagebot;
 import com.yt.app.common.util.RsaUtil;
 
 /**
@@ -35,10 +36,13 @@ public class SystemRunner implements CommandLineRunner {
 	private DictService dictservice;
 
 	@Autowired
-	private Merchantbot mbot;
+	private Merchantbot merchantbot;
 
 	@Autowired
-	private Channelbot cbot;
+	private Channelbot channelbot;
+	
+	@Autowired
+	private Messagebot messagebot;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -58,9 +62,15 @@ public class SystemRunner implements CommandLineRunner {
 		roleservice.refreshSuperAdminPerm();
 
 		// 注册机器人
-		TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-		botsApi.registerBot(mbot);
-		botsApi.registerBot(cbot);
+		try {
+			TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
+			botsApi.registerBot(merchantbot);
+			botsApi.registerBot(channelbot);
+			botsApi.registerBot(messagebot);
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			e.printStackTrace();
+		}
 
 		log.info("服务初始化之后，执行方法 end...");
 	}

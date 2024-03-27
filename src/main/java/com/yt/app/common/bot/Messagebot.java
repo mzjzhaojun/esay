@@ -21,7 +21,7 @@ import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
 import com.yt.app.api.v1.service.PayconfigService;
 
 @Component
-public class Channelbot extends TelegramLongPollingBot {
+public class Messagebot extends TelegramLongPollingBot {
 
 	@Autowired
 	private TgchannelgroupMapper tgchannelgroupmapper;
@@ -37,12 +37,12 @@ public class Channelbot extends TelegramLongPollingBot {
 
 	@Override
 	public String getBotUsername() {
-		return "@rabbityydsc_bot";
+		return "@rabbityydsmsg_bot";
 	}
 
 	@Override
 	public String getBotToken() {
-		return "7031325076:AAGwSE3ytitWpu0VU-dzKK41tv0eU0O0Kpk";
+		return "7158140280:AAHdqpZYsxPEdlUubMW-3ns9PxrSMuQ3BkQ";
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class Channelbot extends TelegramLongPollingBot {
 		Long chatid = update.getMessage().getChat().getId();
 		String message = update.getMessage().getText();
 		Message replymsg = update.getMessage().getReplyToMessage();
-		System.out.println("channel:" + update.toString());
+		System.out.println("message:" + update.toString());
 		if (message != null) {
 			Tgchannelgroup tmg = tgchannelgroupmapper.getByTgGroupId(chatid);
 			if (tmg == null) {

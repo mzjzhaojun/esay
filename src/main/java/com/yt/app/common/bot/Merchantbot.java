@@ -56,12 +56,12 @@ public class Merchantbot extends TelegramLongPollingBot {
 
 	@Override
 	public String getBotUsername() {
-		return "payyds_bot";
+		return "@rabbityydsm_bot";
 	}
 
 	@Override
 	public String getBotToken() {
-		return "6432595042:AAFsycyy8Yjc32RFaCFA6r6aL4aiajoFgzk";
+		return "7048821019:AAGPgNiLt9YYcEG8VTZ2mwi9N7-o2SASTkA";
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class Merchantbot extends TelegramLongPollingBot {
 		if (message != null) {
 			Tgmerchantgroup tmg = tgmerchantgroupmapper.getByTgGroupId(chatid);
 			Integer replyid = update.getMessage().getMessageId();
-			System.out.println("mmmmmm" + update.toString());
+			System.out.println("merchant:" + update.toString());
 			if (tmg == null) {
 				tmg = tgmerchantgroupmapper.getByTgGroupName(update.getMessage().getChat().getTitle());
 				if (tmg != null) {
