@@ -229,8 +229,20 @@
 			<if test="userid != null and userid != ''">
 				and userid = #{userid}
 			</if>
+			<if test="ordernum != null and ordernum != ''">
+				and ordernum = #{ordernum}
+			</if>
+			<if test="merchantordernum != null and merchantordernum != ''">
+				and merchantordernum = #{merchantordernum}
+			</if>
+			<if test="status != null and status != ''">
+				and status = #{status}
+			</if>
+			<if test="accnumer != null and accnumer != ''">
+				and accnumer = #{accnumer}
+			</if>
 			<if test="accname != null and accname != ''">
-				and accname like CONCAT( '%', #{accname} , '%' )
+				and accname = #{accname}
 			</if>
 			<if test="orderBy != null and dir != null">
 				order by ${orderBy} ${dir}
@@ -249,8 +261,20 @@
 			<if test="userid != null and userid != ''">
 				and userid = #{userid}
 			</if>
+			<if test="ordernum != null and ordernum != ''">
+				and ordernum = #{ordernum}
+			</if>
+			<if test="merchantordernum != null and merchantordernum != ''">
+				and merchantordernum = #{merchantordernum}
+			</if>
+			<if test="status != null and status != ''">
+				and status = #{status}
+			</if>
+			<if test="accnumer != null and accnumer != ''">
+				and accnumer = #{accnumer}
+			</if>
 			<if test="accname != null and accname != ''">
-				and accname like CONCAT( '%', #{accname} , '%' )
+				and accname = #{accname}
 			</if>
 		</where>
 	</select>

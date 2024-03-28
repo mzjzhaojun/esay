@@ -108,7 +108,7 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 	private JwtUserBO checkPermission(HttpServletRequest request) {
 		String token = request.getHeader(SecurityConstant.AUTHORIZATION_KEY);
 		if (StrUtil.isBlank(token)) {
-			throw new MyException(YtCodeEnum.YT303.getDesc(), YtCodeEnum.YT303);
+			throw new MyException(YtCodeEnum.YT401.getDesc(), YtCodeEnum.YT401);
 		}
 		// 获取登录用户信息
 		JwtUserBO jwtUserBO = AuthUtil.getLoginUser(token);
@@ -150,7 +150,7 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 				}
 			}
 		}
-		throw new MyException(YtCodeEnum.YT303.getDesc(), YtCodeEnum.YT303);
+		throw new MyException(YtCodeEnum.YT401.getDesc(), YtCodeEnum.YT401);
 
 	}
 

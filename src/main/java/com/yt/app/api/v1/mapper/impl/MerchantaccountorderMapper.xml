@@ -132,6 +132,12 @@
 			<if test="type != null">
 				and type= #{type}
 			</if>
+			<if test="status != null">
+				and status= #{status}
+			</if>
+			<if test="ordernum != null">
+				and ordernum= #{ordernum}
+			</if>
 			<if test="orderBy != null and dir != null">
 				order by ${orderBy} ${dir}
 			</if>
@@ -173,6 +179,12 @@
 			</if>
 			<if test="type != null">
 				and type= #{type}
+			</if>
+			<if test="status != null">
+				and status= #{status}
+			</if>
+			<if test="ordernum != null">
+				and ordernum= #{ordernum}
 			</if>
 		</where>
 	</select>

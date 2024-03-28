@@ -102,6 +102,12 @@
 		from merchantaccountapplyjournal
 		<where>
 			1=1
+			<if test="ordernum != null and ordernum != ''">
+				and ordernum = #{ordernum}
+			</if>
+			<if test="type != null and type != ''">
+				and type = #{type}
+			</if>
 			<if test="userid != null and userid != ''">
 				and userid = #{userid}
 			</if>
@@ -138,6 +144,12 @@
 		select count(*) from merchantaccountapplyjournal
 		<where>
 			1=1
+			<if test="ordernum != null and ordernum != ''">
+				and ordernum = #{ordernum}
+			</if>
+			<if test="type != null and type != ''">
+				and type = #{type}
+			</if>
 			<if test="userid != null and userid != ''">
 				and userid = #{userid}
 			</if>

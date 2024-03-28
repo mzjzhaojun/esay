@@ -31,16 +31,16 @@ public class ExptionAdvice {
 			return new YtBody(e.getMessage(), YtCodeEnum.YT500.getCode());
 		} else if (e instanceof NullPointerException) {
 			logger.error("NullPointerException:", e.getMessage(), e);
-			return new YtBody(e.getMessage(), YtCodeEnum.YT202.getCode());
+			return new YtBody(e.getMessage(), YtCodeEnum.YT500.getCode());
 		} else if (e instanceof ClassCastException) {
 			logger.error("ClassCastException:", e.getMessage(), e);
-			return new YtBody(e.getMessage(), YtCodeEnum.YT203.getCode());
+			return new YtBody(e.getMessage(), YtCodeEnum.YT888.getCode());
 		} else if (e instanceof IllegalArgumentException) {
 			logger.error("IllegalArgumentException:", e.getMessage(), e);
-			return new YtBody(e.getMessage(), YtCodeEnum.YT204.getCode());
+			return new YtBody(e.getMessage(), YtCodeEnum.YT888.getCode());
 		} else if (e instanceof ArithmeticException) {
 			logger.error("ArithmeticException :", e.getMessage(), e);
-			return new YtBody(e.getMessage(), YtCodeEnum.YT205.getCode());
+			return new YtBody(e.getMessage(), YtCodeEnum.YT888.getCode());
 		} else if (e instanceof ArrayStoreException) {
 			logger.error("ArrayStoreException:", e.getMessage(), e);
 			return new YtBody(e.getMessage(), YtCodeEnum.YT206.getCode());
@@ -64,7 +64,7 @@ public class ExptionAdvice {
 			return new YtBody(e.getMessage(), ((MyException) e).getCode().getCode());
 		} else if (e instanceof NotLoginException) {
 			logger.error("NotLoginException :", e.getMessage(), e);
-			return new YtBody(e.getMessage(), YtCodeEnum.YT303.getCode());
+			return new YtBody(e.getMessage(), YtCodeEnum.YT401.getCode());
 		}
 		logger.error("RuntimeException:", e.getMessage(), e);
 		return new YtBody("RuntimeException" + e.getMessage(), YtCodeEnum.YT500.getCode());
