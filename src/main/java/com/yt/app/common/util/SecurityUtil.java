@@ -75,28 +75,12 @@ public class SecurityUtil {
 		src = matcher.replaceAll("\"\"");
 
 		// 增加脚本
-		src = src.replaceAll("script", "").replaceAll(";", "").replaceAll("\"", "").replaceAll("@", "")
+		src = src.replaceAll("script", "").replaceAll(";", "").replaceAll("@", "")
 				.replaceAll("0x0d", "").replaceAll("0x0a", "");
 
-		if (!temp.equals(src) || sqlValidate(src)) {
-			// System.out.println("输入信息存在xss攻击！");
-			// System.out.println("原始输入信息-->" + temp);
-			// System.out.println("处理后信息-->" + src);
-
-			// log.error("xss攻击检查：参数含有非法攻击字符，已禁止继续访问！！");
-			// log.error("原始输入信息-->" + temp);
-
+		if (!temp.equals(src)) {
 			throw new MyException("xss攻击检查：参数含有非法攻击字符，已禁止继续访问！！", YtCodeEnum.YT888);
 		}
 		return src;
-	}
-
-	protected static boolean sqlValidate(String str) {
-		String s = str.toLowerCase();
-		String badStr = "select|update|and|or|delete|insert|truncate|char|into|substr|ascii|declare|exec|count|master|into|drop|execute|table|"
-				+ "char|declare|sitename|xp_cmdshell|like|from|grant|use|group_concat|column_name|"
-				+ "information_schema.columns|table_schema|union|where|order|by|"
-				+ "'\\*|\\;|\\-|\\--|\\+|\\,|\\//|\\/|\\%|\\#";
-		return s.matches(badStr);
 	}
 }
