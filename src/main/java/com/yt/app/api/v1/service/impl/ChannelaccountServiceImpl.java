@@ -143,7 +143,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			t.setToincomeamount(aaaj.getPretoincomeamount());// 待收入减去金额.
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 			mapper.put(t);
-			
+
 			channelservice.updateIncome(t);
 		} catch (Exception e) {
 		} finally {
@@ -376,8 +376,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			lock.unlock();
 		}
 	}
-	
-	
+
 	/**
 	 * =============================================================代付
 	 * 

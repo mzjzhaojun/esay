@@ -326,7 +326,11 @@ public class YtAutoCode {
 					this.L.write("" + column + "\r\n");
 					this.L.write("</sql>\r\n");
 					this.L.write("<!-- ResultMap -->\r\n");
-					this.L.write("<resultMap id=\"ResultMap\" type=\"" + DbConnectionUtil.basePage + ".vo." + bt
+					this.L.write("<resultMap id=\"ResultMap\" type=\"" + DbConnectionUtil.basePage + ".entity." + bt
+							+ "\">\r\n");
+					this.L.write("</resultMap>\r\n");
+					this.L.write("<!-- ResultMap -->\r\n");
+					this.L.write("<resultMap id=\"ResultMapVO\" type=\"" + DbConnectionUtil.basePage + ".vo." + bt
 							+ "VO\">\r\n");
 					this.L.write("</resultMap>\r\n");
 					this.L.write("<!-- add -->\r\n");
@@ -393,17 +397,11 @@ public class YtAutoCode {
 					this.L.write("<if test=\"name != null and name != ''\">\r\n");
 					this.L.write("and name like \"%\"#{name}\"%\"\r\n");
 					this.L.write("</if>\r\n");
-					this.L.write("<if test=\"orderBy != null and dir != null\">\r\n");
-					this.L.write("order by ${orderBy} ${dir}\r\n");
-					this.L.write("</if>\r\n");
-					this.L.write("<if test=\"pageStart != null and pageEnd != null\">\r\n");
-					this.L.write("LIMIT #{pageStart},#{pageEnd}\r\n");
-					this.L.write("</if>\r\n");
 					this.L.write("</where>\r\n");
 					this.L.write("</select>\r\n");
 					this.L.write("<!-- getMap -->\r\n");
 					this.L.write(
-							"<select id=\"page\" parameterType=\"java.util.HashMap\" resultMap=\"ResultMap\">\r\n");
+							"<select id=\"page\" parameterType=\"java.util.HashMap\" resultMap=\"ResultMapVO\">\r\n");
 					this.L.write("select\r\n");
 					this.L.write("<include refid=\"Base_Column_List\"/>\r\n");
 					this.L.write("from " + tb + "\r\n");

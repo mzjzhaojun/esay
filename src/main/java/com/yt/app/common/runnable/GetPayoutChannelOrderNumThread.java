@@ -85,8 +85,8 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 					cat.setAmountreceived(payout.getChannelpay());
 					cat.setType(DictionaryResource.ORDERTYPE_23);
 					cat.setOrdernum(payout.getChannelordernum());
-					cat.setRemark("代付资金￥：" + cat.getAmount() + " 交易费：" + String.format("%.2f", cat.getDeal())
-							+ " 手续费：" + cat.getOnecost());
+					cat.setRemark("代付资金￥：" + cat.getAmount() + " 交易费：" + String.format("%.2f", cat.getDeal()) + " 手续费："
+							+ cat.getOnecost());
 					channelaccountordermapper.post(cat);
 					channelaccountservice.withdrawamount(cat);
 					Tgchannelgroup tgchannelgroup = tgchannelgroupmapper.getByChannelId(payout.getChannelid());

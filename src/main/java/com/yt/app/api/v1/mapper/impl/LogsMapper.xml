@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.LogsMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,optname,optdate,type,method,requesturl,requestparams,requestip,time
+		id,tenant_id,optname,optdate,type,method,requesturl,requestparams,requestip,time
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"

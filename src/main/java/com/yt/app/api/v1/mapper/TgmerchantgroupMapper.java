@@ -114,8 +114,7 @@ public interface TgmerchantgroupMapper extends YtIBaseMapper<Tgmerchantgroup> {
 	 */
 	@YtRedisCacheAnnotation(classs = Tgmerchantgroup.class)
 	public Tgmerchantgroup getByTgGroupId(Long tgid);
-	
-	
+
 	/**
 	 * getByTgId
 	 *

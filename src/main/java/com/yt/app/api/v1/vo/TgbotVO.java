@@ -7,22 +7,23 @@ import com.yt.app.common.base.YtBaseEntity;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-02-26 11:59:44
+ * @version v1 @createdate2024-03-31 17:29:46
  */
 @Getter
 @Setter
-public class TgmerchantgroupmessageVO extends YtBaseEntity<TgmerchantgroupmessageVO> {
+public class TgbotVO extends YtBaseEntity<TgbotVO> {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
 	Long id;
 	Long tenant_id;
-	String message;
+	String name;
+	String token;
+	String manger;
+	Boolean status;
 	Integer type;
-	Object labelids;
-	java.util.Date senttime;
+	String expstr;
+	java.util.Date exp_time;
 	Long create_by;
 	java.util.Date create_time;
 	Long update_by;
@@ -30,18 +31,21 @@ public class TgmerchantgroupmessageVO extends YtBaseEntity<Tgmerchantgroupmessag
 	String remark;
 	Integer version;
 
-	public TgmerchantgroupmessageVO() {
+	public TgbotVO() {
 	}
 
-	public TgmerchantgroupmessageVO(Long id, Long tenant_id, String message, Integer type, Object labelids,
-			java.util.Date senttime, Long create_by, java.util.Date create_time, Long update_by,
+	public TgbotVO(Long id, Long tenant_id, String name, String token, String manger, Boolean status, Integer type,
+			String expstr, java.util.Date exp_time, Long create_by, java.util.Date create_time, Long update_by,
 			java.util.Date update_time, String remark, Integer version) {
 		this.id = id;
 		this.tenant_id = tenant_id;
-		this.message = message;
+		this.name = name;
+		this.token = token;
+		this.manger = manger;
+		this.status = status;
 		this.type = type;
-		this.labelids = labelids;
-		this.senttime = senttime;
+		this.expstr = expstr;
+		this.exp_time = exp_time;
 		this.create_by = create_by;
 		this.create_time = create_time;
 		this.update_by = update_by;

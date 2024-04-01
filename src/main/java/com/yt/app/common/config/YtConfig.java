@@ -30,7 +30,7 @@ public class YtConfig {
 	private String origin;
 
 	private List<String> origins;
-	
+
 	private Integer timeout;
 
 	private boolean build;

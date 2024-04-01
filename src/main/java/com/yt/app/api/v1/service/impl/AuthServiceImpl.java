@@ -114,7 +114,7 @@ public class AuthServiceImpl implements AuthService {
 		Integer i = 0;
 		User u = usermapper.getByUserName(username);
 		Assert.notNull(u, "用户没找到！");
-		
+
 		boolean isValid = PasswordUtil.isValidPassword(password, u.getPassword());
 		// 校验原始密码是否正确
 		Assert.isTrue(isValid, "密码错误！");

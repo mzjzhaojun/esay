@@ -1,57 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper
-	namespace="com.yt.app.api.v1.mapper.TgmerchantgroupmessageMapper">
+<mapper namespace="com.yt.app.api.v1.mapper.TgbotMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,message,type,labelids,senttime,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,name,token,manger,status,type,expstr,exp_time,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.vo.TgmerchantgroupmessageVO">
+		type="com.yt.app.api.v1.entity.Tgbot">
+	</resultMap>
+	<!-- ResultMap -->
+	<resultMap id="ResultMapVO"
+		type="com.yt.app.api.v1.vo.TgbotVO">
 	</resultMap>
 	<!-- add -->
-	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Tgmerchantgroupmessage">
+	<insert id="post" parameterType="com.yt.app.api.v1.entity.Tgbot">
 		insert into
-		Tgmerchantgroupmessage(id,tenant_id,message,type,labelids,senttime,create_by,create_time,update_by,update_time,remark)
+		tgbot(id,name,token,manger,status,type,expstr,exp_time,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{tenant_id},#{message},#{type},#{labelids},#{senttime},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{name},#{token},#{manger},#{status},#{type},#{expstr},#{exp_time},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		Tgmerchantgroupmessage(id,tenant_id,message,type,labelids,senttime,create_by,create_time,update_by,update_time,remark)
+		tgbot(id,tenant_id,name,token,manger,status,type,expstr,exp_time,create_by,create_time,update_by,update_time,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{message},#{type},#{labelids},#{senttime},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+			(#{id},#{tenant_id},#{name},#{token},#{manger},#{status},#{type},#{expstr},#{exp_time},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from Tgmerchantgroupmessage
+		delete from tgbot
 		where id = #{id}
 	</delete>
 	<!-- update -->
-	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Tgmerchantgroupmessage">
-		update Tgmerchantgroupmessage
+	<update id="put" parameterType="com.yt.app.api.v1.entity.Tgbot">
+		update tgbot
 		<set>
 			<if test="tenant_id != null">
 				tenant_id= #{tenant_id},
 			</if>
-			<if test="message != null">
-				message= #{message},
+			<if test="name != null">
+				name= #{name},
+			</if>
+			<if test="token != null">
+				token= #{token},
+			</if>
+			<if test="manger != null">
+				manger= #{manger},
+			</if>
+			<if test="status != null">
+				status= #{status},
 			</if>
 			<if test="type != null">
 				type= #{type},
 			</if>
-			<if test="labelids != null">
-				labelids= #{labelids},
+			<if test="expstr != null">
+				expstr= #{expstr},
 			</if>
-			<if test="senttime != null">
-				senttime= #{senttime},
+			<if test="exp_time != null">
+				exp_time= #{exp_time},
 			</if>
 			<if test="create_by != null">
 				create_by= #{create_by},
@@ -79,34 +89,38 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from Tgmerchantgroupmessage
+		from tgbot
 		where id = #{id}
 	</select>
+	
+	<!--getByToken -->
+	<select id="getByToken" parameterType="java.lang.String"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgbot
+		where token= #{token}
+	</select>
+	
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from Tgmerchantgroupmessage
+		from tgbot
 		<where>
 			1=1
 			<if test="name != null and name != ''">
 				and name like "%"#{name}"%"
 			</if>
-			<if test="orderBy != null and dir != null">
-				order by ${orderBy} ${dir}
-			</if>
-			<if test="pageStart != null and pageEnd != null">
-				LIMIT #{pageStart},#{pageEnd}
-			</if>
 		</where>
 	</select>
 	<!-- getMap -->
 	<select id="page" parameterType="java.util.HashMap"
-		resultMap="ResultMap">
+		resultMap="ResultMapVO">
 		select
 		<include refid="Base_Column_List" />
-		from Tgmerchantgroupmessage
+		from tgbot
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -123,7 +137,7 @@
 	<!-- getCount -->
 	<select id="countlist" parameterType="java.util.HashMap"
 		resultType="int">
-		select count(*) from Tgmerchantgroupmessage
+		select count(*) from tgbot
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -136,7 +150,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from Tgmerchantgroupmessage
+		from tgbot
 		<where>
 			1=1
 			<if test="array != null and array.length > 0">

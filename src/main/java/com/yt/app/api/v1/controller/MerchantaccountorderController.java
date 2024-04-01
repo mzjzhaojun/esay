@@ -45,15 +45,16 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 				.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
-	
+
 	/**
 	 * app提现
 	 * 
 	 * @version 1.1
 	 */
 	@RequestMapping(value = "/appwithdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> appwithdraw(YtRequestDecryptEntity<Merchantaccountorder> YtRequestDecryptEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> appwithdraw(
+			YtRequestDecryptEntity<Merchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request,
+			HttpServletResponse response) {
 		Integer i = service.appsave(YtRequestDecryptEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
@@ -61,6 +62,7 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 	/**
 	 * 
 	 * 取消充值
+	 * 
 	 * @version 1.1
 	 */
 	@RequestMapping(value = "/cancle/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -73,6 +75,7 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 	/**
 	 * 
 	 * 提现
+	 * 
 	 * @version 1.1
 	 */
 	@RequestMapping(value = "/withdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -96,6 +99,7 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 
 	/**
 	 * 处理提现
+	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response
@@ -107,10 +111,10 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 		service.withdrawmanual(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(1));
 	}
-	
-	
+
 	/**
 	 * 处理充值
+	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response

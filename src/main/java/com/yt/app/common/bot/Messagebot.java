@@ -1,9 +1,5 @@
 package com.yt.app.common.bot;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.CopyMessage;
 import org.telegram.telegrambots.meta.api.methods.ForwardMessage;
@@ -13,36 +9,39 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import com.yt.app.api.v1.entity.Payconfig;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
-import com.yt.app.api.v1.service.PayconfigService;
+import com.yt.app.common.base.context.BeanContext;
 
-@Component
 public class Messagebot extends TelegramLongPollingBot {
 
-	@Autowired
 	private TgchannelgroupMapper tgchannelgroupmapper;
 
-	@Autowired
-	private PayconfigService payconfigservice;
-
-	@Autowired
 	private TgmerchantchannelmsgMapper tgmerchantchannelmsgmapper;
 
-	@Autowired
-	private Merchantbot mbot;
+	private String name;
+	private String token;
+
+	public Messagebot() {
+	}
+
+	public Messagebot(String _name, String _token) {
+		tgchannelgroupmapper = BeanContext.getApplicationContext().getBean(TgchannelgroupMapper.class);
+		tgmerchantchannelmsgmapper = BeanContext.getApplicationContext().getBean(TgmerchantchannelmsgMapper.class);
+		name = _name;
+		token = _token;
+	}
 
 	@Override
 	public String getBotUsername() {
-		return "@rabbityydsmsg_bot";
+		return name;
 	}
 
 	@Override
 	public String getBotToken() {
-		return "7158140280:AAHdqpZYsxPEdlUubMW-3ns9PxrSMuQ3BkQ";
+		return token;
 	}
 
 	@Override
@@ -65,31 +64,18 @@ public class Messagebot extends TelegramLongPollingBot {
 					t.setTggroupname(update.getMessage().getChat().getTitle());
 					tgchannelgroupmapper.post(t);
 				}
-				handlemessage(message, tmg);
+
 			} else {
 				if (replymsg != null) {
 					Integer replyid = replymsg.getMessageId();
 					Tgmerchantchannelmsg tmcm = tgmerchantchannelmsgmapper.getCidReplyid(chatid.toString(), replyid);
 					if (tmcm != null) {
-						mbot.sendReplyText(tmcm.getMid(), tmcm.getMreplyid(), message);
+
 						sendReplyText(tmcm.getCid(), tmcm.getCreplyid(), "收到，谢谢你的回复.");
 					}
 				}
-				handlemessage(message, tmg);
-			}
-		}
-	}
 
-	private void handlemessage(String message, Tgchannelgroup tmg) {
-		if (message.equals("lx")) {// 汇率
-			List<Payconfig> list = payconfigservice.getDatas();
-			StringBuffer sb = new StringBuffer();
-			Integer i = 1;
-			for (Payconfig pc : list) {
-				sb.append(i + "" + pc.getName() + "，价格:" + pc.getExchange() + "\n");
-				i++;
 			}
-			sendText(tmg.getTgid(), sb.toString());
 		}
 	}
 

@@ -67,7 +67,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		return new YtResponseEntity<Object>(new YtBody(sr));
 	}
 
-	//盘口查询余额
+	// 盘口查询余额
 	@ApiOperation(value = "query", response = User.class)
 	@RequestMapping(value = "/querybalance", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> query(YtRequestEntity<Payout> requestEntity, HttpServletRequest request,

@@ -24,7 +24,8 @@ public class YtRoutingDataSource extends AbstractRoutingDataSource {
 	private Map<String, DataSource> B;
 	private Map<String, DataSource> C;
 
-	public YtRoutingDataSource(Map<String, DataSource> paramMap1, Map<String, DataSource> paramMap2, Object paramObject) {
+	public YtRoutingDataSource(Map<String, DataSource> paramMap1, Map<String, DataSource> paramMap2,
+			Object paramObject) {
 		a(paramMap1);
 		b(paramMap2);
 		setDefaultTargetDataSource(paramObject);

@@ -42,8 +42,8 @@ public class AuthAppController extends YtBaseEncipherControllerImpl<User, Long> 
 
 	@ApiOperation(value = "loginapp", response = User.class)
 	@RequestMapping(value = "/loginapp", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> loginapp(YtRequestDecryptEntity<AuthLoginDTO> requestEntity, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEntity<Object> loginapp(YtRequestDecryptEntity<AuthLoginDTO> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
 		AuthLoginVO u = authservice.loginapp(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(u));
 	}

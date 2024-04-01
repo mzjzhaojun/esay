@@ -15,18 +15,18 @@ public interface SystemaccountService extends YtIBaseService<Systemaccount, Long
 
 	Systemaccount getData();
 
-	//商户充值
+	// 商户充值
 	void updateTotalincome(Merchantaccountorder mao);
 
-	//商户提现
+	// 商户提现
 	void updateWithdrawamount(Merchantaccountorder mao);
 
-	//代理提现
+	// 代理提现
 	void updateWithdrawamount(Agentaccountorder mao);
 
 	// 代付
 	void updatePayout(Merchantaccountorder mao);
-	
-	//换汇
+
+	// 换汇
 	void updateExchange(Merchantaccountorder mao);
 }

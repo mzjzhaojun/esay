@@ -22,6 +22,8 @@ import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
 import com.yt.app.common.util.RequestUtil;
 
+import cn.hutool.core.lang.Assert;
+
 /**
  * 
  * baseController
@@ -47,6 +49,7 @@ public abstract class YtBaseEncipherControllerImpl<T, ID extends Serializable>
 	public YtResponseEncryptEntity<Object> post(YtRequestDecryptEntity<T> YtRequestDecryptEntity,
 			HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.post(YtRequestDecryptEntity.getBody());
+		Assert.notEquals(i, 0, "新增失败！");
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 
@@ -60,6 +63,7 @@ public abstract class YtBaseEncipherControllerImpl<T, ID extends Serializable>
 	public YtResponseEncryptEntity<Object> put(YtRequestDecryptEntity<T> YtRequestDecryptEntity,
 			HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.put(YtRequestDecryptEntity.getBody());
+		Assert.notEquals(i,0, "修改失败！");
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 
@@ -73,6 +77,7 @@ public abstract class YtBaseEncipherControllerImpl<T, ID extends Serializable>
 	public YtResponseEncryptEntity<Object> get(@PathVariable Long id, HttpServletRequest request,
 			HttpServletResponse response) {
 		T t = service.get(id);
+		Assert.notNull(t, "访问的资源不存在！");
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}
 
@@ -86,6 +91,7 @@ public abstract class YtBaseEncipherControllerImpl<T, ID extends Serializable>
 	public YtResponseEncryptEntity<Object> delete(@PathVariable Long id, HttpServletRequest request,
 			HttpServletResponse response) {
 		Integer i = service.delete(id);
+		Assert.notEquals(i, 0, "删除失败！");
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 

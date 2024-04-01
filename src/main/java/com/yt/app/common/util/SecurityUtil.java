@@ -75,8 +75,8 @@ public class SecurityUtil {
 		src = matcher.replaceAll("\"\"");
 
 		// 增加脚本
-		src = src.replaceAll("script", "").replaceAll(";", "").replaceAll("@", "")
-				.replaceAll("0x0d", "").replaceAll("0x0a", "");
+		src = src.replaceAll("script", "").replaceAll(";", "").replaceAll("0x0d", "")
+				.replaceAll("0x0a", "");
 
 		if (!temp.equals(src)) {
 			throw new MyException("xss攻击检查：参数含有非法攻击字符，已禁止继续访问！！", YtCodeEnum.YT888);

@@ -44,7 +44,7 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 
 	@Autowired
 	private UserMapper usermapper;
-	
+
 	@Autowired
 	private ChannelMapper channelmapper;
 

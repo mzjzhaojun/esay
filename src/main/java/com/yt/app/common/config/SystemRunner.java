@@ -5,16 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import com.yt.app.api.v1.service.DictService;
 import com.yt.app.api.v1.service.RoleService;
+import com.yt.app.api.v1.service.TgbotService;
 import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.context.TenantIdContext;
-import com.yt.app.common.bot.Channelbot;
-import com.yt.app.common.bot.Merchantbot;
-import com.yt.app.common.bot.Messagebot;
 import com.yt.app.common.util.RsaUtil;
 
 /**
@@ -36,13 +32,7 @@ public class SystemRunner implements CommandLineRunner {
 	private DictService dictservice;
 
 	@Autowired
-	private Merchantbot merchantbot;
-
-	@Autowired
-	private Channelbot channelbot;
-	
-	@Autowired
-	private Messagebot messagebot;
+	private TgbotService tgbotservice;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -62,15 +52,7 @@ public class SystemRunner implements CommandLineRunner {
 		roleservice.refreshSuperAdminPerm();
 
 		// 注册机器人
-		try {
-			TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-			botsApi.registerBot(merchantbot);
-			botsApi.registerBot(channelbot);
-			botsApi.registerBot(messagebot);
-		} catch (Exception e) {
-			log.info(e.getMessage());
-			e.printStackTrace();
-		}
+		tgbotservice.initBot();
 
 		log.info("服务初始化之后，执行方法 end...");
 	}

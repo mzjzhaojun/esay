@@ -24,6 +24,8 @@ import com.yt.app.common.common.yt.YtRequestEntity;
 import com.yt.app.common.common.yt.YtResponseEntity;
 import com.yt.app.common.util.RequestUtil;
 
+import cn.hutool.core.lang.Assert;
+
 /**
  * 
  * baseController
@@ -58,6 +60,7 @@ public abstract class YtBaseControllerImpl<T, ID extends Serializable> implement
 	public YtResponseEntity<Object> post(YtRequestEntity<T> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
 		Integer i = service.post(requestEntity.getBody());
+		Assert.notEquals(i, 0, "新增失败！");
 		return new YtResponseEntity<Object>(new YtBody(i));
 	}
 
@@ -71,6 +74,7 @@ public abstract class YtBaseControllerImpl<T, ID extends Serializable> implement
 	public YtResponseEntity<Object> put(YtRequestEntity<T> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
 		Integer i = service.put(requestEntity.getBody());
+		Assert.notEquals(i, 0, "修改失败！");
 		return new YtResponseEntity<Object>(new YtBody(i));
 	}
 
@@ -84,6 +88,7 @@ public abstract class YtBaseControllerImpl<T, ID extends Serializable> implement
 	public YtResponseEntity<Object> get(@PathVariable Long id, HttpServletRequest request,
 			HttpServletResponse response) {
 		T t = service.get(id);
+		Assert.notNull(t, "访问的资源不存在！");
 		return new YtResponseEntity<Object>(new YtBody(t));
 	}
 
@@ -97,6 +102,7 @@ public abstract class YtBaseControllerImpl<T, ID extends Serializable> implement
 	public YtResponseEntity<Object> delete(@PathVariable Long id, HttpServletRequest request,
 			HttpServletResponse response) {
 		Integer i = service.delete(id);
+		Assert.notEquals(i, 0, "删除失败！");
 		return new YtResponseEntity<Object>(new YtBody(i));
 	}
 

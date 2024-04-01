@@ -32,12 +32,14 @@ public class YtMessageConverterMethodProcessor extends AbstractMessageConverterM
 		super(converters);
 	}
 
-	public YtMessageConverterMethodProcessor(List<HttpMessageConverter<?>> converters, ContentNegotiationManager manager) {
+	public YtMessageConverterMethodProcessor(List<HttpMessageConverter<?>> converters,
+			ContentNegotiationManager manager) {
 
 		super(converters, manager);
 	}
 
-	public YtMessageConverterMethodProcessor(List<HttpMessageConverter<?>> converters, List<Object> requestResponseBodyAdvice) {
+	public YtMessageConverterMethodProcessor(List<HttpMessageConverter<?>> converters,
+			List<Object> requestResponseBodyAdvice) {
 
 		super(converters, null, requestResponseBodyAdvice);
 	}

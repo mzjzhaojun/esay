@@ -2,8 +2,6 @@ package com.yt.app.common.aspect;
 
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.yt.app.api.v1.dbo.AuthLoginDTO;
 import com.yt.app.api.v1.entity.Logs;
 import com.yt.app.api.v1.mapper.LogsMapper;
 
@@ -19,8 +18,8 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.yt.app.common.base.context.SysUserContext;
+import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.util.DateTimeUtil;
-import com.yt.app.common.util.RequestUtil;
 
 @Aspect
 @Component
@@ -35,7 +34,7 @@ public class Ytc {
 	@Autowired
 	LogsMapper logsmapper;
 
-	@Pointcut("(execution(* com.yt.app.api.v1.controller.*Controller.*(..))) || (execution(* com.yt.app.common.base.YtIBaseEncipherController.*(..))) || (execution(* com.yt.app.common.base.YtIBaseController.*(..)))")
+	@Pointcut("(execution(* com.yt.app.api.v1.controller.AuthAppController.*(..))) || (execution(* com.yt.app.api.v1.controller.AuthController.*(..)))")
 	public void controllerPointCut() {
 	}
 
@@ -45,12 +44,13 @@ public class Ytc {
 		Object[] args = pjp.getArgs();
 		Logs log = new Logs(SysUserContext.getUsername(), DateTimeUtil.getNow(), 1);
 		for (Object arg : args) {
-			if (arg instanceof HttpServletRequest) {
-				HttpServletRequest p = (HttpServletRequest) arg;
-				log.setRequesturl(p.getRequestURI());
-				log.setRequestparams(RequestUtil.requestToParamMap(p).toString());
-				log.setMethod(p.getMethod());
-				log.setRequestip(p.getRemoteHost());
+			if (arg instanceof YtRequestDecryptEntity) {
+				@SuppressWarnings("unchecked")
+				YtRequestDecryptEntity<AuthLoginDTO> p = (YtRequestDecryptEntity<AuthLoginDTO>) arg;
+				log.setRequesturl(p.getUrl().getPath());
+				log.setRequestparams(p.getBody().toString());
+				log.setMethod(p.getMethod().name());
+				log.setRequestip(p.getUrl().getHost());
 				break;
 			}
 		}

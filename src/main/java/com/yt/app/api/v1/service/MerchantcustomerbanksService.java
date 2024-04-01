@@ -12,7 +12,7 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface MerchantcustomerbanksService extends YtIBaseService<Merchantcustomerbanks, Long> {
-	
+
 	Integer add(Payout t);
 
 	Integer add(Exchange t);
