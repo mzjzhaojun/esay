@@ -22,6 +22,7 @@ public class TgbotVO extends YtBaseEntity<TgbotVO> {
 	String manger;
 	Boolean status;
 	Integer type;
+	String typename;
 	String expstr;
 	java.util.Date exp_time;
 	Long create_by;

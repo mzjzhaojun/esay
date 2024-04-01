@@ -15,6 +15,9 @@ import com.yt.app.common.base.context.AuthRsaKeyContext;
 import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.exption.MyException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SecurityUtil {
 	/**
 	 * API解密
@@ -25,7 +28,7 @@ public class SecurityUtil {
 			byte[] plaintext = RsaUtil.decryptByPrivateKey(Base64.decodeBase64(aesKey), RsaUtil.getPrivateKey());
 			aesKey = new String(plaintext);
 			data = AesUtil.decrypt(data, aesKey);
-			System.out.println("==========" + data);
+			log.info("参数：" + data);
 			return cleanXSS(data);
 		} catch (Throwable e) {
 			throw new RuntimeException("ApiSecurityUtil.decrypt：解密异常！");
@@ -43,6 +46,7 @@ public class SecurityUtil {
 			serializeConfig.put(Date.class, new SimpleDateFormatSerializer("YY-MM-dd HH:mm"));
 			String dataString = JSON.toJSONString(object, serializeConfig, SerializerFeature.PrettyFormat);
 			String data = AesUtil.encrypt(dataString, AuthRsaKeyContext.getAesKey());
+			log.info("显示：" + dataString);
 			return data;
 		} catch (Throwable e) {
 			throw new RuntimeException("ApiSecurityUtil.encrypt：加密异常！");
@@ -75,8 +79,7 @@ public class SecurityUtil {
 		src = matcher.replaceAll("\"\"");
 
 		// 增加脚本
-		src = src.replaceAll("script", "").replaceAll(";", "").replaceAll("0x0d", "")
-				.replaceAll("0x0a", "");
+		src = src.replaceAll("script", "").replaceAll(";", "").replaceAll("0x0d", "").replaceAll("0x0a", "");
 
 		if (!temp.equals(src)) {
 			throw new MyException("xss攻击检查：参数含有非法攻击字符，已禁止继续访问！！", YtCodeEnum.YT888);

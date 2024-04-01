@@ -63,7 +63,7 @@ public abstract class YtBaseEncipherControllerImpl<T, ID extends Serializable>
 	public YtResponseEncryptEntity<Object> put(YtRequestDecryptEntity<T> YtRequestDecryptEntity,
 			HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.put(YtRequestDecryptEntity.getBody());
-		Assert.notEquals(i,0, "修改失败！");
+		Assert.notEquals(i, 0, "修改失败！");
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 

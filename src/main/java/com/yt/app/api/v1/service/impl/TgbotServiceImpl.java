@@ -8,6 +8,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.TgbotMapper;
 import com.yt.app.api.v1.service.TgbotService;
+import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.common.bot.Messagebot;
@@ -17,6 +18,7 @@ import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.exption.MyException;
+import com.yt.app.common.util.RedisUtil;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -80,6 +82,9 @@ public class TgbotServiceImpl extends YtBaseServiceImpl<Tgbot, Long> implements 
 			return new YtPageBean<TgbotVO>(Collections.emptyList());
 		}
 		List<TgbotVO> list = mapper.page(param);
+		list.forEach(t -> {
+			t.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + t.getType()));
+		});
 		return new YtPageBean<TgbotVO>(param, list, count);
 	}
 
