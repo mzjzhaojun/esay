@@ -25,11 +25,8 @@ public class TgbotVO extends YtBaseEntity<TgbotVO> {
 	String typename;
 	String expstr;
 	java.util.Date exp_time;
-	Long create_by;
-	java.util.Date create_time;
-	Long update_by;
-	java.util.Date update_time;
 	String remark;
+	String welcomemsg;
 	Integer version;
 
 	public TgbotVO() {
@@ -47,10 +44,6 @@ public class TgbotVO extends YtBaseEntity<TgbotVO> {
 		this.type = type;
 		this.expstr = expstr;
 		this.exp_time = exp_time;
-		this.create_by = create_by;
-		this.create_time = create_time;
-		this.update_by = update_by;
-		this.update_time = update_time;
 		this.remark = remark;
 		this.version = version;
 	}

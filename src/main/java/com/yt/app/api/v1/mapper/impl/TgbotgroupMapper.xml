@@ -17,9 +17,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Tgbotgroup">
 		insert into
-		tgbotgroup(id,tenant_id,tgid,tgname,gmanger,xmanger,tmexchange,exchange,cost,status,welcomemsg,checkmsg,startmsg,endmsg,type,customersvc,customersvccode,create_by,create_time,update_by,update_time,remark)
+		tgbotgroup(id,tgid,tgname,gmanger,xmanger,tmexchange,exchange,cost,status,welcomemsg,checkmsg,startmsg,endmsg,type,customersvc,customersvccode,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{tenant_id},#{tgid},#{tgname},#{gmanger},#{xmanger},#{tmexchange},#{exchange},#{cost},#{status},#{welcomemsg},#{checkmsg},#{startmsg},#{endmsg},#{type},#{customersvc},#{customersvccode},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{tgid},#{tgname},#{gmanger},#{xmanger},#{tmexchange},#{exchange},#{cost},#{status},#{welcomemsg},#{checkmsg},#{startmsg},#{endmsg},#{type},#{customersvc},#{customersvccode},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -117,6 +117,14 @@
 		<include refid="Base_Column_List" />
 		from tgbotgroup
 		where id = #{id}
+	</select>
+	<!--getByTgGroupId -->
+	<select id="getByTgGroupId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgbotgroup
+		where tgid= #{tgid}
 	</select>
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"

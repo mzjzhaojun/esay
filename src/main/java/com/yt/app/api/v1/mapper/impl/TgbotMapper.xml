@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.TgbotMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,name,token,manger,status,type,expstr,exp_time,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,name,token,manger,status,type,expstr,exp_time,welcomemsg,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -16,9 +16,9 @@
 	<!-- add -->
 	<insert id="post" parameterType="com.yt.app.api.v1.entity.Tgbot">
 		insert into
-		tgbot(id,name,token,manger,status,type,expstr,exp_time,create_by,create_time,update_by,update_time,remark)
+		tgbot(id,name,token,manger,status,type,expstr,exp_time,welcomemsg,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{name},#{token},#{manger},#{status},#{type},#{expstr},#{exp_time},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{name},#{token},#{manger},#{status},#{type},#{expstr},#{exp_time},#{welcomemsg},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -62,6 +62,9 @@
 			</if>
 			<if test="exp_time != null">
 				exp_time= #{exp_time},
+			</if>
+			<if test="welcomemsg != null">
+				welcomemsg= #{welcomemsg},
 			</if>
 			<if test="create_by != null">
 				create_by= #{create_by},

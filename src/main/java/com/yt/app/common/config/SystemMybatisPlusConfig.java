@@ -59,7 +59,7 @@ public class SystemMybatisPlusConfig {
 
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tgbot");
 
-		// MybatisPlusConfig.TENANT_ID_TABLE.add("tgmerchantgroup");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("tgbotgroup");
 		// MybatisPlusConfig.TENANT_ID_TABLE.add("tgmerchantgroupmessage");
 		// MybatisPlusConfig.TENANT_ID_TABLE.add("tgmerchantlabel");
 

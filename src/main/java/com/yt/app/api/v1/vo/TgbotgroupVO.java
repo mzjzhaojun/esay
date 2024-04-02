@@ -17,7 +17,7 @@ public class TgbotgroupVO extends YtBaseEntity<TgbotgroupVO> {
 
 	Long id;
 	Long tenant_id;
-	String tgid;
+	Long tgid;
 	String tgname;
 	String gmanger;
 	String xmanger;
@@ -32,17 +32,13 @@ public class TgbotgroupVO extends YtBaseEntity<TgbotgroupVO> {
 	Integer type;
 	String customersvc;
 	String customersvccode;
-	Long create_by;
-	java.util.Date create_time;
-	Long update_by;
-	java.util.Date update_time;
 	String remark;
 	Integer version;
 
 	public TgbotgroupVO() {
 	}
 
-	public TgbotgroupVO(Long id, Long tenant_id, String tgid, String tgname, String gmanger, String xmanger,
+	public TgbotgroupVO(Long id, Long tenant_id, Long tgid, String tgname, String gmanger, String xmanger,
 			Boolean tmexchange, Object exchange, Object cost, Boolean status, String welcomemsg, String checkmsg,
 			String startmsg, String endmsg, Integer type, String customersvc, String customersvccode, Long create_by,
 			java.util.Date create_time, Long update_by, java.util.Date update_time, String remark, Integer version) {
@@ -63,10 +59,6 @@ public class TgbotgroupVO extends YtBaseEntity<TgbotgroupVO> {
 		this.type = type;
 		this.customersvc = customersvc;
 		this.customersvccode = customersvccode;
-		this.create_by = create_by;
-		this.create_time = create_time;
-		this.update_by = update_by;
-		this.update_time = update_time;
 		this.remark = remark;
 		this.version = version;
 	}

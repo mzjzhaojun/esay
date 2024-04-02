@@ -95,4 +95,14 @@ public interface TgbotgroupMapper extends YtIBaseMapper<Tgbotgroup> {
 	 */
 	@YtRedisCacheAnnotation(classs = Tgbotgroup.class)
 	public List<Tgbotgroup> listByArrayId(long[] id);
+
+	/**
+	 * getByTgGroupId
+	 *
+	 * @param id id
+	 * @return Tgbotgroup
+	 */
+	@YtRedisCacheAnnotation(classs = Tgbotgroup.class)
+	public Tgbotgroup getByTgGroupId(Long id);
+
 }

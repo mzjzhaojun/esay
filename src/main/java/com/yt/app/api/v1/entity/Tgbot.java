@@ -25,6 +25,7 @@ public class Tgbot extends YtBaseEntity<Tgbot> {
 	String expstr;
 	java.util.Date exp_time;
 	String remark;
+	String welcomemsg;
 	Integer version;
 
 	public Tgbot() {
