@@ -63,7 +63,7 @@ public class Messagebot extends TelegramLongPollingBot {
 				}
 				// 回复的消息体
 				Message replymsg = update.getMessage().getReplyToMessage();
-
+				log.info(replymsg.getText());
 				///////////////////////////////////////////////////////////////////////////////////////////////// 常用指令///////////////////////////
 				if (msg.indexOf("+") == 0) {
 					String str = msg.substring(1);
