@@ -2,6 +2,9 @@ package com.yt.app.api.v1.mapper;
 
 import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.yt.app.api.v1.entity.Tgbotgrouprecord;
 import com.yt.app.api.v1.vo.TgbotgrouprecordVO;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
@@ -103,6 +106,6 @@ public interface TgbotgrouprecordMapper extends YtIBaseMapper<Tgbotgrouprecord> 
 	 * @return listTgbotgrouprecord
 	 */
 	@YtRedisCacheAnnotation(classs = Tgbotgrouprecord.class)
-	public List<Tgbotgrouprecord> listByType(Integer type);
+	public List<Tgbotgrouprecord> listByType(@Param("tgid") Long tgid, @Param("type") Integer type);
 
 }

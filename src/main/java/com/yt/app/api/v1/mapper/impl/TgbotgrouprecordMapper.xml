@@ -121,12 +121,11 @@
 		</where>
 	</select>
 	<!-- getList -->
-	<select id="listByType" parameterType="java.lang.Integer"
-		resultMap="ResultMap">
+	<select id="listByType" resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from tgbotgrouprecord
-		where type = #{type}
+		where tgid = #{tgid} and type = #{type}
 	</select>
 	<!-- getMap -->
 	<select id="page" parameterType="java.util.HashMap"

@@ -271,8 +271,8 @@ public class Messagebot extends TelegramLongPollingBot {
 	}
 
 	public String getOrder(Tgbotgroup tbg) {
-		List<Tgbotgrouprecord> listincome = tgbotgrouprecordmapper
-				.listByType(DictionaryResource.TGBOTGROUPRECORD_TYPE_INCOME);
+		List<Tgbotgrouprecord> listincome = tgbotgrouprecordmapper.listByType(tbg.getTgid(),
+				DictionaryResource.TGBOTGROUPRECORD_TYPE_INCOME);
 		StringBuffer sb = new StringBuffer();
 		Integer i = 1;
 		double countincome = 0.00;
@@ -287,8 +287,8 @@ public class Messagebot extends TelegramLongPollingBot {
 			i++;
 		}
 		sb.append("\n");
-		List<Tgbotgrouprecord> liswithdraw = tgbotgrouprecordmapper
-				.listByType(DictionaryResource.TGBOTGROUPRECORD_TYPE_WITHDRAW);
+		List<Tgbotgrouprecord> liswithdraw = tgbotgrouprecordmapper.listByType(tbg.getTgid(),
+				DictionaryResource.TGBOTGROUPRECORD_TYPE_WITHDRAW);
 		i = 1;
 		double counwithdeaw = 0.00;
 		double outusdt = 0.00;
@@ -302,8 +302,8 @@ public class Messagebot extends TelegramLongPollingBot {
 			i++;
 		}
 		sb.append("\n");
-		List<Tgbotgrouprecord> listusdt = tgbotgrouprecordmapper
-				.listByType(DictionaryResource.TGBOTGROUPRECORD_TYPE_USDT);
+		List<Tgbotgrouprecord> listusdt = tgbotgrouprecordmapper.listByType(tbg.getTgid(),
+				DictionaryResource.TGBOTGROUPRECORD_TYPE_USDT);
 		i = 1;
 		double usdt = 0.00;
 		sb.append("下发：" + listusdt.size() + " 笔\n");
