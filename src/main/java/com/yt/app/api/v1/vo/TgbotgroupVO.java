@@ -22,8 +22,8 @@ public class TgbotgroupVO extends YtBaseEntity<TgbotgroupVO> {
 	String gmanger;
 	String xmanger;
 	Boolean tmexchange;
-	Object exchange;
-	Object cost;
+	double exchange;
+	double cost;
 	Boolean status;
 	String welcomemsg;
 	String checkmsg;
@@ -39,7 +39,7 @@ public class TgbotgroupVO extends YtBaseEntity<TgbotgroupVO> {
 	}
 
 	public TgbotgroupVO(Long id, Long tenant_id, Long tgid, String tgname, String gmanger, String xmanger,
-			Boolean tmexchange, Object exchange, Object cost, Boolean status, String welcomemsg, String checkmsg,
+			Boolean tmexchange, double exchange, double cost, Boolean status, String welcomemsg, String checkmsg,
 			String startmsg, String endmsg, Integer type, String customersvc, String customersvccode, Long create_by,
 			java.util.Date create_time, Long update_by, java.util.Date update_time, String remark, Integer version) {
 		this.id = id;

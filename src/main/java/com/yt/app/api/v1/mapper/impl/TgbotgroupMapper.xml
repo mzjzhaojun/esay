@@ -34,7 +34,8 @@
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
 		delete from tgbotgroup
-		where id = #{id}
+		where id
+		= #{id}
 	</delete>
 	<!-- update -->
 	<update id="put"
@@ -108,7 +109,7 @@
 				version= #{version}+1
 			</if>
 		</set>
-		where id = #{id} and version = #{version}
+		where id = #{id}
 	</update>
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"

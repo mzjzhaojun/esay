@@ -22,16 +22,12 @@ public class Tgbotgrouprecord extends YtBaseEntity<Tgbotgrouprecord> {
 	String gmanger;
 	String xmanger;
 	Boolean tmexchange;
-	Object exchange;
-	Object cost;
+	double exchange;
+	double cost;
 	Boolean status;
-	Object amount;
-	Object withdrawusdt;
+	double amount;
+	double withdrawusdt;
 	Integer type;
-	Long create_by;
-	java.util.Date create_time;
-	Long update_by;
-	java.util.Date update_time;
 	String remark;
 	Integer version;
 
@@ -39,7 +35,7 @@ public class Tgbotgrouprecord extends YtBaseEntity<Tgbotgrouprecord> {
 	}
 
 	public Tgbotgrouprecord(Long id, Long tenant_id, Long tgid, String tgname, String gmanger, String xmanger,
-			Boolean tmexchange, Object exchange, Object cost, Boolean status, Object amount, Object withdrawusdt,
+			Boolean tmexchange, double exchange, double cost, Boolean status, double amount, double withdrawusdt,
 			Integer type, Long create_by, java.util.Date create_time, Long update_by, java.util.Date update_time,
 			String remark, Integer version) {
 		this.id = id;
@@ -55,10 +51,6 @@ public class Tgbotgrouprecord extends YtBaseEntity<Tgbotgrouprecord> {
 		this.amount = amount;
 		this.withdrawusdt = withdrawusdt;
 		this.type = type;
-		this.create_by = create_by;
-		this.create_time = create_time;
-		this.update_by = update_by;
-		this.update_time = update_time;
 		this.remark = remark;
 		this.version = version;
 	}
