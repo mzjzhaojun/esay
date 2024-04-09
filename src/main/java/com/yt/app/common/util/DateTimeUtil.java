@@ -15,7 +15,7 @@ public class DateTimeUtil {
 	public static final String DEFAULT_DAY_FORMAT = "dd";
 	public static final String DEFAULT_SHORT_DATE_FORMAT = "YY-MM-dd";
 	public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
-	public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
+	public static final String DEFAULT_TIME_FORMAT = "HH:mm";
 	public static final String DEFAULT_HOUR_FORMAT = "HH";
 	public static final String DEFAULT_MINUTE_FORMAT = "mm";
 	public static final String DEFAULT_SECOND_FORMAT = "ss";
