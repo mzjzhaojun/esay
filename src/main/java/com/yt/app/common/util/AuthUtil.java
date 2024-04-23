@@ -91,6 +91,7 @@ public class AuthUtil {
 		if (StrUtil.isBlank(userObj)) {
 			throw NotLoginException.newInstance(StpUtil.getLoginType(), NotLoginException.NOT_TOKEN);
 		}
+		RedisUtil.setEx(JWT_USER_KEY + tokenValue, userObj, timeout, TimeUnit.SECONDS);
 		return JSONUtil.toBean(userObj, JwtUserBO.class);
 	}
 
