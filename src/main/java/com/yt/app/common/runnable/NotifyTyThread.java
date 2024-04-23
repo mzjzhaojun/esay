@@ -60,11 +60,11 @@ public class NotifyTyThread implements Runnable {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			}
-			if (i > 3) {
-				payout.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_64);
-				mapper.put(payout);
-				break;
+				if (i > 3) {
+					payout.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_64);
+					mapper.put(payout);
+					break;
+				}
 			}
 		}
 		TenantIdContext.remove();
