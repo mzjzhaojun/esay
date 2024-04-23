@@ -356,7 +356,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		pt.setBankcode(ss.getBankcode());
 		pt.setBankaddress(ss.getBankaddress());
 		pt.setAmount(ss.getPayamt());
-		pt.setNotifyurl(mc.getApireusultip());
+		pt.setNotifyurl(ss.getNotifyurl());
 		pt.setAisleid(listmc.get(0).getAisleid());
 		pt.setBankname(ss.getBankname());
 		pt.setMerchantorderid(ss.getMerchantorderid());
