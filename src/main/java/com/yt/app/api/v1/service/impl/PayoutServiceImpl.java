@@ -683,4 +683,15 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		}
 	}
 
+	@Override
+	public SysResultVO queryblance(String merchantid) {
+		Merchant mt = merchantmapper.getByCode(merchantid);
+		Assert.notNull(mt, "没有找到商户!");
+		Merchantaccount mtt = merchantaccountmapper.getByUserId(mt.getUserid());
+		SysResultVO srv = new SysResultVO();
+		srv.setBalance(mtt.getBalance());
+		srv.setMerchantid(merchantid);
+		return srv;
+	}
+
 }

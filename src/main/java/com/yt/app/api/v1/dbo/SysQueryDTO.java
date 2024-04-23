@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class SysQueryDTO {
 
-	Integer merchantid;
+	String merchantid;
 	String merchantorderid;
 	String remark;
 	String sign;
@@ -15,7 +15,7 @@ public class SysQueryDTO {
 	public SysQueryDTO() {
 	}
 
-	public SysQueryDTO(Integer merchantid, String merchantorderid, String remark, String sign) {
+	public SysQueryDTO(String merchantid, String merchantorderid, String remark, String sign) {
 		super();
 		this.merchantid = merchantid;
 		this.merchantorderid = merchantorderid;

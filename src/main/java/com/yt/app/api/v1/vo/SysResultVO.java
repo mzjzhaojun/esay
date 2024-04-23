@@ -16,6 +16,7 @@ public class SysResultVO {
 	Integer code;
 	String remark;
 	String sign;
+	Double balance;
 
 	public SysResultVO() {
 	}
