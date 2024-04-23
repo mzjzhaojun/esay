@@ -105,17 +105,17 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 					mapper.put(payout);
 					break;
 				}
-				if (i > 3) {
-					payout.setStatus(DictionaryResource.PAYOUTSTATUS_54);
-					mapper.put(payout);
-					break;
-				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			} finally {
 				try {
 					Thread.sleep(1000 * rd.nextInt(60));
 					i++;
+					if (i > 3) {
+						payout.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+						mapper.put(payout);
+						break;
+					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
