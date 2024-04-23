@@ -314,7 +314,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	// 盘口提交订单
 	@Override
 	public SysResultVO submit(SysSubmitDTO ss) {
-		Integer code = ss.getMerchantid();
+		String code = ss.getMerchantid();
 		Merchant mc = merchantmapper.getByCode(code.toString());
 		Assert.notNull(mc, "商户不存在!");
 

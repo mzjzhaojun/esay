@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class SysSubmitDTO {
 
-	Integer merchantid;
+	String merchantid;
 	String merchantorderid;
 	Integer paytype;
 	Double payamt;
@@ -24,7 +24,7 @@ public class SysSubmitDTO {
 	public SysSubmitDTO() {
 	}
 
-	public SysSubmitDTO(Integer merchantid, String merchantorderid, Integer paytype, Double payamt, String notifyurl,
+	public SysSubmitDTO(String merchantid, String merchantorderid, Integer paytype, Double payamt, String notifyurl,
 			String banknum, String bankcode, String bankowner, String bankaddress, String remark, String merchantip,
 			String sign) {
 		super();

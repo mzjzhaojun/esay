@@ -54,7 +54,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	@RequestMapping(value = "/query", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tyquery(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
-		Payout pt = service.query(requestEntity.getBody().getMerchantorderid());
+		SysResultVO pt = service.query(requestEntity.getBody().getMerchantorderid());
 		return new YtResponseEntity<Object>(new YtBody(pt));
 	}
 

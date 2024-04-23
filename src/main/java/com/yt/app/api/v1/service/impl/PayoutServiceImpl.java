@@ -278,9 +278,17 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
-	public Payout query(String channelordernum) {
+	public SysResultVO query(String channelordernum) {
 		Payout pt = mapper.getByChannelOrdernum(channelordernum);
-		return pt;
+		if (pt == null) {
+			new MyException("订单不存在!", YtCodeEnum.YT888);
+		}
+		SysResultVO srv = new SysResultVO();
+		srv.setBankcode(pt.getBankcode());
+		srv.setCode(pt.getStatus());
+		srv.setMerchantid(pt.getMerchantcode());
+		srv.setMerchantorderid(pt.getMerchantordernum());
+		return srv;
 	}
 
 	@Override
@@ -320,7 +328,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	// 盘口提交订单
 	@Override
 	public SysResultVO submit(SysSubmitDTO ss) {
-		Integer code = ss.getMerchantid();
+		String code = ss.getMerchantid();
 		Merchant mc = merchantmapper.getByCode(code.toString());
 		if (mc == null) {
 			new MyException("商户不存在!", YtCodeEnum.YT888);
