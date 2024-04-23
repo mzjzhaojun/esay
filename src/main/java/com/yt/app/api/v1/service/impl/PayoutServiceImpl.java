@@ -281,7 +281,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	public SysResultVO query(String merchantordernum) {
 		Payout pt = mapper.getByMerchantOrdernum(merchantordernum);
 		if (pt == null) {
-			new MyException("订单不存在!", YtCodeEnum.YT888);
+			throw new MyException("订单不存在!", YtCodeEnum.YT888);
 		}
 		SysResultVO srv = new SysResultVO();
 		srv.setBankcode(pt.getBankcode());
@@ -332,22 +332,22 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		String code = ss.getMerchantid();
 		Merchant mc = merchantmapper.getByCode(code.toString());
 		if (mc == null) {
-			new MyException("商户不存在!", YtCodeEnum.YT888);
+			throw new MyException("商户不存在!", YtCodeEnum.YT888);
 		}
 
 		Merchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
 		if (ma.getBalance() < ss.getPayamt()) {
-			new MyException("余额不足!", YtCodeEnum.YT888);
+			throw new MyException("余额不足!", YtCodeEnum.YT888);
 		}
 
 		Boolean val = PayUtil.valMd5Submit(ss, mc.getAppkey());
 		if (!val) {
-			new MyException("签名不正确!", YtCodeEnum.YT888);
+			throw new MyException("签名不正确!", YtCodeEnum.YT888);
 		}
 
 		List<Merchantaisle> listmc = merchantaislemapper.getByMid(mc.getId());
 		if (listmc == null || listmc.size() == 0) {
-			new MyException("商戶沒有配置通道!", YtCodeEnum.YT888);
+			throw new MyException("商戶沒有配置通道!", YtCodeEnum.YT888);
 		}
 		// 下單
 		Payout pt = new Payout();
@@ -593,7 +593,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				// 保存客户信息
 				merchantcustomerbanksservice.add(t);
 			} else {
-				new MyException("已经处理完成，不要重复处理", YtCodeEnum.YT888);
+				throw new MyException("已经处理完成，不要重复处理", YtCodeEnum.YT888);
 			}
 		} catch (Exception e) {
 		} finally {
@@ -661,7 +661,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				// 保存客户信息
 				merchantcustomerbanksservice.add(t);
 			} else {
-				new MyException("已经处理完成，不要重复处理", YtCodeEnum.YT888);
+				throw new MyException("已经处理完成，不要重复处理", YtCodeEnum.YT888);
 			}
 
 		} catch (Exception e) {

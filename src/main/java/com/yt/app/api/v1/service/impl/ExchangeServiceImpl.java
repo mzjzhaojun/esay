@@ -320,7 +320,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 		Merchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
 		if (ma.getBalance() < ss.getPayamt()) {
-			new MyException("余额不足", YtCodeEnum.YT888);
+			throw new MyException("余额不足", YtCodeEnum.YT888);
 		}
 
 		Boolean val = PayUtil.valMd5Submit(ss, mc.getAppkey());
@@ -328,7 +328,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 		List<Merchantaisle> listmc = merchantaislemapper.getByMid(mc.getId());
 		if (listmc == null || listmc.size() == 0) {
-			new MyException("商戶沒有配置通道!", YtCodeEnum.YT888);
+			throw new MyException("商戶沒有配置通道!", YtCodeEnum.YT888);
 		}
 
 		Exchange pt = new Exchange();
