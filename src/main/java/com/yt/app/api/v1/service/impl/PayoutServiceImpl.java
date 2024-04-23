@@ -607,10 +607,11 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	 * 
 	 */
 	@Transactional
-	public void payFail(Payout t) {
-		RLock lock = RedissonUtil.getLock(t.getId());
+	public void payFail(Payout pt) {
+		RLock lock = RedissonUtil.getLock(pt.getId());
 		try {
 			lock.lock();
+			Payout t = mapper.get(pt.getId());
 			if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51)) {
 				// 计算商户订单/////////////////////////////////////////////////////
 				Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
