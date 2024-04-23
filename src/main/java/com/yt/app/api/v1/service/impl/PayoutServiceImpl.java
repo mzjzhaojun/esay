@@ -278,8 +278,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
-	public SysResultVO query(String channelordernum) {
-		Payout pt = mapper.getByChannelOrdernum(channelordernum);
+	public SysResultVO query(String merchantordernum) {
+		Payout pt = mapper.getByMerchantOrdernum(merchantordernum);
 		if (pt == null) {
 			new MyException("订单不存在!", YtCodeEnum.YT888);
 		}
@@ -287,7 +287,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		srv.setBankcode(pt.getBankcode());
 		srv.setCode(pt.getStatus());
 		srv.setMerchantid(pt.getMerchantcode());
-		srv.setMerchantorderid(pt.getMerchantordernum());
+		srv.setMerchantorderid(merchantordernum);
+		srv.setPayamt(pt.getAmount());
 		return srv;
 	}
 
@@ -296,7 +297,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		RLock lock = RedissonUtil.getLock(so.getTypay_order_id());
 		try {
 			lock.lock();
-			Payout pt = mapper.getByChannelOrdernum(so.getTypay_order_id());
+			Payout pt = mapper.getByMerchantOrdernum(so.getTypay_order_id());
 			if (pt != null) {
 				SysUserContext.setUserId(pt.getUserid());
 				TenantIdContext.setTenantId(pt.getTenant_id());

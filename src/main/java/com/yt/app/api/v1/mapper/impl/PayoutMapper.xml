@@ -158,12 +158,12 @@
 	</select>
 
 	<!--getByChannelOrdernum -->
-	<select id="getByChannelOrdernum"
+	<select id="getByMerchantOrdernum"
 		parameterType="java.lang.String" resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from payout
-		where channelordernum= #{channelordernum}
+		where merchantorderid= #{channelordernum}
 	</select>
 
 	<!--getByOrdernum -->
