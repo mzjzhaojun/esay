@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,9 +51,9 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	// 盘口查单
 	@ApiOperation(value = "query", response = User.class)
 	@RequestMapping(value = "/query", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> tyquery(@PathVariable String ordernum, HttpServletRequest request,
+	public YtResponseEntity<Object> tyquery(YtRequestEntity<SysSubmitDTO> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
-		Payout pt = service.query(ordernum);
+		Payout pt = service.query(requestEntity.getBody().getMerchantorderid());
 		return new YtResponseEntity<Object>(new YtBody(pt));
 	}
 
@@ -70,7 +69,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	// 盘口查询余额
 	@ApiOperation(value = "query", response = User.class)
 	@RequestMapping(value = "/querybalance", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> query(YtRequestEntity<Payout> requestEntity, HttpServletRequest request,
+	public YtResponseEntity<Object> query(YtRequestEntity<SysSubmitDTO> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
 
 		return new YtResponseEntity<Object>(new YtBody(1));
