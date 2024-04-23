@@ -78,7 +78,7 @@ public class PayUtil {
 		map.add("bank_num", pt.getAccnumer());
 		map.add("bank_owner", pt.getAccname());
 		map.add("bank_address", pt.getBankaddress());
-		map.add("user_ip", "103.151.116.235");
+		map.add("user_ip", "103.151.116.163");
 		map.add("member_account", pt.getAccname());
 		map.add("remark", pt.getRemark());
 
