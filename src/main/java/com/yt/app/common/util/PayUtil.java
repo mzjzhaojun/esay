@@ -67,7 +67,7 @@ public class PayUtil {
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		map.add("merchant_id", cl.getCode());
 		map.add("merchant_order_id", pt.getOrdernum());
-		map.add("user_id", pt.getAccnumer());
+		map.add("user_id", pt.getId());
 		map.add("user_credit_level", "-9_9");
 		map.add("pay_amt", String.format("%.2f", pt.getAmount()));
 		map.add("user_level", 0);
