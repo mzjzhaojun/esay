@@ -5,15 +5,21 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccountorder;
+import com.yt.app.api.v1.entity.Merchantaccountorder;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
+import com.yt.app.api.v1.mapper.AgentaccountorderMapper;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ChannelaccountorderMapper;
+import com.yt.app.api.v1.mapper.MerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
+import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.ChannelaccountService;
+import com.yt.app.api.v1.service.MerchantaccountService;
 import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.Channelbot;
@@ -36,6 +42,10 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 	public void run() {
 		TenantIdContext.removeFlag();
 		PayoutMapper mapper = BeanContext.getApplicationContext().getBean(PayoutMapper.class);
+		MerchantaccountorderMapper merchantaccountordermapper = BeanContext.getApplicationContext().getBean(MerchantaccountorderMapper.class);
+		AgentaccountorderMapper agentaccountordermapper = BeanContext.getApplicationContext().getBean(AgentaccountorderMapper.class);
+		MerchantaccountService merchantaccountservice = BeanContext.getApplicationContext().getBean(MerchantaccountService.class);
+		AgentaccountService agentaccountservice = BeanContext.getApplicationContext().getBean(AgentaccountService.class);
 		ChannelMapper channelmapper = BeanContext.getApplicationContext().getBean(ChannelMapper.class);
 		TgchannelgroupMapper tgchannelgroupmapper = BeanContext.getApplicationContext()
 				.getBean(TgchannelgroupMapper.class);
@@ -56,6 +66,26 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 					channelordernum = PayUtil.SendTySubmit(payout, channel);
 				}
 				if (channelordernum == null || channelordernum.equals("")) {
+					
+					// 计算商户订单/////////////////////////////////////////////////////
+					Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(payout.getMerchantordernum());
+					mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
+					merchantaccountordermapper.put(mao);
+					//
+					merchantaccountservice.turndownPayout(mao);
+
+					// 计算代理
+					if (payout.getAgentid() != null) {
+						Agentaccountorder aao = agentaccountordermapper.getByOrdernum(payout.getAgentordernum());
+						aao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
+						agentaccountordermapper.put(aao);
+						//
+						agentaccountservice.turndownTotalincome(aao);
+					}
+					//
+					payout.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);
+					payout.setRemark("代付失败￥" + payout.getAmount());
+					payout.setSuccesstime(DateTimeUtil.getNow());
 					payout.setStatus(DictionaryResource.PAYOUTSTATUS_54);
 					mapper.put(payout);
 					break;
