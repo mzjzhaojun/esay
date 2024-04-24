@@ -31,7 +31,7 @@ public class TaskConfig {
 	@Autowired
 	private ThreadPoolTaskExecutor threadpooltaskexecutor;
 
-	@Scheduled(cron = "0/30 * * * * ?")
+	@Scheduled(cron = "0/10 * * * * ?")
 	public void notifyPayout() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		// 查询需要通知的数据
@@ -46,7 +46,7 @@ public class TaskConfig {
 		}
 	}
 
-	@Scheduled(cron = "0/10 * * * * ?")
+	@Scheduled(cron = "0/5 * * * * ?")
 	public void payout() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Payout> list = payoutmapper.selectAddlist();
@@ -60,7 +60,7 @@ public class TaskConfig {
 		}
 	}
 
-	@Scheduled(cron = "0/10 * * * * ?")
+	@Scheduled(cron = "0/5 * * * * ?")
 	public void exchange() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Exchange> list = exchangemapper.selectAddlist();
