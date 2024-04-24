@@ -49,10 +49,9 @@ public class TaskConfig {
 	@Scheduled(cron = "0/10 * * * * ?")
 	public void payout() throws InterruptedException {
 		TenantIdContext.removeFlag();
-		// 查询需要下单的单号
 		List<Payout> list = payoutmapper.selectAddlist();
 		for (Payout p : list) {
-			logger.info("获取渠道单号ID：" + p.getId() + " 状态：" + p.getStatus());
+			logger.info("代付获取渠道单号ID：" + p.getId() + " 状态：" + p.getStatus());
 			p.setStatus(DictionaryResource.PAYOUTSTATUS_55);
 			if (payoutmapper.put(p) > 0) {
 				GetPayoutChannelOrderNumThread nf = new GetPayoutChannelOrderNumThread(p.getId());
@@ -64,10 +63,9 @@ public class TaskConfig {
 	@Scheduled(cron = "0/10 * * * * ?")
 	public void exchange() throws InterruptedException {
 		TenantIdContext.removeFlag();
-		// 查询需要下单的单号
 		List<Exchange> list = exchangemapper.selectAddlist();
 		for (Exchange p : list) {
-			logger.info("获取渠道单号ID：" + p.getId() + " 状态：" + p.getStatus());
+			logger.info("换汇渠道单号ID：" + p.getId() + " 状态：" + p.getStatus());
 			p.setStatus(DictionaryResource.PAYOUTSTATUS_55);
 			if (exchangemapper.put(p) > 0) {
 				GetExchangeChannelOrderNumThread nf = new GetExchangeChannelOrderNumThread(p.getId());

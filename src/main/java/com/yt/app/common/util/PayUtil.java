@@ -89,7 +89,7 @@ public class PayUtil {
 				HttpMethod.POST, httpEntity, SysTyOrder.class);
 		SysTyOrder data = sov.getBody();
 		//
-		logger.info("菲律賓成功返回訂單號：" + data.getTypay_order_id());
+		logger.info("菲律賓成功返回訂單號：" + data.getTypay_order_id() + "返回消息：" + data.getPay_message());
 		return data.getTypay_order_id();
 	}
 
