@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yt.app.api.v1.dbo.SysQueryDTO;
 import com.yt.app.api.v1.dbo.SysSubmitDTO;
 import com.yt.app.api.v1.entity.Payout;
-import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.service.PayoutService;
 import com.yt.app.api.v1.vo.SysResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
@@ -41,7 +40,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	private PayoutService service;
 
 	// 菲律宾代付回调
-	@ApiOperation(value = "tycallback", response = User.class)
+	@ApiOperation(value = "tycallback")
 	@RequestMapping(value = "/tycallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -50,7 +49,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	}
 
 	// 盘口查单
-	@ApiOperation(value = "query", response = User.class)
+	@ApiOperation(value = "query")
 	@RequestMapping(value = "/query", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tyquery(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -59,7 +58,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	}
 
 	// 盘口下单
-	@ApiOperation(value = "submit", response = User.class)
+	@ApiOperation(value = "submit")
 	@RequestMapping(value = "/submit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submit(YtRequestEntity<SysSubmitDTO> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -68,7 +67,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	}
 
 	// 盘口查询余额
-	@ApiOperation(value = "query", response = User.class)
+	@ApiOperation(value = "query")
 	@RequestMapping(value = "/querybalance", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> query(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {

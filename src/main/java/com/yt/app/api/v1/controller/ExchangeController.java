@@ -20,7 +20,6 @@ import io.swagger.annotations.ApiOperation;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.ExchangeService;
 import com.yt.app.api.v1.entity.Exchange;
-import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.vo.ExchangeVO;
 
 /**
@@ -55,7 +54,7 @@ public class ExchangeController extends YtBaseEncipherControllerImpl<Exchange, L
 	}
 
 	// 手动回调成功
-	@ApiOperation(value = "exchangemanual", response = User.class)
+	@ApiOperation(value = "exchangemanual")
 	@RequestMapping(value = "/exchangemanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> exchangemanual(YtRequestDecryptEntity<Exchange> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {

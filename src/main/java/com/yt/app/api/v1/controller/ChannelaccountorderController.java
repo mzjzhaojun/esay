@@ -20,7 +20,6 @@ import io.swagger.annotations.ApiOperation;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.ChannelaccountorderService;
 import com.yt.app.api.v1.entity.Channelaccountorder;
-import com.yt.app.api.v1.entity.User;
 
 /**
  * @author zj defaulttest
@@ -53,7 +52,7 @@ public class ChannelaccountorderController extends YtBaseEncipherControllerImpl<
 	 * @param response
 	 * @return
 	 */
-	@ApiOperation(value = "incomemanual", response = User.class)
+	@ApiOperation(value = "incomemanual")
 	@RequestMapping(value = "/incomemanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> incomemanual(YtRequestDecryptEntity<Channelaccountorder> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {

@@ -21,7 +21,6 @@ import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.PayoutService;
 import com.yt.app.api.v1.vo.PayoutVO;
 import com.yt.app.api.v1.entity.Payout;
-import com.yt.app.api.v1.entity.User;
 
 /**
  * @author zj defaulttest
@@ -38,7 +37,7 @@ public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long>
 	private PayoutService service;
 
 	// 手动回调成功
-	@ApiOperation(value = "payoutmanual", response = User.class)
+	@ApiOperation(value = "payoutmanual")
 	@RequestMapping(value = "/payoutmanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> payoutmanual(YtRequestDecryptEntity<Payout> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {

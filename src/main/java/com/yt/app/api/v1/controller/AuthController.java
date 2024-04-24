@@ -41,7 +41,7 @@ public class AuthController extends YtBaseEncipherControllerImpl<User, Long> {
 	@Autowired
 	private AuthService authservice;
 
-	@ApiOperation(value = "login", response = User.class)
+	@ApiOperation(value = "login")
 	@RequestMapping(value = "/loginvue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> loginvue(YtRequestDecryptEntity<AuthLoginDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -49,7 +49,7 @@ public class AuthController extends YtBaseEncipherControllerImpl<User, Long> {
 		return new YtResponseEncryptEntity<Object>(new YtBody(u));
 	}
 
-	@ApiOperation(value = "logout", response = User.class)
+	@ApiOperation(value = "logout")
 	@RequestMapping(value = "/logoutvue", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public YtResponseEncryptEntity<Object> logoutvue(YtRequestDecryptEntity<User> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -58,13 +58,13 @@ public class AuthController extends YtBaseEncipherControllerImpl<User, Long> {
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
 
-	@ApiOperation(value = "getrsakey", response = User.class)
+	@ApiOperation(value = "getrsakey")
 	@RequestMapping(value = "/getrsakey", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> getrsakey(HttpServletRequest request, HttpServletResponse response) {
 		return new YtResponseEntity<Object>(new YtBody(RsaUtil.getPublicKey()));
 	}
 
-	@ApiOperation(value = "qrcode", response = User.class)
+	@ApiOperation(value = "qrcode")
 	@RequestMapping(value = "/qrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> qrcode(YtRequestDecryptEntity<AuthLoginDTO> requestEntity,
 			HttpServletResponse response) {
@@ -72,7 +72,7 @@ public class AuthController extends YtBaseEncipherControllerImpl<User, Long> {
 		return new YtResponseEncryptEntity<Object>(new YtBody(qrcode));
 	}
 
-	@ApiOperation(value = "verqrcode", response = User.class)
+	@ApiOperation(value = "verqrcode")
 	@RequestMapping(value = "/verqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> verqrcode(YtRequestDecryptEntity<AuthLoginDTO> requestEntity,
 			HttpServletResponse response) {
