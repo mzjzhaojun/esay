@@ -142,7 +142,7 @@ public class PayUtil {
 		RestTemplate resttemplate = new RestTemplate();
 		ResponseEntity<YtBody> sov = resttemplate.exchange(url, HttpMethod.POST, httpEntity, YtBody.class);
 		YtBody data = sov.getBody();
-		logger.info("盘口" + ss.getPayorderid() + "通知返回:" + data.getMsg());
+		logger.info("盘口" + ss.getPayorderid() + "通知返回:" + data.getCode());
 		return data;
 	}
 

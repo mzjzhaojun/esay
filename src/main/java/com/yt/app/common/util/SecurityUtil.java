@@ -46,7 +46,7 @@ public class SecurityUtil {
 			serializeConfig.put(Date.class, new SimpleDateFormatSerializer("YY-MM-dd HH:mm"));
 			String dataString = JSON.toJSONString(object, serializeConfig, SerializerFeature.PrettyFormat);
 			String data = AesUtil.encrypt(dataString, AuthRsaKeyContext.getAesKey());
-			log.info("显示：" + dataString);
+			//log.info("显示：" + dataString);
 			return data;
 		} catch (Throwable e) {
 			throw new RuntimeException("ApiSecurityUtil.encrypt：加密异常！");
