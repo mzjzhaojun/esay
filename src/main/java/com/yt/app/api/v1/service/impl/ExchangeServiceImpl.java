@@ -133,6 +133,10 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	@Transactional
 	public Integer post(Exchange t) {
 
+		if (t.getAmount() <= 0) {
+			throw new MyException("金额输入错误!", YtCodeEnum.YT888);
+		}
+
 		///////////////////////////////////////////////////// 录入换汇订单/////////////////////////////////////////////////////
 		Merchant m = merchantmapper.getByUserId(SysUserContext.getUserId());
 		t.setUserid(m.getUserid());
@@ -319,7 +323,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		Assert.notNull(mc, "商户不存在!");
 
 		Merchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
-		if (ma.getBalance() < ss.getPayamt()) {
+		if (ma.getBalance() < ss.getPayamt() || ss.getPayamt() <= 0) {
 			throw new MyException("余额不足", YtCodeEnum.YT888);
 		}
 
@@ -357,6 +361,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 	@Transactional
 	public Integer add(Exchange t, Merchant m) {
+
 		TenantIdContext.setTenantId(m.getTenant_id());
 		///////////////////////////////////////////////////// 盘口录入代付订单/////////////////////////////////////////////////////
 		t.setUserid(m.getUserid());

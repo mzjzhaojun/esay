@@ -132,7 +132,9 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Override
 	@Transactional
 	public Integer post(Payout t) {
-
+		if (t.getAmount() <= 0) {
+			throw new MyException("金额输入错误!", YtCodeEnum.YT888);
+		}
 		///////////////////////////////////////////////////// 录入代付订单/////////////////////////////////////////////////////
 		Merchant m = merchantmapper.getByUserId(SysUserContext.getUserId());
 		t.setUserid(m.getUserid());
@@ -336,8 +338,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		}
 
 		Merchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
-		if (ma.getBalance() < ss.getPayamt()) {
-			throw new MyException("余额不足!", YtCodeEnum.YT888);
+		if (ma.getBalance() < ss.getPayamt() || ss.getPayamt() <= 0) {
+			throw new MyException("提款金额输入错误!", YtCodeEnum.YT888);
 		}
 
 		Boolean val = PayUtil.valMd5Submit(ss, mc.getAppkey());
