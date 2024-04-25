@@ -42,10 +42,14 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 	public void run() {
 		TenantIdContext.removeFlag();
 		PayoutMapper mapper = BeanContext.getApplicationContext().getBean(PayoutMapper.class);
-		MerchantaccountorderMapper merchantaccountordermapper = BeanContext.getApplicationContext().getBean(MerchantaccountorderMapper.class);
-		AgentaccountorderMapper agentaccountordermapper = BeanContext.getApplicationContext().getBean(AgentaccountorderMapper.class);
-		MerchantaccountService merchantaccountservice = BeanContext.getApplicationContext().getBean(MerchantaccountService.class);
-		AgentaccountService agentaccountservice = BeanContext.getApplicationContext().getBean(AgentaccountService.class);
+		MerchantaccountorderMapper merchantaccountordermapper = BeanContext.getApplicationContext()
+				.getBean(MerchantaccountorderMapper.class);
+		AgentaccountorderMapper agentaccountordermapper = BeanContext.getApplicationContext()
+				.getBean(AgentaccountorderMapper.class);
+		MerchantaccountService merchantaccountservice = BeanContext.getApplicationContext()
+				.getBean(MerchantaccountService.class);
+		AgentaccountService agentaccountservice = BeanContext.getApplicationContext()
+				.getBean(AgentaccountService.class);
 		ChannelMapper channelmapper = BeanContext.getApplicationContext().getBean(ChannelMapper.class);
 		TgchannelgroupMapper tgchannelgroupmapper = BeanContext.getApplicationContext()
 				.getBean(TgchannelgroupMapper.class);
@@ -66,7 +70,7 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 					channelordernum = PayUtil.SendTySubmit(payout, channel);
 				}
 				if (channelordernum == null || channelordernum.equals("")) {
-					
+
 					// 计算商户订单/////////////////////////////////////////////////////
 					Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(payout.getMerchantordernum());
 					mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
@@ -86,6 +90,7 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 					payout.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);
 					payout.setRemark("代付失败￥" + payout.getAmount());
 					payout.setSuccesstime(DateTimeUtil.getNow());
+					payout.setBacklong(10L);
 					payout.setStatus(DictionaryResource.PAYOUTSTATUS_54);
 					mapper.put(payout);
 					break;
