@@ -497,6 +497,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		List<ExchangeVO> list = mapper.page(param);
 		list.forEach(mco -> {
 			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
+			mco.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getType()));
 		});
 		return new YtPageBean<ExchangeVO>(param, list, count);
 	}

@@ -49,6 +49,9 @@ public class ExchangeVO extends YtBaseEntity<ExchangeVO> {
 	Long backlong;
 	String imgurl;
 	Double income;
+	String qrcode;
+	Integer type;
+	String typename;
 	String notifyurl;
 	Integer notifystatus;
 	String remark;

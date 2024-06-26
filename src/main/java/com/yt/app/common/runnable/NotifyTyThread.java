@@ -48,7 +48,10 @@ public class NotifyTyThread implements Runnable {
 				// 通知到
 				if (result.getCode() == 200) {
 					payout.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_63);
-					mapper.put(payout);
+					int j = mapper.put(payout);
+					if (j > 0) {
+						payout.setVersion(payout.getVersion() + 1);
+					}
 					break;
 				}
 			} catch (Exception e1) {

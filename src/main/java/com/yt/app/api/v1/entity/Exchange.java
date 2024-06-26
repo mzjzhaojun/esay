@@ -46,6 +46,8 @@ public class Exchange extends YtBaseEntity<Exchange> {
 	Integer status;
 	java.util.Date successtime;
 	Long backlong;
+	String qrcode;
+	Integer type;
 	String imgurl;
 	Double income;
 	String notifyurl;

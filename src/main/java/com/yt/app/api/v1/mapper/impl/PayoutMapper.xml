@@ -140,13 +140,10 @@
 				notifystatus= #{notifystatus},
 			</if>
 			<if test="remark != null">
-				remark= #{remark},
-			</if>
-			<if test="version != null">
-				version= #{version}+1
+				remark= #{remark}
 			</if>
 		</set>
-		where id = #{id} and version = #{version}
+		where id = #{id}
 	</update>
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"

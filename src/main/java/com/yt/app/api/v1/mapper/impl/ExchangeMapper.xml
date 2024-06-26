@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.ExchangeMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankcode,bankname,bankaddress,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income,notifyurl,notifystatus,remark,channelbalance,version
+		id,tenant_id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankcode,bankname,bankaddress,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,type,qrcode,imgurl,income,notifyurl,notifystatus,remark,channelbalance,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -18,9 +18,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Exchange">
 		insert into
-		exchange(id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankcode,bankname,bankaddress,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income,notifyurl,notifystatus,remark,channelbalance)
+		exchange(id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantcost,merchantdeal,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankcode,bankname,bankaddress,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,type,qrcode,imgurl,income,notifyurl,notifystatus,remark,channelbalance)
 		values
-		(#{id},#{userid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantcost},#{merchantdeal},#{merchantpay},#{aisleid},#{aislename},#{agentid},#{agentordernum},#{agentincome},#{channelid},#{channelname},#{channelordernum},#{channelcost},#{channeldeal},#{channelpay},#{accname},#{accnumer},#{bankcode},#{bankname},#{bankaddress},#{amount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{imgurl},#{income},#{notifyurl},#{notifystatus},#{remark},#{channelbalance})
+		(#{id},#{userid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantcost},#{merchantdeal},#{merchantpay},#{aisleid},#{aislename},#{agentid},#{agentordernum},#{agentincome},#{channelid},#{channelname},#{channelordernum},#{channelcost},#{channeldeal},#{channelpay},#{accname},#{accnumer},#{bankcode},#{bankname},#{bankaddress},#{amount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{type},#{qrcode},#{imgurl},#{income},#{notifyurl},#{notifystatus},#{remark},#{channelbalance})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -145,6 +145,9 @@
 				update_time= #{update_time},
 			</if>
 			<if test="imgurl != null">
+				qrcode= #{qrcode},
+			</if>
+			<if test="imgurl != null">
 				imgurl= #{imgurl},
 			</if>
 			<if test="income != null">
@@ -160,13 +163,10 @@
 				remark= #{remark},
 			</if>
 			<if test="channelbalance != null">
-				channelbalance= #{channelbalance},
-			</if>
-			<if test="version != null">
-				version= #{version}+1
+				channelbalance= #{channelbalance}
 			</if>
 		</set>
-		where id = #{id} and version = #{version}
+		where id = #{id}
 	</update>
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"
