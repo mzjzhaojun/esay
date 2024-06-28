@@ -23,6 +23,7 @@ public class Channel extends YtBaseEntity<Channel> {
 	String code;
 	Boolean status;
 	Double balance;
+	Double remotebalance;
 	Double exchange;
 	Double onecost;
 	Double downpoint;

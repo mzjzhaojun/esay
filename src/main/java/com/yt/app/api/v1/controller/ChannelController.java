@@ -9,11 +9,13 @@ import org.springframework.http.MediaType;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
+
 import io.swagger.annotations.ApiOperation;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.ChannelService;
@@ -41,4 +43,18 @@ public class ChannelController extends YtBaseEncipherControllerImpl<Channel, Lon
 		YtIPage<Channel> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
+
+	/**
+	 * 
+	 * 
+	 * @version 1.1
+	 */
+	@Override
+	@RequestMapping(value = "/remotebalance/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> get(@PathVariable Long id, HttpServletRequest request,
+			HttpServletResponse response) {
+		Integer t = service.getRemotebalance(id);
+		return new YtResponseEncryptEntity<Object>(new YtBody(t));
+	}
+
 }

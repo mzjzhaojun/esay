@@ -47,6 +47,8 @@ public class Payout extends YtBaseEntity<Payout> {
 	Integer status;
 	java.util.Date successtime;
 	Long backlong;
+	String qrcode;
+	Integer type;
 	String imgurl;
 	Double income;
 	String notifyurl;

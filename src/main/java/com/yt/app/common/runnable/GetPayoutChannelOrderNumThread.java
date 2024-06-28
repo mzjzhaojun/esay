@@ -68,32 +68,32 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 				String channelordernum = "PC" + StringUtil.getOrderNum();
 				if (channel.getIfordernum()) {
 					channelordernum = PayUtil.SendTySubmit(payout, channel);
-				}
-				if (channelordernum == null || channelordernum.equals("")) {
+					if (channelordernum == null) {
 
-					// 计算商户订单/////////////////////////////////////////////////////
-					Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(payout.getMerchantordernum());
-					mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
-					merchantaccountordermapper.put(mao);
-					//
-					merchantaccountservice.turndownPayout(mao);
-
-					// 计算代理
-					if (payout.getAgentid() != null) {
-						Agentaccountorder aao = agentaccountordermapper.getByOrdernum(payout.getAgentordernum());
-						aao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
-						agentaccountordermapper.put(aao);
+						// 计算商户订单/////////////////////////////////////////////////////
+						Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(payout.getMerchantordernum());
+						mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
+						merchantaccountordermapper.put(mao);
 						//
-						agentaccountservice.turndownTotalincome(aao);
+						merchantaccountservice.turndownPayout(mao);
+
+						// 计算代理
+						if (payout.getAgentid() != null) {
+							Agentaccountorder aao = agentaccountordermapper.getByOrdernum(payout.getAgentordernum());
+							aao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
+							agentaccountordermapper.put(aao);
+							//
+							agentaccountservice.turndownTotalincome(aao);
+						}
+						//
+						payout.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);
+						payout.setRemark("代付失败￥" + payout.getAmount());
+						payout.setSuccesstime(DateTimeUtil.getNow());
+						payout.setBacklong(10L);
+						payout.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+						mapper.put(payout);
+						break;
 					}
-					//
-					payout.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);
-					payout.setRemark("代付失败￥" + payout.getAmount());
-					payout.setSuccesstime(DateTimeUtil.getNow());
-					payout.setBacklong(10L);
-					payout.setStatus(DictionaryResource.PAYOUTSTATUS_54);
-					mapper.put(payout);
-					break;
 				}
 				// 获取到单号
 				payout.setChannelordernum(channelordernum);
@@ -135,11 +135,8 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 					what.append("客户请你们尽快处理\n");
 					if (tgchannelgroup != null)
 						cbot.sendText(tgchannelgroup.getTgid(), what.toString());
-				} else {
-					payout.setStatus(DictionaryResource.PAYOUTSTATUS_54);
-					mapper.put(payout);
 					break;
-				}
+				} 
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			} finally {

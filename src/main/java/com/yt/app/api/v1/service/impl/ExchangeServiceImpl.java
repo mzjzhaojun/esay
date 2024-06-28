@@ -299,7 +299,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			if (pt.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51)) {
 				Channel cl = channelmapper.get(pt.getChannelid());
 				// md5值是否被篡改
-				if (PayUtil.valMd5TyOrder(so, cl.getApikey())) {
+				if (PayUtil.valMd5TyResultOrder(so, cl.getApikey())) {
 					if (so.getPay_message() == 1) {
 						paySuccess(pt);
 						return new YtBody("成功", 200);
@@ -327,7 +327,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			throw new MyException("余额不足", YtCodeEnum.YT888);
 		}
 
-		Boolean val = PayUtil.valMd5Submit(ss, mc.getAppkey());
+		Boolean val = PayUtil.Md5Submit(ss, mc.getAppkey());
 		Assert.isTrue(val, "签名不正确!");
 
 		List<Merchantaisle> listmc = merchantaislemapper.getByMid(mc.getId());
@@ -354,7 +354,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		sr.setPayorderid(pt.getChannelordernum());
 		sr.setRemark(ss.getRemark());
 		sr.setPaytype(ss.getPaytype());
-		sr.setSign(PayUtil.Md5Result(sr, mc.getAppkey()));
+		sr.setSign(PayUtil.Md5Notify(sr, mc.getAppkey()));
 
 		return sr;
 	}

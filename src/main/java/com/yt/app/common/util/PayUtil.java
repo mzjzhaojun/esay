@@ -15,6 +15,7 @@ import com.yt.app.api.v1.dbo.SysSubmitDTO;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.vo.SysResultVO;
+import com.yt.app.api.v1.vo.SysTyBalance;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.common.yt.YtBody;
 
@@ -22,32 +23,55 @@ public class PayUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(PayUtil.class);
 
-	// 验证菲律宾返回签名
-	public static boolean valMd5TyOrder(SysTyOrder so, String key) {
+	// 验证菲律宾通知返回签名
+	public static boolean valMd5TyResultOrder(SysTyOrder so, String key) {
 		String signParams = "merchant_id=" + so.getMerchant_id() + "&merchant_order_id=" + so.getMerchant_order_id()
 				+ "&typay_order_id=" + so.getTypay_order_id() + "&pay_type=" + so.getPay_type() + "&pay_amt="
 				+ String.format("%.2f", so.getPay_amt()) + "&pay_message=" + so.getPay_message() + "&remark="
 				+ so.getRemark() + "&key=" + key;
-
+		logger.info("菲律宾下单回调签名:" + signParams);
 		if (so.getSign().equals(MD5Utils.md5(signParams))) {
 			return true;
 		}
-		logger.info("菲律宾回调签名:" + signParams);
+		return false;
+	}
+
+	// 验证菲律宾查查询单返回签名
+	public static boolean valMd5TySelectOrder(SysTyOrder so, String key) {
+		String signParams = "merchant_id=" + so.getMerchant_id() + "&merchant_order_id=" + so.getMerchant_order_id()
+				+ "&typay_order_id=" + so.getTypay_order_id() + "&pay_amt=" + String.format("%.2f", so.getPay_amt())
+				+ "&pay_message=" + so.getPay_message() + "&remark=SelectOrder&key=" + key;
+		logger.info("菲律宾查單回调签名:" + signParams);
+		String sign = MD5Utils.md5(signParams);
+		logger.info("我方签名:" + signParams + "结果:" + sign + "对方签名:" + so.getSign());
+		if (so.getSign().equals(sign)) {
+			return true;
+		}
 		return false;
 	}
 
 	// 盘口下单验证签名
-	public static boolean valMd5Submit(SysSubmitDTO ss, String key) {
+	public static boolean Md5Submit(SysSubmitDTO ss, String key) {
 		String signParams = "merchantid=" + ss.getMerchantid() + "&merchantorderid=" + ss.getMerchantorderid()
 				+ "&notifyurl=" + ss.getNotifyurl() + "&bankname=" + ss.getBankname() + "&bankcode=" + ss.getBankcode()
 				+ "&banknum=" + ss.getBanknum() + "&bankowner=" + ss.getBankowner() + "&paytype=" + ss.getPaytype()
-				+ "&payamt=" + ss.getPayamt() + "&remark=" + ss.getRemark() + "&key=" + key;
+				+ "&payamt=" + String.format("%.2f", ss.getPayamt()) + "&remark=" + ss.getRemark() + "&key=" + key;
 		String sign = MD5Utils.md5(signParams);
 		logger.info("我方签名:" + signParams + "结果:" + sign + "对方签名:" + ss.getSign());
 		if (ss.getSign().equals(sign)) {
 			return true;
 		}
 		return false;
+	}
+
+	// 盤口通知簽名
+	public static String Md5Notify(SysResultVO ss, String key) {
+		String signParams = "merchantid=" + ss.getMerchantid() + "&payorderid=" + ss.getPayorderid()
+				+ "&merchantorderid=" + ss.getMerchantorderid() + "&bankcode=" + ss.getBankcode() + "&payamt="
+				+ String.format("%.2f", ss.getPayamt()) + "&remark=" + ss.getRemark() + "&code=" + ss.getCode()
+				+ "&key=" + key;
+		logger.info("盘口通知签名:" + signParams);
+		return MD5Utils.md5(signParams);
 	}
 
 	// 菲律宾下单
@@ -85,38 +109,68 @@ public class PayUtil {
 		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		//
-		ResponseEntity<SysTyOrder> sov = resttemplate.exchange(cl.getApiip() + "?sign=" + MD5Utils.md5(signParams),
-				HttpMethod.POST, httpEntity, SysTyOrder.class);
+		ResponseEntity<SysTyOrder> sov = resttemplate.exchange(
+				cl.getApiip() + "/withdraw/create?sign=" + MD5Utils.md5(signParams), HttpMethod.POST, httpEntity,
+				SysTyOrder.class);
 		SysTyOrder data = sov.getBody();
-		//
 		logger.info("菲律賓成功返回訂單號：" + data.getTypay_order_id() + "返回消息：" + data.getPay_message());
-		return data.getTypay_order_id();
+		if (data.getPay_message() == 1) {
+			return data.getTypay_order_id();
+		}
+		return null;
 	}
 
 	// 菲律宾查单
-	public static SysTyOrder SendTySelect(String ordernum, Integer channelcode, String key) {
+	public static SysTyOrder SendTySelectOrder(String ordernum, Channel cl) {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.add("user-agent",
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 
-		String signParams = "merchant_id=" + channelcode + "&merchant_order_id=" + ordernum + "&key=" + key;
+		String signParams = "merchant_id=" + cl.getCode() + "&merchant_order_id=" + ordernum + "&key=" + cl.getApikey();
 
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("merchant_id", channelcode);
+		map.add("merchant_id", cl.getCode());
 		map.add("merchant_order_id", ordernum);
-		map.add("remark", "select");
-
+		map.add("remark", "SelectOrder");
 		System.out.println("菲律宾查单签名：" + signParams);
 
 		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		ResponseEntity<SysTyOrder> sov = resttemplate.exchange(
-				"http://txfat-api.fbnma.com/api/query/withdraw/view?sign=" + MD5Utils.md5(signParams), HttpMethod.POST,
+				cl.getApiip() + "/api/query/withdraw/view?sign=" + MD5Utils.md5(signParams), HttpMethod.POST,
 				httpEntity, SysTyOrder.class);
 		SysTyOrder data = sov.getBody();
-		logger.info(data.getTypay_order_id());
+		if (valMd5TySelectOrder(data, cl.getApikey())) {
+			logger.info(data.getTypay_order_id());
+			return data;
+		} else {
+			return null;
+		}
+	}
+
+	// 菲律宾查余额
+	public static SysTyBalance SendTySelectBalance(Channel cl) {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.add("user-agent",
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+
+		String signParams = "merchant_id=" + cl.getCode() + "&key=" + cl.getApikey();
+
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("MerchantID", cl.getCode());
+		map.add("MerchantType", 0);
+		System.out.println("菲律宾查余额签名：" + signParams);
+
+		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		ResponseEntity<SysTyBalance> sov = resttemplate.exchange(
+				cl.getApiip() + "/api/query/withdraw/amount?sign=" + MD5Utils.md5(signParams), HttpMethod.POST,
+				httpEntity, SysTyBalance.class);
+		SysTyBalance data = sov.getBody();
 		return data;
 	}
 
@@ -128,7 +182,7 @@ public class PayUtil {
 		headers.add("user-agent",
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 		// 签名
-		String signParams = Md5Result(ss, key);
+		String signParams = Md5Notify(ss, key);
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		map.add("merchantid", ss.getMerchantid());
 		map.add("payorderid", ss.getPayorderid());
@@ -144,14 +198,6 @@ public class PayUtil {
 		YtBody data = sov.getBody();
 		logger.info("盘口" + ss.getPayorderid() + "通知返回:" + data.getCode());
 		return data;
-	}
-
-	public static String Md5Result(SysResultVO ss, String key) {
-		String signParams = "merchantid=" + ss.getMerchantid() + "&payorderid=" + ss.getPayorderid()
-				+ "&merchantorderid=" + ss.getMerchantorderid() + "&bankcode=" + ss.getBankcode() + "&payamt="
-				+ ss.getPayamt() + "&remark=" + ss.getRemark() + "&code=" + ss.getCode() + "&key=" + key;
-		logger.info("盘口通知签名:" + signParams);
-		return MD5Utils.md5(signParams);
 	}
 
 }

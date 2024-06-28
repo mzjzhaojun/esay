@@ -21,4 +21,6 @@ public interface ChannelService extends YtIBaseService<Channel, Long> {
 	void updateIncome(Channelaccount t);
 
 	void withdrawamount(Channelaccount t);
+
+	Integer getRemotebalance(Long id);
 }

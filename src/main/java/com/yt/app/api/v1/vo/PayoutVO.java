@@ -53,6 +53,9 @@ public class PayoutVO extends YtBaseEntity<Aislechannel> {
 	String statusname;
 	java.util.Date successtime;
 	Long backlong;
+	String qrcode;
+	Integer type;
+	String typename;
 	String imgurl;
 	Double income;
 	String notifyurl;

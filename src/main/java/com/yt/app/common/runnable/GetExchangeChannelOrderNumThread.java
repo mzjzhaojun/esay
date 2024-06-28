@@ -93,17 +93,8 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 					what.append("金额：" + exchange.getAmount() + "\n");
 					what.append("发起时间：" + DateTimeUtil.getDateTime() + "\n");
 					what.append("客户请你们尽快处理\n");
-					if (tgchannelgroup != null) {
+					if (tgchannelgroup != null)
 						cbot.sendText(tgchannelgroup.getTgid(), what.toString());
-					}
-				} else {
-					exchange.setStatus(DictionaryResource.PAYOUTSTATUS_54);
-					mapper.put(exchange);
-					break;
-				}
-				if (i > 3) {
-					exchange.setStatus(DictionaryResource.PAYOUTSTATUS_54);
-					mapper.put(exchange);
 					break;
 				}
 			} catch (Exception e1) {
@@ -112,6 +103,11 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 				try {
 					Thread.sleep(1000 * rd.nextInt(60));
 					i++;
+					if (i > 3) {
+						exchange.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+						mapper.put(exchange);
+						break;
+					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

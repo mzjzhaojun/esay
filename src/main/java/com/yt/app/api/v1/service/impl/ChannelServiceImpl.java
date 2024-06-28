@@ -8,6 +8,7 @@ import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ChannelaccountMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.ChannelService;
+import com.yt.app.api.v1.vo.SysTyBalance;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.context.TenantIdContext;
@@ -23,6 +24,7 @@ import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PasswordUtil;
+import com.yt.app.common.util.PayUtil;
 import com.yt.app.common.util.RedissonUtil;
 
 import java.util.Collections;
@@ -160,5 +162,13 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 		} finally {
 			lock.unlock();
 		}
+	}
+
+	@Override
+	public Integer getRemotebalance(Long id) {
+		Channel cl = mapper.get(id);
+		SysTyBalance stb = PayUtil.SendTySelectBalance(cl);
+		cl.setRemotebalance(stb.getAvailableBalance());
+		return mapper.put(cl);
 	}
 }

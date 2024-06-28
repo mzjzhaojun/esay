@@ -299,18 +299,22 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		RLock lock = RedissonUtil.getLock(so.getTypay_order_id());
 		try {
 			lock.lock();
-			Payout pt = mapper.getByMerchantOrdernum(so.getTypay_order_id());
+			Payout pt = mapper.getByOrdernum(so.getMerchant_order_id());
 			if (pt != null) {
 				SysUserContext.setUserId(pt.getUserid());
 				TenantIdContext.setTenantId(pt.getTenant_id());
 				if (pt.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51)) {
 					Channel cl = channelmapper.get(pt.getChannelid());
-					// md5值是否被篡改
-					if (PayUtil.valMd5TyOrder(so, cl.getApikey())) {
-						if (so.getPay_message() == 1) {
-							paySuccess(pt);
-						} else {
-							payFail(pt);
+					// 查询渠道是否真实成功
+					SysTyOrder sto = PayUtil.SendTySelectOrder(pt.getOrdernum(), cl);
+					if (sto != null && sto.getPay_message() == 1) {
+						// md5值是否被篡改
+						if (PayUtil.valMd5TyResultOrder(so, cl.getApikey())) {
+							if (so.getPay_message() == 1) {
+								paySuccess(pt);
+							} else {
+								payFail(pt);
+							}
 						}
 					}
 				}
@@ -342,7 +346,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			throw new MyException("提款金额输入错误!", YtCodeEnum.YT888);
 		}
 
-		Boolean val = PayUtil.valMd5Submit(ss, mc.getAppkey());
+		Boolean val = PayUtil.Md5Submit(ss, mc.getAppkey());
 		if (!val) {
 			throw new MyException("签名不正确!", YtCodeEnum.YT888);
 		}
@@ -372,7 +376,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		sr.setPayorderid(pt.getMerchantordernum());
 		sr.setRemark(ss.getRemark());
 		sr.setPaytype(ss.getPaytype());
-		sr.setSign(PayUtil.Md5Result(sr, mc.getAppkey()));
+		sr.setSign(PayUtil.Md5Notify(sr, mc.getAppkey()));
 		// 返回给盘口订单号
 		return sr;
 	}

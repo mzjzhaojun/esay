@@ -91,8 +91,8 @@ public class DictionaryResource implements Serializable {
 	 * 回调状态
 	 */
 
-	public static final Integer PAYOUTNOTIFYSTATUS_60 = 60; // 无需通知
-	public static final Integer PAYOUTNOTIFYSTATUS_61 = 61; // 需要通知
+	public static final Integer PAYOUTNOTIFYSTATUS_60 = 60; // 无通知
+	public static final Integer PAYOUTNOTIFYSTATUS_61 = 61; // 需通知
 	public static final Integer PAYOUTNOTIFYSTATUS_62 = 62; // 待通知
 	public static final Integer PAYOUTNOTIFYSTATUS_63 = 63; // 已通知
 	public static final Integer PAYOUTNOTIFYSTATUS_64 = 64; // 通知失败
