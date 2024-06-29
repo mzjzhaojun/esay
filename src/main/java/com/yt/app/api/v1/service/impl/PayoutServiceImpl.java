@@ -309,13 +309,12 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 					SysTyOrder sto = PayUtil.SendTySelectOrder(pt.getOrdernum(), cl);
 					if (sto != null && sto.getPay_message() == 1) {
 						// md5值是否被篡改
-						if (PayUtil.valMd5TyResultOrder(so, cl.getApikey())) {
-							if (so.getPay_message() == 1) {
-								paySuccess(pt);
-							} else {
-								payFail(pt);
-							}
+						if (PayUtil.valMd5TyResultOrder(so, cl.getApikey()) && so.getPay_message() == 1) {
+							paySuccess(pt);
 						}
+					} else if (sto != null && (sto.getPay_message() == -2 || sto.getPay_message() == -3)
+							&& so.getPay_message() == -2) {
+						payFail(pt);
 					}
 				}
 			} else {

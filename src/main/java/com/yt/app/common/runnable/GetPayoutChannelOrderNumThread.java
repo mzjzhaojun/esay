@@ -133,7 +133,7 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 					what.append("卡号：" + payout.getAccnumer() + "\n");
 					what.append("金额：" + payout.getAmount() + "\n");
 					what.append("发起时间：" + DateTimeUtil.getDateTime() + "\n");
-					what.append("客户请你们尽快处理\n");
+					what.append("请你们尽快处理\n");
 					if (tgchannelgroup != null)
 						cbot.sendText(tgchannelgroup.getTgid(), what.toString());
 					break;

@@ -31,7 +31,7 @@ public class PayUtil {
 				+ "&typay_order_id=" + so.getTypay_order_id() + "&pay_type=" + so.getPay_type() + "&pay_amt="
 				+ String.format("%.2f", so.getPay_amt()) + "&pay_message=" + so.getPay_message() + "&remark="
 				+ so.getRemark() + "&key=" + key;
-		log.info("菲律宾下单回调签名:" + signParams);
+		log.info("菲律宾回调签名:" + signParams);
 		if (so.getSign().equals(MD5Utils.md5(signParams))) {
 			return true;
 		}
