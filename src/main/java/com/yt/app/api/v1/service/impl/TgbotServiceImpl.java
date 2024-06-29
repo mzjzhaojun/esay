@@ -8,9 +8,12 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.TgbotMapper;
 import com.yt.app.api.v1.service.TgbotService;
+import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
+import com.yt.app.common.bot.Channelbot;
+import com.yt.app.common.bot.Merchantbot;
 import com.yt.app.common.bot.Messagebot;
 import com.yt.app.api.v1.entity.Tgbot;
 import com.yt.app.api.v1.vo.TgbotVO;
@@ -37,6 +40,12 @@ public class TgbotServiceImpl extends YtBaseServiceImpl<Tgbot, Long> implements 
 	private TgbotMapper mapper;
 
 	private TelegramBotsApi botsApi;
+
+	@Autowired
+	private Merchantbot merchantbot;
+	
+	@Autowired
+	private Channelbot channelbot;
 
 	public TgbotServiceImpl() {
 		try {
@@ -90,9 +99,11 @@ public class TgbotServiceImpl extends YtBaseServiceImpl<Tgbot, Long> implements 
 
 	@Override
 	public void initBot() {
-		TenantIdContext.setTenantId(1720395906240614400L);
+		TenantIdContext.setTenantId(AppConstant.SYSTEM_TENANT_ID);
 		List<Tgbot> list = mapper.list(new HashMap<String, Object>());
 		try {
+			botsApi.registerBot(merchantbot);
+			botsApi.registerBot(channelbot);
 			for (Tgbot tb : list) {
 				Messagebot mb = new Messagebot(tb.getName(), tb.getToken());
 				botsApi.registerBot(mb);

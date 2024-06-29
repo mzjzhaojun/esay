@@ -1,8 +1,5 @@
 package com.yt.app.common.runnable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.mapper.MerchantMapper;
@@ -14,9 +11,10 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.PayUtil;
 
-public class NotifyTyThread implements Runnable {
+import lombok.extern.slf4j.Slf4j;
 
-	private static final Logger logger = LoggerFactory.getLogger(NotifyTyThread.class);
+@Slf4j
+public class NotifyTyThread implements Runnable {
 
 	private Long id;
 
@@ -39,7 +37,7 @@ public class NotifyTyThread implements Runnable {
 		ss.setBankcode(payout.getBankcode());
 		ss.setCode(payout.getStatus());
 		ss.setRemark(payout.getRemark());
-		logger.info("通知 start---------------------商户单号：" + payout.getMerchantordernum());
+		log.info("通知 start---------------------商户单号：" + payout.getMerchantordernum());
 		int i = 1;
 		while (true) {
 			YtBody result;
@@ -71,7 +69,7 @@ public class NotifyTyThread implements Runnable {
 			}
 		}
 		TenantIdContext.remove();
-		logger.info("通知 end---------------------");
+		log.info("通知 end---------------------");
 	}
 
 }

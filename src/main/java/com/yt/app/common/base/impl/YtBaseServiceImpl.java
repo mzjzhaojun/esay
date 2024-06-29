@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yt.app.common.common.yt.YtIPage;
@@ -32,7 +30,7 @@ import com.yt.app.common.base.YtIBaseMapper;
 @Service
 public abstract class YtBaseServiceImpl<T, ID extends Serializable> implements YtIBaseService<T, ID> {
 
-	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 
 	@Autowired
 	private YtIBaseMapper<T> mapper;

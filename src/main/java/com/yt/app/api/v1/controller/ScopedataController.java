@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import com.yt.app.common.common.yt.YtRequestDecryptEntity;
@@ -30,7 +30,7 @@ import com.yt.app.api.v1.entity.Scopedata;
 @RequestMapping("/rest/v1/scopedata")
 public class ScopedataController extends YtBaseEncipherControllerImpl<Scopedata, Long> {
 
-	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	private ScopedataService service;
 

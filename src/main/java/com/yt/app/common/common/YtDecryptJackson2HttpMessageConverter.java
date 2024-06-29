@@ -8,8 +8,8 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
@@ -44,7 +44,6 @@ import com.yt.app.common.util.SecurityUtil;
  */
 public class YtDecryptJackson2HttpMessageConverter extends MappingJackson2HttpMessageConverter {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 

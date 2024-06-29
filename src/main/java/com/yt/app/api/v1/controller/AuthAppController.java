@@ -3,8 +3,8 @@ package com.yt.app.api.v1.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +35,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/app/v1/auth")
 public class AuthAppController extends YtBaseEncipherControllerImpl<User, Long> {
 
-	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 
 	@Autowired
 	private AuthService authservice;

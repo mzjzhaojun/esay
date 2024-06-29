@@ -26,7 +26,12 @@ import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.service.PayconfigService;
+import com.yt.app.common.base.constant.AppConstant;
+import com.yt.app.common.base.context.TenantIdContext;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class Merchantbot extends TelegramLongPollingBot {
 
@@ -56,12 +61,12 @@ public class Merchantbot extends TelegramLongPollingBot {
 
 	@Override
 	public String getBotUsername() {
-		return "@rabbityydsm_bot";
+		return "飞兔商户";
 	}
 
 	@Override
 	public String getBotToken() {
-		return "7048821019:AAGPgNiLt9YYcEG8VTZ2mwi9N7-o2SASTkA";
+		return "7472319600:AAGY998sxdVqHNiOVdW3OE6mnEj3KczMxto";
 	}
 
 	@Override
@@ -69,9 +74,10 @@ public class Merchantbot extends TelegramLongPollingBot {
 		Long chatid = update.getMessage().getChat().getId();
 		String message = update.getMessage().getText();
 		if (message != null) {
+			TenantIdContext.setTenantId(AppConstant.SYSTEM_TENANT_ID);
 			Tgmerchantgroup tmg = tgmerchantgroupmapper.getByTgGroupId(chatid);
 			Integer replyid = update.getMessage().getMessageId();
-			System.out.println("merchant:" + update.toString());
+			log.info("merchant:" + update.toString());
 			if (tmg == null) {
 				tmg = tgmerchantgroupmapper.getByTgGroupName(update.getMessage().getChat().getTitle());
 				if (tmg != null) {
@@ -89,7 +95,7 @@ public class Merchantbot extends TelegramLongPollingBot {
 				handlemessage(message, chatid, replyid, tmg);
 			}
 		}
-
+		TenantIdContext.remove();
 	}
 
 	private void handlemessage(String message, Long chatid, Integer replyid, Tgmerchantgroup tmg) {
@@ -136,7 +142,7 @@ public class Merchantbot extends TelegramLongPollingBot {
 				String cmsg = "订单号：" + po.getChannelordernum() + "\n名字:" + po.getAccname() + "\n卡号:" + po.getAccnumer()
 						+ "\n金额:" + po.getAmount() + "\n客户加急催单。请回复！";
 				Message messag = cbot.sendText(tcg.getTgid(), cmsg);
-				System.out.println(messag.toString());
+				log.info(messag.toString());
 				Tgmerchantchannelmsg t = tgmerchantchannelmsgmapper.getOrderNum(orderno);
 				if (t == null) {
 					// 插入关联关系

@@ -3,11 +3,13 @@
 	<property scope="context" name="USER_HOME" value="c://logpay" />
 	<property scope="context" name="FILE_NAME" value="pay" />
 	<timestamp key="Day" datePattern="yyyy-MM-dd" />
+	
 	<appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<pattern>%d{MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%msg%n</pattern>
 		</encoder>
 	</appender>
+	
 	<appender name="File"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${USER_HOME}/${FILE_NAME}.log</file>
@@ -24,6 +26,7 @@
 			<pattern>%-4relative %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level%logger{35} - %msg%n</pattern>
 		</encoder>
 	</appender>
+	
 	<appender name="FileError"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${USER_HOME}/${FILE_NAME}-error.log</file>
@@ -40,6 +43,7 @@
 			<pattern>%-4relative %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level%logger{35} - %msg%n</pattern>
 		</encoder>
 	</appender>
+	
 	<appender name="ASYNC-FILE" class="ch.qos.logback.classic.AsyncAppender">
 		<discardingThreshold>0</discardingThreshold>
 		<queueSize>512</queueSize>
@@ -47,8 +51,8 @@
 		<includeCallerData>true</includeCallerData>
 	</appender>
 
-    <logger name="com.yt.app" level="debug">		
-	</logger>
+    <logger name="com.yt.app" level="debug"></logger>
+    
 	<root level="info"><!-- debug error -->
 		<appender-ref ref="ASYNC-FILE" />
 	</root>

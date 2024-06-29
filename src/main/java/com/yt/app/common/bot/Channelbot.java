@@ -19,7 +19,12 @@ import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
 import com.yt.app.api.v1.service.PayconfigService;
+import com.yt.app.common.base.constant.AppConstant;
+import com.yt.app.common.base.context.TenantIdContext;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class Channelbot extends TelegramLongPollingBot {
 
@@ -37,12 +42,12 @@ public class Channelbot extends TelegramLongPollingBot {
 
 	@Override
 	public String getBotUsername() {
-		return "@rabbityydsc_bot";
+		return "飞兔运营";
 	}
 
 	@Override
 	public String getBotToken() {
-		return "7031325076:AAGwSE3ytitWpu0VU-dzKK41tv0eU0O0Kpk";
+		return "7126079871:AAFQOkrsh2s3ytDrP4ERtMwpWryV3Zs8jc8";
 	}
 
 	@Override
@@ -50,8 +55,9 @@ public class Channelbot extends TelegramLongPollingBot {
 		Long chatid = update.getMessage().getChat().getId();
 		String message = update.getMessage().getText();
 		Message replymsg = update.getMessage().getReplyToMessage();
-		System.out.println("channel:" + update.toString());
+		log.info("channel:" + update.toString());
 		if (message != null) {
+			TenantIdContext.setTenantId(AppConstant.SYSTEM_TENANT_ID);
 			Tgchannelgroup tmg = tgchannelgroupmapper.getByTgGroupId(chatid);
 			if (tmg == null) {
 				tmg = tgchannelgroupmapper.getByTgGroupName(update.getMessage().getChat().getTitle());
@@ -78,6 +84,7 @@ public class Channelbot extends TelegramLongPollingBot {
 				handlemessage(message, tmg);
 			}
 		}
+		TenantIdContext.remove();
 	}
 
 	private void handlemessage(String message, Tgchannelgroup tmg) {

@@ -2,8 +2,8 @@ package com.yt.app.api.v1.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
@@ -29,7 +29,7 @@ import com.yt.app.api.v1.entity.Tgmerchantlabel;
 @RequestMapping("/rest/v1/tgmerchantlabel")
 public class TgmerchantlabelController extends YtBaseEncipherControllerImpl<Tgmerchantlabel, Long> {
 
-	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	private TgmerchantlabelService service;
 

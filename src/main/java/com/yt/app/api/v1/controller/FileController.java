@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,7 +47,7 @@ import com.yt.app.common.util.FileUtil;
 @RequestMapping("/rest/v1/file")
 public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 
-	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 
 	@Autowired
 	private FileService service;

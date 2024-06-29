@@ -2,8 +2,8 @@ package com.yt.app.common.runnable;
 
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+
 
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Channel;
@@ -28,9 +28,10 @@ import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.PayUtil;
 import com.yt.app.common.util.StringUtil;
 
-public class GetPayoutChannelOrderNumThread implements Runnable {
+import lombok.extern.slf4j.Slf4j;
 
-	private static final Logger logger = LoggerFactory.getLogger(GetPayoutChannelOrderNumThread.class);
+@Slf4j
+public class GetPayoutChannelOrderNumThread implements Runnable {
 
 	private Long id;
 
@@ -61,7 +62,7 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 		Payout payout = mapper.get(id);
 		Channel channel = channelmapper.get(payout.getChannelid());
 		Random rd = new Random();
-		logger.info("代付获取渠道单号 start---------------------商户单号：" + payout.getMerchantordernum());
+		log.info("代付获取渠道单号 start---------------------商户单号：" + payout.getMerchantordernum());
 		int i = 1;
 		while (true) {
 			try {
@@ -154,7 +155,7 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 			}
 		}
 		TenantIdContext.remove();
-		logger.info("获取 end---------------------");
+		log.info("获取 end---------------------");
 	}
 
 }

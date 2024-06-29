@@ -8,6 +8,7 @@ import com.yt.app.common.config.YtRedis;
 import com.yt.app.common.util.RedisHashUtil;
 
 import cn.hutool.core.lang.Snowflake;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Component;
  * 
  * @version 1.0
  */
+@Slf4j
 @Aspect
 @Component
 public class Yta {
@@ -75,8 +77,10 @@ public class Yta {
 				Method mg = args[0].getClass().getDeclaredMethod("getId");
 				Long id = (Long) mg.invoke(args[0]);
 				if (id == null) {
+					Long ids = e.nextId();
+					log.info("生成雪花算法id:" + ids);
 					Method ms = args[0].getClass().getDeclaredMethod("setId", Long.class);
-					ms.invoke(args[0], e.nextId());
+					ms.invoke(args[0], ids);
 				}
 			}
 			if (d.isCache()) {
@@ -84,8 +88,10 @@ public class Yta {
 			}
 			result = joinPoint.proceed(args);
 		} else if (annotation.annotationType().equals(YtRedisCacheAnnotation.class)) {
-			if (d.isCache())
+			if (d.isCache()) {
+				log.info("从缓存读取数据");
 				result = rs.getObjectEx(classname, key);
+			}
 			if (result != null) {
 				return result;
 			} else {

@@ -15,12 +15,15 @@ import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.common.YtRoutingDataSource;
 import com.yt.app.common.enums.YtDataSourceEnum;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 
  * @author zj
  * 
  * @version 1.0
  */
+@Slf4j
 @Aspect
 @Component
 public class Ytb {
@@ -38,8 +41,10 @@ public class Ytb {
 		YtDataSourceAnnotation rcea = me.getAnnotation(YtDataSourceAnnotation.class);
 		if (rcea != null) {
 			if (rcea.datasource().equals(YtDataSourceEnum.SLAVE)) {
+				log.info("使用从数据库");
 				this.j.n();
 			} else {
+				log.info("使用主数据库");
 				this.j.o();
 			}
 		} else {

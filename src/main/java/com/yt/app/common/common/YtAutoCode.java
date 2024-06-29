@@ -17,12 +17,15 @@ import java.util.List;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.DbConnectionUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 
  * @author zj
  * 
  * @version 1.0
  */
+@Slf4j
 public class YtAutoCode {
 
 	File file;
@@ -91,7 +94,7 @@ public class YtAutoCode {
 			db2java.add(new String[] { "float", "float" });
 			for (int ti = 0; ti < tables.size(); ti++) {
 				String tb = tables.get(ti);
-				System.out.println("========>>>>>>：" + tb);
+				log.info("========>>>>>>：" + tb);
 				String tn = "";
 				if (tb.indexOf("_") != -1) {
 					String tns = tb.substring(tb.indexOf("_") + 1).toLowerCase();
@@ -116,7 +119,7 @@ public class YtAutoCode {
 					r = new HashMap[rs.getRow()];
 					rs.beforeFirst();
 				} else {
-					System.out.println("table not exist");
+					log.info("table not exist");
 					return;
 				}
 
@@ -651,8 +654,8 @@ public class YtAutoCode {
 					this.L.write("package " + DbConnectionUtil.basePage + ".controller;\r\n");
 					this.L.write("import javax.servlet.http.HttpServletRequest;\r\n");
 					this.L.write("import javax.servlet.http.HttpServletResponse;\r\n");
-					this.L.write("import org.slf4j.Logger;\r\n");
-					this.L.write("import org.slf4j.LoggerFactory;\r\n");
+					this.L.write("\r\n");
+					this.L.write("\r\n");
 					this.L.write("import org.springframework.beans.factory.annotation.Autowired;\r\n");
 					this.L.write("import org.springframework.http.MediaType;\r\n");
 					this.L.write("import com.yt.app.common.common.yt.YtResponseEncryptEntity;\r\n");
@@ -684,7 +687,7 @@ public class YtAutoCode {
 							+ ", Long> {\r\n");
 					this.L.write("\r\n");
 					this.L.write("\r\n");
-					this.L.write("protected Logger logger = LoggerFactory.getLogger(this.getClass());\r\n");
+					this.L.write("\r\n");
 					this.L.write("@Autowired\r\n");
 					this.L.write("private " + bt + "Service service;\r\n");
 					this.L.write("\r\n");

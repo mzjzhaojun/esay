@@ -3,6 +3,7 @@ package com.yt.app.common.security;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import com.google.common.collect.Lists;
 import com.yt.app.api.v1.bo.JwtUserBO;
@@ -38,7 +39,7 @@ import javax.servlet.http.HttpServletResponse;
  * @description 注册使用参考 {@link WebAppConfig}
  * @date 2022/1/10 16:28
  */
-
+@Slf4j
 public class HandlerInterceptorForToken implements HandlerInterceptor {
 
 	private Pattern allowedMethods = Pattern.compile("^(HEAD|TRACE|OPTIONS)$");
@@ -117,6 +118,7 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 		// "GET:/web/api/user/*"
 		String restfulPath = method + ":" + path;
 
+		log.info("请求方法"+restfulPath);
 		/**
 		 * URL鉴权 [URL-角色集合] [{'key':'GET:/web/api/user/*','value':['ADMIN','TEST']},...]
 		 */

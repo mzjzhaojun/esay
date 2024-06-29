@@ -15,6 +15,7 @@ import com.yt.app.api.v1.entity.Tgbotgroup;
 import com.yt.app.api.v1.entity.Tgbotgrouprecord;
 import com.yt.app.api.v1.mapper.TgbotgroupMapper;
 import com.yt.app.api.v1.mapper.TgbotgrouprecordMapper;
+import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.resource.DictionaryResource;
@@ -57,7 +58,7 @@ public class Messagebot extends TelegramLongPollingBot {
 		if (update != null) {
 			Long chatid = update.getMessage().getChat().getId();
 			if (update.getMessage() != null) {
-				TenantIdContext.setTenantId(1720395906240614400L);
+				TenantIdContext.setTenantId(AppConstant.SYSTEM_TENANT_ID);
 				String msg = update.getMessage().getText();
 				String from = update.getMessage().getFrom().getFirstName();
 				String replyname = from;

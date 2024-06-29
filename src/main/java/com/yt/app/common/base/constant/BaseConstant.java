@@ -36,7 +36,7 @@ public interface BaseConstant {
 	/**
 	 * 项目租户 -- id、超级套餐
 	 */
-	Long SYSTEM_TENANT_ID = 1L;
+	Long SYSTEM_TENANT_ID = 1720395906240614400L;
 	Long SYSTEM_TENANT_ID_PACKAGE_ID = 1L;
 
 	/**

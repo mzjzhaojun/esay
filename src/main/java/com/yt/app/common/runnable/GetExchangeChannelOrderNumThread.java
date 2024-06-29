@@ -2,8 +2,8 @@ package com.yt.app.common.runnable;
 
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+
 
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccountorder;
@@ -21,9 +21,12 @@ import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.StringUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+
+@Slf4j
 public class GetExchangeChannelOrderNumThread implements Runnable {
 
-	private static final Logger logger = LoggerFactory.getLogger(GetPayoutChannelOrderNumThread.class);
 
 	private Long id;
 
@@ -45,7 +48,7 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 		Channelbot cbot = BeanContext.getApplicationContext().getBean(Channelbot.class);
 		Exchange exchange = mapper.get(id);
 		Random rd = new Random();
-		logger.info("换汇获取渠道单号 start---------------------商户单号：" + exchange.getMerchantordernum());
+		log.info("换汇获取渠道单号 start---------------------商户单号：" + exchange.getMerchantordernum());
 		int i = 1;
 		while (true) {
 			try {
@@ -114,7 +117,7 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 			}
 		}
 		TenantIdContext.remove();
-		logger.info("获取 end---------------------");
+		log.info("获取 end---------------------");
 	}
 
 }

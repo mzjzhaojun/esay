@@ -5,19 +5,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 反射工具类
  *
  */
+@Slf4j
 public class ReflectionUtil extends org.springframework.util.ReflectionUtils {
-	/**
-	 * Logger for this class
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(ReflectionUtil.class);
-
 	/**
 	 * 获取类的实体,通过调用getInstance
 	 * 
@@ -32,7 +27,7 @@ public class ReflectionUtil extends org.springframework.util.ReflectionUtils {
 				T returnT = (T) m.invoke(null);
 				return returnT;
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				logger.error("getInstance(Class<T>) - exception ignored", e); //$NON-NLS-1$
+				log.error("getInstance(Class<T>) - exception ignored", e); //$NON-NLS-1$
 			}
 		}
 		return null;
@@ -48,7 +43,7 @@ public class ReflectionUtil extends org.springframework.util.ReflectionUtils {
 		try {
 			return Class.forName(clazz);
 		} catch (ClassNotFoundException e) {
-			logger.error("getClass(String)", e); //$NON-NLS-1$
+			log.error("getClass(String)", e); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 		return null;

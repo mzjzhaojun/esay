@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import com.yt.app.common.common.yt.YtRequestDecryptEntity;
@@ -31,7 +31,7 @@ import com.yt.app.api.v1.entity.Menu;
 @RequestMapping("/rest/v1/menu")
 public class MenuController extends YtBaseEncipherControllerImpl<Menu, Long> {
 
-	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	private MenuService service;
 
