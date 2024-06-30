@@ -12,7 +12,7 @@ import com.yt.app.api.v1.mapper.AgentaccountbankMapper;
 import com.yt.app.api.v1.service.AgentService;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
-import com.yt.app.common.base.context.JwtUserContext;
+import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccount;
@@ -83,15 +83,15 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Agentaccount getData() {
-		Agentaccount ac = mapper.getByUserId(JwtUserContext.get().getUserId());
+		Agentaccount ac = mapper.getByUserId(SysUserContext.getUserId());
 		return ac;
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Agentaccount getDataBank() {
-		Agentaccount t = mapper.getByUserId(JwtUserContext.get().getUserId());
-		List<Agentaccountbank> listbanks = agentaccountbankmapper.listByUserid(JwtUserContext.get().getUserId());
+		Agentaccount t = mapper.getByUserId(SysUserContext.getUserId());
+		List<Agentaccountbank> listbanks = agentaccountbankmapper.listByUserid(SysUserContext.getUserId());
 		t.setListbanks(listbanks);
 		return t;
 	}
@@ -130,7 +130,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPretotalincome(ma.getTotalincome());// 总收入
 			aaaj.setPretoincomeamount(ma.getToincomeamount() + t.getAmountreceived());// 待确认收入
 			aaaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
-			aaaj.setPretowithdrawamount(ma.getWithdrawamount());// 待确认支出
+			aaaj.setPretowithdrawamount(ma.getTowithdrawamount());// 待确认支出
 			// 变更后
 			aaaj.setPosttotalincome(ma.getTotalincome());// 总收入
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
@@ -167,7 +167,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
 			aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
 			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
+			aaaj.setPretowithdrawamount(t.getTowithdrawamount());// 待确认支出
 			// 变更后
 			aaaj.setPosttotalincome(t.getTotalincome() + mao.getAmountreceived());// 总收入
 			aaaj.setPosttoincomeamount(mao.getAmountreceived());// 确认收入
@@ -206,7 +206,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
 			aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
 			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
+			aaaj.setPretowithdrawamount(t.getTowithdrawamount());// 待确认支出
 			// 变更后
 			aaaj.setPosttotalincome(t.getTotalincome());// 总收入
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
@@ -243,7 +243,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
 			aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
 			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
+			aaaj.setPretowithdrawamount(t.getTowithdrawamount());// 待确认支出
 			// 变更后
 			aaaj.setPosttotalincome(t.getTotalincome());// 总收入
 			aaaj.setPosttoincomeamount(0.00);// 确认收入

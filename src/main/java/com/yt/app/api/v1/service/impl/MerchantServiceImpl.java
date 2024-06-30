@@ -12,7 +12,7 @@ import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
-import com.yt.app.common.base.context.JwtUserContext;
+import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agent;
@@ -191,7 +191,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Merchant getData() {
-		Merchant t = mapper.getByUserId(JwtUserContext.get().getUserId());
+		Merchant t = mapper.getByUserId(SysUserContext.getUserId());
 		return t;
 	}
 

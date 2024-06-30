@@ -12,7 +12,7 @@ import com.yt.app.api.v1.mapper.MerchantaccountbankMapper;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.MerchantaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
-import com.yt.app.common.base.context.JwtUserContext;
+import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Merchantaccount;
@@ -85,15 +85,15 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Merchantaccount getData() {
-		Merchantaccount t = mapper.getByUserId(JwtUserContext.get().getUserId());
+		Merchantaccount t = mapper.getByUserId(SysUserContext.getUserId());
 		return t;
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Merchantaccount getDataBank() {
-		Merchantaccount t = mapper.getByUserId(JwtUserContext.get().getUserId());
-		List<Merchantaccountbank> listbanks = merchantaccountbankmapper.listByUserid(JwtUserContext.get().getUserId());
+		Merchantaccount t = mapper.getByUserId(SysUserContext.getUserId());
+		List<Merchantaccountbank> listbanks = merchantaccountbankmapper.listByUserid(SysUserContext.getUserId());
 		t.setListbanks(listbanks);
 		return t;
 	}
@@ -128,7 +128,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPretotalincome(ma.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(ma.getToincomeamount() + t.getAmountreceived());// 待确认收入
 			maaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
-			maaj.setPretowithdrawamount(ma.getWithdrawamount());// 待确认支出
+			maaj.setPretowithdrawamount(ma.getTowithdrawamount());// 待确认支出
 			// 变更后
 			maaj.setPosttotalincome(ma.getTotalincome());// 总收入
 			maaj.setPosttoincomeamount(0.00);// 确认收入金额
@@ -167,7 +167,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
 			maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			maaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
+			maaj.setPretowithdrawamount(t.getTowithdrawamount());// 待确认支出
 			//
 			maaj.setPosttotalincome(t.getTotalincome() + mao.getAmountreceived());// 总收入
 			maaj.setPosttoincomeamount(mao.getAmountreceived());// 确认收入
@@ -208,7 +208,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
 			maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			maaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
+			maaj.setPretowithdrawamount(t.getTowithdrawamount());// 待确认支出
 			// 变更后
 			maaj.setPosttotalincome(t.getTotalincome());// 总收入
 			maaj.setPosttoincomeamount(0.00);// 确认收入
@@ -245,7 +245,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
 			maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			maaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
+			maaj.setPretowithdrawamount(t.getTowithdrawamount());// 待确认支出
 			// 变更后
 			maaj.setPosttotalincome(t.getTotalincome());// 总收入
 			maaj.setPosttoincomeamount(0.00);// 确认收入

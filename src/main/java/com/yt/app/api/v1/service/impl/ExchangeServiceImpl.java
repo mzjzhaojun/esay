@@ -132,8 +132,9 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	@Override
 	@Transactional
 	public Integer post(Exchange t) {
+		Merchantaccount ma = merchantaccountmapper.getByUserId(SysUserContext.getUserId());
 
-		if (t.getAmount() <= 0) {
+		if (t.getAmount() <= 0 || t.getAmount() < ma.getBalance()) {
 			throw new MyException("金额输入错误!", YtCodeEnum.YT888);
 		}
 

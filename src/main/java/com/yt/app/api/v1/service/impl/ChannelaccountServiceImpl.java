@@ -91,7 +91,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			aaaj.setPretotalincome(ma.getTotalincome());// 总收入
 			aaaj.setPretoincomeamount(ma.getToincomeamount() + t.getAmountreceived());// 待确认收入
 			aaaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
-			aaaj.setPretowithdrawamount(ma.getWithdrawamount());// 待确认支出
+			aaaj.setPretowithdrawamount(ma.getTowithdrawamount());// 待确认支出
 			// 变更后
 			aaaj.setPosttotalincome(ma.getTotalincome());// 总收入
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
@@ -129,7 +129,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
 			aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
 			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
+			aaaj.setPretowithdrawamount(t.getTowithdrawamount());// 待确认支出
 			// 变更后
 			aaaj.setPosttotalincome(t.getTotalincome() + mao.getAmountreceived());// 总收入
 			aaaj.setPosttoincomeamount(mao.getAmountreceived());// 确认收入
@@ -170,7 +170,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
 			aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
 			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
+			aaaj.setPretowithdrawamount(t.getTowithdrawamount());// 待确认支出
 			// 变更后
 			aaaj.setPosttotalincome(t.getTotalincome());// 总收入
 			aaaj.setPosttoincomeamount(0.00);// 待确认收入
@@ -206,7 +206,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
 			aaaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmountreceived());// 待确认收入
 			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			aaaj.setPretowithdrawamount(t.getWithdrawamount());// 待确认支出
+			aaaj.setPretowithdrawamount(t.getTowithdrawamount());// 待确认支出
 			// 变更后
 			aaaj.setPosttotalincome(t.getTotalincome());// 总收入
 			aaaj.setPosttoincomeamount(0.00);// 待确认收入

@@ -132,7 +132,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Override
 	@Transactional
 	public Integer post(Payout t) {
-		Merchantaccount maccount = merchantaccountmapper.getByUserId(t.getUserid());
+		Merchantaccount maccount = merchantaccountmapper.getByUserId(SysUserContext.getUserId());
 
 		if (t.getAmount() <= 0 || t.getAmount() > maccount.getBalance()) {
 			throw new MyException("金额输入错误!", YtCodeEnum.YT888);
