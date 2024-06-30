@@ -3,8 +3,6 @@ package com.yt.app.api.v1.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +20,6 @@ import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
 import com.yt.app.common.common.yt.YtResponseEntity;
 import com.yt.app.common.util.AuthUtil;
-import com.yt.app.common.util.RsaUtil;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -31,12 +28,9 @@ import io.swagger.annotations.ApiOperation;
  * 
  * @version v1 @createdate2018-09-27 09:52:46
  */
-
 @RestController
 @RequestMapping("/rest/v1/auth")
 public class AuthController extends YtBaseEncipherControllerImpl<User, Long> {
-
-	
 
 	@Autowired
 	private AuthService authservice;
@@ -61,7 +55,7 @@ public class AuthController extends YtBaseEncipherControllerImpl<User, Long> {
 	@ApiOperation(value = "getrsakey")
 	@RequestMapping(value = "/getrsakey", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> getrsakey(HttpServletRequest request, HttpServletResponse response) {
-		return new YtResponseEntity<Object>(new YtBody(RsaUtil.getPublicKey()));
+		return new YtResponseEntity<Object>(new YtBody(authservice.getPublicKey(request)));
 	}
 
 	@ApiOperation(value = "qrcode")

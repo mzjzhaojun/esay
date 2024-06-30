@@ -1,5 +1,7 @@
 package com.yt.app.api.v1.service;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.yt.app.api.v1.dbo.AuthLoginDTO;
 import com.yt.app.api.v1.vo.AuthLoginVO;
 
@@ -29,5 +31,7 @@ public interface AuthService {
 	Integer verqrcode(String username, String password, String code, String twocode);
 
 	AuthLoginVO loginapp(AuthLoginDTO params);
+	
+	String getPublicKey(HttpServletRequest request);
 
 }

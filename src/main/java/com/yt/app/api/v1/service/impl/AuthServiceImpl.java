@@ -7,8 +7,10 @@ import com.yt.app.api.v1.bo.JwtUserBO;
 import com.yt.app.api.v1.bo.SysScopeDataBO;
 import com.yt.app.api.v1.dbo.AuthLoginDTO;
 import com.yt.app.api.v1.dbo.SysUserPermDTO;
+import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.api.v1.entity.User;
+import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.SystemaccountMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.AuthService;
@@ -24,13 +26,17 @@ import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.AuthUtil;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PasswordUtil;
+import com.yt.app.common.util.RsaUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -59,6 +65,9 @@ public class AuthServiceImpl implements AuthService {
 	@Autowired
 	private SystemaccountMapper systemaccountmapper;
 
+	@Autowired
+	private MerchantMapper merchantmapper;
+
 	@Override
 	public AuthLoginVO login(AuthLoginDTO params) {
 
@@ -72,7 +81,7 @@ public class AuthServiceImpl implements AuthService {
 
 		isValid = GoogleAuthenticatorUtil.checkCode(userPerm.getTwofactorcode(), Long.parseLong(params.getCode()),
 				System.currentTimeMillis());
-		//Assert.isTrue(isValid, "验证码错误！");
+		// Assert.isTrue(isValid, "验证码错误！");
 
 		// 拿到下级角色ids
 		List<Long> roleIdList = userPerm.getRoleIdList();
@@ -140,11 +149,31 @@ public class AuthServiceImpl implements AuthService {
 
 		isValid = GoogleAuthenticatorUtil.checkCode(userPerm.getTwofactorcode(), Long.parseLong(params.getCode()),
 				System.currentTimeMillis());
-		//Assert.isTrue(isValid, "验证码错误！");
+		// Assert.isTrue(isValid, "验证码错误！");
 
 		return AuthUtil.login(JwtUserBO.builder().authSourceEnum(AuthSourceEnum.B)
 				.userId(Long.valueOf(userPerm.getId())).username(userPerm.getUsername()).deptId(userPerm.getDept_id())
 				.tenantId(userPerm.getTenantId()).accounttype(userPerm.getAccounttype()).build());
+	}
+
+	@Override
+	public String getPublicKey(HttpServletRequest request) {
+		String ip = request.getHeader("X-Real-IP");
+		if (ip == null)
+			return RsaUtil.getPublicKey();
+		boolean isValid = false;
+		if (!AuthUtil.isMobileDevice(request.getHeader("User-Agent"))) {
+			// 判断ip 是否在配置内
+			List<Merchant> listm = merchantmapper.getListAll(new HashMap<String, Object>());
+			for (int i = 0; i < listm.size(); i++) {
+				if (listm.get(i).getIpaddress().indexOf(ip) >= 0) {
+					isValid = true;
+					break;
+				}
+			}
+			Assert.isTrue(isValid, "IP不在白名单中");
+		}
+		return RsaUtil.getPublicKey();
 	}
 
 }

@@ -130,4 +130,12 @@ public interface MerchantMapper extends YtIBaseMapper<Merchant> {
 	@YtRedisCacheEvictAnnotation(classs = { Merchant.class })
 	public Integer putagent(Merchant t);
 
+	/**
+	 * list
+	 * 
+	 * @param param map
+	 * @return listMerchant
+	 */
+	@YtRedisCacheAnnotation(classs = Merchant.class)
+	public List<Merchant> getListAll(Map<String, Object> param);
 }

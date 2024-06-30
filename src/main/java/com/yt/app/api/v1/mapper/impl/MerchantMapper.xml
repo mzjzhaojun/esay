@@ -111,7 +111,7 @@
 		update merchant set
 		agentid = null, agentname= null where id = #{id}
 	</update>
-	
+
 	<update id="putagent"
 		parameterType="com.yt.app.api.v1.entity.Merchant">
 		update merchant
@@ -143,7 +143,7 @@
 		from merchant
 		where id = #{id}
 	</select>
-	
+
 	<!--getByUserId -->
 	<select id="getByUserId" parameterType="java.lang.Long"
 		resultMap="ResultMap">
@@ -152,8 +152,8 @@
 		from merchant
 		where userid = #{userid}
 	</select>
-	
-	
+
+
 	<!--getByUserId -->
 	<select id="getByCode" parameterType="java.lang.String"
 		resultMap="ResultMap">
@@ -162,7 +162,7 @@
 		from merchant
 		where code = #{code}
 	</select>
-	
+
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
@@ -197,6 +197,18 @@
 			</if>
 		</where>
 	</select>
+
+	<!-- getListAll -->
+	<select id="getListAll" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from merchant
+		<where>
+			1=1
+		</where>
+	</select>
+
 	<!-- getMap -->
 	<select id="map" parameterType="java.util.HashMap"
 		resultType="java.util.HashMap">
