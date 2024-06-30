@@ -39,7 +39,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	@Autowired
 	private PayoutService service;
 
-	// 菲律宾代付回调
+	// 菲律宾提款回调
 	@ApiOperation(value = "tycallback")
 	@RequestMapping(value = "/tycallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request,

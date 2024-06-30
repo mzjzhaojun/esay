@@ -83,7 +83,7 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 					cat.setAmountreceived(exchange.getChannelpay());
 					cat.setType(DictionaryResource.ORDERTYPE_22);
 					cat.setOrdernum(exchange.getChannelordernum());
-					cat.setRemark("代付资金￥：" + cat.getAmount() + " 交易费：" + String.format("%.2f", cat.getDeal()) + " 手续费："
+					cat.setRemark("提款资金￥：" + cat.getAmount() + " 交易费：" + String.format("%.2f", cat.getDeal()) + " 手续费："
 							+ cat.getOnecost());
 					channelaccountordermapper.post(cat);
 					channelaccountservice.exchangeamount(cat);

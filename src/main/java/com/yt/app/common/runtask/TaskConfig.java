@@ -52,7 +52,7 @@ public class TaskConfig {
 		TenantIdContext.removeFlag();
 		List<Payout> list = payoutmapper.selectAddlist();
 		for (Payout p : list) {
-			log.info("代付获取渠道单号ID：" + p.getId() + " 状态：" + p.getStatus());
+			log.info("提款获取渠道单号ID：" + p.getId() + " 状态：" + p.getStatus());
 			p.setStatus(DictionaryResource.PAYOUTSTATUS_55);
 			if (payoutmapper.put(p) > 0) {
 				GetPayoutChannelOrderNumThread nf = new GetPayoutChannelOrderNumThread(p.getId());

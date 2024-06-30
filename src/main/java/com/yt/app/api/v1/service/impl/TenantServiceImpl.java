@@ -27,6 +27,7 @@ import com.yt.app.common.enums.SysRoleCodeEnum;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.PasswordUtil;
+import com.yt.app.common.util.StringUtil;
 
 import cn.hutool.core.lang.Snowflake;
 
@@ -82,6 +83,7 @@ public class TenantServiceImpl extends YtBaseServiceImpl<Tenant, Long> implement
 		u.setPhone(params.getAdmin_phone());
 		u.setPassword(PasswordUtil.encodePassword(params.getPassword()));
 		u.setAccounttype(DictionaryResource.SYSTEM_ADMINTYPE_1);
+		u.setTwofactorcode(StringUtil.getUUID());
 		i = usermapper.postAndTanantId(u);
 
 		//
@@ -90,7 +92,7 @@ public class TenantServiceImpl extends YtBaseServiceImpl<Tenant, Long> implement
 		sm.setTotalincome(0.00);
 		sm.setWithdrawamount(0.00);
 		sm.setUserid(u.getId());
-		systemaccountmapper.post(sm);
+		systemaccountmapper.postAndTanantId(sm);
 
 		// role
 		Role r = new Role();

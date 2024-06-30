@@ -8,7 +8,6 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.TgbotMapper;
 import com.yt.app.api.v1.service.TgbotService;
-import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
@@ -99,7 +98,7 @@ public class TgbotServiceImpl extends YtBaseServiceImpl<Tgbot, Long> implements 
 
 	@Override
 	public void initBot() {
-		TenantIdContext.setTenantId(AppConstant.SYSTEM_TENANT_ID);
+		TenantIdContext.removeFlag();
 		List<Tgbot> list = mapper.list(new HashMap<String, Object>());
 		try {
 			botsApi.registerBot(merchantbot);

@@ -24,7 +24,7 @@ public interface SystemaccountService extends YtIBaseService<Systemaccount, Long
 	// 代理提现
 	void updateWithdrawamount(Agentaccountorder mao);
 
-	// 代付
+	// 提款
 	void updatePayout(Merchantaccountorder mao);
 
 	// 换汇

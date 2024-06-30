@@ -17,6 +17,13 @@
 		values
 		(#{id},#{totalincome},#{withdrawamount},#{balance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark},#{userid})
 	</insert>
+	<insert id="postAndTanantId"
+		parameterType="com.yt.app.api.v1.entity.Systemaccount">
+		insert into
+		systemaccount(id,tenant_id,totalincome,withdrawamount,balance,create_by,create_time,update_by,update_time,remark,userid)
+		values
+		(#{id},#{tenant_id},#{totalincome},#{withdrawamount},#{balance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark},#{userid})
+	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into

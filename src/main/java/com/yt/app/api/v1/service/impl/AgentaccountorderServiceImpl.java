@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.yt.app.api.v1.mapper.AgentMapper;
+import com.yt.app.api.v1.mapper.AgentaccountMapper;
 import com.yt.app.api.v1.mapper.AgentaccountbankMapper;
 import com.yt.app.api.v1.mapper.AgentaccountorderMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
@@ -18,6 +19,7 @@ import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.entity.Agent;
+import com.yt.app.api.v1.entity.Agentaccount;
 import com.yt.app.api.v1.entity.Agentaccountbank;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -44,10 +46,13 @@ import java.util.Map;
 @Service
 public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccountorder, Long>
 		implements AgentaccountorderService {
+
 	@Autowired
 	private AgentaccountorderMapper mapper;
+
 	@Autowired
 	private UserMapper usermapper;
+
 	@Autowired
 	private AgentMapper agentmapper;
 
@@ -59,6 +64,9 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 
 	@Autowired
 	private SystemaccountService systemaccountservice;
+
+	@Autowired
+	private AgentaccountMapper aamapper;
 
 	@Override
 	@Transactional
@@ -94,7 +102,8 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 	@Override
 	@Transactional
 	public Integer save(Agentaccountorder t) {
-		if (t.getAmount() <= 0) {
+		Agentaccount aac = aamapper.getByUserId(t.getUserid());
+		if (t.getAmount() <= 0 || t.getAmount() > aac.getBalance()) {
 			throw new MyException("金额输入错误!", YtCodeEnum.YT888);
 		}
 		Agent m = null;

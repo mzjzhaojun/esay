@@ -62,7 +62,7 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 		Payout payout = mapper.get(id);
 		Channel channel = channelmapper.get(payout.getChannelid());
 		Random rd = new Random();
-		log.info("代付获取渠道单号 start---------------------商户单号：" + payout.getMerchantordernum());
+		log.info("提款获取渠道单号 start---------------------商户单号：" + payout.getMerchantordernum());
 		int i = 1;
 		while (true) {
 			try {
@@ -88,7 +88,7 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 						}
 						//
 						payout.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);
-						payout.setRemark("代付失败￥" + payout.getAmount());
+						payout.setRemark("提款失败￥" + payout.getAmount());
 						payout.setSuccesstime(DateTimeUtil.getNow());
 						payout.setBacklong(10L);
 						payout.setStatus(DictionaryResource.PAYOUTSTATUS_54);
@@ -121,13 +121,13 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 					cat.setAmountreceived(payout.getChannelpay());
 					cat.setType(DictionaryResource.ORDERTYPE_23);
 					cat.setOrdernum(payout.getChannelordernum());
-					cat.setRemark("代付资金￥：" + cat.getAmount() + " 交易费：" + String.format("%.2f", cat.getDeal()) + " 手续费："
+					cat.setRemark("提款资金￥：" + cat.getAmount() + " 交易费：" + String.format("%.2f", cat.getDeal()) + " 手续费："
 							+ cat.getOnecost());
 					channelaccountordermapper.post(cat);
 					channelaccountservice.withdrawamount(cat);
 					Tgchannelgroup tgchannelgroup = tgchannelgroupmapper.getByChannelId(payout.getChannelid());
 					StringBuffer what = new StringBuffer();
-					what.append("状态：新增代付\n");
+					what.append("状态：新增提款\n");
 					what.append("单号：" + payout.getChannelordernum() + "\n");
 					what.append("姓名：" + payout.getAccname() + "\n");
 					what.append("卡号：" + payout.getAccnumer() + "\n");

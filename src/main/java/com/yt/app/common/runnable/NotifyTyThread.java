@@ -68,7 +68,6 @@ public class NotifyTyThread implements Runnable {
 				}
 			}
 		}
-		TenantIdContext.remove();
 		log.info("通知 end---------------------");
 	}
 

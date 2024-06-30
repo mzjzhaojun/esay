@@ -19,7 +19,6 @@ import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
 import com.yt.app.api.v1.service.PayconfigService;
-import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +56,7 @@ public class Channelbot extends TelegramLongPollingBot {
 		Message replymsg = update.getMessage().getReplyToMessage();
 		log.info("channel:" + update.toString());
 		if (message != null) {
-			TenantIdContext.setTenantId(AppConstant.SYSTEM_TENANT_ID);
+			TenantIdContext.removeFlag();
 			Tgchannelgroup tmg = tgchannelgroupmapper.getByTgGroupId(chatid);
 			if (tmg == null) {
 				tmg = tgchannelgroupmapper.getByTgGroupName(update.getMessage().getChat().getTitle());

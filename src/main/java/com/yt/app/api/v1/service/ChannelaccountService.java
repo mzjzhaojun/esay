@@ -20,7 +20,7 @@ public interface ChannelaccountService extends YtIBaseService<Channelaccount, Lo
 
 	void cancleTotalincome(Channelaccountorder mao);
 
-	// 代付
+	// 提款
 	void withdrawamount(Channelaccountorder t);
 
 	void updateWithdrawamount(Channelaccountorder mao);

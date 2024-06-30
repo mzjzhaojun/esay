@@ -26,7 +26,6 @@ import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.service.PayconfigService;
-import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 
 import lombok.extern.slf4j.Slf4j;
@@ -74,7 +73,7 @@ public class Merchantbot extends TelegramLongPollingBot {
 		Long chatid = update.getMessage().getChat().getId();
 		String message = update.getMessage().getText();
 		if (message != null) {
-			TenantIdContext.setTenantId(AppConstant.SYSTEM_TENANT_ID);
+			TenantIdContext.removeFlag();
 			Tgmerchantgroup tmg = tgmerchantgroupmapper.getByTgGroupId(chatid);
 			Integer replyid = update.getMessage().getMessageId();
 			log.info("merchant:" + update.toString());

@@ -363,7 +363,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	public Integer add(Exchange t, Merchant m) {
 
 		TenantIdContext.setTenantId(m.getTenant_id());
-		///////////////////////////////////////////////////// 盘口录入代付订单/////////////////////////////////////////////////////
+		///////////////////////////////////////////////////// 盘口录入提款订单/////////////////////////////////////////////////////
 		t.setUserid(m.getUserid());
 		t.setMerchantid(m.getId());
 		t.setMerchantcode(m.getCode());
@@ -543,7 +543,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			// 计算渠道数据
 			channelservice.updateExchange(t);
 
-			// ------------------更新代付订单-----------------
+			// ------------------更新提款订单-----------------
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 			t.setRemark("换汇成功￥:" + pt.getAmount());
 			t.setSuccesstime(DateTimeUtil.getNow());
