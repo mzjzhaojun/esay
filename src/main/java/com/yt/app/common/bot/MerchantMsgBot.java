@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class Merchantbot extends TelegramLongPollingBot {
+public class MerchantMsgBot extends TelegramLongPollingBot {
 
 	@Autowired
 	private TgmerchantgroupMapper tgmerchantgroupmapper;
@@ -50,7 +50,7 @@ public class Merchantbot extends TelegramLongPollingBot {
 	private TgmerchantchannelmsgMapper tgmerchantchannelmsgmapper;
 
 	@Autowired
-	private Channelbot cbot;
+	private ChannelMsgBot cbot;
 
 	@Autowired
 	private MerchantaccountMapper merchantaccountmapper;
@@ -70,13 +70,15 @@ public class Merchantbot extends TelegramLongPollingBot {
 
 	@Override
 	public void onUpdateReceived(Update update) {
+		//获取书记表情，转发消息
+		log.info(update.toString());
+		
 		Long chatid = update.getMessage().getChat().getId();
 		String message = update.getMessage().getText();
 		if (message != null) {
 			TenantIdContext.removeFlag();
 			Tgmerchantgroup tmg = tgmerchantgroupmapper.getByTgGroupId(chatid);
 			Integer replyid = update.getMessage().getMessageId();
-			log.info("merchant:" + update.toString());
 			if (tmg == null) {
 				tmg = tgmerchantgroupmapper.getByTgGroupName(update.getMessage().getChat().getTitle());
 				if (tmg != null) {
@@ -148,7 +150,7 @@ public class Merchantbot extends TelegramLongPollingBot {
 					t = new Tgmerchantchannelmsg();
 					t.setMid(chatid);
 					t.setCid(tcg.getTgid());
-					t.setMmanger(tmg.getMangers());
+					t.setMmanger(tmg.getOsmangers());
 					t.setCmanger(tcg.getMangers());
 					t.setOrdernum(orderno);
 					t.setMreplyid(replyid);

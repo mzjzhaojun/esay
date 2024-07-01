@@ -318,7 +318,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
-					<warName>pay</warName>
+					<warName>esay</warName>
 				</configuration>
 			</plugin>
 			<plugin>

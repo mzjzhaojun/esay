@@ -11,9 +11,9 @@ import com.yt.app.api.v1.service.TgbotService;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
-import com.yt.app.common.bot.Channelbot;
-import com.yt.app.common.bot.Merchantbot;
-import com.yt.app.common.bot.Messagebot;
+import com.yt.app.common.bot.ChannelMsgBot;
+import com.yt.app.common.bot.MerchantMsgBot;
+import com.yt.app.common.bot.BookAccountBot;
 import com.yt.app.api.v1.entity.Tgbot;
 import com.yt.app.api.v1.vo.TgbotVO;
 import com.yt.app.common.common.yt.YtIPage;
@@ -41,10 +41,10 @@ public class TgbotServiceImpl extends YtBaseServiceImpl<Tgbot, Long> implements 
 	private TelegramBotsApi botsApi;
 
 	@Autowired
-	private Merchantbot merchantbot;
+	private MerchantMsgBot merchantbot;
 	
 	@Autowired
-	private Channelbot channelbot;
+	private ChannelMsgBot channelbot;
 
 	public TgbotServiceImpl() {
 		try {
@@ -61,7 +61,7 @@ public class TgbotServiceImpl extends YtBaseServiceImpl<Tgbot, Long> implements 
 		if (tb == null) {
 			Integer i = mapper.post(t);
 			try {
-				Messagebot mb = new Messagebot(t.getName(), t.getToken());
+				BookAccountBot mb = new BookAccountBot(t.getName(), t.getToken());
 				botsApi.registerBot(mb);
 			} catch (TelegramApiException e) {
 				e.printStackTrace();
@@ -104,7 +104,7 @@ public class TgbotServiceImpl extends YtBaseServiceImpl<Tgbot, Long> implements 
 			botsApi.registerBot(merchantbot);
 			botsApi.registerBot(channelbot);
 			for (Tgbot tb : list) {
-				Messagebot mb = new Messagebot(tb.getName(), tb.getToken());
+				BookAccountBot mb = new BookAccountBot(tb.getName(), tb.getToken());
 				botsApi.registerBot(mb);
 			}
 		} catch (TelegramApiException e) {

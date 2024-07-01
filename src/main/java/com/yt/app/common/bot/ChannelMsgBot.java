@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class Channelbot extends TelegramLongPollingBot {
+public class ChannelMsgBot extends TelegramLongPollingBot {
 
 	@Autowired
 	private TgchannelgroupMapper tgchannelgroupmapper;
@@ -37,7 +37,7 @@ public class Channelbot extends TelegramLongPollingBot {
 	private TgmerchantchannelmsgMapper tgmerchantchannelmsgmapper;
 
 	@Autowired
-	private Merchantbot mbot;
+	private MerchantMsgBot mbot;
 
 	@Override
 	public String getBotUsername() {
@@ -51,10 +51,13 @@ public class Channelbot extends TelegramLongPollingBot {
 
 	@Override
 	public void onUpdateReceived(Update update) {
+		
+		log.info(update.toString());
+		
 		Long chatid = update.getMessage().getChat().getId();
 		String message = update.getMessage().getText();
 		Message replymsg = update.getMessage().getReplyToMessage();
-		log.info("channel:" + update.toString());
+		
 		if (message != null) {
 			TenantIdContext.removeFlag();
 			Tgchannelgroup tmg = tgchannelgroupmapper.getByTgGroupId(chatid);

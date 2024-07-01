@@ -16,7 +16,7 @@ import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
-import com.yt.app.common.bot.Channelbot;
+import com.yt.app.common.bot.ChannelMsgBot;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.StringUtil;
@@ -45,7 +45,7 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 				.getBean(ChannelaccountorderMapper.class);
 		ChannelaccountService channelaccountservice = BeanContext.getApplicationContext()
 				.getBean(ChannelaccountService.class);
-		Channelbot cbot = BeanContext.getApplicationContext().getBean(Channelbot.class);
+		ChannelMsgBot cbot = BeanContext.getApplicationContext().getBean(ChannelMsgBot.class);
 		Exchange exchange = mapper.get(id);
 		Random rd = new Random();
 		log.info("换汇获取渠道单号 start---------------------商户单号：" + exchange.getMerchantordernum());

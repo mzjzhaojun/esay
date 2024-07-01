@@ -24,7 +24,8 @@ public class Tgmerchantgroup extends YtBaseEntity<Tgmerchantgroup> {
 	Long tgid;
 	String tggroupname;
 	String remark;
-	String mangers;
+	String osmangers;
+	String customermangers;
 	Integer version;
 
 	public Tgmerchantgroup() {

@@ -23,7 +23,7 @@ import com.yt.app.common.util.DateTimeUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class Messagebot extends TelegramLongPollingBot {
+public class BookAccountBot extends TelegramLongPollingBot {
 
 	private TgbotgroupMapper tgbotgroupmapper;
 	private TgbotgrouprecordMapper tgbotgrouprecordmapper;
@@ -31,10 +31,10 @@ public class Messagebot extends TelegramLongPollingBot {
 	private String name;
 	private String token;
 
-	public Messagebot() {
+	public BookAccountBot() {
 	}
 
-	public Messagebot(String _name, String _token) {
+	public BookAccountBot(String _name, String _token) {
 		tgbotgroupmapper = BeanContext.getApplicationContext().getBean(TgbotgroupMapper.class);
 		tgbotgrouprecordmapper = BeanContext.getApplicationContext().getBean(TgbotgrouprecordMapper.class);
 		name = _name;
@@ -53,7 +53,9 @@ public class Messagebot extends TelegramLongPollingBot {
 
 	@Override
 	public void onUpdateReceived(Update update) {
-		log.info("messageupdate:" + update);
+		log.info("messageupdate:" + update.toString());
+		
+		
 		if (update != null) {
 			Long chatid = update.getMessage().getChat().getId();
 			if (update.getMessage() != null) {

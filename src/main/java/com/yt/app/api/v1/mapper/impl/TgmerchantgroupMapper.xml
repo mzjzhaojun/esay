@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.TgmerchantgroupMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,create_by,create_time,update_by,update_time,remark,mangers,version
+		id,tenant_id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,create_by,create_time,update_by,update_time,remark,osmangers,customermangers,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -14,9 +14,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Tgmerchantgroup">
 		insert into
-		tgmerchantgroup(id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,create_by,create_time,update_by,update_time,remark,mangers)
+		tgmerchantgroup(id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,create_by,create_time,update_by,update_time,remark,osmangers,customermangers)
 		values
-		(#{id},#{merchantid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{remark},#{mangers})
+		(#{id},#{merchantid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{remark},#{osmangers},#{customermangers})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -65,8 +65,11 @@
 			<if test="remark != null">
 				remark= #{remark},
 			</if>
-			<if test="mangers != null">
-				mangers= #{mangers},
+			<if test="osmangers != null">
+				osmangers= #{osmangers},
+			</if>
+			<if test="customermangers != null">
+				customermangers= #{customermangers},
 			</if>
 			<if test="version != null">
 				version= #{version}+1

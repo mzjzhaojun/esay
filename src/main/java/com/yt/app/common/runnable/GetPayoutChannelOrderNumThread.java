@@ -22,7 +22,7 @@ import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.api.v1.service.MerchantaccountService;
 import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
-import com.yt.app.common.bot.Channelbot;
+import com.yt.app.common.bot.ChannelMsgBot;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.PayUtil;
@@ -58,7 +58,7 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 				.getBean(ChannelaccountorderMapper.class);
 		ChannelaccountService channelaccountservice = BeanContext.getApplicationContext()
 				.getBean(ChannelaccountService.class);
-		Channelbot cbot = BeanContext.getApplicationContext().getBean(Channelbot.class);
+		ChannelMsgBot cbot = BeanContext.getApplicationContext().getBean(ChannelMsgBot.class);
 		Payout payout = mapper.get(id);
 		Channel channel = channelmapper.get(payout.getChannelid());
 		Random rd = new Random();

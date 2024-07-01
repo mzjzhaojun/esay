@@ -35,7 +35,7 @@ import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
-import com.yt.app.common.bot.Merchantbot;
+import com.yt.app.common.bot.MerchantMsgBot;
 import com.yt.app.api.v1.dbo.SysSubmitDTO;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccountorder;
@@ -123,7 +123,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Autowired
 	private MerchantaisleMapper merchantaislemapper;
 	@Autowired
-	private Merchantbot mbot;
+	private MerchantMsgBot mbot;
 	@Autowired
 	private TgmerchantgroupMapper tgmerchantgroupmapper;
 	@Autowired
