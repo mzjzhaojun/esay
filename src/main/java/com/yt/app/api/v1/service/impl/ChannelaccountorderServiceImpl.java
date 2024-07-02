@@ -56,7 +56,7 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 	@Transactional
 	public Integer post(Channelaccountorder t) {
 		if (t.getAmount() <= 0) {
-			throw new YtException("金额输入错误!");
+			throw new YtException("金额不能小于1");
 		}
 		Channel m = null;
 		if (t.getChannelid() == null) {

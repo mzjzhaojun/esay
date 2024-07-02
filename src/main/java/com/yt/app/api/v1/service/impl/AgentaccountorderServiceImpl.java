@@ -103,7 +103,7 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 	public Integer save(Agentaccountorder t) {
 		Agentaccount aac = aamapper.getByUserId(t.getUserid());
 		if (t.getAmount() <= 0 || t.getAmount() > aac.getBalance()) {
-			throw new YtException("金额输入错误!");
+			throw new YtException("金额不能小于1，大于余额");
 		}
 		Agent m = null;
 		if (t.getAgentid() == null) {

@@ -68,7 +68,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	@Transactional
 	public Integer post(Merchantaccountorder t) {
 		if (t.getAmount() <= 0) {
-			throw new YtException("金额输入错误!");
+			throw new YtException("金额不能小于1");
 		}
 		Merchant m = null;
 		if (t.getMerchantid() == null) {
@@ -102,7 +102,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	@Transactional
 	public Integer save(Merchantaccountorder t) {
 		if (t.getAmount() <= 0) {
-			throw new YtException("金额输入错误!");
+			throw new YtException("金额不能小于1");
 		}
 		Merchant m = null;
 		if (t.getMerchantid() == null) {
@@ -142,7 +142,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	@Transactional
 	public Integer appsave(Merchantaccountorder t) {
 		if (t.getAmount() <= 0) {
-			throw new YtException("金额输入错误!");
+			throw new YtException("金额不能小于1");
 		}
 		Merchant m = null;
 		if (t.getMerchantid() == null) {

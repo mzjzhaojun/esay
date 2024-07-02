@@ -134,7 +134,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		Merchantaccount maccount = merchantaccountmapper.getByUserId(SysUserContext.getUserId());
 
 		if (t.getAmount() <= 0 || t.getAmount() > maccount.getBalance()) {
-			throw new YtException("金额输入错误!");
+			throw new YtException("金额不能小于1，大于余额");
 		}
 		///////////////////////////////////////////////////// 录入提款订单/////////////////////////////////////////////////////
 		Merchant m = merchantmapper.getByUserId(SysUserContext.getUserId());
@@ -160,7 +160,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		List<Channel> listc = channelmapper.listByArrayId(cids);
 		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount())
 				.collect(Collectors.toList());
-		Assert.notEmpty(listcmm, "支付额度不匹配!");
+		Assert.notEmpty(listcmm, "提款金额超出限额");
 		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 		Channel cl = null;
 		if (listcf.size() > 0) {
@@ -406,7 +406,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		List<Channel> listc = channelmapper.listByArrayId(cids);
 		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount())
 				.collect(Collectors.toList());
-		Assert.notEmpty(listcmm, "支付额度不匹配!");
+		Assert.notEmpty(listcmm, "提款金额超出限额");
 		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 		Channel cl = null;
 		if (listcf.size() > 0) {

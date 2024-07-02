@@ -133,8 +133,8 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	public Integer post(Exchange t) {
 		Merchantaccount ma = merchantaccountmapper.getByUserId(SysUserContext.getUserId());
 
-		if (t.getAmount() <= 0 || t.getAmount() < ma.getBalance()) {
-			throw new YtException("金额输入错误!");
+		if (t.getAmount() <= 0 || t.getAmount() > ma.getBalance()) {
+			throw new YtException("金额不能小于1，大于余额");
 		}
 
 		///////////////////////////////////////////////////// 录入换汇订单/////////////////////////////////////////////////////
@@ -161,7 +161,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		List<Channel> listc = channelmapper.listByArrayId(cids);
 		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount())
 				.collect(Collectors.toList());
-		Assert.notEmpty(listcmm, "支付额度不匹配!");
+		Assert.notEmpty(listcmm, "提款金额超出限额");
 		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 		Channel cl = null;
 		if (listcf.size() > 0) {
@@ -324,7 +324,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 		Merchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
 		if (ma.getBalance() < ss.getPayamt() || ss.getPayamt() <= 0) {
-			throw new YtException("余额不足");
+			throw new YtException("提款金额输入错误!");
 		}
 
 		Boolean val = PayUtil.Md5Submit(ss, mc.getAppkey());
@@ -385,7 +385,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		List<Channel> listc = channelmapper.listByArrayId(cids);
 		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount())
 				.collect(Collectors.toList());
-		Assert.notEmpty(listcmm, "支付额度不匹配!");
+		Assert.notEmpty(listcmm, "提款金额超出限额");
 		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 		Channel cl = null;
 		if (listcf.size() > 0) {
