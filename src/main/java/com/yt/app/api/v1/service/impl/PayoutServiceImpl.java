@@ -53,9 +53,8 @@ import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.enums.YtDataSourceEnum;
-import com.yt.app.common.exption.MyException;
+import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
@@ -135,7 +134,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		Merchantaccount maccount = merchantaccountmapper.getByUserId(SysUserContext.getUserId());
 
 		if (t.getAmount() <= 0 || t.getAmount() > maccount.getBalance()) {
-			throw new MyException("金额输入错误!", YtCodeEnum.YT888);
+			throw new YtException("金额输入错误!");
 		}
 		///////////////////////////////////////////////////// 录入提款订单/////////////////////////////////////////////////////
 		Merchant m = merchantmapper.getByUserId(SysUserContext.getUserId());
@@ -150,7 +149,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);// 商戶發起
-		t.setRemark("商户提款新增￥:" + String.format("%.2f", t.getAmount()));
+		t.setRemark("新增提款￥:" + String.format("%.2f", t.getAmount()));
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
 
@@ -221,7 +220,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
 		mao.setType(DictionaryResource.ORDERTYPE_23);
 		mao.setOrdernum(t.getMerchantordernum());
-		mao.setRemark("商户提款操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
+		mao.setRemark("提款资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
 				+ m.getOnecost());
 		merchantaccountordermapper.post(mao);
 		merchantaccountservice.payout(mao);
@@ -285,7 +284,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	public SysResultVO query(String merchantordernum) {
 		Payout pt = mapper.getByMerchantOrdernum(merchantordernum);
 		if (pt == null) {
-			throw new MyException("订单不存在!", YtCodeEnum.YT888);
+			throw new YtException("订单不存在!");
 		}
 		SysResultVO srv = new SysResultVO();
 		srv.setBankcode(pt.getBankcode());
@@ -339,22 +338,22 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		String code = ss.getMerchantid();
 		Merchant mc = merchantmapper.getByCode(code.toString());
 		if (mc == null) {
-			throw new MyException("商户不存在!", YtCodeEnum.YT888);
+			throw new YtException("商户不存在!");
 		}
 
 		Merchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
 		if (ma.getBalance() < ss.getPayamt() || ss.getPayamt() <= 0) {
-			throw new MyException("提款金额输入错误!", YtCodeEnum.YT888);
+			throw new YtException("提款金额输入错误!");
 		}
 
 		Boolean val = PayUtil.Md5Submit(ss, mc.getAppkey());
 		if (!val) {
-			throw new MyException("签名不正确!", YtCodeEnum.YT888);
+			throw new YtException("签名不正确!");
 		}
 
 		List<Merchantaisle> listmc = merchantaislemapper.getByMid(mc.getId());
 		if (listmc == null || listmc.size() == 0) {
-			throw new MyException("商戶沒有配置通道!", YtCodeEnum.YT888);
+			throw new YtException("商戶沒有配置通道!");
 		}
 		// 下單
 		Payout pt = new Payout();
@@ -396,7 +395,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61); // 盘口发起
-		t.setRemark("盘口提款新增￥:" + String.format("%.2f", t.getAmount()));
+		t.setRemark("新增提款￥:" + String.format("%.2f", t.getAmount()));
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
 
@@ -466,7 +465,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
 		mao.setType(DictionaryResource.ORDERTYPE_23);
 		mao.setOrdernum(t.getMerchantordernum());
-		mao.setRemark("盘口提款操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
+		mao.setRemark("提款资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
 				+ m.getOnecost());
 		merchantaccountordermapper.post(mao);
 		merchantaccountservice.payout(mao);
@@ -491,7 +490,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			aat.setOnecost(ag.getOnecost());// 手续费
 			aat.setType(DictionaryResource.ORDERTYPE_23);
 			aat.setOrdernum("PA" + StringUtil.getOrderNum());
-			aat.setRemark("盘口提款资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费："
+			aat.setRemark("提款资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费："
 					+ aat.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
 			t.setAgentordernum(aat.getOrdernum());
@@ -600,7 +599,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				// 保存客户信息
 				merchantcustomerbanksservice.add(t);
 			} else {
-				throw new MyException("已经处理完成，不要重复处理", YtCodeEnum.YT888);
+				throw new YtException("已经处理完成，不要重复处理");
 			}
 		} catch (Exception e) {
 		} finally {
@@ -668,7 +667,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				// 保存客户信息
 				merchantcustomerbanksservice.add(t);
 			} else {
-				throw new MyException("已经处理完成，不要重复处理", YtCodeEnum.YT888);
+				throw new YtException("已经处理完成，不要重复处理");
 			}
 
 		} catch (Exception e) {

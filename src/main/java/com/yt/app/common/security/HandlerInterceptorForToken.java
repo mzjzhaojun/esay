@@ -13,7 +13,7 @@ import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.enums.YtCodeEnum;
-import com.yt.app.common.exption.MyException;
+import com.yt.app.common.exption.YtException;
 import com.yt.app.common.util.AuthUtil;
 import com.yt.app.common.util.RedisUtil;
 
@@ -109,7 +109,7 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 	private JwtUserBO checkPermission(HttpServletRequest request) {
 		String token = request.getHeader(SecurityConstant.AUTHORIZATION_KEY);
 		if (StrUtil.isBlank(token)) {
-			throw new MyException(YtCodeEnum.YT401.getDesc(), YtCodeEnum.YT401);
+			throw new YtException(YtCodeEnum.YT401.getDesc(), YtCodeEnum.YT401);
 		}
 		// 获取登录用户信息
 		JwtUserBO jwtUserBO = AuthUtil.getLoginUser(token);
@@ -152,7 +152,7 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 				}
 			}
 		}
-		throw new MyException(YtCodeEnum.YT401.getDesc(), YtCodeEnum.YT401);
+		throw new YtException(YtCodeEnum.YT401.getDesc(), YtCodeEnum.YT401);
 
 	}
 

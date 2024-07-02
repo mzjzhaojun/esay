@@ -53,9 +53,8 @@ import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.enums.YtDataSourceEnum;
-import com.yt.app.common.exption.MyException;
+import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
@@ -135,7 +134,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		Merchantaccount ma = merchantaccountmapper.getByUserId(SysUserContext.getUserId());
 
 		if (t.getAmount() <= 0 || t.getAmount() < ma.getBalance()) {
-			throw new MyException("金额输入错误!", YtCodeEnum.YT888);
+			throw new YtException("金额输入错误!");
 		}
 
 		///////////////////////////////////////////////////// 录入换汇订单/////////////////////////////////////////////////////
@@ -325,7 +324,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 		Merchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
 		if (ma.getBalance() < ss.getPayamt() || ss.getPayamt() <= 0) {
-			throw new MyException("余额不足", YtCodeEnum.YT888);
+			throw new YtException("余额不足");
 		}
 
 		Boolean val = PayUtil.Md5Submit(ss, mc.getAppkey());
@@ -333,7 +332,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 		List<Merchantaisle> listmc = merchantaislemapper.getByMid(mc.getId());
 		if (listmc == null || listmc.size() == 0) {
-			throw new MyException("商戶沒有配置通道!", YtCodeEnum.YT888);
+			throw new YtException("商戶沒有配置通道!");
 		}
 
 		Exchange pt = new Exchange();

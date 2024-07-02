@@ -18,8 +18,7 @@ import com.yt.app.api.v1.entity.Tgbot;
 import com.yt.app.api.v1.vo.TgbotVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtCodeEnum;
-import com.yt.app.common.exption.MyException;
+import com.yt.app.common.exption.YtException;
 import com.yt.app.common.util.RedisUtil;
 
 import java.util.Collections;
@@ -42,7 +41,7 @@ public class TgbotServiceImpl extends YtBaseServiceImpl<Tgbot, Long> implements 
 
 	@Autowired
 	private MerchantMsgBot merchantbot;
-	
+
 	@Autowired
 	private ChannelMsgBot channelbot;
 
@@ -68,7 +67,7 @@ public class TgbotServiceImpl extends YtBaseServiceImpl<Tgbot, Long> implements 
 			}
 			return i;
 		}
-		throw new MyException("已经存在的机器人,请不要重复添加!", YtCodeEnum.YT888);
+		throw new YtException("已经存在的机器人,请不要重复添加");
 	}
 
 	@Override

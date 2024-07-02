@@ -11,26 +11,27 @@ import com.yt.app.common.enums.YtCodeEnum;
  * @version 1.0
  */
 @Component
-public class MyException extends RuntimeException {
+public class YtException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
 	private YtCodeEnum code;
 
-	public MyException(String msg, Throwable t) {
+	public YtException(String msg, Throwable t) {
 		super(msg, t);
 	}
 
-	public MyException(String msg) {
+	public YtException(String msg) {
 		super(msg);
+		this.code = YtCodeEnum.YT888;
 	}
 
-	public MyException(String msg, YtCodeEnum code) {
+	public YtException(String msg, YtCodeEnum code) {
 		super(msg);
 		this.code = code;
 	}
 
-	public MyException(YtCodeEnum code) {
+	public YtException(YtCodeEnum code) {
 		this.code = code;
 	}
 
@@ -38,6 +39,6 @@ public class MyException extends RuntimeException {
 		return code;
 	}
 
-	public MyException() {
+	public YtException() {
 	}
 }

@@ -144,7 +144,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount());
 			mapper.put(t);
 			scr.setBalance(t.getBalance());//
-			scr.setRemark("商戶提款金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
+			scr.setRemark("提款金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 		} catch (Exception e) {
 		} finally {

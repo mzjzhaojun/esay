@@ -12,8 +12,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.SimpleDateFormatSerializer;
 import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.yt.app.common.base.context.AuthRsaKeyContext;
-import com.yt.app.common.enums.YtCodeEnum;
-import com.yt.app.common.exption.MyException;
+import com.yt.app.common.exption.YtException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,7 +45,7 @@ public class SecurityUtil {
 			serializeConfig.put(Date.class, new SimpleDateFormatSerializer("YY-MM-dd HH:mm"));
 			String dataString = JSON.toJSONString(object, serializeConfig, SerializerFeature.PrettyFormat);
 			String data = AesUtil.encrypt(dataString, AuthRsaKeyContext.getAesKey());
-			//log.info("显示：" + dataString);
+			// log.info("显示：" + dataString);
 			return data;
 		} catch (Throwable e) {
 			throw new RuntimeException("ApiSecurityUtil.encrypt：加密异常！");
@@ -82,7 +81,7 @@ public class SecurityUtil {
 		src = src.replaceAll("script", "").replaceAll(";", "").replaceAll("0x0d", "").replaceAll("0x0a", "");
 
 		if (!temp.equals(src)) {
-			throw new MyException("xss攻击检查：参数含有非法攻击字符，已禁止继续访问！！", YtCodeEnum.YT888);
+			throw new YtException("xss攻击检查：参数含有非法攻击字符，已禁止继续访问");
 		}
 		return src;
 	}

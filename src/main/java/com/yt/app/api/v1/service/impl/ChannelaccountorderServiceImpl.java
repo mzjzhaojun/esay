@@ -18,9 +18,8 @@ import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.enums.YtDataSourceEnum;
-import com.yt.app.common.exption.MyException;
+import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.RedisUtil;
@@ -57,7 +56,7 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 	@Transactional
 	public Integer post(Channelaccountorder t) {
 		if (t.getAmount() <= 0) {
-			throw new MyException("金额输入错误!", YtCodeEnum.YT888);
+			throw new YtException("金额输入错误!");
 		}
 		Channel m = null;
 		if (t.getChannelid() == null) {

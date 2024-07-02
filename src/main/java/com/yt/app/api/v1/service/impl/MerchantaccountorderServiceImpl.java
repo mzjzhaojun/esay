@@ -21,9 +21,8 @@ import com.yt.app.api.v1.entity.Merchantaccountorder;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.enums.YtDataSourceEnum;
-import com.yt.app.common.exption.MyException;
+import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.RedisUtil;
@@ -69,7 +68,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	@Transactional
 	public Integer post(Merchantaccountorder t) {
 		if (t.getAmount() <= 0) {
-			throw new MyException("金额输入错误!", YtCodeEnum.YT888);
+			throw new YtException("金额输入错误!");
 		}
 		Merchant m = null;
 		if (t.getMerchantid() == null) {
@@ -103,7 +102,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	@Transactional
 	public Integer save(Merchantaccountorder t) {
 		if (t.getAmount() <= 0) {
-			throw new MyException("金额输入错误!", YtCodeEnum.YT888);
+			throw new YtException("金额输入错误!");
 		}
 		Merchant m = null;
 		if (t.getMerchantid() == null) {
@@ -143,7 +142,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	@Transactional
 	public Integer appsave(Merchantaccountorder t) {
 		if (t.getAmount() <= 0) {
-			throw new MyException("金额输入错误!", YtCodeEnum.YT888);
+			throw new YtException("金额输入错误!");
 		}
 		Merchant m = null;
 		if (t.getMerchantid() == null) {

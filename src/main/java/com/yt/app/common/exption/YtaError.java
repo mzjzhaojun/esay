@@ -37,12 +37,12 @@ public class YtaError {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/401")
 	public YtResponseEntity<Object> error404(HttpServletRequest request) {
-		return new YtResponseEntity<Object>(new YtBody(YtCodeEnum.YT300));
+		return new YtResponseEntity<Object>(new YtBody(YtCodeEnum.YT500));
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/404")
 	public YtResponseEntity<Object> error401(HttpServletRequest request) {
-		return new YtResponseEntity<Object>(new YtBody(YtCodeEnum.YT400));
+		return new YtResponseEntity<Object>(new YtBody(YtCodeEnum.YT500));
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/500")

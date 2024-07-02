@@ -23,9 +23,8 @@ import com.yt.app.api.v1.entity.Agentaccount;
 import com.yt.app.api.v1.entity.Agentaccountbank;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.enums.YtDataSourceEnum;
-import com.yt.app.common.exption.MyException;
+import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.RedisUtil;
@@ -104,7 +103,7 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 	public Integer save(Agentaccountorder t) {
 		Agentaccount aac = aamapper.getByUserId(t.getUserid());
 		if (t.getAmount() <= 0 || t.getAmount() > aac.getBalance()) {
-			throw new MyException("金额输入错误!", YtCodeEnum.YT888);
+			throw new YtException("金额输入错误!");
 		}
 		Agent m = null;
 		if (t.getAgentid() == null) {

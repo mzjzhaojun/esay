@@ -22,7 +22,9 @@ import com.yt.app.api.v1.vo.SysUserPermVO;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.enums.AuthSourceEnum;
 import com.yt.app.common.enums.SysRoleCodeEnum;
+import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.enums.YtDataSourceEnum;
+import com.yt.app.common.exption.YtException;
 import com.yt.app.common.util.AuthUtil;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PasswordUtil;
@@ -159,8 +161,9 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public String getPublicKey(HttpServletRequest request) {
 		String ip = request.getHeader("X-Real-IP");
-		if (ip == null)
+		if (ip == null) {
 			return RsaUtil.getPublicKey();
+		}
 		boolean isValid = false;
 		if (!AuthUtil.isMobileDevice(request.getHeader("User-Agent"))) {
 			// 判断ip 是否在配置内
@@ -171,7 +174,8 @@ public class AuthServiceImpl implements AuthService {
 					break;
 				}
 			}
-			Assert.isTrue(isValid, "IP不在白名单中");
+			if (!isValid)
+				throw new YtException(YtCodeEnum.YT402.getDesc(), YtCodeEnum.YT402);
 		}
 		return RsaUtil.getPublicKey();
 	}
