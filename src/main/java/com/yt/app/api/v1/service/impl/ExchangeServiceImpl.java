@@ -139,6 +139,10 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 		///////////////////////////////////////////////////// 录入换汇订单/////////////////////////////////////////////////////
 		Merchant m = merchantmapper.getByUserId(SysUserContext.getUserId());
+		if (!m.getStatus()) {
+			throw new YtException("商户被冻结!");
+		}
+
 		t.setUserid(m.getUserid());
 		t.setMerchantid(m.getId());
 		t.setNotifyurl(m.getApireusultip());
@@ -156,9 +160,10 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 		////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
 		List<Aislechannel> listac = aislechannelmapper.getByAisleId(t.getAisleid());
-		Assert.notEmpty(listac, "没有设置渠道!");
+		Assert.notEmpty(listac, "没有可用通道!");
 		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
 		List<Channel> listc = channelmapper.listByArrayId(cids);
+		Assert.notEmpty(listc, "没有可用渠道!");
 		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount())
 				.collect(Collectors.toList());
 		Assert.notEmpty(listcmm, "提款金额超出限额");
@@ -194,7 +199,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			WeightRandom<String> wr = RandomUtil.weightRandom(weightList);
 			String code = wr.next();
 			cl = listc.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
-			Assert.notNull(cl, "没有匹配的渠道!");
+			Assert.notNull(cl, "没有可用的渠道!");
 			t.setChannelid(cl.getId());
 			t.setChannelname(cl.getName());
 			t.setChannelcost(cl.getOnecost());// 渠道手续费
@@ -362,6 +367,10 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	@Transactional
 	public Integer add(Exchange t, Merchant m) {
 
+		if (!m.getStatus()) {
+			throw new YtException("商户被冻结!");
+		}
+
 		TenantIdContext.setTenantId(m.getTenant_id());
 		///////////////////////////////////////////////////// 盘口录入提款订单/////////////////////////////////////////////////////
 		t.setUserid(m.getUserid());
@@ -380,9 +389,10 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 		////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
 		List<Aislechannel> listac = aislechannelmapper.getByAisleId(t.getAisleid());
-		Assert.notEmpty(listac, "没有设置渠道!");
+		Assert.notEmpty(listac, "没有可用通道!");
 		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
 		List<Channel> listc = channelmapper.listByArrayId(cids);
+		Assert.notEmpty(listc, "没有可用渠道!");
 		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount())
 				.collect(Collectors.toList());
 		Assert.notEmpty(listcmm, "提款金额超出限额");
@@ -418,7 +428,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			WeightRandom<String> wr = RandomUtil.weightRandom(weightList);
 			String code = wr.next();
 			cl = listc.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
-			Assert.notNull(cl, "没有匹配的渠道!");
+			Assert.notNull(cl, "没有可用的渠道!");
 			t.setChannelid(cl.getId());
 			t.setChannelname(cl.getName());
 			t.setChannelcost(cl.getOnecost());// 渠道手续费
@@ -555,10 +565,13 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			if (i > 0) {
 				Tgmerchantgroup tgmerchantgroup = tgmerchantgroupmapper.getByMerchantId(t.getMerchantid());
 				StringBuffer what = new StringBuffer();
+				String strnum = t.getAccnumer();
+				if (strnum == null)
+					strnum = "收款码";
 				what.append("状态：换汇成功\n");
 				what.append("单号：" + t.getMerchantordernum() + "\n");
 				what.append("姓名：" + t.getAccname() + "\n");
-				what.append("卡号：" + t.getAccnumer() + "\n");
+				what.append("卡号：" + strnum + "\n");
 				what.append("金额：" + t.getAmount() + "\n");
 				what.append("成功时间：" + DateTimeUtil.getDateTime() + "\n");
 				what.append("兑换部已处理完毕，请你们核实查看\n");
@@ -616,10 +629,13 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			if (i > 0) {
 				Tgmerchantgroup tgmerchantgroup = tgmerchantgroupmapper.getByMerchantId(t.getMerchantid());
 				StringBuffer what = new StringBuffer();
+				String strnum = t.getAccnumer();
+				if (strnum == null)
+					strnum = "收款码";
 				what.append("状态：换汇失败\n");
 				what.append("单号：" + t.getMerchantordernum() + "\n");
 				what.append("姓名：" + t.getAccname() + "\n");
-				what.append("卡号：" + t.getAccnumer() + "\n");
+				what.append("卡号：" + strnum + "\n");
 				what.append("金额：" + t.getAmount() + "\n");
 				what.append("失败时间：" + DateTimeUtil.getDateTime() + "\n");
 				what.append("兑换部已处理完毕，请你们核实查看\n");

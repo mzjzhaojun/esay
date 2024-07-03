@@ -138,6 +138,11 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		}
 		///////////////////////////////////////////////////// 录入提款订单/////////////////////////////////////////////////////
 		Merchant m = merchantmapper.getByUserId(SysUserContext.getUserId());
+
+		if (!m.getStatus()) {
+			throw new YtException("商户被冻结!");
+		}
+
 		t.setUserid(m.getUserid());
 		t.setMerchantid(m.getId());
 		t.setNotifyurl(m.getApireusultip());
@@ -155,9 +160,10 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 		////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
 		List<Aislechannel> listac = aislechannelmapper.getByAisleId(t.getAisleid());
-		Assert.notEmpty(listac, "没有设置渠道!");
+		Assert.notEmpty(listac, "没有可用通道!");
 		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
 		List<Channel> listc = channelmapper.listByArrayId(cids);
+		Assert.notEmpty(listc, "没有可用渠道!");
 		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount())
 				.collect(Collectors.toList());
 		Assert.notEmpty(listcmm, "提款金额超出限额");
@@ -193,7 +199,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			WeightRandom<String> wr = RandomUtil.weightRandom(weightList);
 			String code = wr.next();
 			cl = listc.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
-			Assert.notNull(cl, "没有匹配的渠道!");
+			Assert.notNull(cl, "没有可用的渠道!");
 			t.setChannelid(cl.getId());
 			t.setChannelname(cl.getName());
 			t.setChannelcost(cl.getOnecost());// 渠道手续费
@@ -337,8 +343,13 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	public SysResultVO submit(SysSubmitDTO ss) {
 		String code = ss.getMerchantid();
 		Merchant mc = merchantmapper.getByCode(code.toString());
+
 		if (mc == null) {
 			throw new YtException("商户不存在!");
+		}
+
+		if (!mc.getStatus()) {
+			throw new YtException("商户被冻结!");
 		}
 
 		Merchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
@@ -401,9 +412,10 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 		////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
 		List<Aislechannel> listac = aislechannelmapper.getByAisleId(t.getAisleid());
-		Assert.notEmpty(listac, "没有设置渠道!");
+		Assert.notEmpty(listac, "没有可用通道!");
 		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
 		List<Channel> listc = channelmapper.listByArrayId(cids);
+		Assert.notEmpty(listc, "没有可用渠道!");
 		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount())
 				.collect(Collectors.toList());
 		Assert.notEmpty(listcmm, "提款金额超出限额");
@@ -439,7 +451,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			WeightRandom<String> wr = RandomUtil.weightRandom(weightList);
 			String code = wr.next();
 			cl = listc.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
-			Assert.notNull(cl, "没有匹配的渠道!");
+			Assert.notNull(cl, "没有可用的渠道!");
 			t.setChannelid(cl.getId());
 			t.setChannelname(cl.getName());
 			t.setChannelcost(cl.getOnecost());// 渠道手续费

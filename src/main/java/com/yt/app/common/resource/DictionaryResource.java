@@ -14,6 +14,10 @@ public class DictionaryResource implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1;
+
+	public static final Integer IS_DELETE_0 = 0;
+	public static final Integer IS_DELETE_1 = 1;
+
 	/**
 	 * 账户类型
 	 */
@@ -118,10 +122,10 @@ public class DictionaryResource implements Serializable {
 
 	public static final Integer EXCHANGETYPE_86 = 86; // 收入取消
 	public static final Integer EXCHANGETYPE_87 = 87; // 支出取消
-	
+
 	public static final Integer TGBOT_TYPE_M = 101; // 商户
-	public static final Integer TGBOT_TYPE_C= 102; // 运营
-	public static final Integer TGBOT_TYPE_MSG= 103; // 记账
+	public static final Integer TGBOT_TYPE_C = 102; // 运营
+	public static final Integer TGBOT_TYPE_MSG = 103; // 记账
 
 	public static final Integer TGBOTGROUPRECORD_TYPE_INCOME = 111; // 收入
 	public static final Integer TGBOTGROUPRECORD_TYPE_WITHDRAW = 112; // 减款

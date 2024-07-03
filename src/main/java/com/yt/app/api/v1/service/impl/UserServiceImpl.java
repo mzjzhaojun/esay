@@ -28,6 +28,7 @@ import com.yt.app.api.v1.entity.Userrole;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
+import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.AuthUtil;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PasswordUtil;
@@ -168,6 +169,7 @@ public class UserServiceImpl extends YtBaseServiceImpl<User, Long> implements Us
 		SysUserPermVO userPerm = mapper.selectUserPerm(params);
 
 		Assert.notNull(userPerm, "用户不存在或无权限！");
+
 		// 2.权限树
 		userPerm.setPermissionTreeList(tsysmenuservice
 				.tree(SysMenuTreeDTO.builder().roleIdList(userPerm.getRoleIdList()).isOnlyShowPerm(true).build()));
@@ -197,5 +199,15 @@ public class UserServiceImpl extends YtBaseServiceImpl<User, Long> implements Us
 		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), code, System.currentTimeMillis());
 		Assert.isTrue(isValid, "验证码错误！");
 		return 1;
+	}
+
+	@Override
+	@Transactional
+	public Integer delete(Long id) {
+		User t = mapper.get(id);
+		t.setIs_deleted(DictionaryResource.IS_DELETE_1);
+		Integer i = mapper.put(t);
+		Assert.equals(i, 1, ServiceConstant.DELETE_FAIL_MSG);
+		return i;
 	}
 }

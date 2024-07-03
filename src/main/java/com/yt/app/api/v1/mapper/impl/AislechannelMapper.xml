@@ -105,7 +105,7 @@
 		JOIN channel c
 		ON ac.channelid = c.id
 		<where>
-			1=1
+			c.status =1
 			<if test="aisleid != null and aisleid != ''">
 				AND ac.aisleid = #{aisleid}
 			</if>
@@ -149,7 +149,7 @@
 		JOIN channel c
 		ON ac.channelid = c.id
 		<where>
-			1=1
+			c.status  =1
 			<if test="aisleid != null and aisleid != ''">
 				AND ac.aisleid = #{aisleid}
 			</if>
@@ -183,7 +183,7 @@
 		JOIN channel c
 		ON ac.channelid = c.id
 		<where>
-			1=1
+			c.status=1
 			<if test="aisleid != null and aisleid != ''">
 				AND ac.aisleid = #{aisleid}
 			</if>

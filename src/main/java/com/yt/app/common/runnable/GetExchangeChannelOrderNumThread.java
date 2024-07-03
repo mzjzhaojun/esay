@@ -2,9 +2,6 @@ package com.yt.app.common.runnable;
 
 import java.util.Random;
 
-
-
-
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccountorder;
 import com.yt.app.api.v1.entity.Exchange;
@@ -23,10 +20,8 @@ import com.yt.app.common.util.StringUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 public class GetExchangeChannelOrderNumThread implements Runnable {
-
 
 	private Long id;
 
@@ -89,10 +84,13 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 					channelaccountservice.exchangeamount(cat);
 					Tgchannelgroup tgchannelgroup = tgchannelgroupmapper.getByChannelId(exchange.getChannelid());
 					StringBuffer what = new StringBuffer();
+					String strnum = exchange.getAccnumer();
+					if (strnum == null)
+						strnum = "收款码";
 					what.append("状态：新增换汇\n");
 					what.append("单号：" + exchange.getChannelordernum() + "\n");
 					what.append("姓名：" + exchange.getAccname() + "\n");
-					what.append("卡号：" + exchange.getAccnumer() + "\n");
+					what.append("卡号：" + strnum + "\n");
 					what.append("金额：" + exchange.getAmount() + "\n");
 					what.append("发起时间：" + DateTimeUtil.getDateTime() + "\n");
 					what.append("客户请你们尽快处理\n");

@@ -18,6 +18,13 @@
 		values
 		(#{id},#{userid},#{merchantname},#{ordernum},#{type},#{pretotalincome},#{prewithdrawamount},#{pretowithdrawamount},#{pretoincomeamount},#{posttotalincome},#{postwithdrawamount},#{posttowithdrawamount},#{posttoincomeamount},#{update_time},#{update_by},#{create_time},#{create_by},#{remark})
 	</insert>
+	<insert id="postAndTenantid"
+		parameterType="com.yt.app.api.v1.entity.Merchantaccountapplyjournal">
+		insert into
+		merchantaccountapplyjournal(id,tenant_id,userid,merchantname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,update_time,update_by,create_time,create_by,remark)
+		values
+		(#{id},#{tenant_id},#{userid},#{merchantname},#{ordernum},#{type},#{pretotalincome},#{prewithdrawamount},#{pretowithdrawamount},#{pretoincomeamount},#{posttotalincome},#{postwithdrawamount},#{posttowithdrawamount},#{posttoincomeamount},#{update_time},#{update_by},#{create_time},#{create_by},#{remark})
+	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into

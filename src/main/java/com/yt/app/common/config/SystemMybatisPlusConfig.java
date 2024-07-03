@@ -57,14 +57,11 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("systemaccount");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("systemcapitalrecord");
 
-		MybatisPlusConfig.TENANT_ID_TABLE.add("tgbot");
-
-		MybatisPlusConfig.TENANT_ID_TABLE.add("tgbotgroup");
-		MybatisPlusConfig.TENANT_ID_TABLE.add("tgbotgrouprecord");
-
+		//MybatisPlusConfig.TENANT_ID_TABLE.add("tgbot");
+		//MybatisPlusConfig.TENANT_ID_TABLE.add("tgbotgroup");
+		//MybatisPlusConfig.TENANT_ID_TABLE.add("tgbotgrouprecord");
 		// MybatisPlusConfig.TENANT_ID_TABLE.add("tgmerchantlabel");
-
-		MybatisPlusConfig.TENANT_ID_TABLE.add("tgchannelgroup");
+		//MybatisPlusConfig.TENANT_ID_TABLE.add("tgchannelgroup");
 	}
 
 }

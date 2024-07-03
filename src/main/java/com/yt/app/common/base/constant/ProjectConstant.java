@@ -39,18 +39,4 @@ public interface ProjectConstant extends BaseConstant {
 	String DEFAULT_FOLDER_TMP = PROJECT_ROOT_DIRECTORY + "/tmp";
 	String DEFAULT_FOLDER_TMP_GENERATE = PROJECT_ROOT_DIRECTORY + "/tmp-generate";
 
-	// ===============================================================================
-	// ============================ ↓↓↓↓↓↓ other ↓↓↓↓↓↓
-	// ==============================
-	// ===============================================================================
-
-	/**
-	 * 实体类
-	 */
-	String ENTITY_PACKAGE = "com.zhengqing.*.entity";
-	/**
-	 * mapper
-	 */
-	String MAPPER_PACKAGE = "com.zhengqing.*.mapper";
-
 }

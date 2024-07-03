@@ -101,7 +101,7 @@
 		JOIN aisle a
 		ON ma.aisleid = a.id
 		<where>
-			1=1
+			a.status =1
 			<if test="userid != null and userid != ''">
 				AND m.userid = #{userid}
 			</if>
@@ -163,7 +163,7 @@
 		JOIN aisle a
 		ON ma.aisleid = a.id
 		<where>
-			1=1
+			a.status =1
 			<if test="aisleid != null and aisleid != ''">
 				and a.id = #{aisleid}
 			</if>

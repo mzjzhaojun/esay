@@ -29,8 +29,8 @@ public class ExptionAdvice {
 			log.error("MyException :", e.getMessage(), e);
 			return new YtBody(e.getMessage(), ((YtException) e).getCode().getCode());
 		}
-		log.error("RuntimeException:", e.getMessage(), e);
-		return new YtBody("RuntimeException" + e.getMessage(), YtCodeEnum.YT500.getCode());
+		log.error("msg:", e.getMessage(), e);
+		return new YtBody(e.getMessage(), YtCodeEnum.YT888.getCode());
 	}
 
 	@ExceptionHandler(Exception.class)
