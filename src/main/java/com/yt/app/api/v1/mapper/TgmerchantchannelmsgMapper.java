@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
+import com.yt.app.api.v1.vo.TgmerchantchannelmsgVO;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
 import com.yt.app.common.base.YtIBaseMapper;
@@ -13,7 +14,7 @@ import com.yt.app.common.base.YtIBaseMapper;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2023-12-28 15:01:59
+ * @version v1 @createdate2024-07-04 16:47:48
  */
 
 public interface TgmerchantchannelmsgMapper extends YtIBaseMapper<Tgmerchantchannelmsg> {
@@ -87,7 +88,7 @@ public interface TgmerchantchannelmsgMapper extends YtIBaseMapper<Tgmerchantchan
 	 * @return mapTgmerchantchannelmsg
 	 */
 	@YtRedisCacheAnnotation(classs = Tgmerchantchannelmsg.class)
-	public List<Map<String, Object>> map(Map<String, Object> param);
+	public List<TgmerchantchannelmsgVO> page(Map<String, Object> param);
 
 	/**
 	 * listbyids

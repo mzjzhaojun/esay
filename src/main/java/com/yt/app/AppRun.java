@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.yt.app.common.common.YtAutoCode;
 
-
 /**
  * by jz
  * 
@@ -26,7 +25,7 @@ import com.yt.app.common.common.YtAutoCode;
 @EnableTransactionManagement
 @EnableHypermediaSupport(type = { HypermediaType.HAL })
 @EnableAspectJAutoProxy(proxyTargetClass = false)
-public class AppRun extends SpringBootServletInitializer {	
+public class AppRun extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -35,6 +34,6 @@ public class AppRun extends SpringBootServletInitializer {
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(new Class[] { AppRun.class }, args);
-		//YtAutoCode.u().p(Arrays.asList("tglabel"));
+		// YtAutoCode.u().p(Arrays.asList("tgmerchantgroup"));
 	}
 }

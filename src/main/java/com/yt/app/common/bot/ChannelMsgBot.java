@@ -1,5 +1,6 @@
 package com.yt.app.common.bot;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.CopyMessage;
 import org.telegram.telegrambots.meta.api.methods.ForwardMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -51,13 +54,13 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 
 	@Override
 	public void onUpdateReceived(Update update) {
-		
+
 		log.info(update.toString());
-		
+
 		Long chatid = update.getMessage().getChat().getId();
 		String message = update.getMessage().getText();
 		Message replymsg = update.getMessage().getReplyToMessage();
-		
+
 		if (message != null) {
 			TenantIdContext.removeFlag();
 			Tgchannelgroup tmg = tgchannelgroupmapper.getByTgGroupId(chatid);
@@ -105,6 +108,17 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 	// 发送消息
 	public Message sendText(Long who, String what) {
 		SendMessage sm = SendMessage.builder().chatId(who.toString()).text(what).build();
+		try {
+			Message msg = execute(sm);
+			return msg;
+		} catch (TelegramApiException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	// 发送照片
+	public Message sendPhoto(Long who, String what) {
+		SendPhoto sm = SendPhoto.builder().chatId(who.toString()).photo(new InputFile(new File(what))).build();
 		try {
 			Message msg = execute(sm);
 			return msg;

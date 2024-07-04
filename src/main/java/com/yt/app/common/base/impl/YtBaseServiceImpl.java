@@ -30,8 +30,6 @@ import com.yt.app.common.base.YtIBaseMapper;
 @Service
 public abstract class YtBaseServiceImpl<T, ID extends Serializable> implements YtIBaseService<T, ID> {
 
-	
-
 	@Autowired
 	private YtIBaseMapper<T> mapper;
 

@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,8 +45,6 @@ import com.yt.app.common.util.FileUtil;
 @RestController
 @RequestMapping("/rest/v1/file")
 public class FileController extends YtBaseControllerImpl<YtFile, Long> {
-
-	
 
 	@Autowired
 	private FileService service;

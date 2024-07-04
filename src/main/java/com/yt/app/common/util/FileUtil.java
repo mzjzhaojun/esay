@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 
 import com.yt.app.api.v1.entity.YtFile;
+import com.yt.app.common.config.YtConfig;
 
 /**
  * 文件处理
@@ -633,5 +635,38 @@ public class FileUtil {
 	public static int getFontWidth(Font f, String pressText) {
 		FontMetrics fm = sun.font.FontDesignMetrics.getMetrics(f);
 		return fm.stringWidth(pressText);
+	}
+
+	public static String createfilepath(Date date, YtConfig appConfig) {
+		StringBuffer sb = new StringBuffer();
+		String yearfolder = DateTimeUtil.getDateTime(date, DateTimeUtil.DEFAULT_DATE_FORMAT);
+		File filePath = new File(appConfig.getFilePath());
+		if (!filePath.exists()) {
+			try {
+				filePath.mkdir();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		String ypath = sb.append(java.io.File.separator).append(yearfolder).toString();
+		java.io.File yfile = new java.io.File(filePath + ypath);
+		if (!yfile.exists()) {
+			try {
+				yfile.mkdir();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		String hfolder = DateTimeUtil.getDateTime(date, DateTimeUtil.DEFAULT_HOUR_FORMAT);
+		String hpath = sb.append(java.io.File.separator).append(hfolder).toString();
+		java.io.File hfile = new java.io.File(filePath + hpath);
+		if (!hfile.exists()) {
+			try {
+				hfile.mkdir();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return hpath;
 	}
 }

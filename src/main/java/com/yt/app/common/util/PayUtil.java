@@ -1,7 +1,5 @@
 package com.yt.app.common.util;
 
-
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -23,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PayUtil {
-
 
 	// 验证菲律宾通知返回签名
 	public static boolean valMd5TyResultOrder(SysTyOrder so, String key) {

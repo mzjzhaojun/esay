@@ -3,7 +3,6 @@ package com.yt.app.api.v1.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import com.yt.app.common.common.yt.YtRequestDecryptEntity;
@@ -29,7 +28,6 @@ import com.yt.app.api.v1.entity.Config;
 @RequestMapping("/rest/v1/config")
 public class ConfigController extends YtBaseEncipherControllerImpl<Config, Long> {
 
-	
 	@Autowired
 	private ConfigService service;
 

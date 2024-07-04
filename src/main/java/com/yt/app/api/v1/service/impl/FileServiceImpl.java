@@ -2,7 +2,6 @@ package com.yt.app.api.v1.service.impl;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,7 +33,6 @@ import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.enums.YtDataSourceEnum;
-import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.FileUtil;
 import com.yt.app.common.util.VideoUtil;
 
@@ -54,6 +52,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 
 	@Autowired
 	YtConfig appConfig;
+
 	@Autowired
 	Snowflake idworker;
 
@@ -78,7 +77,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 		if (FileUtil.isImage(filename))
 			type = "jpeg";
 		Date uploaddate = new Date();
-		String filepath = createfilepath(uploaddate);
+		String filepath = FileUtil.createfilepath(uploaddate, appConfig);
 		InputStream is = file.getInputStream();
 		YtFile fl = null;
 		StringBuffer sb = new StringBuffer();
@@ -135,7 +134,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 		if (FileUtil.isImage(filename))
 			type = "jpeg";
 		Date uploaddate = new Date();
-		String filepath = createfilepath(uploaddate);
+		String filepath = FileUtil.createfilepath(uploaddate, appConfig);
 		InputStream is = file.getInputStream();
 		YtFile fl = new YtFile();
 		StringBuffer sb = new StringBuffer();
@@ -224,39 +223,6 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 		return f;
 	}
 
-	public String createfilepath(Date date) {
-		StringBuffer sb = new StringBuffer();
-		String yearfolder = DateTimeUtil.getDateTime(date, DateTimeUtil.DEFAULT_DATE_FORMAT);
-		File filePath = new File(appConfig.getFilePath());
-		if (!filePath.exists()) {
-			try {
-				filePath.mkdir();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		String ypath = sb.append(java.io.File.separator).append(yearfolder).toString();
-		java.io.File yfile = new java.io.File(filePath + ypath);
-		if (!yfile.exists()) {
-			try {
-				yfile.mkdir();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		String hfolder = DateTimeUtil.getDateTime(date, DateTimeUtil.DEFAULT_HOUR_FORMAT);
-		String hpath = sb.append(java.io.File.separator).append(hfolder).toString();
-		java.io.File hfile = new java.io.File(filePath + hpath);
-		if (!hfile.exists()) {
-			try {
-				hfile.mkdir();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return hpath;
-	}
-
 	public String findId(String url) {
 		return url.substring(url.lastIndexOf("/") + 1);
 	}
@@ -300,7 +266,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 	public YtFile addImg(String imgStr, String url) throws IOException {
 		String type = "jpeg";
 		Date uploaddate = new Date();
-		String filepath = createfilepath(uploaddate);
+		String filepath = FileUtil.createfilepath(uploaddate, appConfig);
 		YtFile fl = new YtFile();
 		StringBuffer sb = new StringBuffer();
 		String name = "";
@@ -386,7 +352,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 		String filename = file.getOriginalFilename();
 		String type = (filename.substring(filename.lastIndexOf(".") + 1));
 		Date uploaddate = new Date();
-		String filepath = createfilepath(uploaddate);
+		String filepath = FileUtil.createfilepath(uploaddate, appConfig);
 		InputStream is = file.getInputStream();
 		YtFile fl = null;
 		StringBuffer sb = new StringBuffer();

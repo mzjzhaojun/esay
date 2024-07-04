@@ -1,8 +1,7 @@
-package com.yt.app.api.v1.entity;
+package com.yt.app.api.v1.dbo;
 
 import lombok.Getter;
 import lombok.Setter;
-import com.yt.app.common.base.YtBaseEntity;
 
 /**
  * @author zj default
@@ -11,30 +10,32 @@ import com.yt.app.common.base.YtBaseEntity;
  */
 @Getter
 @Setter
-public class Tgmerchantchannelmsg extends YtBaseEntity<Tgmerchantchannelmsg> {
-
-	private static final long serialVersionUID = 1L;
+public class TgmerchantchannelmsgDTO {
 
 	Long id;
 	Long mid;
 	Long cid;
-	Long chatid;
+	Integer chatid;
 	String mmanger;
 	String cmanger;
 	Integer mreplyid;
 	Integer creplyid;
 	String ordernum;
-	String qrcode;
+	String orcode;
 	Object amount;
 	String telegrameimgid;
 	String remark;
+	Long create_by;
+	java.util.Date create_time;
+	Long update_by;
+	java.util.Date update_time;
 	Integer version;
 
-	public Tgmerchantchannelmsg() {
+	public TgmerchantchannelmsgDTO() {
 	}
 
-	public Tgmerchantchannelmsg(Long id, Long mid, Long cid, Long chatid, String mmanger, String cmanger,
-			Integer mreplyid, Integer creplyid, String ordernum, String qrcode, Object amount, String telegrameimgid,
+	public TgmerchantchannelmsgDTO(Long id, Long mid, Long cid, Integer chatid, String mmanger, String cmanger,
+			Integer mreplyid, Integer creplyid, String ordernum, String orcode, Object amount, String telegrameimgid,
 			String remark, Long create_by, java.util.Date create_time, Long update_by, java.util.Date update_time,
 			Integer version) {
 		this.id = id;
@@ -46,10 +47,14 @@ public class Tgmerchantchannelmsg extends YtBaseEntity<Tgmerchantchannelmsg> {
 		this.mreplyid = mreplyid;
 		this.creplyid = creplyid;
 		this.ordernum = ordernum;
-		this.qrcode = qrcode;
+		this.orcode = orcode;
 		this.amount = amount;
 		this.telegrameimgid = telegrameimgid;
 		this.remark = remark;
+		this.create_by = create_by;
+		this.create_time = create_time;
+		this.update_by = update_by;
+		this.update_time = update_time;
 		this.version = version;
 	}
 }

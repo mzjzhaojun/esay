@@ -22,8 +22,7 @@ public interface SystemaccountMapper extends YtIBaseMapper<Systemaccount> {
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Systemaccount.class })
 	public Integer post(Object t);
-	
-	
+
 	/**
 	 * add
 	 * 
@@ -32,6 +31,7 @@ public interface SystemaccountMapper extends YtIBaseMapper<Systemaccount> {
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Systemaccount.class })
 	public Integer postAndTanantId(Object t);
+
 	/**
 	 * sava batch
 	 * 

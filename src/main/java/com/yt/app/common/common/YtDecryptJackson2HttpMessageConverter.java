@@ -8,8 +8,6 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.concurrent.atomic.AtomicReference;
 
-
-
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
@@ -43,7 +41,6 @@ import com.yt.app.common.util.SecurityUtil;
  * @author zj AbstractJackson2HttpMessageConverter
  */
 public class YtDecryptJackson2HttpMessageConverter extends MappingJackson2HttpMessageConverter {
-
 
 	public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 

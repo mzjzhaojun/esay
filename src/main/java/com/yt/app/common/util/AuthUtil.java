@@ -89,7 +89,7 @@ public class AuthUtil {
 	public static JwtUserBO getLoginUser(String tokenValue) {
 		String userObj = RedisUtil.get(JWT_USER_KEY + tokenValue);
 		if (StrUtil.isBlank(userObj)) {
-			throw NotLoginException.newInstance(StpUtil.getLoginType(), NotLoginException.NOT_TOKEN);
+			throw NotLoginException.newInstance(StpUtil.getLoginType(), "用户未登录");
 		}
 		RedisUtil.setEx(JWT_USER_KEY + tokenValue, userObj, timeout, TimeUnit.SECONDS);
 		return JSONUtil.toBean(userObj, JwtUserBO.class);

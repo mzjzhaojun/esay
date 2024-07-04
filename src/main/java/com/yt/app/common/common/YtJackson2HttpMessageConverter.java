@@ -5,8 +5,6 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.concurrent.atomic.AtomicReference;
 
-
-
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;

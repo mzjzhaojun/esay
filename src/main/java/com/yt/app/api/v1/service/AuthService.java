@@ -31,7 +31,7 @@ public interface AuthService {
 	Integer verqrcode(String username, String password, String code, String twocode);
 
 	AuthLoginVO loginapp(AuthLoginDTO params);
-	
+
 	String getPublicKey(HttpServletRequest request);
 
 }

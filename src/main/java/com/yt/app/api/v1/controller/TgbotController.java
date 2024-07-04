@@ -3,7 +3,6 @@ package com.yt.app.api.v1.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
@@ -30,7 +29,6 @@ import com.yt.app.api.v1.vo.TgbotVO;
 @RequestMapping("/rest/v1/tgbot")
 public class TgbotController extends YtBaseEncipherControllerImpl<Tgbot, Long> {
 
-	
 	@Autowired
 	private TgbotService service;
 

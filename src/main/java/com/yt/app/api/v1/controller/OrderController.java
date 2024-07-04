@@ -3,8 +3,6 @@ package com.yt.app.api.v1.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +31,6 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/rest/v1/order")
 public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> {
-
-	
 
 	@Autowired
 	private PayoutService service;

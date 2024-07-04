@@ -48,7 +48,6 @@ import com.yt.app.api.v1.entity.Merchantaisle;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.vo.ExchangeVO;
-import com.yt.app.api.v1.vo.SysResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtIPage;
@@ -320,20 +319,17 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		return new YtBody("成功", 200);
 	}
 
-	// 盘口提交订单
+	// 飞机提交订单
 	@Override
-	public SysResultVO submit(SysSubmitDTO ss) {
-		String code = ss.getMerchantid();
-		Merchant mc = merchantmapper.getByCode(code.toString());
+	public String submit(SysSubmitDTO ss) {
+		String id = ss.getMerchantid();
+		Merchant mc = merchantmapper.get(Long.valueOf(id));
 		Assert.notNull(mc, "商户不存在!");
 
 		Merchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
 		if (ma.getBalance() < ss.getPayamt() || ss.getPayamt() <= 0) {
 			throw new YtException("提款金额输入错误!");
 		}
-
-		Boolean val = PayUtil.Md5Submit(ss, mc.getAppkey());
-		Assert.isTrue(val, "签名不正确!");
 
 		List<Merchantaisle> listmc = merchantaislemapper.getByMid(mc.getId());
 		if (listmc == null || listmc.size() == 0) {
@@ -349,19 +345,9 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		pt.setNotifyurl(mc.getApireusultip());
 		pt.setAisleid(listmc.get(0).getAisleid());
 		pt.setBankname(ss.getBankname());
+		pt.setQrcode(ss.getQrcode());
 		add(pt, mc);
-
-		SysResultVO sr = new SysResultVO();
-		sr.setBankcode(ss.getBankcode());
-		sr.setMerchantid(sr.getMerchantid());
-		sr.setMerchantorderid(ss.getMerchantorderid());
-		sr.setPayamt(ss.getPayamt());
-		sr.setPayorderid(pt.getChannelordernum());
-		sr.setRemark(ss.getRemark());
-		sr.setPaytype(ss.getPaytype());
-		sr.setSign(PayUtil.Md5Notify(sr, mc.getAppkey()));
-
-		return sr;
+		return pt.getOrdernum();
 	}
 
 	@Transactional
@@ -383,7 +369,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61); // 盘口发起
-		t.setRemark("盘口换汇新增￥：" + String.format("%.2f", t.getAmount()));
+		t.setRemark("群内换汇新增￥：" + String.format("%.2f", t.getAmount()));
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
 
@@ -455,7 +441,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
 		mao.setType(DictionaryResource.ORDERTYPE_22);
 		mao.setOrdernum(t.getMerchantordernum());
-		mao.setRemark("盘口换汇操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
+		mao.setRemark("群内换汇操作资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
 				+ m.getOnecost());
 		merchantaccountordermapper.post(mao);
 		merchantaccountservice.exchange(mao);
@@ -480,7 +466,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			aat.setOnecost(ag.getOnecost());// 手续费
 			aat.setType(DictionaryResource.ORDERTYPE_22);
 			aat.setOrdernum("EA" + StringUtil.getOrderNum());
-			aat.setRemark("盘口换汇资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费："
+			aat.setRemark("群内换汇资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费："
 					+ aat.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
 			t.setAgentordernum(aat.getOrdernum());

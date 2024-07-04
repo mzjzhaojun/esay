@@ -19,6 +19,7 @@ public class SysSubmitDTO {
 	String bankaddress;
 	String remark;
 	String merchantip;
+	String qrcode;
 	String sign;
 
 	public SysSubmitDTO() {

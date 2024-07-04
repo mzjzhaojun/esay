@@ -2,9 +2,6 @@ package com.yt.app.common.runnable;
 
 import java.util.Random;
 
-
-
-
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccountorder;
@@ -72,7 +69,8 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 					if (channelordernum == null) {
 
 						// 计算商户订单/////////////////////////////////////////////////////
-						Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(payout.getMerchantordernum());
+						Merchantaccountorder mao = merchantaccountordermapper
+								.getByOrdernum(payout.getMerchantordernum());
 						mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
 						merchantaccountordermapper.put(mao);
 						//
@@ -137,7 +135,7 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 					if (tgchannelgroup != null)
 						cbot.sendText(tgchannelgroup.getTgid(), what.toString());
 					break;
-				} 
+				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			} finally {

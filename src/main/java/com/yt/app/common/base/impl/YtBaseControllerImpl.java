@@ -5,8 +5,6 @@ import java.io.Serializable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +33,6 @@ import cn.hutool.core.lang.Assert;
  */
 @RestController
 public abstract class YtBaseControllerImpl<T, ID extends Serializable> implements YtIBaseController<T, ID> {
-	
 
 	@Autowired
 	private YtIBaseService<T, Long> service;

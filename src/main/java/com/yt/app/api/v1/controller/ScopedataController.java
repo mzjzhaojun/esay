@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import com.yt.app.common.common.yt.YtRequestDecryptEntity;
@@ -30,7 +29,6 @@ import com.yt.app.api.v1.entity.Scopedata;
 @RequestMapping("/rest/v1/scopedata")
 public class ScopedataController extends YtBaseEncipherControllerImpl<Scopedata, Long> {
 
-	
 	@Autowired
 	private ScopedataService service;
 

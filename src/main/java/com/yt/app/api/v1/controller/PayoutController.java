@@ -3,7 +3,6 @@ package com.yt.app.api.v1.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
@@ -32,7 +31,6 @@ import com.yt.app.api.v1.entity.Payout;
 @RequestMapping("/rest/v1/payout")
 public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long> {
 
-	
 	@Autowired
 	private PayoutService service;
 

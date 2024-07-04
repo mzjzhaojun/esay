@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import com.yt.app.common.common.yt.YtRequestDecryptEntity;
@@ -33,7 +32,6 @@ import com.yt.app.api.v1.entity.Dept;
 @RequestMapping("/rest/v1/dept")
 public class DeptController extends YtBaseEncipherControllerImpl<Dept, Long> {
 
-	
 	@Autowired
 	private DeptService service;
 

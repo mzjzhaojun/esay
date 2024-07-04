@@ -20,6 +20,6 @@ public interface ServiceConstant {
 	String DELETE_FAIL_MSG = "删除失败!";
 
 	String SELECT_FAIL_MSG = "没有查到数据!";
-	
+
 	String DELETE_MSG = "已经被删除";
 }

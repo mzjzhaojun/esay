@@ -25,7 +25,7 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 
 	//
 	SysResultVO query(String ordernum);
-	
+
 	SysResultVO queryblance(String merchantid);
 
 	SysResultVO submit(SysSubmitDTO ss);

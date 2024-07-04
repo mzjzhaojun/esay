@@ -3,7 +3,6 @@ package com.yt.app.api.v1.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
@@ -28,7 +27,6 @@ import com.yt.app.api.v1.entity.Merchantaisle;
 @RequestMapping("/rest/v1/merchantaisle")
 public class MerchantaisleController extends YtBaseEncipherControllerImpl<Merchantaisle, Long> {
 
-	
 	@Autowired
 	private MerchantaisleService service;
 

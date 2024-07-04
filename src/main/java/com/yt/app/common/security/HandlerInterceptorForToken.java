@@ -118,7 +118,7 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 		// "GET:/web/api/user/*"
 		String restfulPath = method + ":" + path;
 
-		log.info("请求方法"+restfulPath);
+		log.info("请求方法" + restfulPath);
 		/**
 		 * URL鉴权 [URL-角色集合] [{'key':'GET:/web/api/user/*','value':['ADMIN','TEST']},...]
 		 */

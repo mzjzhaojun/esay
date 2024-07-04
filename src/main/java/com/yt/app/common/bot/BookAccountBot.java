@@ -54,8 +54,7 @@ public class BookAccountBot extends TelegramLongPollingBot {
 	@Override
 	public void onUpdateReceived(Update update) {
 		log.info("messageupdate:" + update.toString());
-		
-		
+
 		if (update != null) {
 			Long chatid = update.getMessage().getChat().getId();
 			if (update.getMessage() != null) {
@@ -287,8 +286,7 @@ public class BookAccountBot extends TelegramLongPollingBot {
 		sb.append("入款:" + listincome.size() + " 笔\n");
 		for (Tgbotgrouprecord tbgr : listincome) {
 			sb.append(i + "：" + DateTimeUtil.getDateTime(tbgr.getCreate_time(), DateTimeUtil.DEFAULT_TIME_FORMAT)
-					+ "   " + tbgr.getAmount() + "/" + tbgr.getExchange() + "=" + tbgr.getWithdrawusdt() + " "
-					+ "\n");
+					+ "   " + tbgr.getAmount() + "/" + tbgr.getExchange() + "=" + tbgr.getWithdrawusdt() + " " + "\n");
 			countincome = countincome + tbgr.getAmount();
 			countusdt = countusdt + tbgr.getWithdrawusdt();
 			i++;
@@ -302,8 +300,7 @@ public class BookAccountBot extends TelegramLongPollingBot {
 		sb.append("减款:" + liswithdraw.size() + " 笔\n");
 		for (Tgbotgrouprecord tbgr : liswithdraw) {
 			sb.append(i + "：" + DateTimeUtil.getDateTime(tbgr.getCreate_time(), DateTimeUtil.DEFAULT_TIME_FORMAT)
-					+ "   " + tbgr.getAmount() + "/" + tbgr.getExchange() + "=" + tbgr.getWithdrawusdt() + " "
-					+ "\n");
+					+ "   " + tbgr.getAmount() + "/" + tbgr.getExchange() + "=" + tbgr.getWithdrawusdt() + " " + "\n");
 			counwithdeaw = counwithdeaw + tbgr.getAmount();
 			outusdt = outusdt + tbgr.getWithdrawusdt();
 			i++;

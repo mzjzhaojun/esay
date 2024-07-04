@@ -22,7 +22,7 @@ public interface MerchantaccountapplyjournalMapper extends YtIBaseMapper<Merchan
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Merchantaccountapplyjournal.class })
 	public Integer post(Object t);
-	
+
 	/**
 	 * add
 	 * 

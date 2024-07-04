@@ -3,7 +3,6 @@ package com.yt.app.api.v1.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
@@ -18,18 +17,18 @@ import io.swagger.annotations.ApiOperation;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.TgmerchantgroupService;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
+import com.yt.app.api.v1.vo.TgmerchantgroupVO;
 
 /**
  * @author zj defaulttest
  * 
- * @version v1 @createdate2023-11-26 13:20:46
+ * @version v1 @createdate2024-07-04 17:05:13
  */
 
 @RestController
 @RequestMapping("/rest/v1/tgmerchantgroup")
 public class TgmerchantgroupController extends YtBaseEncipherControllerImpl<Tgmerchantgroup, Long> {
 
-	
 	@Autowired
 	private TgmerchantgroupService service;
 
@@ -38,10 +37,18 @@ public class TgmerchantgroupController extends YtBaseEncipherControllerImpl<Tgme
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Tgmerchantgroup> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
-		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
+		YtIPage<Tgmerchantgroup> list = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}
 
+	@ApiOperation(value = "page", response = Tgmerchantgroup.class)
+	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<TgmerchantgroupVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
+	}
+	
 	/**
 	 * 
 	 * 

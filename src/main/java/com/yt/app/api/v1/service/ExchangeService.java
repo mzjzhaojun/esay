@@ -5,7 +5,6 @@ import java.util.Map;
 import com.yt.app.api.v1.dbo.SysSubmitDTO;
 import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.vo.ExchangeVO;
-import com.yt.app.api.v1.vo.SysResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.common.yt.YtBody;
@@ -26,7 +25,7 @@ public interface ExchangeService extends YtIBaseService<Exchange, Long> {
 	//
 	Exchange query(String ordernum);
 
-	SysResultVO submit(SysSubmitDTO ss);
+	String submit(SysSubmitDTO ss);
 
 	YtIPage<ExchangeVO> page(Map<String, Object> param);
 }

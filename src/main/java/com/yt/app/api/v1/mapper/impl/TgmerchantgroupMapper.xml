@@ -4,28 +4,32 @@
 	namespace="com.yt.app.api.v1.mapper.TgmerchantgroupMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,create_by,create_time,update_by,update_time,remark,osmangers,customermangers,version
+		id,tenant_id,merchantid,merchantname,channelid,channelname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
 		type="com.yt.app.api.v1.entity.Tgmerchantgroup">
 	</resultMap>
+	<!-- ResultMap -->
+	<resultMap id="ResultMapVO"
+		type="com.yt.app.api.v1.vo.TgmerchantgroupVO">
+	</resultMap>
 	<!-- add -->
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Tgmerchantgroup">
 		insert into
-		tgmerchantgroup(id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,create_by,create_time,update_by,update_time,remark,osmangers,customermangers)
+		tgmerchantgroup(id,tenant_id,channelid,channelname,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{merchantid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{remark},#{osmangers},#{customermangers})
+		(#{id},#{tenant_id},#{channelid},#{merchantid},#{channelname},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{adminmangers},#{mangers},#{customermangers},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		tgmerchantgroup(id,tenant_id,merchantname,merchantcode,status,tgid,tggroupname,create_by,create_time,update_by,update_time,remark)
+		tgmerchantgroup(id,tenant_id,channelid,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,customermangers,create_by,create_time,update_by,update_time,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+			(#{id},#{tenant_id},#{merchantid},#{channelid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{adminmangers},#{customermangers},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -38,8 +42,17 @@
 		parameterType="com.yt.app.api.v1.entity.Tgmerchantgroup">
 		update tgmerchantgroup
 		<set>
+			<if test="tenant_id != null">
+				tenant_id= #{tenant_id},
+			</if>
 			<if test="merchantid != null">
 				merchantid= #{merchantid},
+			</if>
+			<if test="channelid != null">
+				channelid= #{channelid},
+			</if>
+			<if test="channelname != null">
+				channelname= #{channelname},
 			</if>
 			<if test="merchantname != null">
 				merchantname= #{merchantname},
@@ -56,6 +69,21 @@
 			<if test="tggroupname != null">
 				tggroupname= #{tggroupname},
 			</if>
+			<if test="adminmangers != null">
+				adminmangers= #{adminmangers},
+			</if>
+			<if test="mangers != null">
+				mangers= #{mangers},
+			</if>
+			<if test="customermangers != null">
+				customermangers= #{customermangers},
+			</if>
+			<if test="create_by != null">
+				create_by= #{create_by},
+			</if>
+			<if test="create_time != null">
+				create_time= #{create_time},
+			</if>
 			<if test="update_by != null">
 				update_by= #{update_by},
 			</if>
@@ -64,12 +92,6 @@
 			</if>
 			<if test="remark != null">
 				remark= #{remark},
-			</if>
-			<if test="osmangers != null">
-				osmangers= #{osmangers},
-			</if>
-			<if test="customermangers != null">
-				customermangers= #{customermangers},
 			</if>
 			<if test="version != null">
 				version= #{version}+1
@@ -85,31 +107,6 @@
 		from tgmerchantgroup
 		where id = #{id}
 	</select>
-	
-	<!--getById -->
-	<select id="getByTgGroupName" parameterType="java.lang.String"
-		resultMap="ResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from tgmerchantgroup
-		where tggroupname= #{tggroupname}
-	</select>
-	<!--getById -->
-	<select id="getByTgGroupId" parameterType="java.lang.Long"
-		resultMap="ResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from tgmerchantgroup
-		where tgid= #{tgid}
-	</select>
-	<select id="getByMerchantId" parameterType="java.lang.Long"
-		resultMap="ResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from tgmerchantgroup
-		where merchantid= #{merchantid}
-	</select>
-	
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
@@ -121,17 +118,11 @@
 			<if test="name != null and name != ''">
 				and name like "%"#{name}"%"
 			</if>
-			<if test="orderBy != null and dir != null">
-				order by ${orderBy} ${dir}
-			</if>
-			<if test="pageStart != null and pageEnd != null">
-				LIMIT #{pageStart},#{pageEnd}
-			</if>
 		</where>
 	</select>
 	<!-- getMap -->
-	<select id="map" parameterType="java.util.HashMap"
-		resultType="java.util.HashMap">
+	<select id="page" parameterType="java.util.HashMap"
+		resultMap="ResultMapVO">
 		select
 		<include refid="Base_Column_List" />
 		from tgmerchantgroup
@@ -175,5 +166,29 @@
 				</foreach>
 			</if>
 		</where>
+	</select>
+
+	<!--getById -->
+	<select id="getByTgGroupName" parameterType="java.lang.String"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmerchantgroup
+		where tggroupname= #{tggroupname}
+	</select>
+	<!--getById -->
+	<select id="getByTgGroupId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmerchantgroup
+		where tgid= #{tgid}
+	</select>
+	<select id="getByMerchantId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmerchantgroup
+		where merchantid= #{merchantid}
 	</select>
 </mapper>

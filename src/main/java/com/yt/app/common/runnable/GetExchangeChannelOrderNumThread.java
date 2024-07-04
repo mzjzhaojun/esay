@@ -6,10 +6,12 @@ import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccountorder;
 import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
+import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ChannelaccountorderMapper;
 import com.yt.app.api.v1.mapper.ExchangeMapper;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
+import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
 import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
@@ -33,6 +35,8 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 	public void run() {
 		TenantIdContext.removeFlag();
 		ExchangeMapper mapper = BeanContext.getApplicationContext().getBean(ExchangeMapper.class);
+		TgmerchantchannelmsgMapper tgmerchantchannelmsgmapper = BeanContext.getApplicationContext()
+				.getBean(TgmerchantchannelmsgMapper.class);
 		ChannelMapper channelmapper = BeanContext.getApplicationContext().getBean(ChannelMapper.class);
 		TgchannelgroupMapper tgchannelgroupmapper = BeanContext.getApplicationContext()
 				.getBean(TgchannelgroupMapper.class);
@@ -78,7 +82,7 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 					cat.setAmountreceived(exchange.getChannelpay());
 					cat.setType(DictionaryResource.ORDERTYPE_22);
 					cat.setOrdernum(exchange.getChannelordernum());
-					cat.setRemark("提款资金￥：" + cat.getAmount() + " 交易费：" + String.format("%.2f", cat.getDeal()) + " 手续费："
+					cat.setRemark("换汇资金￥：" + cat.getAmount() + " 交易费：" + String.format("%.2f", cat.getDeal()) + " 手续费："
 							+ cat.getOnecost());
 					channelaccountordermapper.post(cat);
 					channelaccountservice.exchangeamount(cat);
@@ -94,8 +98,13 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 					what.append("金额：" + exchange.getAmount() + "\n");
 					what.append("发起时间：" + DateTimeUtil.getDateTime() + "\n");
 					what.append("客户请你们尽快处理\n");
-					if (tgchannelgroup != null)
+					if (tgchannelgroup != null) {
+						Tgmerchantchannelmsg tmm = tgmerchantchannelmsgmapper.getOrderNum(exchange.getOrdernum());
+						if (tmm != null) {
+							cbot.sendPhoto(tgchannelgroup.getTgid(), tmm.getTelegrameimgid());
+						}
 						cbot.sendText(tgchannelgroup.getTgid(), what.toString());
+					}
 					break;
 				}
 			} catch (Exception e1) {
