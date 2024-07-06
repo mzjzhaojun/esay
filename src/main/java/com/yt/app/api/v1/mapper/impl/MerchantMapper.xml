@@ -107,6 +107,12 @@
 		</set>
 		where id = #{id} and version = #{version}
 	</update>
+	<update id="updatetodayvalue"  parameterType="java.lang.Long">
+		update merchant
+		set todaycost = 0,todaycount = 0
+		where id = #{id}
+	</update>
+
 	<update id="removeagent" parameterType="java.lang.Long">
 		update merchant set
 		agentid = null, agentname= null where id = #{id}

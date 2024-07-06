@@ -92,7 +92,7 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 					if (strnum == null)
 						strnum = "收款码";
 					what.append("状态：新增换汇\n");
-					what.append("单号：" + exchange.getChannelordernum() + "\n");
+					what.append("单号：" + exchange.getOrdernum() + "\n");
 					what.append("姓名：" + exchange.getAccname() + "\n");
 					what.append("卡号：" + strnum + "\n");
 					what.append("金额：" + exchange.getAmount() + "\n");

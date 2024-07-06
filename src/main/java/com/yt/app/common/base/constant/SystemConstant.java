@@ -41,5 +41,8 @@ public interface SystemConstant {
 	 * 权限缓存
 	 */
 	String CACHE_SYS_PERMISSION_PREFIX = "payboot:system:sys_permission_";
-
+	/**
+	 * 实时汇率
+	 */
+	String CACHE_SYS_EXCHANGE = "payboot:system:exchange:topone";
 }

@@ -11,7 +11,6 @@ import org.telegram.telegrambots.meta.api.methods.CopyMessage;
 import org.telegram.telegrambots.meta.api.methods.ForwardMessage;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -34,9 +33,11 @@ import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.service.ExchangeService;
 import com.yt.app.api.v1.service.PayconfigService;
+import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.util.FileUtil;
+import com.yt.app.common.util.RedisUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -119,9 +120,10 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 
 	private void handlemessage(String message, Long chatid, Tgmerchantgroup tmg, Update update) {
 		Integer replyid = update.getMessage().getMessageId();
+		String username = update.getMessage().getFrom().getUserName();
 		if (message.equals("#h")) {
 			// 汇率
-			List<Payconfig> list = payconfigservice.getDatas();
+			List<Payconfig> list = payconfigservice.getDataTop();
 			StringBuffer sb = new StringBuffer();
 			Integer i = 1;
 			for (Payconfig pc : list) {
@@ -129,7 +131,7 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 				i++;
 			}
 			sendText(chatid, sb.toString());
-		} else if (message.equals("#cz")) {
+		} else if (message.equals("#dz")) {
 			// 充值地址
 			Payconfig pc = payconfigservice.getData();
 			if (pc != null) {
@@ -164,24 +166,23 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 				Tgchannelgroup tcg = tgchannelgroupmapper.getByChannelId(po.getChannelid());
 				String cmsg = "订单号：" + po.getChannelordernum() + "\n名字:" + po.getAccname() + "\n卡号:" + po.getAccnumer()
 						+ "\n金额:" + po.getAmount() + "\n客户加急催单。请回复！";
-				Message messag = cbot.sendText(tcg.getTgid(), cmsg);
-				log.info(messag.toString());
-				Tgmerchantchannelmsg t = tgmerchantchannelmsgmapper.getOrderNum(orderno);
-				if (t == null) {
-					// 插入关联关系
-					t = new Tgmerchantchannelmsg();
-					t.setMid(chatid);
-					t.setCid(tcg.getTgid());
-					t.setMmanger(tmg.getAdminmangers());
-					t.setCmanger(tcg.getMangers());
-					t.setOrdernum(orderno);
-					t.setMreplyid(replyid);
-					t.setCreplyid(messag.getMessageId());
-					tgmerchantchannelmsgmapper.post(t);
-				}
+				cbot.sendText(tcg.getTgid(), cmsg);
 			}
+		} else if (message.indexOf("#zd") >= 0
+				&& (username.equals(tmg.getAdminmangers()) || username.equals(tmg.getMangers()))
+				|| username.equals(tmg.getCustomermangers())) {
+			StringBuffer sb = new StringBuffer();
+			sb.append("今日订单：" + tmg.getTodaycountorder() + " 笔\n");
+			sb.append("\n");
+			sb.append("今日打款：" + tmg.getTodaycount() + "￥\n");
+			sb.append("今日U款：" + tmg.getTodayusdcount() + " $\n");
+			sb.append("\n");
+			sb.append("总单量：" + tmg.getCountorder() + "\n");
+			sb.append("总打款：" + tmg.getCount() + " ￥\n");
+			sb.append("\n");
+			sendText(chatid, sb.toString());
 		} else if (message.indexOf("#q") >= 0
-				&& update.getMessage().getFrom().getUserName().equals(tmg.getAdminmangers())) {
+				&& (username.equals(tmg.getAdminmangers()) || username.equals(tmg.getMangers()))) {
 			// 创建二维码收款单
 			Double amount = 0.00;
 			String str = message.substring(2, message.length());
@@ -190,7 +191,8 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 			}
 			if (update.getMessage().getReplyToMessage() != null
 					&& update.getMessage().getReplyToMessage().getPhoto().size() != 0) {
-				PhotoSize photo = update.getMessage().getReplyToMessage().getPhoto().get(update.getMessage().getReplyToMessage().getPhoto().size() - 1);
+				PhotoSize photo = update.getMessage().getReplyToMessage().getPhoto()
+						.get(update.getMessage().getReplyToMessage().getPhoto().size() - 1);
 				GetFile getFile = new GetFile();
 				getFile.setFileId(photo.getFileId());
 				try {
@@ -224,9 +226,10 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 					ss.setMerchantid(tmg.getMerchantid().toString());
 					ss.setQrcode(url);
 					ss.setPayamt(amount);
-					ss.setBankowner("客户提交");
+					ss.setBankowner("客户");
 					String ordernum = exchangeservice.submit(ss);
 
+					Double exchange = Double.valueOf(RedisUtil.get(SystemConstant.CACHE_SYS_EXCHANGE));
 					// 提交转发数据
 					Tgmerchantchannelmsg tmm = new Tgmerchantchannelmsg();
 					tmm.setMid(tmg.getMerchantid());
@@ -237,7 +240,18 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 					tmm.setQrcode(url);
 					tmm.setTelegrameimgid(path);
 					tmm.setAmount(amount);
+					tmm.setExchange(exchange);
+					tmm.setUsd(amount / exchange);
+					tmm.setCreplyid(replyid);
 					tgmerchantchannelmsgmapper.post(tmm);
+
+					// 更新
+					tmg.setTodaycountorder(tmg.getTodaycountorder() + 1);
+					tmg.setCountorder(tmg.getCountorder() + 1);
+					tmg.setTodayusdcount(tmg.getTodayusdcount() + tmm.getUsd());
+					tmg.setTodaycount(tmg.getTodaycount() + tmm.getAmount());
+					tmg.setCount(tmg.getCount() + tmm.getAmount());
+					tgmerchantgroupmapper.put(tmg);
 				} catch (TelegramApiException e) {
 					e.printStackTrace();
 				}

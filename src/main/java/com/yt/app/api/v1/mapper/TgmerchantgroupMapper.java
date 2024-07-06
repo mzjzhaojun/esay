@@ -3,7 +3,6 @@ package com.yt.app.api.v1.mapper;
 import java.util.List;
 import java.util.Map;
 
-import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.vo.TgmerchantgroupVO;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
@@ -13,7 +12,7 @@ import com.yt.app.common.base.YtIBaseMapper;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-07-04 17:05:13
+ * @version v1 @createdate2024-07-05 13:07:39
  */
 
 public interface TgmerchantgroupMapper extends YtIBaseMapper<Tgmerchantgroup> {
@@ -122,6 +121,15 @@ public interface TgmerchantgroupMapper extends YtIBaseMapper<Tgmerchantgroup> {
 	 * @param id id
 	 * @return Tgmerchantgroup
 	 */
-	@YtRedisCacheAnnotation(classs = Tgchannelgroup.class)
-	public Tgmerchantgroup getByMerchantId(Long merchantId);
+	@YtRedisCacheAnnotation(classs = Tgmerchantgroup.class)
+	public Tgmerchantgroup getByMerchantId(Long Id);
+
+	/**
+	 * update
+	 * 
+	 * @param o Merchant
+	 * @return count
+	 */
+	@YtRedisCacheEvictAnnotation(classs = { Tgmerchantgroup.class })
+	public Integer updatetodayvalue(Long Id);
 }

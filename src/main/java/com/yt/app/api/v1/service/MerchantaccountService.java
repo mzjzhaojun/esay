@@ -36,7 +36,7 @@ public interface MerchantaccountService extends YtIBaseService<Merchantaccount, 
 
 	void cancleWithdrawamount(Merchantaccountorder mao);
 
-	// 提款
+	// 代付
 	void payout(Merchantaccountorder t);
 
 	void updatePayout(Merchantaccountorder mao);

@@ -125,7 +125,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		}
 	}
 
-	// 商户提款
+	// 商户代付
 	@Override
 	@Transactional
 	public void updatePayout(Merchantaccountorder mao) {
@@ -144,7 +144,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount());
 			mapper.put(t);
 			scr.setBalance(t.getBalance());//
-			scr.setRemark("提款金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
+			scr.setRemark("代付金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 		} catch (Exception e) {
 		} finally {

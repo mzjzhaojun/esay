@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,mid,cid,chatid,mmanger,cmanger,mreplyid,creplyid,ordernum,qrcode,amount,telegrameimgid,remark,create_by,create_time,update_by,update_time,version
+		id,mid,cid,chatid,mmanger,cmanger,mreplyid,creplyid,ordernum,qrcode,amount,telegrameimgid,exchange,usd,remark,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -18,9 +18,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Tgmerchantchannelmsg">
 		insert into
-		tgmerchantchannelmsg(id,mid,cid,chatid,mmanger,cmanger,mreplyid,creplyid,ordernum,qrcode,amount,telegrameimgid,remark,create_by,create_time,update_by,update_time)
+		tgmerchantchannelmsg(id,mid,cid,chatid,mmanger,cmanger,mreplyid,creplyid,ordernum,qrcode,amount,telegrameimgid,exchange,usd,remark,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{mid},#{cid},#{chatid},#{mmanger},#{cmanger},#{mreplyid},#{creplyid},#{ordernum},#{qrcode},#{amount},#{telegrameimgid},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{mid},#{cid},#{chatid},#{mmanger},#{cmanger},#{mreplyid},#{creplyid},#{ordernum},#{qrcode},#{amount},#{telegrameimgid},#{exchange},#{usd},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -34,7 +34,8 @@
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from tgmerchantchannelmsg
+		delete from
+		tgmerchantchannelmsg
 		where id = #{id}
 	</delete>
 	<!-- update -->
@@ -74,6 +75,12 @@
 			</if>
 			<if test="telegrameimgid != null">
 				telegrameimgid= #{telegrameimgid},
+			</if>
+			<if test="exchange != null">
+				exchange= #{exchange},
+			</if>
+			<if test="usd != null">
+				usd= #{usd},
 			</if>
 			<if test="remark != null">
 				remark= #{remark},
@@ -164,7 +171,7 @@
 			</if>
 		</where>
 	</select>
-	
+
 	<!--getByordernum -->
 	<select id="getOrderNum" parameterType="java.lang.String"
 		resultMap="ResultMap">
@@ -173,9 +180,9 @@
 		from tgmerchantchannelmsg
 		where ordernum = #{ordernum}
 	</select>
-	
+
 	<!--getByordernum -->
-	<select id="getCidReplyid"  resultMap="ResultMap">
+	<select id="getCidReplyid" resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from tgmerchantchannelmsg

@@ -25,20 +25,18 @@ public class TgmerchantchannelmsgVO extends YtBaseEntity<TgmerchantchannelmsgVO>
 	Integer creplyid;
 	String ordernum;
 	String qrcode;
-	Object amount;
+	Double amount;
 	String telegrameimgid;
+	Double exchange;
+	Double usd;
 	String remark;
-	Long create_by;
-	java.util.Date create_time;
-	Long update_by;
-	java.util.Date update_time;
 	Integer version;
 
 	public TgmerchantchannelmsgVO() {
 	}
 
 	public TgmerchantchannelmsgVO(Long id, Long mid, Long cid, Integer chatid, String mmanger, String cmanger,
-			Integer mreplyid, Integer creplyid, String ordernum, String qrcode, Object amount, String telegrameimgid,
+			Integer mreplyid, Integer creplyid, String ordernum, String qrcode, Double amount, String telegrameimgid,
 			String remark, Long create_by, java.util.Date create_time, Long update_by, java.util.Date update_time,
 			Integer version) {
 		this.id = id;
@@ -54,10 +52,6 @@ public class TgmerchantchannelmsgVO extends YtBaseEntity<TgmerchantchannelmsgVO>
 		this.amount = amount;
 		this.telegrameimgid = telegrameimgid;
 		this.remark = remark;
-		this.create_by = create_by;
-		this.create_time = create_time;
-		this.update_by = update_by;
-		this.update_time = update_time;
 		this.version = version;
 	}
 }

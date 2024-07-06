@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.TgmerchantgroupMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,merchantid,merchantname,channelid,channelname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,channelid,channelname,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,cost,tmexchange,downpoint,exchange,todayusdcount,todaycountorder,countorder,todaycount,count,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -18,18 +18,18 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Tgmerchantgroup">
 		insert into
-		tgmerchantgroup(id,tenant_id,channelid,channelname,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,create_by,create_time,update_by,update_time,remark)
+		tgmerchantgroup(id,tenant_id,channelid,channelname,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,cost,tmexchange,downpoint,exchange,todayusdcount,todaycountorder,countorder,todaycount,count,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{tenant_id},#{channelid},#{merchantid},#{channelname},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{adminmangers},#{mangers},#{customermangers},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{tenant_id},#{channelid},#{channelname},#{merchantid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{adminmangers},#{mangers},#{customermangers},#{cost},#{tmexchange},#{downpoint},#{exchange},#{todayusdcount},#{todaycountorder},#{countorder},#{todaycount},#{count},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		tgmerchantgroup(id,tenant_id,channelid,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,customermangers,create_by,create_time,update_by,update_time,remark)
+		tgmerchantgroup(id,tenant_id,channelid,channelname,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,cost,tmexchange,downpoint,exchange,todaycountorder,countorder,todaycount,count,create_by,create_time,update_by,update_time,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{merchantid},#{channelid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{adminmangers},#{customermangers},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+			(#{id},#{tenant_id},#{channelid},#{channelname},#{merchantid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{adminmangers},#{mangers},#{customermangers},#{cost},#{tmexchange},#{downpoint},#{exchange},#{todaycountorder},#{countorder},#{todaycount},#{count},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -45,14 +45,14 @@
 			<if test="tenant_id != null">
 				tenant_id= #{tenant_id},
 			</if>
-			<if test="merchantid != null">
-				merchantid= #{merchantid},
-			</if>
 			<if test="channelid != null">
 				channelid= #{channelid},
 			</if>
 			<if test="channelname != null">
 				channelname= #{channelname},
+			</if>
+			<if test="merchantid != null">
+				merchantid= #{merchantid},
 			</if>
 			<if test="merchantname != null">
 				merchantname= #{merchantname},
@@ -78,6 +78,33 @@
 			<if test="customermangers != null">
 				customermangers= #{customermangers},
 			</if>
+			<if test="cost != null">
+				cost= #{cost},
+			</if>
+			<if test="tmexchange != null">
+				tmexchange= #{tmexchange},
+			</if>
+			<if test="downpoint != null">
+				downpoint= #{downpoint},
+			</if>
+			<if test="exchange != null">
+				exchange= #{exchange},
+			</if>
+			<if test="todaycountorder != null">
+				todaycountorder= #{todaycountorder},
+			</if>
+			<if test="todayusdcount != null">
+				todayusdcount= #{todayusdcount},
+			</if>
+			<if test="countorder != null">
+				countorder= #{countorder},
+			</if>
+			<if test="todaycount != null">
+				todaycount= #{todaycount},
+			</if>
+			<if test="count != null">
+				count= #{count},
+			</if>
 			<if test="create_by != null">
 				create_by= #{create_by},
 			</if>
@@ -99,6 +126,13 @@
 		</set>
 		where id = #{id} and version = #{version}
 	</update>
+
+	<update id="updatetodayvalue"  parameterType="java.lang.Long">
+		update tgmerchantgroup
+		set todaycountorder = 0,todayusdcount = 0,todaycount =0
+		where id = #{id}
+	</update>
+
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"
 		resultMap="ResultMap">

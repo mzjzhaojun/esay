@@ -225,7 +225,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	}
 
 	/**
-	 * =============================================================提款
+	 * =============================================================代付
 	 * 
 	 */
 
@@ -253,7 +253,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			aaaj.setPosttoincomeamount(0.00);// 待确认收入
 			aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 待确认支出
-			aaaj.setRemark("提款待确认￥：" + String.format("%.2f", t.getAmountreceived()));
+			aaaj.setRemark("代付待确认￥：" + String.format("%.2f", t.getAmountreceived()));
 			//
 			channelaccountapplyjournamapper.post(aaaj);
 			ma.setTowithdrawamount(aaaj.getPretowithdrawamount());
@@ -290,7 +290,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			aaaj.setPosttoincomeamount(0.00);// 待确认收入
 			aaaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());// 总支出
 			aaaj.setPosttowithdrawamount(mao.getAmountreceived());// 待确认支出
-			aaaj.setRemark("提款成功￥：" + String.format("%.2f", mao.getAmountreceived()));
+			aaaj.setRemark("代付成功￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
 			channelaccountapplyjournamapper.post(aaaj);
 			t.setWithdrawamount(aaaj.getPostwithdrawamount());// 支出增加金额
@@ -328,7 +328,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			aaaj.setPosttoincomeamount(0.00);// 待确认收入
 			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 待确认支出
-			aaaj.setRemark("提款失败￥：" + String.format("%.2f", mao.getAmountreceived()));
+			aaaj.setRemark("代付失败￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
 			channelaccountapplyjournamapper.post(aaaj);
 
@@ -366,7 +366,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			aaaj.setPosttoincomeamount(0.00);// 待确认收入
 			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 待确认支出
-			aaaj.setRemark("取消提款￥：" + String.format("%.2f", mao.getAmountreceived()));
+			aaaj.setRemark("取消代付￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
 			channelaccountapplyjournamapper.post(aaaj);
 			t.setTowithdrawamount(aaaj.getPretowithdrawamount());
@@ -378,7 +378,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	}
 
 	/**
-	 * =============================================================提款
+	 * =============================================================代付
 	 * 
 	 */
 

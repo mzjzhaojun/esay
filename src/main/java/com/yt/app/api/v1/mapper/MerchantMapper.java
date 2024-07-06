@@ -138,4 +138,13 @@ public interface MerchantMapper extends YtIBaseMapper<Merchant> {
 	 */
 	@YtRedisCacheAnnotation(classs = Merchant.class)
 	public List<Merchant> getListAll(Map<String, Object> param);
+
+	/**
+	 * update
+	 * 
+	 * @param o Merchant
+	 * @return count
+	 */
+	@YtRedisCacheEvictAnnotation(classs = { Merchant.class })
+	public Integer updatetodayvalue(Long id);
 }

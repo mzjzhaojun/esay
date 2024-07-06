@@ -165,7 +165,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		Assert.notEmpty(listc, "没有可用渠道!");
 		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount())
 				.collect(Collectors.toList());
-		Assert.notEmpty(listcmm, "提款金额超出限额");
+		Assert.notEmpty(listcmm, "代付金额超出限额");
 		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 		Channel cl = null;
 		if (listcf.size() > 0) {
@@ -328,7 +328,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 		Merchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
 		if (ma.getBalance() < ss.getPayamt() || ss.getPayamt() <= 0) {
-			throw new YtException("提款金额输入错误!");
+			throw new YtException("代付金额输入错误!");
 		}
 
 		List<Merchantaisle> listmc = merchantaislemapper.getByMid(mc.getId());
@@ -358,7 +358,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		}
 
 		TenantIdContext.setTenantId(m.getTenant_id());
-		///////////////////////////////////////////////////// 盘口录入提款订单/////////////////////////////////////////////////////
+		///////////////////////////////////////////////////// 盘口录入代付订单/////////////////////////////////////////////////////
 		t.setUserid(m.getUserid());
 		t.setMerchantid(m.getId());
 		t.setMerchantcode(m.getCode());
@@ -381,7 +381,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		Assert.notEmpty(listc, "没有可用渠道!");
 		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount())
 				.collect(Collectors.toList());
-		Assert.notEmpty(listcmm, "提款金额超出限额");
+		Assert.notEmpty(listcmm, "代付金额超出限额");
 		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 		Channel cl = null;
 		if (listcf.size() > 0) {
@@ -539,7 +539,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			// 计算渠道数据
 			channelservice.updateExchange(t);
 
-			// ------------------更新提款订单-----------------
+			// ------------------更新代付订单-----------------
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 			t.setRemark("换汇成功￥:" + pt.getAmount());
 			t.setSuccesstime(DateTimeUtil.getNow());

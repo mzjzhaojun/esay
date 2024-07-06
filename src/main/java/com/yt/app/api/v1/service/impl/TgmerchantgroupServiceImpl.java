@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
+import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.service.TgmerchantgroupService;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
-import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-07-04 17:05:13
+ * @version v1 @createdate2024-07-05 13:07:39
  */
 
 @Service

@@ -15,5 +15,7 @@ public interface PayconfigService extends YtIBaseService<Payconfig, Long> {
 
 	Payconfig getData();
 
-	List<Payconfig> getDatas();
+	List<Payconfig> getDataTop();
+
+	void initExchangeData();
 }

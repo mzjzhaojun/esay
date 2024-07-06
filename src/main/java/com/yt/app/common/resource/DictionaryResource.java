@@ -42,10 +42,10 @@ public class DictionaryResource implements Serializable {
 	public static final Integer ORDERTYPE_20 = 20; // 充值
 	public static final Integer ORDERTYPE_21 = 21; // 提现
 	public static final Integer ORDERTYPE_22 = 22; // 换汇
-	public static final Integer ORDERTYPE_23 = 23; // 提款
+	public static final Integer ORDERTYPE_23 = 23; // 代付
 
 	/**
-	 * 提款资金明细类型
+	 * 代付资金明细类型
 	 */
 	public static final Integer RECORDTYPE_30 = 30; // 充值待确认
 	public static final Integer RECORDTYPE_31 = 31; // 充值成功
@@ -53,11 +53,11 @@ public class DictionaryResource implements Serializable {
 	public static final Integer RECORDTYPE_32 = 32; // 充值失败
 	public static final Integer RECORDTYPE_33 = 33; // 充值取消
 
-	public static final Integer RECORDTYPE_34 = 34; // 提款待确认
-	public static final Integer RECORDTYPE_35 = 35; // 提款成功
+	public static final Integer RECORDTYPE_34 = 34; // 代付待确认
+	public static final Integer RECORDTYPE_35 = 35; // 代付成功
 
-	public static final Integer RECORDTYPE_36 = 36; // 提款失败
-	public static final Integer RECORDTYPE_37 = 37; // 提款取消
+	public static final Integer RECORDTYPE_36 = 36; // 代付失败
+	public static final Integer RECORDTYPE_37 = 37; // 代付取消
 
 	/**
 	 * 换汇资金明细类型
@@ -82,10 +82,10 @@ public class DictionaryResource implements Serializable {
 	public static final Integer BANKCARDTYPE_42 = 42; // Visa
 
 	/**
-	 * 提款状态
+	 * 代付状态
 	 */
 	public static final Integer PAYOUTSTATUS_50 = 50; // 新增
-	public static final Integer PAYOUTSTATUS_51 = 51; // 提款ing
+	public static final Integer PAYOUTSTATUS_51 = 51; // 代付ing
 	public static final Integer PAYOUTSTATUS_52 = 52; // 成功
 	public static final Integer PAYOUTSTATUS_53 = 53; // 失败或异常
 	public static final Integer PAYOUTSTATUS_54 = 54; // 审核失败
@@ -105,7 +105,7 @@ public class DictionaryResource implements Serializable {
 	/**
 	 * 通道类型
 	 */
-	public static final Integer AISLE_TYPE_PAYOUT_70 = 70;// 提款
+	public static final Integer AISLE_TYPE_PAYOUT_70 = 70;// 代付
 	public static final Integer AISLE_TYPE_EXCHANGE_71 = 71;// 换汇
 
 	/**

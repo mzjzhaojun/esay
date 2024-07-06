@@ -25,7 +25,9 @@ public class Tgmerchantchannelmsg extends YtBaseEntity<Tgmerchantchannelmsg> {
 	Integer creplyid;
 	String ordernum;
 	String qrcode;
-	Object amount;
+	Double exchange;
+	Double usd;
+	Double amount;
 	String telegrameimgid;
 	String remark;
 	Integer version;
@@ -34,7 +36,7 @@ public class Tgmerchantchannelmsg extends YtBaseEntity<Tgmerchantchannelmsg> {
 	}
 
 	public Tgmerchantchannelmsg(Long id, Long mid, Long cid, Long chatid, String mmanger, String cmanger,
-			Integer mreplyid, Integer creplyid, String ordernum, String qrcode, Object amount, String telegrameimgid,
+			Integer mreplyid, Integer creplyid, String ordernum, String qrcode, Double amount, String telegrameimgid,
 			String remark, Long create_by, java.util.Date create_time, Long update_by, java.util.Date update_time,
 			Integer version) {
 		this.id = id;

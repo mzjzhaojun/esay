@@ -1,5 +1,6 @@
 package com.yt.app.common.runtask;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +9,14 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.yt.app.api.v1.entity.Exchange;
+import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Payout;
+import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.mapper.ExchangeMapper;
+import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
+import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
+import com.yt.app.api.v1.service.PayconfigService;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.runnable.GetExchangeChannelOrderNumThread;
@@ -25,15 +31,57 @@ public class TaskConfig {
 
 	@Autowired
 	private PayoutMapper payoutmapper;
+
 	@Autowired
 	private ExchangeMapper exchangemapper;
+
 	@Autowired
 	private ThreadPoolTaskExecutor threadpooltaskexecutor;
 
+	@Autowired
+	private PayconfigService payconfigservice;
+
+	@Autowired
+	private MerchantMapper merchantmapper;
+
+	@Autowired
+	private TgmerchantgroupMapper tgmerchantgroupmapper;
+
+	/**
+	 * 更新实时汇率
+	 * 
+	 * @throws InterruptedException
+	 */
+	@Scheduled(cron = "0/5 * * * * ?")
+	public void getOKXExchange() throws InterruptedException {
+		payconfigservice.initExchangeData();
+	}
+
+	/**
+	 * 更新每日新数据
+	 * 
+	 * @throws InterruptedException
+	 */
+	@Scheduled(cron = "0/5 * * * * ?")
+	public void updateTodayValue() throws InterruptedException {
+		List<Merchant> listm = merchantmapper.list(new HashMap<String, Object>());
+		listm.forEach(m -> {
+			merchantmapper.updatetodayvalue(m.getId());
+		});
+		List<Tgmerchantgroup> listtmg = tgmerchantgroupmapper.list(new HashMap<String, Object>());
+		listtmg.forEach(mg -> {
+			tgmerchantgroupmapper.updatetodayvalue(mg.getId());
+		});
+	}
+
+	/**
+	 * 查询需要通知的数据
+	 * 
+	 * @throws InterruptedException
+	 */
 	@Scheduled(cron = "0/10 * * * * ?")
 	public void notifyPayout() throws InterruptedException {
 		TenantIdContext.removeFlag();
-		// 查询需要通知的数据
 		List<Payout> list = payoutmapper.selectNotifylist();
 		for (Payout p : list) {
 			log.info("通知ID：" + p.getId() + " 状态：" + p.getStatus());
@@ -45,12 +93,17 @@ public class TaskConfig {
 		}
 	}
 
+	/**
+	 * 代付线上获取单号
+	 * 
+	 * @throws InterruptedException
+	 */
 	@Scheduled(cron = "0/5 * * * * ?")
 	public void payout() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Payout> list = payoutmapper.selectAddlist();
 		for (Payout p : list) {
-			log.info("提款获取渠道单号ID：" + p.getId() + " 状态：" + p.getStatus());
+			log.info("代付获取渠道单号ID：" + p.getId() + " 状态：" + p.getStatus());
 			p.setStatus(DictionaryResource.PAYOUTSTATUS_55);
 			if (payoutmapper.put(p) > 0) {
 				GetPayoutChannelOrderNumThread nf = new GetPayoutChannelOrderNumThread(p.getId());
@@ -59,6 +112,11 @@ public class TaskConfig {
 		}
 	}
 
+	/**
+	 * 换汇线上获取单号
+	 * 
+	 * @throws InterruptedException
+	 */
 	@Scheduled(cron = "0/5 * * * * ?")
 	public void exchange() throws InterruptedException {
 		TenantIdContext.removeFlag();
