@@ -8,18 +8,18 @@
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.ExchangeMerchantaccountapplyjournal">
+		type="com.yt.app.api.v1.entity.ExchangeMerchantaccountrecord">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.ExchangeMerchantaccountapplyjournal">
+		parameterType="com.yt.app.api.v1.entity.ExchangeMerchantaccountrecord">
 		insert into
 		exchangemerchantaccountrecord(id,userid,merchantname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,update_time,update_by,create_time,create_by,remark)
 		values
 		(#{id},#{userid},#{merchantname},#{ordernum},#{type},#{pretotalincome},#{prewithdrawamount},#{pretowithdrawamount},#{pretoincomeamount},#{posttotalincome},#{postwithdrawamount},#{posttowithdrawamount},#{posttoincomeamount},#{update_time},#{update_by},#{create_time},#{create_by},#{remark})
 	</insert>
 	<insert id="postAndTenantid"
-		parameterType="com.yt.app.api.v1.entity.ExchangeMerchantaccountapplyjournal">
+		parameterType="com.yt.app.api.v1.entity.ExchangeMerchantaccountrecord">
 		insert into
 		exchangemerchantaccountrecord(id,tenant_id,userid,merchantname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,update_time,update_by,create_time,create_by,remark)
 		values
@@ -42,7 +42,7 @@
 	</delete>
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.ExchangeMerchantaccountapplyjournal">
+		parameterType="com.yt.app.api.v1.entity.ExchangeMerchantaccountrecord">
 		update exchangemerchantaccountrecord
 		<set>
 			<if test="merchantname != null">

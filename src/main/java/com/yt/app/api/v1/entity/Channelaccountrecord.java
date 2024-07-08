@@ -11,14 +11,14 @@ import com.yt.app.common.base.YtBaseEntity;
  */
 @Getter
 @Setter
-public class Agentaccountapplyjourna extends YtBaseEntity<Agentaccountapplyjourna> {
+public class Channelaccountrecord extends YtBaseEntity<Channelaccountrecord> {
 
 	private static final long serialVersionUID = 1L;
 
 	Long id;
 	Long tenant_id;
+	String channelname;
 	Long userid;
-	String agentname;
 	String ordernum;
 	Integer type;
 	String typename;
@@ -33,18 +33,18 @@ public class Agentaccountapplyjourna extends YtBaseEntity<Agentaccountapplyjourn
 	String remark;
 	Integer version;
 
-	public Agentaccountapplyjourna() {
+	public Channelaccountrecord() {
 	}
 
-	public Agentaccountapplyjourna(Long id, Long tenant_id, Long userid, String agentname, String ordernum,
+	public Channelaccountrecord(Long id, Long tenant_id, String channelname, Long userid, String ordernum,
 			Integer type, Double pretotalincome, Double prewithdrawamount, Double pretowithdrawamount,
 			Double pretoincomeamount, Double posttotalincome, Double postwithdrawamount, Double posttowithdrawamount,
-			Double posttoincomeamount, String remark, Long create_by, java.util.Date create_time, Long update_by,
-			java.util.Date update_time, Integer version) {
+			Double posttoincomeamount, Long create_by, java.util.Date create_time, Long update_by,
+			java.util.Date update_time, String remark, Integer version) {
 		this.id = id;
 		this.tenant_id = tenant_id;
+		this.channelname = channelname;
 		this.userid = userid;
-		this.agentname = agentname;
 		this.ordernum = ordernum;
 		this.type = type;
 		this.pretotalincome = pretotalincome;

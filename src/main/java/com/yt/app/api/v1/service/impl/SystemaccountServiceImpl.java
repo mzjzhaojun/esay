@@ -14,7 +14,7 @@ import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccountorder;
 import com.yt.app.api.v1.entity.Merchantaccountorder;
 import com.yt.app.api.v1.entity.Systemaccount;
-import com.yt.app.api.v1.entity.Systemcapitalrecord;
+import com.yt.app.api.v1.entity.Systemaccountrecord;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
@@ -80,7 +80,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		try {
 			lock.lock();
 			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
-			Systemcapitalrecord scr = new Systemcapitalrecord();
+			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getUsername());
 			scr.setType(DictionaryResource.ORDERTYPE_20);
@@ -107,7 +107,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		try {
 			lock.lock();
 			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
-			Systemcapitalrecord scr = new Systemcapitalrecord();
+			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getUsername());
 			scr.setType(DictionaryResource.ORDERTYPE_21);
@@ -134,7 +134,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		try {
 			lock.lock();
 			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
-			Systemcapitalrecord scr = new Systemcapitalrecord();
+			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getUsername());
 			scr.setType(DictionaryResource.ORDERTYPE_23);
@@ -161,7 +161,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		try {
 			lock.lock();
 			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
-			Systemcapitalrecord scr = new Systemcapitalrecord();
+			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getUsername());
 			scr.setType(DictionaryResource.ORDERTYPE_22);
@@ -190,7 +190,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		try {
 			lock.lock();
 			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
-			Systemcapitalrecord scr = new Systemcapitalrecord();
+			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getUsername());
 			scr.setType(DictionaryResource.ORDERTYPE_21);
@@ -216,7 +216,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			lock.lock();
 			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
 
-			Systemcapitalrecord scr = new Systemcapitalrecord();
+			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getUsername());
 			scr.setType(DictionaryResource.ORDERTYPE_24);
@@ -244,7 +244,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		try {
 			lock.lock();
 			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
-			Systemcapitalrecord scr = new Systemcapitalrecord();
+			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getUsername());
 			scr.setType(DictionaryResource.ORDERTYPE_25);

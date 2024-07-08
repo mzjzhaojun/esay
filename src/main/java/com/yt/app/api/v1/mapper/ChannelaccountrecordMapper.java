@@ -2,7 +2,7 @@ package com.yt.app.api.v1.mapper;
 
 import java.util.List;
 import java.util.Map;
-import com.yt.app.api.v1.entity.Channelaccountapplyjourna;
+import com.yt.app.api.v1.entity.Channelaccountrecord;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
 import com.yt.app.common.base.YtIBaseMapper;
@@ -13,14 +13,14 @@ import com.yt.app.common.base.YtIBaseMapper;
  * @version v1 @createdate2023-11-18 12:44:01
  */
 
-public interface ChannelaccountrecordMapper extends YtIBaseMapper<Channelaccountapplyjourna> {
+public interface ChannelaccountrecordMapper extends YtIBaseMapper<Channelaccountrecord> {
 	/**
 	 * add
 	 * 
 	 * @param o Channelaccountapplyjourna
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Channelaccountapplyjourna.class })
+	@YtRedisCacheEvictAnnotation(classs = { Channelaccountrecord.class })
 	public Integer post(Object t);
 
 	/**
@@ -29,8 +29,8 @@ public interface ChannelaccountrecordMapper extends YtIBaseMapper<Channelaccount
 	 * @param o Channelaccountapplyjournalist
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Channelaccountapplyjourna.class })
-	public Integer batchSava(List<Channelaccountapplyjourna> list);
+	@YtRedisCacheEvictAnnotation(classs = { Channelaccountrecord.class })
+	public Integer batchSava(List<Channelaccountrecord> list);
 
 	/**
 	 * update
@@ -38,7 +38,7 @@ public interface ChannelaccountrecordMapper extends YtIBaseMapper<Channelaccount
 	 * @param o Channelaccountapplyjourna
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Channelaccountapplyjourna.class })
+	@YtRedisCacheEvictAnnotation(classs = { Channelaccountrecord.class })
 	public Integer put(Object t);
 
 	/**
@@ -47,8 +47,8 @@ public interface ChannelaccountrecordMapper extends YtIBaseMapper<Channelaccount
 	 * @param id id
 	 * @return Channelaccountapplyjourna
 	 */
-	@YtRedisCacheAnnotation(classs = Channelaccountapplyjourna.class)
-	public Channelaccountapplyjourna get(Long id);
+	@YtRedisCacheAnnotation(classs = Channelaccountrecord.class)
+	public Channelaccountrecord get(Long id);
 
 	/**
 	 * delete
@@ -56,7 +56,7 @@ public interface ChannelaccountrecordMapper extends YtIBaseMapper<Channelaccount
 	 * @param id id
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Channelaccountapplyjourna.class })
+	@YtRedisCacheEvictAnnotation(classs = { Channelaccountrecord.class })
 	public Integer delete(Long id);
 
 	/**
@@ -65,7 +65,7 @@ public interface ChannelaccountrecordMapper extends YtIBaseMapper<Channelaccount
 	 * @param param map
 	 * @return count
 	 */
-	@YtRedisCacheAnnotation(classs = Channelaccountapplyjourna.class)
+	@YtRedisCacheAnnotation(classs = Channelaccountrecord.class)
 	public Integer countlist(Map<String, Object> param);
 
 	/**
@@ -74,8 +74,8 @@ public interface ChannelaccountrecordMapper extends YtIBaseMapper<Channelaccount
 	 * @param param map
 	 * @return listChannelaccountapplyjourna
 	 */
-	@YtRedisCacheAnnotation(classs = Channelaccountapplyjourna.class)
-	public List<Channelaccountapplyjourna> list(Map<String, Object> param);
+	@YtRedisCacheAnnotation(classs = Channelaccountrecord.class)
+	public List<Channelaccountrecord> list(Map<String, Object> param);
 
 	/**
 	 * map
@@ -83,7 +83,7 @@ public interface ChannelaccountrecordMapper extends YtIBaseMapper<Channelaccount
 	 * @param param map
 	 * @return mapChannelaccountapplyjourna
 	 */
-	@YtRedisCacheAnnotation(classs = Channelaccountapplyjourna.class)
+	@YtRedisCacheAnnotation(classs = Channelaccountrecord.class)
 	public List<Map<String, Object>> map(Map<String, Object> param);
 
 	/**
@@ -92,6 +92,6 @@ public interface ChannelaccountrecordMapper extends YtIBaseMapper<Channelaccount
 	 * @param id long[]ids
 	 * @return listChannelaccountapplyjourna
 	 */
-	@YtRedisCacheAnnotation(classs = Channelaccountapplyjourna.class)
-	public List<Channelaccountapplyjourna> listByArrayId(long[] id);
+	@YtRedisCacheAnnotation(classs = Channelaccountrecord.class)
+	public List<Channelaccountrecord> listByArrayId(long[] id);
 }

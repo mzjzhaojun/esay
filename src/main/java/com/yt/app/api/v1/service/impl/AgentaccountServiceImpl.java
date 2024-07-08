@@ -16,7 +16,7 @@ import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccount;
-import com.yt.app.api.v1.entity.Agentaccountapplyjourna;
+import com.yt.app.api.v1.entity.Agentaccountrecord;
 import com.yt.app.api.v1.entity.Agentaccountbank;
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.common.common.yt.YtIPage;
@@ -120,7 +120,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			lock.lock();
 			Agentaccount ma = mapper.getByUserId(t.getUserid());
 			// 资金记录
-			Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
+			Agentaccountrecord aaaj = new Agentaccountrecord();
 
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(t.getUsername());
@@ -157,7 +157,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			Agentaccount t = mapper.getByUserId(mao.getUserid());
 
 			//
-			Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
+			Agentaccountrecord aaaj = new Agentaccountrecord();
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(mao.getUsername());
 			aaaj.setOrdernum(mao.getOrdernum());
@@ -196,7 +196,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			lock.lock();
 			Agentaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
+			Agentaccountrecord aaaj = new Agentaccountrecord();
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(mao.getUsername());
 			aaaj.setOrdernum(mao.getOrdernum());
@@ -233,7 +233,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			lock.lock();
 			Agentaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
+			Agentaccountrecord aaaj = new Agentaccountrecord();
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(mao.getUsername());
 			aaaj.setOrdernum(mao.getOrdernum());
@@ -274,7 +274,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 		try {
 			lock.lock();
 			Agentaccount ma = mapper.getByUserId(t.getUserid());
-			Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
+			Agentaccountrecord aaaj = new Agentaccountrecord();
 
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(t.getUsername());
@@ -311,7 +311,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			lock.lock();
 			Agentaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
+			Agentaccountrecord aaaj = new Agentaccountrecord();
 			//
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(mao.getUsername());
@@ -351,7 +351,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			lock.lock();
 			Agentaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
+			Agentaccountrecord aaaj = new Agentaccountrecord();
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(mao.getUsername());
 			aaaj.setOrdernum(mao.getOrdernum());
@@ -387,7 +387,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			Agentaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			//
-			Agentaccountapplyjourna aaaj = new Agentaccountapplyjourna();
+			Agentaccountrecord aaaj = new Agentaccountrecord();
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(mao.getUsername());
 			aaaj.setOrdernum(mao.getOrdernum());

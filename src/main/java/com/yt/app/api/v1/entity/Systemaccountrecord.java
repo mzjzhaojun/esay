@@ -11,7 +11,7 @@ import com.yt.app.common.base.YtBaseEntity;
  */
 @Getter
 @Setter
-public class Systemcapitalrecord extends YtBaseEntity<Systemcapitalrecord> {
+public class Systemaccountrecord extends YtBaseEntity<Systemaccountrecord> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -38,10 +38,10 @@ public class Systemcapitalrecord extends YtBaseEntity<Systemcapitalrecord> {
 	String remark;
 	Integer version;
 
-	public Systemcapitalrecord() {
+	public Systemaccountrecord() {
 	}
 
-	public Systemcapitalrecord(Long id, Long tenant_id, Long systemaccountid, String name, Integer type,
+	public Systemaccountrecord(Long id, Long tenant_id, Long systemaccountid, String name, Integer type,
 			Double pretotalincome, Double prewithdrawamount, Double posttotalincome, Double postwithdrawamount,
 			Double amount, java.util.Date update_time, Long update_by, java.util.Date create_time, Long create_by,
 			String remark, Integer version) {

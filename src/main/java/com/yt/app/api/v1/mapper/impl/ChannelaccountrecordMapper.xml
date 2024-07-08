@@ -8,11 +8,11 @@
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Channelaccountapplyjourna">
+		type="com.yt.app.api.v1.entity.Channelaccountrecord">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Channelaccountapplyjourna">
+		parameterType="com.yt.app.api.v1.entity.Channelaccountrecord">
 		insert into
 		channelaccountrecord(id,channelname,userid,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,create_by,create_time,update_by,update_time,remark)
 		values
@@ -35,7 +35,7 @@
 	</delete>
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Channelaccountapplyjourna">
+		parameterType="com.yt.app.api.v1.entity.Channelaccountrecord">
 		update channelaccountrecord
 		<set>
 			<if test="channelname != null">

@@ -11,7 +11,7 @@ import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Channelaccount;
-import com.yt.app.api.v1.entity.Channelaccountapplyjourna;
+import com.yt.app.api.v1.entity.Channelaccountrecord;
 import com.yt.app.api.v1.entity.Channelaccountorder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -81,7 +81,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			lock.lock();
 			Channelaccount ma = mapper.getByUserId(t.getUserid());
 			// 资金记录
-			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			Channelaccountrecord aaaj = new Channelaccountrecord();
 
 			aaaj.setUserid(t.getUserid());
 			aaaj.setChannelname(t.getChannelname());
@@ -119,7 +119,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 
 			//
-			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			Channelaccountrecord aaaj = new Channelaccountrecord();
 			aaaj.setUserid(t.getUserid());
 			aaaj.setChannelname(mao.getChannelname());
 			aaaj.setOrdernum(mao.getOrdernum());
@@ -160,7 +160,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			lock.lock();
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			Channelaccountrecord aaaj = new Channelaccountrecord();
 			aaaj.setUserid(t.getUserid());
 			aaaj.setChannelname(mao.getChannelname());
 			aaaj.setOrdernum(mao.getOrdernum());
@@ -196,7 +196,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			lock.lock();
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			Channelaccountrecord aaaj = new Channelaccountrecord();
 			aaaj.setUserid(t.getUserid());
 			aaaj.setChannelname(mao.getChannelname());
 			aaaj.setOrdernum(mao.getOrdernum());
@@ -237,7 +237,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 		try {
 			lock.lock();
 			Channelaccount ma = mapper.getByUserId(t.getUserid());
-			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			Channelaccountrecord aaaj = new Channelaccountrecord();
 
 			aaaj.setUserid(t.getUserid());
 			aaaj.setChannelname(t.getChannelname());
@@ -273,7 +273,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			lock.lock();
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			Channelaccountrecord aaaj = new Channelaccountrecord();
 			//
 			aaaj.setUserid(t.getUserid());
 			aaaj.setChannelname(mao.getChannelname());
@@ -312,7 +312,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			lock.lock();
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			Channelaccountrecord aaaj = new Channelaccountrecord();
 			aaaj.setUserid(t.getUserid());
 			aaaj.setChannelname(mao.getChannelname());
 			aaaj.setOrdernum(mao.getOrdernum());
@@ -350,7 +350,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			//
-			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			Channelaccountrecord aaaj = new Channelaccountrecord();
 			aaaj.setUserid(t.getUserid());
 			aaaj.setChannelname(mao.getChannelname());
 			aaaj.setOrdernum(mao.getOrdernum());
@@ -390,7 +390,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 		try {
 			lock.lock();
 			Channelaccount ma = mapper.getByUserId(t.getUserid());
-			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			Channelaccountrecord aaaj = new Channelaccountrecord();
 
 			aaaj.setUserid(t.getUserid());
 			aaaj.setChannelname(t.getChannelname());
@@ -426,7 +426,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			lock.lock();
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			Channelaccountrecord aaaj = new Channelaccountrecord();
 			//
 			aaaj.setUserid(t.getUserid());
 			aaaj.setChannelname(mao.getChannelname());
@@ -465,7 +465,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			lock.lock();
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			Channelaccountrecord aaaj = new Channelaccountrecord();
 			aaaj.setUserid(t.getUserid());
 			aaaj.setChannelname(mao.getChannelname());
 			aaaj.setOrdernum(mao.getOrdernum());
@@ -503,7 +503,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			//
-			Channelaccountapplyjourna aaaj = new Channelaccountapplyjourna();
+			Channelaccountrecord aaaj = new Channelaccountrecord();
 			aaaj.setUserid(t.getUserid());
 			aaaj.setChannelname(mao.getChannelname());
 			aaaj.setOrdernum(mao.getOrdernum());

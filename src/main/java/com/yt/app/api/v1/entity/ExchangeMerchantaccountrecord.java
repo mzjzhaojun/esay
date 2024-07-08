@@ -11,7 +11,7 @@ import com.yt.app.common.base.YtBaseEntity;
  */
 @Getter
 @Setter
-public class ExchangeMerchantaccountapplyjournal extends YtBaseEntity<ExchangeMerchantaccountapplyjournal> {
+public class ExchangeMerchantaccountrecord extends YtBaseEntity<ExchangeMerchantaccountrecord> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -33,10 +33,10 @@ public class ExchangeMerchantaccountapplyjournal extends YtBaseEntity<ExchangeMe
 	String remark;
 	Integer version;
 
-	public ExchangeMerchantaccountapplyjournal() {
+	public ExchangeMerchantaccountrecord() {
 	}
 
-	public ExchangeMerchantaccountapplyjournal(Long id, Long tenant_id, String merchantname, String ordernum, Integer type,
+	public ExchangeMerchantaccountrecord(Long id, Long tenant_id, String merchantname, String ordernum, Integer type,
 			Double pretotalincome, Double prewithdrawamount, Double pretowithdrawamount, Double pretoincomeamount,
 			Double posttotalincome, Double postwithdrawamount, Double posttowithdrawamount, Double posttoincomeamount,
 			java.util.Date update_time, Long update_by, java.util.Date create_time, Long create_by, String remark,

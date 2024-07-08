@@ -2,7 +2,7 @@ package com.yt.app.api.v1.mapper;
 
 import java.util.List;
 import java.util.Map;
-import com.yt.app.api.v1.entity.Systemcapitalrecord;
+import com.yt.app.api.v1.entity.Systemaccountrecord;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
 import com.yt.app.common.base.YtIBaseMapper;
@@ -13,14 +13,14 @@ import com.yt.app.common.base.YtIBaseMapper;
  * @version v1 @createdate2023-11-16 20:07:25
  */
 
-public interface SystemaccountrecordMapper extends YtIBaseMapper<Systemcapitalrecord> {
+public interface SystemaccountrecordMapper extends YtIBaseMapper<Systemaccountrecord> {
 	/**
 	 * add
 	 * 
 	 * @param o Systemcapitalrecord
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Systemcapitalrecord.class })
+	@YtRedisCacheEvictAnnotation(classs = { Systemaccountrecord.class })
 	public Integer post(Object t);
 
 	/**
@@ -29,8 +29,8 @@ public interface SystemaccountrecordMapper extends YtIBaseMapper<Systemcapitalre
 	 * @param o Systemcapitalrecordlist
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Systemcapitalrecord.class })
-	public Integer batchSava(List<Systemcapitalrecord> list);
+	@YtRedisCacheEvictAnnotation(classs = { Systemaccountrecord.class })
+	public Integer batchSava(List<Systemaccountrecord> list);
 
 	/**
 	 * update
@@ -38,7 +38,7 @@ public interface SystemaccountrecordMapper extends YtIBaseMapper<Systemcapitalre
 	 * @param o Systemcapitalrecord
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Systemcapitalrecord.class })
+	@YtRedisCacheEvictAnnotation(classs = { Systemaccountrecord.class })
 	public Integer put(Object t);
 
 	/**
@@ -47,8 +47,8 @@ public interface SystemaccountrecordMapper extends YtIBaseMapper<Systemcapitalre
 	 * @param id id
 	 * @return Systemcapitalrecord
 	 */
-	@YtRedisCacheAnnotation(classs = Systemcapitalrecord.class)
-	public Systemcapitalrecord get(Long id);
+	@YtRedisCacheAnnotation(classs = Systemaccountrecord.class)
+	public Systemaccountrecord get(Long id);
 
 	/**
 	 * delete
@@ -56,7 +56,7 @@ public interface SystemaccountrecordMapper extends YtIBaseMapper<Systemcapitalre
 	 * @param id id
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Systemcapitalrecord.class })
+	@YtRedisCacheEvictAnnotation(classs = { Systemaccountrecord.class })
 	public Integer delete(Long id);
 
 	/**
@@ -65,7 +65,7 @@ public interface SystemaccountrecordMapper extends YtIBaseMapper<Systemcapitalre
 	 * @param param map
 	 * @return count
 	 */
-	@YtRedisCacheAnnotation(classs = Systemcapitalrecord.class)
+	@YtRedisCacheAnnotation(classs = Systemaccountrecord.class)
 	public Integer countlist(Map<String, Object> param);
 
 	/**
@@ -74,8 +74,8 @@ public interface SystemaccountrecordMapper extends YtIBaseMapper<Systemcapitalre
 	 * @param param map
 	 * @return listSystemcapitalrecord
 	 */
-	@YtRedisCacheAnnotation(classs = Systemcapitalrecord.class)
-	public List<Systemcapitalrecord> list(Map<String, Object> param);
+	@YtRedisCacheAnnotation(classs = Systemaccountrecord.class)
+	public List<Systemaccountrecord> list(Map<String, Object> param);
 
 	/**
 	 * map
@@ -83,7 +83,7 @@ public interface SystemaccountrecordMapper extends YtIBaseMapper<Systemcapitalre
 	 * @param param map
 	 * @return mapSystemcapitalrecord
 	 */
-	@YtRedisCacheAnnotation(classs = Systemcapitalrecord.class)
+	@YtRedisCacheAnnotation(classs = Systemaccountrecord.class)
 	public List<Map<String, Object>> map(Map<String, Object> param);
 
 	/**
@@ -92,6 +92,6 @@ public interface SystemaccountrecordMapper extends YtIBaseMapper<Systemcapitalre
 	 * @param id long[]ids
 	 * @return listSystemcapitalrecord
 	 */
-	@YtRedisCacheAnnotation(classs = Systemcapitalrecord.class)
-	public List<Systemcapitalrecord> listByArrayId(long[] id);
+	@YtRedisCacheAnnotation(classs = Systemaccountrecord.class)
+	public List<Systemaccountrecord> listByArrayId(long[] id);
 }

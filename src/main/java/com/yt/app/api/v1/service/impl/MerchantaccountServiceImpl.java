@@ -16,7 +16,7 @@ import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Merchantaccount;
-import com.yt.app.api.v1.entity.Merchantaccountapplyjournal;
+import com.yt.app.api.v1.entity.Merchantaccountrecord;
 import com.yt.app.api.v1.entity.Merchantaccountbank;
 import com.yt.app.api.v1.entity.Merchantaccountorder;
 import com.yt.app.common.common.yt.YtIPage;
@@ -118,7 +118,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		try {
 			lock.lock();
 			Merchantaccount ma = mapper.getByUserId(t.getUserid());
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			Merchantaccountrecord maaj = new Merchantaccountrecord();
 
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(t.getUsername());
@@ -158,7 +158,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			Merchantaccount t = mapper.getByUserId(mao.getUserid());
 
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			Merchantaccountrecord maaj = new Merchantaccountrecord();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -198,7 +198,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			lock.lock();
 			Merchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			Merchantaccountrecord maaj = new Merchantaccountrecord();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -235,7 +235,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			lock.lock();
 			Merchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			Merchantaccountrecord maaj = new Merchantaccountrecord();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -276,7 +276,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		try {
 			lock.lock();
 			Merchantaccount ma = mapper.getByUserId(t.getUserid());
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			Merchantaccountrecord maaj = new Merchantaccountrecord();
 
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(t.getUsername());
@@ -317,7 +317,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			lock.lock();
 			Merchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			Merchantaccountrecord maaj = new Merchantaccountrecord();
 			//
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
@@ -356,7 +356,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			lock.lock();
 			Merchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			Merchantaccountrecord maaj = new Merchantaccountrecord();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -394,7 +394,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			Merchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			Merchantaccountrecord maaj = new Merchantaccountrecord();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -434,7 +434,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		try {
 			lock.lock();
 			Merchantaccount ma = mapper.getByUserId(t.getUserid());
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			Merchantaccountrecord maaj = new Merchantaccountrecord();
 
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(t.getUsername());
@@ -471,7 +471,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			lock.lock();
 			Merchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			Merchantaccountrecord maaj = new Merchantaccountrecord();
 			//
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
@@ -511,7 +511,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			lock.lock();
 			Merchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			Merchantaccountrecord maaj = new Merchantaccountrecord();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -549,7 +549,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			lock.lock();
 			Merchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			Merchantaccountrecord maaj = new Merchantaccountrecord();
 			maaj.setTenant_id(t.getTenant_id());
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
@@ -590,7 +590,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			Merchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			Merchantaccountrecord maaj = new Merchantaccountrecord();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -631,7 +631,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 		try {
 			lock.lock();
 			Merchantaccount ma = mapper.getByUserId(t.getUserid());
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			Merchantaccountrecord maaj = new Merchantaccountrecord();
 
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(t.getUsername());
@@ -668,7 +668,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			lock.lock();
 			Merchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			Merchantaccountrecord maaj = new Merchantaccountrecord();
 			//
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
@@ -708,7 +708,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			lock.lock();
 			Merchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			Merchantaccountrecord maaj = new Merchantaccountrecord();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -748,7 +748,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			Merchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			Merchantaccountrecord maaj = new Merchantaccountrecord();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());

@@ -8,11 +8,11 @@
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Agentaccountapplyjourna">
+		type="com.yt.app.api.v1.entity.Agentaccountrecord">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Agentaccountapplyjourna">
+		parameterType="com.yt.app.api.v1.entity.Agentaccountrecord">
 		insert into
 		agentaccountrecord(id,userid,agentname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,remark,create_by,create_time,update_by,update_time)
 		values
@@ -35,7 +35,7 @@
 	</delete>
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Agentaccountapplyjourna">
+		parameterType="com.yt.app.api.v1.entity.Agentaccountrecord">
 		update agentaccountrecord
 		<set>
 			<if test="userid != null">

@@ -1,6 +1,6 @@
 package com.yt.app.api.v1.service;
 
-import com.yt.app.api.v1.entity.Systemcapitalrecord;
+import com.yt.app.api.v1.entity.Systemaccountrecord;
 import com.yt.app.common.base.YtIBaseService;
 
 /**
@@ -9,5 +9,5 @@ import com.yt.app.common.base.YtIBaseService;
  * @version v1 @createdate2023-11-16 20:07:25
  */
 
-public interface SystemcapitalrecordService extends YtIBaseService<Systemcapitalrecord, Long> {
+public interface SystemaccountrecordService extends YtIBaseService<Systemaccountrecord, Long> {
 }

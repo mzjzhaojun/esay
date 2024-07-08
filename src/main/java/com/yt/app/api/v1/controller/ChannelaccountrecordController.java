@@ -15,28 +15,29 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
 import io.swagger.annotations.ApiOperation;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
-import com.yt.app.api.v1.service.SystemcapitalrecordService;
-import com.yt.app.api.v1.entity.Systemcapitalrecord;
+import com.yt.app.api.v1.service.ChannelaccountrecordService;
+import com.yt.app.api.v1.entity.Channelaccountrecord;
 
 /**
  * @author zj defaulttest
  * 
- * @version v1 @createdate2023-11-16 20:07:25
+ * @version v1 @createdate2023-11-18 12:44:01
  */
 
 @RestController
-@RequestMapping("/rest/v1/systemcapitalrecord")
-public class SystemcapitalrecordController extends YtBaseEncipherControllerImpl<Systemcapitalrecord, Long> {
+@RequestMapping("/rest/v1/channelaccountrecord")
+public class ChannelaccountrecordController extends YtBaseEncipherControllerImpl<Channelaccountrecord, Long> {
 
 	@Autowired
-	private SystemcapitalrecordService service;
+	private ChannelaccountrecordService service;
 
 	@Override
-	@ApiOperation(value = "list", response = Systemcapitalrecord.class)
+	@ApiOperation(value = "list", response = Channelaccountrecord.class)
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Systemcapitalrecord> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		YtIPage<Channelaccountrecord> pagebean = service
+				.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 }

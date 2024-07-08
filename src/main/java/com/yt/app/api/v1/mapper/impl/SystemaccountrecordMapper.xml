@@ -8,11 +8,11 @@
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Systemcapitalrecord">
+		type="com.yt.app.api.v1.entity.Systemaccountrecord">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Systemcapitalrecord">
+		parameterType="com.yt.app.api.v1.entity.Systemaccountrecord">
 		insert into
 		systemaccountrecord(id,systemaccountid,name,type,pretotalincome,prewithdrawamount,posttotalincome,postwithdrawamount,amount,balance,update_time,update_by,create_time,create_by,remark)
 		values
@@ -35,7 +35,7 @@
 	</delete>
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Systemcapitalrecord">
+		parameterType="com.yt.app.api.v1.entity.Systemaccountrecord">
 		update systemaccountrecord
 		<set>
 			<if test="systemaccountid != null">

@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.AgentaccountrecordMapper;
-import com.yt.app.api.v1.service.AgentaccountapplyjournaService;
+import com.yt.app.api.v1.service.AgentaccountrecordService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
-import com.yt.app.api.v1.entity.Agentaccountapplyjourna;
+import com.yt.app.api.v1.entity.Agentaccountrecord;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
@@ -25,39 +25,39 @@ import java.util.Map;
  */
 
 @Service
-public class AgentaccountapplyjournaServiceImpl extends YtBaseServiceImpl<Agentaccountapplyjourna, Long>
-		implements AgentaccountapplyjournaService {
+public class AgentaccountrecordServiceImpl extends YtBaseServiceImpl<Agentaccountrecord, Long>
+		implements AgentaccountrecordService {
 	@Autowired
 	private AgentaccountrecordMapper mapper;
 
 	@Override
 	@Transactional
-	public Integer post(Agentaccountapplyjourna t) {
+	public Integer post(Agentaccountrecord t) {
 		Integer i = mapper.post(t);
 		return i;
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Agentaccountapplyjourna> list(Map<String, Object> param) {
+	public YtIPage<Agentaccountrecord> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return new YtPageBean<Agentaccountapplyjourna>(Collections.emptyList());
+				return new YtPageBean<Agentaccountrecord>(Collections.emptyList());
 			}
 		}
-		List<Agentaccountapplyjourna> list = mapper.list(param);
+		List<Agentaccountrecord> list = mapper.list(param);
 		list.forEach(maaj -> {
 			maaj.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + maaj.getType()));
 		});
-		return new YtPageBean<Agentaccountapplyjourna>(param, list, count);
+		return new YtPageBean<Agentaccountrecord>(param, list, count);
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public Agentaccountapplyjourna get(Long id) {
-		Agentaccountapplyjourna t = mapper.get(id);
+	public Agentaccountrecord get(Long id) {
+		Agentaccountrecord t = mapper.get(id);
 		return t;
 	}
 }

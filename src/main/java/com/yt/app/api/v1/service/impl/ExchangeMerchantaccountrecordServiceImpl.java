@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.ExchangeMerchantaccountrecordMapper;
-import com.yt.app.api.v1.service.ExchangeMerchantaccountapplyjournalService;
+import com.yt.app.api.v1.service.ExchangeMerchantaccountrecordService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
-import com.yt.app.api.v1.entity.ExchangeMerchantaccountapplyjournal;
+import com.yt.app.api.v1.entity.ExchangeMerchantaccountrecord;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
@@ -25,40 +25,40 @@ import java.util.Map;
  */
 
 @Service
-public class ExchangeMerchantaccountapplyjournalServiceImpl
-		extends YtBaseServiceImpl<ExchangeMerchantaccountapplyjournal, Long>
-		implements ExchangeMerchantaccountapplyjournalService {
+public class ExchangeMerchantaccountrecordServiceImpl
+		extends YtBaseServiceImpl<ExchangeMerchantaccountrecord, Long>
+		implements ExchangeMerchantaccountrecordService {
 	@Autowired
 	private ExchangeMerchantaccountrecordMapper mapper;
 
 	@Override
 	@Transactional
-	public Integer post(ExchangeMerchantaccountapplyjournal t) {
+	public Integer post(ExchangeMerchantaccountrecord t) {
 		Integer i = mapper.post(t);
 		return i;
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<ExchangeMerchantaccountapplyjournal> list(Map<String, Object> param) {
+	public YtIPage<ExchangeMerchantaccountrecord> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return new YtPageBean<ExchangeMerchantaccountapplyjournal>(Collections.emptyList());
+				return new YtPageBean<ExchangeMerchantaccountrecord>(Collections.emptyList());
 			}
 		}
-		List<ExchangeMerchantaccountapplyjournal> list = mapper.list(param);
+		List<ExchangeMerchantaccountrecord> list = mapper.list(param);
 		list.forEach(maaj -> {
 			maaj.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + maaj.getType()));
 		});
-		return new YtPageBean<ExchangeMerchantaccountapplyjournal>(param, list, count);
+		return new YtPageBean<ExchangeMerchantaccountrecord>(param, list, count);
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public ExchangeMerchantaccountapplyjournal get(Long id) {
-		ExchangeMerchantaccountapplyjournal t = mapper.get(id);
+	public ExchangeMerchantaccountrecord get(Long id) {
+		ExchangeMerchantaccountrecord t = mapper.get(id);
 		return t;
 	}
 
