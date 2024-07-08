@@ -20,6 +20,10 @@ public class Systemaccount extends YtBaseEntity<Systemaccount> {
 	Double totalincome;
 	Double withdrawamount;
 	Double balance;
+
+	Double usdttotalincome;
+	Double usdtwithdrawamount;
+	Double usdtbalance;
 	String remark;
 	Long userid;
 	Integer version;

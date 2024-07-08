@@ -62,7 +62,7 @@ public class TaskConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0/5 * * * * ?")
+	@Scheduled(cron = "59 59 23 * * ?")
 	public void updateTodayValue() throws InterruptedException {
 		List<Merchant> listm = merchantmapper.list(new HashMap<String, Object>());
 		listm.forEach(m -> {

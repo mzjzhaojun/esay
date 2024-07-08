@@ -23,6 +23,7 @@ public class Merchant extends YtBaseEntity<Merchant> {
 	String code;
 	String remark;
 	Double balance;
+	Double usdtbalance;
 	Boolean status;
 	Double todaycost;
 	Double todaycount;
@@ -30,6 +31,7 @@ public class Merchant extends YtBaseEntity<Merchant> {
 	Double exchange;
 	Double onecost;
 	Double downpoint;
+	Double exchangedownpoint;
 	Long agentid;
 	String agentname;
 	Boolean backpay;

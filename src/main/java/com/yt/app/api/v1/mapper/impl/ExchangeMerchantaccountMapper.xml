@@ -1,75 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
-	namespace="com.yt.app.api.v1.mapper.SystemcapitalrecordMapper">
+	namespace="com.yt.app.api.v1.mapper.ExchangeMerchantaccountMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,systemaccountid,name,type,pretotalincome,prewithdrawamount,posttotalincome,postwithdrawamount,amount,balance,update_time,update_by,create_time,create_by,remark,version
+		id,tenant_id,userid,merchantid,totalincome,withdrawamount,towithdrawamount,toincomeamount,balance,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Systemcapitalrecord">
+		type="com.yt.app.api.v1.entity.ExchangeMerchantaccount">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Systemcapitalrecord">
+		parameterType="com.yt.app.api.v1.entity.ExchangeMerchantaccount">
 		insert into
-		systemcapitalrecord(id,systemaccountid,name,type,pretotalincome,prewithdrawamount,posttotalincome,postwithdrawamount,amount,balance,update_time,update_by,create_time,create_by,remark)
+		exchangemerchantaccount(id,userid,merchantid,totalincome,withdrawamount,towithdrawamount,toincomeamount,balance,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{systemaccountid},#{name},#{type},#{pretotalincome},#{prewithdrawamount},#{posttotalincome},#{postwithdrawamount},#{amount},#{balance},#{update_time},#{update_by},#{create_time},#{create_by},#{remark})
+		(#{id},#{userid},#{merchantid},#{totalincome},#{withdrawamount},#{towithdrawamount},#{toincomeamount},#{balance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		systemcapitalrecord(id,tenant_id,systemaccountid,name,type,pretotalincome,prewithdrawamount,posttotalincome,postwithdrawamount,amount,update_time,update_by,create_time,create_by,remark)
+		exchangemerchantaccount(id,merchantid,totalincome,withdrawamount,towithdrawamount,toincomeamount,balance,create_by,create_time,update_by,update_time,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{systemaccountid},#{name},#{type},#{pretotalincome},#{prewithdrawamount},#{posttotalincome},#{postwithdrawamount},#{amount},#{update_time},#{update_by},#{create_time},#{create_by},#{remark})
+			(#{id},#{merchantid},#{totalincome},#{withdrawamount},#{towithdrawamount},#{toincomeamount},#{balance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from systemcapitalrecord
+		delete from exchangemerchantaccount
 		where id = #{id}
 	</delete>
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Systemcapitalrecord">
-		update systemcapitalrecord
+		parameterType="com.yt.app.api.v1.entity.ExchangeMerchantaccount">
+		update exchangemerchantaccount
 		<set>
-			<if test="systemaccountid != null">
-				systemaccountid= #{systemaccountid},
+			<if test="merchantid != null">
+				merchantid= #{merchantid},
 			</if>
-			<if test="nkname != null">
-				nkname= #{nkname},
+			<if test="totalincome != null">
+				totalincome= #{totalincome},
 			</if>
-			<if test="name != null">
-				name= #{name},
+			<if test="withdrawamount != null">
+				withdrawamount= #{withdrawamount},
 			</if>
-			<if test="type != null">
-				type= #{type},
+			<if test="towithdrawamount != null">
+				towithdrawamount= #{towithdrawamount},
 			</if>
-			<if test="pretotalincome != null">
-				pretotalincome= #{pretotalincome},
+			<if test="toincomeamount != null">
+				toincomeamount= #{toincomeamount},
 			</if>
-			<if test="prewithdrawamount != null">
-				prewithdrawamount= #{prewithdrawamount},
-			</if>
-			<if test="posttotalincome != null">
-				posttotalincome= #{posttotalincome},
-			</if>
-			<if test="postwithdrawamount != null">
-				postwithdrawamount= #{postwithdrawamount},
-			</if>
-			<if test="amount != null">
-				amount= #{amount},
-			</if>
-			<if test="update_time != null">
-				update_time= #{update_time},
+			<if test="balance != null">
+				balance= #{balance},
 			</if>
 			<if test="update_by != null">
 				update_by= #{update_by},
+			</if>
+			<if test="update_time != null">
+				update_time= #{update_time},
 			</if>
 			<if test="remark != null">
 				remark= #{remark},
@@ -85,15 +76,25 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from systemcapitalrecord
+		from exchangemerchantaccount
 		where id = #{id}
 	</select>
+	
+	<!--getById -->
+	<select id="getByUserId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from exchangemerchantaccount
+		where userid = #{userid}
+	</select>
+	
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from systemcapitalrecord
+		from exchangemerchantaccount
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -112,7 +113,7 @@
 		resultType="java.util.HashMap">
 		select
 		<include refid="Base_Column_List" />
-		from systemcapitalrecord
+		from exchangemerchantaccount
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -129,7 +130,7 @@
 	<!-- getCount -->
 	<select id="countlist" parameterType="java.util.HashMap"
 		resultType="int">
-		select count(*) from systemcapitalrecord
+		select count(*) from exchangemerchantaccount
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -142,7 +143,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from systemcapitalrecord
+	from exchangemerchantaccount
 		<where>
 			1=1
 			<if test="array != null and array.length > 0">

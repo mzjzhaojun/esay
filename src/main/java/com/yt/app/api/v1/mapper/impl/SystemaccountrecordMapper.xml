@@ -1,78 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yt.app.api.v1.mapper.SystemaccountMapper">
+<mapper
+	namespace="com.yt.app.api.v1.mapper.SystemaccountrecordMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,totalincome,withdrawamount,balance,usdttotalincome,usdtwithdrawamount,usdtbalance,create_by,create_time,update_by,update_time,remark,userid,version
+		id,tenant_id,systemaccountid,name,type,pretotalincome,prewithdrawamount,posttotalincome,postwithdrawamount,amount,balance,update_time,update_by,create_time,create_by,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Systemaccount">
+		type="com.yt.app.api.v1.entity.Systemcapitalrecord">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Systemaccount">
+		parameterType="com.yt.app.api.v1.entity.Systemcapitalrecord">
 		insert into
-		systemaccount(id,totalincome,withdrawamount,balance,usdttotalincome,usdtwithdrawamount,usdtbalance,create_by,create_time,update_by,update_time,remark,userid)
+		systemaccountrecord(id,systemaccountid,name,type,pretotalincome,prewithdrawamount,posttotalincome,postwithdrawamount,amount,balance,update_time,update_by,create_time,create_by,remark)
 		values
-		(#{id},#{totalincome},#{withdrawamount},#{balance},#{usdttotalincome},#{usdtwithdrawamount},#{usdtbalance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark},#{userid})
-	</insert>
-	<insert id="postAndTanantId"
-		parameterType="com.yt.app.api.v1.entity.Systemaccount">
-		insert into
-		systemaccount(id,tenant_id,totalincome,withdrawamount,balance,create_by,create_time,update_by,update_time,remark,userid)
-		values
-		(#{id},#{tenant_id},#{totalincome},#{withdrawamount},#{balance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark},#{userid})
+		(#{id},#{systemaccountid},#{name},#{type},#{pretotalincome},#{prewithdrawamount},#{posttotalincome},#{postwithdrawamount},#{amount},#{balance},#{update_time},#{update_by},#{create_time},#{create_by},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		systemaccount(id,tenant_id,totalincome,withdrawamount,balance,create_by,create_time,update_by,update_time,remark,userid)
+		systemaccountrecord(id,tenant_id,systemaccountid,name,type,pretotalincome,prewithdrawamount,posttotalincome,postwithdrawamount,amount,update_time,update_by,create_time,create_by,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{totalincome},#{withdrawamount},#{balance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark},#{userid})
+			(#{id},#{tenant_id},#{systemaccountid},#{name},#{type},#{pretotalincome},#{prewithdrawamount},#{posttotalincome},#{postwithdrawamount},#{amount},#{update_time},#{update_by},#{create_time},#{create_by},#{remark})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from systemaccount
+		delete from systemaccountrecord
 		where id = #{id}
 	</delete>
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Systemaccount">
-		update systemaccount
+		parameterType="com.yt.app.api.v1.entity.Systemcapitalrecord">
+		update systemaccountrecord
 		<set>
-			<if test="totalincome != null">
-				totalincome= #{totalincome},
+			<if test="systemaccountid != null">
+				systemaccountid= #{systemaccountid},
 			</if>
-			<if test="withdrawamount != null">
-				withdrawamount= #{withdrawamount},
+			<if test="nkname != null">
+				nkname= #{nkname},
 			</if>
-			<if test="usdttotalincome != null">
-				usdttotalincome= #{usdttotalincome},
+			<if test="name != null">
+				name= #{name},
 			</if>
-			<if test="usdtwithdrawamount != null">
-				usdtwithdrawamount= #{usdtwithdrawamount},
+			<if test="type != null">
+				type= #{type},
 			</if>
-			<if test="usdtbalance != null">
-				usdtbalance= #{usdtbalance},
+			<if test="pretotalincome != null">
+				pretotalincome= #{pretotalincome},
 			</if>
-			<if test="balance != null">
-				balance= #{balance},
+			<if test="prewithdrawamount != null">
+				prewithdrawamount= #{prewithdrawamount},
 			</if>
-			<if test="update_by != null">
-				update_by= #{update_by},
+			<if test="posttotalincome != null">
+				posttotalincome= #{posttotalincome},
+			</if>
+			<if test="postwithdrawamount != null">
+				postwithdrawamount= #{postwithdrawamount},
+			</if>
+			<if test="amount != null">
+				amount= #{amount},
 			</if>
 			<if test="update_time != null">
 				update_time= #{update_time},
 			</if>
+			<if test="update_by != null">
+				update_by= #{update_by},
+			</if>
 			<if test="remark != null">
 				remark= #{remark},
-			</if>
-			<if test="userid != null">
-				userid= #{userid},
 			</if>
 			<if test="version != null">
 				version= #{version}+1
@@ -85,23 +85,15 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from systemaccount
+		from systemaccountrecord
 		where id = #{id}
-	</select>
-	<!--getByUserId -->
-	<select id="getByTenantId" parameterType="java.lang.Long"
-		resultMap="ResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from systemaccount
-		where tenant_id = #{userid}
 	</select>
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from systemaccount
+		from systemaccountrecord
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -120,7 +112,7 @@
 		resultType="java.util.HashMap">
 		select
 		<include refid="Base_Column_List" />
-		from systemaccount
+		from systemaccountrecord
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -137,7 +129,7 @@
 	<!-- getCount -->
 	<select id="countlist" parameterType="java.util.HashMap"
 		resultType="int">
-		select count(*) from systemaccount
+		select count(*) from systemaccountrecord
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -150,7 +142,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from systemaccount
+		from systemaccountrecord
 		<where>
 			1=1
 			<if test="array != null and array.length > 0">

@@ -23,8 +23,8 @@ public class Exchange extends YtBaseEntity<Exchange> {
 	String merchantname;
 	String merchantcode;
 	String merchantordernum;
-	Double merchantcost;
-	Double merchantdeal;
+	Double merchantrealtimeexchange;
+	Double merchantdowpoint;
 	Double merchantpay;
 	Long aisleid;
 	String aislename;
@@ -43,6 +43,7 @@ public class Exchange extends YtBaseEntity<Exchange> {
 	String bankname;
 	String bankaddress;
 	Double amount;
+	Double exchange;
 	Integer status;
 	java.util.Date successtime;
 	Long backlong;
@@ -60,7 +61,7 @@ public class Exchange extends YtBaseEntity<Exchange> {
 	}
 
 	public Exchange(Long id, Long tenant_id, Long userid, String ordernum, Long merchantid, String merchantname,
-			String merchantcode, String merchantordernum, Double merchantcost, Double merchantdeal, Double merchantpay,
+			String merchantcode, String merchantordernum, Double merchantrealtimeexchange, Double merchantdowpoint, Double merchantpay,
 			Long aisleid, String aislename, Long agentid, String agentordernum, Double agentincome, Long channelid,
 			String channelname, String channelordernum, Double channelcost, Double channeldeal, Double channelpay,
 			String accname, String accnumer, String bankcode, String bankname, String bankaddress, Double amount,
@@ -75,8 +76,8 @@ public class Exchange extends YtBaseEntity<Exchange> {
 		this.merchantname = merchantname;
 		this.merchantcode = merchantcode;
 		this.merchantordernum = merchantordernum;
-		this.merchantcost = merchantcost;
-		this.merchantdeal = merchantdeal;
+		this.merchantrealtimeexchange = merchantrealtimeexchange;
+		this.merchantdowpoint = merchantdowpoint;
 		this.merchantpay = merchantpay;
 		this.aisleid = aisleid;
 		this.aislename = aislename;

@@ -13,7 +13,7 @@ import com.yt.app.common.base.YtIBaseMapper;
  * @version v1 @createdate2023-11-18 12:44:01
  */
 
-public interface ChannelaccountapplyjournaMapper extends YtIBaseMapper<Channelaccountapplyjourna> {
+public interface ChannelaccountrecordMapper extends YtIBaseMapper<Channelaccountapplyjourna> {
 	/**
 	 * add
 	 * 

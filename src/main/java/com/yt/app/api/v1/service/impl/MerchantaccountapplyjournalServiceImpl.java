@@ -3,7 +3,7 @@ package com.yt.app.api.v1.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
-import com.yt.app.api.v1.mapper.MerchantaccountapplyjournalMapper;
+import com.yt.app.api.v1.mapper.MerchantaccountrecordMapper;
 import com.yt.app.api.v1.service.MerchantaccountapplyjournalService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
@@ -28,7 +28,7 @@ import java.util.Map;
 public class MerchantaccountapplyjournalServiceImpl extends YtBaseServiceImpl<Merchantaccountapplyjournal, Long>
 		implements MerchantaccountapplyjournalService {
 	@Autowired
-	private MerchantaccountapplyjournalMapper mapper;
+	private MerchantaccountrecordMapper mapper;
 
 	@Override
 	@Transactional

@@ -12,6 +12,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.SimpleDateFormatSerializer;
 import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.yt.app.common.base.context.AuthRsaKeyContext;
+import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.exption.YtException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ public class SecurityUtil {
 			log.info("参数：" + data);
 			return cleanXSS(data);
 		} catch (Throwable e) {
-			throw new RuntimeException("ApiSecurityUtil.decrypt：解密异常！");
+			throw new YtException("用户长时间未登录！",YtCodeEnum.YT401);
 		}
 	}
 
@@ -45,10 +46,9 @@ public class SecurityUtil {
 			serializeConfig.put(Date.class, new SimpleDateFormatSerializer("YY-MM-dd HH:mm"));
 			String dataString = JSON.toJSONString(object, serializeConfig, SerializerFeature.PrettyFormat);
 			String data = AesUtil.encrypt(dataString, AuthRsaKeyContext.getAesKey());
-			// log.info("显示：" + dataString);
 			return data;
 		} catch (Throwable e) {
-			throw new RuntimeException("ApiSecurityUtil.encrypt：加密异常！");
+			throw new YtException("用户长时间未登录！",YtCodeEnum.YT401);
 		}
 	}
 

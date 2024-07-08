@@ -1,52 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
-	namespace="com.yt.app.api.v1.mapper.MerchantaccountapplyjournalMapper">
+	namespace="com.yt.app.api.v1.mapper.AgentaccountrecordMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,merchantname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,update_time,update_by,create_time,create_by,remark,version
+		id,tenant_id,userid,agentname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,remark,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Merchantaccountapplyjournal">
+		type="com.yt.app.api.v1.entity.Agentaccountapplyjourna">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Merchantaccountapplyjournal">
+		parameterType="com.yt.app.api.v1.entity.Agentaccountapplyjourna">
 		insert into
-		merchantaccountapplyjournal(id,userid,merchantname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,update_time,update_by,create_time,create_by,remark)
+		agentaccountrecord(id,userid,agentname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,remark,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{userid},#{merchantname},#{ordernum},#{type},#{pretotalincome},#{prewithdrawamount},#{pretowithdrawamount},#{pretoincomeamount},#{posttotalincome},#{postwithdrawamount},#{posttowithdrawamount},#{posttoincomeamount},#{update_time},#{update_by},#{create_time},#{create_by},#{remark})
-	</insert>
-	<insert id="postAndTenantid"
-		parameterType="com.yt.app.api.v1.entity.Merchantaccountapplyjournal">
-		insert into
-		merchantaccountapplyjournal(id,tenant_id,userid,merchantname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,update_time,update_by,create_time,create_by,remark)
-		values
-		(#{id},#{tenant_id},#{userid},#{merchantname},#{ordernum},#{type},#{pretotalincome},#{prewithdrawamount},#{pretowithdrawamount},#{pretoincomeamount},#{posttotalincome},#{postwithdrawamount},#{posttowithdrawamount},#{posttoincomeamount},#{update_time},#{update_by},#{create_time},#{create_by},#{remark})
+		(#{id},#{userid},#{agentname},#{ordernum},#{type},#{pretotalincome},#{prewithdrawamount},#{pretowithdrawamount},#{pretoincomeamount},#{posttotalincome},#{postwithdrawamount},#{posttowithdrawamount},#{posttoincomeamount},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		merchantaccountapplyjournal(id,merchantname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,update_time,update_by,create_time,create_by,remark)
+		agentaccountrecord(id,tenant_id,userid,agentname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,remark,create_by,create_time,update_by,update_time)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{merchantname},#{ordernum},#{type},#{pretotalincome},#{prewithdrawamount},#{pretowithdrawamount},#{pretoincomeamount},#{posttotalincome},#{postwithdrawamount},#{posttowithdrawamount},#{posttoincomeamount},#{update_time},#{update_by},#{create_time},#{create_by},#{remark})
+			(#{id},#{tenant_id},#{userid},#{agentname},#{ordernum},#{type},#{pretotalincome},#{prewithdrawamount},#{pretowithdrawamount},#{pretoincomeamount},#{posttotalincome},#{postwithdrawamount},#{posttowithdrawamount},#{posttoincomeamount},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from merchantaccountapplyjournal
+		delete from agentaccountrecord
 		where id = #{id}
 	</delete>
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Merchantaccountapplyjournal">
-		update merchantaccountapplyjournal
+		parameterType="com.yt.app.api.v1.entity.Agentaccountapplyjourna">
+		update agentaccountrecord
 		<set>
-			<if test="merchantname != null">
-				merchantname= #{merchantname},
+			<if test="userid != null">
+				userid= #{userid},
+			</if>
+			<if test="agentname != null">
+				agentname= #{agentname},
 			</if>
 			<if test="ordernum != null">
 				ordernum= #{ordernum},
@@ -78,14 +74,14 @@
 			<if test="posttoincomeamount != null">
 				posttoincomeamount= #{posttoincomeamount},
 			</if>
-			<if test="update_time != null">
-				update_time= #{update_time},
+			<if test="remark != null">
+				remark= #{remark},
 			</if>
 			<if test="update_by != null">
 				update_by= #{update_by},
 			</if>
-			<if test="remark != null">
-				remark= #{remark},
+			<if test="update_time != null">
+				update_time= #{update_time},
 			</if>
 			<if test="version != null">
 				version= #{version}+1
@@ -98,7 +94,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from merchantaccountapplyjournal
+		from agentaccountrecord
 		where id = #{id}
 	</select>
 	<!-- getList -->
@@ -106,17 +102,11 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from merchantaccountapplyjournal
+		from agentaccountrecord
 		<where>
 			1=1
-			<if test="ordernum != null and ordernum != ''">
-				and ordernum = #{ordernum}
-			</if>
-			<if test="type != null and type != ''">
-				and type = #{type}
-			</if>
-			<if test="userid != null and userid != ''">
-				and userid = #{userid}
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
 			</if>
 			<if test="orderBy != null and dir != null">
 				order by ${orderBy} ${dir}
@@ -131,7 +121,7 @@
 		resultType="java.util.HashMap">
 		select
 		<include refid="Base_Column_List" />
-		from merchantaccountapplyjournal
+		from agentaccountrecord
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -148,17 +138,11 @@
 	<!-- getCount -->
 	<select id="countlist" parameterType="java.util.HashMap"
 		resultType="int">
-		select count(*) from merchantaccountapplyjournal
+		select count(*) from agentaccountrecord
 		<where>
 			1=1
-			<if test="ordernum != null and ordernum != ''">
-				and ordernum = #{ordernum}
-			</if>
-			<if test="type != null and type != ''">
-				and type = #{type}
-			</if>
-			<if test="userid != null and userid != ''">
-				and userid = #{userid}
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
 			</if>
 		</where>
 	</select>
@@ -167,7 +151,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from merchantaccountapplyjournal
+		from agentaccountrecord
 		<where>
 			1=1
 			<if test="array != null and array.length > 0">

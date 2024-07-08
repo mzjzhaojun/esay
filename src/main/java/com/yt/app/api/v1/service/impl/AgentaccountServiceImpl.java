@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.yt.app.api.v1.mapper.AgentMapper;
 import com.yt.app.api.v1.mapper.AgentaccountMapper;
-import com.yt.app.api.v1.mapper.AgentaccountapplyjournaMapper;
+import com.yt.app.api.v1.mapper.AgentaccountrecordMapper;
 import com.yt.app.api.v1.mapper.AgentaccountbankMapper;
 import com.yt.app.api.v1.service.AgentService;
 import com.yt.app.api.v1.service.AgentaccountService;
@@ -47,7 +47,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	private AgentaccountbankMapper agentaccountbankmapper;
 
 	@Autowired
-	private AgentaccountapplyjournaMapper agentaccountapplyjournamapper;
+	private AgentaccountrecordMapper agentaccountapplyjournamapper;
 
 	@Autowired
 	private AgentService agentservice;

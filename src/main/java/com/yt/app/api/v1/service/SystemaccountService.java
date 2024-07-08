@@ -1,6 +1,7 @@
 package com.yt.app.api.v1.service;
 
 import com.yt.app.api.v1.entity.Agentaccountorder;
+import com.yt.app.api.v1.entity.ExchangeMerchantaccountorder;
 import com.yt.app.api.v1.entity.Merchantaccountorder;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.common.base.YtIBaseService;
@@ -28,5 +29,12 @@ public interface SystemaccountService extends YtIBaseService<Systemaccount, Long
 	void updatePayout(Merchantaccountorder mao);
 
 	// 换汇
-	void updateExchange(Merchantaccountorder mao);
+	void updateExchange(ExchangeMerchantaccountorder mao);
+
+	// 商户充值
+	void updateUsdtTotalincome(ExchangeMerchantaccountorder mao);
+
+	// 商户提现
+	void updateUsdtWithdrawamount(ExchangeMerchantaccountorder mao);
+
 }

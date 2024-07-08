@@ -13,7 +13,7 @@ import com.yt.app.common.base.YtIBaseMapper;
  * @version v1 @createdate2023-11-15 09:44:15
  */
 
-public interface MerchantaccountapplyjournalMapper extends YtIBaseMapper<Merchantaccountapplyjournal> {
+public interface MerchantaccountrecordMapper extends YtIBaseMapper<Merchantaccountapplyjournal> {
 	/**
 	 * add
 	 * 

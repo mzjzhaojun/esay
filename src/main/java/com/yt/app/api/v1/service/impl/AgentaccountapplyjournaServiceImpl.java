@@ -3,7 +3,7 @@ package com.yt.app.api.v1.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
-import com.yt.app.api.v1.mapper.AgentaccountapplyjournaMapper;
+import com.yt.app.api.v1.mapper.AgentaccountrecordMapper;
 import com.yt.app.api.v1.service.AgentaccountapplyjournaService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
@@ -28,7 +28,7 @@ import java.util.Map;
 public class AgentaccountapplyjournaServiceImpl extends YtBaseServiceImpl<Agentaccountapplyjourna, Long>
 		implements AgentaccountapplyjournaService {
 	@Autowired
-	private AgentaccountapplyjournaMapper mapper;
+	private AgentaccountrecordMapper mapper;
 
 	@Override
 	@Transactional

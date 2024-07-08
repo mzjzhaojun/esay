@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.yt.app.api.v1.mapper.AgentMapper;
+import com.yt.app.api.v1.mapper.ExchangeMerchantaccountMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.MerchantaccountMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
@@ -17,6 +18,7 @@ import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Exchange;
+import com.yt.app.api.v1.entity.ExchangeMerchantaccount;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Merchantaccount;
 import com.yt.app.api.v1.entity.Payout;
@@ -56,6 +58,9 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	@Autowired
 	private MerchantaccountMapper merchantaccountmapper;
 
+	@Autowired
+	private ExchangeMerchantaccountMapper exchangemerchantaccountmapper;
+
 	@Override
 	@Transactional
 	public Integer post(Merchant t) {
@@ -83,6 +88,15 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		sm.setUserid(u.getId());
 		sm.setMerchantid(t.getId());
 		merchantaccountmapper.post(sm);
+
+		ExchangeMerchantaccount emc = new ExchangeMerchantaccount();
+		emc.setTotalincome(0.00);
+		emc.setWithdrawamount(0.00);
+		emc.setTowithdrawamount(0.00);
+		emc.setToincomeamount(0.00);
+		emc.setUserid(u.getId());
+		emc.setMerchantid(t.getId());
+		exchangemerchantaccountmapper.post(emc);
 
 		return i;
 	}
@@ -219,8 +233,37 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 			Merchantaccount ma = merchantaccountmapper.getByUserId(m.getUserid());
 			m.setCount(m.getCount() + t.getAmount());// 总量不包含手续费和交易费
 			m.setTodaycount(m.getTodaycount() + t.getAmount());
-			m.setTodaycost(m.getTodaycost() + t.getMerchantcost());
+			m.setTodaycost(m.getTodaycost() + 0);
 			m.setBalance(ma.getBalance());
+			mapper.put(m);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	@Override
+	public void updateInComeUsdt(ExchangeMerchantaccount t) {
+		RLock lock = RedissonUtil.getLock(t.getMerchantid());
+		try {
+			lock.lock();
+			Merchant m = mapper.get(t.getMerchantid());
+			m.setUsdtbalance(t.getBalance());
+			mapper.put(m);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+
+	}
+
+	@Override
+	public void withdrawamountUsdt(ExchangeMerchantaccount t) {
+		RLock lock = RedissonUtil.getLock(t.getMerchantid());
+		try {
+			lock.lock();
+			Merchant m = mapper.get(t.getMerchantid());
+			m.setUsdtbalance(t.getBalance());
 			mapper.put(m);
 		} catch (Exception e) {
 		} finally {

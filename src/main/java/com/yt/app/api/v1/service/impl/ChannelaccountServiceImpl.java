@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.ChannelaccountMapper;
-import com.yt.app.api.v1.mapper.ChannelaccountapplyjournaMapper;
+import com.yt.app.api.v1.mapper.ChannelaccountrecordMapper;
 import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
@@ -37,7 +37,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Autowired
 	private ChannelService channelservice;
 	@Autowired
-	private ChannelaccountapplyjournaMapper channelaccountapplyjournamapper;
+	private ChannelaccountrecordMapper channelaccountapplyjournamapper;
 
 	@Override
 	@Transactional

@@ -6,19 +6,19 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.yt.app.api.v1.mapper.MerchantMapper;
-import com.yt.app.api.v1.mapper.MerchantaccountMapper;
-import com.yt.app.api.v1.mapper.MerchantaccountrecordMapper;
+import com.yt.app.api.v1.mapper.ExchangeMerchantaccountMapper;
+import com.yt.app.api.v1.mapper.ExchangeMerchantaccountrecordMapper;
 import com.yt.app.api.v1.mapper.MerchantaccountbankMapper;
 import com.yt.app.api.v1.service.MerchantService;
-import com.yt.app.api.v1.service.MerchantaccountService;
+import com.yt.app.api.v1.service.ExchangeMerchantaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Merchant;
-import com.yt.app.api.v1.entity.Merchantaccount;
-import com.yt.app.api.v1.entity.Merchantaccountapplyjournal;
+import com.yt.app.api.v1.entity.ExchangeMerchantaccount;
+import com.yt.app.api.v1.entity.ExchangeMerchantaccountapplyjournal;
 import com.yt.app.api.v1.entity.Merchantaccountbank;
-import com.yt.app.api.v1.entity.Merchantaccountorder;
+import com.yt.app.api.v1.entity.ExchangeMerchantaccountorder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
@@ -36,8 +36,8 @@ import java.util.Map;
  */
 
 @Service
-public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccount, Long>
-		implements MerchantaccountService {
+public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<ExchangeMerchantaccount, Long>
+		implements ExchangeMerchantaccountService {
 
 	@Autowired
 	private MerchantMapper merchantmapper;
@@ -46,53 +46,53 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	private MerchantService merchantservice;
 
 	@Autowired
-	private MerchantaccountMapper mapper;
+	private ExchangeMerchantaccountMapper mapper;
 
 	@Autowired
 	private MerchantaccountbankMapper merchantaccountbankmapper;
 
 	@Autowired
-	private MerchantaccountrecordMapper merchantaccountapplyjournalmapper;
+	private ExchangeMerchantaccountrecordMapper exchangemerchantaccountapplyjournalmapper;
 
 	@Override
 	@Transactional
-	public Integer post(Merchantaccount t) {
+	public Integer post(ExchangeMerchantaccount t) {
 		Integer i = mapper.post(t);
 		return i;
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Merchantaccount> list(Map<String, Object> param) {
+	public YtIPage<ExchangeMerchantaccount> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return new YtPageBean<Merchantaccount>(Collections.emptyList());
+				return new YtPageBean<ExchangeMerchantaccount>(Collections.emptyList());
 			}
 		}
-		List<Merchantaccount> list = mapper.list(param);
-		return new YtPageBean<Merchantaccount>(param, list, count);
+		List<ExchangeMerchantaccount> list = mapper.list(param);
+		return new YtPageBean<ExchangeMerchantaccount>(param, list, count);
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public Merchantaccount get(Long id) {
-		Merchantaccount t = mapper.get(id);
+	public ExchangeMerchantaccount get(Long id) {
+		ExchangeMerchantaccount t = mapper.get(id);
 		return t;
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public Merchantaccount getData() {
-		Merchantaccount t = mapper.getByUserId(SysUserContext.getUserId());
+	public ExchangeMerchantaccount getData() {
+		ExchangeMerchantaccount t = mapper.getByUserId(SysUserContext.getUserId());
 		return t;
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public Merchantaccount getDataBank() {
-		Merchantaccount t = mapper.getByUserId(SysUserContext.getUserId());
+	public ExchangeMerchantaccount getDataBank() {
+		ExchangeMerchantaccount t = mapper.getByUserId(SysUserContext.getUserId());
 		List<Merchantaccountbank> listbanks = merchantaccountbankmapper.listByUserid(SysUserContext.getUserId());
 		t.setListbanks(listbanks);
 		return t;
@@ -100,9 +100,9 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public Merchantaccount getDataBank(Long id) {
+	public ExchangeMerchantaccount getDataBank(Long id) {
 		Merchant m = merchantmapper.get(id);
-		Merchantaccount t = mapper.getByUserId(m.getUserid());
+		ExchangeMerchantaccount t = mapper.getByUserId(m.getUserid());
 		List<Merchantaccountbank> listbanks = merchantaccountbankmapper.listByUserid(m.getUserid());
 		t.setListbanks(listbanks);
 		return t;
@@ -113,12 +113,12 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	 */
 	@Override
 	@Transactional
-	public void totalincome(Merchantaccountorder t) {
+	public void totalincome(ExchangeMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
-			Merchantaccount ma = mapper.getByUserId(t.getUserid());
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			ExchangeMerchantaccount ma = mapper.getByUserId(t.getUserid());
+			ExchangeMerchantaccountapplyjournal maaj = new ExchangeMerchantaccountapplyjournal();
 
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(t.getUsername());
@@ -135,9 +135,9 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出金额
 
-			maaj.setRemark("充值人民币待确认￥：" + String.format("%.2f", t.getAmountreceived()));
+			maaj.setRemark("充值USDT待确认：" + String.format("%.2f", t.getAmountreceived()));
 			//
-			merchantaccountapplyjournalmapper.post(maaj);
+			exchangemerchantaccountapplyjournalmapper.post(maaj);
 			ma.setToincomeamount(maaj.getPretoincomeamount());
 			mapper.put(ma);
 		} catch (Exception e) {
@@ -151,14 +151,14 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	 */
 	@Override
 	@Transactional
-	public void updateTotalincome(Merchantaccountorder mao) {
+	public void updateTotalincome(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
-			Merchantaccount t = mapper.getByUserId(mao.getUserid());
+			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			ExchangeMerchantaccountapplyjournal maaj = new ExchangeMerchantaccountapplyjournal();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -173,16 +173,16 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(mao.getAmountreceived());// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("充值成功￥：" + String.format("%.2f", mao.getAmountreceived()));
+			maaj.setRemark("充值USDT成功：" + String.format("%.2f", mao.getAmountreceived()));
 			//
-			merchantaccountapplyjournalmapper.post(maaj);
+			exchangemerchantaccountapplyjournalmapper.post(maaj);
 
 			t.setTotalincome(maaj.getPosttotalincome());// 收入增加金额
 			t.setToincomeamount(maaj.getPretoincomeamount());// 待收入减去金额.
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 			mapper.put(t);
 			// 更新余额
-			merchantservice.updateInCome(t);
+			merchantservice.updateInComeUsdt(t);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -192,13 +192,13 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	// 拒绝充值
 	@Override
 	@Transactional
-	public void turndownTotalincome(Merchantaccountorder mao) {
+	public void turndownTotalincome(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
-			Merchantaccount t = mapper.getByUserId(mao.getUserid());
+			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			ExchangeMerchantaccountapplyjournal maaj = new ExchangeMerchantaccountapplyjournal();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -214,9 +214,9 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("审核拒绝充值￥：" + String.format("%.2f", mao.getAmountreceived()));
+			maaj.setRemark("审核拒绝USDT充值：" + String.format("%.2f", mao.getAmountreceived()));
 			//
-			merchantaccountapplyjournalmapper.post(maaj);
+			exchangemerchantaccountapplyjournalmapper.post(maaj);
 
 			t.setToincomeamount(maaj.getPretoincomeamount());
 			mapper.put(t);
@@ -229,13 +229,13 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	// 客户取消
 	@Override
 	@Transactional
-	public void cancleTotalincome(Merchantaccountorder mao) {
+	public void cancleTotalincome(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
-			Merchantaccount t = mapper.getByUserId(mao.getUserid());
+			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			ExchangeMerchantaccountapplyjournal maaj = new ExchangeMerchantaccountapplyjournal();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -251,9 +251,9 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("取消充值￥：" + String.format("%.2f", mao.getAmountreceived()));
+			maaj.setRemark("取消USDT充值：" + String.format("%.2f", mao.getAmountreceived()));
 			//
-			merchantaccountapplyjournalmapper.post(maaj);
+			exchangemerchantaccountapplyjournalmapper.post(maaj);
 
 			t.setToincomeamount(maaj.getPretoincomeamount());
 			mapper.put(t);
@@ -271,12 +271,12 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	// 待确认支出
 	@Override
 	@Transactional
-	public void withdrawamount(Merchantaccountorder t) {
+	public void withdrawamount(ExchangeMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
-			Merchantaccount ma = mapper.getByUserId(t.getUserid());
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			ExchangeMerchantaccount ma = mapper.getByUserId(t.getUserid());
+			ExchangeMerchantaccountapplyjournal maaj = new ExchangeMerchantaccountapplyjournal();
 
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(t.getUsername());
@@ -292,16 +292,16 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("冻结待提现￥：" + String.format("%.2f", t.getAmountreceived()));
+			maaj.setRemark("冻结USDT待提现：" + String.format("%.2f", t.getAmountreceived()));
 			//
-			merchantaccountapplyjournalmapper.post(maaj);
+			exchangemerchantaccountapplyjournalmapper.post(maaj);
 
 			ma.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
 			ma.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
 			ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
 			mapper.put(ma);
 
-			merchantservice.withdrawamount(ma);
+			merchantservice.withdrawamountUsdt(ma);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -311,13 +311,13 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	// 提现成功
 	@Override
 	@Transactional
-	public void updateWithdrawamount(Merchantaccountorder mao) {
+	public void updateWithdrawamount(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
-			Merchantaccount t = mapper.getByUserId(mao.getUserid());
+			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			ExchangeMerchantaccountapplyjournal maaj = new ExchangeMerchantaccountapplyjournal();
 			//
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
@@ -334,9 +334,9 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());// 总支出
 			maaj.setPosttowithdrawamount(mao.getAmountreceived());// 确认支出
-			maaj.setRemark("提现成功￥：" + String.format("%.2f", mao.getAmountreceived()));
+			maaj.setRemark("提现USDT成功：" + String.format("%.2f", mao.getAmountreceived()));
 			//
-			merchantaccountapplyjournalmapper.post(maaj);
+			exchangemerchantaccountapplyjournalmapper.post(maaj);
 			t.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
 			t.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
@@ -350,13 +350,13 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	// 提现失败
 	@Override
 	@Transactional
-	public void turndownWithdrawamount(Merchantaccountorder mao) {
+	public void turndownWithdrawamount(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
-			Merchantaccount t = mapper.getByUserId(mao.getUserid());
+			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			ExchangeMerchantaccountapplyjournal maaj = new ExchangeMerchantaccountapplyjournal();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -372,9 +372,9 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("审核拒绝提现￥：" + String.format("%.2f", mao.getAmountreceived()));
+			maaj.setRemark("审核拒绝USDT提现：" + String.format("%.2f", mao.getAmountreceived()));
 			//
-			merchantaccountapplyjournalmapper.post(maaj);
+			exchangemerchantaccountapplyjournalmapper.post(maaj);
 			t.setTowithdrawamount(maaj.getPretowithdrawamount());
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 			mapper.put(t);
@@ -387,14 +387,14 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	// 取消提现
 	@Override
 	@Transactional
-	public void cancleWithdrawamount(Merchantaccountorder mao) {
+	public void cancleWithdrawamount(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
-			Merchantaccount t = mapper.getByUserId(mao.getUserid());
+			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			ExchangeMerchantaccountapplyjournal maaj = new ExchangeMerchantaccountapplyjournal();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -410,9 +410,9 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("取消提现￥：" + String.format("%.2f", mao.getAmountreceived()));
+			maaj.setRemark("取消USDT提现：" + String.format("%.2f", mao.getAmountreceived()));
 			//
-			merchantaccountapplyjournalmapper.post(maaj);
+			exchangemerchantaccountapplyjournalmapper.post(maaj);
 			t.setTowithdrawamount(maaj.getPretowithdrawamount());
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 			mapper.put(t);
@@ -429,12 +429,12 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	// 待确认代付
 	@Override
 	@Transactional
-	public void payout(Merchantaccountorder t) {
+	public void payout(ExchangeMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
-			Merchantaccount ma = mapper.getByUserId(t.getUserid());
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			ExchangeMerchantaccount ma = mapper.getByUserId(t.getUserid());
+			ExchangeMerchantaccountapplyjournal maaj = new ExchangeMerchantaccountapplyjournal();
 
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(t.getUsername());
@@ -452,7 +452,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
 			maaj.setRemark("待确认代付￥：" + String.format("%.2f", t.getAmountreceived()));
 			//
-			merchantaccountapplyjournalmapper.post(maaj);
+			exchangemerchantaccountapplyjournalmapper.post(maaj);
 			ma.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出金额
 			ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
 			mapper.put(ma);
@@ -465,13 +465,13 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	// 确认代付
 	@Override
 	@Transactional
-	public void updatePayout(Merchantaccountorder mao) {
+	public void updatePayout(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
-			Merchantaccount t = mapper.getByUserId(mao.getUserid());
+			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			ExchangeMerchantaccountapplyjournal maaj = new ExchangeMerchantaccountapplyjournal();
 			//
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
@@ -490,7 +490,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttowithdrawamount(mao.getAmountreceived());// 确认支出
 			maaj.setRemark("代付成功￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
-			merchantaccountapplyjournalmapper.post(maaj);
+			exchangemerchantaccountapplyjournalmapper.post(maaj);
 			//
 			t.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
 			t.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
@@ -505,13 +505,13 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	// 拒绝代付
 	@Override
 	@Transactional
-	public void turndownPayout(Merchantaccountorder mao) {
+	public void turndownPayout(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
-			Merchantaccount t = mapper.getByUserId(mao.getUserid());
+			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			ExchangeMerchantaccountapplyjournal maaj = new ExchangeMerchantaccountapplyjournal();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -529,7 +529,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
 			maaj.setRemark("代付失败￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
-			merchantaccountapplyjournalmapper.post(maaj);
+			exchangemerchantaccountapplyjournalmapper.post(maaj);
 			t.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
 			t.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
@@ -543,13 +543,13 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	// fail
 	@Override
 	@Transactional
-	public void failPayout(Merchantaccountorder mao) {
+	public void failPayout(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
-			Merchantaccount t = mapper.getByUserId(mao.getUserid());
+			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			ExchangeMerchantaccountapplyjournal maaj = new ExchangeMerchantaccountapplyjournal();
 			maaj.setTenant_id(t.getTenant_id());
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
@@ -568,7 +568,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
 			maaj.setRemark("代付失败￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
-			merchantaccountapplyjournalmapper.postAndTenantid(maaj);
+			exchangemerchantaccountapplyjournalmapper.postAndTenantid(maaj);
 			t.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
 			t.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
@@ -582,15 +582,15 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	// 取消代付
 	@Override
 	@Transactional
-	public void canclePayout(Merchantaccountorder mao) {
+	public void canclePayout(ExchangeMerchantaccountorder mao) {
 		//
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
-			Merchantaccount t = mapper.getByUserId(mao.getUserid());
+			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			ExchangeMerchantaccountapplyjournal maaj = new ExchangeMerchantaccountapplyjournal();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -608,7 +608,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
 			maaj.setRemark("取消代付￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
-			merchantaccountapplyjournalmapper.post(maaj);
+			exchangemerchantaccountapplyjournalmapper.post(maaj);
 			t.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
 			t.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
@@ -626,12 +626,12 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	// 待确认代付
 	@Override
 	@Transactional
-	public void exchange(Merchantaccountorder t) {
+	public void exchange(ExchangeMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
-			Merchantaccount ma = mapper.getByUserId(t.getUserid());
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			ExchangeMerchantaccount ma = mapper.getByUserId(t.getUserid());
+			ExchangeMerchantaccountapplyjournal maaj = new ExchangeMerchantaccountapplyjournal();
 
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(t.getUsername());
@@ -649,7 +649,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
 			maaj.setRemark("换汇待确认￥：" + String.format("%.2f", t.getAmountreceived()));
 			//
-			merchantaccountapplyjournalmapper.post(maaj);
+			exchangemerchantaccountapplyjournalmapper.post(maaj);
 			ma.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出金额
 			ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
 			mapper.put(ma);
@@ -662,13 +662,13 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	// 确认代付
 	@Override
 	@Transactional
-	public void updateExchange(Merchantaccountorder mao) {
+	public void updateExchange(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
-			Merchantaccount t = mapper.getByUserId(mao.getUserid());
+			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			ExchangeMerchantaccountapplyjournal maaj = new ExchangeMerchantaccountapplyjournal();
 			//
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
@@ -687,7 +687,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttowithdrawamount(mao.getAmountreceived());// 确认支出
 			maaj.setRemark("换汇成功￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
-			merchantaccountapplyjournalmapper.post(maaj);
+			exchangemerchantaccountapplyjournalmapper.post(maaj);
 			//
 			t.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
 			t.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
@@ -702,13 +702,13 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	// 拒绝代付
 	@Override
 	@Transactional
-	public void turndownExchange(Merchantaccountorder mao) {
+	public void turndownExchange(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
-			Merchantaccount t = mapper.getByUserId(mao.getUserid());
+			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			ExchangeMerchantaccountapplyjournal maaj = new ExchangeMerchantaccountapplyjournal();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -726,7 +726,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
 			maaj.setRemark("换汇失败￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
-			merchantaccountapplyjournalmapper.post(maaj);
+			exchangemerchantaccountapplyjournalmapper.post(maaj);
 			t.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
 			t.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
@@ -740,15 +740,15 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 	// 取消代付
 	@Override
 	@Transactional
-	public void cancleExchange(Merchantaccountorder mao) {
+	public void cancleExchange(ExchangeMerchantaccountorder mao) {
 		//
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
-			Merchantaccount t = mapper.getByUserId(mao.getUserid());
+			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			//
-			Merchantaccountapplyjournal maaj = new Merchantaccountapplyjournal();
+			ExchangeMerchantaccountapplyjournal maaj = new ExchangeMerchantaccountapplyjournal();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -766,7 +766,7 @@ public class MerchantaccountServiceImpl extends YtBaseServiceImpl<Merchantaccoun
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
 			maaj.setRemark("取消换汇￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
-			merchantaccountapplyjournalmapper.post(maaj);
+			exchangemerchantaccountapplyjournalmapper.post(maaj);
 			t.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
 			t.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());

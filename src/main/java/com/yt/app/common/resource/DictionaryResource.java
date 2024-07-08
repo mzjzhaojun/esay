@@ -43,6 +43,8 @@ public class DictionaryResource implements Serializable {
 	public static final Integer ORDERTYPE_21 = 21; // 提现
 	public static final Integer ORDERTYPE_22 = 22; // 换汇
 	public static final Integer ORDERTYPE_23 = 23; // 代付
+	public static final Integer ORDERTYPE_24 = 24; // usdt充值
+	public static final Integer ORDERTYPE_25 = 25; // usdt提现
 
 	/**
 	 * 代付资金明细类型

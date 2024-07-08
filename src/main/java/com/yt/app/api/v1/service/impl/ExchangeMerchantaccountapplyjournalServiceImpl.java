@@ -3,12 +3,12 @@ package com.yt.app.api.v1.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
-import com.yt.app.api.v1.mapper.SystemaccountrecordMapper;
-import com.yt.app.api.v1.service.SystemcapitalrecordService;
+import com.yt.app.api.v1.mapper.ExchangeMerchantaccountrecordMapper;
+import com.yt.app.api.v1.service.ExchangeMerchantaccountapplyjournalService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
-import com.yt.app.api.v1.entity.Systemcapitalrecord;
+import com.yt.app.api.v1.entity.ExchangeMerchantaccountapplyjournal;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
@@ -21,43 +21,45 @@ import java.util.Map;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2023-11-16 20:07:25
+ * @version v1 @createdate2023-11-15 09:44:15
  */
 
 @Service
-public class SystemcapitalrecordServiceImpl extends YtBaseServiceImpl<Systemcapitalrecord, Long>
-		implements SystemcapitalrecordService {
+public class ExchangeMerchantaccountapplyjournalServiceImpl
+		extends YtBaseServiceImpl<ExchangeMerchantaccountapplyjournal, Long>
+		implements ExchangeMerchantaccountapplyjournalService {
 	@Autowired
-	private SystemaccountrecordMapper mapper;
+	private ExchangeMerchantaccountrecordMapper mapper;
 
 	@Override
 	@Transactional
-	public Integer post(Systemcapitalrecord t) {
+	public Integer post(ExchangeMerchantaccountapplyjournal t) {
 		Integer i = mapper.post(t);
 		return i;
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Systemcapitalrecord> list(Map<String, Object> param) {
+	public YtIPage<ExchangeMerchantaccountapplyjournal> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return new YtPageBean<Systemcapitalrecord>(Collections.emptyList());
+				return new YtPageBean<ExchangeMerchantaccountapplyjournal>(Collections.emptyList());
 			}
 		}
-		List<Systemcapitalrecord> list = mapper.list(param);
+		List<ExchangeMerchantaccountapplyjournal> list = mapper.list(param);
 		list.forEach(maaj -> {
 			maaj.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + maaj.getType()));
 		});
-		return new YtPageBean<Systemcapitalrecord>(param, list, count);
+		return new YtPageBean<ExchangeMerchantaccountapplyjournal>(param, list, count);
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public Systemcapitalrecord get(Long id) {
-		Systemcapitalrecord t = mapper.get(id);
+	public ExchangeMerchantaccountapplyjournal get(Long id) {
+		ExchangeMerchantaccountapplyjournal t = mapper.get(id);
 		return t;
 	}
+
 }

@@ -13,7 +13,7 @@ import com.yt.app.common.base.YtIBaseMapper;
  * @version v1 @createdate2023-11-16 20:07:25
  */
 
-public interface SystemcapitalrecordMapper extends YtIBaseMapper<Systemcapitalrecord> {
+public interface SystemaccountrecordMapper extends YtIBaseMapper<Systemcapitalrecord> {
 	/**
 	 * add
 	 * 
