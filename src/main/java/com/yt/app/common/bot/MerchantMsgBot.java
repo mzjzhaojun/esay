@@ -227,13 +227,14 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 					ss.setQrcode(url);
 					ss.setPayamt(amount);
 					ss.setBankowner("客户");
+
 					String ordernum = exchangeservice.submit(ss);
 
 					Double exchange = Double.valueOf(RedisUtil.get(SystemConstant.CACHE_SYS_EXCHANGE));
 					// 提交转发数据
 					Tgmerchantchannelmsg tmm = new Tgmerchantchannelmsg();
 					tmm.setMid(tmg.getMerchantid());
-					tmm.setCid(tmg.getChannelid());
+					// tmm.setCid(tmg.getChannelid());
 					tmm.setChatid(chatid);
 					tmm.setMreplyid(replyid);
 					tmm.setOrdernum(ordernum);
@@ -252,8 +253,8 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 					tmg.setTodaycount(tmg.getTodaycount() + tmm.getAmount());
 					tmg.setCount(tmg.getCount() + tmm.getAmount());
 					tgmerchantgroupmapper.put(tmg);
-				} catch (TelegramApiException e) {
-					e.printStackTrace();
+				} catch (Exception e) {
+					sendText(chatid, e.getMessage());
 				}
 			}
 		}

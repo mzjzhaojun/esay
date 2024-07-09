@@ -73,17 +73,16 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 					cat.setChannelcode(cll.getCode());
 					cat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
 					cat.setAmount(exchange.getAmount());// 操作资金
-					cat.setDeal(exchange.getChanneldeal());// 交易费
-					cat.setOnecost(exchange.getChannelcost());// 手续费
-					cat.setExchange(cll.getExchange());
+					cat.setDeal(exchange.getChannelpay());// 交易费
+					cat.setOnecost(exchange.getChannelonecost());// 手续费
+					cat.setExchange(exchange.getChannelrealtimeexchange());
 					cat.setAccname(exchange.getAccname());
 					cat.setAccnumber(exchange.getAccnumer());
-					cat.setChannelexchange(cll.getExchange());
+					cat.setChannelexchange(exchange.getChanneldowpoint());
 					cat.setAmountreceived(exchange.getChannelpay());
 					cat.setType(DictionaryResource.ORDERTYPE_22);
 					cat.setOrdernum(exchange.getChannelordernum());
-					cat.setRemark("换汇资金￥：" + cat.getAmount() + " 交易费：" + String.format("%.2f", cat.getDeal()) + " 手续费："
-							+ cat.getOnecost());
+					cat.setRemark("换汇资金￥：" + cat.getAmount() + " 手续费：" + cat.getOnecost());
 					channelaccountordermapper.post(cat);
 					channelaccountservice.exchangeamount(cat);
 					Tgchannelgroup tgchannelgroup = tgchannelgroupmapper.getByChannelId(exchange.getChannelid());

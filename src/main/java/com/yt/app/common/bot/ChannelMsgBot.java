@@ -93,7 +93,7 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 	}
 
 	private void handlemessage(String message, Tgchannelgroup tmg) {
-		if (message.equals("lx")) {// 汇率
+		if (message.equals("#h")) {// 汇率
 			List<Payconfig> list = payconfigservice.getDataTop();
 			StringBuffer sb = new StringBuffer();
 			Integer i = 1;

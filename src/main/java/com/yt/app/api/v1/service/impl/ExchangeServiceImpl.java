@@ -26,6 +26,7 @@ import com.yt.app.api.v1.service.ExchangeMerchantaccountService;
 import com.yt.app.api.v1.service.ExchangeService;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.MerchantcustomerbanksService;
+import com.yt.app.api.v1.service.PayconfigService;
 import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
@@ -45,6 +46,7 @@ import com.yt.app.api.v1.entity.ExchangeMerchantaccount;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccountorder;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Merchantaisle;
+import com.yt.app.api.v1.entity.Payconfig;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.vo.ExchangeVO;
@@ -126,6 +128,8 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	private TgmerchantgroupMapper tgmerchantgroupmapper;
 	@Autowired
 	private MerchantcustomerbanksService merchantcustomerbanksservice;
+	@Autowired
+	private PayconfigService payconfigservice;
 
 	@Override
 	@Transactional
@@ -133,7 +137,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		ExchangeMerchantaccount ma = exchangemerchantaccountmapper.getByUserId(SysUserContext.getUserId());
 
 		if (t.getAmount() <= 0 || t.getAmount() > ma.getBalance()) {
-			throw new YtException("金额不能小于1，大于余额");
+			throw new YtException("账户余额不足");
 		}
 
 		///////////////////////////////////////////////////// 录入换汇订单/////////////////////////////////////////////////////
@@ -151,7 +155,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		t.setMerchantordernum("EM" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantrealtimeexchange(t.getExchange());
 		t.setMerchantdowpoint(m.getExchangedownpoint());
-		t.setMerchantpay(t.getAmount() / (t.getExchange() - m.getExchangedownpoint()));// 商户usdt支付总额
+		t.setMerchantpay(t.getAmount() / (t.getExchange() + m.getExchangedownpoint()));// 商户usdt支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);// 商戶發起
 		t.setRemark(
 				"换汇新增￥：" + String.format("%.2f", t.getAmount()) + ",USDT" + String.format("%.2f", t.getMerchantpay()));
@@ -202,9 +206,10 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			Assert.notNull(cl, "没有可用的渠道!");
 			t.setChannelid(cl.getId());
 			t.setChannelname(cl.getName());
-			t.setChannelcost(0.00);// 渠道手续费
-			t.setChanneldeal(0.00);
-			t.setChannelpay(t.getAmount() / (t.getExchange() - cl.getDownpoint()));// 渠道总支付usdt
+			t.setChannelonecost(cl.getExchangeonecost());
+			t.setChannelrealtimeexchange(t.getExchange() + cl.getExchangedownpoint());// 渠道手续费
+			t.setChanneldowpoint(cl.getExchangedownpoint());
+			t.setChannelpay(t.getAmount() / t.getChannelrealtimeexchange());// 渠道总支付usdt
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		}
 
@@ -217,19 +222,19 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		mao.setNkname(m.getNikname());
 		mao.setMerchantcode(m.getCode());
 		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
-		mao.setExchange(t.getExchange() - m.getExchangedownpoint());
+		mao.setExchange(t.getExchange() + m.getExchangedownpoint());
 		mao.setMerchantexchange(m.getExchange());
 		mao.setAccname(t.getAccname());
 		mao.setAccnumber(t.getAccnumer());
 		mao.setRealtimeexchange(t.getExchange());
-		mao.setDowpoint(m.getDownpoint());
+		mao.setDowpoint(m.getExchangedownpoint());
 		mao.setAmount(t.getAmount());// 操作资金
 		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
 		mao.setType(DictionaryResource.ORDERTYPE_22);
 		mao.setOrdernum(t.getMerchantordernum());
 		mao.setUsdtval(t.getMerchantpay());
 		mao.setRemark("换汇操作资金：" + t.getAmount() + " usdt：" + String.format("%.2f", t.getMerchantpay()) + " 手续费："
-				+ m.getOnecost());
+				+ m.getExchangeonecost());
 		exchangemerchantaccountordermapper.post(mao);
 		exchangemerchantaccountservice.exchange(mao);
 
@@ -263,6 +268,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		}
 		// 渠道余额
 		t.setChannelbalance(cl.getBalance());
+		t.setExchange(t.getMerchantrealtimeexchange() + t.getMerchantdowpoint());
 		//
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 		return mapper.post(t);
@@ -322,7 +328,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		return new YtBody("成功", 200);
 	}
 
-	// 飞机提交订单
+	// API提交订单
 	@Override
 	public String submit(SysSubmitDTO ss) {
 		String id = ss.getMerchantid();
@@ -331,13 +337,15 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 		ExchangeMerchantaccount ma = exchangemerchantaccountmapper.getByUserId(mc.getUserid());
 		if (ma.getBalance() < ss.getPayamt() || ss.getPayamt() <= 0) {
-			throw new YtException("代付金额输入错误!");
+			throw new YtException("账户余额不足!");
 		}
 
 		List<Merchantaisle> listmc = merchantaislemapper.getByMid(mc.getId());
 		if (listmc == null || listmc.size() == 0) {
 			throw new YtException("商戶沒有配置通道!");
 		}
+
+		Payconfig pc = payconfigservice.getData();
 
 		Exchange pt = new Exchange();
 		pt.setAccname(ss.getBankowner());
@@ -349,12 +357,13 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		pt.setAisleid(listmc.get(0).getAisleid());
 		pt.setBankname(ss.getBankname());
 		pt.setQrcode(ss.getQrcode());
-		add(pt, mc);
+		pt.setExchange(pc.getExchange());
+		addExchange(pt, mc);
 		return pt.getOrdernum();
 	}
 
 	@Transactional
-	public Integer add(Exchange t, Merchant m) {
+	public void addExchange(Exchange t, Merchant m) {
 
 		if (!m.getStatus()) {
 			throw new YtException("商户被冻结!");
@@ -370,9 +379,10 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		t.setMerchantordernum("EM" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantrealtimeexchange(t.getExchange());
 		t.setMerchantdowpoint(m.getExchangedownpoint());
-		t.setMerchantpay(t.getAmount() / (t.getExchange() - m.getExchangedownpoint()));// 商户usdt支付总额
+		t.setMerchantpay(t.getAmount() / (t.getExchange() + m.getExchangedownpoint()));// 商户usdt支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61); // 盘口发起
-		t.setRemark("群内换汇新增￥：" + String.format("%.2f", t.getAmount()) + ",USDT" + String.format("%.2f", t.getMerchantpay()));
+		t.setRemark("群内换汇新增￥：" + String.format("%.2f", t.getAmount()) + ",USDT"
+				+ String.format("%.2f", t.getMerchantpay()));
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
 
@@ -420,9 +430,10 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			Assert.notNull(cl, "没有可用的渠道!");
 			t.setChannelid(cl.getId());
 			t.setChannelname(cl.getName());
-			t.setChannelcost(cl.getOnecost());// 渠道手续费
-			t.setChanneldeal(t.getAmount() * (cl.getExchange() / 1000));
-			t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
+			t.setChannelonecost(cl.getExchangeonecost());
+			t.setChannelrealtimeexchange(t.getExchange() + cl.getExchangedownpoint());// 渠道手续费
+			t.setChanneldowpoint(cl.getExchangedownpoint());
+			t.setChannelpay(t.getAmount() / t.getChannelrealtimeexchange());// 渠道总支付usdt
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		}
 
@@ -435,17 +446,18 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		mao.setNkname(m.getNikname());
 		mao.setMerchantcode(m.getCode());
 		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
-		mao.setExchange(m.getExchange());
+		mao.setExchange(t.getExchange() + m.getExchangedownpoint());
+		mao.setMerchantexchange(m.getExchange());
 		mao.setAccname(t.getAccname());
 		mao.setAccnumber(t.getAccnumer());
 		mao.setRealtimeexchange(t.getExchange());
-		mao.setDowpoint(m.getDownpoint());
+		mao.setDowpoint(m.getExchangedownpoint());
 		mao.setAmount(t.getAmount());// 操作资金
 		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
 		mao.setType(DictionaryResource.ORDERTYPE_22);
 		mao.setOrdernum(t.getMerchantordernum());
 		mao.setRemark("群内换汇操作资金：" + t.getAmount() + " usdt：" + String.format("%.2f", t.getMerchantpay()) + " 手续费："
-				+ m.getOnecost());
+				+ m.getExchangeonecost());
 		exchangemerchantaccountordermapper.post(mao);
 		exchangemerchantaccountservice.exchange(mao);
 
@@ -480,11 +492,11 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		}
 		// 渠道余额
 		t.setChannelbalance(cl.getBalance());
+		t.setExchange(t.getMerchantrealtimeexchange() + t.getMerchantdowpoint());
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 		//
-		Integer i = mapper.post(t);
+		mapper.post(t);
 		TenantIdContext.remove();
-		return i;
 	}
 
 	@Override

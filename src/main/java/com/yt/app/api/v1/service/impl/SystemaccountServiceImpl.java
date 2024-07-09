@@ -72,7 +72,9 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		return t;
 	}
 
-	// 收入
+	/**
+	 * 商戶收入
+	 */
 	@Override
 	@Transactional
 	public void updateTotalincome(Merchantaccountorder mao) {
@@ -99,7 +101,9 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		}
 	}
 
-	// 商户提现
+	/**
+	 * 商戶支出
+	 */
 	@Override
 	@Transactional
 	public void updateWithdrawamount(Merchantaccountorder mao) {
@@ -126,7 +130,9 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		}
 	}
 
-	// 商户代付
+	/**
+	 * 商户代付
+	 */
 	@Override
 	@Transactional
 	public void updatePayout(Merchantaccountorder mao) {
@@ -141,6 +147,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			scr.setPrewithdrawamount(t.getWithdrawamount());
 			scr.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
 			scr.setAmount(mao.getAmountreceived());
+
 			t.setWithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount());
 			mapper.put(t);
@@ -153,36 +160,9 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		}
 	}
 
-	// 商户换汇
-	@Override
-	@Transactional
-	public void updateExchange(ExchangeMerchantaccountorder mao) {
-		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
-		try {
-			lock.lock();
-			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
-			Systemaccountrecord scr = new Systemaccountrecord();
-			scr.setSystemaccountid(t.getId());
-			scr.setName(mao.getUsername());
-			scr.setType(DictionaryResource.ORDERTYPE_22);
-			scr.setPrewithdrawamount(t.getWithdrawamount());
-			scr.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
-			scr.setAmount(mao.getAmountreceived());
-
-			t.setUsdttotalincome(t.getTotalincome() + mao.getAmountreceived());
-			t.setUsdtbalance(t.getTotalincome() - t.getWithdrawamount());
-			mapper.put(t);
-
-			scr.setBalance(t.getBalance());//
-			scr.setRemark("商戶换汇金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
-			systemcapitalrecordmapper.post(scr);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	// 代理提现支出
+	/**
+	 * 代理支出
+	 */
 	@Override
 	@Transactional
 	public void updateWithdrawamount(Agentaccountorder mao) {
@@ -193,7 +173,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getUsername());
-			scr.setType(DictionaryResource.ORDERTYPE_21);
+			scr.setType(DictionaryResource.ORDERTYPE_26);
 			scr.setPrewithdrawamount(t.getWithdrawamount());
 			scr.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
 			scr.setAmount(mao.getAmountreceived());
@@ -209,6 +189,39 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		}
 	}
 
+	/**
+	 * 商戶換汇
+	 */
+	@Override
+	@Transactional
+	public void updateExchange(ExchangeMerchantaccountorder mao) {
+		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
+		try {
+			lock.lock();
+			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
+			Systemaccountrecord scr = new Systemaccountrecord();
+			scr.setSystemaccountid(t.getId());
+			scr.setName(mao.getUsername());
+			scr.setType(DictionaryResource.ORDERTYPE_22);
+			scr.setUsdtprewithdrawamount(t.getUsdtwithdrawamount());
+			scr.setUsdtpostwithdrawamount(t.getUsdtwithdrawamount() + mao.getAmountreceived());
+			scr.setUsdtamount(mao.getAmountreceived());
+
+			t.setUsdtwithdrawamount(t.getUsdtwithdrawamount() + mao.getAmountreceived());
+			t.setUsdtbalance(t.getUsdttotalincome() - t.getUsdtwithdrawamount());
+			mapper.put(t);
+			scr.setUsdtbalance(t.getUsdtbalance());//
+			scr.setRemark("商户USDT换汇：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
+			systemcapitalrecordmapper.post(scr);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * 换汇收入
+	 */
 	@Override
 	public void updateUsdtTotalincome(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
@@ -220,15 +233,15 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getUsername());
 			scr.setType(DictionaryResource.ORDERTYPE_24);
-			scr.setPretotalincome(t.getTotalincome());// 总收入
-			scr.setPosttotalincome(t.getTotalincome() + mao.getAmountreceived());// 待确认收入
-			scr.setAmount(mao.getAmountreceived());// 操作金额
+			scr.setUsdtpretotalincome(t.getUsdttotalincome());// 总收入
+			scr.setUsdtposttotalincome(t.getUsdttotalincome() + mao.getAmountreceived());// 待确认收入
+			scr.setUsdtamount(mao.getAmountreceived());// 操作金额
 
-			t.setUsdttotalincome(t.getTotalincome() + mao.getAmountreceived());
-			t.setUsdtbalance(t.getTotalincome() - t.getWithdrawamount());
+			t.setUsdttotalincome(t.getUsdttotalincome() + mao.getAmountreceived());
+			t.setUsdtbalance(t.getUsdttotalincome() - t.getUsdtwithdrawamount());
 			mapper.put(t);
 
-			scr.setBalance(t.getBalance());//
+			scr.setUsdtbalance(t.getUsdtbalance());//
 			scr.setRemark("商户USDT充值：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 		} catch (Exception e) {
@@ -238,6 +251,9 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 
 	}
 
+	/**
+	 * 换汇支出
+	 */
 	@Override
 	public void updateUsdtWithdrawamount(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
@@ -248,15 +264,15 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getUsername());
 			scr.setType(DictionaryResource.ORDERTYPE_25);
-			scr.setPrewithdrawamount(t.getWithdrawamount());
-			scr.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
-			scr.setAmount(mao.getAmountreceived());
+			scr.setUsdtprewithdrawamount(t.getUsdtwithdrawamount());
+			scr.setUsdtpostwithdrawamount(t.getUsdtwithdrawamount() + mao.getAmountreceived());
+			scr.setUsdtamount(mao.getAmountreceived());
 
-			t.setUsdtwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
-			t.setUsdtbalance(t.getTotalincome() - t.getWithdrawamount());
+			t.setUsdtwithdrawamount(t.getUsdtwithdrawamount() + mao.getAmountreceived());
+			t.setUsdtbalance(t.getUsdttotalincome() - t.getUsdtwithdrawamount());
 			mapper.put(t);
 
-			scr.setBalance(t.getBalance());//
+			scr.setUsdtbalance(t.getUsdtbalance());//
 			scr.setRemark("商户USDT提现：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 		} catch (Exception e) {

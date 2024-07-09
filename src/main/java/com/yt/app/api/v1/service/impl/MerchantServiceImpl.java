@@ -230,11 +230,8 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		try {
 			lock.lock();
 			Merchant m = mapper.get(t.getMerchantid());
-			Merchantaccount ma = merchantaccountmapper.getByUserId(m.getUserid());
-			m.setCount(m.getCount() + t.getAmount());// 总量不包含手续费和交易费
-			m.setTodaycount(m.getTodaycount() + t.getAmount());
-			m.setTodaycost(m.getTodaycost() + 0);
-			m.setBalance(ma.getBalance());
+			ExchangeMerchantaccount ma = exchangemerchantaccountmapper.getByUserId(m.getUserid());
+			m.setUsdtbalance(ma.getBalance());
 			mapper.put(m);
 		} catch (Exception e) {
 		} finally {

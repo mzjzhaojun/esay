@@ -189,7 +189,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 		}
 	}
 
-	// 拒绝充值
+	// 拒绝换汇
 	@Override
 	@Transactional
 	public void turndownTotalincome(ExchangeMerchantaccountorder mao) {
@@ -308,7 +308,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 		}
 	}
 
-	// 提现成功
+	// 换汇成功
 	@Override
 	@Transactional
 	public void updateWithdrawamount(ExchangeMerchantaccountorder mao) {
@@ -347,7 +347,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 		}
 	}
 
-	// 提现失败
+	// 提现换汇
 	@Override
 	@Transactional
 	public void turndownWithdrawamount(ExchangeMerchantaccountorder mao) {
@@ -384,7 +384,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 		}
 	}
 
-	// 取消提现
+	// 取消换汇
 	@Override
 	@Transactional
 	public void cancleWithdrawamount(ExchangeMerchantaccountorder mao) {
@@ -426,7 +426,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	 * =============================================================代付
 	 * 
 	 */
-	// 待确认代付
+	// 待确认换汇
 	@Override
 	@Transactional
 	public void payout(ExchangeMerchantaccountorder t) {
@@ -462,7 +462,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 		}
 	}
 
-	// 确认代付
+	// 确认换汇
 	@Override
 	@Transactional
 	public void updatePayout(ExchangeMerchantaccountorder mao) {
@@ -502,7 +502,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 		}
 	}
 
-	// 拒绝代付
+	// 拒绝换汇
 	@Override
 	@Transactional
 	public void turndownPayout(ExchangeMerchantaccountorder mao) {
@@ -579,7 +579,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 		}
 	}
 
-	// 取消代付
+	// 取消换汇
 	@Override
 	@Transactional
 	public void canclePayout(ExchangeMerchantaccountorder mao) {
@@ -659,7 +659,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 		}
 	}
 
-	// 确认代付
+	// 确认换汇
 	@Override
 	@Transactional
 	public void updateExchange(ExchangeMerchantaccountorder mao) {
@@ -699,7 +699,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 		}
 	}
 
-	// 拒绝代付
+	// 拒绝换汇
 	@Override
 	@Transactional
 	public void turndownExchange(ExchangeMerchantaccountorder mao) {
@@ -737,7 +737,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 		}
 	}
 
-	// 取消代付
+	// 取消换汇
 	@Override
 	@Transactional
 	public void cancleExchange(ExchangeMerchantaccountorder mao) {

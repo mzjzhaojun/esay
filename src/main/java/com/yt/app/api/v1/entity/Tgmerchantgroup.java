@@ -17,8 +17,6 @@ public class Tgmerchantgroup extends YtBaseEntity<Tgmerchantgroup> {
 
 	Long id;
 	Long tenant_id;
-	Long channelid;
-	String channelname;
 	Long merchantid;
 	String merchantname;
 	String merchantcode;
@@ -29,7 +27,7 @@ public class Tgmerchantgroup extends YtBaseEntity<Tgmerchantgroup> {
 	String mangers;
 	String customermangers;
 	Double cost;
-	Boolean tmexchange;
+	Boolean realtimeexchange;
 	Double downpoint;
 	Double exchange;
 	Integer todaycountorder;
@@ -45,14 +43,12 @@ public class Tgmerchantgroup extends YtBaseEntity<Tgmerchantgroup> {
 
 	public Tgmerchantgroup(Long id, Long tenant_id, Long channelid, String channelname, Long merchantid,
 			String merchantname, String merchantcode, Boolean status, Long tgid, String tggroupname,
-			String adminmangers, String mangers, String customermangers, Double cost, Boolean tmexchange,
+			String adminmangers, String mangers, String customermangers, Double cost, Boolean realtimeexchange,
 			Double downpoint, Double exchange, Integer todaycountorder, Integer countorder, Double todaycount,
 			Double count, Long create_by, java.util.Date create_time, Long update_by, java.util.Date update_time,
 			String remark, String version) {
 		this.id = id;
 		this.tenant_id = tenant_id;
-		this.channelid = channelid;
-		this.channelname = channelname;
 		this.merchantid = merchantid;
 		this.merchantname = merchantname;
 		this.merchantcode = merchantcode;
@@ -63,7 +59,7 @@ public class Tgmerchantgroup extends YtBaseEntity<Tgmerchantgroup> {
 		this.mangers = mangers;
 		this.customermangers = customermangers;
 		this.cost = cost;
-		this.tmexchange = tmexchange;
+		this.realtimeexchange = realtimeexchange;
 		this.downpoint = downpoint;
 		this.exchange = exchange;
 		this.todaycountorder = todaycountorder;

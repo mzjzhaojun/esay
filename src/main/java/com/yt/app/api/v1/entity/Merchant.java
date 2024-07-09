@@ -31,6 +31,7 @@ public class Merchant extends YtBaseEntity<Merchant> {
 	Double exchange;
 	Double onecost;
 	Double downpoint;
+	Double exchangeonecost;
 	Double exchangedownpoint;
 	Long agentid;
 	String agentname;

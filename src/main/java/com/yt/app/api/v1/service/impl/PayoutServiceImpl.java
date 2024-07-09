@@ -134,7 +134,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		Merchantaccount maccount = merchantaccountmapper.getByUserId(SysUserContext.getUserId());
 
 		if (t.getAmount() <= 0 || t.getAmount() > maccount.getBalance()) {
-			throw new YtException("金额不能小于1，大于余额");
+			throw new YtException("账户余额不足");
 		}
 		///////////////////////////////////////////////////// 录入代付订单/////////////////////////////////////////////////////
 		Merchant m = merchantmapper.getByUserId(SysUserContext.getUserId());
@@ -354,7 +354,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 		Merchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
 		if (ma.getBalance() < ss.getPayamt() || ss.getPayamt() <= 0) {
-			throw new YtException("代付金额输入错误!");
+			throw new YtException("账户余额不足");
 		}
 
 		Boolean val = PayUtil.Md5Submit(ss, mc.getAppkey());
@@ -377,7 +377,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		pt.setAisleid(listmc.get(0).getAisleid());
 		pt.setBankname(ss.getBankname());
 		pt.setMerchantorderid(ss.getMerchantorderid());
-		add(pt, mc);
+		addPayout(pt, mc);
 		// 返回
 		SysResultVO sr = new SysResultVO();
 		sr.setBankcode(ss.getBankcode());
@@ -393,7 +393,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Transactional
-	public Integer add(Payout t, Merchant m) {
+	public void addPayout(Payout t, Merchant m) {
 		TenantIdContext.setTenantId(m.getTenant_id());
 		///////////////////////////////////////////////////// 盘口录入代付订单/////////////////////////////////////////////////////
 		t.setUserid(m.getUserid());
@@ -516,9 +516,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		// 小计
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 		//
-		Integer i = mapper.post(t);
+		mapper.post(t);
 		TenantIdContext.remove();
-		return i;
 	}
 
 	@Override

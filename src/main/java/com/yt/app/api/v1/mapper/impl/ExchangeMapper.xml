@@ -3,13 +3,13 @@
 <mapper namespace="com.yt.app.api.v1.mapper.ExchangeMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantrealtimeexchange,merchantdowpoint,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankcode,bankname,bankaddress,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,type,qrcode,imgurl,income,notifyurl,notifystatus,remark,channelbalance,version
+		id,tenant_id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantrealtimeexchange,merchantdowpoint,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelrealtimeexchange,channeldowpoint,channelpay,channelonecost,accname,accnumer,bankcode,bankname,bankaddress,amount,exchange,status,successtime,backlong,create_by,create_time,update_by,update_time,type,qrcode,imgurl,income,notifyurl,notifystatus,remark,channelbalance,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
 		type="com.yt.app.api.v1.entity.Exchange">
 	</resultMap>
-	
+
 	<!-- ResultMap -->
 	<resultMap id="ResultMapVO"
 		type="com.yt.app.api.v1.vo.ExchangeVO">
@@ -18,24 +18,25 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Exchange">
 		insert into
-		exchange(id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantrealtimeexchange,merchantdowpoint,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankcode,bankname,bankaddress,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,type,qrcode,imgurl,income,notifyurl,notifystatus,remark,channelbalance)
+		exchange(id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantrealtimeexchange,merchantdowpoint,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelrealtimeexchange,channeldowpoint,channelpay,channelonecost,accname,accnumer,bankcode,bankname,bankaddress,amount,exchange,status,successtime,backlong,create_by,create_time,update_by,update_time,type,qrcode,imgurl,income,notifyurl,notifystatus,remark,channelbalance)
 		values
-		(#{id},#{userid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantrealtimeexchange},#{merchantdowpoint},#{merchantpay},#{aisleid},#{aislename},#{agentid},#{agentordernum},#{agentincome},#{channelid},#{channelname},#{channelordernum},#{channelcost},#{channeldeal},#{channelpay},#{accname},#{accnumer},#{bankcode},#{bankname},#{bankaddress},#{amount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{type},#{qrcode},#{imgurl},#{income},#{notifyurl},#{notifystatus},#{remark},#{channelbalance})
+		(#{id},#{userid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantrealtimeexchange},#{merchantdowpoint},#{merchantpay},#{aisleid},#{aislename},#{agentid},#{agentordernum},#{agentincome},#{channelid},#{channelname},#{channelordernum},#{channelrealtimeexchange},#{channeldowpoint},#{channelpay},#{channelonecost},#{accname},#{accnumer},#{bankcode},#{bankname},#{bankaddress},#{amount},#{exchange},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{type},#{qrcode},#{imgurl},#{income},#{notifyurl},#{notifystatus},#{remark},#{channelbalance})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		exchange(id,tenant_id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantrealtimeexchange,merchantdowpoint,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelcost,channeldeal,channelpay,accname,accnumer,bankcode,bankname,bankaddress,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income,notifyurl,notifystatus,remark,channelbalance)
+		exchange(id,tenant_id,userid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantrealtimeexchange,merchantdowpoint,merchantpay,aisleid,aislename,agentid,agentordernum,agentincome,channelid,channelname,channelordernum,channelrealtimeexchange,channeldowpoint,channelpay,accname,accnumer,bankcode,bankname,bankaddress,amount,status,successtime,backlong,create_by,create_time,update_by,update_time,imgurl,income,notifyurl,notifystatus,remark,channelbalance)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{userid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantrealtimeexchange},#{merchantdowpoint},#{merchantpay},#{aisleid},#{aislename},#{agentid},#{agentordernum},#{agentincome},#{channelid},#{channelname},#{channelordernum},#{channelcost},#{channeldeal},#{channelpay},#{accname},#{accnumer},#{bankcode},#{bankname},#{bankaddress},#{amount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{imgurl},#{income},#{notifyurl},#{notifystatus},#{remark},#{channelbalance})
+			(#{id},#{tenant_id},#{userid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantrealtimeexchange},#{merchantdowpoint},#{merchantpay},#{aisleid},#{aislename},#{agentid},#{agentordernum},#{agentincome},#{channelid},#{channelname},#{channelordernum},#{channelrealtimeexchange},#{channeldowpoint},#{channelpay},#{accname},#{accnumer},#{bankcode},#{bankname},#{bankaddress},#{amount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{imgurl},#{income},#{notifyurl},#{notifystatus},#{remark},#{channelbalance})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
 		delete from exchange
-		where id = #{id}
+		where id =
+		#{id}
 	</delete>
 	<!-- update -->
 	<update id="put"
@@ -96,11 +97,11 @@
 			<if test="channelordernum != null">
 				channelordernum= #{channelordernum},
 			</if>
-			<if test="channelcost != null">
-				channelcost= #{channelcost},
+			<if test="channelrealtimeexchange != null">
+				channelrealtimeexchange= #{channelrealtimeexchange},
 			</if>
-			<if test="channeldeal != null">
-				channeldeal= #{channeldeal},
+			<if test="channeldowpoint != null">
+				channeldowpoint= #{channeldowpoint},
 			</if>
 			<if test="channelpay != null">
 				channelpay= #{channelpay},
@@ -195,7 +196,7 @@
 			</if>
 		</where>
 	</select>
-	
+
 	<!-- selectAddlist -->
 	<select id="selectAddlist" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
@@ -242,16 +243,16 @@
 			</if>
 		</where>
 	</select>
-	
+
 	<!--getByChannelOrdernum -->
-	<select id="getByChannelOrdernum" parameterType="java.lang.String"
-		resultMap="ResultMap">
+	<select id="getByChannelOrdernum"
+		parameterType="java.lang.String" resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from exchange
 		where channelordernum= #{channelordernum}
 	</select>
-	
+
 	<!--getByOrdernum -->
 	<select id="getByOrdernum" parameterType="java.lang.String"
 		resultMap="ResultMap">
@@ -260,7 +261,7 @@
 		from exchange
 		where ordernum= #{ordernum}
 	</select>
-	
+
 	<!-- getList -->
 	<select id="selectNotifylist" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
@@ -271,8 +272,8 @@
 			notifystatus = 61
 		</where>
 	</select>
-	
-	
+
+
 	<!-- listByArrayId -->
 	<select id="listByArrayId" parameterType="java.util.HashMap"
 		resultMap="ResultMap">

@@ -34,8 +34,9 @@ public class Exchange extends YtBaseEntity<Exchange> {
 	Long channelid;
 	String channelname;
 	String channelordernum;
-	Double channelcost;
-	Double channeldeal;
+	Double channelrealtimeexchange;
+	Double channeldowpoint;
+	Double channelonecost;
 	Double channelpay;
 	String accname;
 	String accnumer;
@@ -61,13 +62,14 @@ public class Exchange extends YtBaseEntity<Exchange> {
 	}
 
 	public Exchange(Long id, Long tenant_id, Long userid, String ordernum, Long merchantid, String merchantname,
-			String merchantcode, String merchantordernum, Double merchantrealtimeexchange, Double merchantdowpoint, Double merchantpay,
-			Long aisleid, String aislename, Long agentid, String agentordernum, Double agentincome, Long channelid,
-			String channelname, String channelordernum, Double channelcost, Double channeldeal, Double channelpay,
-			String accname, String accnumer, String bankcode, String bankname, String bankaddress, Double amount,
-			Integer status, java.util.Date successtime, Long backlong, Long create_by, java.util.Date create_time,
-			Long update_by, java.util.Date update_time, String imgurl, Double income, String notifyurl,
-			Integer notifystatus, String remark, Double channelbalance, Integer version) {
+			String merchantcode, String merchantordernum, Double merchantrealtimeexchange, Double merchantdowpoint,
+			Double merchantpay, Long aisleid, String aislename, Long agentid, String agentordernum, Double agentincome,
+			Long channelid, String channelname, String channelordernum, Double channelrealtimeexchange,
+			Double channeldowpoint, Double channelpay, String accname, String accnumer, String bankcode,
+			String bankname, String bankaddress, Double amount, Integer status, java.util.Date successtime,
+			Long backlong, Long create_by, java.util.Date create_time, Long update_by, java.util.Date update_time,
+			String imgurl, Double income, String notifyurl, Integer notifystatus, String remark, Double channelbalance,
+			Integer version) {
 		this.id = id;
 		this.tenant_id = tenant_id;
 		this.userid = userid;
@@ -87,8 +89,8 @@ public class Exchange extends YtBaseEntity<Exchange> {
 		this.channelid = channelid;
 		this.channelname = channelname;
 		this.channelordernum = channelordernum;
-		this.channelcost = channelcost;
-		this.channeldeal = channeldeal;
+		this.channelrealtimeexchange = channelrealtimeexchange;
+		this.channeldowpoint = channeldowpoint;
 		this.channelpay = channelpay;
 		this.accname = accname;
 		this.accnumer = accnumer;
