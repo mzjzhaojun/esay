@@ -128,6 +128,13 @@
 		where id = #{id}
 	</update>
 
+	<update id="updatemerchantid" parameterType="java.lang.Long">
+		update
+		tgmerchantgroup
+		set merchantid = null,merchantname = null
+		where merchantid = #{id}
+	</update>
+
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"
 		resultMap="ResultMap">

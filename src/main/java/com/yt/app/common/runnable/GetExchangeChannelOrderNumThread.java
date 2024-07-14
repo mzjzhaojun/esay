@@ -96,7 +96,7 @@ public class GetExchangeChannelOrderNumThread implements Runnable {
 					what.append("卡号：" + strnum + "\n");
 					what.append("金额：" + exchange.getAmount() + "\n");
 					what.append("发起时间：" + DateTimeUtil.getDateTime() + "\n");
-					what.append("客户请你们尽快处理\n");
+					what.append("请你们尽快处理\n");
 					if (tgchannelgroup != null) {
 						Tgmerchantchannelmsg tmm = tgmerchantchannelmsgmapper.getOrderNum(exchange.getOrdernum());
 						if (tmm != null) {

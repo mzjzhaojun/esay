@@ -25,7 +25,9 @@ public interface ExchangeService extends YtIBaseService<Exchange, Long> {
 	//
 	Exchange query(String ordernum);
 
-	String submit(SysSubmitDTO ss);
+	Exchange submit(SysSubmitDTO ss);
+
+	void submit(String ordernum);
 
 	YtIPage<ExchangeVO> page(Map<String, Object> param);
 }

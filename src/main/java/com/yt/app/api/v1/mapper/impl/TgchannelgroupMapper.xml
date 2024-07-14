@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.TgchannelgroupMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,channelid,channelname,channelnkname,status,tgid,tggroupname,create_by,create_time,update_by,update_time,pushstatus,pushname,mangers,remark,version
+		id,tenant_id,channelid,channelname,channelnkname,status,tgid,tggroupname,create_by,create_time,update_by,update_time,adminmangers,customermangers,mangers,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -13,18 +13,18 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Tgchannelgroup">
 		insert into
-		tgchannelgroup(id,channelid,channelname,channelnkname,status,tgid,tggroupname,create_by,create_time,update_by,update_time,pushstatus,pushname,mangers,remark)
+		tgchannelgroup(id,channelid,channelname,channelnkname,status,tgid,tggroupname,create_by,create_time,update_by,update_time,adminmangers,customermangers,mangers,remark)
 		values
-		(#{id},#{channelid},#{channelname},#{channelnkname},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{pushstatus},#{pushname},#{mangers},#{remark})
+		(#{id},#{channelid},#{channelname},#{channelnkname},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{adminmangers},#{customermangers},#{mangers},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		tgchannelgroup(id,tenant_id,channelid,channelname,channelnkname,status,tgid,tggroupname,create_by,create_time,update_by,update_time,pushstatus,pushname,remark)
+		tgchannelgroup(id,tenant_id,channelid,channelname,channelnkname,status,tgid,tggroupname,create_by,create_time,update_by,update_time,adminmangers,customermangers,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{channelid},#{channelname},#{channelnkname},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{pushstatus},#{pushname},#{remark})
+			(#{id},#{tenant_id},#{channelid},#{channelname},#{channelnkname},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{adminmangers},#{customermangers},#{remark})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -70,11 +70,11 @@
 			<if test="update_time != null">
 				update_time= #{update_time},
 			</if>
-			<if test="pushstatus != null">
-				pushstatus= #{pushstatus},
+			<if test="adminmangers != null">
+				adminmangers= #{adminmangers},
 			</if>
-			<if test="pushname != null">
-				pushname= #{pushname},
+			<if test="customermangers != null">
+				customermangers= #{customermangers},
 			</if>
 			<if test="mangers != null">
 				mangers= #{mangers},
@@ -88,6 +88,14 @@
 		</set>
 		where id = #{id} and version = #{version}
 	</update>
+
+	<update id="updatechannelid" parameterType="java.lang.Long">
+		update
+		tgchannelgroup
+		set channelid = null,channelname = null
+		where channelid = #{id}
+	</update>
+
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"
 		resultMap="ResultMap">
@@ -121,7 +129,7 @@
 		from tgchannelgroup
 		where channelid= #{channelid}
 	</select>
-	
+
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">

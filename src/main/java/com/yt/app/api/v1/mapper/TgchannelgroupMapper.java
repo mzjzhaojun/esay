@@ -122,4 +122,13 @@ public interface TgchannelgroupMapper extends YtIBaseMapper<Tgchannelgroup> {
 	@YtRedisCacheAnnotation(classs = Tgchannelgroup.class)
 	public Tgchannelgroup getByChannelId(Long channelId);
 
+	/**
+	 * getByTgId
+	 *
+	 * @param id id
+	 * @return Tgmerchantgroup
+	 */
+	@YtRedisCacheAnnotation(classs = Tgchannelgroup.class)
+	public Integer updatechannelid(Long id);
+
 }

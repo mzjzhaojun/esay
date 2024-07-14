@@ -603,7 +603,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 					what.append("卡号：" + t.getAccnumer() + "\n");
 					what.append("金额：" + t.getAmount() + "\n");
 					what.append("成功时间：" + DateTimeUtil.getDateTime() + "\n");
-					what.append("业务部已处理完毕，请你们核实查看\n");
+					what.append("业务部已处理完毕，请你们核实\n");
 					if (tgmerchantgroup != null)
 						mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
 				}

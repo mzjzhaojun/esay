@@ -136,10 +136,6 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	public Integer post(Exchange t) {
 		ExchangeMerchantaccount ma = exchangemerchantaccountmapper.getByUserId(SysUserContext.getUserId());
 
-		if (t.getAmount() <= 0 || t.getAmount() > ma.getBalance()) {
-			throw new YtException("账户余额不足");
-		}
-
 		///////////////////////////////////////////////////// 录入换汇订单/////////////////////////////////////////////////////
 		Merchant m = merchantmapper.getByUserId(SysUserContext.getUserId());
 		if (!m.getStatus()) {
@@ -159,6 +155,11 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);// 商戶發起
 		t.setRemark(
 				"换汇新增￥：" + String.format("%.2f", t.getAmount()) + ",USDT" + String.format("%.2f", t.getMerchantpay()));
+
+		if (t.getMerchantpay() <= 0 || t.getMerchantpay() > ma.getBalance()) {
+			throw new YtException("账户余额不足");
+		}
+
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
 
@@ -168,7 +169,8 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
 		List<Channel> listc = channelmapper.listByArrayId(cids);
 		Assert.notEmpty(listc, "没有可用渠道!");
-		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount())
+		List<Channel> listcmm = listc.stream()
+				.filter(c -> c.getMax() >= t.getMerchantpay() && c.getMin() <= t.getMerchantpay())
 				.collect(Collectors.toList());
 		Assert.notEmpty(listcmm, "代付金额超出限额");
 		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
@@ -179,13 +181,13 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 				String[] match = cc.getFirstmatchmoney().split(",");
 				for (int i = 0; i < match.length; i++) {
 					String number = match[i];
-					if (number.indexOf("-") == -1 && t.getAmount().intValue() == Integer.parseInt(number)) {
+					if (number.indexOf("-") == -1 && t.getMerchantpay().intValue() == Integer.parseInt(number)) {
 						cl = cc;
 					} else {
 						String[] matchs = number.split("-");
 						Integer min = Integer.parseInt(matchs[0]);
 						Integer max = Integer.parseInt(matchs[1]);
-						if (t.getAmount().intValue() >= min && t.getAmount().intValue() <= max) {
+						if (t.getMerchantpay().intValue() >= min && t.getMerchantpay().intValue() <= max) {
 							cl = cc;
 						}
 					}
@@ -330,15 +332,10 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 	// API提交订单
 	@Override
-	public String submit(SysSubmitDTO ss) {
+	public Exchange submit(SysSubmitDTO ss) {
 		String id = ss.getMerchantid();
 		Merchant mc = merchantmapper.get(Long.valueOf(id));
 		Assert.notNull(mc, "商户不存在!");
-
-		ExchangeMerchantaccount ma = exchangemerchantaccountmapper.getByUserId(mc.getUserid());
-		if (ma.getBalance() < ss.getPayamt() || ss.getPayamt() <= 0) {
-			throw new YtException("账户余额不足!");
-		}
 
 		List<Merchantaisle> listmc = merchantaislemapper.getByMid(mc.getId());
 		if (listmc == null || listmc.size() == 0) {
@@ -359,7 +356,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		pt.setQrcode(ss.getQrcode());
 		pt.setExchange(pc.getExchange());
 		addExchange(pt, mc);
-		return pt.getOrdernum();
+		return pt;
 	}
 
 	@Transactional
@@ -368,6 +365,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		if (!m.getStatus()) {
 			throw new YtException("商户被冻结!");
 		}
+		ExchangeMerchantaccount ma = exchangemerchantaccountmapper.getByUserId(m.getUserid());
 
 		TenantIdContext.setTenantId(m.getTenant_id());
 		///////////////////////////////////////////////////// 盘口录入代付订单/////////////////////////////////////////////////////
@@ -383,6 +381,11 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61); // 盘口发起
 		t.setRemark("群内换汇新增￥：" + String.format("%.2f", t.getAmount()) + ",USDT"
 				+ String.format("%.2f", t.getMerchantpay()));
+
+		if (ma.getBalance() < t.getMerchantpay() || t.getMerchantpay() <= 0) {
+			throw new YtException("账户余额不足!");
+		}
+
 		Aisle a = aislemapper.get(t.getAisleid());
 		t.setAislename(a.getName());
 
@@ -392,7 +395,8 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
 		List<Channel> listc = channelmapper.listByArrayId(cids);
 		Assert.notEmpty(listc, "没有可用渠道!");
-		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount())
+		List<Channel> listcmm = listc.stream()
+				.filter(c -> c.getMax() >= t.getMerchantpay() && c.getMin() <= t.getMerchantpay())
 				.collect(Collectors.toList());
 		Assert.notEmpty(listcmm, "代付金额超出限额");
 		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
@@ -403,13 +407,13 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 				String[] match = cc.getFirstmatchmoney().split(",");
 				for (int i = 0; i < match.length; i++) {
 					String number = match[i];
-					if (number.indexOf("-") == -1 && t.getAmount().intValue() == Integer.parseInt(number)) {
+					if (number.indexOf("-") == -1 && t.getMerchantpay().intValue() == Integer.parseInt(number)) {
 						cl = cc;
 					} else {
 						String[] matchs = number.split("-");
 						Integer min = Integer.parseInt(matchs[0]);
 						Integer max = Integer.parseInt(matchs[1]);
-						if (t.getAmount().intValue() >= min && t.getAmount().intValue() <= max) {
+						if (t.getMerchantpay().intValue() >= min && t.getMerchantpay().intValue() <= max) {
 							cl = cc;
 						}
 					}
@@ -641,7 +645,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 				what.append("卡号：" + strnum + "\n");
 				what.append("金额：" + t.getAmount() + "\n");
 				what.append("失败时间：" + DateTimeUtil.getDateTime() + "\n");
-				what.append("兑换部已处理完毕，请你们核实查看\n");
+				what.append("兑换部已处理完毕，请你们核实\n");
 				if (tgmerchantgroup != null)
 					mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
 			}
@@ -654,15 +658,22 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	}
 
 	@Override
-	public void exchangemanual(Exchange pt) {
+	public void exchangemanual(Exchange ex) {
 		User u = usermapper.get(SysUserContext.getUserId());
-		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(pt.getRemark()),
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(ex.getRemark()),
 				System.currentTimeMillis());
 		Assert.isTrue(isValid, "验证码错误！");
-		if (pt.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
-			paySuccess(pt);
+		if (ex.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
+			paySuccess(ex);
 		} else {
-			payFail(pt);
+			payFail(ex);
 		}
+	}
+
+	@Override
+	public void submit(String ordernum) {
+		Exchange ex = mapper.getByOrdernum(ordernum);
+		if (ex.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51))
+			paySuccess(ex);
 	}
 }

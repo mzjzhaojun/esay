@@ -132,4 +132,14 @@ public interface TgmerchantgroupMapper extends YtIBaseMapper<Tgmerchantgroup> {
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Tgmerchantgroup.class })
 	public Integer updatetodayvalue(Long Id);
+
+	/**
+	 * update
+	 * 
+	 * @param o Merchant
+	 * @return count
+	 */
+	@YtRedisCacheEvictAnnotation(classs = { Tgmerchantgroup.class })
+	public Integer updatemerchantid(Long Id);
+
 }

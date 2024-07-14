@@ -60,6 +60,7 @@ public class TgchannelgroupServiceImpl extends YtBaseServiceImpl<Tgchannelgroup,
 
 	@Override
 	public Integer putchannel(Tgchannelgroup t) {
+		mapper.updatechannelid(t.getChannelid());
 		Channel ct = channelmapper.get(t.getChannelid());
 		t.setChannelname(ct.getName());
 		return mapper.put(t);

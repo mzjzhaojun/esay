@@ -18,9 +18,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.yt.app.api.v1.entity.Payconfig;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
-import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
-import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
+import com.yt.app.api.v1.service.ExchangeService;
 import com.yt.app.api.v1.service.PayconfigService;
 import com.yt.app.common.base.context.TenantIdContext;
 
@@ -37,10 +36,7 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 	private PayconfigService payconfigservice;
 
 	@Autowired
-	private TgmerchantchannelmsgMapper tgmerchantchannelmsgmapper;
-
-	@Autowired
-	private MerchantMsgBot mbot;
+	private ExchangeService exchangeservice;
 
 	@Override
 	public String getBotUsername() {
@@ -59,8 +55,6 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 
 		Long chatid = update.getMessage().getChat().getId();
 		String message = update.getMessage().getText();
-		Message replymsg = update.getMessage().getReplyToMessage();
-
 		if (message != null) {
 			TenantIdContext.removeFlag();
 			Tgchannelgroup tmg = tgchannelgroupmapper.getByTgGroupId(chatid);
@@ -76,23 +70,17 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 					t.setTggroupname(update.getMessage().getChat().getTitle());
 					tgchannelgroupmapper.post(t);
 				}
-				handlemessage(message, tmg);
+				handlemessage(update, message, tmg);
 			} else {
-				if (replymsg != null) {
-					Integer replyid = replymsg.getMessageId();
-					Tgmerchantchannelmsg tmcm = tgmerchantchannelmsgmapper.getCidReplyid(chatid.toString(), replyid);
-					if (tmcm != null) {
-						mbot.sendReplyText(tmcm.getMid(), tmcm.getMreplyid(), message);
-						sendReplyText(tmcm.getCid(), tmcm.getCreplyid(), "收到，谢谢你的回复.");
-					}
-				}
-				handlemessage(message, tmg);
+				// 处理返回消息
+				handlemessage(update, message, tmg);
 			}
 		}
 		TenantIdContext.remove();
 	}
 
-	private void handlemessage(String message, Tgchannelgroup tmg) {
+	private void handlemessage(Update update, String message, Tgchannelgroup tmg) {
+		String username = update.getMessage().getFrom().getUserName();
 		if (message.equals("#h")) {// 汇率
 			List<Payconfig> list = payconfigservice.getDataTop();
 			StringBuffer sb = new StringBuffer();
@@ -102,6 +90,14 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 				i++;
 			}
 			sendText(tmg.getTgid(), sb.toString());
+		} else if (message.equals("#fs")
+				&& (username.equals(tmg.getAdminmangers()) || username.equals(tmg.getMangers()))) {// 汇率
+			if (update.getMessage().getReplyToMessage() != null) {
+				String text = update.getMessage().getReplyToMessage().getText();
+				Integer index = text.indexOf("单号：") + 3;
+				String ordernum = text.substring(index, index + 16);
+				exchangeservice.submit(ordernum);
+			}
 		}
 	}
 
