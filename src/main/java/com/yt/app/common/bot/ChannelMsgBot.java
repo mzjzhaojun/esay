@@ -18,7 +18,11 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.yt.app.api.v1.entity.Payconfig;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
+import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
+import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
+import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
+import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.service.ExchangeService;
 import com.yt.app.api.v1.service.PayconfigService;
 import com.yt.app.common.base.context.TenantIdContext;
@@ -31,6 +35,12 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 
 	@Autowired
 	private TgchannelgroupMapper tgchannelgroupmapper;
+
+	@Autowired
+	private TgmerchantgroupMapper tgmerchantgroupmapper;
+
+	@Autowired
+	private TgmerchantchannelmsgMapper tgmerchantchannelmsgmapper;
 
 	@Autowired
 	private PayconfigService payconfigservice;
@@ -97,6 +107,15 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 				Integer index = text.indexOf("单号：") + 3;
 				String ordernum = text.substring(index, index + 16);
 				exchangeservice.submit(ordernum);
+				Tgmerchantchannelmsg tmccm = tgmerchantchannelmsgmapper.getOrderNum(text.substring(index, index + 16));
+				Tgmerchantgroup tmmg = tgmerchantgroupmapper.getByTgGroupId(tmccm.getChatid());
+				// 更新
+				tmmg.setTodaycountorder(tmmg.getTodaycountorder() + 1);
+				tmmg.setCountorder(tmmg.getCountorder() + 1);
+				tmmg.setTodayusdcount(tmmg.getTodayusdcount() + tmccm.getUsd());
+				tmmg.setTodaycount(tmmg.getTodaycount() + tmccm.getAmount());
+				tmmg.setCount(tmmg.getCount() + tmccm.getAmount());
+				tgmerchantgroupmapper.put(tmmg);
 			}
 		}
 	}

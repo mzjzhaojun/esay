@@ -246,14 +246,6 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 					tmm.setUsd(amount / exchange);
 					tmm.setCreplyid(replyid);
 					tgmerchantchannelmsgmapper.post(tmm);
-
-					// 更新
-					tmg.setTodaycountorder(tmg.getTodaycountorder() + 1);
-					tmg.setCountorder(tmg.getCountorder() + 1);
-					tmg.setTodayusdcount(tmg.getTodayusdcount() + tmm.getUsd());
-					tmg.setTodaycount(tmg.getTodaycount() + tmm.getAmount());
-					tmg.setCount(tmg.getCount() + tmm.getAmount());
-					tgmerchantgroupmapper.put(tmg);
 				} catch (Exception e) {
 					sendText(chatid, e.getMessage());
 				}
