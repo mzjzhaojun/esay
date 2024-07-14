@@ -181,7 +181,7 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 			sb.append("总打款：" + tmg.getCount() + " ￥\n");
 			sb.append("\n");
 			sendText(chatid, sb.toString());
-		} else if (message.indexOf("￥-") >= 0
+		} else if (message.indexOf("#e") >= 0
 				&& (username.equals(tmg.getAdminmangers()) || username.equals(tmg.getMangers()))) {
 			// 二维码收款单
 			Double amount = 0.00;
