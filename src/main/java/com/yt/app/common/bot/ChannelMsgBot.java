@@ -133,8 +133,7 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 
 				tgchannelgroupmapper.put(tmg);
 			}
-		} else if (message.indexOf("#z") >= 0
-				&& (username.equals(tmg.getAdminmangers()) || username.equals(tmg.getMangers()))
+		} else if (message.equals("#z") && (username.equals(tmg.getAdminmangers()) || username.equals(tmg.getMangers()))
 				|| username.equals(tmg.getCustomermangers())) {
 			// 订单统计
 			StringBuffer sb = new StringBuffer();
