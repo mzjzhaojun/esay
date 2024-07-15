@@ -673,9 +673,10 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	}
 
 	@Override
-	public void submit(String ordernum) {
+	public Exchange submit(String ordernum) {
 		Exchange ex = mapper.getByOrdernum(ordernum);
 		if (ex.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51))
 			paySuccess(ex);
+		return ex;
 	}
 }

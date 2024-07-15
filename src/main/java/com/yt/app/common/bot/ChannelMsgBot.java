@@ -16,6 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.Payconfig;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
@@ -106,17 +107,44 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 				String text = update.getMessage().getReplyToMessage().getText();
 				Integer index = text.indexOf("单号：") + 3;
 				String ordernum = text.substring(index, index + 16);
-				exchangeservice.submit(ordernum);
+				Exchange ex = exchangeservice.submit(ordernum);
 				Tgmerchantchannelmsg tmccm = tgmerchantchannelmsgmapper.getOrderNum(text.substring(index, index + 16));
 				Tgmerchantgroup tmmg = tgmerchantgroupmapper.getByTgGroupId(tmccm.getChatid());
 				// 更新
+
 				tmmg.setTodaycountorder(tmmg.getTodaycountorder() + 1);
 				tmmg.setCountorder(tmmg.getCountorder() + 1);
-				tmmg.setTodayusdcount(tmmg.getTodayusdcount() + tmccm.getUsd());
+
+				tmmg.setTodayusdcount(tmmg.getTodayusdcount() + ex.getMerchantpay());
 				tmmg.setTodaycount(tmmg.getTodaycount() + tmccm.getAmount());
+
 				tmmg.setCount(tmmg.getCount() + tmccm.getAmount());
+				tmmg.setUsdcount(tmmg.getUsdcount() + ex.getMerchantpay());
+
+				tmmg.setRealtimeexchange(ex.getMerchantrealtimeexchange());
+
 				tgmerchantgroupmapper.put(tmmg);
+
+				tmg.setTodaycountorder(tmg.getTodaycountorder() + 1);
+				tmg.setCountorder(tmg.getCountorder() + 1);
+
+				tmg.setTodayusdcount(tmg.getTodayusdcount() + ex.getChannelpay());
+				tmg.setUsdcount(tmg.getUsdcount() + ex.getChannelpay());
+
+				tgchannelgroupmapper.put(tmg);
 			}
+		} else if (message.indexOf("#z") >= 0
+				&& (username.equals(tmg.getAdminmangers()) || username.equals(tmg.getMangers()))
+				|| username.equals(tmg.getCustomermangers())) {
+			// 订单统计
+			StringBuffer sb = new StringBuffer();
+			sb.append("今日订单：" + tmg.getTodaycountorder() + " 笔\n");
+			sb.append("\n");
+			sb.append("今日U款：" + tmg.getTodayusdcount() + " $\n");
+			sb.append("\n");
+			sb.append("总单量：" + tmg.getCountorder() + "\n");
+			sb.append("\n");
+			sendText(tmg.getTgid(), sb.toString());
 		}
 	}
 

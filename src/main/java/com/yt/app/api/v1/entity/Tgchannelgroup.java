@@ -23,6 +23,10 @@ public class Tgchannelgroup extends YtBaseEntity<Tgchannelgroup> {
 	Boolean status;
 	Long tgid;
 	String tggroupname;
+	Double usdcount;
+	Integer todaycountorder;
+	Double todayusdcount;
+	Integer countorder;
 	String adminmangers;
 	String customermangers;
 	String mangers;

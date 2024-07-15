@@ -169,7 +169,7 @@ public class AuthServiceImpl implements AuthService {
 			// 判断ip 是否在配置内
 			List<Merchant> listm = merchantmapper.getListAll(new HashMap<String, Object>());
 			for (int i = 0; i < listm.size(); i++) {
-				if (listm.get(i).getIpaddress().indexOf(ip) >= 0) {
+				if (listm.get(i).getIpaddress() != null && listm.get(i).getIpaddress().indexOf(ip) >= 0) {
 					isValid = true;
 					break;
 				}

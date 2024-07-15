@@ -29,9 +29,9 @@ public class TgmerchantgroupVO extends YtBaseEntity<TgmerchantgroupVO> {
 	String mangers;
 	String customermangers;
 	Double cost;
-	Boolean tmexchange;
-	Double downpoint;
-	Double exchange;
+	Double realtimeexchange;
+	Double costcount;
+	Double usdcount;
 	Integer todaycountorder;
 	Double todayusdcount;
 	Integer countorder;
@@ -43,34 +43,4 @@ public class TgmerchantgroupVO extends YtBaseEntity<TgmerchantgroupVO> {
 	public TgmerchantgroupVO() {
 	}
 
-	public TgmerchantgroupVO(Long id, Long tenant_id, Long channelid, String channelname, Long merchantid,
-			String merchantname, String merchantcode, Boolean status, Long tgid, String tggroupname,
-			String adminmangers, String mangers, String customermangers, Double cost, Boolean tmexchange,
-			Double downpoint, Double exchange, Integer todaycountorder, Integer countorder, Double todaycount,
-			Double count, Long create_by, java.util.Date create_time, Long update_by, java.util.Date update_time,
-			String remark, String version) {
-		this.id = id;
-		this.tenant_id = tenant_id;
-		this.channelid = channelid;
-		this.channelname = channelname;
-		this.merchantid = merchantid;
-		this.merchantname = merchantname;
-		this.merchantcode = merchantcode;
-		this.status = status;
-		this.tgid = tgid;
-		this.tggroupname = tggroupname;
-		this.adminmangers = adminmangers;
-		this.mangers = mangers;
-		this.customermangers = customermangers;
-		this.cost = cost;
-		this.tmexchange = tmexchange;
-		this.downpoint = downpoint;
-		this.exchange = exchange;
-		this.todaycountorder = todaycountorder;
-		this.countorder = countorder;
-		this.todaycount = todaycount;
-		this.count = count;
-		this.remark = remark;
-		this.version = version;
-	}
 }

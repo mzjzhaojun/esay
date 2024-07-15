@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.TgchannelgroupMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,channelid,channelname,channelnkname,status,tgid,tggroupname,create_by,create_time,update_by,update_time,adminmangers,customermangers,mangers,remark,version
+		id,tenant_id,channelid,channelname,channelnkname,status,tgid,tggroupname,usdcount,todayusdcount,todaycountorder,countorder,create_by,create_time,update_by,update_time,adminmangers,customermangers,mangers,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -15,7 +15,7 @@
 		insert into
 		tgchannelgroup(id,channelid,channelname,channelnkname,status,tgid,tggroupname,create_by,create_time,update_by,update_time,adminmangers,customermangers,mangers,remark)
 		values
-		(#{id},#{channelid},#{channelname},#{channelnkname},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{adminmangers},#{customermangers},#{mangers},#{remark})
+		(#{id},#{channelid},#{channelname},#{channelnkname},#{status},#{tgid},#{tggroupname},#{usdcount},#{todayusdcount},#{todaycountorder},#{countorder},#{create_by},#{create_time},#{update_by},#{update_time},#{adminmangers},#{customermangers},#{mangers},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -58,6 +58,18 @@
 			<if test="tggroupname != null">
 				tggroupname= #{tggroupname},
 			</if>
+			<if test="usdcount != null">
+				usdcount= #{usdcount},
+			</if>
+			<if test="todaycountorder != null">
+				todaycountorder= #{todaycountorder},
+			</if>
+			<if test="todayusdcount != null">
+				todayusdcount= #{todayusdcount},
+			</if>
+			<if test="countorder != null">
+				countorder= #{countorder},
+			</if>
 			<if test="create_by != null">
 				create_by= #{create_by},
 			</if>
@@ -89,6 +101,14 @@
 		where id = #{id} and version = #{version}
 	</update>
 
+
+	<update id="updatetodayvalue" parameterType="java.lang.Long">
+		update
+		tgchannelgroup
+		set todaycountorder = 0,todayusdcount = 0
+		where id = #{id}
+	</update>
+	
 	<update id="updatechannelid" parameterType="java.lang.Long">
 		update
 		tgchannelgroup

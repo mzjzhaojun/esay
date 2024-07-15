@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.TgmerchantgroupMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,cost,realtimeexchange,downpoint,exchange,todayusdcount,todaycountorder,countorder,todaycount,count,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,cost,realtimeexchange,costcount,usdcount,todayusdcount,todaycountorder,countorder,todaycount,count,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -18,18 +18,18 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Tgmerchantgroup">
 		insert into
-		tgmerchantgroup(id,tenant_id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,cost,realtimeexchange,downpoint,exchange,todayusdcount,todaycountorder,countorder,todaycount,count,create_by,create_time,update_by,update_time,remark)
+		tgmerchantgroup(id,tenant_id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,cost,realtimeexchange,costcount,usdcount,todayusdcount,todaycountorder,countorder,todaycount,count,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{tenant_id},,#{merchantid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{adminmangers},#{mangers},#{customermangers},#{cost},#{realtimeexchange},#{downpoint},#{exchange},#{todayusdcount},#{todaycountorder},#{countorder},#{todaycount},#{count},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{tenant_id},,#{merchantid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{adminmangers},#{mangers},#{customermangers},#{cost},#{realtimeexchange},#{costcount},#{usdcount},#{todayusdcount},#{todaycountorder},#{countorder},#{todaycount},#{count},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		tgmerchantgroup(id,tenant_id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,cost,realtimeexchange,downpoint,exchange,todaycountorder,countorder,todaycount,count,create_by,create_time,update_by,update_time,remark)
+		tgmerchantgroup(id,tenant_id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,cost,realtimeexchange,costcount,usdcount,todaycountorder,countorder,todaycount,count,create_by,create_time,update_by,update_time,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{merchantid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{adminmangers},#{mangers},#{customermangers},#{cost},#{realtimeexchange},#{downpoint},#{exchange},#{todaycountorder},#{countorder},#{todaycount},#{count},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+			(#{id},#{tenant_id},#{merchantid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{adminmangers},#{mangers},#{customermangers},#{cost},#{realtimeexchange},#{costcount},#{usdcount},#{todaycountorder},#{countorder},#{todaycount},#{count},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -78,11 +78,11 @@
 			<if test="realtimeexchange != null">
 				realtimeexchange= #{realtimeexchange},
 			</if>
-			<if test="downpoint != null">
-				downpoint= #{downpoint},
+			<if test="costcount != null">
+				costcount= #{costcount},
 			</if>
-			<if test="exchange != null">
-				exchange= #{exchange},
+			<if test="usdcount != null">
+				usdcount= #{usdcount},
 			</if>
 			<if test="todaycountorder != null">
 				todaycountorder= #{todaycountorder},

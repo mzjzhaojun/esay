@@ -11,10 +11,12 @@ import org.springframework.stereotype.Component;
 import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Payout;
+import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.mapper.ExchangeMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
+import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.service.PayconfigService;
 import com.yt.app.common.base.context.TenantIdContext;
@@ -47,6 +49,9 @@ public class TaskConfig {
 	@Autowired
 	private TgmerchantgroupMapper tgmerchantgroupmapper;
 
+	@Autowired
+	private TgchannelgroupMapper tgchannelgroupmapper;
+
 	/**
 	 * 更新实时汇率
 	 * 
@@ -71,6 +76,11 @@ public class TaskConfig {
 		List<Tgmerchantgroup> listtmg = tgmerchantgroupmapper.list(new HashMap<String, Object>());
 		listtmg.forEach(mg -> {
 			tgmerchantgroupmapper.updatetodayvalue(mg.getId());
+		});
+
+		List<Tgchannelgroup> listtcg = tgchannelgroupmapper.list(new HashMap<String, Object>());
+		listtcg.forEach(mg -> {
+			tgchannelgroupmapper.updatetodayvalue(mg.getId());
 		});
 	}
 
