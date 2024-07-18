@@ -11,7 +11,7 @@ import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.SimpleDateFormatSerializer;
 import com.alibaba.fastjson.serializer.ToStringSerializer;
-import com.yt.app.common.base.context.AuthRsaKeyContext;
+import com.yt.app.common.base.context.AuthContext;
 import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.exption.YtException;
 
@@ -24,7 +24,7 @@ public class SecurityUtil {
 	 */
 	public static String decrypt(String data) {
 		try {
-			String aesKey = AuthRsaKeyContext.getKey();
+			String aesKey = AuthContext.getKey();
 			byte[] plaintext = RsaUtil.decryptByPrivateKey(Base64.decodeBase64(aesKey), RsaUtil.getPrivateKey());
 			aesKey = new String(plaintext);
 			data = AesUtil.decrypt(data, aesKey);
@@ -45,7 +45,7 @@ public class SecurityUtil {
 			serializeConfig.put(Long.TYPE, ToStringSerializer.instance);
 			serializeConfig.put(Date.class, new SimpleDateFormatSerializer("YY-MM-dd HH:mm"));
 			String dataString = JSON.toJSONString(object, serializeConfig, SerializerFeature.PrettyFormat);
-			String data = AesUtil.encrypt(dataString, AuthRsaKeyContext.getAesKey());
+			String data = AesUtil.encrypt(dataString, AuthContext.getAesKey());
 			return data;
 		} catch (Throwable e) {
 			throw new YtException("用户长时间未登录！",YtCodeEnum.YT401);

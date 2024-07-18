@@ -134,4 +134,10 @@ public class DictionaryResource implements Serializable {
 	public static final Integer TGBOTGROUPRECORD_TYPE_WITHDRAW = 112; // 减款
 	public static final Integer TGBOTGROUPRECORD_TYPE_USDT = 113; // 下发
 
+	/**
+	 * 换汇资金明细类型
+	 */
+	public static final Integer LOG_TYPE_201 = 201; // web
+	public static final Integer LOG_TYPE_202 = 202; // app
+
 }

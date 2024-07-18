@@ -29,9 +29,10 @@ public class Logs implements Serializable {
 	public Logs() {
 	}
 
-	public Logs(String optname, java.util.Date optdate, Integer type) {
+	public Logs(String optname, java.util.Date optdate, String ip, Integer type) {
 		this.optname = optname;
 		this.optdate = optdate;
+		this.requestip = ip;
 		this.type = type;
 	}
 

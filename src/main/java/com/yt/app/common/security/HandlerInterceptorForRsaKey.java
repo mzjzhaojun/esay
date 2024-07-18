@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.yt.app.common.base.context.AuthRsaKeyContext;
+import com.yt.app.common.base.context.AuthContext;
 import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.util.AesUtil;
 import com.yt.app.common.util.RsaUtil;
@@ -30,23 +30,25 @@ public class HandlerInterceptorForRsaKey implements HandlerInterceptor {
 
 	private static final String SIGN = "sign";
 
+	private static final String REAL_IP = "X-Real-IP";
+
 	/**
 	 * 在业务处理器处理请求之前被调用。预处理，可以进行编码、安全控制、权限校验等处理；
 	 */
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		String ip = request.getHeader(REAL_IP);
+		AuthContext.setIp(ip);
 		String siang = request.getHeader(SIGNA);
 		if (StringUtils.isNotBlank(siang)) {
-			AuthRsaKeyContext.setKey(siang);
-		} else {
-
+			AuthContext.setKey(siang);
 		}
 		String key = AesUtil.getKey();
 		String sign = RsaUtil.sign(key.getBytes(), RsaUtil.getPrivateKey());
 		response.addHeader(SIGNA, key);
 		response.addHeader(SIGN, sign);
-		AuthRsaKeyContext.setAesKey(key);
+		AuthContext.setAesKey(key);
 		return true;
 	}
 
@@ -67,8 +69,7 @@ public class HandlerInterceptorForRsaKey implements HandlerInterceptor {
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
 		HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
-		AuthRsaKeyContext.remove();
-		AuthRsaKeyContext.removeAes();
+		AuthContext.removeAll();
 	}
 
 }

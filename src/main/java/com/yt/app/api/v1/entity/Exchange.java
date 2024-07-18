@@ -25,6 +25,7 @@ public class Exchange extends YtBaseEntity<Exchange> {
 	String merchantordernum;
 	Double merchantrealtimeexchange;
 	Double merchantdowpoint;
+	Double merchantonecost;
 	Double merchantpay;
 	Long aisleid;
 	String aislename;

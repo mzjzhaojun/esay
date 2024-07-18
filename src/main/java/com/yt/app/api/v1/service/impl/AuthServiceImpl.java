@@ -7,6 +7,7 @@ import com.yt.app.api.v1.bo.JwtUserBO;
 import com.yt.app.api.v1.bo.SysScopeDataBO;
 import com.yt.app.api.v1.dbo.AuthLoginDTO;
 import com.yt.app.api.v1.dbo.SysUserPermDTO;
+import com.yt.app.api.v1.entity.Logs;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.api.v1.entity.User;
@@ -14,17 +15,20 @@ import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.SystemaccountMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.AuthService;
+import com.yt.app.api.v1.service.LogsService;
 import com.yt.app.api.v1.service.RoleService;
 import com.yt.app.api.v1.service.RolescopeService;
 import com.yt.app.api.v1.service.UserService;
 import com.yt.app.api.v1.vo.AuthLoginVO;
 import com.yt.app.api.v1.vo.SysUserPermVO;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
+import com.yt.app.common.base.context.AuthContext;
 import com.yt.app.common.enums.AuthSourceEnum;
 import com.yt.app.common.enums.SysRoleCodeEnum;
 import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.YtException;
+import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.AuthUtil;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PasswordUtil;
@@ -34,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,6 +62,9 @@ public class AuthServiceImpl implements AuthService {
 
 	@Autowired
 	private UserService isysuserservice;
+
+	@Autowired
+	private LogsService logsservice;
 
 	@Autowired
 	private UserMapper usermapper;
@@ -107,6 +115,8 @@ public class AuthServiceImpl implements AuthService {
 		// 查询系统账户id
 		Systemaccount sca = systemaccountmapper.getByTenantId(userPerm.getTenantId());
 
+		// 写入登录日志
+		logsservice.post(new Logs(username, new Date(), AuthContext.getIp(), DictionaryResource.LOG_TYPE_201));
 		// 登录
 		return AuthUtil
 				.login(JwtUserBO.builder().authSourceEnum(AuthSourceEnum.B).userId(Long.valueOf(userPerm.getId()))
@@ -153,6 +163,9 @@ public class AuthServiceImpl implements AuthService {
 				System.currentTimeMillis());
 		// Assert.isTrue(isValid, "验证码错误！");
 
+		// 写入登录日志
+		logsservice.post(new Logs(username, new Date(), AuthContext.getIp(), DictionaryResource.LOG_TYPE_202));
+
 		return AuthUtil.login(JwtUserBO.builder().authSourceEnum(AuthSourceEnum.B)
 				.userId(Long.valueOf(userPerm.getId())).username(userPerm.getUsername()).deptId(userPerm.getDept_id())
 				.tenantId(userPerm.getTenantId()).accounttype(userPerm.getAccounttype()).build());
@@ -160,7 +173,7 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public String getPublicKey(HttpServletRequest request) {
-		String ip = request.getHeader("X-Real-IP");
+		String ip = AuthContext.getIp();
 		if (ip == null) {
 			return RsaUtil.getPublicKey();
 		}

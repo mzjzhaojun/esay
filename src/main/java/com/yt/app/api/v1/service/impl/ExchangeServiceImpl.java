@@ -151,7 +151,8 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		t.setMerchantordernum("EM" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantrealtimeexchange(t.getExchange());
 		t.setMerchantdowpoint(m.getExchangedownpoint());
-		t.setMerchantpay(t.getAmount() / (t.getExchange() + m.getExchangedownpoint()));// 商户usdt支付总额
+		t.setMerchantonecost(m.getExchangeonecost());
+		t.setMerchantpay((t.getAmount() / (t.getExchange() + m.getExchangedownpoint())) + t.getMerchantonecost());// 商户usdt支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);// 商戶發起
 		t.setRemark(
 				"换汇新增￥：" + String.format("%.2f", t.getAmount()) + ",USDT" + String.format("%.2f", t.getMerchantpay()));
@@ -377,7 +378,8 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		t.setMerchantordernum("EM" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantrealtimeexchange(t.getExchange());
 		t.setMerchantdowpoint(m.getExchangedownpoint());
-		t.setMerchantpay(t.getAmount() / (t.getExchange() + m.getExchangedownpoint()));// 商户usdt支付总额
+		t.setMerchantonecost(m.getExchangeonecost());
+		t.setMerchantpay((t.getAmount() / (t.getExchange() + m.getExchangedownpoint())) + t.getMerchantonecost());// 商户usdt支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61); // 盘口发起
 		t.setRemark("群内换汇新增￥：" + String.format("%.2f", t.getAmount()) + ",USDT"
 				+ String.format("%.2f", t.getMerchantpay()));

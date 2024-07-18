@@ -174,7 +174,7 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 			sb.append("今日订单：" + tmg.getTodaycountorder() + " 笔\n");
 			sb.append("\n");
 			sb.append("今日打款：" + tmg.getTodaycount() + "￥\n");
-			sb.append("今日U款：" + tmg.getTodayusdcount() + " $\n");
+			sb.append("今日U款：" + String.format("%.0f", tmg.getTodayusdcount()) + " $\n");
 			sb.append("\n");
 			sb.append("总单量：" + tmg.getCountorder() + "\n");
 			sb.append("总打款：" + tmg.getCount() + " ￥\n");
