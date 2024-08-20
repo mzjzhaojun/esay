@@ -1,6 +1,6 @@
 package com.yt.app.api.v1.vo;
 
-import com.yt.app.api.v1.dbo.base.BaseVO;
+import com.yt.app.common.base.BaseVO;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

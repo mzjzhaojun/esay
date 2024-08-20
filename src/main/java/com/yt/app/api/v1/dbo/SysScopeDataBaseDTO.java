@@ -1,7 +1,7 @@
 package com.yt.app.api.v1.dbo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.yt.app.api.v1.dbo.base.BasePageDTO;
+import com.yt.app.common.base.BasePageDTO;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

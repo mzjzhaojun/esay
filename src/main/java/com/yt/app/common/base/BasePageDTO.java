@@ -1,4 +1,4 @@
-package com.yt.app.api.v1.dbo.base;
+package com.yt.app.common.base;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

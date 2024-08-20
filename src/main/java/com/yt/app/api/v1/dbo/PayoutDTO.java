@@ -3,7 +3,7 @@ package com.yt.app.api.v1.dbo;
 
 
 
-import com.yt.app.api.v1.dbo.base.BaseDTO;
+import com.yt.app.common.base.BaseDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

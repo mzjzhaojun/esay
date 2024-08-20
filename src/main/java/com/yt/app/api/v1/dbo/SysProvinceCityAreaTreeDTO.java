@@ -10,8 +10,8 @@ import lombok.experimental.SuperBuilder;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
-import com.yt.app.api.v1.dbo.base.BaseDTO;
 import com.yt.app.api.v1.dbo.it.HandleParam;
+import com.yt.app.common.base.BaseDTO;
 import com.yt.app.common.enums.SysProvinceCityAreaTypeEnum;
 
 /**

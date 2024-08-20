@@ -13,7 +13,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.google.common.collect.Lists;
-import com.yt.app.api.v1.dbo.base.BaseVO;
+import com.yt.app.common.base.BaseVO;
 
 /**
  * <p>

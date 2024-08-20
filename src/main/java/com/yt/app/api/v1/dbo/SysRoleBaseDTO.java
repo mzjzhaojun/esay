@@ -1,6 +1,6 @@
 package com.yt.app.api.v1.dbo;
 
-import com.yt.app.api.v1.dbo.base.BaseDTO;
+import com.yt.app.common.base.BaseDTO;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

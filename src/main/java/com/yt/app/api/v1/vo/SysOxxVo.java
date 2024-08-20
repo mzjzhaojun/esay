@@ -2,7 +2,7 @@ package com.yt.app.api.v1.vo;
 
 import java.util.List;
 
-import com.yt.app.api.v1.dbo.base.BaseVO;
+import com.yt.app.common.base.BaseVO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 import java.util.Date;
 import java.util.List;
 
-import com.yt.app.api.v1.dbo.base.BaseVO;
+import com.yt.app.common.base.BaseVO;
 
 /**
  * <p>
