@@ -31,7 +31,7 @@ public class SecurityUtil {
 			log.info("参数：" + data);
 			return cleanXSS(data);
 		} catch (Throwable e) {
-			throw new YtException("用户长时间未登录！",YtCodeEnum.YT401);
+			throw new YtException("用户长时间未登录！", YtCodeEnum.YT401);
 		}
 	}
 
@@ -48,7 +48,7 @@ public class SecurityUtil {
 			String data = AesUtil.encrypt(dataString, AuthContext.getAesKey());
 			return data;
 		} catch (Throwable e) {
-			throw new YtException("用户长时间未登录！",YtCodeEnum.YT401);
+			throw new YtException("用户长时间未登录！", YtCodeEnum.YT401);
 		}
 	}
 

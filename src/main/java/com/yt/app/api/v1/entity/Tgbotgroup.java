@@ -1,6 +1,5 @@
 package com.yt.app.api.v1.entity;
 
-
 import com.yt.app.common.base.YtBaseEntity;
 
 import lombok.AllArgsConstructor;

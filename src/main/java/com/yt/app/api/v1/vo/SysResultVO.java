@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class SysResultVO extends BaseVO{
+public class SysResultVO extends BaseVO {
 
 	/**
 	 * 

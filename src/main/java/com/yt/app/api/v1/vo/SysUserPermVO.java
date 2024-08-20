@@ -27,7 +27,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class SysUserPermVO extends BaseVO{
+public class SysUserPermVO extends BaseVO {
 
 	// ================= ↓↓↓↓↓↓ 基本信息 ↓↓↓↓↓↓ =================
 

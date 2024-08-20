@@ -15,29 +15,37 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
 import io.swagger.annotations.ApiOperation;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
-import com.yt.app.api.v1.service.MerchantaccountrecordService;
-import com.yt.app.api.v1.entity.Merchantaccountrecord;
+import com.yt.app.api.v1.service.TwitterService;
+import com.yt.app.api.v1.entity.Twitter;
+import com.yt.app.api.v1.vo.TwitterVO;
 
 /**
  * @author zj defaulttest
  * 
- * @version v1 @createdate2023-11-15 09:44:15
+ * @version v1 @createdate2024-08-20 17:29:27
  */
 
 @RestController
-@RequestMapping("/rest/v1/merchantaccountrecord")
-public class MerchantaccountrecordController extends YtBaseEncipherControllerImpl<Merchantaccountrecord, Long> {
+@RequestMapping("/rest/v1/twitter")
+public class TwitterController extends YtBaseEncipherControllerImpl<Twitter, Long> {
 
 	@Autowired
-	private MerchantaccountrecordService service;
+	private TwitterService service;
 
 	@Override
-	@ApiOperation(value = "list", response = Merchantaccountrecord.class)
+	@ApiOperation(value = "list", response = Twitter.class)
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Merchantaccountrecord> pagebean = service
-				.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		YtIPage<Twitter> list = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		return new YtResponseEncryptEntity<Object>(new YtBody(list));
+	}
+
+	@ApiOperation(value = "page", response = Twitter.class)
+	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<TwitterVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 }

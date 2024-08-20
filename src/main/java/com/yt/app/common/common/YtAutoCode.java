@@ -14,9 +14,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.yt.app.api.v1.vo.TgmerchantgroupVO;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.DbConnectionUtil;
 
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -155,7 +157,11 @@ public class YtAutoCode {
 					this.K = new FileWriter(file);
 					this.L = new BufferedWriter(this.K);
 					this.L.write("package " + DbConnectionUtil.basePage + ".entity;\r\n\n");
-					this.L.write("import lombok.Getter;\r\n");
+					this.L.write("import lombok.AllArgsConstructor;\r\n");
+					this.L.write("import lombok.Data;\r\n");
+					this.L.write("import lombok.NoArgsConstructor;\r\n");
+					this.L.write("import lombok.Builder;\r\n");
+					this.L.write("import lombok.EqualsAndHashCode;\r\n");
 					this.L.write("\r\n");
 					this.L.write("import com.yt.app.common.base.YtBaseEntity;\r\n");
 					this.L.write("/**\r\n");
@@ -164,8 +170,11 @@ public class YtAutoCode {
 					this.L.write("* @version " + DbConnectionUtil.version + "\r\n");
 					this.L.write("* @createdate" + DateTimeUtil.getDateTime() + "\r\n");
 					this.L.write("*/\r\n");
-					this.L.write("@Getter\r\n");
-					this.L.write("@Setter\r\n");
+					this.L.write("@Data\r\n");
+					this.L.write("@Builder\r\n");
+					this.L.write("@AllArgsConstructor\r\n");
+					this.L.write("@NoArgsConstructor\r\n");
+					this.L.write("@EqualsAndHashCode(callSuper = true)\r\n");
 					this.L.write("public class " + bt + " extends YtBaseEntity<" + bt + ">{\r\n");
 					this.L.write("\r\n");
 					this.L.write("private static final long serialVersionUID=1L;\r\n");
@@ -173,15 +182,6 @@ public class YtAutoCode {
 					for (int l = 0; l < r.length; l++) {
 						this.L.write("" + ts[l][0] + " " + ts[l][1] + ";\r\n");
 					}
-					this.L.write("public " + bt + "(){\r\n");
-					this.L.write("}\r\n");
-					String gz = "";
-					for (int i = 0; i < r.length; i++)
-						gz += "," + ts[i][0] + " " + ts[i][1];
-					this.L.write("public " + bt + "(" + gz.substring(1) + "){\r\n");
-					for (int i = 0; i < r.length; i++)
-						this.L.write("this." + ts[i][1] + "=" + ts[i][1] + ";\r\n");
-					this.L.write("}\r\n");
 					this.L.write("}");
 					this.L.flush();
 					String column = "", value = "", update = "", insertColumn = "", insertValue = "";
@@ -208,7 +208,10 @@ public class YtAutoCode {
 					this.K = new FileWriter(file);
 					this.L = new BufferedWriter(this.K);
 					this.L.write("package " + DbConnectionUtil.basePage + ".dbo;\r\n\n");
-					this.L.write("import lombok.Getter;\r\n");
+					this.L.write("import lombok.AllArgsConstructor;\r\n");
+					this.L.write("import lombok.Data;\r\n");
+					this.L.write("import lombok.NoArgsConstructor;\r\n");
+					this.L.write("import lombok.experimental.SuperBuilder;\r\n");
 					this.L.write("\r\n");
 					this.L.write("/**\r\n");
 					this.L.write("* @author zj default\r\n");
@@ -216,23 +219,16 @@ public class YtAutoCode {
 					this.L.write("* @version " + DbConnectionUtil.version + "\r\n");
 					this.L.write("* @createdate" + DateTimeUtil.getDateTime() + "\r\n");
 					this.L.write("*/\r\n");
-					this.L.write("@Getter\r\n");
-					this.L.write("@Setter\r\n");
+					this.L.write("@Data\r\n");
+					this.L.write("@SuperBuilder\r\n");
+					this.L.write("@NoArgsConstructor\r\n");
+					this.L.write("@AllArgsConstructor\r\n");
 					this.L.write("public class " + bt + "DTO {\r\n");
 					this.L.write("\r\n");
 					this.L.write("\r\n");
 					for (int l = 0; l < r.length; l++) {
 						this.L.write("" + ts[l][0] + " " + ts[l][1] + ";\r\n");
 					}
-					this.L.write("public " + bt + "DTO(){\r\n");
-					this.L.write("}\r\n");
-					gz = "";
-					for (int i = 0; i < r.length; i++)
-						gz += "," + ts[i][0] + " " + ts[i][1];
-					this.L.write("public " + bt + "DTO(" + gz.substring(1) + "){\r\n");
-					for (int i = 0; i < r.length; i++)
-						this.L.write("this." + ts[i][1] + "=" + ts[i][1] + ";\r\n");
-					this.L.write("}\r\n");
 					this.L.write("}");
 					this.L.flush();
 					column = "";
@@ -263,33 +259,31 @@ public class YtAutoCode {
 					this.K = new FileWriter(file);
 					this.L = new BufferedWriter(this.K);
 					this.L.write("package " + DbConnectionUtil.basePage + ".vo;\r\n\n");
-					this.L.write("import lombok.Getter;\r\n");
+					this.L.write("import lombok.AllArgsConstructor;\r\n");
+					this.L.write("import lombok.Data;\r\n");
+					this.L.write("import lombok.NoArgsConstructor;\r\n");
+					this.L.write("import lombok.experimental.SuperBuilder;\r\n");
+					this.L.write("import lombok.EqualsAndHashCode;\r\n");
 					this.L.write("\r\n");
-					this.L.write("import com.yt.app.common.base.YtBaseEntity;\r\n");
+					this.L.write("import com.yt.app.common.base.BaseVO;\r\n");
 					this.L.write("/**\r\n");
 					this.L.write("* @author zj default\r\n");
 					this.L.write("* \r\n");
 					this.L.write("* @version " + DbConnectionUtil.version + "\r\n");
 					this.L.write("* @createdate" + DateTimeUtil.getDateTime() + "\r\n");
 					this.L.write("*/\r\n");
-					this.L.write("@Getter\r\n");
-					this.L.write("@Setter\r\n");
-					this.L.write("public class " + bt + "VO extends YtBaseEntity<" + bt + "VO>{\r\n");
+					this.L.write("@Data\r\n");
+					this.L.write("@SuperBuilder\r\n");
+					this.L.write("@NoArgsConstructor\r\n");
+					this.L.write("@AllArgsConstructor\r\n");
+					this.L.write("@EqualsAndHashCode(callSuper = true)\r\n");
+					this.L.write("public class " + bt + "VO extends BaseVO{\r\n");
 					this.L.write("\r\n");
 					this.L.write("private static final long serialVersionUID = 1L;\r\n");
 					this.L.write("\r\n");
 					for (int l = 0; l < r.length; l++) {
 						this.L.write("" + ts[l][0] + " " + ts[l][1] + ";\r\n");
 					}
-					this.L.write("public " + bt + "VO(){\r\n");
-					this.L.write("}\r\n");
-					gz = "";
-					for (int i = 0; i < r.length; i++)
-						gz += "," + ts[i][0] + " " + ts[i][1];
-					this.L.write("public " + bt + "VO(" + gz.substring(1) + "){\r\n");
-					for (int i = 0; i < r.length; i++)
-						this.L.write("this." + ts[i][1] + "=" + ts[i][1] + ";\r\n");
-					this.L.write("}\r\n");
 					this.L.write("}");
 					this.L.flush();
 					column = "";

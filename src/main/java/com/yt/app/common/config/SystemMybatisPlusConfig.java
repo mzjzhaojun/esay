@@ -27,7 +27,7 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("t_sys_user_role");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("t_sys_config");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("t_sys_file");
-		//MybatisPlusConfig.TENANT_ID_TABLE.add("t_sys_logs");
+		// MybatisPlusConfig.TENANT_ID_TABLE.add("t_sys_logs");
 		//
 
 		MybatisPlusConfig.TENANT_ID_TABLE.add("aisle");

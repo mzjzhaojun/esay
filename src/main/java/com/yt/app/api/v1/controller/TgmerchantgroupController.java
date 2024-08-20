@@ -48,7 +48,7 @@ public class TgmerchantgroupController extends YtBaseEncipherControllerImpl<Tgme
 		YtIPage<TgmerchantgroupVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
-	
+
 	/**
 	 * 
 	 * 

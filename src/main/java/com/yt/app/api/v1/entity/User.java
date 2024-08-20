@@ -2,7 +2,6 @@ package com.yt.app.api.v1.entity;
 
 import java.util.List;
 
-
 import com.yt.app.common.base.YtBaseEntity;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.enums.UserSexEnum;

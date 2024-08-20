@@ -1,8 +1,5 @@
 package com.yt.app.api.v1.entity;
 
-
-
-
 import com.yt.app.common.base.YtBaseEntity;
 
 import lombok.AllArgsConstructor;
@@ -35,6 +32,5 @@ public class Merchantcustomerbanks extends YtBaseEntity<Merchantcustomerbanks> {
 	String bankaddress;
 	String value;
 	Integer version;
-
 
 }

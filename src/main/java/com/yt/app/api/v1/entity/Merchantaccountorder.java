@@ -1,8 +1,5 @@
 package com.yt.app.api.v1.entity;
 
-
-
-
 import com.yt.app.common.base.YtBaseEntity;
 
 import lombok.AllArgsConstructor;
@@ -49,5 +46,4 @@ public class Merchantaccountorder extends YtBaseEntity<Merchantaccountorder> {
 	Integer version;
 	String ordernum;
 
-	
 }

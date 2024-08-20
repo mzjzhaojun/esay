@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-
 import com.yt.app.common.base.YtBaseEntity;
 
 /**

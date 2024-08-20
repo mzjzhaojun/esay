@@ -12,15 +12,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-
-
-
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class SysOxxVo extends BaseVO{
+public class SysOxxVo extends BaseVO {
 	/**
 	 * 
 	 */

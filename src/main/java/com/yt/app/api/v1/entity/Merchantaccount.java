@@ -1,8 +1,5 @@
 package com.yt.app.api.v1.entity;
 
-
-
-
 import java.util.List;
 
 import com.yt.app.common.base.YtBaseEntity;
@@ -39,6 +36,5 @@ public class Merchantaccount extends YtBaseEntity<Merchantaccount> {
 	String remark;
 	Integer version;
 	List<Merchantaccountbank> listbanks;
-
 
 }

@@ -36,5 +36,5 @@ public class Agent extends YtBaseEntity<Agent> {
 	String ipaddress;
 	Long tenant_id;
 	Long userid;
-	Integer version;	
+	Integer version;
 }

@@ -1,11 +1,7 @@
 package com.yt.app.api.v1.entity;
 
-
-
 import java.io.Serializable;
 import java.util.List;
-
-
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

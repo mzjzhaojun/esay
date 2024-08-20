@@ -1,7 +1,5 @@
 package com.yt.app.api.v1.vo;
 
-
-
 import com.yt.app.common.base.BaseVO;
 
 import lombok.AllArgsConstructor;

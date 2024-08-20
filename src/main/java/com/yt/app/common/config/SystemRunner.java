@@ -52,7 +52,7 @@ public class SystemRunner implements CommandLineRunner {
 		roleservice.refreshSuperAdminPerm();
 
 		// 注册机器人
-		//tgbotservice.initBot();
+		// tgbotservice.initBot();
 
 		log.info("服务初始化之后，执行方法 end...");
 	}

@@ -1,8 +1,5 @@
 package com.yt.app.api.v1.entity;
 
-
-
-
 import java.io.Serializable;
 import java.util.Date;
 

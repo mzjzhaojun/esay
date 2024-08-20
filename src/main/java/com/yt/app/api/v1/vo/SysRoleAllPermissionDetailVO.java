@@ -25,7 +25,7 @@ import com.yt.app.common.base.BaseVO;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class SysRoleAllPermissionDetailVO extends BaseVO{
+public class SysRoleAllPermissionDetailVO extends BaseVO {
 
 	/**
 	 * 

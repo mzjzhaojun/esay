@@ -1,7 +1,5 @@
 package com.yt.app.api.v1.vo;
 
-
-
 import com.yt.app.common.base.BaseVO;
 
 import lombok.AllArgsConstructor;
@@ -44,5 +42,4 @@ public class TgbotgroupVO extends BaseVO {
 	String remark;
 	Integer version;
 
-	
 }

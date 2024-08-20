@@ -29,7 +29,7 @@ import com.yt.app.common.base.BaseVO;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class SysMenuTreeVO extends BaseVO{
+public class SysMenuTreeVO extends BaseVO {
 
 	// ==================== ↓↓↓↓↓↓ 菜单基础信息 ↓↓↓↓↓↓ ====================
 

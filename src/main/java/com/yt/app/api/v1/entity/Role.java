@@ -1,7 +1,5 @@
 package com.yt.app.api.v1.entity;
 
-
-
 import java.util.List;
 
 import com.yt.app.api.v1.vo.SysMenuTreeVO;
