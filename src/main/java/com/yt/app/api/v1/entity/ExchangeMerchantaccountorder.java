@@ -1,16 +1,23 @@
 package com.yt.app.api.v1.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+
 import com.yt.app.common.base.YtBaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * @author zj default
  * 
  * @version v1 @createdate2023-11-15 09:44:15
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ExchangeMerchantaccountorder extends YtBaseEntity<ExchangeMerchantaccountorder> {
 
 	private static final long serialVersionUID = 1L;
@@ -39,27 +46,4 @@ public class ExchangeMerchantaccountorder extends YtBaseEntity<ExchangeMerchanta
 	Integer version;
 	String ordernum;
 
-	public ExchangeMerchantaccountorder() {
-	}
-
-	public ExchangeMerchantaccountorder(Long id, Long tenant_id, Long merchantid, String username, String nkname,
-			String merchantcode, Double amount, Double exchange, Double merchantexchange, Double amountreceived,
-			Integer status, String remark, Long create_by, java.util.Date create_time, Long update_by,
-			java.util.Date update_time, Integer version, String ordernum) {
-		this.id = id;
-		this.tenant_id = tenant_id;
-		this.merchantid = merchantid;
-		this.username = username;
-		this.nkname = nkname;
-		this.merchantcode = merchantcode;
-		this.amount = amount;
-		this.exchange = exchange;
-		this.merchantexchange = merchantexchange;
-		this.amountreceived = amountreceived;
-		this.status = status;
-		this.remark = remark;
-
-		this.version = version;
-		this.ordernum = ordernum;
-	}
 }

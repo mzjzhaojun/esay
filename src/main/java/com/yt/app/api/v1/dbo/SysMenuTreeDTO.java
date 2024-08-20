@@ -2,9 +2,10 @@ package com.yt.app.api.v1.dbo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
@@ -20,11 +21,11 @@ import com.yt.app.api.v1.dbo.base.BaseDTO;
  * @description
  * @date 2020/4/15 20:54
  */
-@Getter
-@Setter
+@Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class SysMenuTreeDTO extends BaseDTO {
 
 	/**

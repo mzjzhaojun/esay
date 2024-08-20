@@ -1,11 +1,17 @@
 package com.yt.app.api.v1.vo;
 
-import io.swagger.annotations.ApiModel;
+import com.yt.app.api.v1.dbo.base.BaseVO;
+
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-import lombok.Getter;
 
-import lombok.Setter;
+
+
 
 /**
  * <p>
@@ -16,10 +22,17 @@ import lombok.Setter;
  * @description
  * @date 2023/10/18 14:03
  */
-@Getter
-@Setter
-@ApiModel("系统管理-角色&数据权限关联表-列表-响应参数")
-public class SysRoleScopeListVO {
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class SysRoleScopeListVO extends BaseVO {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty("主键ID")
 	private Long id;

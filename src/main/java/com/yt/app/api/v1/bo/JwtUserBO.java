@@ -1,9 +1,10 @@
 package com.yt.app.api.v1.bo;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -18,9 +19,10 @@ import com.yt.app.common.enums.AuthSourceEnum;
  * @description
  * @date 2020/11/28 23:16
  */
-@Getter
-@Setter
-@Builder
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class JwtUserBO {
 
 	@ApiModelProperty("认证来源")

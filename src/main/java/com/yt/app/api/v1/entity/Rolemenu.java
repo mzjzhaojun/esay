@@ -1,8 +1,11 @@
 package com.yt.app.api.v1.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 
 import com.yt.app.common.base.YtBaseEntity;
 
@@ -11,9 +14,11 @@ import com.yt.app.common.base.YtBaseEntity;
  * 
  * @version v1 @createdate2023-10-25 17:20:27
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Rolemenu extends YtBaseEntity<Rolemenu> {
 
 	private static final long serialVersionUID = 1L;
@@ -23,15 +28,4 @@ public class Rolemenu extends YtBaseEntity<Rolemenu> {
 	Long role_id;
 	Long menu_id;
 	Integer version;
-
-	public Rolemenu() {
-	}
-
-	public Rolemenu(Long id, Long tenant_id, Long role_id, Long menu_id, Integer version) {
-		this.id = id;
-		this.tenant_id = tenant_id;
-		this.role_id = role_id;
-		this.menu_id = menu_id;
-		this.version = version;
-	}
 }

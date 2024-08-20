@@ -18,4 +18,6 @@ public interface PayconfigService extends YtIBaseService<Payconfig, Long> {
 	List<Payconfig> getDataTop();
 
 	void initExchangeData();
+
+	List<Payconfig> getAliPayDataTop();
 }

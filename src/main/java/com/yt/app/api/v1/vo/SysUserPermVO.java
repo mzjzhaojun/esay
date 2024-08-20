@@ -1,13 +1,14 @@
 package com.yt.app.api.v1.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.yt.app.api.v1.dbo.base.BaseVO;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
-import lombok.Getter;
-
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
 import java.util.List;
@@ -21,12 +22,19 @@ import java.util.List;
  * @description 基本信息+角色+权限...
  * @date 2020/4/15 10:48
  */
-@Getter
-@Setter
-@ApiModel
-public class SysUserPermVO {
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class SysUserPermVO extends BaseVO{
 
 	// ================= ↓↓↓↓↓↓ 基本信息 ↓↓↓↓↓↓ =================
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "用户ID")
 	private Long id;

@@ -1,16 +1,26 @@
 package com.yt.app.api.v1.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+
+
+
 import com.yt.app.common.base.YtBaseEntity;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * @author zj default
  * 
  * @version v1 @createdate2024-07-05 13:07:39
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Tgmerchantgroup extends YtBaseEntity<Tgmerchantgroup> {
 
 	private static final long serialVersionUID = 1L;
@@ -37,8 +47,5 @@ public class Tgmerchantgroup extends YtBaseEntity<Tgmerchantgroup> {
 	Double count;
 	String remark;
 	String version;
-
-	public Tgmerchantgroup() {
-	}
 
 }

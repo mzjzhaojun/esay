@@ -13,7 +13,7 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Tgchannelgroup">
 		insert into
-		tgchannelgroup(id,channelid,channelname,channelnkname,status,tgid,tggroupname,create_by,create_time,update_by,update_time,adminmangers,customermangers,mangers,remark)
+		tgchannelgroup(id,channelid,channelname,channelnkname,status,tgid,tggroupname,usdcount,todayusdcount,todaycountorder,countorder,create_by,create_time,update_by,update_time,adminmangers,customermangers,mangers,remark)
 		values
 		(#{id},#{channelid},#{channelname},#{channelnkname},#{status},#{tgid},#{tggroupname},#{usdcount},#{todayusdcount},#{todaycountorder},#{countorder},#{create_by},#{create_time},#{update_by},#{update_time},#{adminmangers},#{customermangers},#{mangers},#{remark})
 	</insert>
@@ -98,7 +98,7 @@
 				version= #{version}+1
 			</if>
 		</set>
-		where id = #{id} and version = #{version}
+		where id = #{id}
 	</update>
 
 
@@ -106,9 +106,10 @@
 		update
 		tgchannelgroup
 		set todaycountorder = 0,todayusdcount = 0
-		where id = #{id}
+		where id =
+		#{id}
 	</update>
-	
+
 	<update id="updatechannelid" parameterType="java.lang.Long">
 		update
 		tgchannelgroup

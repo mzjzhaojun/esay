@@ -1,7 +1,11 @@
 package com.yt.app.api.v1.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 import com.yt.app.common.base.YtBaseEntity;
 
 /**
@@ -9,8 +13,11 @@ import com.yt.app.common.base.YtBaseEntity;
  * 
  * @version v1 @createdate2023-11-18 12:44:01
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Agentaccountrecord extends YtBaseEntity<Agentaccountrecord> {
 
 	private static final long serialVersionUID = 1L;
@@ -32,30 +39,4 @@ public class Agentaccountrecord extends YtBaseEntity<Agentaccountrecord> {
 	Double posttoincomeamount;
 	String remark;
 	Integer version;
-
-	public Agentaccountrecord() {
-	}
-
-	public Agentaccountrecord(Long id, Long tenant_id, Long userid, String agentname, String ordernum,
-			Integer type, Double pretotalincome, Double prewithdrawamount, Double pretowithdrawamount,
-			Double pretoincomeamount, Double posttotalincome, Double postwithdrawamount, Double posttowithdrawamount,
-			Double posttoincomeamount, String remark, Long create_by, java.util.Date create_time, Long update_by,
-			java.util.Date update_time, Integer version) {
-		this.id = id;
-		this.tenant_id = tenant_id;
-		this.userid = userid;
-		this.agentname = agentname;
-		this.ordernum = ordernum;
-		this.type = type;
-		this.pretotalincome = pretotalincome;
-		this.prewithdrawamount = prewithdrawamount;
-		this.pretowithdrawamount = pretowithdrawamount;
-		this.pretoincomeamount = pretoincomeamount;
-		this.posttotalincome = posttotalincome;
-		this.postwithdrawamount = postwithdrawamount;
-		this.posttowithdrawamount = posttowithdrawamount;
-		this.posttoincomeamount = posttoincomeamount;
-		this.remark = remark;
-		this.version = version;
-	}
 }

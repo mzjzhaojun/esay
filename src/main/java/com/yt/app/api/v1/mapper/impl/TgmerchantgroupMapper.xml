@@ -20,7 +20,7 @@
 		insert into
 		tgmerchantgroup(id,tenant_id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,cost,realtimeexchange,costcount,usdcount,todayusdcount,todaycountorder,countorder,todaycount,count,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{tenant_id},,#{merchantid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{adminmangers},#{mangers},#{customermangers},#{cost},#{realtimeexchange},#{costcount},#{usdcount},#{todayusdcount},#{todaycountorder},#{countorder},#{todaycount},#{count},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{tenant_id},#{merchantid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{adminmangers},#{mangers},#{customermangers},#{cost},#{realtimeexchange},#{costcount},#{usdcount},#{todayusdcount},#{todaycountorder},#{countorder},#{todaycount},#{count},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -118,7 +118,7 @@
 				version= #{version}+1
 			</if>
 		</set>
-		where id = #{id} and version = #{version}
+		where id = #{id}
 	</update>
 
 	<update id="updatetodayvalue" parameterType="java.lang.Long">
@@ -132,7 +132,8 @@
 		update
 		tgmerchantgroup
 		set merchantid = null,merchantname = null
-		where merchantid = #{id}
+		where
+		merchantid = #{id}
 	</update>
 
 	<!--getById -->

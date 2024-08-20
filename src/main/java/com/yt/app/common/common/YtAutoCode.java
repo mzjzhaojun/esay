@@ -156,7 +156,7 @@ public class YtAutoCode {
 					this.L = new BufferedWriter(this.K);
 					this.L.write("package " + DbConnectionUtil.basePage + ".entity;\r\n\n");
 					this.L.write("import lombok.Getter;\r\n");
-					this.L.write("import lombok.Setter;\r\n");
+					this.L.write("\r\n");
 					this.L.write("import com.yt.app.common.base.YtBaseEntity;\r\n");
 					this.L.write("/**\r\n");
 					this.L.write("* @author zj default\r\n");
@@ -209,7 +209,7 @@ public class YtAutoCode {
 					this.L = new BufferedWriter(this.K);
 					this.L.write("package " + DbConnectionUtil.basePage + ".dbo;\r\n\n");
 					this.L.write("import lombok.Getter;\r\n");
-					this.L.write("import lombok.Setter;\r\n");
+					this.L.write("\r\n");
 					this.L.write("/**\r\n");
 					this.L.write("* @author zj default\r\n");
 					this.L.write("* \r\n");
@@ -264,7 +264,7 @@ public class YtAutoCode {
 					this.L = new BufferedWriter(this.K);
 					this.L.write("package " + DbConnectionUtil.basePage + ".vo;\r\n\n");
 					this.L.write("import lombok.Getter;\r\n");
-					this.L.write("import lombok.Setter;\r\n");
+					this.L.write("\r\n");
 					this.L.write("import com.yt.app.common.base.YtBaseEntity;\r\n");
 					this.L.write("/**\r\n");
 					this.L.write("* @author zj default\r\n");

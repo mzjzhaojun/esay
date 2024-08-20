@@ -1,26 +1,18 @@
 package com.yt.app.api.v1.dbo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-@Getter
-@Setter
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysQueryDTO {
 
 	String merchantid;
 	String merchantorderid;
 	String remark;
 	String sign;
-
-	public SysQueryDTO() {
-	}
-
-	public SysQueryDTO(String merchantid, String merchantorderid, String remark, String sign) {
-		super();
-		this.merchantid = merchantid;
-		this.merchantorderid = merchantorderid;
-		this.remark = remark;
-		this.sign = sign;
-	}
-
 }

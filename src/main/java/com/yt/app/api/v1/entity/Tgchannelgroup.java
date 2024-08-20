@@ -1,16 +1,26 @@
 package com.yt.app.api.v1.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+
+
+
 import com.yt.app.common.base.YtBaseEntity;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * @author zj default
  * 
  * @version v1 @createdate2023-12-27 21:37:32
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Tgchannelgroup extends YtBaseEntity<Tgchannelgroup> {
 
 	private static final long serialVersionUID = 1L;
@@ -32,8 +42,4 @@ public class Tgchannelgroup extends YtBaseEntity<Tgchannelgroup> {
 	String mangers;
 	String remark;
 	Integer version;
-
-	public Tgchannelgroup() {
-	}
-
 }

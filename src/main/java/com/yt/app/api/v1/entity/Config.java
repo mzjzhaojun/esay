@@ -1,7 +1,10 @@
 package com.yt.app.api.v1.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import com.yt.app.common.base.YtBaseEntity;
 
@@ -10,8 +13,11 @@ import com.yt.app.common.base.YtBaseEntity;
  * 
  * @version v1 @createdate2023-11-02 20:38:10
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Config extends YtBaseEntity<Config> {
 
 	private static final long serialVersionUID = 1L;
@@ -25,16 +31,4 @@ public class Config extends YtBaseEntity<Config> {
 	Integer is_deleted;
 	Integer version;
 
-	public Config() {
-	}
-
-	public Config(Long id, Long tenant_id, String key, Object value, String remark, Integer type, Integer is_deleted) {
-		this.id = id;
-		this.tenant_id = tenant_id;
-		this.keyn = key;
-		this.valuen = value;
-		this.remark = remark;
-		this.type = type;
-		this.is_deleted = is_deleted;
-	}
 }

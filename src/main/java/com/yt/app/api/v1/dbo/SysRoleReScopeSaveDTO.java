@@ -2,9 +2,10 @@ package com.yt.app.api.v1.dbo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotNull;
@@ -22,11 +23,11 @@ import java.util.List;
  * @description
  * @date 2020/9/10 15:00
  */
-@Getter
-@Setter
+@Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class SysRoleReScopeSaveDTO extends BaseDTO {
 
 	/**

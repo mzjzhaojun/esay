@@ -1,12 +1,24 @@
 package com.yt.app.api.v1.vo;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.yt.app.api.v1.dbo.base.BaseVO;
 
-@Getter
-@Setter
-public class SysResultVO {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class SysResultVO extends BaseVO{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	String merchantid;
 	String payorderid;
 	String merchantorderid;
@@ -17,21 +29,5 @@ public class SysResultVO {
 	String remark;
 	String sign;
 	Double balance;
-
-	public SysResultVO() {
-	}
-
-	public SysResultVO(String merchantid, String payorderid, String merchantorderid, Integer paytype, Double payamt,
-			String bankcode, String remark, String sign) {
-		super();
-		this.merchantid = merchantid;
-		this.payorderid = payorderid;
-		this.merchantorderid = merchantorderid;
-		this.paytype = paytype;
-		this.payamt = payamt;
-		this.bankcode = bankcode;
-		this.remark = remark;
-		this.sign = sign;
-	}
 
 }

@@ -1,13 +1,15 @@
 package com.yt.app.api.v1.vo;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
-import lombok.Getter;
-
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
+
+import com.yt.app.api.v1.dbo.base.BaseVO;
 
 /**
  * <p>
@@ -18,10 +20,17 @@ import java.util.List;
  * @description
  * @date 2020/4/15 16:19
  */
-@Getter
-@Setter
-@ApiModel("系统管理-角色表-输出内容")
-public class SysRoleBaseVO {
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class SysRoleBaseVO extends BaseVO{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty("父id")
 	private Long parent_id;

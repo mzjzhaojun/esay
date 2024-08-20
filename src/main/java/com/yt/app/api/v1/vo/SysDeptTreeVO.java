@@ -1,13 +1,16 @@
 package com.yt.app.api.v1.vo;
 
 import io.swagger.annotations.ApiModelProperty;
-
-import lombok.Getter;
-
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
 import java.util.List;
+
+import com.yt.app.api.v1.dbo.base.BaseVO;
 
 /**
  * <p>
@@ -19,9 +22,17 @@ import java.util.List;
  * @date 2023/10/09 18:10
  */
 
-@Getter
-@Setter
-public class SysDeptTreeVO {
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class SysDeptTreeVO extends BaseVO {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty("主键ID")
 	private Long id;

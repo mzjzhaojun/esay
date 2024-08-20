@@ -98,22 +98,23 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 			TenantIdContext.removeFlag();
 			Long chatid = update.getMessage().getChat().getId();
 			Tgmerchantgroup tmg = tgmerchantgroupmapper.getByTgGroupId(chatid);
-
-			if (tmg == null) {
-				tmg = tgmerchantgroupmapper.getByTgGroupName(update.getMessage().getChat().getTitle());
-				if (tmg != null) {
-					tmg.setTgid(chatid);
-					tgmerchantgroupmapper.put(tmg);
-					handlemessage(message, chatid, tmg, update);
-				} else {
-					Tgmerchantgroup t = new Tgmerchantgroup();
-					t.setTgid(chatid);
-					t.setStatus(true);
-					t.setTggroupname(update.getMessage().getChat().getTitle());
-					tgmerchantgroupmapper.post(t);
-				}
-			} else {
+			if (tmg != null) {
 				handlemessage(message, chatid, tmg, update);
+			} else {
+				Tgmerchantgroup t = new Tgmerchantgroup();
+				t.setTgid(chatid);
+				t.setStatus(true);
+				t.setCost(0.0);
+				t.setCostcount(0.0);
+				t.setUsdcount(0.0);
+				t.setCount(0.0);
+				t.setCountorder(0);
+				t.setTodaycount(0.0);
+				t.setTodaycountorder(0);
+				t.setTodayusdcount(0.0);
+				t.setTggroupname(update.getMessage().getChat().getTitle());
+				tgmerchantgroupmapper.post(t);
+				sendText(chatid, "请配置后台开始工作：#h 查汇率  ，#d 查USDT充值地址，#y 查余额，#z 查账单");
 			}
 		}
 		TenantIdContext.remove();
@@ -141,7 +142,8 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 			} else {
 				sendText(chatid, "正在更新地址，请稍后再试！");
 			}
-		} else if (message.equals("#y")) {// 余额
+		} else if (message.equals("#y")) {
+			// 余额
 			Merchantaccount merchantaccount = merchantaccountmapper
 					.getByUserId(merchantmapper.get(tmg.getMerchantid()).getUserid());
 			if (merchantaccount != null) {

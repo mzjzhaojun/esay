@@ -5,8 +5,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import io.swagger.annotations.ApiModelProperty;
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
@@ -22,6 +23,8 @@ import java.util.Date;
  */
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public abstract class YtBaseEntity<T extends Model<T>> extends Model<T> {
 
 	/**

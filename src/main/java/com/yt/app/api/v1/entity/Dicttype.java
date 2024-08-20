@@ -1,17 +1,26 @@
 package com.yt.app.api.v1.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+
+
 
 import com.yt.app.common.base.YtBaseEntity;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * @author zj default
  * 
  * @version v1 @createdate2023-10-27 14:55:02
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Dicttype extends YtBaseEntity<Dicttype> {
 
 	private static final long serialVersionUID = 1L;
@@ -24,18 +33,4 @@ public class Dicttype extends YtBaseEntity<Dicttype> {
 	Integer is_fixed;
 	Integer is_deleted;
 	Integer version;
-
-	public Dicttype() {
-	}
-
-	public Dicttype(Long id, String code, String name, Boolean status, Integer sort, Integer is_fixed,
-			Integer is_deleted) {
-		this.id = id;
-		this.code = code;
-		this.name = name;
-		this.status = status;
-		this.sort = sort;
-		this.is_fixed = is_fixed;
-		this.is_deleted = is_deleted;
-	}
 }

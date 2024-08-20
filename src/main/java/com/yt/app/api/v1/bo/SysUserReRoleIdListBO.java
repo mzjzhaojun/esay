@@ -1,8 +1,12 @@
 package com.yt.app.api.v1.bo;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+
 
 /**
  * <p>
@@ -13,8 +17,10 @@ import lombok.Setter;
  * @description
  * @date 2020/4/15 10:48
  */
-@Getter
-@Setter
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysUserReRoleIdListBO {
 
 	@ApiModelProperty(value = "用户ID")

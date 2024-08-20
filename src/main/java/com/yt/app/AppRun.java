@@ -33,8 +33,8 @@ public class AppRun extends SpringBootServletInitializer {
 	}
 
 	public static void main(String[] args) throws Exception {
-		// SpringApplication.run(new Class[] { AppRun.class }, args);
+		SpringApplication.run(new Class[] { AppRun.class }, args);
 		// YtAutoCode.u().p(Arrays.asList("tgmerchantgroup"));
-		System.out.println(String.format("%.0f", 120.21312));
+		//System.out.println(String.format("%.0f", 120.21312));
 	}
 }

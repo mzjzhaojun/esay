@@ -296,7 +296,7 @@ public class RoleServiceImpl extends YtBaseServiceImpl<Role, Long> implements Ro
 		// 1、先查询超级管理员角色id再绑定
 		Long roleId = this.sysRoleMapper.selectRoleIdByCode(SysRoleCodeEnum.超级管理员.getCode());
 		Assert.notNull(roleId, "超级管理员角色丢失！");
-		Userrole ur = new Userrole(AppConstant.SYSTEM_SUPER_ADMIN_USER_ID, roleId);
+		Userrole ur = Userrole.builder().user_id(AppConstant.SYSTEM_SUPER_ADMIN_USER_ID).role_id(roleId).build();
 		List<Userrole> reusult = userrolemapper.getByRoleIdUserId(ur);
 		if (reusult.size() == 0) {
 			// 2、先查询所有菜单和按钮数据

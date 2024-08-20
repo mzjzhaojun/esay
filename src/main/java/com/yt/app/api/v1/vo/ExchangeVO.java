@@ -1,18 +1,24 @@
 package com.yt.app.api.v1.vo;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.yt.app.api.v1.dbo.base.BaseVO;
 
-import com.yt.app.common.base.YtBaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * @author zj default
  * 
  * @version v1 @createdate2024-03-07 20:55:20
  */
-@Getter
-@Setter
-public class ExchangeVO extends YtBaseEntity<ExchangeVO> {
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class ExchangeVO extends BaseVO {
 
 	private static final long serialVersionUID = 1L;
 
@@ -25,6 +31,7 @@ public class ExchangeVO extends YtBaseEntity<ExchangeVO> {
 	String merchantcode;
 	String merchantordernum;
 	Double merchantrealtimeexchange;
+	Double merchantonecost;
 	Double merchantdowpoint;
 	Double merchantpay;
 	Long aisleid;
@@ -60,7 +67,4 @@ public class ExchangeVO extends YtBaseEntity<ExchangeVO> {
 	String remark;
 	Double channelbalance;
 	Integer version;
-
-	public ExchangeVO() {
-	}
 }

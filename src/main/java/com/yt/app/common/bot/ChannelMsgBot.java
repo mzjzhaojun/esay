@@ -69,22 +69,20 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 		if (message != null) {
 			TenantIdContext.removeFlag();
 			Tgchannelgroup tmg = tgchannelgroupmapper.getByTgGroupId(chatid);
-			if (tmg == null) {
-				tmg = tgchannelgroupmapper.getByTgGroupName(update.getMessage().getChat().getTitle());
-				if (tmg != null) {
-					tmg.setTgid(chatid);
-					tgchannelgroupmapper.put(tmg);
-				} else {
-					Tgchannelgroup t = new Tgchannelgroup();
-					t.setTgid(chatid);
-					t.setStatus(true);
-					t.setTggroupname(update.getMessage().getChat().getTitle());
-					tgchannelgroupmapper.post(t);
-				}
-				handlemessage(update, message, tmg);
-			} else {
+			if (tmg != null) {
 				// 处理返回消息
 				handlemessage(update, message, tmg);
+			} else {
+				Tgchannelgroup t = new Tgchannelgroup();
+				t.setTgid(chatid);
+				t.setStatus(true);
+				t.setCountorder(0);
+				t.setUsdcount(0.00);
+				t.setTodaycountorder(0);
+				t.setTodayusdcount(0.00);
+				t.setTggroupname(update.getMessage().getChat().getTitle());
+				tgchannelgroupmapper.post(t);
+				sendText(chatid, "请配置后台开始工作：#h 查汇率  ，#z 查账单");
 			}
 		}
 		TenantIdContext.remove();
@@ -93,7 +91,7 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 	private void handlemessage(Update update, String message, Tgchannelgroup tmg) {
 		String username = update.getMessage().getFrom().getUserName();
 		if (message.equals("#h")) {// 汇率
-			List<Payconfig> list = payconfigservice.getDataTop();
+			List<Payconfig> list = payconfigservice.getAliPayDataTop();
 			StringBuffer sb = new StringBuffer();
 			Integer i = 1;
 			for (Payconfig pc : list) {

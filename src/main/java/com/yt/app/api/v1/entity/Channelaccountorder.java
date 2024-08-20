@@ -1,7 +1,11 @@
 package com.yt.app.api.v1.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 import com.yt.app.common.base.YtBaseEntity;
 
 /**
@@ -9,8 +13,11 @@ import com.yt.app.common.base.YtBaseEntity;
  * 
  * @version v1 @createdate2023-11-18 12:41:23
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Channelaccountorder extends YtBaseEntity<Channelaccountorder> {
 
 	private static final long serialVersionUID = 1L;
@@ -38,33 +45,4 @@ public class Channelaccountorder extends YtBaseEntity<Channelaccountorder> {
 	Integer version;
 	String ordernum;
 	String imgurl;
-
-	public Channelaccountorder() {
-	}
-
-	public Channelaccountorder(Long id, Long tenant_id, Long userid, Long channelid, String channelname, String nkname,
-			String channelcode, Integer type, Double amount, String accname, String accnumber, Double exchange,
-			Double channelexchange, Double amountreceived, Integer status, String remark, Long create_by,
-			java.util.Date create_time, Long update_by, java.util.Date update_time, Integer version, String ordernum,
-			String imgurl) {
-		this.id = id;
-		this.tenant_id = tenant_id;
-		this.userid = userid;
-		this.channelid = channelid;
-		this.channelname = channelname;
-		this.nkname = nkname;
-		this.channelcode = channelcode;
-		this.type = type;
-		this.amount = amount;
-		this.accname = accname;
-		this.accnumber = accnumber;
-		this.exchange = exchange;
-		this.channelexchange = channelexchange;
-		this.amountreceived = amountreceived;
-		this.status = status;
-		this.remark = remark;
-		this.version = version;
-		this.ordernum = ordernum;
-		this.imgurl = imgurl;
-	}
 }

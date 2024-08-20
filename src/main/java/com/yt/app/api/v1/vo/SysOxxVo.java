@@ -2,23 +2,31 @@ package com.yt.app.api.v1.vo;
 
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.yt.app.api.v1.dbo.base.BaseVO;
 
-@Getter
-@Setter
-public class SysOxxVo {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
+
+
+
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class SysOxxVo extends BaseVO{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Integer code;
 	SellData data;
-
-	public SysOxxVo() {
-	}
-
-	public SysOxxVo(Integer code, SellData data) {
-		super();
-		this.code = code;
-		this.data = data;
-	}
 
 	@Getter
 	@Setter

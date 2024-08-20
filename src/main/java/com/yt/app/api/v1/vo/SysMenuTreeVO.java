@@ -1,9 +1,11 @@
 package com.yt.app.api.v1.vo;
 
 import io.swagger.annotations.ApiModelProperty;
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
@@ -11,6 +13,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.google.common.collect.Lists;
+import com.yt.app.api.v1.dbo.base.BaseVO;
 
 /**
  * <p>
@@ -21,11 +24,19 @@ import com.google.common.collect.Lists;
  * @description
  * @date 2020/4/15 20:54
  */
-@Getter
-@Setter
-public class SysMenuTreeVO {
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class SysMenuTreeVO extends BaseVO{
 
 	// ==================== ↓↓↓↓↓↓ 菜单基础信息 ↓↓↓↓↓↓ ====================
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty("ID")
 	private Long id;

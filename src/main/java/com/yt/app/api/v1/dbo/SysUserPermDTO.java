@@ -1,11 +1,11 @@
 package com.yt.app.api.v1.dbo;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 import lombok.experimental.SuperBuilder;
 
 import com.yt.app.api.v1.dbo.base.BaseDTO;
@@ -20,12 +20,11 @@ import com.yt.app.api.v1.dbo.it.CheckParam;
  * @description
  * @date 2020/4/15 10:48
  */
-@Setter
-@Getter
+@Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel
+@EqualsAndHashCode(callSuper = true)
 public class SysUserPermDTO extends BaseDTO implements CheckParam {
 
 	/**

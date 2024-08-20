@@ -116,7 +116,8 @@ public class AuthServiceImpl implements AuthService {
 		Systemaccount sca = systemaccountmapper.getByTenantId(userPerm.getTenantId());
 
 		// 写入登录日志
-		logsservice.post(new Logs(username, new Date(), AuthContext.getIp(), DictionaryResource.LOG_TYPE_201));
+		logsservice.post(Logs.builder().optname(username).optdate(new Date()).requestip(AuthContext.getIp())
+				.type(DictionaryResource.LOG_TYPE_201).build());
 		// 登录
 		return AuthUtil
 				.login(JwtUserBO.builder().authSourceEnum(AuthSourceEnum.B).userId(Long.valueOf(userPerm.getId()))
@@ -164,7 +165,8 @@ public class AuthServiceImpl implements AuthService {
 		// Assert.isTrue(isValid, "验证码错误！");
 
 		// 写入登录日志
-		logsservice.post(new Logs(username, new Date(), AuthContext.getIp(), DictionaryResource.LOG_TYPE_202));
+		logsservice.post(Logs.builder().optname(username).optdate(new Date()).requestip(AuthContext.getIp())
+				.type(DictionaryResource.LOG_TYPE_202).build());
 
 		return AuthUtil.login(JwtUserBO.builder().authSourceEnum(AuthSourceEnum.B)
 				.userId(Long.valueOf(userPerm.getId())).username(userPerm.getUsername()).deptId(userPerm.getDept_id())
