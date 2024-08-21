@@ -76,7 +76,7 @@ public class PayconfigServiceImpl extends YtBaseServiceImpl<Payconfig, Long> imp
 
 		List<Payconfig> count = mapper.selectList(p);
 
-		System.out.println(count.get(0).getName());
+		System.out.println("实时汇率：" + count.get(0).getExchange());
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("user-agent",

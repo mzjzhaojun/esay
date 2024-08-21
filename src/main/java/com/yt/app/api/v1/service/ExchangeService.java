@@ -2,7 +2,7 @@ package com.yt.app.api.v1.service;
 
 import java.util.Map;
 
-import com.yt.app.api.v1.dbo.SysSubmitDTO;
+import com.yt.app.api.v1.dbo.PaySubmitDTO;
 import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.vo.ExchangeVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
@@ -25,7 +25,7 @@ public interface ExchangeService extends YtIBaseService<Exchange, Long> {
 	//
 	Exchange query(String ordernum);
 
-	Exchange submit(SysSubmitDTO ss);
+	Exchange submit(PaySubmitDTO ss);
 
 	Exchange submit(String ordernum);
 

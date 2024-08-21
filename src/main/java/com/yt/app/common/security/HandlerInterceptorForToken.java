@@ -46,7 +46,7 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 
 	private AntPathRequestMatcher[] requestMatchers = { new AntPathRequestMatcher("/rest/v1/auth/**"),
 			new AntPathRequestMatcher("/rest/v1/file/dt/**"), new AntPathRequestMatcher("/rest/v1/order/**"),
-			new AntPathRequestMatcher("/app/v1/auth/**") };
+			new AntPathRequestMatcher("/static/**") };
 
 	public HandlerInterceptorForToken(YtConfig config) {
 	}

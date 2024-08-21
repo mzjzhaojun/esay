@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yt.app.api.v1.dbo.SysQueryDTO;
-import com.yt.app.api.v1.dbo.SysSubmitDTO;
+import com.yt.app.api.v1.dbo.PaySubmitDTO;
+import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.service.PayoutService;
-import com.yt.app.api.v1.vo.SysResultVO;
+import com.yt.app.api.v1.vo.PayResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.common.common.yt.YtBody;
@@ -49,16 +50,16 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	@RequestMapping(value = "/query", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tyquery(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
-		SysResultVO pt = service.query(requestEntity.getBody().getMerchantorderid());
+		PayResultVO pt = service.query(requestEntity.getBody().getMerchantorderid());
 		return new YtResponseEntity<Object>(new YtBody(pt));
 	}
 
 	// 盘口下单
 	@ApiOperation(value = "submit")
 	@RequestMapping(value = "/submit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> submit(YtRequestEntity<SysSubmitDTO> requestEntity, HttpServletRequest request,
+	public YtResponseEntity<Object> submit(YtRequestEntity<PaySubmitDTO> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
-		SysResultVO sr = service.submit(requestEntity.getBody());
+		PayResultVO sr = service.submit(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(sr));
 	}
 
@@ -67,8 +68,17 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	@RequestMapping(value = "/querybalance", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> query(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
-		SysResultVO pt = service.query(requestEntity.getBody().getMerchantid());
+		PayResultVO pt = service.query(requestEntity.getBody().getMerchantid());
 		return new YtResponseEntity<Object>(new YtBody(pt));
+	}
+
+	// 拉码下单
+	@ApiOperation(value = "submit")
+	@RequestMapping(value = "/submitqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> submitqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		String yb = service.submitQrcode(requestEntity.getBody());
+		return new YtResponseEntity<Object>(new YtBody(yb));
 	}
 
 }

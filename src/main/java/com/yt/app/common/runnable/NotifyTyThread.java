@@ -4,7 +4,7 @@ import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
-import com.yt.app.api.v1.vo.SysResultVO;
+import com.yt.app.api.v1.vo.PayResultVO;
 import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.common.yt.YtBody;
@@ -29,7 +29,7 @@ public class NotifyTyThread implements Runnable {
 		MerchantMapper merchantmapper = BeanContext.getApplicationContext().getBean(MerchantMapper.class);
 		Payout payout = mapper.get(id);
 		Merchant merchant = merchantmapper.get(payout.getMerchantid());
-		SysResultVO ss = new SysResultVO();
+		PayResultVO ss = new PayResultVO();
 		ss.setMerchantid(payout.getMerchantcode());
 		ss.setPayorderid(payout.getMerchantordernum());
 		ss.setMerchantorderid(payout.getMerchantorderid());

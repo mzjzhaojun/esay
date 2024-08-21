@@ -34,7 +34,7 @@ import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.common.bot.MerchantMsgBot;
-import com.yt.app.api.v1.dbo.SysSubmitDTO;
+import com.yt.app.api.v1.dbo.PaySubmitDTO;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Aisle;
@@ -333,7 +333,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 	// API提交订单
 	@Override
-	public Exchange submit(SysSubmitDTO ss) {
+	public Exchange submit(PaySubmitDTO ss) {
 		String id = ss.getMerchantid();
 		Merchant mc = merchantmapper.get(Long.valueOf(id));
 		Assert.notNull(mc, "商户不存在!");

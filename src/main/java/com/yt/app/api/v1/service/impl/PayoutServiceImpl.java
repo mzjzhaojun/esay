@@ -28,7 +28,7 @@ import com.yt.app.api.v1.service.MerchantcustomerbanksService;
 import com.yt.app.api.v1.service.PayoutService;
 import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.api.v1.vo.PayoutVO;
-import com.yt.app.api.v1.vo.SysResultVO;
+import com.yt.app.api.v1.vo.PayResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
@@ -36,7 +36,8 @@ import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.common.bot.MerchantMsgBot;
-import com.yt.app.api.v1.dbo.SysSubmitDTO;
+import com.yt.app.api.v1.dbo.PaySubmitDTO;
+import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Aisle;
@@ -287,12 +288,12 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
-	public SysResultVO query(String merchantordernum) {
+	public PayResultVO query(String merchantordernum) {
 		Payout pt = mapper.getByMerchantOrdernum(merchantordernum);
 		if (pt == null) {
 			throw new YtException("订单不存在!");
 		}
-		SysResultVO srv = new SysResultVO();
+		PayResultVO srv = new PayResultVO();
 		srv.setBankcode(pt.getBankcode());
 		srv.setCode(pt.getStatus());
 		srv.setMerchantid(pt.getMerchantcode());
@@ -340,7 +341,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	// 盘口提交订单
 	@Override
-	public SysResultVO submit(SysSubmitDTO ss) {
+	public PayResultVO submit(PaySubmitDTO ss) {
 		String code = ss.getMerchantid();
 		Merchant mc = merchantmapper.getByCode(code.toString());
 
@@ -379,7 +380,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		pt.setMerchantorderid(ss.getMerchantorderid());
 		addPayout(pt, mc);
 		// 返回
-		SysResultVO sr = new SysResultVO();
+		PayResultVO sr = new PayResultVO();
 		sr.setBankcode(ss.getBankcode());
 		sr.setMerchantid(sr.getMerchantid());
 		sr.setMerchantorderid(ss.getMerchantorderid());
@@ -701,14 +702,23 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
-	public SysResultVO queryblance(String merchantid) {
+	public PayResultVO queryblance(String merchantid) {
 		Merchant mt = merchantmapper.getByCode(merchantid);
 		Assert.notNull(mt, "没有找到商户!");
 		Merchantaccount mtt = merchantaccountmapper.getByUserId(mt.getUserid());
-		SysResultVO srv = new SysResultVO();
+		PayResultVO srv = new PayResultVO();
 		srv.setBalance(mtt.getBalance());
 		srv.setMerchantid(merchantid);
 		return srv;
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public String submitQrcode(QrcodeSubmitDTO qs) {
+		String sign = PayUtil.SignMd5Qrocde(qs, "0cqiwsk80js5gvf4f0vnhnzujn6twvuh");
+		return sign;
 	}
 
 }

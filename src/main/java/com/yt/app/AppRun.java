@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.yt.app.common.common.YtAutoCode;
+import com.yt.app.common.mybatis.MybatisPlusConfig;
 
 /**
  * by jz
@@ -33,8 +34,7 @@ public class AppRun extends SpringBootServletInitializer {
 	}
 
 	public static void main(String[] args) throws Exception {
-		// SpringApplication.run(new Class[] { AppRun.class }, args);
-		YtAutoCode.u().p(Arrays.asList("twitter"));
-		// System.out.println(String.format("%.0f", 120.21312));
+		SpringApplication.run(new Class[] { AppRun.class }, args);
+		// YtAutoCode.u().p(Arrays.asList("qrcode","income","incomemerchantaccount","incomemerchantaccountrecord","incomemerchantaccountorder"));
 	}
 }

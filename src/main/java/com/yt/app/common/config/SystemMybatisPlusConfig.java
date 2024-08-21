@@ -27,7 +27,6 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("t_sys_user_role");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("t_sys_config");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("t_sys_file");
-		// MybatisPlusConfig.TENANT_ID_TABLE.add("t_sys_logs");
 		//
 
 		MybatisPlusConfig.TENANT_ID_TABLE.add("aisle");
@@ -35,33 +34,39 @@ public class SystemMybatisPlusConfig {
 
 		MybatisPlusConfig.TENANT_ID_TABLE.add("channel");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("channelaccount");
-		MybatisPlusConfig.TENANT_ID_TABLE.add("channelaccountapplyjourna");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("channelaccountrecord");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("channelaccountorder");
 
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchant");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantaisle");
+
+		MybatisPlusConfig.TENANT_ID_TABLE.add("payout");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantaccount");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantaccountbank");
-		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantaccountapplyjournal");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantaccountrecord");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantaccountorder");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantcustomerbanks");
 
 		MybatisPlusConfig.TENANT_ID_TABLE.add("agent");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("agentaccount");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("agentaccountbank");
-		MybatisPlusConfig.TENANT_ID_TABLE.add("agentaccountapplyjourna");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("agentaccountrecord");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("agentaccountorder");
 
-		MybatisPlusConfig.TENANT_ID_TABLE.add("payout");
-		MybatisPlusConfig.TENANT_ID_TABLE.add("exchange");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("systemaccount");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("systemcapitalrecord");
 
+		MybatisPlusConfig.TENANT_ID_TABLE.add("exchange");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("exchangemerchantaccount");
-		MybatisPlusConfig.TENANT_ID_TABLE.add("exchangemerchantaccountapplyjournal");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("exchangemerchantaccountrecord");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("exchangemerchantaccountorder");
-		// MybatisPlusConfig.TENANT_ID_TABLE.add("tgmerchantlabel");
-		// MybatisPlusConfig.TENANT_ID_TABLE.add("tgchannelgroup");
+
+		MybatisPlusConfig.TENANT_ID_TABLE.add("qrcode");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("income");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("incomemerchantaccount");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("incomemerchantaccountrecord");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("incomemerchantaccountorder");
+
 	}
 
 }

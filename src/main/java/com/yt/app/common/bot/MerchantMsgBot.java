@@ -16,7 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import com.yt.app.api.v1.dbo.SysSubmitDTO;
+import com.yt.app.api.v1.dbo.PaySubmitDTO;
 import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.Merchantaccount;
 import com.yt.app.api.v1.entity.Payconfig;
@@ -224,7 +224,7 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 					String url = appConfig.getFileurl().replace("{id}", fl.getId() + "");
 
 					// 下單
-					SysSubmitDTO ss = new SysSubmitDTO();
+					PaySubmitDTO ss = new PaySubmitDTO();
 					ss.setMerchantid(tmg.getMerchantid().toString());
 					ss.setQrcode(url);
 					ss.setPayamt(amount);

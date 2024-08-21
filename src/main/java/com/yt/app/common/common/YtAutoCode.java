@@ -14,11 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.yt.app.api.v1.vo.TgmerchantgroupVO;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.DbConnectionUtil;
 
-import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 
 /**

@@ -1,10 +1,7 @@
-package com.yt.app.api.v1.vo;
-
-import com.yt.app.common.base.BaseVO;
+package com.yt.app.api.v1.dbo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -12,22 +9,20 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class SysResultVO extends BaseVO {
+public class PaySubmitDTO {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	String merchantid;
-	String payorderid;
 	String merchantorderid;
 	Integer paytype;
 	Double payamt;
+	String notifyurl;
+	String banknum;
 	String bankcode;
-	Integer code;
+	String bankname;
+	String bankowner;
+	String bankaddress;
 	String remark;
+	String merchantip;
+	String qrcode;
 	String sign;
-	Double balance;
-
 }
