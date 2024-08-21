@@ -9,7 +9,7 @@
 </head>
 <body onLoad="submit_sync()">
 	<form name="uncome"
-		action="https://yunfumon.meisuobudamiya.net/Pay_Index.html"
+		action="http://localhost:8080/esay/rest/v1/view/index"
 		method="post">
 		<input type="text" name="pay_memberid" value="240851448"> <input
 			type="text" name="pay_orderid" value="24085144812313"> <input
@@ -30,29 +30,11 @@
 </body>
 <script type="text/javascript">
 	var submit_sync = function() {
-		$.ajax({
-			type : "post",
-			url : 'http://localhost:8080/esay/rest/v1/order/submitqrcode',
-			async : false,
-			data : JSON.stringify({
-				pay_memberid : "240851448",
-				pay_orderid : "24085144812313",
-				pay_applydate : "2016-12-26 18:18:18",
-				pay_bankcode : "8017",
-				pay_notifyurl : "-",
-				pay_callbackurl : "-",
-				pay_amount : 100,
-				pay_productname : "test",
-				pay_productnum : 3
-			}),
-			contentType : "application/json; charset=utf-8",
-			dataType : "json",
-			success : function(data) {
-				console.info(data.body);
-				$('#pay_md5sign').val(data.body);
-				uncome.submit();
-			}
-		});
+		
+		uncome.submit();
+		
+		
+		
 	}
 </script>
 </html>

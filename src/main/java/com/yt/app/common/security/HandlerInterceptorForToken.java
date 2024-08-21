@@ -46,7 +46,7 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 
 	private AntPathRequestMatcher[] requestMatchers = { new AntPathRequestMatcher("/rest/v1/auth/**"),
 			new AntPathRequestMatcher("/rest/v1/file/dt/**"), new AntPathRequestMatcher("/rest/v1/order/**"),
-			new AntPathRequestMatcher("/static/**") };
+			new AntPathRequestMatcher("/rest/v1/view/**"), new AntPathRequestMatcher("/static/**") };
 
 	public HandlerInterceptorForToken(YtConfig config) {
 	}
@@ -90,6 +90,8 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 	}
 
 	public boolean matches(HttpServletRequest request) {
+		String url = request.getServletPath();
+		System.out.println(url);
 		for (AntPathRequestMatcher rm : requestMatchers) {
 			if (rm.matches(request)) {
 				return true;

@@ -43,9 +43,5 @@ public class Incomemerchantaccountorder extends YtBaseEntity<Incomemerchantaccou
 	Integer status;
 	String imgurl;
 	String remark;
-	Long create_by;
-	java.util.Date create_time;
-	Long update_by;
-	java.util.Date update_time;
 	Integer version;
 }

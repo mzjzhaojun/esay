@@ -57,10 +57,6 @@ public class Income extends YtBaseEntity<Income> {
 	Integer status;
 	java.util.Date successtime;
 	Long backlong;
-	Long create_by;
-	java.util.Date create_time;
-	Long update_by;
-	java.util.Date update_time;
 	String qrcode;
 	Integer type;
 	String imgurl;

@@ -36,10 +36,6 @@ public class Incomemerchantaccountrecord extends YtBaseEntity<Incomemerchantacco
 	Object posttoincomeamount;
 	Object postwithdrawamount;
 	Object posttowithdrawamount;
-	java.util.Date update_time;
-	Long update_by;
-	java.util.Date create_time;
-	Long create_by;
 	String remark;
 	Integer version;
 }

@@ -41,10 +41,6 @@ public class Qrcode extends YtBaseEntity<Qrcode> {
 	String fixedcode;
 	Boolean firstmatch;
 	String firstmatchmoney;
-	Long create_by;
-	java.util.Date create_time;
-	Long update_by;
-	java.util.Date update_time;
 	String remark;
 	Integer version;
 }

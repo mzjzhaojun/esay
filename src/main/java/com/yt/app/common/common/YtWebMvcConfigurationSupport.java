@@ -28,6 +28,9 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 /**
  * 
@@ -118,12 +121,34 @@ public class YtWebMvcConfigurationSupport extends WebMvcConfigurationSupport {
 		super.addResourceHandlers(paramResourceHandlerRegistry);
 	}
 
-	@Bean(name = "InternalResourceViewResolver")
+	@Bean
 	public InternalResourceViewResolver l() {
 		InternalResourceViewResolver localInternalResourceViewResolver = new InternalResourceViewResolver();
 		localInternalResourceViewResolver.setPrefix("/");
 		localInternalResourceViewResolver.setSuffix(".html");
 		return localInternalResourceViewResolver;
+	}
+
+	@Bean
+	public SpringResourceTemplateResolver springresourcetemplateresolver() {
+		SpringResourceTemplateResolver tt = new SpringResourceTemplateResolver();
+		tt.setPrefix("classpath:/template/");
+		tt.setSuffix(".html");
+		return tt;
+	}
+
+	@Bean
+	public SpringTemplateEngine springtemplateengine() {
+		SpringTemplateEngine tt = new SpringTemplateEngine();
+		tt.setTemplateResolver(springresourcetemplateresolver());
+		return tt;
+	}
+
+	@Bean
+	public ThymeleafViewResolver thymeleafviewresolver() {
+		ThymeleafViewResolver tt = new ThymeleafViewResolver();
+		tt.setTemplateEngine(springtemplateengine());
+		return tt;
 	}
 
 	@Override

@@ -31,10 +31,6 @@ public class Incomemerchantaccount extends YtBaseEntity<Incomemerchantaccount> {
 	Object withdrawamount;
 	Object towithdrawamount;
 	Object balance;
-	Long create_by;
-	java.util.Date create_time;
-	Long update_by;
-	java.util.Date update_time;
 	String remark;
 	Integer version;
 }
