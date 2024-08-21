@@ -2,7 +2,7 @@ package com.yt.app.api.v1.service;
 
 import java.util.List;
 
-import com.yt.app.api.v1.entity.Payconfig;
+import com.yt.app.api.v1.entity.Sysconfig;
 import com.yt.app.common.base.YtIBaseService;
 
 /**
@@ -11,13 +11,13 @@ import com.yt.app.common.base.YtIBaseService;
  * @version v1 @createdate2023-11-15 18:42:54
  */
 
-public interface PayconfigService extends YtIBaseService<Payconfig, Long> {
+public interface SysconfigService extends YtIBaseService<Sysconfig, Long> {
 
-	Payconfig getData();
+	Sysconfig getData();
 
-	List<Payconfig> getDataTop();
+	List<Sysconfig> getDataTop();
 
 	void initExchangeData();
 
-	List<Payconfig> getAliPayDataTop();
+	List<Sysconfig> getAliPayDataTop();
 }

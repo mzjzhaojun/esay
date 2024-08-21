@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Payconfig extends YtBaseEntity<Payconfig> {
+public class Sysconfig extends YtBaseEntity<Sysconfig> {
 
 	private static final long serialVersionUID = 1L;
 

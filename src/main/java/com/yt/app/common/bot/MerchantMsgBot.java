@@ -19,7 +19,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.yt.app.api.v1.dbo.PaySubmitDTO;
 import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.Merchantaccount;
-import com.yt.app.api.v1.entity.Payconfig;
+import com.yt.app.api.v1.entity.Sysconfig;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
@@ -33,7 +33,7 @@ import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.service.ExchangeService;
-import com.yt.app.api.v1.service.PayconfigService;
+import com.yt.app.api.v1.service.SysconfigService;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.config.YtConfig;
@@ -53,7 +53,7 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 	private TgchannelgroupMapper tgchannelgroupmapper;
 
 	@Autowired
-	private PayconfigService payconfigservice;
+	private SysconfigService payconfigservice;
 
 	@Autowired
 	private PayoutMapper payoutmapper;
@@ -125,17 +125,17 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 		String username = update.getMessage().getFrom().getUserName();
 		if (message.equals("#h")) {
 			// 汇率
-			List<Payconfig> list = payconfigservice.getDataTop();
+			List<Sysconfig> list = payconfigservice.getDataTop();
 			StringBuffer sb = new StringBuffer();
 			Integer i = 1;
-			for (Payconfig pc : list) {
+			for (Sysconfig pc : list) {
 				sb.append(i + "" + pc.getName() + "，价格:" + pc.getExchange() + "\n");
 				i++;
 			}
 			sendText(chatid, sb.toString());
 		} else if (message.equals("#d")) {
 			// 充值地址
-			Payconfig pc = payconfigservice.getData();
+			Sysconfig pc = payconfigservice.getData();
 			if (pc != null) {
 				String msg = "USDT地址：" + pc.getUsdt() + "";
 				sendReplyText(chatid, messageid, msg);

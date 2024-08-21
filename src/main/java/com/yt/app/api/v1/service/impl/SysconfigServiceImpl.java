@@ -9,15 +9,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.stereotype.Service;
-import com.yt.app.api.v1.mapper.PayconfigMapper;
-import com.yt.app.api.v1.service.PayconfigService;
+import com.yt.app.api.v1.mapper.SysconfigMapper;
+import com.yt.app.api.v1.service.SysconfigService;
 import com.yt.app.api.v1.vo.SysOxxVo;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.yt.app.api.v1.entity.Payconfig;
+import com.yt.app.api.v1.entity.Sysconfig;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
@@ -37,44 +37,44 @@ import java.util.Map;
  */
 
 @Service
-public class PayconfigServiceImpl extends YtBaseServiceImpl<Payconfig, Long> implements PayconfigService {
+public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> implements SysconfigService {
 	@Autowired
-	private PayconfigMapper mapper;
+	private SysconfigMapper mapper;
 
 	@Override
 	@Transactional
-	public Integer post(Payconfig t) {
+	public Integer post(Sysconfig t) {
 		Integer i = mapper.post(t);
 		return i;
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Payconfig> list(Map<String, Object> param) {
+	public YtIPage<Sysconfig> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return new YtPageBean<Payconfig>(Collections.emptyList());
+				return new YtPageBean<Sysconfig>(Collections.emptyList());
 			}
 		}
-		List<Payconfig> list = mapper.list(param);
-		return new YtPageBean<Payconfig>(param, list, count);
+		List<Sysconfig> list = mapper.list(param);
+		return new YtPageBean<Sysconfig>(param, list, count);
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public Payconfig get(Long id) {
-		Payconfig t = mapper.get(id);
+	public Sysconfig get(Long id) {
+		Sysconfig t = mapper.get(id);
 		return t;
 	}
 
 	@Override
 	public void initExchangeData() {
 		// test
-		QueryWrapper<Payconfig> p = new QueryWrapper<Payconfig>();
+		QueryWrapper<Sysconfig> p = new QueryWrapper<Sysconfig>();
 
-		List<Payconfig> count = mapper.selectList(p);
+		List<Sysconfig> count = mapper.selectList(p);
 
 		System.out.println("实时汇率：" + count.get(0).getExchange());
 
@@ -94,12 +94,12 @@ public class PayconfigServiceImpl extends YtBaseServiceImpl<Payconfig, Long> imp
 	}
 
 	@Override
-	public Payconfig getData() {
+	public Sysconfig getData() {
 		return mapper.getByName(ServiceConstant.SYSTEM_PAYCONFIG_EXCHANGE);
 	}
 
 	@Override
-	public List<Payconfig> getDataTop() {
+	public List<Sysconfig> getDataTop() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("user-agent",
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
@@ -110,9 +110,9 @@ public class PayconfigServiceImpl extends YtBaseServiceImpl<Payconfig, Long> imp
 				HttpMethod.GET, httpEntity, SysOxxVo.class);
 		SysOxxVo data = sov.getBody();
 		List<Object> list = data.getData().getSell();
-		List<Payconfig> listpc = new ArrayList<Payconfig>();
+		List<Sysconfig> listpc = new ArrayList<Sysconfig>();
 		for (Integer i = 0; i < 5; i++) {
-			Payconfig e = new Payconfig();
+			Sysconfig e = new Sysconfig();
 			e.setName(BeanUtil.beanToMap(list.get(i)).get("nickName").toString());
 			e.setExchange(Double.valueOf(BeanUtil.beanToMap(list.get(i)).get("price").toString()));
 			listpc.add(e);
@@ -121,7 +121,7 @@ public class PayconfigServiceImpl extends YtBaseServiceImpl<Payconfig, Long> imp
 	}
 
 	@Override
-	public List<Payconfig> getAliPayDataTop() {
+	public List<Sysconfig> getAliPayDataTop() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("user-agent",
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
@@ -132,9 +132,9 @@ public class PayconfigServiceImpl extends YtBaseServiceImpl<Payconfig, Long> imp
 				HttpMethod.GET, httpEntity, SysOxxVo.class);
 		SysOxxVo data = sov.getBody();
 		List<Object> list = data.getData().getSell();
-		List<Payconfig> listpc = new ArrayList<Payconfig>();
+		List<Sysconfig> listpc = new ArrayList<Sysconfig>();
 		for (Integer i = 0; i < 5; i++) {
-			Payconfig e = new Payconfig();
+			Sysconfig e = new Sysconfig();
 			e.setName(BeanUtil.beanToMap(list.get(i)).get("nickName").toString());
 			e.setExchange(Double.valueOf(BeanUtil.beanToMap(list.get(i)).get("price").toString()));
 			listpc.add(e);

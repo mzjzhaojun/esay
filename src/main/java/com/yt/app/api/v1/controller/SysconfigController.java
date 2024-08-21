@@ -15,8 +15,8 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
 import io.swagger.annotations.ApiOperation;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
-import com.yt.app.api.v1.service.PayconfigService;
-import com.yt.app.api.v1.entity.Payconfig;
+import com.yt.app.api.v1.service.SysconfigService;
+import com.yt.app.api.v1.entity.Sysconfig;
 
 /**
  * @author zj defaulttest
@@ -26,17 +26,17 @@ import com.yt.app.api.v1.entity.Payconfig;
 
 @RestController
 @RequestMapping("/rest/v1/payconfig")
-public class PayconfigController extends YtBaseEncipherControllerImpl<Payconfig, Long> {
+public class SysconfigController extends YtBaseEncipherControllerImpl<Sysconfig, Long> {
 
 	@Autowired
-	private PayconfigService service;
+	private SysconfigService service;
 
 	@Override
-	@ApiOperation(value = "list", response = Payconfig.class)
+	@ApiOperation(value = "list", response = Sysconfig.class)
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Payconfig> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		YtIPage<Sysconfig> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
@@ -47,7 +47,7 @@ public class PayconfigController extends YtBaseEncipherControllerImpl<Payconfig,
 	 */
 	@RequestMapping(value = "/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> data(HttpServletRequest request, HttpServletResponse response) {
-		Payconfig t = service.getData();
+		Sysconfig t = service.getData();
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}
 }

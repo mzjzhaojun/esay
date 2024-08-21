@@ -17,7 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.yt.app.api.v1.entity.Exchange;
-import com.yt.app.api.v1.entity.Payconfig;
+import com.yt.app.api.v1.entity.Sysconfig;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
@@ -25,7 +25,7 @@ import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.service.ExchangeService;
-import com.yt.app.api.v1.service.PayconfigService;
+import com.yt.app.api.v1.service.SysconfigService;
 import com.yt.app.common.base.context.TenantIdContext;
 
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +44,7 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 	private TgmerchantchannelmsgMapper tgmerchantchannelmsgmapper;
 
 	@Autowired
-	private PayconfigService payconfigservice;
+	private SysconfigService payconfigservice;
 
 	@Autowired
 	private ExchangeService exchangeservice;
@@ -91,10 +91,10 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 	private void handlemessage(Update update, String message, Tgchannelgroup tmg) {
 		String username = update.getMessage().getFrom().getUserName();
 		if (message.equals("#h")) {// 汇率
-			List<Payconfig> list = payconfigservice.getAliPayDataTop();
+			List<Sysconfig> list = payconfigservice.getAliPayDataTop();
 			StringBuffer sb = new StringBuffer();
 			Integer i = 1;
-			for (Payconfig pc : list) {
+			for (Sysconfig pc : list) {
 				sb.append(i + "" + pc.getName() + "，价格:" + pc.getExchange() + "\n");
 				i++;
 			}

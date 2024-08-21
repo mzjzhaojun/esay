@@ -18,7 +18,7 @@ import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
-import com.yt.app.api.v1.service.PayconfigService;
+import com.yt.app.api.v1.service.SysconfigService;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.runnable.GetExchangeChannelOrderNumThread;
@@ -41,7 +41,7 @@ public class TaskConfig {
 	private ThreadPoolTaskExecutor threadpooltaskexecutor;
 
 	@Autowired
-	private PayconfigService payconfigservice;
+	private SysconfigService payconfigservice;
 
 	@Autowired
 	private MerchantMapper merchantmapper;

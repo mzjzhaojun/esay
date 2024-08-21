@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yt.app.api.v1.mapper.PayconfigMapper">
+<mapper namespace="com.yt.app.api.v1.mapper.SysconfigMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
 		id,name,usdt,exchange,tenant_id,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Payconfig">
+		type="com.yt.app.api.v1.entity.Sysconfig">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Payconfig">
+		parameterType="com.yt.app.api.v1.entity.Sysconfig">
 		insert into
-		payconfig(id,name,usdt,exchange,create_by,create_time,update_by,update_time)
+		sysconfig(id,name,usdt,exchange,create_by,create_time,update_by,update_time)
 		values
 		(#{id},#{name},#{usdt},#{exchange},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		payconfig(id,name,usdt,exchange,tenant_id,create_by,create_time,update_by,update_time)
+		sysconfig(id,name,usdt,exchange,tenant_id,create_by,create_time,update_by,update_time)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
@@ -29,20 +29,20 @@
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from payconfig
+		delete from sysconfig
 		where id
 		= #{id}
 	</delete>
 
 	<update id="putExchange" parameterType="java.lang.Double">
-		update payconfig set
+		update sysconfig set
 		exchange = #{value} where id = 1
 	</update>
 
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Payconfig">
-		update payconfig
+		parameterType="com.yt.app.api.v1.entity.Sysconfig">
+		update sysconfig
 		<set>
 			<if test="name != null">
 				name= #{name},
@@ -70,7 +70,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from payconfig
+		from sysconfig
 		where id = #{id}
 	</select>
 	<!--getByName -->
@@ -78,7 +78,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from payconfig
+		from sysconfig
 		where name = #{name}
 	</select>
 	<!-- getList -->
@@ -86,7 +86,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from payconfig
+		from sysconfig
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -105,7 +105,7 @@
 		resultType="java.util.HashMap">
 		select
 		<include refid="Base_Column_List" />
-		from payconfig
+		from sysconfig
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -122,7 +122,7 @@
 	<!-- getCount -->
 	<select id="countlist" parameterType="java.util.HashMap"
 		resultType="int">
-		select count(*) from payconfig
+		select count(*) from sysconfig
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -135,7 +135,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from payconfig
+		from sysconfig
 		<where>
 			1=1
 			<if test="array != null and array.length > 0">

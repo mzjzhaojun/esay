@@ -2,7 +2,7 @@ package com.yt.app.api.v1.mapper;
 
 import java.util.List;
 import java.util.Map;
-import com.yt.app.api.v1.entity.Payconfig;
+import com.yt.app.api.v1.entity.Sysconfig;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
 import com.yt.app.common.base.YtIBaseMapper;
@@ -13,14 +13,14 @@ import com.yt.app.common.base.YtIBaseMapper;
  * @version v1 @createdate2023-11-15 18:42:54
  */
 
-public interface PayconfigMapper extends YtIBaseMapper<Payconfig> {
+public interface SysconfigMapper extends YtIBaseMapper<Sysconfig> {
 	/**
 	 * add
 	 * 
 	 * @param o Payconfig
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Payconfig.class })
+	@YtRedisCacheEvictAnnotation(classs = { Sysconfig.class })
 	public Integer post(Object t);
 
 	/**
@@ -29,8 +29,8 @@ public interface PayconfigMapper extends YtIBaseMapper<Payconfig> {
 	 * @param o Payconfiglist
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Payconfig.class })
-	public Integer batchSava(List<Payconfig> list);
+	@YtRedisCacheEvictAnnotation(classs = { Sysconfig.class })
+	public Integer batchSava(List<Sysconfig> list);
 
 	/**
 	 * update
@@ -38,7 +38,7 @@ public interface PayconfigMapper extends YtIBaseMapper<Payconfig> {
 	 * @param o Payconfig
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Payconfig.class })
+	@YtRedisCacheEvictAnnotation(classs = { Sysconfig.class })
 	public Integer put(Object t);
 
 	/**
@@ -47,8 +47,8 @@ public interface PayconfigMapper extends YtIBaseMapper<Payconfig> {
 	 * @param id id
 	 * @return Payconfig
 	 */
-	@YtRedisCacheAnnotation(classs = Payconfig.class)
-	public Payconfig get(Long id);
+	@YtRedisCacheAnnotation(classs = Sysconfig.class)
+	public Sysconfig get(Long id);
 
 	/**
 	 * delete
@@ -56,7 +56,7 @@ public interface PayconfigMapper extends YtIBaseMapper<Payconfig> {
 	 * @param id id
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Payconfig.class })
+	@YtRedisCacheEvictAnnotation(classs = { Sysconfig.class })
 	public Integer delete(Long id);
 
 	/**
@@ -65,7 +65,7 @@ public interface PayconfigMapper extends YtIBaseMapper<Payconfig> {
 	 * @param param map
 	 * @return count
 	 */
-	@YtRedisCacheAnnotation(classs = Payconfig.class)
+	@YtRedisCacheAnnotation(classs = Sysconfig.class)
 	public Integer countlist(Map<String, Object> param);
 
 	/**
@@ -74,8 +74,8 @@ public interface PayconfigMapper extends YtIBaseMapper<Payconfig> {
 	 * @param param map
 	 * @return listPayconfig
 	 */
-	@YtRedisCacheAnnotation(classs = Payconfig.class)
-	public List<Payconfig> list(Map<String, Object> param);
+	@YtRedisCacheAnnotation(classs = Sysconfig.class)
+	public List<Sysconfig> list(Map<String, Object> param);
 
 	/**
 	 * map
@@ -83,7 +83,7 @@ public interface PayconfigMapper extends YtIBaseMapper<Payconfig> {
 	 * @param param map
 	 * @return mapPayconfig
 	 */
-	@YtRedisCacheAnnotation(classs = Payconfig.class)
+	@YtRedisCacheAnnotation(classs = Sysconfig.class)
 	public List<Map<String, Object>> map(Map<String, Object> param);
 
 	/**
@@ -92,8 +92,8 @@ public interface PayconfigMapper extends YtIBaseMapper<Payconfig> {
 	 * @param id long[]ids
 	 * @return listPayconfig
 	 */
-	@YtRedisCacheAnnotation(classs = Payconfig.class)
-	public List<Payconfig> listByArrayId(long[] id);
+	@YtRedisCacheAnnotation(classs = Sysconfig.class)
+	public List<Sysconfig> listByArrayId(long[] id);
 
 	/**
 	 * update
@@ -101,7 +101,7 @@ public interface PayconfigMapper extends YtIBaseMapper<Payconfig> {
 	 * @param o Payconfig
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Payconfig.class })
+	@YtRedisCacheEvictAnnotation(classs = { Sysconfig.class })
 	public Integer putExchange(Double value);
 
 	/**
@@ -110,7 +110,7 @@ public interface PayconfigMapper extends YtIBaseMapper<Payconfig> {
 	 * @param id id
 	 * @return Payconfig
 	 */
-	@YtRedisCacheAnnotation(classs = Payconfig.class)
-	public Payconfig getByName(String name);
+	@YtRedisCacheAnnotation(classs = Sysconfig.class)
+	public Sysconfig getByName(String name);
 
 }

@@ -26,7 +26,7 @@ import com.yt.app.api.v1.service.ExchangeMerchantaccountService;
 import com.yt.app.api.v1.service.ExchangeService;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.MerchantcustomerbanksService;
-import com.yt.app.api.v1.service.PayconfigService;
+import com.yt.app.api.v1.service.SysconfigService;
 import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
@@ -46,7 +46,7 @@ import com.yt.app.api.v1.entity.ExchangeMerchantaccount;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccountorder;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Merchantaisle;
-import com.yt.app.api.v1.entity.Payconfig;
+import com.yt.app.api.v1.entity.Sysconfig;
 import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.vo.ExchangeVO;
@@ -129,7 +129,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	@Autowired
 	private MerchantcustomerbanksService merchantcustomerbanksservice;
 	@Autowired
-	private PayconfigService payconfigservice;
+	private SysconfigService payconfigservice;
 
 	@Override
 	@Transactional
@@ -343,7 +343,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			throw new YtException("商戶沒有配置通道!");
 		}
 
-		Payconfig pc = payconfigservice.getData();
+		Sysconfig pc = payconfigservice.getData();
 
 		Exchange pt = new Exchange();
 		pt.setAccname(ss.getBankowner());
