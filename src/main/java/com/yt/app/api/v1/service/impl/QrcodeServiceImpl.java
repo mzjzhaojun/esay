@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.QrcodeMapper;
 import com.yt.app.api.v1.service.QrcodeService;
+import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.vo.QrcodeVO;
@@ -28,6 +29,7 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	@Override
 	@Transactional
 	public Integer post(Qrcode t) {
+		t.setUserid(SysUserContext.getUserId());
 		Integer i = mapper.post(t);
 		return i;
 	}

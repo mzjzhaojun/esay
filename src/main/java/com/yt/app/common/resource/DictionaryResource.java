@@ -110,6 +110,7 @@ public class DictionaryResource implements Serializable {
 	 */
 	public static final Integer AISLE_TYPE_PAYOUT_70 = 70;// 代付
 	public static final Integer AISLE_TYPE_EXCHANGE_71 = 71;// 换汇
+	public static final Integer AISLE_TYPE_EXCHANGE_72 = 72;// 代收
 
 	/**
 	 * 换汇资金明细类型

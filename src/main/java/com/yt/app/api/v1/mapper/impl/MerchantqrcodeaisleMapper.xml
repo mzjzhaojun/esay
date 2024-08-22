@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.yt.app.api.v1.mapper.MerchantqrcodeaisleMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,tenant_id,merchantid,qrcodeaisleid,create_by,create_time,update_by,update_time,version
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Merchantqrcodeaisle">
+	</resultMap>
+	<!-- ResultMap -->
+	<resultMap id="ResultMapVO"
+		type="com.yt.app.api.v1.vo.MerchantqrcodeaisleVO">
+	</resultMap>
+	<!-- add -->
+	<insert id="post"
+		parameterType="com.yt.app.api.v1.entity.Merchantqrcodeaisle">
+		insert into
+		merchantqrcodeaisle(id,merchantid,qrcodeaisleid,create_by,create_time,update_by,update_time)
+		values
+		(#{id},#{merchantid},#{qrcodeaisleid},#{create_by},#{create_time},#{update_by},#{update_time})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		merchantqrcodeaisle(id,tenant_id,merchantid,qrcodeaisleid,create_by,create_time,update_by,update_time)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{tenant_id},#{merchantid},#{qrcodeaisleid},#{create_by},#{create_time},#{update_by},#{update_time})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from merchantqrcodeaisle
+		where id = #{id}
+	</delete>
+	<!-- update -->
+	<update id="put"
+		parameterType="com.yt.app.api.v1.entity.Merchantqrcodeaisle">
+		update merchantqrcodeaisle
+		<set>
+			<if test="tenant_id != null">
+				tenant_id= #{tenant_id},
+			</if>
+			<if test="merchantid != null">
+				merchantid= #{merchantid},
+			</if>
+			<if test="qrcodeaisleid != null">
+				qrcodeaisleid= #{qrcodeaisleid},
+			</if>
+			<if test="create_by != null">
+				create_by= #{create_by},
+			</if>
+			<if test="create_time != null">
+				create_time= #{create_time},
+			</if>
+			<if test="update_by != null">
+				update_by= #{update_by},
+			</if>
+			<if test="update_time != null">
+				update_time= #{update_time},
+			</if>
+			<if test="version != null">
+				version= #{version}+1
+			</if>
+		</set>
+		where id = #{id} and version = #{version}
+	</update>
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from merchantqrcodeaisle
+		where id = #{id}
+	</select>
+	
+	<select id="getByMidAid" resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from merchantqrcodeaisle
+		where qrcodeaisleid = #{qrcodeaisleid} and merchantid= #{merchantid}
+	</select>
+	
+	<select id="getByMid" resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from merchantqrcodeaisle
+		where merchantid=#{merchantid}
+	</select>
+	
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from merchantqrcodeaisle
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="page" parameterType="java.util.HashMap"
+		resultMap="ResultMapVO">
+		SELECT
+		ma.id id,
+		ma.merchantid merchantid,
+		ma.qrcodeaisleid qrcodeaisleid,
+		a.name
+		NAME,
+		a.code CODE,
+		a.status STATUS,
+		a.nikname nikname,
+		a.type type,
+		a.remark remark
+		FROM
+		merchantqrcodeaisle ma
+		JOIN merchant m
+		ON m.id = ma.merchantid
+		JOIN qrcodeaisle a
+		ON ma.qrcodeaisleid = a.id
+		<where>
+			a.status =1
+			<if test="userid != null and userid != ''">
+				AND m.userid = #{userid}
+			</if>
+			<if test="qrcodeaisleid != null and qrcodeaisleid != ''">
+				AND ma.qrcodeaisleid = #{qrcodeaisleid}
+			</if>
+			<if test="merchantid != null and merchantid != ''">
+				AND ma.merchantid = #{merchantid}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE CONCAT( '%', #{name} , '%' )
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code LIKE CONCAT( '%', #{code} , '%' )
+			</if>
+			<if test="status != null">
+				AND a.status = #{status}
+			</if>
+			<if test="type != null">
+				AND a.type = #{type}
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		SELECT
+		count(*)
+		FROM
+		merchantqrcodeaisle ma
+		JOIN merchant m
+		ON m.id = ma.merchantid
+		JOIN qrcodeaisle a
+		ON ma.qrcodeaisleid = a.id
+		<where>
+			a.status =1
+			<if test="userid != null and userid != ''">
+				AND m.userid = #{userid}
+			</if>
+			<if test="qrcodeaisleid != null and qrcodeaisleid != ''">
+				AND ma.qrcodeaisleid = #{qrcodeaisleid}
+			</if>
+			<if test="merchantid != null and merchantid != ''">
+				AND ma.merchantid = #{merchantid}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE CONCAT( '%', #{name} , '%' )
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code LIKE CONCAT( '%', #{code} , '%' )
+			</if>
+			<if test="status != null">
+				AND a.status = #{status}
+			</if>
+			<if test="type != null">
+				AND a.type = #{type}
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from merchantqrcodeaisle
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+</mapper>

@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.ChannelMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,name,userid,nkname,code,status,balance,remotebalance,exchange,onecost,downpoint,costexchange,exchangeonecost,exchangedownpoint,min,max,weight,mtorder,ifordernum,firstmatch,firstmatchmoney,apiip,apikey,apireusultip,tenant_id,remark,create_by,create_time,update_by,update_time,version
+		id,name,userid,nkname,code,status,balance,remotebalance,type,exchange,onecost,downpoint,costexchange,exchangeonecost,exchangedownpoint,min,max,weight,mtorder,ifordernum,firstmatch,firstmatchmoney,apiip,apikey,apireusultip,tenant_id,remark,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -13,9 +13,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Channel">
 		insert into
-		channel(id,userid,name,nkname,code,status,balance,remotebalance,exchange,onecost,downpoint,costexchange,exchangeonecost,exchangedownpoint,min,max,weight,mtorder,ifordernum,firstmatch,firstmatchmoney,apiip,apikey,apireusultip,remark,create_by,create_time,update_by,update_time)
+		channel(id,userid,name,nkname,code,status,balance,remotebalance,type,exchange,onecost,downpoint,costexchange,exchangeonecost,exchangedownpoint,min,max,weight,mtorder,ifordernum,firstmatch,firstmatchmoney,apiip,apikey,apireusultip,remark,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{userid},#{name},#{nkname},#{code},#{status},#{balance},#{remotebalance},#{exchange},#{onecost},#{downpoint},#{costexchange},#{exchangeonecost},#{exchangedownpoint},#{min},#{max},#{weight},#{mtorder},#{ifordernum},#{firstmatch},#{firstmatchmoney},#{apiip},#{apikey},#{apireusultip},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{userid},#{name},#{nkname},#{code},#{status},#{balance},#{remotebalance},#{type},#{exchange},#{onecost},#{downpoint},#{costexchange},#{exchangeonecost},#{exchangedownpoint},#{min},#{max},#{weight},#{mtorder},#{ifordernum},#{firstmatch},#{firstmatchmoney},#{apiip},#{apikey},#{apireusultip},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -55,6 +55,9 @@
 			</if>
 			<if test="remotebalance != null">
 				remotebalance= #{remotebalance},
+			</if>
+			<if test="type != null">
+				type= #{type},
 			</if>
 			<if test="exchange != null">
 				exchange= #{exchange},

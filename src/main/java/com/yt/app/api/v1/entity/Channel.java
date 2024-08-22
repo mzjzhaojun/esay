@@ -37,6 +37,8 @@ public class Channel extends YtBaseEntity<Channel> {
 	Double exchangedownpoint;
 	Double downpoint;
 	Double costexchange;
+	String type;
+	String typename;
 	Integer min;
 	Integer max;
 	Integer weight;

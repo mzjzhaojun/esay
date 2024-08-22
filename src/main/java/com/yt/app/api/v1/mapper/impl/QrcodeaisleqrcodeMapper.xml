@@ -1,51 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yt.app.api.v1.mapper.AislechannelMapper">
+<mapper
+	namespace="com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,aisleid,channelid,create_by,create_time,update_by,update_time,version
+		id,tenant_id,qrcodeaisleid,qrcodelid,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Aislechannel">
+		type="com.yt.app.api.v1.entity.Qrcodeaisleqrcode">
 	</resultMap>
+	<!-- ResultMap -->
 	<resultMap id="ResultMapVO"
-		type="com.yt.app.api.v1.vo.AislechannelVO">
+		type="com.yt.app.api.v1.vo.QrcodeaisleqrcodeVO">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Aislechannel">
+		parameterType="com.yt.app.api.v1.entity.Qrcodeaisleqrcode">
 		insert into
-		aislechannel(id,aisleid,channelid,create_by,create_time,update_by,update_time)
+		qrcodeaisleqrcode(id,qrcodeaisleid,qrcodelid,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{aisleid},#{channelid},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{qrcodeaisleid},#{qrcodelid},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		aislechannel(id,aisleid,channelid,create_by,create_time,update_by,update_time)
+		qrcodeaisleqrcode(id,tenant_id,qrcodeaisleid,qrcodelid,create_by,create_time,update_by,update_time)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{aisleid},#{channelid},#{create_by},#{create_time},#{update_by},#{update_time})
+			(#{id},#{tenant_id},#{qrcodeaisleid},#{qrcodelid},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from aislechannel
-		where
-		id = #{id}
+		delete from qrcodeaisleqrcode
+		where id = #{id}
 	</delete>
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Aislechannel">
-		update aislechannel
+		parameterType="com.yt.app.api.v1.entity.Qrcodeaisleqrcode">
+		update qrcodeaisleqrcode
 		<set>
-			<if test="aisleid != null">
-				aisleid= #{aisleid},
+			<if test="tenant_id != null">
+				tenant_id= #{tenant_id},
 			</if>
-			<if test="channelid != null">
-				channelid= #{channelid},
+			<if test="qrcodeaisleid != null">
+				qrcodeaisleid= #{qrcodeaisleid},
+			</if>
+			<if test="qrcodelid != null">
+				qrcodelid= #{qrcodelid},
+			</if>
+			<if test="create_by != null">
+				create_by= #{create_by},
+			</if>
+			<if test="create_time != null">
+				create_time= #{create_time},
 			</if>
 			<if test="update_by != null">
 				update_by= #{update_by},
@@ -57,97 +67,60 @@
 				version= #{version}+1
 			</if>
 		</set>
-		where id = #{id} and version= #{version}
+		where id = #{id} and version = #{version}
 	</update>
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from aislechannel
+		from qrcodeaisleqrcode
 		where id = #{id}
 	</select>
 	
-	<!--getByAisleId -->
-	<select id="getByAisleId" parameterType="java.lang.Long"
-		resultMap="ResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from aislechannel
-		where aisleid = #{aisleid}
-	</select>
-
 	<select id="getByAidCid" resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from aislechannel
-		where aisleid = #{aisleid} and channelid= #{channelid}
+		from qrcodeaisleqrcode
+		where qrcodelid = #{qrcodelid} and qrcodeaisleid= #{qrcodeaisleid}
 	</select>
-
+	
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
-		SELECT
-		ac.id id,
-		ac.channelid channelid,
-		ac.aisleid aisleid,
-		c.name name,
-		c.code code,
-		c.status status,
-		c.exchange exchange,
-		c.onecost onecost,
-		c.remark remark
-		FROM
-		aislechannel ac
-		JOIN aisle ae
-		ON ae.id = ac.aisleid
-		JOIN channel c
-		ON ac.channelid = c.id
+		select
+		<include refid="Base_Column_List" />
+		from qrcodeaisleqrcode
 		<where>
-			c.status =1
-			<if test="aisleid != null and aisleid != ''">
-				AND ac.aisleid = #{aisleid}
-			</if>
+			1=1
 			<if test="name != null and name != ''">
-				AND c.name LIKE CONCAT( '%', #{name} , '%' )
-			</if>
-			<if test="code != null and code != ''">
-				AND c.code LIKE CONCAT( '%', #{code} , '%' )
-			</if>
-			<if test="status != null">
-				AND c.status = #{status}
-			</if>
-			<if test="orderBy != null and dir != null">
-				order by ${orderBy} ${dir}
-			</if>
-			<if test="pageStart != null and pageEnd != null">
-				LIMIT #{pageStart},#{pageEnd}
+				and name like "%"#{name}"%"
 			</if>
 		</where>
 	</select>
 	<!-- getMap -->
 	<select id="page" parameterType="java.util.HashMap"
 		resultMap="ResultMapVO">
-		SELECT
-		ac.id id,
-		ac.channelid channelid,
-		ac.aisleid aisleid,
+		select ac.id id,
+		ac.qrcodelid qrcodelid,
+		ac.qrcodeaisleid qrcodeaisleid,
 		c.name name,
 		c.code code,
 		c.status status,
-		c.exchange exchange,
+		c.dynamic dynamic,
+		c.fixedcode fixedcode,
 		c.onecost onecost,
 		c.remark remark
 		FROM
-		aislechannel ac
-		JOIN aisle ae
-		ON ae.id = ac.aisleid
-		JOIN channel c
-		ON ac.channelid = c.id
+		qrcodeaisleqrcode ac
+		JOIN qrcodeaisle ae
+		ON ae.id = ac.qrcodeaisleid
+		JOIN qrcode c
+		ON ac.qrcodelid = c.id
 		<where>
-			c.status  =1
-			<if test="aisleid != null and aisleid != ''">
-				AND ac.aisleid = #{aisleid}
+			c.status=1
+			<if test="qrcodeaisleid != null and qrcodeaisleid != ''">
+				AND ac.qrcodeaisleid = #{qrcodeaisleid}
 			</if>
 			<if test="name != null and name != ''">
 				AND c.name LIKE CONCAT( '%', #{name} , '%' )
@@ -157,12 +130,6 @@
 			</if>
 			<if test="status != null">
 				AND c.status = #{status}
-			</if>
-			<if test="orderBy != null and dir != null">
-				order by ${orderBy} ${dir}
-			</if>
-			<if test="pageStart != null and pageEnd != null">
-				LIMIT #{pageStart},#{pageEnd}
 			</if>
 		</where>
 	</select>
@@ -170,15 +137,15 @@
 	<select id="countlist" parameterType="java.util.HashMap"
 		resultType="int">
 		select count(*) FROM
-		aislechannel ac
-		JOIN aisle ae
-		ON ae.id = ac.aisleid
-		JOIN channel c
-		ON ac.channelid = c.id
+		qrcodeaisleqrcode ac
+		JOIN qrcodeaisle ae
+		ON ae.id = ac.qrcodeaisleid
+		JOIN qrcode c
+		ON ac.qrcodelid = c.id
 		<where>
 			c.status=1
-			<if test="aisleid != null and aisleid != ''">
-				AND ac.aisleid = #{aisleid}
+			<if test="qrcodeaisleid != null and qrcodeaisleid != ''">
+				AND ac.qrcodeaisleid = #{qrcodeaisleid}
 			</if>
 			<if test="name != null and name != ''">
 				AND c.name LIKE CONCAT( '%', #{name} , '%' )
@@ -196,7 +163,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from aislechannel
+		from qrcodeaisleqrcode
 		<where>
 			1=1
 			<if test="array != null and array.length > 0">

@@ -11,6 +11,7 @@ import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.vo.SysTyBalance;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.AppConstant;
+import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Channel;
@@ -25,6 +26,7 @@ import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PasswordUtil;
 import com.yt.app.common.util.PayUtil;
+import com.yt.app.common.util.RedisUtil;
 import com.yt.app.common.util.RedissonUtil;
 
 import java.util.Collections;
@@ -88,6 +90,9 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 			}
 		}
 		List<Channel> list = mapper.list(param);
+		list.forEach(al -> {
+			al.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + al.getType()));
+		});
 		return new YtPageBean<Channel>(param, list, count);
 	}
 
