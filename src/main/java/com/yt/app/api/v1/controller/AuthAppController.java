@@ -21,7 +21,7 @@ import com.yt.app.common.common.yt.YtResponseEncryptEntity;
 import com.yt.app.common.common.yt.YtResponseEntity;
 import com.yt.app.common.util.AuthUtil;
 
-import io.swagger.annotations.ApiOperation;
+
 
 /**
  * @author zj defaulttest
@@ -36,7 +36,6 @@ public class AuthAppController extends YtBaseEncipherControllerImpl<User, Long> 
 	@Autowired
 	private AuthService authservice;
 
-	@ApiOperation(value = "loginapp", response = User.class)
 	@RequestMapping(value = "/loginapp", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> loginapp(YtRequestDecryptEntity<AuthLoginDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -44,7 +43,6 @@ public class AuthAppController extends YtBaseEncipherControllerImpl<User, Long> 
 		return new YtResponseEntity<Object>(new YtBody(u));
 	}
 
-	@ApiOperation(value = "logoutapp", response = User.class)
 	@RequestMapping(value = "/logoutapp", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public YtResponseEncryptEntity<Object> logoutvue(YtRequestDecryptEntity<User> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {

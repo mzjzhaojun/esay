@@ -13,7 +13,7 @@ import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
-import io.swagger.annotations.ApiOperation;
+
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.IncomemerchantaccountorderService;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
@@ -34,7 +34,6 @@ public class IncomemerchantaccountorderController
 	private IncomemerchantaccountorderService service;
 
 	@Override
-	@ApiOperation(value = "list", response = Incomemerchantaccountorder.class)
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -43,7 +42,6 @@ public class IncomemerchantaccountorderController
 		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}
 
-	@ApiOperation(value = "page", response = Incomemerchantaccountorder.class)
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {

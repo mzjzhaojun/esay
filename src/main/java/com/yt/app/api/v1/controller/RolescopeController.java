@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
-import io.swagger.annotations.ApiOperation;
+
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.RolescopeService;
 import com.yt.app.api.v1.entity.Rolescope;
@@ -32,7 +32,6 @@ public class RolescopeController extends YtBaseEncipherControllerImpl<Rolescope,
 	private RolescopeService service;
 
 	@Override
-	@ApiOperation(value = "list", response = Rolescope.class)
 	@RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {

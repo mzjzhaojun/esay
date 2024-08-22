@@ -658,7 +658,7 @@ public class YtAutoCode {
 					this.L.write("import com.yt.app.common.common.yt.YtIPage;\r\n");
 					this.L.write("import com.yt.app.common.common.yt.YtBody;\r\n");
 					this.L.write("import com.yt.app.common.util.RequestUtil;\r\n");
-					this.L.write("import io.swagger.annotations.ApiOperation;\r\n");
+					this.L.write("\r\n");
 					this.L.write("import " + DbConnectionUtil.commndPage + ".impl.YtBaseEncipherControllerImpl;\r\n");
 					this.L.write("import " + DbConnectionUtil.basePage + "." + "service." + bt + "Service;\r\n");
 					this.L.write("import " + DbConnectionUtil.basePage + "." + "entity." + bt + ";\r\n");
@@ -686,7 +686,6 @@ public class YtAutoCode {
 					this.L.write("\r\n");
 					this.L.write("\r\n");
 					this.L.write("@Override\r\n");
-					this.L.write("@ApiOperation(value = \"list\", response = " + bt + ".class)\r\n");
 					this.L.write(
 							"@RequestMapping(value = \"/list\", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)\r\n");
 					this.L.write(
@@ -698,7 +697,6 @@ public class YtAutoCode {
 					this.L.write("\r\n");
 					this.L.write("\r\n");
 					this.L.write("\r\n");
-					this.L.write("@ApiOperation(value = \"page\", response = " + bt + ".class)\r\n");
 					this.L.write(
 							"@RequestMapping(value = \"/page\", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)\r\n");
 					this.L.write(

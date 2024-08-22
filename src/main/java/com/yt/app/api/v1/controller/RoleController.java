@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
-import io.swagger.annotations.ApiOperation;
+
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.RoleService;
 import com.yt.app.api.v1.vo.SysRoleBaseVO;
@@ -38,7 +38,6 @@ public class RoleController extends YtBaseEncipherControllerImpl<Role, Long> {
 	private RoleService service;
 
 	@Override
-	@ApiOperation(value = "list", response = Role.class)
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -46,7 +45,6 @@ public class RoleController extends YtBaseEncipherControllerImpl<Role, Long> {
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
-	@ApiOperation(value = "tree", response = Role.class)
 	@RequestMapping(value = "/tree", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> tree(YtRequestDecryptEntity<SysRoleBaseDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -54,7 +52,6 @@ public class RoleController extends YtBaseEncipherControllerImpl<Role, Long> {
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
-	@ApiOperation(value = "SysRoleAllPermissionDetailVO", response = Role.class)
 	@RequestMapping(value = "/getscopeidlistbyroleid/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> SysRoleAllPermissionDetail(@PathVariable Long id, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -62,7 +59,6 @@ public class RoleController extends YtBaseEncipherControllerImpl<Role, Long> {
 		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}
 
-	@ApiOperation(value = "saverolereperm", response = Role.class)
 	@RequestMapping(value = "/saverolereperm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> saverolereperm(YtRequestDecryptEntity<SysRoleRePermSaveDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {

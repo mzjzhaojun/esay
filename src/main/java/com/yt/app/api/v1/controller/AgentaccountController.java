@@ -14,7 +14,7 @@ import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
-import io.swagger.annotations.ApiOperation;
+
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.entity.Agentaccount;
@@ -33,7 +33,6 @@ public class AgentaccountController extends YtBaseEncipherControllerImpl<Agentac
 	private AgentaccountService service;
 
 	@Override
-	@ApiOperation(value = "list", response = Agentaccount.class)
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {

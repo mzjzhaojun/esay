@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.yt.app.common.common.yt.YtBody;
-import io.swagger.annotations.ApiOperation;
+
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.MenuService;
 import com.yt.app.api.v1.vo.SysMenuTreeVO;
@@ -33,7 +33,6 @@ public class MenuController extends YtBaseEncipherControllerImpl<Menu, Long> {
 	@Autowired
 	private MenuService service;
 
-	@ApiOperation(value = "tree", response = Menu.class)
 	@RequestMapping(value = "/tree", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> tree(YtRequestDecryptEntity<SysMenuTreeDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {

@@ -15,7 +15,7 @@ import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
-import io.swagger.annotations.ApiOperation;
+
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.ExchangeService;
 import com.yt.app.api.v1.entity.Exchange;
@@ -35,7 +35,6 @@ public class ExchangeController extends YtBaseEncipherControllerImpl<Exchange, L
 	private ExchangeService service;
 
 	@Override
-	@ApiOperation(value = "list", response = Exchange.class)
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -43,7 +42,6 @@ public class ExchangeController extends YtBaseEncipherControllerImpl<Exchange, L
 		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}
 
-	@ApiOperation(value = "page", response = Exchange.class)
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -52,7 +50,6 @@ public class ExchangeController extends YtBaseEncipherControllerImpl<Exchange, L
 	}
 
 	// 手动回调成功
-	@ApiOperation(value = "exchangemanual")
 	@RequestMapping(value = "/exchangemanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> exchangemanual(YtRequestDecryptEntity<Exchange> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {

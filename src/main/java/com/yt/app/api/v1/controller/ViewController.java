@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import io.swagger.annotations.ApiOperation;
+
 
 /**
  * @author zj defaulttest
@@ -22,7 +22,6 @@ import io.swagger.annotations.ApiOperation;
 public class ViewController {
 
 	// index
-	@ApiOperation(value = "income")
 	@RequestMapping(value = "/income/{id}", method = RequestMethod.GET)
 	public String submitqrcode(@PathVariable Long id, Model model, HttpServletRequest request,
 			HttpServletResponse response) {

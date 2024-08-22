@@ -13,7 +13,7 @@ import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
-import io.swagger.annotations.ApiOperation;
+
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.api.v1.entity.Channelaccount;
@@ -32,7 +32,6 @@ public class ChannelaccountController extends YtBaseEncipherControllerImpl<Chann
 	private ChannelaccountService service;
 
 	@Override
-	@ApiOperation(value = "list", response = Channelaccount.class)
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {

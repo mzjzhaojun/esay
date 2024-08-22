@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
-import io.swagger.annotations.ApiOperation;
+
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.DeptService;
 import com.yt.app.api.v1.vo.SysDeptTreeVO;
@@ -36,7 +36,6 @@ public class DeptController extends YtBaseEncipherControllerImpl<Dept, Long> {
 	private DeptService service;
 
 	@Override
-	@ApiOperation(value = "list", response = Dept.class)
 	@RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -44,7 +43,6 @@ public class DeptController extends YtBaseEncipherControllerImpl<Dept, Long> {
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
-	@ApiOperation(value = "tree", response = Dept.class)
 	@RequestMapping(value = "/tree", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> tree(YtRequestDecryptEntity<SysDeptTreeDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {

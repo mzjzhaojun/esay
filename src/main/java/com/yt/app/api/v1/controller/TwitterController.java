@@ -13,7 +13,7 @@ import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
-import io.swagger.annotations.ApiOperation;
+
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.TwitterService;
 import com.yt.app.api.v1.entity.Twitter;
@@ -33,7 +33,6 @@ public class TwitterController extends YtBaseEncipherControllerImpl<Twitter, Lon
 	private TwitterService service;
 
 	@Override
-	@ApiOperation(value = "list", response = Twitter.class)
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -41,7 +40,6 @@ public class TwitterController extends YtBaseEncipherControllerImpl<Twitter, Lon
 		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}
 
-	@ApiOperation(value = "page", response = Twitter.class)
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {

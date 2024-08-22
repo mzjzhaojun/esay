@@ -21,8 +21,6 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtRequestEntity;
 import com.yt.app.common.common.yt.YtResponseEntity;
 
-import io.swagger.annotations.ApiOperation;
-
 /**
  * @author zj defaulttest
  * 
@@ -37,7 +35,6 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	private PayoutService service;
 
 	// 菲律宾代付回调
-	@ApiOperation(value = "tycallback")
 	@RequestMapping(value = "/tycallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -46,7 +43,6 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	}
 
 	// 盘口查单
-	@ApiOperation(value = "query")
 	@RequestMapping(value = "/query", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tyquery(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -55,7 +51,6 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	}
 
 	// 盘口下单
-	@ApiOperation(value = "submit")
 	@RequestMapping(value = "/submit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submit(YtRequestEntity<PaySubmitDTO> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -64,7 +59,6 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	}
 
 	// 盘口查询余额
-	@ApiOperation(value = "query")
 	@RequestMapping(value = "/querybalance", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> query(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -73,9 +67,16 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	}
 
 	// 拉码下单
-	@ApiOperation(value = "submit")
 	@RequestMapping(value = "/submitqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submitqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		String yb = service.submitQrcode(requestEntity.getBody());
+		return new YtResponseEntity<Object>(new YtBody(yb));
+	}
+
+	// 拉码下单
+	@RequestMapping(value = "/queryqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> queryqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
 		String yb = service.submitQrcode(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(yb));

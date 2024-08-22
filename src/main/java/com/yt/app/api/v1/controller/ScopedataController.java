@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.yt.app.common.common.yt.YtBody;
-import io.swagger.annotations.ApiOperation;
+
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.ScopedataService;
 import com.yt.app.api.v1.dbo.SysScopeDataBaseDTO;
@@ -32,7 +32,6 @@ public class ScopedataController extends YtBaseEncipherControllerImpl<Scopedata,
 	@Autowired
 	private ScopedataService service;
 
-	@ApiOperation(value = "tree", response = Scopedata.class)
 	@RequestMapping(value = "/tree", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> tree(YtRequestDecryptEntity<SysScopeDataBaseDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {

@@ -13,7 +13,7 @@ import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
-import io.swagger.annotations.ApiOperation;
+
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.entity.Merchant;
@@ -32,7 +32,6 @@ public class MerchantController extends YtBaseEncipherControllerImpl<Merchant, L
 	private MerchantService service;
 
 	@Override
-	@ApiOperation(value = "list", response = Merchant.class)
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {

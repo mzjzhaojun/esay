@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
-import io.swagger.annotations.ApiOperation;
+
 
 import com.yt.app.common.base.constant.SecurityConstant;
 import com.yt.app.common.base.context.SysUserContext;
@@ -38,7 +38,6 @@ public class UserController extends YtBaseEncipherControllerImpl<User, Long> {
 	private UserService service;
 
 	@Override
-	@ApiOperation(value = "list", response = User.class)
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -73,7 +72,6 @@ public class UserController extends YtBaseEncipherControllerImpl<User, Long> {
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 
-	@ApiOperation(value = "checkgoogle", response = User.class)
 	@RequestMapping(value = "/checkgoogle/{code}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> checkgoogle(@PathVariable Long code, HttpServletResponse response) {
 		Integer i = service.checkgoogle(code);

@@ -1,6 +1,6 @@
 package com.yt.app.api.v1.controller;
 
-import io.swagger.annotations.ApiOperation;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,7 +59,6 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 	 * @return
 	 * @throws IOException
 	 */
-	@ApiOperation(value = "上传", response = YtFile.class)
 	@RequestMapping(value = "/upload", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> add(MultipartHttpServletRequest request) {
 		MultipartFile file = request.getFile("file");
@@ -82,7 +81,6 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 	 * @return
 	 * @throws IOException
 	 */
-	@ApiOperation(value = "文本编辑上传", response = YtFile.class)
 	@RequestMapping(value = "/upload/imgFile", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> addImgFile(MultipartHttpServletRequest request) {
 		MultipartFile file = null;
@@ -104,7 +102,6 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 		return new YtResponseEntity<Object>(furl);
 	}
 
-	@ApiOperation(value = "上传", response = YtFile.class)
 	@RequestMapping(value = "/video/upload", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> updload(MultipartHttpServletRequest request) {
 		MultipartFile file = request.getFile("file");
@@ -122,7 +119,6 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 	 * 
 	 * @version 1.1
 	 */
-	@ApiOperation(value = "删除")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> delete(@PathVariable Long id, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -135,7 +131,6 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 	 * 
 	 * @version 1.1
 	 */
-	@ApiOperation(value = "删除")
 	@RequestMapping(value = "/delete/array", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> deleteArray(YtRequestEntity<List<String>> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -149,7 +144,6 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 	 * @param id
 	 * @param response
 	 */
-	@ApiOperation(value = "下载", response = YtFile.class)
 	@RequestMapping(value = "/dt/{ids}", method = RequestMethod.GET)
 	public void dowloadall(@PathVariable String ids, HttpServletResponse response) {
 		if (ids.indexOf(",") != -1) {
@@ -194,7 +188,6 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 	 * @param id
 	 * @param response
 	 */
-	@ApiOperation(value = "下载", response = YtFile.class)
 	@RequestMapping(value = "/{id}/{size}", method = RequestMethod.GET)
 	public void dowload(@PathVariable Long id, @PathVariable Long size, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -318,7 +311,6 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 	 * @return
 	 * @throws IOException
 	 */
-	@ApiOperation(value = "上传", response = YtFile.class)
 	@RequestMapping(value = "/txt/dowload/{id}", method = RequestMethod.GET)
 	public void dowloadtxt(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
@@ -331,7 +323,6 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 	 * @return
 	 * @throws IOException
 	 */
-	@ApiOperation(value = "上传", response = YtFile.class)
 	@RequestMapping(value = "/customer/dowload/{id}", method = RequestMethod.GET)
 	public void dowloadcustomer(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
@@ -344,7 +335,6 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 	 * @return
 	 * @throws IOException
 	 */
-	@ApiOperation(value = "上传", response = YtFile.class)
 	@RequestMapping(value = "/txt/dowloadmobile/{id}", method = RequestMethod.GET)
 	public void dowloadmobile(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {

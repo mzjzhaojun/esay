@@ -15,7 +15,7 @@ import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
-import io.swagger.annotations.ApiOperation;
+
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.ChannelaccountorderService;
 import com.yt.app.api.v1.entity.Channelaccountorder;
@@ -34,7 +34,6 @@ public class ChannelaccountorderController extends YtBaseEncipherControllerImpl<
 	private ChannelaccountorderService service;
 
 	@Override
-	@ApiOperation(value = "list", response = Channelaccountorder.class)
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -50,7 +49,6 @@ public class ChannelaccountorderController extends YtBaseEncipherControllerImpl<
 	 * @param response
 	 * @return
 	 */
-	@ApiOperation(value = "incomemanual")
 	@RequestMapping(value = "/incomemanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> incomemanual(YtRequestDecryptEntity<Channelaccountorder> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
