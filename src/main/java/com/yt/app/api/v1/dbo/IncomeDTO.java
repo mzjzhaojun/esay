@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-08-21 14:30:58
+ * @version v1 @createdate2024-08-23 18:22:46
  */
 @Data
 @SuperBuilder
@@ -18,36 +18,28 @@ public class IncomeDTO {
 
 	Long id;
 	Long tenant_id;
-	Long userid;
+	Long merchantuserid;
 	String ordernum;
 	Long merchantid;
 	String merchantname;
 	String merchantcode;
 	String merchantordernum;
-	Object merchantrealtimeexchange;
+	String merchantorderid;
 	Object merchantonecost;
-	Object merchantdowpoint;
-	Object exchange;
 	Object merchantpay;
-	Long aisleid;
-	String aislename;
+	String aislecode;
+	Long qrcodeaisleid;
+	String qrcodeaislename;
 	Long agentid;
 	String agentordernum;
 	Object agentincome;
 	Long channelid;
-	Object channelbalance;
-	String channelname;
+	Object qrcodeid;
+	String qrcodename;
 	String channelordernum;
-	Object channelrealtimeexchange;
-	Object channelonecost;
-	Object channeldowpoint;
-	Object channelpay;
-	String accname;
-	String accnumer;
-	String bankcode;
-	String bankname;
-	String bankaddress;
+	String channeluserid;
 	Object amount;
+	Object realamount;
 	Integer status;
 	java.util.Date successtime;
 	Long backlong;
@@ -57,8 +49,8 @@ public class IncomeDTO {
 	java.util.Date update_time;
 	String qrcode;
 	Integer type;
-	String imgurl;
-	Object income;
+	String resulturl;
+	Object fewamount;
 	String notifyurl;
 	Integer notifystatus;
 	String remark;

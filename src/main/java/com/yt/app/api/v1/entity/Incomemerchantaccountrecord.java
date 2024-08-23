@@ -28,14 +28,14 @@ public class Incomemerchantaccountrecord extends YtBaseEntity<Incomemerchantacco
 	String merchantname;
 	String ordernum;
 	Integer type;
-	Object pretotalincome;
-	Object pretoincomeamount;
-	Object prewithdrawamount;
-	Object pretowithdrawamount;
-	Object posttotalincome;
-	Object posttoincomeamount;
-	Object postwithdrawamount;
-	Object posttowithdrawamount;
+	Double pretotalincome;
+	Double pretoincomeamount;
+	Double prewithdrawamount;
+	Double pretowithdrawamount;
+	Double posttotalincome;
+	Double posttoincomeamount;
+	Double postwithdrawamount;
+	Double posttowithdrawamount;
 	String remark;
 	Integer version;
 }

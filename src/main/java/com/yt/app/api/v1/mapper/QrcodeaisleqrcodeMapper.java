@@ -100,6 +100,15 @@ public interface QrcodeaisleqrcodeMapper extends YtIBaseMapper<Qrcodeaisleqrcode
 	public List<Qrcodeaisleqrcode> listByArrayId(long[] id);
 
 	/**
+	 * getByQrcodeAisleId
+	 * 
+	 * @param id long[]ids
+	 * @return listQrcodeaisleqrcode
+	 */
+	@YtRedisCacheAnnotation(classs = Qrcodeaisleqrcode.class)
+	public List<Qrcodeaisleqrcode> getByQrcodeAisleId(long qrcodeaisleid);
+
+	/**
 	 * 查询重复
 	 * 
 	 * @param qrcodelid

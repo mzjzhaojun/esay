@@ -98,10 +98,10 @@ public interface MerchantqrcodeaisleMapper extends YtIBaseMapper<Merchantqrcodea
 	 */
 	@YtRedisCacheAnnotation(classs = Merchantqrcodeaisle.class)
 	public List<Merchantqrcodeaisle> listByArrayId(long[] id);
-	
-	
+
 	@YtRedisCacheAnnotation(classs = Merchantqrcodeaisle.class)
-	public Merchantqrcodeaisle getByMidAid(@Param("qrcodeaisleid") Long qrcodeaisleid, @Param("merchantid") Long merchantid);
+	public Merchantqrcodeaisle getByMidAid(@Param("qrcodeaisleid") Long qrcodeaisleid,
+			@Param("merchantid") Long merchantid);
 
 	/**
 	 * listbyids

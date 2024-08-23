@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.yt.app.api.v1.mapper.QrcodeaccountorderMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,tenant_id,userid,channelid,channelname,nkname,channelcode,ordernum,type,deal,onecost,amount,accname,accnumber,exchange,channelexchange,amountreceived,usdtval,status,remark,create_by,create_time,update_by,update_time,version,imgurl
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Qrcodeaccountorder">
+	</resultMap>
+	<!-- ResultMap -->
+	<resultMap id="ResultMapVO"
+		type="com.yt.app.api.v1.vo.QrcodeaccountorderVO">
+	</resultMap>
+	<!-- add -->
+	<insert id="post"
+		parameterType="com.yt.app.api.v1.entity.Qrcodeaccountorder">
+		insert into
+		qrcodeaccountorder(id,userid,channelid,channelname,nkname,channelcode,ordernum,type,deal,onecost,amount,accname,accnumber,exchange,channelexchange,amountreceived,usdtval,status,remark,create_by,create_time,update_by,update_time,imgurl)
+		values
+		(#{id},#{userid},#{channelid},#{channelname},#{nkname},#{channelcode},#{ordernum},#{type},#{deal},#{onecost},#{amount},#{accname},#{accnumber},#{exchange},#{channelexchange},#{amountreceived},#{usdtval},#{status},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{imgurl})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		qrcodeaccountorder(id,tenant_id,userid,channelid,channelname,nkname,channelcode,ordernum,type,deal,onecost,amount,accname,accnumber,exchange,channelexchange,amountreceived,usdtval,status,remark,create_by,create_time,update_by,update_time,imgurl)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{tenant_id},#{userid},#{channelid},#{channelname},#{nkname},#{channelcode},#{ordernum},#{type},#{deal},#{onecost},#{amount},#{accname},#{accnumber},#{exchange},#{channelexchange},#{amountreceived},#{usdtval},#{status},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{imgurl})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from qrcodeaccountorder
+		where id = #{id}
+	</delete>
+	<!-- update -->
+	<update id="put"
+		parameterType="com.yt.app.api.v1.entity.Qrcodeaccountorder">
+		update qrcodeaccountorder
+		<set>
+			<if test="tenant_id != null">
+				tenant_id= #{tenant_id},
+			</if>
+			<if test="userid != null">
+				userid= #{userid},
+			</if>
+			<if test="channelid != null">
+				channelid= #{channelid},
+			</if>
+			<if test="channelname != null">
+				channelname= #{channelname},
+			</if>
+			<if test="nkname != null">
+				nkname= #{nkname},
+			</if>
+			<if test="channelcode != null">
+				channelcode= #{channelcode},
+			</if>
+			<if test="ordernum != null">
+				ordernum= #{ordernum},
+			</if>
+			<if test="type != null">
+				type= #{type},
+			</if>
+			<if test="deal != null">
+				deal= #{deal},
+			</if>
+			<if test="onecost != null">
+				onecost= #{onecost},
+			</if>
+			<if test="amount != null">
+				amount= #{amount},
+			</if>
+			<if test="accname != null">
+				accname= #{accname},
+			</if>
+			<if test="accnumber != null">
+				accnumber= #{accnumber},
+			</if>
+			<if test="exchange != null">
+				exchange= #{exchange},
+			</if>
+			<if test="channelexchange != null">
+				channelexchange= #{channelexchange},
+			</if>
+			<if test="amountreceived != null">
+				amountreceived= #{amountreceived},
+			</if>
+			<if test="usdtval != null">
+				usdtval= #{usdtval},
+			</if>
+			<if test="status != null">
+				status= #{status},
+			</if>
+			<if test="remark != null">
+				remark= #{remark},
+			</if>
+			<if test="create_by != null">
+				create_by= #{create_by},
+			</if>
+			<if test="create_time != null">
+				create_time= #{create_time},
+			</if>
+			<if test="update_by != null">
+				update_by= #{update_by},
+			</if>
+			<if test="update_time != null">
+				update_time= #{update_time},
+			</if>
+			<if test="version != null">
+				version= #{version}+1,
+			</if>
+			<if test="imgurl != null">
+				imgurl= #{imgurl}
+			</if>
+		</set>
+		where id = #{id} and version = #{version}
+	</update>
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from qrcodeaccountorder
+		where id = #{id}
+	</select>
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from qrcodeaccountorder
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="page" parameterType="java.util.HashMap"
+		resultMap="ResultMapVO">
+		select
+		<include refid="Base_Column_List" />
+		from qrcodeaccountorder
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and Dir != null">
+				order by ${orderBy} ${Dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		select count(*) from qrcodeaccountorder
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from qrcodeaccountorder
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+</mapper>

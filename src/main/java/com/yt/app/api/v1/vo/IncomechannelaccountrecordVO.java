@@ -1,34 +1,33 @@
-package com.yt.app.api.v1.entity;
-
-import com.yt.app.common.base.YtBaseEntity;
+package com.yt.app.api.v1.vo;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import lombok.EqualsAndHashCode;
+
+import com.yt.app.common.base.BaseVO;
 
 /**
  * @author zj default
  * 
- * @version v1 @createdate2023-11-15 09:44:15
+ * @version v1 @createdate2024-08-23 00:41:52
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-@Builder
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor
-public class Merchantaccountrecord extends YtBaseEntity<Merchantaccountrecord> {
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class IncomechannelaccountrecordVO extends BaseVO {
 
 	private static final long serialVersionUID = 1L;
 
 	Long id;
 	Long tenant_id;
+	String channelname;
 	Long userid;
-	String merchantname;
 	String ordernum;
 	Integer type;
-	String typename;
 	Double pretotalincome;
 	Double prewithdrawamount;
 	Double pretowithdrawamount;
@@ -37,7 +36,10 @@ public class Merchantaccountrecord extends YtBaseEntity<Merchantaccountrecord> {
 	Double postwithdrawamount;
 	Double posttowithdrawamount;
 	Double posttoincomeamount;
+	Long create_by;
+	java.util.Date create_time;
+	Long update_by;
+	java.util.Date update_time;
 	String remark;
 	Integer version;
-
 }

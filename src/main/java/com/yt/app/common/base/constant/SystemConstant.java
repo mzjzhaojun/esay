@@ -45,4 +45,9 @@ public interface SystemConstant {
 	 * 实时汇率
 	 */
 	String CACHE_SYS_EXCHANGE = "payboot:system:exchange:topone";
+
+	/**
+	 * 挂碼
+	 */
+	String CACHE_SYS_QRCODE = "payboot:system:qrcode:";
 }

@@ -18,7 +18,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.yt.app.api.v1.dbo.PaySubmitDTO;
 import com.yt.app.api.v1.entity.Exchange;
-import com.yt.app.api.v1.entity.Merchantaccount;
+import com.yt.app.api.v1.entity.PayoutMerchantaccount;
 import com.yt.app.api.v1.entity.Sysconfig;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
@@ -27,7 +27,7 @@ import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.entity.YtFile;
 import com.yt.app.api.v1.mapper.FileMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
-import com.yt.app.api.v1.mapper.MerchantaccountMapper;
+import com.yt.app.api.v1.mapper.PayoutMerchantaccountMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
@@ -65,7 +65,7 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 	private ChannelMsgBot cbot;
 
 	@Autowired
-	private MerchantaccountMapper merchantaccountmapper;
+	private PayoutMerchantaccountMapper merchantaccountmapper;
 
 	@Autowired
 	private MerchantMapper merchantmapper;
@@ -144,7 +144,7 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 			}
 		} else if (message.equals("#y")) {
 			// 余额
-			Merchantaccount merchantaccount = merchantaccountmapper
+			PayoutMerchantaccount merchantaccount = merchantaccountmapper
 					.getByUserId(merchantmapper.get(tmg.getMerchantid()).getUserid());
 			if (merchantaccount != null) {
 				String msg = "账户可用余额：" + merchantaccount.getBalance() + "\n总充值金额：" + merchantaccount.getTotalincome()

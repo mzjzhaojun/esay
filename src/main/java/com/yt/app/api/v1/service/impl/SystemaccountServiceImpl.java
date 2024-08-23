@@ -12,7 +12,7 @@ import com.yt.app.common.base.context.JwtUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccountorder;
-import com.yt.app.api.v1.entity.Merchantaccountorder;
+import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.api.v1.entity.Systemaccountrecord;
 import com.yt.app.common.common.yt.YtIPage;
@@ -77,7 +77,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 */
 	@Override
 	@Transactional
-	public void updateTotalincome(Merchantaccountorder mao) {
+	public void updateTotalincome(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
@@ -106,7 +106,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 */
 	@Override
 	@Transactional
-	public void updateWithdrawamount(Merchantaccountorder mao) {
+	public void updateWithdrawamount(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
@@ -135,7 +135,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 */
 	@Override
 	@Transactional
-	public void updatePayout(Merchantaccountorder mao) {
+	public void updatePayout(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();

@@ -16,8 +16,8 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
 
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
-import com.yt.app.api.v1.service.MerchantaccountService;
-import com.yt.app.api.v1.entity.Merchantaccount;
+import com.yt.app.api.v1.service.PayoutMerchantaccountService;
+import com.yt.app.api.v1.entity.PayoutMerchantaccount;
 
 /**
  * @author zj defaulttest
@@ -27,16 +27,17 @@ import com.yt.app.api.v1.entity.Merchantaccount;
 
 @RestController
 @RequestMapping("/rest/v1/merchantaccount")
-public class MerchantaccountController extends YtBaseEncipherControllerImpl<Merchantaccount, Long> {
+public class PayoutMerchantaccountController extends YtBaseEncipherControllerImpl<PayoutMerchantaccount, Long> {
 
 	@Autowired
-	private MerchantaccountService service;
+	private PayoutMerchantaccountService service;
 
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Merchantaccount> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		YtIPage<PayoutMerchantaccount> pagebean = service
+				.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
@@ -47,7 +48,7 @@ public class MerchantaccountController extends YtBaseEncipherControllerImpl<Merc
 	 */
 	@RequestMapping(value = "/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> data(HttpServletRequest request, HttpServletResponse response) {
-		Merchantaccount t = service.getData();
+		PayoutMerchantaccount t = service.getData();
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}
 
@@ -58,7 +59,7 @@ public class MerchantaccountController extends YtBaseEncipherControllerImpl<Merc
 	 */
 	@RequestMapping(value = "/bank", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> bank(HttpServletRequest request, HttpServletResponse response) {
-		Merchantaccount t = service.getDataBank();
+		PayoutMerchantaccount t = service.getDataBank();
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}
 
@@ -70,7 +71,7 @@ public class MerchantaccountController extends YtBaseEncipherControllerImpl<Merc
 	@RequestMapping(value = "/bank/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> bank(@PathVariable Long id, HttpServletRequest request,
 			HttpServletResponse response) {
-		Merchantaccount t = service.getDataBank(id);
+		PayoutMerchantaccount t = service.getDataBank(id);
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}
 }

@@ -11,7 +11,7 @@ import com.yt.app.common.base.YtIBaseMapper;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-08-21 14:30:58
+ * @version v1 @createdate2024-08-22 23:02:54
  */
 
 public interface IncomemerchantaccountMapper extends YtIBaseMapper<Incomemerchantaccount> {

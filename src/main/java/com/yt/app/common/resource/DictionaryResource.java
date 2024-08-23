@@ -135,6 +135,10 @@ public class DictionaryResource implements Serializable {
 	public static final Integer TGBOTGROUPRECORD_TYPE_WITHDRAW = 112; // 减款
 	public static final Integer TGBOTGROUPRECORD_TYPE_USDT = 113; // 下发
 
+	public static final Integer BANK_TYPE_121 = 121; // 银行卡
+	public static final Integer BANK_TYPE_122 = 122; // 微信
+	public static final Integer BANK_TYPE_123 = 123; // 支付宝
+
 	/**
 	 * 换汇资金明细类型
 	 */

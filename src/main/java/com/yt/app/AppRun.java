@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.yt.app.common.common.YtAutoCode;
+import com.yt.app.common.util.NumberUtil;
 
 /**
  * by jz
@@ -34,6 +35,6 @@ public class AppRun extends SpringBootServletInitializer {
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(new Class[] { AppRun.class }, args);
-		// YtAutoCode.u().p(Arrays.asList("merchantqrcodeaisle"));
+		// YtAutoCode.u().p(Arrays.asList("qrcodeaccount","qrcodeaccountorder","qrcodeaccountrecord"));
 	}
 }

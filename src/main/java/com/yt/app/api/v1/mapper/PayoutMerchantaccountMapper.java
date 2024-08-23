@@ -2,7 +2,7 @@ package com.yt.app.api.v1.mapper;
 
 import java.util.List;
 import java.util.Map;
-import com.yt.app.api.v1.entity.Merchantaccount;
+import com.yt.app.api.v1.entity.PayoutMerchantaccount;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
 import com.yt.app.common.base.YtIBaseMapper;
@@ -13,14 +13,14 @@ import com.yt.app.common.base.YtIBaseMapper;
  * @version v1 @createdate2023-11-15 09:44:15
  */
 
-public interface MerchantaccountMapper extends YtIBaseMapper<Merchantaccount> {
+public interface PayoutMerchantaccountMapper extends YtIBaseMapper<PayoutMerchantaccount> {
 	/**
 	 * add
 	 * 
 	 * @param o Merchantaccount
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Merchantaccount.class })
+	@YtRedisCacheEvictAnnotation(classs = { PayoutMerchantaccount.class })
 	public Integer post(Object t);
 
 	/**
@@ -29,8 +29,8 @@ public interface MerchantaccountMapper extends YtIBaseMapper<Merchantaccount> {
 	 * @param o Merchantaccountlist
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Merchantaccount.class })
-	public Integer batchSava(List<Merchantaccount> list);
+	@YtRedisCacheEvictAnnotation(classs = { PayoutMerchantaccount.class })
+	public Integer batchSava(List<PayoutMerchantaccount> list);
 
 	/**
 	 * update
@@ -38,7 +38,7 @@ public interface MerchantaccountMapper extends YtIBaseMapper<Merchantaccount> {
 	 * @param o Merchantaccount
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Merchantaccount.class })
+	@YtRedisCacheEvictAnnotation(classs = { PayoutMerchantaccount.class })
 	public Integer put(Object t);
 
 	/**
@@ -47,8 +47,8 @@ public interface MerchantaccountMapper extends YtIBaseMapper<Merchantaccount> {
 	 * @param id id
 	 * @return Merchantaccount
 	 */
-	@YtRedisCacheAnnotation(classs = Merchantaccount.class)
-	public Merchantaccount get(Long id);
+	@YtRedisCacheAnnotation(classs = PayoutMerchantaccount.class)
+	public PayoutMerchantaccount get(Long id);
 
 	/**
 	 * delete
@@ -56,7 +56,7 @@ public interface MerchantaccountMapper extends YtIBaseMapper<Merchantaccount> {
 	 * @param id id
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Merchantaccount.class })
+	@YtRedisCacheEvictAnnotation(classs = { PayoutMerchantaccount.class })
 	public Integer delete(Long id);
 
 	/**
@@ -65,7 +65,7 @@ public interface MerchantaccountMapper extends YtIBaseMapper<Merchantaccount> {
 	 * @param param map
 	 * @return count
 	 */
-	@YtRedisCacheAnnotation(classs = Merchantaccount.class)
+	@YtRedisCacheAnnotation(classs = PayoutMerchantaccount.class)
 	public Integer countlist(Map<String, Object> param);
 
 	/**
@@ -74,8 +74,8 @@ public interface MerchantaccountMapper extends YtIBaseMapper<Merchantaccount> {
 	 * @param param map
 	 * @return listMerchantaccount
 	 */
-	@YtRedisCacheAnnotation(classs = Merchantaccount.class)
-	public List<Merchantaccount> list(Map<String, Object> param);
+	@YtRedisCacheAnnotation(classs = PayoutMerchantaccount.class)
+	public List<PayoutMerchantaccount> list(Map<String, Object> param);
 
 	/**
 	 * map
@@ -83,7 +83,7 @@ public interface MerchantaccountMapper extends YtIBaseMapper<Merchantaccount> {
 	 * @param param map
 	 * @return mapMerchantaccount
 	 */
-	@YtRedisCacheAnnotation(classs = Merchantaccount.class)
+	@YtRedisCacheAnnotation(classs = PayoutMerchantaccount.class)
 	public List<Map<String, Object>> map(Map<String, Object> param);
 
 	/**
@@ -92,8 +92,8 @@ public interface MerchantaccountMapper extends YtIBaseMapper<Merchantaccount> {
 	 * @param id long[]ids
 	 * @return listMerchantaccount
 	 */
-	@YtRedisCacheAnnotation(classs = Merchantaccount.class)
-	public List<Merchantaccount> listByArrayId(long[] id);
+	@YtRedisCacheAnnotation(classs = PayoutMerchantaccount.class)
+	public List<PayoutMerchantaccount> listByArrayId(long[] id);
 
 	/**
 	 * getByUserId
@@ -101,7 +101,7 @@ public interface MerchantaccountMapper extends YtIBaseMapper<Merchantaccount> {
 	 * @param id id
 	 * @return Merchantaccount
 	 */
-	@YtRedisCacheAnnotation(classs = Merchantaccount.class)
-	public Merchantaccount getByUserId(Long userid);
+	@YtRedisCacheAnnotation(classs = PayoutMerchantaccount.class)
+	public PayoutMerchantaccount getByUserId(Long userid);
 
 }

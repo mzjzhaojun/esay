@@ -5,18 +5,18 @@ import java.util.Random;
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccountorder;
-import com.yt.app.api.v1.entity.Merchantaccountorder;
+import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.mapper.AgentaccountorderMapper;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ChannelaccountorderMapper;
-import com.yt.app.api.v1.mapper.MerchantaccountorderMapper;
+import com.yt.app.api.v1.mapper.PayoutMerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.ChannelaccountService;
-import com.yt.app.api.v1.service.MerchantaccountService;
+import com.yt.app.api.v1.service.PayoutMerchantaccountService;
 import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.ChannelMsgBot;
@@ -40,12 +40,12 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 	public void run() {
 		TenantIdContext.removeFlag();
 		PayoutMapper mapper = BeanContext.getApplicationContext().getBean(PayoutMapper.class);
-		MerchantaccountorderMapper merchantaccountordermapper = BeanContext.getApplicationContext()
-				.getBean(MerchantaccountorderMapper.class);
+		PayoutMerchantaccountorderMapper merchantaccountordermapper = BeanContext.getApplicationContext()
+				.getBean(PayoutMerchantaccountorderMapper.class);
 		AgentaccountorderMapper agentaccountordermapper = BeanContext.getApplicationContext()
 				.getBean(AgentaccountorderMapper.class);
-		MerchantaccountService merchantaccountservice = BeanContext.getApplicationContext()
-				.getBean(MerchantaccountService.class);
+		PayoutMerchantaccountService merchantaccountservice = BeanContext.getApplicationContext()
+				.getBean(PayoutMerchantaccountService.class);
 		AgentaccountService agentaccountservice = BeanContext.getApplicationContext()
 				.getBean(AgentaccountService.class);
 		ChannelMapper channelmapper = BeanContext.getApplicationContext().getBean(ChannelMapper.class);
@@ -69,7 +69,7 @@ public class GetPayoutChannelOrderNumThread implements Runnable {
 					if (channelordernum == null) {
 
 						// 计算商户订单/////////////////////////////////////////////////////
-						Merchantaccountorder mao = merchantaccountordermapper
+						PayoutMerchantaccountorder mao = merchantaccountordermapper
 								.getByOrdernum(payout.getMerchantordernum());
 						mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
 						merchantaccountordermapper.put(mao);

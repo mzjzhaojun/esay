@@ -13,8 +13,10 @@ import com.yt.app.api.v1.dbo.SysQueryDTO;
 import com.yt.app.api.v1.dbo.PaySubmitDTO;
 import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
 import com.yt.app.api.v1.entity.Payout;
+import com.yt.app.api.v1.service.IncomeService;
 import com.yt.app.api.v1.service.PayoutService;
 import com.yt.app.api.v1.vo.PayResultVO;
+import com.yt.app.api.v1.vo.QrcodeResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.common.common.yt.YtBody;
@@ -33,6 +35,9 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 
 	@Autowired
 	private PayoutService service;
+
+	@Autowired
+	private IncomeService incomeservice;
 
 	// 菲律宾代付回调
 	@RequestMapping(value = "/tycallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -70,15 +75,15 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	@RequestMapping(value = "/submitqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submitqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		String yb = service.submitQrcode(requestEntity.getBody());
+		QrcodeResultVO yb = incomeservice.submitQrcode(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(yb));
 	}
 
-	// 拉码下单
+	// 拉码查单
 	@RequestMapping(value = "/queryqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> queryqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		String yb = service.submitQrcode(requestEntity.getBody());
+		QrcodeResultVO yb = incomeservice.queryqrcode(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(yb));
 	}
 

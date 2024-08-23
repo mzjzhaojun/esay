@@ -77,14 +77,24 @@
 		from qrcodeaisleqrcode
 		where id = #{id}
 	</select>
-	
+
+	<!--getByQrcodeAisleId -->
+	<select id="getByQrcodeAisleId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from qrcodeaisleqrcode
+		where qrcodeaisleid = #{qrcodeaisleid}
+	</select>
+
 	<select id="getByAidCid" resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from qrcodeaisleqrcode
-		where qrcodelid = #{qrcodelid} and qrcodeaisleid= #{qrcodeaisleid}
+		where qrcodelid = #{qrcodelid} and
+		qrcodeaisleid= #{qrcodeaisleid}
 	</select>
-	
+
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
@@ -108,7 +118,8 @@
 		c.code code,
 		c.status status,
 		c.dynamic dynamic,
-		c.fixedcode fixedcode,
+		c.fixedcode
+		fixedcode,
 		c.onecost onecost,
 		c.remark remark
 		FROM
@@ -116,7 +127,8 @@
 		JOIN qrcodeaisle ae
 		ON ae.id = ac.qrcodeaisleid
 		JOIN qrcode c
-		ON ac.qrcodelid = c.id
+		ON
+		ac.qrcodelid = c.id
 		<where>
 			c.status=1
 			<if test="qrcodeaisleid != null and qrcodeaisleid != ''">
@@ -139,7 +151,8 @@
 		select count(*) FROM
 		qrcodeaisleqrcode ac
 		JOIN qrcodeaisle ae
-		ON ae.id = ac.qrcodeaisleid
+		ON ae.id =
+		ac.qrcodeaisleid
 		JOIN qrcode c
 		ON ac.qrcodelid = c.id
 		<where>

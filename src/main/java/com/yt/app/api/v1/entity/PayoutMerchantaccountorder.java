@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Merchantaccountorder extends YtBaseEntity<Merchantaccountorder> {
+public class PayoutMerchantaccountorder extends YtBaseEntity<PayoutMerchantaccountorder> {
 
 	private static final long serialVersionUID = 1L;
 

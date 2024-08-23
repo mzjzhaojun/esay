@@ -14,6 +14,7 @@ import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.vo.PayResultVO;
+import com.yt.app.api.v1.vo.QrcodeResultVO;
 import com.yt.app.api.v1.vo.SysTyBalance;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.common.yt.YtBody;
@@ -203,10 +204,19 @@ public class PayUtil {
 	// 拉码下单签名
 	public static String SignMd5Qrocde(QrcodeSubmitDTO qs, String key) {
 		String stringSignTemp = "pay_amount=" + qs.getPay_amount() + "&pay_applydate=" + qs.getPay_applydate()
-				+ "&pay_bankcode=" + qs.getPay_bankcode() + "&pay_callbackurl=" + qs.getPay_callbackurl()
+				+ "&pay_aislecode=" + qs.getPay_aislecode() + "&pay_callbackurl=" + qs.getPay_callbackurl()
 				+ "&pay_memberid=" + qs.getPay_memberid() + "&pay_notifyurl=" + qs.getPay_notifyurl() + "&pay_orderid="
 				+ qs.getPay_orderid() + "&key=" + key;
-		log.info("盘口通知签名:" + stringSignTemp);
+		log.info("拉码下单签名:" + stringSignTemp);
+		return MD5Utils.md5(stringSignTemp).toUpperCase();
+	}
+
+	// 拉码下单返回签名
+	public static String SignMd5ResultQrocde(QrcodeResultVO qr, String key) {
+		String stringSignTemp = "pay_memberid=" + qr.getPay_memberid() + "pay_amount=" + qr.getPay_amount()
+				+ "&pay_aislecode=" + qr.getPay_aislecode() + "&pay_orderid=" + qr.getPay_orderid() + "&pay_viewurl="
+				+ qr.getPay_viewurl() + "&key=" + key;
+		log.info("拉码下单返回签名:" + stringSignTemp);
 		return MD5Utils.md5(stringSignTemp).toUpperCase();
 	}
 

@@ -3,7 +3,7 @@ package com.yt.app.api.v1.mapper;
 import java.util.List;
 import java.util.Map;
 
-import com.yt.app.api.v1.entity.Merchantaccountorder;
+import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
 import com.yt.app.common.base.YtIBaseMapper;
@@ -14,14 +14,14 @@ import com.yt.app.common.base.YtIBaseMapper;
  * @version v1 @createdate2023-11-15 09:44:15
  */
 
-public interface MerchantaccountorderMapper extends YtIBaseMapper<Merchantaccountorder> {
+public interface PayoutMerchantaccountorderMapper extends YtIBaseMapper<PayoutMerchantaccountorder> {
 	/**
 	 * add
 	 * 
 	 * @param o Merchantaccountorder
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Merchantaccountorder.class })
+	@YtRedisCacheEvictAnnotation(classs = { PayoutMerchantaccountorder.class })
 	public Integer post(Object t);
 
 	/**
@@ -30,8 +30,8 @@ public interface MerchantaccountorderMapper extends YtIBaseMapper<Merchantaccoun
 	 * @param o Merchantaccountorderlist
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Merchantaccountorder.class })
-	public Integer batchSava(List<Merchantaccountorder> list);
+	@YtRedisCacheEvictAnnotation(classs = { PayoutMerchantaccountorder.class })
+	public Integer batchSava(List<PayoutMerchantaccountorder> list);
 
 	/**
 	 * update
@@ -39,7 +39,7 @@ public interface MerchantaccountorderMapper extends YtIBaseMapper<Merchantaccoun
 	 * @param o Merchantaccountorder
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Merchantaccountorder.class })
+	@YtRedisCacheEvictAnnotation(classs = { PayoutMerchantaccountorder.class })
 	public Integer put(Object t);
 
 	/**
@@ -48,8 +48,8 @@ public interface MerchantaccountorderMapper extends YtIBaseMapper<Merchantaccoun
 	 * @param id id
 	 * @return Merchantaccountorder
 	 */
-	@YtRedisCacheAnnotation(classs = Merchantaccountorder.class)
-	public Merchantaccountorder get(Long id);
+	@YtRedisCacheAnnotation(classs = PayoutMerchantaccountorder.class)
+	public PayoutMerchantaccountorder get(Long id);
 
 	/**
 	 * delete
@@ -57,7 +57,7 @@ public interface MerchantaccountorderMapper extends YtIBaseMapper<Merchantaccoun
 	 * @param id id
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Merchantaccountorder.class })
+	@YtRedisCacheEvictAnnotation(classs = { PayoutMerchantaccountorder.class })
 	public Integer delete(Long id);
 
 	/**
@@ -66,7 +66,7 @@ public interface MerchantaccountorderMapper extends YtIBaseMapper<Merchantaccoun
 	 * @param param map
 	 * @return count
 	 */
-	@YtRedisCacheAnnotation(classs = Merchantaccountorder.class)
+	@YtRedisCacheAnnotation(classs = PayoutMerchantaccountorder.class)
 	public Integer countlist(Map<String, Object> param);
 
 	/**
@@ -75,8 +75,8 @@ public interface MerchantaccountorderMapper extends YtIBaseMapper<Merchantaccoun
 	 * @param param map
 	 * @return listMerchantaccountorder
 	 */
-	@YtRedisCacheAnnotation(classs = Merchantaccountorder.class)
-	public List<Merchantaccountorder> list(Map<String, Object> param);
+	@YtRedisCacheAnnotation(classs = PayoutMerchantaccountorder.class)
+	public List<PayoutMerchantaccountorder> list(Map<String, Object> param);
 
 	/**
 	 * map
@@ -84,7 +84,7 @@ public interface MerchantaccountorderMapper extends YtIBaseMapper<Merchantaccoun
 	 * @param param map
 	 * @return mapMerchantaccountorder
 	 */
-	@YtRedisCacheAnnotation(classs = Merchantaccountorder.class)
+	@YtRedisCacheAnnotation(classs = PayoutMerchantaccountorder.class)
 	public List<Map<String, Object>> map(Map<String, Object> param);
 
 	/**
@@ -93,8 +93,8 @@ public interface MerchantaccountorderMapper extends YtIBaseMapper<Merchantaccoun
 	 * @param id long[]ids
 	 * @return listMerchantaccountorder
 	 */
-	@YtRedisCacheAnnotation(classs = Merchantaccountorder.class)
-	public List<Merchantaccountorder> listByArrayId(long[] id);
+	@YtRedisCacheAnnotation(classs = PayoutMerchantaccountorder.class)
+	public List<PayoutMerchantaccountorder> listByArrayId(long[] id);
 
 	/**
 	 * getByOrdernum
@@ -102,6 +102,6 @@ public interface MerchantaccountorderMapper extends YtIBaseMapper<Merchantaccoun
 	 * @param id id
 	 * @return Merchantaccount
 	 */
-	@YtRedisCacheAnnotation(classs = Merchantaccountorder.class)
-	public Merchantaccountorder getByOrdernum(String ordernum);
+	@YtRedisCacheAnnotation(classs = PayoutMerchantaccountorder.class)
+	public PayoutMerchantaccountorder getByOrdernum(String ordernum);
 }

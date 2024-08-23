@@ -1,48 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper
-	namespace="com.yt.app.api.v1.mapper.MerchantaccountMapper">
+<mapper namespace="com.yt.app.api.v1.mapper.QrcodeaccountMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,merchantid,totalincome,withdrawamount,towithdrawamount,toincomeamount,balance,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,userid,channelid,totalincome,toincomeamount,withdrawamount,towithdrawamount,balance,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Merchantaccount">
+		type="com.yt.app.api.v1.entity.Qrcodeaccount">
+	</resultMap>
+	<!-- ResultMap -->
+	<resultMap id="ResultMapVO"
+		type="com.yt.app.api.v1.vo.QrcodeaccountVO">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Merchantaccount">
+		parameterType="com.yt.app.api.v1.entity.Qrcodeaccount">
 		insert into
-		merchantaccount(id,userid,merchantid,totalincome,withdrawamount,towithdrawamount,toincomeamount,balance,create_by,create_time,update_by,update_time,remark)
+		qrcodeaccount(id,userid,channelid,totalincome,toincomeamount,withdrawamount,towithdrawamount,balance,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{userid},#{merchantid},#{totalincome},#{withdrawamount},#{towithdrawamount},#{toincomeamount},#{balance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{userid},#{channelid},#{totalincome},#{toincomeamount},#{withdrawamount},#{towithdrawamount},#{balance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		merchantaccount(id,merchantid,totalincome,withdrawamount,towithdrawamount,toincomeamount,balance,create_by,create_time,update_by,update_time,remark)
+		qrcodeaccount(id,tenant_id,userid,channelid,totalincome,toincomeamount,withdrawamount,towithdrawamount,balance,create_by,create_time,update_by,update_time,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{merchantid},#{totalincome},#{withdrawamount},#{towithdrawamount},#{toincomeamount},#{balance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+			(#{id},#{tenant_id},#{userid},#{channelid},#{totalincome},#{toincomeamount},#{withdrawamount},#{towithdrawamount},#{balance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from merchantaccount
+		delete from qrcodeaccount
 		where id = #{id}
 	</delete>
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Merchantaccount">
-		update merchantaccount
+		parameterType="com.yt.app.api.v1.entity.Qrcodeaccount">
+		update qrcodeaccount
 		<set>
-			<if test="merchantid != null">
-				merchantid= #{merchantid},
+			<if test="tenant_id != null">
+				tenant_id= #{tenant_id},
+			</if>
+			<if test="userid != null">
+				userid= #{userid},
+			</if>
+			<if test="channelid != null">
+				channelid= #{channelid},
 			</if>
 			<if test="totalincome != null">
 				totalincome= #{totalincome},
+			</if>
+			<if test="toincomeamount != null">
+				toincomeamount= #{toincomeamount},
 			</if>
 			<if test="withdrawamount != null">
 				withdrawamount= #{withdrawamount},
@@ -50,11 +62,14 @@
 			<if test="towithdrawamount != null">
 				towithdrawamount= #{towithdrawamount},
 			</if>
-			<if test="toincomeamount != null">
-				toincomeamount= #{toincomeamount},
-			</if>
 			<if test="balance != null">
 				balance= #{balance},
+			</if>
+			<if test="create_by != null">
+				create_by= #{create_by},
+			</if>
+			<if test="create_time != null">
+				create_time= #{create_time},
 			</if>
 			<if test="update_by != null">
 				update_by= #{update_by},
@@ -76,44 +91,28 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from merchantaccount
+		from qrcodeaccount
 		where id = #{id}
 	</select>
-	
-	<!--getById -->
-	<select id="getByUserId" parameterType="java.lang.Long"
-		resultMap="ResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from merchantaccount
-		where userid = #{userid}
-	</select>
-	
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from merchantaccount
+		from qrcodeaccount
 		<where>
 			1=1
 			<if test="name != null and name != ''">
 				and name like "%"#{name}"%"
 			</if>
-			<if test="orderBy != null and dir != null">
-				order by ${orderBy} ${dir}
-			</if>
-			<if test="pageStart != null and pageEnd != null">
-				LIMIT #{pageStart},#{pageEnd}
-			</if>
 		</where>
 	</select>
 	<!-- getMap -->
-	<select id="map" parameterType="java.util.HashMap"
-		resultType="java.util.HashMap">
+	<select id="page" parameterType="java.util.HashMap"
+		resultMap="ResultMapVO">
 		select
 		<include refid="Base_Column_List" />
-		from merchantaccount
+		from qrcodeaccount
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -130,7 +129,7 @@
 	<!-- getCount -->
 	<select id="countlist" parameterType="java.util.HashMap"
 		resultType="int">
-		select count(*) from merchantaccount
+		select count(*) from qrcodeaccount
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -143,7 +142,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from merchantaccount
+		from qrcodeaccount
 		<where>
 			1=1
 			<if test="array != null and array.length > 0">

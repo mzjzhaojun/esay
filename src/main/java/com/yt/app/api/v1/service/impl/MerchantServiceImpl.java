@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.AgentMapper;
 import com.yt.app.api.v1.mapper.ExchangeMerchantaccountMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
-import com.yt.app.api.v1.mapper.MerchantaccountMapper;
+import com.yt.app.api.v1.mapper.PayoutMerchantaccountMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
@@ -20,7 +20,7 @@ import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccount;
 import com.yt.app.api.v1.entity.Merchant;
-import com.yt.app.api.v1.entity.Merchantaccount;
+import com.yt.app.api.v1.entity.PayoutMerchantaccount;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtIPage;
@@ -56,7 +56,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	private AgentMapper agentmapper;
 
 	@Autowired
-	private MerchantaccountMapper merchantaccountmapper;
+	private PayoutMerchantaccountMapper merchantaccountmapper;
 
 	@Autowired
 	private ExchangeMerchantaccountMapper exchangemerchantaccountmapper;
@@ -80,7 +80,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		Integer i = mapper.post(t);
 
 		//
-		Merchantaccount sm = new Merchantaccount();
+		PayoutMerchantaccount sm = new PayoutMerchantaccount();
 		sm.setTotalincome(0.00);
 		sm.setWithdrawamount(0.00);
 		sm.setTowithdrawamount(0.00);
@@ -170,7 +170,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 
 	@Override
 	@Transactional
-	public void updateInCome(Merchantaccount ma) {
+	public void updateInCome(PayoutMerchantaccount ma) {
 		RLock lock = RedissonUtil.getLock(ma.getMerchantid());
 		try {
 			lock.lock();
@@ -190,7 +190,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		try {
 			lock.lock();
 			Merchant m = mapper.get(t.getMerchantid());
-			Merchantaccount ma = merchantaccountmapper.getByUserId(m.getUserid());
+			PayoutMerchantaccount ma = merchantaccountmapper.getByUserId(m.getUserid());
 			m.setCount(m.getCount() + t.getAmount());// 总量不包含手续费和交易费
 			m.setTodaycount(m.getTodaycount() + t.getAmount());// 当日
 			m.setTodaycost(m.getTodaycost() + t.getMerchantcost());// 当日手续费
@@ -210,7 +210,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	}
 
 	@Override
-	public void withdrawamount(Merchantaccount ma) {
+	public void withdrawamount(PayoutMerchantaccount ma) {
 		RLock lock = RedissonUtil.getLock(ma.getMerchantid());
 		try {
 			lock.lock();

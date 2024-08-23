@@ -34,7 +34,8 @@
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from incomemerchantaccountrecord
+		delete from
+		incomemerchantaccountrecord
 		where id = #{id}
 	</delete>
 	<!-- update -->

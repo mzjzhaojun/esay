@@ -11,7 +11,7 @@ import com.yt.app.common.base.YtBaseEntity;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-08-21 14:30:58
+ * @version v1 @createdate2024-08-22 23:02:54
  */
 @Data
 @Builder
@@ -31,17 +31,15 @@ public class Incomemerchantaccountorder extends YtBaseEntity<Incomemerchantaccou
 	String nkname;
 	String merchantcode;
 	Integer type;
-	Object realtimeexchange;
-	Object dowpoint;
-	Object amount;
-	String accname;
-	String accnumber;
-	Object exchange;
-	Object merchantexchange;
-	Object amountreceived;
-	Object usdtval;
+	Double realtimeexchange;
+	Double realamount;
+	Double amount;
+	Double exchange;
+	Double merchantexchange;
+	Double amountreceived;
+	Double usdtval;
 	Integer status;
-	String imgurl;
+	String resultimg;
 	String remark;
 	Integer version;
 }

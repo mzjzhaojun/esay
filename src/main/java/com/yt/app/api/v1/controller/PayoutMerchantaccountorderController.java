@@ -18,8 +18,8 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
 
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
-import com.yt.app.api.v1.service.MerchantaccountorderService;
-import com.yt.app.api.v1.entity.Merchantaccountorder;
+import com.yt.app.api.v1.service.PayoutMerchantaccountorderService;
+import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 
 /**
  * @author zj defaulttest
@@ -29,16 +29,17 @@ import com.yt.app.api.v1.entity.Merchantaccountorder;
 
 @RestController
 @RequestMapping("/rest/v1/merchantaccountorder")
-public class MerchantaccountorderController extends YtBaseEncipherControllerImpl<Merchantaccountorder, Long> {
+public class PayoutMerchantaccountorderController
+		extends YtBaseEncipherControllerImpl<PayoutMerchantaccountorder, Long> {
 
 	@Autowired
-	private MerchantaccountorderService service;
+	private PayoutMerchantaccountorderService service;
 
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Merchantaccountorder> pagebean = service
+		YtIPage<PayoutMerchantaccountorder> pagebean = service
 				.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
@@ -50,7 +51,7 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 	 */
 	@RequestMapping(value = "/appwithdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> appwithdraw(
-			YtRequestDecryptEntity<Merchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request,
+			YtRequestDecryptEntity<PayoutMerchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request,
 			HttpServletResponse response) {
 		Integer i = service.appsave(YtRequestDecryptEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
@@ -76,8 +77,9 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 	 * @version 1.1
 	 */
 	@RequestMapping(value = "/withdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> withdraw(YtRequestDecryptEntity<Merchantaccountorder> YtRequestDecryptEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> withdraw(
+			YtRequestDecryptEntity<PayoutMerchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request,
+			HttpServletResponse response) {
 		Integer i = service.save(YtRequestDecryptEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
@@ -103,7 +105,7 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 	 * @return
 	 */
 	@RequestMapping(value = "/withdrawmanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> withdrawmanual(YtRequestDecryptEntity<Merchantaccountorder> requestEntity,
+	public YtResponseEntity<Object> withdrawmanual(YtRequestDecryptEntity<PayoutMerchantaccountorder> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
 		service.withdrawmanual(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(1));
@@ -118,7 +120,7 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 	 * @return
 	 */
 	@RequestMapping(value = "/incomemanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> incomemanual(YtRequestDecryptEntity<Merchantaccountorder> requestEntity,
+	public YtResponseEntity<Object> incomemanual(YtRequestDecryptEntity<PayoutMerchantaccountorder> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
 		service.incomemanual(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(1));

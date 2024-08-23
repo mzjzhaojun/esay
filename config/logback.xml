@@ -53,11 +53,11 @@
 
     <logger name="com.yt.app" level="debug"></logger>
     
-	<root level="info"><!-- debug error -->
+	<root level="debug"><!-- debug error -->
 		<appender-ref ref="ASYNC-FILE" />
 	</root>
 	
-	<root level="info"><!-- debug error -->
+	<root level="debug"><!-- debug error -->
 		<appender-ref ref="Console" />
 	</root>
 </configuration>

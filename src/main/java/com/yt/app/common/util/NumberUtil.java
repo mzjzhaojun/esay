@@ -29,6 +29,11 @@ public class NumberUtil {
 		return (int) (Math.random() * max);
 	}
 
+	public static BigDecimal makeRandom(Double max, Double min, int scale) {
+		BigDecimal cha = new BigDecimal(Math.random() * (max - min) + min);
+		return cha.setScale(scale, BigDecimal.ROUND_HALF_UP);
+	}
+
 	/**
 	 * 格式化金额 两位小数
 	 * 

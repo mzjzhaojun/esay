@@ -12,8 +12,8 @@ import com.yt.app.api.v1.mapper.AislechannelMapper;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ChannelaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
-import com.yt.app.api.v1.mapper.MerchantaccountMapper;
-import com.yt.app.api.v1.mapper.MerchantaccountorderMapper;
+import com.yt.app.api.v1.mapper.PayoutMerchantaccountMapper;
+import com.yt.app.api.v1.mapper.PayoutMerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantaisleMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
@@ -23,7 +23,7 @@ import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.api.v1.service.MerchantService;
-import com.yt.app.api.v1.service.MerchantaccountService;
+import com.yt.app.api.v1.service.PayoutMerchantaccountService;
 import com.yt.app.api.v1.service.MerchantcustomerbanksService;
 import com.yt.app.api.v1.service.PayoutService;
 import com.yt.app.api.v1.service.SystemaccountService;
@@ -37,7 +37,6 @@ import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.common.bot.MerchantMsgBot;
 import com.yt.app.api.v1.dbo.PaySubmitDTO;
-import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Aisle;
@@ -45,8 +44,8 @@ import com.yt.app.api.v1.entity.Aislechannel;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccountorder;
 import com.yt.app.api.v1.entity.Merchant;
-import com.yt.app.api.v1.entity.Merchantaccount;
-import com.yt.app.api.v1.entity.Merchantaccountorder;
+import com.yt.app.api.v1.entity.PayoutMerchantaccount;
+import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.api.v1.entity.Merchantaisle;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
@@ -103,7 +102,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Autowired
 	private MerchantService merchantservice;
 	@Autowired
-	private MerchantaccountorderMapper merchantaccountordermapper;
+	private PayoutMerchantaccountorderMapper merchantaccountordermapper;
 	@Autowired
 	private AgentMapper agentmapper;
 	@Autowired
@@ -111,7 +110,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Autowired
 	private ChannelaccountorderMapper channelaccountordermapper;
 	@Autowired
-	private MerchantaccountService merchantaccountservice;
+	private PayoutMerchantaccountService merchantaccountservice;
 	@Autowired
 	private AgentaccountService agentaccountservice;
 	@Autowired
@@ -119,7 +118,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Autowired
 	private SystemaccountService systemaccountservice;
 	@Autowired
-	private MerchantaccountMapper merchantaccountmapper;
+	private PayoutMerchantaccountMapper merchantaccountmapper;
 	@Autowired
 	private MerchantaisleMapper merchantaislemapper;
 	@Autowired
@@ -132,7 +131,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Override
 	@Transactional
 	public Integer post(Payout t) {
-		Merchantaccount maccount = merchantaccountmapper.getByUserId(SysUserContext.getUserId());
+		PayoutMerchantaccount maccount = merchantaccountmapper.getByUserId(SysUserContext.getUserId());
 
 		if (t.getAmount() <= 0 || t.getAmount() > maccount.getBalance()) {
 			throw new YtException("账户余额不足");
@@ -211,7 +210,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 		///////////////////////////////////////////////////// 计算商户订单
 		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
-		Merchantaccountorder mao = new Merchantaccountorder();
+		PayoutMerchantaccountorder mao = new PayoutMerchantaccountorder();
 		mao.setUserid(m.getUserid());
 		mao.setMerchantid(m.getId());
 		mao.setUsername(m.getName());
@@ -342,8 +341,12 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	// 盘口提交订单
 	@Override
 	public PayResultVO submit(PaySubmitDTO ss) {
-		String code = ss.getMerchantid();
-		Merchant mc = merchantmapper.getByCode(code.toString());
+
+		if (ss.getMerchantid().length() > 10) {
+			throw new YtException("商户号错误!");
+		}
+
+		Merchant mc = merchantmapper.getByCode(ss.getMerchantid());
 
 		if (mc == null) {
 			throw new YtException("商户不存在!");
@@ -353,7 +356,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			throw new YtException("商户被冻结!");
 		}
 
-		Merchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
+		PayoutMerchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
 		if (ma.getBalance() < ss.getPayamt() || ss.getPayamt() <= 0) {
 			throw new YtException("账户余额不足");
 		}
@@ -462,7 +465,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		}
 
 		///////////////////////////////////////////////////// 计算商户订单/////////////////////////////////////////////////////
-		Merchantaccountorder mao = new Merchantaccountorder();
+		PayoutMerchantaccountorder mao = new PayoutMerchantaccountorder();
 		mao.setUserid(m.getUserid());
 		mao.setMerchantid(m.getId());
 		mao.setUsername(m.getName());
@@ -549,7 +552,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			Payout t = mapper.get(pt.getId());
 			if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51)) {
 				// 计算商户订单/////////////////////////////////////////////////////
-				Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
+				PayoutMerchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
 				mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
 				// 商户订单
 				merchantaccountordermapper.put(mao);
@@ -632,7 +635,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			Payout t = mapper.get(pt.getId());
 			if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51)) {
 				// 计算商户订单/////////////////////////////////////////////////////
-				Merchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
+				PayoutMerchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
 				mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
 				merchantaccountordermapper.put(mao);
 				//
@@ -705,20 +708,11 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	public PayResultVO queryblance(String merchantid) {
 		Merchant mt = merchantmapper.getByCode(merchantid);
 		Assert.notNull(mt, "没有找到商户!");
-		Merchantaccount mtt = merchantaccountmapper.getByUserId(mt.getUserid());
+		PayoutMerchantaccount mtt = merchantaccountmapper.getByUserId(mt.getUserid());
 		PayResultVO srv = new PayResultVO();
 		srv.setBalance(mtt.getBalance());
 		srv.setMerchantid(merchantid);
 		return srv;
-	}
-
-	/**
-	 * 
-	 */
-	@Override
-	public String submitQrcode(QrcodeSubmitDTO qs) {
-		String sign = PayUtil.SignMd5Qrocde(qs, "0cqiwsk80js5gvf4f0vnhnzujn6twvuh");
-		return sign;
 	}
 
 }

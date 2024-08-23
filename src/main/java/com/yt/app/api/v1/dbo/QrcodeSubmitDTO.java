@@ -13,7 +13,7 @@ public class QrcodeSubmitDTO {
 
 	String pay_memberid;
 	String pay_orderid;
-	String pay_bankcode;
+	String pay_aislecode;
 	String pay_amount;
 	String pay_notifyurl;
 	String pay_callbackurl;

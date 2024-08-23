@@ -27,6 +27,8 @@ public class YtConfig {
 
 	private String fileurl;
 
+	private String viewurl;
+
 	private String origin;
 
 	private List<String> origins;

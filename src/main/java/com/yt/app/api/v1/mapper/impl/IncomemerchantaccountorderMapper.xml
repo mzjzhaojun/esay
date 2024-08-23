@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,ordernum,merchantid,username,nkname,merchantcode,type,realtimeexchange,dowpoint,amount,accname,accnumber,exchange,merchantexchange,amountreceived,usdtval,status,imgurl,remark,create_by,create_time,update_by,update_time,version
+		id,tenant_id,userid,ordernum,merchantid,username,nkname,merchantcode,type,realtimeexchange,realamount,amount,exchange,merchantexchange,amountreceived,usdtval,status,resultimg,remark,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -18,23 +18,24 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Incomemerchantaccountorder">
 		insert into
-		incomemerchantaccountorder(id,userid,ordernum,merchantid,username,nkname,merchantcode,type,realtimeexchange,dowpoint,amount,accname,accnumber,exchange,merchantexchange,amountreceived,usdtval,status,imgurl,remark,create_by,create_time,update_by,update_time)
+		incomemerchantaccountorder(id,userid,ordernum,merchantid,username,nkname,merchantcode,type,realtimeexchange,realamount,amount,exchange,merchantexchange,amountreceived,usdtval,status,resultimg,remark,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{userid},#{ordernum},#{merchantid},#{username},#{nkname},#{merchantcode},#{type},#{realtimeexchange},#{dowpoint},#{amount},#{accname},#{accnumber},#{exchange},#{merchantexchange},#{amountreceived},#{usdtval},#{status},#{imgurl},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{userid},#{ordernum},#{merchantid},#{username},#{nkname},#{merchantcode},#{type},#{realtimeexchange},#{realamount},#{amount},#{exchange},#{merchantexchange},#{amountreceived},#{usdtval},#{status},#{resultimg},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		incomemerchantaccountorder(id,tenant_id,userid,ordernum,merchantid,username,nkname,merchantcode,type,realtimeexchange,dowpoint,amount,accname,accnumber,exchange,merchantexchange,amountreceived,usdtval,status,imgurl,remark,create_by,create_time,update_by,update_time)
+		incomemerchantaccountorder(id,tenant_id,userid,ordernum,merchantid,username,nkname,merchantcode,type,realtimeexchange,realamount,amount,exchange,merchantexchange,amountreceived,usdtval,status,resultimg,remark,create_by,create_time,update_by,update_time)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{userid},#{ordernum},#{merchantid},#{username},#{nkname},#{merchantcode},#{type},#{realtimeexchange},#{dowpoint},#{amount},#{accname},#{accnumber},#{exchange},#{merchantexchange},#{amountreceived},#{usdtval},#{status},#{imgurl},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+			(#{id},#{tenant_id},#{userid},#{ordernum},#{merchantid},#{username},#{nkname},#{merchantcode},#{type},#{realtimeexchange},#{realamount},#{amount},#{exchange},#{merchantexchange},#{amountreceived},#{usdtval},#{status},#{resultimg},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from incomemerchantaccountorder
+		delete from
+		incomemerchantaccountorder
 		where id = #{id}
 	</delete>
 	<!-- update -->
@@ -69,17 +70,11 @@
 			<if test="realtimeexchange != null">
 				realtimeexchange= #{realtimeexchange},
 			</if>
-			<if test="dowpoint != null">
-				dowpoint= #{dowpoint},
+			<if test="realamount != null">
+				realamount= #{realamount},
 			</if>
 			<if test="amount != null">
 				amount= #{amount},
-			</if>
-			<if test="accname != null">
-				accname= #{accname},
-			</if>
-			<if test="accnumber != null">
-				accnumber= #{accnumber},
 			</if>
 			<if test="exchange != null">
 				exchange= #{exchange},
@@ -96,8 +91,8 @@
 			<if test="status != null">
 				status= #{status},
 			</if>
-			<if test="imgurl != null">
-				imgurl= #{imgurl},
+			<if test="resultimg != null">
+				resultimg= #{resultimg},
 			</if>
 			<if test="remark != null">
 				remark= #{remark},

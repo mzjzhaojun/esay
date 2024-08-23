@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-
-
 /**
  * @author zj defaulttest
  * 
@@ -27,7 +25,7 @@ public class ViewController {
 			HttpServletResponse response) {
 		model.addAttribute("test", id);
 		System.out.println("======================" + id);
-		return "static/income";
+		return "static/payview";
 	}
 
 }

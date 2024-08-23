@@ -15,28 +15,36 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
 
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
-import com.yt.app.api.v1.service.MerchantaccountrecordService;
-import com.yt.app.api.v1.entity.Merchantaccountrecord;
+import com.yt.app.api.v1.service.QrcodeaccountrecordService;
+import com.yt.app.api.v1.entity.Qrcodeaccountrecord;
+import com.yt.app.api.v1.vo.QrcodeaccountrecordVO;
 
 /**
  * @author zj defaulttest
  * 
- * @version v1 @createdate2023-11-15 09:44:15
+ * @version v1 @createdate2024-08-23 22:50:47
  */
 
 @RestController
-@RequestMapping("/rest/v1/merchantaccountrecord")
-public class MerchantaccountrecordController extends YtBaseEncipherControllerImpl<Merchantaccountrecord, Long> {
+@RequestMapping("/rest/v1/qrcodeaccountrecord")
+public class QrcodeaccountrecordController extends YtBaseEncipherControllerImpl<Qrcodeaccountrecord, Long> {
 
 	@Autowired
-	private MerchantaccountrecordService service;
+	private QrcodeaccountrecordService service;
 
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Merchantaccountrecord> pagebean = service
-				.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		YtIPage<Qrcodeaccountrecord> list = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		return new YtResponseEncryptEntity<Object>(new YtBody(list));
+	}
+
+	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<QrcodeaccountrecordVO> pagebean = service
+				.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 }

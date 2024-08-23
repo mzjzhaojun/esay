@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
-	namespace="com.yt.app.api.v1.mapper.MerchantaccountrecordMapper">
+	namespace="com.yt.app.api.v1.mapper.PayoutMerchantaccountrecordMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
 		id,tenant_id,userid,merchantname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,update_time,update_by,create_time,create_by,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Merchantaccountrecord">
+		type="com.yt.app.api.v1.entity.PayoutMerchantaccountrecord">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Merchantaccountrecord">
+		parameterType="com.yt.app.api.v1.entity.PayoutMerchantaccountrecord">
 		insert into
-		merchantaccountrecord(id,userid,merchantname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,update_time,update_by,create_time,create_by,remark)
+		payoutmerchantaccountrecord(id,userid,merchantname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,update_time,update_by,create_time,create_by,remark)
 		values
 		(#{id},#{userid},#{merchantname},#{ordernum},#{type},#{pretotalincome},#{prewithdrawamount},#{pretowithdrawamount},#{pretoincomeamount},#{posttotalincome},#{postwithdrawamount},#{posttowithdrawamount},#{posttoincomeamount},#{update_time},#{update_by},#{create_time},#{create_by},#{remark})
 	</insert>
 	<insert id="postAndTenantid"
-		parameterType="com.yt.app.api.v1.entity.Merchantaccountrecord">
+		parameterType="com.yt.app.api.v1.entity.PayoutMerchantaccountrecord">
 		insert into
-		merchantaccountrecord(id,tenant_id,userid,merchantname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,update_time,update_by,create_time,create_by,remark)
+		payoutmerchantaccountrecord(id,tenant_id,userid,merchantname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,update_time,update_by,create_time,create_by,remark)
 		values
 		(#{id},#{tenant_id},#{userid},#{merchantname},#{ordernum},#{type},#{pretotalincome},#{prewithdrawamount},#{pretowithdrawamount},#{pretoincomeamount},#{posttotalincome},#{postwithdrawamount},#{posttowithdrawamount},#{posttoincomeamount},#{update_time},#{update_by},#{create_time},#{create_by},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		merchantaccountrecord(id,merchantname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,update_time,update_by,create_time,create_by,remark)
+		payoutmerchantaccountrecord(id,merchantname,ordernum,type,pretotalincome,prewithdrawamount,pretowithdrawamount,pretoincomeamount,posttotalincome,postwithdrawamount,posttowithdrawamount,posttoincomeamount,update_time,update_by,create_time,create_by,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
@@ -37,13 +37,13 @@
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from merchantaccountrecord
+		delete from payoutmerchantaccountrecord
 		where id = #{id}
 	</delete>
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Merchantaccountrecord">
-		update merchantaccountrecord
+		parameterType="com.yt.app.api.v1.entity.PayoutMerchantaccountrecord">
+		update payoutmerchantaccountrecord
 		<set>
 			<if test="merchantname != null">
 				merchantname= #{merchantname},
@@ -98,7 +98,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from merchantaccountrecord
+		from payoutmerchantaccountrecord
 		where id = #{id}
 	</select>
 	<!-- getList -->
@@ -106,7 +106,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from merchantaccountrecord
+		from payoutmerchantaccountrecord
 		<where>
 			1=1
 			<if test="ordernum != null and ordernum != ''">
@@ -131,7 +131,7 @@
 		resultType="java.util.HashMap">
 		select
 		<include refid="Base_Column_List" />
-		from merchantaccountrecord
+		from payoutmerchantaccountrecord
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -148,7 +148,7 @@
 	<!-- getCount -->
 	<select id="countlist" parameterType="java.util.HashMap"
 		resultType="int">
-		select count(*) from merchantaccountrecord
+		select count(*) from payoutmerchantaccountrecord
 		<where>
 			1=1
 			<if test="ordernum != null and ordernum != ''">
@@ -167,7 +167,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from merchantaccountrecord
+		from payoutmerchantaccountrecord
 		<where>
 			1=1
 			<if test="array != null and array.length > 0">

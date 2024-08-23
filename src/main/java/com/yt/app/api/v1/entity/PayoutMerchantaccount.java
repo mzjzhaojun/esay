@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Merchantaccount extends YtBaseEntity<Merchantaccount> {
+public class PayoutMerchantaccount extends YtBaseEntity<PayoutMerchantaccount> {
 
 	private static final long serialVersionUID = 1L;
 

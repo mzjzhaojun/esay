@@ -11,7 +11,7 @@ import com.yt.app.common.base.YtIBaseMapper;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-08-21 14:30:58
+ * @version v1 @createdate2024-08-23 18:22:46
  */
 
 public interface IncomeMapper extends YtIBaseMapper<Income> {

@@ -21,8 +21,6 @@ import com.yt.app.common.common.yt.YtResponseEncryptEntity;
 import com.yt.app.common.common.yt.YtResponseEntity;
 import com.yt.app.common.util.AuthUtil;
 
-
-
 /**
  * @author zj defaulttest
  * 

@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
-	namespace="com.yt.app.api.v1.mapper.MerchantaccountorderMapper">
+	namespace="com.yt.app.api.v1.mapper.PayoutMerchantaccountorderMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
 		id,tenant_id,userid,merchantid,username,nkname,merchantcode,type,amount,onecost,deal,accname,accnumber,exchange,merchantexchange,amountreceived,status,usdtval,remark,create_by,create_time,update_by,update_time,version,ordernum,imgurl
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Merchantaccountorder">
+		type="com.yt.app.api.v1.entity.PayoutMerchantaccountorder">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Merchantaccountorder">
+		parameterType="com.yt.app.api.v1.entity.PayoutMerchantaccountorder">
 		insert into
-		merchantaccountorder(id,userid,merchantid,username,nkname,type,merchantcode,amount,onecost,deal,accname,accnumber,exchange,merchantexchange,amountreceived,status,usdtval,remark,create_by,create_time,update_by,update_time,ordernum,imgurl)
+		payoutmerchantaccountorder(id,userid,merchantid,username,nkname,type,merchantcode,amount,onecost,deal,accname,accnumber,exchange,merchantexchange,amountreceived,status,usdtval,remark,create_by,create_time,update_by,update_time,ordernum,imgurl)
 		values
 		(#{id},#{userid},#{merchantid},#{username},#{nkname},#{type},#{merchantcode},#{amount},#{onecost},#{deal},#{accname},#{accnumber},#{exchange},#{merchantexchange},#{amountreceived},#{status},#{usdtval},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{ordernum},#{imgurl})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		merchantaccountorder(id,merchantid,username,nkname,merchantcode,amount,exchange,merchantexchange,amountreceived,status,remark,create_by,create_time,update_by,update_time,ordernum)
+		payoutmerchantaccountorder(id,merchantid,username,nkname,merchantcode,amount,exchange,merchantexchange,amountreceived,status,remark,create_by,create_time,update_by,update_time,ordernum)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
@@ -31,13 +31,13 @@
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
 		delete from
-		merchantaccountorder
+		payoutmerchantaccountorder
 		where id = #{id}
 	</delete>
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Merchantaccountorder">
-		update merchantaccountorder
+		parameterType="com.yt.app.api.v1.entity.PayoutMerchantaccountorder">
+		update payoutmerchantaccountorder
 		<set>
 			<if test="merchantid != null">
 				merchantid= #{merchantid},
@@ -104,7 +104,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from merchantaccountorder
+		from payoutmerchantaccountorder
 		where id = #{id}
 	</select>
 
@@ -112,7 +112,7 @@
 	<select id="getByOrdernum" parameterType="java.lang.String"  resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from merchantaccountorder
+		from payoutmerchantaccountorder
 		where ordernum = #{ordernum}
 	</select>
 	<!-- getList -->
@@ -120,7 +120,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from merchantaccountorder
+		from payoutmerchantaccountorder
 		<where>
 			1=1
 			<if test="username != null and username != ''">
@@ -151,7 +151,7 @@
 		resultType="java.util.HashMap">
 		select
 		<include refid="Base_Column_List" />
-		from merchantaccountorder
+		from payoutmerchantaccountorder
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -168,7 +168,7 @@
 	<!-- getCount -->
 	<select id="countlist" parameterType="java.util.HashMap"
 		resultType="int">
-		select count(*) from merchantaccountorder
+		select count(*) from payoutmerchantaccountorder
 		<where>
 			1=1
 			<if test="username != null and username != ''">
@@ -193,7 +193,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from merchantaccountorder
+		from payoutmerchantaccountorder
 		<where>
 			1=1
 			<if test="array != null and array.length > 0">

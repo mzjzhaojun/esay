@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-08-21 14:30:58
+ * @version v1 @createdate2024-08-22 23:02:54
  */
 @Data
 @SuperBuilder
@@ -26,16 +26,14 @@ public class IncomemerchantaccountorderDTO {
 	String merchantcode;
 	Integer type;
 	Object realtimeexchange;
-	Object dowpoint;
+	Object realamount;
 	Object amount;
-	String accname;
-	String accnumber;
 	Object exchange;
 	Object merchantexchange;
 	Object amountreceived;
 	Object usdtval;
 	Integer status;
-	String imgurl;
+	String resultimg;
 	String remark;
 	Long create_by;
 	java.util.Date create_time;

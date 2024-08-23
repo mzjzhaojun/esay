@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.MerchantaccountbankMapper;
-import com.yt.app.api.v1.mapper.MerchantaccountorderMapper;
+import com.yt.app.api.v1.mapper.PayoutMerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
-import com.yt.app.api.v1.service.MerchantaccountService;
-import com.yt.app.api.v1.service.MerchantaccountorderService;
+import com.yt.app.api.v1.service.PayoutMerchantaccountService;
+import com.yt.app.api.v1.service.PayoutMerchantaccountorderService;
 import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
@@ -18,7 +18,7 @@ import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Merchantaccountbank;
-import com.yt.app.api.v1.entity.Merchantaccountorder;
+import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -43,10 +43,10 @@ import java.util.Map;
  */
 
 @Service
-public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchantaccountorder, Long>
-		implements MerchantaccountorderService {
+public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<PayoutMerchantaccountorder, Long>
+		implements PayoutMerchantaccountorderService {
 	@Autowired
-	private MerchantaccountorderMapper mapper;
+	private PayoutMerchantaccountorderMapper mapper;
 
 	@Autowired
 	private UserMapper usermapper;
@@ -58,7 +58,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	private MerchantaccountbankMapper merchantaccountbankmapper;
 
 	@Autowired
-	private MerchantaccountService merchantaccountservice;
+	private PayoutMerchantaccountService merchantaccountservice;
 
 	@Autowired
 	private SystemaccountService systemaccountservice;
@@ -68,7 +68,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	 */
 	@Override
 	@Transactional
-	public Integer post(Merchantaccountorder t) {
+	public Integer post(PayoutMerchantaccountorder t) {
 		if (t.getAmount() <= 0) {
 			throw new YtException("金额不能小于1");
 		}
@@ -102,7 +102,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	// 提现
 	@Override
 	@Transactional
-	public Integer save(Merchantaccountorder t) {
+	public Integer save(PayoutMerchantaccountorder t) {
 		if (t.getAmount() <= 0) {
 			throw new YtException("金额不能小于1");
 		}
@@ -142,7 +142,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	 */
 	@Override
 	@Transactional
-	public Integer appsave(Merchantaccountorder t) {
+	public Integer appsave(PayoutMerchantaccountorder t) {
 		if (t.getAmount() <= 0) {
 			throw new YtException("金额不能小于1");
 		}
@@ -179,32 +179,32 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Merchantaccountorder> list(Map<String, Object> param) {
+	public YtIPage<PayoutMerchantaccountorder> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
 			if (count == 0) {
-				return new YtPageBean<Merchantaccountorder>(Collections.emptyList());
+				return new YtPageBean<PayoutMerchantaccountorder>(Collections.emptyList());
 			}
 		}
-		List<Merchantaccountorder> list = mapper.list(param);
+		List<PayoutMerchantaccountorder> list = mapper.list(param);
 		list.forEach(mco -> {
 			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
 		});
-		return new YtPageBean<Merchantaccountorder>(param, list, count);
+		return new YtPageBean<PayoutMerchantaccountorder>(param, list, count);
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public Merchantaccountorder get(Long id) {
-		Merchantaccountorder t = mapper.get(id);
+	public PayoutMerchantaccountorder get(Long id) {
+		PayoutMerchantaccountorder t = mapper.get(id);
 		return t;
 	}
 
 	////////////////////////////////////////////////////////////// 充值处理
 	@Override
 	@Transactional
-	public void incomemanual(Merchantaccountorder mco) {
+	public void incomemanual(PayoutMerchantaccountorder mco) {
 		RLock lock = RedissonUtil.getLock(mco.getId());
 		try {
 			lock.lock();
@@ -212,7 +212,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 			boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()),
 					System.currentTimeMillis());
 			Assert.isTrue(isValid, "验证码错误！");
-			Merchantaccountorder mao = mapper.get(mco.getId());
+			PayoutMerchantaccountorder mao = mapper.get(mco.getId());
 			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_10)) {
 				mao.setStatus(mco.getStatus());
 				Integer i = mapper.put(mao);
@@ -242,7 +242,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		RLock lock = RedissonUtil.getLock(id);
 		try {
 			lock.lock();
-			Merchantaccountorder mao = mapper.get(id);
+			PayoutMerchantaccountorder mao = mapper.get(id);
 			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_13);
 			Integer i = mapper.put(mao);
 			//
@@ -259,7 +259,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 
 	@Override
 	@Transactional
-	public void withdrawmanual(Merchantaccountorder mco) {
+	public void withdrawmanual(PayoutMerchantaccountorder mco) {
 		RLock lock = RedissonUtil.getLock(mco.getId());
 		try {
 			lock.lock();
@@ -267,7 +267,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 			boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()),
 					System.currentTimeMillis());
 			Assert.isTrue(isValid, "验证码错误！");
-			Merchantaccountorder mao = mapper.get(mco.getId());
+			PayoutMerchantaccountorder mao = mapper.get(mco.getId());
 			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_10)) {
 				mao.setStatus(mco.getStatus());
 				mao.setImgurl(mco.getImgurl());
@@ -298,7 +298,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		RLock lock = RedissonUtil.getLock(id);
 		try {
 			lock.lock();
-			Merchantaccountorder mao = mapper.get(id);
+			PayoutMerchantaccountorder mao = mapper.get(id);
 			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_13);
 			Integer i = mapper.put(mao);
 			//

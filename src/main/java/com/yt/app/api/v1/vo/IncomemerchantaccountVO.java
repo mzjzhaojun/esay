@@ -11,7 +11,7 @@ import com.yt.app.common.base.BaseVO;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-08-21 14:30:58
+ * @version v1 @createdate2024-08-22 23:02:54
  */
 @Data
 @SuperBuilder
@@ -26,11 +26,11 @@ public class IncomemerchantaccountVO extends BaseVO {
 	Long tenant_id;
 	Long userid;
 	Long merchantid;
-	Object totalincome;
-	Object toincomeamount;
-	Object withdrawamount;
-	Object towithdrawamount;
-	Object balance;
+	Double totalincome;
+	Double toincomeamount;
+	Double withdrawamount;
+	Double towithdrawamount;
+	Double balance;
 	Long create_by;
 	java.util.Date create_time;
 	Long update_by;

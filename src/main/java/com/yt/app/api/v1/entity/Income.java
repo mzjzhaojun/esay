@@ -11,7 +11,7 @@ import com.yt.app.common.base.YtBaseEntity;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-08-21 14:30:58
+ * @version v1 @createdate2024-08-23 18:22:46
  */
 @Data
 @Builder
@@ -24,43 +24,34 @@ public class Income extends YtBaseEntity<Income> {
 
 	Long id;
 	Long tenant_id;
-	Long userid;
+	Long merchantuserid;
 	String ordernum;
 	Long merchantid;
 	String merchantname;
 	String merchantcode;
 	String merchantordernum;
-	Object merchantrealtimeexchange;
-	Object merchantonecost;
-	Object merchantdowpoint;
-	Object exchange;
-	Object merchantpay;
-	Long aisleid;
-	String aislename;
+	String merchantorderid;
+	Double merchantonecost;
+	Double merchantpay;
+	String aislecode;
+	Long qrcodeaisleid;
+	String qrcodeaislename;
 	Long agentid;
 	String agentordernum;
-	Object agentincome;
-	Long channelid;
-	Object channelbalance;
-	String channelname;
-	String channelordernum;
-	Object channelrealtimeexchange;
-	Object channelonecost;
-	Object channeldowpoint;
-	Object channelpay;
-	String accname;
-	String accnumer;
-	String bankcode;
-	String bankname;
-	String bankaddress;
-	Object amount;
+	Double agentincome;
+	Long qrcodeid;
+	String qrcodename;
+	String qrcodeordernum;
+	Long qrcodeuserid;
+	Double amount;
+	Double realamount;
 	Integer status;
 	java.util.Date successtime;
 	Long backlong;
 	String qrcode;
-	Integer type;
-	String imgurl;
-	Object income;
+	String type;
+	String resulturl;
+	Double fewamount;
 	String notifyurl;
 	Integer notifystatus;
 	String remark;
