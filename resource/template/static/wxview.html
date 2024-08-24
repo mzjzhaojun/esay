@@ -4,9 +4,8 @@
 <meta charset="UTF-8" />
 <link rel="icon" href="/favicon.ico" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>支付中......</title>
+<title>扫码支付</title>
 <script src="/esay/static/js/jquery-3.5.1.min.js"></script>
-<script src="/esay/static/js/layer.js"></script>
 <style>
 html, body {
 	width: 100%;
@@ -54,11 +53,11 @@ div {
 			</div>
 			<div
 				style="width: 100%; height: 4%; display: flex; justify-content: center; align-items: center;">
-				<div>请在规定时间内付款订单，过期之后请勿支付</div>
+				<div style="color: Orange">请在规定时间内付款订单，过期之后请勿支付</div>
 			</div>
 			<div
 				style="width: 100%; height: 4%; display: flex; justify-content: center; align-items: center;">
-				<div>不要修改金额，否则不到账、不退款</div>
+				<div style="color: Orange">不要修改金额，否则不到账、不退款</div>
 			</div>
 			<div
 				style="width: 100%; height: 8%; display: flex; justify-content: center; align-items: center;">
@@ -66,7 +65,7 @@ div {
 				<div id="amount" style="font-size: 25px; font-weight: 2px;"></div>
 			</div>
 			<div id="count-down"
-				style="background: red; width: 100%; height: 5%; display: flex; justify-content: center; align-items: center;">
+				style="width: 100%; height: 5%; display: flex; justify-content: center; align-items: center;">
 				<div class="mr-4">还有</div>
 				<div style="background: #ffe600; border-radius: 5px; padding: 4px;"
 					id="minute">00</div>
@@ -96,7 +95,7 @@ div {
 			</div>
 			<div
 				style="width: 100%; height: 3%; display: flex; justify-content: center; align-items: center;">
-				<div>支付完成不能关闭本页面，等待后台确认收到款</div>
+				<div style="color: red">支付完成不能关闭本页面，等待后台确认收到款</div>
 			</div>
 		</div>
 	</div>
@@ -137,7 +136,7 @@ div {
 			document.getElementById("minute").innerText = minute
 			document.getElementById("second").innerText = second
 			if (hour <= 0 && minute <= 0 && second <= 0) {
-				$('#count-down').html('<div>订单已过期</div>');
+				$('#count-down').html('<div style="background: red; ">订单已过期,如果你已经支付,请五分钟后查看账户</div>');
 				$('#qrcode_load').attr('style', 'filter: blur(10px);');
 			} else {
 
@@ -171,26 +170,5 @@ div {
 		window.location.href = backforwardurl;
 	}
 
-	function setpayexpired() {
-		$.ajax({
-			type : "GET",
-			dataType : "json",
-			url : "/esay/rest/v1/order/income/" + incomeid,
-			data : {},
-			success : function(data) {
-				if (data.code == 1) {
-					$('.alert').html('支付成功，正在跳转中...').addClass('alert-success')
-							.show().delay(2500).fadeOut();
-					setTimeout(window.location.href = data.backurl, 1000);
-				} else {
-					setTimeout("checkpaystatus()", 2000);
-				}
-			},
-			error : function() {
-				setTimeout("checkpaystatus()", 2000);
-			}
-		});
-	}
 </script>
-
 </html>

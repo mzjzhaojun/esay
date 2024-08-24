@@ -19,6 +19,7 @@ import com.yt.app.api.v1.service.IncomeService;
 import com.yt.app.api.v1.service.PayoutService;
 import com.yt.app.api.v1.vo.PayResultVO;
 import com.yt.app.api.v1.vo.QrcodeResultVO;
+import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.common.common.yt.YtBody;
@@ -85,7 +86,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	@RequestMapping(value = "/queryqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> queryqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		QrcodeResultVO yb = incomeservice.queryqrcode(requestEntity.getBody());
+		QueryQrcodeResultVO yb = incomeservice.queryqrcode(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(yb));
 	}
 

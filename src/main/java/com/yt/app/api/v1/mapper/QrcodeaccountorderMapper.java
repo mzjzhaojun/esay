@@ -2,6 +2,7 @@ package com.yt.app.api.v1.mapper;
 
 import java.util.List;
 import java.util.Map;
+
 import com.yt.app.api.v1.entity.Qrcodeaccountorder;
 import com.yt.app.api.v1.vo.QrcodeaccountorderVO;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
@@ -95,4 +96,13 @@ public interface QrcodeaccountorderMapper extends YtIBaseMapper<Qrcodeaccountord
 	 */
 	@YtRedisCacheAnnotation(classs = Qrcodeaccountorder.class)
 	public List<Qrcodeaccountorder> listByArrayId(long[] id);
+
+	/**
+	 * get
+	 *
+	 * @param id id
+	 * @return Incomemerchantaccountorder
+	 */
+	@YtRedisCacheAnnotation(classs = Qrcodeaccountorder.class)
+	public Qrcodeaccountorder getByOrderNum(String ordernum);
 }

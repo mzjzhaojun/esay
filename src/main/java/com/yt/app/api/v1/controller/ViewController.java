@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.service.IncomeService;
+import com.yt.app.common.resource.DictionaryResource;
 
 /**
  * @author zj defaulttest
@@ -37,7 +38,11 @@ public class ViewController {
 		model.addAttribute("amount", income.getRealamount());
 		model.addAttribute("backforwardurl", income.getBackforwardurl());
 		model.addAttribute("status", income.getStatus());
-		return "static/wxview";
+		if (income.getType().equals(DictionaryResource.BANK_TYPE_122.toString()))
+			return "static/wxview";
+		else if (income.getType().equals(DictionaryResource.BANK_TYPE_123.toString()))
+			return "static/aliview";
+		return "static/othview";
 	}
 
 }

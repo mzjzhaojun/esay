@@ -1,5 +1,6 @@
 package com.yt.app.common.runtask;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,27 +10,38 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.yt.app.api.v1.entity.Exchange;
+import com.yt.app.api.v1.entity.Income;
+import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Payout;
+import com.yt.app.api.v1.entity.Qrcodeaccountorder;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.mapper.ExchangeMapper;
+import com.yt.app.api.v1.mapper.IncomeMapper;
+import com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
+import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.service.SysconfigService;
+import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.runnable.GetExchangeChannelOrderNumThread;
 import com.yt.app.common.runnable.GetPayoutChannelOrderNumThread;
 import com.yt.app.common.runnable.NotifyTyThread;
+import com.yt.app.common.util.RedisUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-//@Component
+@Component
 public class TaskConfig {
+
+	@Autowired
+	private IncomeMapper incomemapper;
 
 	@Autowired
 	private PayoutMapper payoutmapper;
@@ -51,6 +63,12 @@ public class TaskConfig {
 
 	@Autowired
 	private TgchannelgroupMapper tgchannelgroupmapper;
+
+	@Autowired
+	private QrcodeaccountorderMapper qrcodeaccountordermapper;
+
+	@Autowired
+	private IncomemerchantaccountorderMapper incomemerchantaccountordermapper;
 
 	/**
 	 * 更新实时汇率
@@ -137,6 +155,35 @@ public class TaskConfig {
 			if (exchangemapper.put(p) > 0) {
 				GetExchangeChannelOrderNumThread nf = new GetExchangeChannelOrderNumThread(p.getId());
 				threadpooltaskexecutor.execute(nf);
+			}
+		}
+	}
+
+	/**
+	 * 超時3+3分钟未支付订单处理
+	 */
+	@Scheduled(cron = "0/30 * * * * ?")
+	public void income() throws InterruptedException {
+		TenantIdContext.removeFlag();
+		List<Income> list = incomemapper.selectAddlist();
+		for (Income p : list) {
+			log.info("代收单号ID：" + p.getId() + " 状态：" + p.getStatus());
+			if (p.getExpireddate().getTime() < new Date().getTime()) {
+				p.setStatus(DictionaryResource.PAYOUTSTATUS_53);
+				incomemapper.put(p);
+				//
+				Qrcodeaccountorder qao = qrcodeaccountordermapper.getByOrderNum(p.getQrcodeordernum());
+				qao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
+				qrcodeaccountordermapper.put(qao);
+				//
+				Incomemerchantaccountorder imqao = incomemerchantaccountordermapper
+						.getByOrderNum(p.getMerchantordernum());
+				imqao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
+				incomemerchantaccountordermapper.put(imqao);
+				// 释放收款码数据
+				String key = SystemConstant.CACHE_SYS_QRCODE + p.getQrcodeid() + "" + p.getFewamount();
+				RedisUtil.delete(key);
+				// 处理账户
 			}
 		}
 	}

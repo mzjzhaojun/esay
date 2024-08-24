@@ -49,7 +49,7 @@
 				userid= #{userid},
 			</if>
 			<if test="qrcodeaislecode != null">
-	qrcodeaislecode= #{qrcodeaislecode},
+				qrcodeaislecode= #{qrcodeaislecode},
 			</if>
 			<if test="qrcodeaisleid != null">
 				qrcodeaisleid= #{qrcodeaisleid},
@@ -127,6 +127,13 @@
 		<include refid="Base_Column_List" />
 		from qrcodeaccountorder
 		where id = #{id}
+	</select>
+	<select id="getByOrderNum" parameterType="java.lang.String"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from qrcodeaccountorder
+		where ordernum= #{ordernum}
 	</select>
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"

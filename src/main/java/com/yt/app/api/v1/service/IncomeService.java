@@ -6,6 +6,7 @@ import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.api.v1.vo.QrcodeResultVO;
+import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
 import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.common.yt.YtIPage;
 
@@ -25,5 +26,5 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 	QrcodeResultVO submitQrcode(QrcodeSubmitDTO qs);
 
 	// 拉码下单查单
-	QrcodeResultVO queryqrcode(QrcodeSubmitDTO qs);
+	QueryQrcodeResultVO queryqrcode(QrcodeSubmitDTO qs);
 }

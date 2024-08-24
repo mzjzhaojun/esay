@@ -32,6 +32,7 @@ import com.yt.app.api.v1.entity.Qrcodeaisle;
 import com.yt.app.api.v1.entity.Qrcodeaisleqrcode;
 import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.api.v1.vo.QrcodeResultVO;
+import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.config.YtConfig;
@@ -141,10 +142,14 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		if (!mc.getStatus()) {
 			throw new YtException("商户被冻结!");
 		}
-		String sign = PayUtil.SignMd5Qrocde(qs, mc.getAppkey());
+		String sign = PayUtil.SignMd5SubmitQrocde(qs, mc.getAppkey());
 		System.out.println(sign);
 		if (!sign.equals(qs.getPay_md5sign())) {
 			throw new YtException("签名不正确!");
+		}
+		Income income = mapper.getByMerchantOrderNum(qs.getPay_orderid());
+		if (income != null) {
+			throw new YtException("已经存在订单!");
 		}
 		List<Merchantqrcodeaisle> listmc = merchantqrcodeaislemapper.getByMid(mc.getId());
 		if (listmc == null || listmc.size() == 0) {
@@ -152,9 +157,11 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		long[] qraids = listmc.stream().mapToLong(qa -> qa.getQrcodeaisleid()).distinct().toArray();
 		List<Qrcodeaisle> listqa = qrcodeaislemapper.listByArrayId(qraids);
-		Qrcodeaisle qas = listqa.stream().filter(qa -> qa.getCode().equals(qs.getPay_aislecode())).findFirst().get();
-		if (qas == null) {
-			throw new YtException("通道不匹配");
+		Qrcodeaisle qas;
+		try {
+			qas = listqa.stream().filter(qa -> qa.getCode().equals(qs.getPay_aislecode())).findFirst().get();
+		} catch (Exception e1) {
+			throw new YtException(qs.getPay_aislecode() + "通道没有权限");
 		}
 
 		List<Qrcodeaisleqrcode> listqaq = qrcodeaisleqrcodemapper.getByQrcodeAisleId(qas.getId());
@@ -202,7 +209,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		// 开始业务
 		System.out.println("====================" + qd.getName());
 
-		Income income = new Income();
+		income = new Income();
 		// 商戶
 		income.setMerchantuserid(mc.getUserid());
 		income.setOrdernum(StringUtil.getOrderNum());
@@ -211,7 +218,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());
-		income.setExpireddate(DateTimeUtil.addMinute(qd.getExpireminute()));
+		income.setExpireddate(DateTimeUtil.addMinute(qd.getExpireminute()+3));
 		// 通道
 		income.setExpiredminute(qd.getExpireminute());
 		income.setQrcodeaisleid(qas.getId());
@@ -321,9 +328,29 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
-	public QrcodeResultVO queryqrcode(QrcodeSubmitDTO qs) {
-
-		return null;
+	public QueryQrcodeResultVO queryqrcode(QrcodeSubmitDTO qs) {
+		// 验证
+		if (qs.getPay_memberid().length() > 10) {
+			throw new YtException("商户号错误!");
+		}
+		// 盘口商户
+		Merchant mc = merchantmapper.getByCode(qs.getPay_memberid());
+		if (mc == null) {
+			throw new YtException("商户不存在!");
+		}
+		String sign = PayUtil.SignMd5SubmitQrocde(qs, mc.getAppkey());
+		System.out.println(sign);
+		if (!sign.equals(qs.getPay_md5sign())) {
+			throw new YtException("签名不正确!");
+		}
+		Income income = mapper.getByMerchantOrderNum(qs.getPay_orderid());
+		QueryQrcodeResultVO qrv = new QueryQrcodeResultVO();
+		qrv.setPay_code(income.getStatus());
+		qrv.setPay_amount(income.getAmount().toString());
+		qrv.setPay_memberid(mc.getCode());
+		qrv.setPay_orderid(qs.getPay_orderid());
+		qrv.setPay_md5sign(PayUtil.SignMd5QueryResultQrocde(qrv, mc.getAppkey()));
+		return qrv;
 	}
 
 	@Override

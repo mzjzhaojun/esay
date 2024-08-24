@@ -171,9 +171,17 @@
 		from income
 		where ordernum= #{ordernum}
 	</select>
+	<!--getByMerchantOrderNum -->
+	<select id="getByMerchantOrderNum"
+		parameterType="java.lang.String" resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from income
+		where merchantorderid= #{ordernum}
+	</select>
 	<!--getByQrcodeOrderNum -->
-	<select id="getByQrcodeOrderNum" parameterType="java.lang.String"
-		resultMap="ResultMap">
+	<select id="getByQrcodeOrderNum"
+		parameterType="java.lang.String" resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from income
@@ -237,6 +245,16 @@
 					#{item}
 				</foreach>
 			</if>
+		</where>
+	</select>
+	<!-- selectAddlist -->
+	<select id="selectAddlist" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from income
+		<where>
+			status = 50
 		</where>
 	</select>
 </mapper>

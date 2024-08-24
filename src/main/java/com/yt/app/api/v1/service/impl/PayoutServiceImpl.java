@@ -366,12 +366,17 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			throw new YtException("签名不正确!");
 		}
 
+		Payout pt = mapper.getByMerchantOrdernum(ss.getMerchantorderid());
+		if (pt != null) {
+			throw new YtException("已经存在的订单!");
+		}
+
 		List<Merchantaisle> listmc = merchantaislemapper.getByMid(mc.getId());
 		if (listmc == null || listmc.size() == 0) {
 			throw new YtException("商戶沒有配置通道!");
 		}
 		// 下單
-		Payout pt = new Payout();
+		pt = new Payout();
 		pt.setAccname(ss.getBankowner());
 		pt.setAccnumer(ss.getBanknum());
 		pt.setBankcode(ss.getBankcode());

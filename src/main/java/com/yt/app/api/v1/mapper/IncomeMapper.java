@@ -2,6 +2,7 @@ package com.yt.app.api.v1.mapper;
 
 import java.util.List;
 import java.util.Map;
+
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
@@ -104,7 +105,7 @@ public interface IncomeMapper extends YtIBaseMapper<Income> {
 	 */
 	@YtRedisCacheAnnotation(classs = Income.class)
 	public Income getByOrderNum(String ordernum);
-	
+
 	/**
 	 * getByOrderNum
 	 * 
@@ -113,4 +114,20 @@ public interface IncomeMapper extends YtIBaseMapper<Income> {
 	 */
 	@YtRedisCacheAnnotation(classs = Income.class)
 	public Income getByQrcodeOrderNum(String ordernum);
+
+	/**
+	 * getByOrderNum
+	 * 
+	 * @param ordernum
+	 * @return
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public Income getByMerchantOrderNum(String ordernum);
+
+	/**
+	 * 
+	 * @return
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public List<Income> selectAddlist();
 }
