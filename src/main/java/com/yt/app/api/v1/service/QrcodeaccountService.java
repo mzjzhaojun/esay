@@ -3,6 +3,7 @@ package com.yt.app.api.v1.service;
 import java.util.Map;
 
 import com.yt.app.api.v1.entity.Qrcodeaccount;
+import com.yt.app.api.v1.entity.Qrcodeaccountorder;
 import com.yt.app.api.v1.vo.QrcodeaccountVO;
 import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.common.yt.YtIPage;
@@ -15,4 +16,17 @@ import com.yt.app.common.common.yt.YtIPage;
 
 public interface QrcodeaccountService extends YtIBaseService<Qrcodeaccount, Long> {
 	YtIPage<QrcodeaccountVO> page(Map<String, Object> param);
+
+	/**
+	 * 代收待确认
+	 * 
+	 * @param t
+	 */
+	void totalincome(Qrcodeaccountorder t);
+	
+	/**
+	 * 代收成功
+	 * @param mao
+	 */
+	void updateTotalincome(Qrcodeaccountorder mao);
 }

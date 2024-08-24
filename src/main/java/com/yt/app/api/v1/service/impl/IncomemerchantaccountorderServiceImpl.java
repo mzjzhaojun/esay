@@ -5,11 +5,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper;
 import com.yt.app.api.v1.service.IncomemerchantaccountorderService;
+import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.vo.IncomemerchantaccountorderVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.util.RedisUtil;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +20,7 @@ import java.util.Map;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-08-22 23:02:54
+ * @version v1 @createdate2024-08-23 23:31:35
  */
 
 @Service
@@ -52,6 +55,10 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 			return new YtPageBean<IncomemerchantaccountorderVO>(Collections.emptyList());
 		}
 		List<IncomemerchantaccountorderVO> list = mapper.page(param);
+		list.forEach(mco -> {
+			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
+			mco.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getType()));
+		});
 		return new YtPageBean<IncomemerchantaccountorderVO>(param, list, count);
 	}
 }

@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yt.app.api.v1.dbo.SysQueryDTO;
 import com.yt.app.api.v1.dbo.PaySubmitDTO;
 import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
+import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.service.IncomeService;
 import com.yt.app.api.v1.service.PayoutService;
@@ -85,6 +87,14 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 			HttpServletRequest request, HttpServletResponse response) {
 		QrcodeResultVO yb = incomeservice.queryqrcode(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(yb));
+	}
+
+	// index
+	@RequestMapping(value = "/income/{id}", method = RequestMethod.GET)
+	public YtResponseEntity<Object> queryIncomeOrder(@PathVariable Long id, HttpServletRequest request,
+			HttpServletResponse response) {
+		Income income = incomeservice.get(id);
+		return new YtResponseEntity<Object>(new YtBody(income.getStatus()));
 	}
 
 }

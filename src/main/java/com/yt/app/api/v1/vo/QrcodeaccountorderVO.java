@@ -11,7 +11,7 @@ import com.yt.app.common.base.BaseVO;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-08-23 22:50:47
+ * @version v1 @createdate2024-08-23 23:07:27
  */
 @Data
 @SuperBuilder
@@ -25,27 +25,29 @@ public class QrcodeaccountorderVO extends BaseVO {
 	Long id;
 	Long tenant_id;
 	Long userid;
-	Long channelid;
-	String channelname;
-	String nkname;
-	String channelcode;
+	String qrcodeaislecode;
+	Long qrcodeaisleid;
+	String qrcodeaislename;
+	String qrcodename;
+	Long qrcodeid;
+	String qrcodecode;
 	String ordernum;
-	Integer type;
-	Object deal;
-	Object onecost;
-	Object amount;
-	String accname;
-	String accnumber;
-	Object exchange;
-	Object channelexchange;
-	Object amountreceived;
-	Object usdtval;
+	String type;
+	String typename;
+	Double fewamount;
+	java.util.Date expireddate;
+	Double amount;
+	Double realamount;
+	String resulturl;
+	String merchantname;
+	String qrocde;
 	Integer status;
+	String statusname;
 	String remark;
+	String imgurl;
 	Long create_by;
 	java.util.Date create_time;
 	Long update_by;
 	java.util.Date update_time;
 	Integer version;
-	String imgurl;
 }

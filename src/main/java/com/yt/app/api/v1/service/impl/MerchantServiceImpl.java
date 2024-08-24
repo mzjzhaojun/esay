@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.yt.app.api.v1.mapper.AgentMapper;
 import com.yt.app.api.v1.mapper.ExchangeMerchantaccountMapper;
+import com.yt.app.api.v1.mapper.IncomemerchantaccountMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.PayoutMerchantaccountMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
@@ -19,6 +20,7 @@ import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccount;
+import com.yt.app.api.v1.entity.Incomemerchantaccount;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.PayoutMerchantaccount;
 import com.yt.app.api.v1.entity.Payout;
@@ -61,6 +63,9 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	@Autowired
 	private ExchangeMerchantaccountMapper exchangemerchantaccountmapper;
 
+	@Autowired
+	private IncomemerchantaccountMapper incomemerchantaccountmapper;
+
 	@Override
 	@Transactional
 	public Integer post(Merchant t) {
@@ -87,6 +92,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		sm.setToincomeamount(0.00);
 		sm.setUserid(u.getId());
 		sm.setMerchantid(t.getId());
+		sm.setBalance(0.00);
 		merchantaccountmapper.post(sm);
 
 		ExchangeMerchantaccount emc = new ExchangeMerchantaccount();
@@ -96,7 +102,18 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		emc.setToincomeamount(0.00);
 		emc.setUserid(u.getId());
 		emc.setMerchantid(t.getId());
+		emc.setBalance(0.00);
 		exchangemerchantaccountmapper.post(emc);
+
+		Incomemerchantaccount ima = new Incomemerchantaccount();
+		ima.setTotalincome(0.00);
+		ima.setWithdrawamount(0.00);
+		ima.setTowithdrawamount(0.00);
+		ima.setToincomeamount(0.00);
+		ima.setUserid(u.getId());
+		ima.setMerchantid(t.getId());
+		ima.setBalance(0.00);
+		incomemerchantaccountmapper.post(ima);
 
 		return i;
 	}

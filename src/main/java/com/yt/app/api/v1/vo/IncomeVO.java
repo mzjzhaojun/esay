@@ -30,10 +30,9 @@ public class IncomeVO extends BaseVO {
 	String merchantname;
 	String merchantcode;
 	String merchantordernum;
-	String merchantorderid;
-	Object merchantonecost;
-	Object merchantpay;
-	String aislecode;
+	String backforwardurl;
+	java.util.Date expireddate;
+	Integer expiredminute;
 	Long qrcodeaisleid;
 	String qrcodeaislename;
 	Long agentid;
@@ -46,7 +45,9 @@ public class IncomeVO extends BaseVO {
 	Object amount;
 	Object realamount;
 	Integer status;
+	String statusname;
 	java.util.Date successtime;
+	String merchantorderid;
 	Long backlong;
 	Long create_by;
 	java.util.Date create_time;
@@ -54,6 +55,7 @@ public class IncomeVO extends BaseVO {
 	java.util.Date update_time;
 	String qrcode;
 	String type;
+	String typename;
 	String resulturl;
 	Object fewamount;
 	String notifyurl;

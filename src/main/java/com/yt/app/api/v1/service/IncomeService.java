@@ -16,6 +16,9 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface IncomeService extends YtIBaseService<Income, Long> {
+
+	Income getByOrderNum(String ordernum);
+
 	YtIPage<IncomeVO> page(Map<String, Object> param);
 
 	// 拉码下单查单

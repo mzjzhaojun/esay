@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,ordernum,merchantid,username,nkname,merchantcode,type,realtimeexchange,realamount,amount,exchange,merchantexchange,amountreceived,usdtval,status,resultimg,remark,create_by,create_time,update_by,update_time,version
+		id,tenant_id,userid,merchantname,merchantcode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,fewamount,expireddate,amount,realamount,resulturl,qrocde,status,remark,merchantid,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -18,18 +18,18 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Incomemerchantaccountorder">
 		insert into
-		incomemerchantaccountorder(id,userid,ordernum,merchantid,username,nkname,merchantcode,type,realtimeexchange,realamount,amount,exchange,merchantexchange,amountreceived,usdtval,status,resultimg,remark,create_by,create_time,update_by,update_time)
+		incomemerchantaccountorder(id,userid,merchantname,merchantcode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,fewamount,expireddate,amount,realamount,resulturl,qrocde,status,remark,merchantid,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{userid},#{ordernum},#{merchantid},#{username},#{nkname},#{merchantcode},#{type},#{realtimeexchange},#{realamount},#{amount},#{exchange},#{merchantexchange},#{amountreceived},#{usdtval},#{status},#{resultimg},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{userid},#{merchantname},#{merchantcode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{fewamount},#{expireddate},#{amount},#{realamount},#{resulturl},#{qrocde},#{status},#{remark},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		incomemerchantaccountorder(id,tenant_id,userid,ordernum,merchantid,username,nkname,merchantcode,type,realtimeexchange,realamount,amount,exchange,merchantexchange,amountreceived,usdtval,status,resultimg,remark,create_by,create_time,update_by,update_time)
+		incomemerchantaccountorder(id,tenant_id,userid,merchantname,merchantcode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,fewamount,expireddate,amount,realamount,resulturl,qrocde,status,remark,merchantid,create_by,create_time,update_by,update_time)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{userid},#{ordernum},#{merchantid},#{username},#{nkname},#{merchantcode},#{type},#{realtimeexchange},#{realamount},#{amount},#{exchange},#{merchantexchange},#{amountreceived},#{usdtval},#{status},#{resultimg},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+			(#{id},#{tenant_id},#{userid},#{merchantname},#{merchantcode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{fewamount},#{expireddate},#{amount},#{realamount},#{resulturl},#{qrocde},#{status},#{remark},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -49,53 +49,59 @@
 			<if test="userid != null">
 				userid= #{userid},
 			</if>
-			<if test="ordernum != null">
-				ordernum= #{ordernum},
-			</if>
-			<if test="merchantid != null">
-				merchantid= #{merchantid},
-			</if>
-			<if test="username != null">
-				username= #{username},
-			</if>
-			<if test="nkname != null">
-				nkname= #{nkname},
+			<if test="merchantname != null">
+				merchantname= #{merchantname},
 			</if>
 			<if test="merchantcode != null">
 				merchantcode= #{merchantcode},
 			</if>
+			<if test="qrcodeaisleid != null">
+				qrcodeaisleid= #{qrcodeaisleid},
+			</if>
+			<if test="qrcodeaislename != null">
+				qrcodeaislename= #{qrcodeaislename},
+			</if>
+			<if test="qrcodename != null">
+				qrcodename= #{qrcodename},
+			</if>
+			<if test="qrcodeid != null">
+				qrcodeid= #{qrcodeid},
+			</if>
+			<if test="qrcodecode != null">
+				qrcodecode= #{qrcodecode},
+			</if>
+			<if test="ordernum != null">
+				ordernum= #{ordernum},
+			</if>
 			<if test="type != null">
 				type= #{type},
 			</if>
-			<if test="realtimeexchange != null">
-				realtimeexchange= #{realtimeexchange},
+			<if test="fewamount != null">
+				fewamount= #{fewamount},
 			</if>
-			<if test="realamount != null">
-				realamount= #{realamount},
+			<if test="expireddate != null">
+				expireddate= #{expireddate},
 			</if>
 			<if test="amount != null">
 				amount= #{amount},
 			</if>
-			<if test="exchange != null">
-				exchange= #{exchange},
+			<if test="realamount != null">
+				realamount= #{realamount},
 			</if>
-			<if test="merchantexchange != null">
-				merchantexchange= #{merchantexchange},
+			<if test="resulturl != null">
+				resulturl= #{resulturl},
 			</if>
-			<if test="amountreceived != null">
-				amountreceived= #{amountreceived},
-			</if>
-			<if test="usdtval != null">
-				usdtval= #{usdtval},
+			<if test="qrocde != null">
+				qrocde= #{qrocde},
 			</if>
 			<if test="status != null">
 				status= #{status},
 			</if>
-			<if test="resultimg != null">
-				resultimg= #{resultimg},
-			</if>
 			<if test="remark != null">
 				remark= #{remark},
+			</if>
+			<if test="merchantid != null">
+				merchantid= #{merchantid},
 			</if>
 			<if test="create_by != null">
 				create_by= #{create_by},
@@ -123,6 +129,15 @@
 		from incomemerchantaccountorder
 		where id = #{id}
 	</select>
+	<!--getByOrderNum -->
+	<select id="getByOrderNum" parameterType="java.lang.String"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from incomemerchantaccountorder
+		where ordernum= #{ordernum}
+	</select>
+	
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">

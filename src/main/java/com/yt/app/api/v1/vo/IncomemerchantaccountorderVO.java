@@ -11,7 +11,7 @@ import com.yt.app.common.base.BaseVO;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-08-22 23:02:54
+ * @version v1 @createdate2024-08-23 23:31:35
  */
 @Data
 @SuperBuilder
@@ -25,22 +25,26 @@ public class IncomemerchantaccountorderVO extends BaseVO {
 	Long id;
 	Long tenant_id;
 	Long userid;
-	String ordernum;
-	Long merchantid;
-	String username;
-	String nkname;
+	String merchantname;
 	String merchantcode;
-	Integer type;
-	Object realtimeexchange;
-	Object realamount;
-	Object amount;
-	Object exchange;
-	Object merchantexchange;
-	Object amountreceived;
-	Object usdtval;
+	Long qrcodeaisleid;
+	String qrcodeaislename;
+	String qrcodename;
+	Long qrcodeid;
+	String qrcodecode;
+	String ordernum;
+	String type;
+	String typename;
+	Double fewamount;
+	java.util.Date expireddate;
+	Double amount;
+	Double realamount;
+	String resulturl;
+	String qrocde;
 	Integer status;
-	String resultimg;
+	String statusname;
 	String remark;
+	String imgurl;
 	Long create_by;
 	java.util.Date create_time;
 	Long update_by;

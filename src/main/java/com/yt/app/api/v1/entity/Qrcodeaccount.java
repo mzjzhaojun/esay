@@ -30,7 +30,7 @@ public class Qrcodeaccount extends YtBaseEntity<Qrcodeaccount> {
 	Double toincomeamount;
 	Double withdrawamount;
 	Double towithdrawamount;
-	String balance;
+	Double balance;
 	String remark;
 	Integer version;
 }

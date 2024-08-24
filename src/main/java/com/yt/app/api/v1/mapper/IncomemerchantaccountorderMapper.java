@@ -11,7 +11,7 @@ import com.yt.app.common.base.YtIBaseMapper;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-08-22 23:02:54
+ * @version v1 @createdate2024-08-23 23:31:35
  */
 
 public interface IncomemerchantaccountorderMapper extends YtIBaseMapper<Incomemerchantaccountorder> {
@@ -95,4 +95,13 @@ public interface IncomemerchantaccountorderMapper extends YtIBaseMapper<Incomeme
 	 */
 	@YtRedisCacheAnnotation(classs = Incomemerchantaccountorder.class)
 	public List<Incomemerchantaccountorder> listByArrayId(long[] id);
+
+	/**
+	 * get
+	 *
+	 * @param id id
+	 * @return Incomemerchantaccountorder
+	 */
+	@YtRedisCacheAnnotation(classs = Incomemerchantaccountorder.class)
+	public Incomemerchantaccountorder getByOrderNum(String ordernum);
 }

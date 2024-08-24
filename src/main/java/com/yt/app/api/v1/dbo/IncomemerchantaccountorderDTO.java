@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-08-22 23:02:54
+ * @version v1 @createdate2024-08-23 23:31:35
  */
 @Data
 @SuperBuilder
@@ -19,22 +19,24 @@ public class IncomemerchantaccountorderDTO {
 	Long id;
 	Long tenant_id;
 	Long userid;
-	String ordernum;
-	Long merchantid;
-	String username;
-	String nkname;
+	String merchantname;
 	String merchantcode;
+	Long qrcodeaisleid;
+	String qrcodeaislename;
+	String qrcodename;
+	Long qrcodeid;
+	String qrcodecode;
+	String ordernum;
 	Integer type;
-	Object realtimeexchange;
-	Object realamount;
+	Object fewamount;
+	Object onecost;
 	Object amount;
-	Object exchange;
-	Object merchantexchange;
-	Object amountreceived;
-	Object usdtval;
+	Object realamount;
+	String resulturl;
+	String qrocde;
 	Integer status;
-	String resultimg;
 	String remark;
+	String imgurl;
 	Long create_by;
 	java.util.Date create_time;
 	Long update_by;

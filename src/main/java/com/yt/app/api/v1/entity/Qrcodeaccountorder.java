@@ -11,7 +11,7 @@ import com.yt.app.common.base.YtBaseEntity;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-08-23 22:50:47
+ * @version v1 @createdate2024-08-23 23:07:27
  */
 @Data
 @Builder
@@ -25,23 +25,23 @@ public class Qrcodeaccountorder extends YtBaseEntity<Qrcodeaccountorder> {
 	Long id;
 	Long tenant_id;
 	Long userid;
-	Long channelid;
-	String channelname;
-	String nkname;
-	String channelcode;
+	String qrcodeaislecode;
+	Long qrcodeaisleid;
+	String qrcodeaislename;
+	String qrcodename;
+	Long qrcodeid;
+	String qrcodecode;
 	String ordernum;
-	Integer type;
-	Double deal;
-	Double onecost;
+	String type;
+	Double fewamount;
+	java.util.Date expireddate;
 	Double amount;
-	String accname;
-	String accnumber;
-	Double exchange;
-	Double channelexchange;
-	Double amountreceived;
-	Double usdtval;
+	Double realamount;
+	String resulturl;
+	String merchantname;
+	String qrocde;
 	Integer status;
 	String remark;
+	Long channelid;
 	Integer version;
-	String imgurl;
 }

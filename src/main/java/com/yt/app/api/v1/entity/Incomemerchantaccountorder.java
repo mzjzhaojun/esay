@@ -11,7 +11,7 @@ import com.yt.app.common.base.YtBaseEntity;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-08-22 23:02:54
+ * @version v1 @createdate2024-08-23 23:31:35
  */
 @Data
 @Builder
@@ -25,21 +25,23 @@ public class Incomemerchantaccountorder extends YtBaseEntity<Incomemerchantaccou
 	Long id;
 	Long tenant_id;
 	Long userid;
-	String ordernum;
-	Long merchantid;
-	String username;
-	String nkname;
+	String merchantname;
 	String merchantcode;
-	Integer type;
-	Double realtimeexchange;
-	Double realamount;
+	Long qrcodeaisleid;
+	String qrcodeaislename;
+	String qrcodename;
+	Long qrcodeid;
+	String qrcodecode;
+	String ordernum;
+	String type;
+	Double fewamount;
+	java.util.Date expireddate;
 	Double amount;
-	Double exchange;
-	Double merchantexchange;
-	Double amountreceived;
-	Double usdtval;
+	Double realamount;
+	String resulturl;
+	String qrocde;
 	Integer status;
-	String resultimg;
 	String remark;
+	Long merchantid;
 	Integer version;
 }

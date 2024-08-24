@@ -95,4 +95,22 @@ public interface IncomeMapper extends YtIBaseMapper<Income> {
 	 */
 	@YtRedisCacheAnnotation(classs = Income.class)
 	public List<Income> listByArrayId(long[] id);
+
+	/**
+	 * getByOrderNum
+	 * 
+	 * @param ordernum
+	 * @return
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public Income getByOrderNum(String ordernum);
+	
+	/**
+	 * getByOrderNum
+	 * 
+	 * @param ordernum
+	 * @return
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public Income getByQrcodeOrderNum(String ordernum);
 }

@@ -96,6 +96,14 @@
 		from incomemerchantaccount
 		where id = #{id}
 	</select>
+	<!--getById -->
+	<select id="getByUserId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from incomemerchantaccount
+		where userid = #{userid}
+	</select>
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">

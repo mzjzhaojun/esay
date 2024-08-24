@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.QrcodeaccountorderMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,channelid,channelname,nkname,channelcode,ordernum,type,deal,onecost,amount,accname,accnumber,exchange,channelexchange,amountreceived,usdtval,status,remark,create_by,create_time,update_by,update_time,version,imgurl
+		id,tenant_id,userid,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,fewamount,expireddate,amount,realamount,resulturl,merchantname,qrocde,status,remark,channelid,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -18,18 +18,18 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Qrcodeaccountorder">
 		insert into
-		qrcodeaccountorder(id,userid,channelid,channelname,nkname,channelcode,ordernum,type,deal,onecost,amount,accname,accnumber,exchange,channelexchange,amountreceived,usdtval,status,remark,create_by,create_time,update_by,update_time,imgurl)
+		qrcodeaccountorder(id,userid,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,fewamount,expireddate,amount,realamount,resulturl,merchantname,qrocde,status,remark,channelid,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{userid},#{channelid},#{channelname},#{nkname},#{channelcode},#{ordernum},#{type},#{deal},#{onecost},#{amount},#{accname},#{accnumber},#{exchange},#{channelexchange},#{amountreceived},#{usdtval},#{status},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{imgurl})
+		(#{id},#{userid},#{qrcodeaislecode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{fewamount},#{expireddate},#{amount},#{realamount},#{resulturl},#{merchantname},#{qrocde},#{status},#{remark},#{channelid},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		qrcodeaccountorder(id,tenant_id,userid,channelid,channelname,nkname,channelcode,ordernum,type,deal,onecost,amount,accname,accnumber,exchange,channelexchange,amountreceived,usdtval,status,remark,create_by,create_time,update_by,update_time,imgurl)
+		qrcodeaccountorder(id,tenant_id,userid,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,fewamount,expireddate,amount,realamount,resulturl,merchantname,qrocde,status,remark,channelid,create_by,create_time,update_by,update_time)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{userid},#{channelid},#{channelname},#{nkname},#{channelcode},#{ordernum},#{type},#{deal},#{onecost},#{amount},#{accname},#{accnumber},#{exchange},#{channelexchange},#{amountreceived},#{usdtval},#{status},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{imgurl})
+			(#{id},#{tenant_id},#{userid},#{qrcodeaislecode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{fewamount},#{expireddate},#{amount},#{realamount},#{resulturl},#{merchantname},#{qrocde},#{status},#{remark},#{channelid},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -48,17 +48,23 @@
 			<if test="userid != null">
 				userid= #{userid},
 			</if>
-			<if test="channelid != null">
-				channelid= #{channelid},
+			<if test="qrcodeaislecode != null">
+	qrcodeaislecode= #{qrcodeaislecode},
 			</if>
-			<if test="channelname != null">
-				channelname= #{channelname},
+			<if test="qrcodeaisleid != null">
+				qrcodeaisleid= #{qrcodeaisleid},
 			</if>
-			<if test="nkname != null">
-				nkname= #{nkname},
+			<if test="qrcodeaislename != null">
+				qrcodeaislename= #{qrcodeaislename},
 			</if>
-			<if test="channelcode != null">
-				channelcode= #{channelcode},
+			<if test="qrcodename != null">
+				qrcodename= #{qrcodename},
+			</if>
+			<if test="qrcodeid != null">
+				qrcodeid= #{qrcodeid},
+			</if>
+			<if test="qrcodecode != null">
+				qrcodecode= #{qrcodecode},
 			</if>
 			<if test="ordernum != null">
 				ordernum= #{ordernum},
@@ -66,38 +72,35 @@
 			<if test="type != null">
 				type= #{type},
 			</if>
-			<if test="deal != null">
-				deal= #{deal},
+			<if test="fewamount != null">
+				fewamount= #{fewamount},
 			</if>
-			<if test="onecost != null">
-				onecost= #{onecost},
+			<if test="expireddate != null">
+				expireddate= #{expireddate},
 			</if>
 			<if test="amount != null">
 				amount= #{amount},
 			</if>
-			<if test="accname != null">
-				accname= #{accname},
+			<if test="realamount != null">
+				realamount= #{realamount},
 			</if>
-			<if test="accnumber != null">
-				accnumber= #{accnumber},
+			<if test="resulturl != null">
+				resulturl= #{resulturl},
 			</if>
-			<if test="exchange != null">
-				exchange= #{exchange},
+			<if test="merchantname != null">
+				merchantname= #{merchantname},
 			</if>
-			<if test="channelexchange != null">
-				channelexchange= #{channelexchange},
-			</if>
-			<if test="amountreceived != null">
-				amountreceived= #{amountreceived},
-			</if>
-			<if test="usdtval != null">
-				usdtval= #{usdtval},
+			<if test="qrocde != null">
+				qrocde= #{qrocde},
 			</if>
 			<if test="status != null">
 				status= #{status},
 			</if>
 			<if test="remark != null">
 				remark= #{remark},
+			</if>
+			<if test="channelid != null">
+				channelid= #{channelid},
 			</if>
 			<if test="create_by != null">
 				create_by= #{create_by},
@@ -112,10 +115,7 @@
 				update_time= #{update_time},
 			</if>
 			<if test="version != null">
-				version= #{version}+1,
-			</if>
-			<if test="imgurl != null">
-				imgurl= #{imgurl}
+				version= #{version}+1
 			</if>
 		</set>
 		where id = #{id} and version = #{version}

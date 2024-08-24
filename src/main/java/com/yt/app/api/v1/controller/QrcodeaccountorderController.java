@@ -22,7 +22,7 @@ import com.yt.app.api.v1.vo.QrcodeaccountorderVO;
 /**
  * @author zj defaulttest
  * 
- * @version v1 @createdate2024-08-23 22:50:47
+ * @version v1 @createdate2024-08-23 23:07:27
  */
 
 @RestController

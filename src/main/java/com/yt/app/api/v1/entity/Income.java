@@ -31,9 +31,9 @@ public class Income extends YtBaseEntity<Income> {
 	String merchantcode;
 	String merchantordernum;
 	String merchantorderid;
-	Double merchantonecost;
-	Double merchantpay;
-	String aislecode;
+	String backforwardurl;
+	java.util.Date expireddate;
+	Integer expiredminute;
 	Long qrcodeaisleid;
 	String qrcodeaislename;
 	Long agentid;

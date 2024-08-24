@@ -10,7 +10,7 @@ import com.yt.app.common.common.yt.YtIPage;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-08-22 23:02:54
+ * @version v1 @createdate2024-08-23 23:31:35
  */
 
 public interface IncomemerchantaccountorderService extends YtIBaseService<Incomemerchantaccountorder, Long> {

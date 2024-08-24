@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.IncomeMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,merchantuserid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantorderid,merchantonecost,merchantpay,aislecode,qrcodeaisleid,qrcodeaislename,agentid,agentordernum,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,resulturl,fewamount,notifyurl,notifystatus,remark,version
+		id,tenant_id,merchantuserid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislename,agentid,agentordernum,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,resulturl,fewamount,notifyurl,notifystatus,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -17,18 +17,18 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Income">
 		insert into
-		income(id,merchantuserid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantorderid,merchantonecost,merchantpay,aislecode,qrcodeaisleid,qrcodeaislename,agentid,agentordernum,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,resulturl,fewamount,notifyurl,notifystatus,remark)
+		income(id,merchantuserid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislename,agentid,agentordernum,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,resulturl,fewamount,notifyurl,notifystatus,remark)
 		values
-		(#{id},#{merchantuserid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantorderid},#{merchantonecost},#{merchantpay},#{aislecode},#{qrcodeaisleid},#{qrcodeaislename},#{agentid},#{agentordernum},#{agentincome},#{qrcodeid},#{qrcodename},#{qrcodeordernum},#{qrcodeuserid},#{amount},#{realamount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{qrcode},#{type},#{resulturl},#{fewamount},#{notifyurl},#{notifystatus},#{remark})
+		(#{id},#{merchantuserid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantorderid},#{backforwardurl},#{expireddate},#{expiredminute},#{qrcodeaisleid},#{qrcodeaislename},#{agentid},#{agentordernum},#{agentincome},#{qrcodeid},#{qrcodename},#{qrcodeordernum},#{qrcodeuserid},#{amount},#{realamount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{qrcode},#{type},#{resulturl},#{fewamount},#{notifyurl},#{notifystatus},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		income(id,tenant_id,merchantuserid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantorderid,merchantonecost,merchantpay,aislecode,qrcodeaisleid,qrcodeaislename,agentid,agentordernum,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,resulturl,fewamount,notifyurl,notifystatus,remark)
+		income(id,tenant_id,merchantuserid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislename,agentid,agentordernum,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,resulturl,fewamount,notifyurl,notifystatus,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{merchantuserid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantorderid},#{merchantonecost},#{merchantpay},#{aislecode},#{qrcodeaisleid},#{qrcodeaislename},#{agentid},#{agentordernum},#{agentincome},#{qrcodeid},#{qrcodename},#{qrcodeordernum},#{qrcodeuserid},#{amount},#{realamount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{qrcode},#{type},#{resulturl},#{fewamount},#{notifyurl},#{notifystatus},#{remark})
+			(#{id},#{tenant_id},#{merchantuserid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantorderid},#{backforwardurl},#{expireddate},#{expiredminute},#{qrcodeaisleid},#{qrcodeaislename},#{agentid},#{agentordernum},#{agentincome},#{qrcodeid},#{qrcodename},#{qrcodeordernum},#{qrcodeuserid},#{amount},#{realamount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{qrcode},#{type},#{resulturl},#{fewamount},#{notifyurl},#{notifystatus},#{remark})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -65,14 +65,14 @@
 			<if test="merchantorderid != null">
 				merchantorderid= #{merchantorderid},
 			</if>
-			<if test="merchantonecost != null">
-				merchantonecost= #{merchantonecost},
+			<if test="backforwardurl != null">
+				backforwardurl= #{backforwardurl},
 			</if>
-			<if test="merchantpay != null">
-				merchantpay= #{merchantpay},
+			<if test="expireddate != null">
+				expireddate= #{expireddate},
 			</if>
-			<if test="aislecode != null">
-				aislecode= #{aislecode},
+			<if test="expiredminute != null">
+				expiredminute= #{expiredminute},
 			</if>
 			<if test="qrcodeaisleid != null">
 				qrcodeaisleid= #{qrcodeaisleid},
@@ -162,6 +162,22 @@
 		<include refid="Base_Column_List" />
 		from income
 		where id = #{id}
+	</select>
+	<!--getByOrderNum -->
+	<select id="getByOrderNum" parameterType="java.lang.String"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from income
+		where ordernum= #{ordernum}
+	</select>
+	<!--getByQrcodeOrderNum -->
+	<select id="getByQrcodeOrderNum" parameterType="java.lang.String"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from income
+		where qrcodeordernum= #{qrcodeordernum}
 	</select>
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"

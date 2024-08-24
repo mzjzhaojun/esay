@@ -71,6 +71,10 @@ public class DateTimeUtil {
 		return add(getNow(), months, 2);
 	}
 
+	public static Date addMinute(int minute) {
+		return add(getNow(), minute, 12);
+	}
+
 	public static Date addMonths(Date date, int months) {
 		return add(date, months, 2);
 	}

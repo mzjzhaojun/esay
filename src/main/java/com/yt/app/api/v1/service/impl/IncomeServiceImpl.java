@@ -4,21 +4,30 @@ import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+
+import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.IncomeMapper;
+import com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.MerchantqrcodeaisleMapper;
 import com.yt.app.api.v1.mapper.QrcodeMapper;
+import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper;
 import com.yt.app.api.v1.service.IncomeService;
+import com.yt.app.api.v1.service.IncomemerchantaccountService;
+import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
+import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Income;
+import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Merchantqrcodeaisle;
 import com.yt.app.api.v1.entity.Qrcode;
+import com.yt.app.api.v1.entity.Qrcodeaccountorder;
 import com.yt.app.api.v1.entity.Qrcodeaisle;
 import com.yt.app.api.v1.entity.Qrcodeaisleqrcode;
 import com.yt.app.api.v1.vo.IncomeVO;
@@ -28,6 +37,7 @@ import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
+import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.PayUtil;
 import com.yt.app.common.util.RedisUtil;
 import com.yt.app.common.util.RedissonUtil;
@@ -53,23 +63,29 @@ import java.util.stream.Collectors;
 public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implements IncomeService {
 
 	@Autowired
-	YtConfig appConfig;
-
+	private YtConfig appConfig;
 	@Autowired
 	private IncomeMapper mapper;
 	@Autowired
 	private QrcodeMapper qrcodemapper;
 	@Autowired
 	private QrcodeaisleMapper qrcodeaislemapper;
-
 	@Autowired
 	private QrcodeaisleqrcodeMapper qrcodeaisleqrcodemapper;
-
 	@Autowired
 	private MerchantMapper merchantmapper;
-
 	@Autowired
 	private MerchantqrcodeaisleMapper merchantqrcodeaislemapper;
+	@Autowired
+	private QrcodeaccountorderMapper qrcodeaccountordermapper;
+	@Autowired
+	private IncomemerchantaccountorderMapper incomemerchantaccountordermapper;
+	@Autowired
+	private ChannelMapper channelmapper;
+	@Autowired
+	private IncomemerchantaccountService incomemerchantaccountservice;
+	@Autowired
+	private QrcodeaccountService qrcodeaccountservice;
 
 	@Override
 	@Transactional
@@ -97,6 +113,10 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			return new YtPageBean<IncomeVO>(Collections.emptyList());
 		}
 		List<IncomeVO> list = mapper.page(param);
+		list.forEach(mco -> {
+			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
+			mco.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getType()));
+		});
 		return new YtPageBean<IncomeVO>(param, list, count);
 	}
 
@@ -191,9 +211,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());
-		income.setMerchantpay(Double.valueOf(qs.getPay_amount()));
+		income.setExpireddate(DateTimeUtil.addMinute(qd.getExpireminute()));
 		// 通道
-		income.setAislecode(qas.getCode());
+		income.setExpiredminute(qd.getExpireminute());
 		income.setQrcodeaisleid(qas.getId());
 		income.setQrcodeaislename(qas.getName());
 		// 收款码
@@ -206,9 +226,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
 		income.setNotifyurl(qs.getPay_notifyurl());
-		income.setResulturl(qs.getPay_callbackurl());
 		income.setQrcode(qd.getFixedcode());
 		income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
+		income.setBackforwardurl(qs.getPay_callbackurl());
 		// 计算当前码可生成的订单
 		RLock lock = RedissonUtil.getLock(qd.getId());
 		Integer i = 0;
@@ -228,6 +248,51 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		if (i == 0) {
 			throw new YtException("当前通道码繁忙");
 		}
+		Channel channel = channelmapper.getByUserId(qd.getUserid());
+		// 添加qrcode订单
+		Qrcodeaccountorder qao = new Qrcodeaccountorder();
+		qao.setUserid(income.getQrcodeuserid());
+		qao.setQrcodeaisleid(income.getQrcodeaisleid());
+		qao.setQrcodeaislename(income.getQrcodeaislename());
+		qao.setQrcodename(income.getQrcodename());
+		qao.setQrcodeid(income.getQrcodeid());
+		qao.setOrdernum(income.getQrcodeordernum());
+		qao.setQrcodecode(qd.getCode());
+		qao.setType(income.getType());
+		qao.setFewamount(income.getFewamount());
+		qao.setAmount(income.getAmount());
+		qao.setRealamount(income.getRealamount());
+		qao.setResulturl(income.getResulturl());
+		qao.setMerchantname(income.getMerchantname());
+		qao.setQrocde(income.getQrcode());
+		qao.setStatus(income.getStatus());
+		qao.setQrcodeaislecode(qas.getCode());
+		qao.setChannelid(channel.getId());
+		qao.setExpireddate(income.getExpireddate());
+		qrcodeaccountordermapper.post(qao);
+		qrcodeaccountservice.totalincome(qao);
+		// 添加商戶订单
+		Incomemerchantaccountorder imao = new Incomemerchantaccountorder();
+		imao.setUserid(income.getMerchantuserid());
+		imao.setQrcodeaisleid(income.getQrcodeaisleid());
+		imao.setQrcodeaislename(income.getQrcodeaislename());
+		imao.setQrcodename(income.getQrcodename());
+		imao.setQrcodeid(income.getQrcodeid());
+		imao.setOrdernum(income.getMerchantordernum());
+		imao.setQrcodecode(qd.getCode());
+		imao.setType(income.getType());
+		imao.setFewamount(income.getFewamount());
+		imao.setAmount(income.getAmount());
+		imao.setRealamount(income.getRealamount());
+		imao.setResulturl(income.getResulturl());
+		imao.setMerchantname(income.getMerchantname());
+		imao.setQrocde(income.getQrcode());
+		imao.setStatus(income.getStatus());
+		imao.setMerchantcode(mc.getCode());
+		imao.setMerchantid(mc.getId());
+		imao.setExpireddate(income.getExpireddate());
+		incomemerchantaccountordermapper.post(imao);
+		incomemerchantaccountservice.totalincome(imao);
 
 		QrcodeResultVO qr = new QrcodeResultVO();
 		qr.setPay_memberid(mc.getCode());
@@ -259,5 +324,10 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	public QrcodeResultVO queryqrcode(QrcodeSubmitDTO qs) {
 
 		return null;
+	}
+
+	@Override
+	public Income getByOrderNum(String ordernum) {
+		return mapper.getByOrderNum(ordernum);
 	}
 }

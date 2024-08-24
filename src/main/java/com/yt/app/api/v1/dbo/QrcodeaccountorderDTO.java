@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-08-23 22:50:47
+ * @version v1 @createdate2024-08-23 23:07:27
  */
 @Data
 @SuperBuilder
@@ -20,26 +20,26 @@ public class QrcodeaccountorderDTO {
 	Long tenant_id;
 	Long userid;
 	Long channelid;
-	String channelname;
-	String nkname;
-	String channelcode;
+	Long qrcodeaisleid;
+	String qrcodeaislename;
+	String qrcodename;
+	Long qrcodeid;
+	String qrcodecode;
 	String ordernum;
 	Integer type;
-	Object deal;
+	Object fewamount;
 	Object onecost;
 	Object amount;
-	String accname;
+	String realamount;
 	String accnumber;
 	Object exchange;
-	Object channelexchange;
-	Object amountreceived;
-	Object usdtval;
+	String qrocde;
 	Integer status;
 	String remark;
+	String imgurl;
 	Long create_by;
 	java.util.Date create_time;
 	Long update_by;
 	java.util.Date update_time;
 	Integer version;
-	String imgurl;
 }

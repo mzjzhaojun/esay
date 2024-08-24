@@ -31,7 +31,7 @@ public class Qrcode extends YtBaseEntity<Qrcode> {
 	String code;
 	Boolean status;
 	Double balance;
-	Double onecost;
+	Integer expireminute;
 	String type;
 	Integer min;
 	Integer max;

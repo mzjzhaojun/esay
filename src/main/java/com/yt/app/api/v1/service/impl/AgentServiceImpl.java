@@ -72,6 +72,7 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 		sm.setToincomeamount(0.00);
 		sm.setUserid(u.getId());
 		sm.setAgentid(t.getId());
+		sm.setBalance(0.00);
 		agentaccountmapper.post(sm);
 
 		return i;
