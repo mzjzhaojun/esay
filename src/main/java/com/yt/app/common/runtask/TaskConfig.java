@@ -25,13 +25,15 @@ import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
+import com.yt.app.api.v1.service.IncomemerchantaccountService;
+import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.api.v1.service.SysconfigService;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.runnable.GetExchangeChannelOrderNumThread;
 import com.yt.app.common.runnable.GetPayoutChannelOrderNumThread;
-import com.yt.app.common.runnable.NotifyTyThread;
+import com.yt.app.common.runnable.NotifyTyPayoutThread;
 import com.yt.app.common.util.RedisUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -70,6 +72,12 @@ public class TaskConfig {
 	@Autowired
 	private IncomemerchantaccountorderMapper incomemerchantaccountordermapper;
 
+	@Autowired
+	private QrcodeaccountService qrcodeaccountservice;
+
+	@Autowired
+	private IncomemerchantaccountService incomemerchantaccountservice;
+
 	/**
 	 * 更新实时汇率
 	 * 
@@ -103,7 +111,7 @@ public class TaskConfig {
 	}
 
 	/**
-	 * 查询需要通知的数据
+	 * 查询代付需要通知
 	 * 
 	 * @throws InterruptedException
 	 */
@@ -115,8 +123,27 @@ public class TaskConfig {
 			log.info("通知ID：" + p.getId() + " 状态：" + p.getStatus());
 			p.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_65);
 			if (payoutmapper.put(p) > 0) {
-				NotifyTyThread nf = new NotifyTyThread(p.getId());
+				NotifyTyPayoutThread nf = new NotifyTyPayoutThread(p.getId());
 				threadpooltaskexecutor.execute(nf);
+			}
+		}
+	}
+
+	/**
+	 * 查询代收需要通知
+	 * 
+	 * @throws InterruptedException
+	 */
+	@Scheduled(cron = "0/10 * * * * ?")
+	public void notifyIncome() throws InterruptedException {
+		TenantIdContext.removeFlag();
+		List<Income> list = incomemapper.selectNotifylist();
+		for (Income p : list) {
+			log.info("通知ID：" + p.getId() + " 状态：" + p.getStatus());
+			p.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_65);
+			if (incomemapper.put(p) > 0) {
+//				NotifyTyPayoutThread nf = new NotifyTyPayoutThread(p.getId());
+//				threadpooltaskexecutor.execute(nf);
 			}
 		}
 	}
@@ -184,6 +211,8 @@ public class TaskConfig {
 				String key = SystemConstant.CACHE_SYS_QRCODE + p.getQrcodeid() + "" + p.getFewamount();
 				RedisUtil.delete(key);
 				// 处理账户
+				qrcodeaccountservice.cancleTotalincome(qao);
+				incomemerchantaccountservice.cancleTotalincome(imqao);
 			}
 		}
 	}

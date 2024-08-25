@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.MerchantqrcodeaisleMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,merchantid,qrcodeaisleid,create_by,create_time,update_by,update_time,version
+		id,tenant_id,merchantid,qrcodeaisleid,collection,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -51,6 +51,9 @@
 			<if test="qrcodeaisleid != null">
 				qrcodeaisleid= #{qrcodeaisleid},
 			</if>
+			<if test="collection != null">
+				collection= #{collection},
+			</if>
 			<if test="create_by != null">
 				create_by= #{create_by},
 			</if>
@@ -67,7 +70,7 @@
 				version= #{version}+1
 			</if>
 		</set>
-		where id = #{id} and version = #{version}
+		where id = #{id}
 	</update>
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"
@@ -112,8 +115,8 @@
 		ma.id id,
 		ma.merchantid merchantid,
 		ma.qrcodeaisleid qrcodeaisleid,
-		a.name
-		NAME,
+		ma.collection collection,
+		a.name NAME,
 		a.code CODE,
 		a.status STATUS,
 		a.nikname nikname,

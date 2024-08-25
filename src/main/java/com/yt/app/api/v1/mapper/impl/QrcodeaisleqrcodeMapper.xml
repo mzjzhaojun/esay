@@ -120,7 +120,7 @@
 		c.dynamic dynamic,
 		c.fixedcode
 		fixedcode,
-		c.onecost onecost,
+		c.expireminute expireminute,
 		c.remark remark
 		FROM
 		qrcodeaisleqrcode ac

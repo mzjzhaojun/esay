@@ -130,4 +130,11 @@ public interface IncomeMapper extends YtIBaseMapper<Income> {
 	 */
 	@YtRedisCacheAnnotation(classs = Income.class)
 	public List<Income> selectAddlist();
+
+	/**
+	 * 
+	 * @return
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public List<Income> selectNotifylist();
 }

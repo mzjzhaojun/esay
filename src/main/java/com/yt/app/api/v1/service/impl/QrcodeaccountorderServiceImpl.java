@@ -67,6 +67,8 @@ public class QrcodeaccountorderServiceImpl extends YtBaseServiceImpl<Qrcodeaccou
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			Qrcodeaccountorder qrcodeaccountorder = mapper.get(t.getId());
 			income.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			if (income.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61)
+				income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 			//
 			incomemapper.put(income);
 			//

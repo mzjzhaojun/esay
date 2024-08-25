@@ -49,5 +49,6 @@ public class IncomemerchantaccountorderVO extends BaseVO {
 	java.util.Date create_time;
 	Long update_by;
 	java.util.Date update_time;
+	Double incomeamount;
 	Integer version;
 }

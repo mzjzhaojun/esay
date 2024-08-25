@@ -60,6 +60,10 @@ public class IncomeVO extends BaseVO {
 	Object fewamount;
 	String notifyurl;
 	Integer notifystatus;
+	String notifystatusname;
 	String remark;
+	Double incomeamount;
+	Double merchantincomeamount;
+	Double channelincomeamount;
 	Integer version;
 }

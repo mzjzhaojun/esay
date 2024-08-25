@@ -284,4 +284,18 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 			lock.unlock();
 		}
 	}
+
+	@Override
+	public void updateInCome(Incomemerchantaccount ma) {
+		RLock lock = RedissonUtil.getLock(ma.getMerchantid());
+		try {
+			lock.lock();
+			Merchant m = mapper.get(ma.getMerchantid());
+			m.setBalance(ma.getBalance());
+			mapper.put(m);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+	}
 }

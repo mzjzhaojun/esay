@@ -33,6 +33,7 @@ public class Channel extends YtBaseEntity<Channel> {
 	Double remotebalance;
 	Double exchange;
 	Double onecost;
+	Integer collection;
 	Double exchangeonecost;
 	Double exchangedownpoint;
 	Double downpoint;

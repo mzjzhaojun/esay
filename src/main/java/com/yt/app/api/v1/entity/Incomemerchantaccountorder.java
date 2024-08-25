@@ -43,5 +43,6 @@ public class Incomemerchantaccountorder extends YtBaseEntity<Incomemerchantaccou
 	Integer status;
 	String remark;
 	Long merchantid;
+	Double incomeamount;
 	Integer version;
 }

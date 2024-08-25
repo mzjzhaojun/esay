@@ -43,5 +43,6 @@ public class Qrcodeaccountorder extends YtBaseEntity<Qrcodeaccountorder> {
 	Integer status;
 	String remark;
 	Long channelid;
+	Double incomeamount;
 	Integer version;
 }

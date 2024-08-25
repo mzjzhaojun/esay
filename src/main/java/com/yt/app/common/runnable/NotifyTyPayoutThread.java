@@ -14,11 +14,11 @@ import com.yt.app.common.util.PayUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class NotifyTyThread implements Runnable {
+public class NotifyTyPayoutThread implements Runnable {
 
 	private Long id;
 
-	public NotifyTyThread(Long _id) {
+	public NotifyTyPayoutThread(Long _id) {
 		id = _id;
 	}
 
@@ -42,7 +42,7 @@ public class NotifyTyThread implements Runnable {
 		while (true) {
 			YtBody result;
 			try {
-				result = PayUtil.SendNotify(payout.getNotifyurl(), ss, merchant.getAppkey());
+				result = PayUtil.SendPayoutNotify(payout.getNotifyurl(), ss, merchant.getAppkey());
 				// 通知到
 				if (result.getCode() == 200) {
 					payout.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_63);

@@ -191,4 +191,18 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 		cl.setRemotebalance(stb.getAvailableBalance());
 		return mapper.put(cl);
 	}
+
+	@Override
+	public void updateIncome(Qrcodeaccount t) {
+		RLock lock = RedissonUtil.getLock(t.getChannelid());
+		try {
+			lock.lock();
+			Channel a = mapper.get(t.getChannelid());
+			a.setBalance(t.getBalance());
+			mapper.put(a);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+	}
 }

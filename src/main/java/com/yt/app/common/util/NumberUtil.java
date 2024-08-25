@@ -50,6 +50,22 @@ public class NumberUtil {
 	}
 
 	/**
+	 * 百分比
+	 * 
+	 * @param money
+	 * @param scale
+	 * @return
+	 */
+	public static BigDecimal multiply(String value, String percentage, int scale) {
+		if (scale < 0) {
+			throw new IllegalArgumentException("The   scale   must   be   a   positive   integer   or   zero");
+		}
+		BigDecimal one = new BigDecimal(value);
+		BigDecimal two = new BigDecimal(percentage);
+		return one.multiply(two).setScale(scale, BigDecimal.ROUND_HALF_UP);
+	}
+
+	/**
 	 * 
 	 * @param number   被转换的String
 	 * @param digits   小数位数

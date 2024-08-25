@@ -23,10 +23,17 @@ public interface QrcodeaccountService extends YtIBaseService<Qrcodeaccount, Long
 	 * @param t
 	 */
 	void totalincome(Qrcodeaccountorder t);
-	
+
 	/**
 	 * 代收成功
+	 * 
 	 * @param mao
 	 */
 	void updateTotalincome(Qrcodeaccountorder mao);
+
+	/**
+	 * 超时支付取消订单
+	 * @param mao
+	 */
+	void cancleTotalincome(Qrcodeaccountorder mao);
 }

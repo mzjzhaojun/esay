@@ -39,6 +39,7 @@ import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
+import com.yt.app.common.util.NumberUtil;
 import com.yt.app.common.util.PayUtil;
 import com.yt.app.common.util.RedisUtil;
 import com.yt.app.common.util.RedissonUtil;
@@ -116,6 +117,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		List<IncomeVO> list = mapper.page(param);
 		list.forEach(mco -> {
 			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
+			mco.setNotifystatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getNotifystatus()));
 			mco.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getType()));
 		});
 		return new YtPageBean<IncomeVO>(param, list, count);
@@ -163,7 +165,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		} catch (Exception e1) {
 			throw new YtException(qs.getPay_aislecode() + "通道没有权限");
 		}
-
+		Merchantqrcodeaisle mqd = listmc.stream().filter(mqds -> mqds.getQrcodeaisleid().equals(qas.getId()))
+				.findFirst().get();
 		List<Qrcodeaisleqrcode> listqaq = qrcodeaisleqrcodemapper.getByQrcodeAisleId(qas.getId());
 		long[] qaqids = listqaq.stream().mapToLong(qaq -> qaq.getQrcodelid()).distinct().toArray();
 		List<Qrcode> listqrcode = qrcodemapper.listByArrayId(qaqids);
@@ -208,6 +211,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		// 开始业务
 		System.out.println("====================" + qd.getName());
+		Channel channel = channelmapper.getByUserId(qd.getUserid());
 
 		income = new Income();
 		// 商戶
@@ -218,7 +222,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());
-		income.setExpireddate(DateTimeUtil.addMinute(qd.getExpireminute()+3));
+		income.setExpireddate(DateTimeUtil.addMinute(qd.getExpireminute() + 3));
 		// 通道
 		income.setExpiredminute(qd.getExpireminute());
 		income.setQrcodeaisleid(qas.getId());
@@ -236,6 +240,12 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setQrcode(qd.getFixedcode());
 		income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
 		income.setBackforwardurl(qs.getPay_callbackurl());
+		income.setChannelincomeamount(
+				NumberUtil.multiply(income.getAmount().toString(), "0." + channel.getCollection(), 2).doubleValue());
+		income.setMerchantincomeamount(
+				NumberUtil.multiply(income.getAmount().toString(), "0." + mqd.getCollection(), 2).doubleValue());
+		income.setIncomeamount(income.getMerchantincomeamount() - income.getChannelincomeamount());
+		income.setMerchantincomeamount(income.getAmount() - income.getMerchantincomeamount());
 		// 计算当前码可生成的订单
 		RLock lock = RedissonUtil.getLock(qd.getId());
 		Integer i = 0;
@@ -255,7 +265,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		if (i == 0) {
 			throw new YtException("当前通道码繁忙");
 		}
-		Channel channel = channelmapper.getByUserId(qd.getUserid());
+
 		// 添加qrcode订单
 		Qrcodeaccountorder qao = new Qrcodeaccountorder();
 		qao.setUserid(income.getQrcodeuserid());
@@ -276,6 +286,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qao.setQrcodeaislecode(qas.getCode());
 		qao.setChannelid(channel.getId());
 		qao.setExpireddate(income.getExpireddate());
+		qao.setIncomeamount(income.getChannelincomeamount());
 		qrcodeaccountordermapper.post(qao);
 		qrcodeaccountservice.totalincome(qao);
 		// 添加商戶订单
@@ -298,6 +309,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		imao.setMerchantcode(mc.getCode());
 		imao.setMerchantid(mc.getId());
 		imao.setExpireddate(income.getExpireddate());
+		imao.setIncomeamount(income.getMerchantincomeamount());
 		incomemerchantaccountordermapper.post(imao);
 		incomemerchantaccountservice.totalincome(imao);
 

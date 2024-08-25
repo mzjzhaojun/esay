@@ -176,8 +176,34 @@ public class PayUtil {
 		return data;
 	}
 
-	// 盘口通知
-	public static YtBody SendNotify(String url, PayResultVO ss, String key) {
+	// 代付盘口通知
+	public static YtBody SendPayoutNotify(String url, PayResultVO ss, String key) {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.add("user-agent",
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		// 签名
+		String signParams = Md5Notify(ss, key);
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("merchantid", ss.getMerchantid());
+		map.add("payorderid", ss.getPayorderid());
+		map.add("merchantorderid", ss.getMerchantorderid());
+		map.add("payamt", ss.getPayamt());
+		map.add("bankcode", ss.getBankcode());
+		map.add("code", ss.getCode());
+		map.add("remark", ss.getRemark());
+		map.add("sign", signParams);
+		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		ResponseEntity<YtBody> sov = resttemplate.exchange(url, HttpMethod.POST, httpEntity, YtBody.class);
+		YtBody data = sov.getBody();
+		log.info("盘口" + ss.getPayorderid() + "通知返回:" + data.getCode());
+		return data;
+	}
+
+	// 代付盘口通知
+	public static YtBody SendIncomeNotify(String url, PayResultVO ss, String key) {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

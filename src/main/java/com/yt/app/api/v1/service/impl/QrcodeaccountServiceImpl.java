@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.QrcodeaccountMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountrecordMapper;
+import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Qrcodeaccount;
@@ -34,6 +35,9 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 
 	@Autowired
 	private QrcodeaccountrecordMapper qrcodeaccountrecordmapper;
+
+	@Autowired
+	private ChannelService channelservice;
 
 	@Override
 	@Transactional
@@ -79,7 +83,7 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			maaj.setType(DictionaryResource.RECORDTYPE_30);
 			// 变更前
 			maaj.setPretotalincome(ma.getTotalincome());// 总收入
-			maaj.setPretoincomeamount(ma.getToincomeamount() + t.getRealamount());// 待确认收入
+			maaj.setPretoincomeamount(ma.getToincomeamount() + t.getAmount());// 待确认收入
 			maaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
 			maaj.setPretowithdrawamount(ma.getTowithdrawamount());// 待确认支出
 			// 变更后
@@ -88,7 +92,7 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			maaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出金额
 
-			maaj.setRemark("码商代收人民币￥：" + String.format("%.2f", t.getRealamount()));
+			maaj.setRemark("码商代收人民币￥：" + String.format("%.2f", t.getAmount()));
 			//
 			qrcodeaccountrecordmapper.post(maaj);
 			ma.setToincomeamount(maaj.getPretoincomeamount());
@@ -115,15 +119,15 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			maaj.setType(DictionaryResource.RECORDTYPE_31);
 			//
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
-			maaj.setPretoincomeamount(t.getToincomeamount() - mao.getRealamount());// 待确认收入
+			maaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmount());// 待确认收入
 			maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPretowithdrawamount(t.getTowithdrawamount());// 待确认支出
 			//
-			maaj.setPosttotalincome(t.getTotalincome() + mao.getRealamount());// 总收入
-			maaj.setPosttoincomeamount(mao.getRealamount());// 确认收入
+			maaj.setPosttotalincome(t.getTotalincome() + mao.getAmount());// 总收入
+			maaj.setPosttoincomeamount(mao.getAmount());// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("码商代收成功￥：" + String.format("%.2f", mao.getRealamount()));
+			maaj.setRemark("码商代收成功￥：" + String.format("%.2f", mao.getAmount()));
 			//
 			qrcodeaccountrecordmapper.post(maaj);
 
@@ -132,7 +136,45 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 			mapper.put(t);
 			// 更新余额
-			// merchantservice.updateInCome(t);
+			channelservice.updateIncome(t);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	// 超时取消
+	@Override
+	@Transactional
+	public void cancleTotalincome(Qrcodeaccountorder mao) {
+		RLock lock = RedissonUtil.getLock(mao.getChannelid());
+		try {
+			lock.lock();
+			Qrcodeaccount t = mapper.getByUserId(mao.getUserid());
+
+			//
+			Qrcodeaccountrecord maaj = new Qrcodeaccountrecord();
+			maaj.setUserid(t.getUserid());
+			maaj.setChannelname(mao.getMerchantname());
+			maaj.setOrdernum(mao.getOrdernum());
+			maaj.setType(DictionaryResource.RECORDTYPE_33);
+
+			// 变更前
+			maaj.setPretotalincome(t.getTotalincome());// 总收入
+			maaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmount());// 待确认收入
+			maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
+			maaj.setPretowithdrawamount(t.getTowithdrawamount());// 待确认支出
+			// 变更后
+			maaj.setPosttotalincome(t.getTotalincome());// 总收入
+			maaj.setPosttoincomeamount(0.00);// 确认收入
+			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
+			maaj.setPosttowithdrawamount(0.00);// 确认支出
+			maaj.setRemark("超时支付,取消订单：" + String.format("%.2f", mao.getAmount()));
+			//
+			qrcodeaccountrecordmapper.post(maaj);
+
+			t.setToincomeamount(maaj.getPretoincomeamount());
+			mapper.put(t);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();

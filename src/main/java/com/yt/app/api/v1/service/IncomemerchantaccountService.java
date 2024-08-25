@@ -30,4 +30,10 @@ public interface IncomemerchantaccountService extends YtIBaseService<Incomemerch
 	 * @param mao
 	 */
 	void updateTotalincome(Incomemerchantaccountorder mao);
+	
+	/**
+	 * 超时取消
+	 * @param mao
+	 */
+	void cancleTotalincome(Incomemerchantaccountorder mao);
 }
