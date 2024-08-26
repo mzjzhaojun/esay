@@ -151,7 +151,7 @@
 			<if test="type != null">
 				AND a.type = #{type}
 			</if>
-			<if test="orderBy != null and dir != null">
+			<if test="orderBy != null and dir!= null">
 				order by ${orderBy} ${dir}
 			</if>
 			<if test="pageStart != null and pageEnd != null">
@@ -193,7 +193,7 @@
 			<if test="type != null">
 				AND a.type = #{type}
 			</if>
-			<if test="orderBy != null and dir != null">
+			<if test="orderBy != null and dir!= null">
 				order by ${orderBy} ${dir}
 			</if>
 			<if test="pageStart != null and pageEnd != null">

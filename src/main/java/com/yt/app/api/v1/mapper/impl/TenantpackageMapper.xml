@@ -88,7 +88,7 @@
 			<if test="name != null and name != ''">
 				and name like "%"#{name}"%"
 			</if>
-			<if test="orderBy != null and dir != null">
+			<if test="orderBy != null and dir!= null">
 				order by ${orderBy} ${dir}
 			</if>
 			<if test="pageStart != null and pageEnd != null">
@@ -107,7 +107,7 @@
 			<if test="name != null and name != ''">
 				and name like "%"#{name}"%"
 			</if>
-			<if test="orderBy != null and dir != null">
+			<if test="orderBy != null and dir!= null">
 				order by ${orderBy} ${dir}
 			</if>
 			<if test="pageStart != null and pageEnd != null">

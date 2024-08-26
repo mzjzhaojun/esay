@@ -26,7 +26,7 @@ public class IncomemerchantaccountorderVO extends BaseVO {
 	Long tenant_id;
 	Long userid;
 	String merchantname;
-	String merchantcode;
+	String qrcodeaislecode;
 	Long qrcodeaisleid;
 	String qrcodeaislename;
 	String qrcodename;

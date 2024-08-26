@@ -405,8 +405,8 @@ public class YtAutoCode {
 					this.L.write("<if test=\"name != null and name != ''\">\r\n");
 					this.L.write("and name like \"%\"#{name}\"%\"\r\n");
 					this.L.write("</if>\r\n");
-					this.L.write("<if test=\"orderBy != null and Dir != null\">\r\n");
-					this.L.write("order by ${orderBy} ${Dir}\r\n");
+					this.L.write("<if test=\"orderBy != null and dir != null\">\r\n");
+					this.L.write("order by ${orderBy} ${dir}\r\n");
 					this.L.write("</if>\r\n");
 					this.L.write("<if test=\"pageStart != null and pageEnd != null\">\r\n");
 					this.L.write("LIMIT #{pageStart},#{pageEnd}\r\n");

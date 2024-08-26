@@ -15,7 +15,9 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
 
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
+import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.ChannelaccountService;
+import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccount;
 
 /**
@@ -31,11 +33,25 @@ public class ChannelaccountController extends YtBaseEncipherControllerImpl<Chann
 	@Autowired
 	private ChannelaccountService service;
 
+	@Autowired
+	private ChannelService channelservice;
+
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<Channelaccount> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
+	}
+
+	/**
+	 * 
+	 * 
+	 * @version 1.1
+	 */
+	@RequestMapping(value = "/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> data(HttpServletRequest request, HttpServletResponse response) {
+		Channel t = channelservice.getData();
+		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}
 }

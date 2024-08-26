@@ -28,6 +28,7 @@ public class QrcodeaccountrecordVO extends BaseVO {
 	Long userid;
 	String ordernum;
 	Integer type;
+	String typename;
 	Object pretotalincome;
 	Object prewithdrawamount;
 	Object pretowithdrawamount;

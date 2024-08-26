@@ -5,11 +5,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountrecordMapper;
 import com.yt.app.api.v1.service.IncomemerchantaccountrecordService;
+import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Incomemerchantaccountrecord;
 import com.yt.app.api.v1.vo.IncomemerchantaccountrecordVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.util.RedisUtil;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +55,9 @@ public class IncomemerchantaccountrecordServiceImpl extends YtBaseServiceImpl<In
 			return new YtPageBean<IncomemerchantaccountrecordVO>(Collections.emptyList());
 		}
 		List<IncomemerchantaccountrecordVO> list = mapper.page(param);
+		list.forEach(mco -> {
+			mco.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getType()));
+		});
 		return new YtPageBean<IncomemerchantaccountrecordVO>(param, list, count);
 	}
 }

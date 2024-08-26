@@ -5,11 +5,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.QrcodeaccountrecordMapper;
 import com.yt.app.api.v1.service.QrcodeaccountrecordService;
+import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Qrcodeaccountrecord;
 import com.yt.app.api.v1.vo.QrcodeaccountrecordVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.util.RedisUtil;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +55,9 @@ public class QrcodeaccountrecordServiceImpl extends YtBaseServiceImpl<Qrcodeacco
 			return new YtPageBean<QrcodeaccountrecordVO>(Collections.emptyList());
 		}
 		List<QrcodeaccountrecordVO> list = mapper.page(param);
+		list.forEach(mco -> {
+			mco.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getType()));
+		});
 		return new YtPageBean<QrcodeaccountrecordVO>(param, list, count);
 	}
 }

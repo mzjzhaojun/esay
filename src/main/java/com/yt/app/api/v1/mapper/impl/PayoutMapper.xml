@@ -183,7 +183,7 @@
 			<if test="userid != null and userid != ''">
 				and userid = #{userid}
 			</if>
-			<if test="orderBy != null and dir != null">
+			<if test="orderBy != null and dir!= null">
 				order by ${orderBy} ${dir}
 			</if>
 			<if test="pageStart != null and pageEnd != null">
@@ -241,7 +241,7 @@
 			<if test="accname != null and accname != ''">
 				and accname = #{accname}
 			</if>
-			<if test="orderBy != null and dir != null">
+			<if test="orderBy != null and dir!= null">
 				order by ${orderBy} ${dir}
 			</if>
 			<if test="pageStart != null and pageEnd != null">

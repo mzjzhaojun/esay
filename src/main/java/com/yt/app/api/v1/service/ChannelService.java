@@ -26,4 +26,6 @@ public interface ChannelService extends YtIBaseService<Channel, Long> {
 	Integer getRemotebalance(Long id);
 
 	void updateIncome(Qrcodeaccount t);
+
+	Channel getData();
 }

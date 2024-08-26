@@ -306,7 +306,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		imao.setMerchantname(income.getMerchantname());
 		imao.setQrocde(income.getQrcode());
 		imao.setStatus(income.getStatus());
-		imao.setMerchantcode(mc.getCode());
+		imao.setQrcodeaislecode(qas.getCode());
 		imao.setMerchantid(mc.getId());
 		imao.setExpireddate(income.getExpireddate());
 		imao.setIncomeamount(income.getMerchantincomeamount());

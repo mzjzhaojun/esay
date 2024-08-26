@@ -28,6 +28,7 @@ public class IncomemerchantaccountrecordVO extends BaseVO {
 	String merchantname;
 	String ordernum;
 	Integer type;
+	String typename;
 	Object pretotalincome;
 	Object pretoincomeamount;
 	Object prewithdrawamount;

@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,merchantname,merchantcode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,fewamount,expireddate,amount,incomeamount,realamount,resulturl,qrocde,status,remark,merchantid,create_by,create_time,update_by,update_time,version
+		id,tenant_id,userid,merchantname,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,fewamount,expireddate,amount,incomeamount,realamount,resulturl,qrocde,status,remark,merchantid,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -18,18 +18,18 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Incomemerchantaccountorder">
 		insert into
-		incomemerchantaccountorder(id,userid,merchantname,merchantcode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,fewamount,expireddate,amount,incomeamount,realamount,resulturl,qrocde,status,remark,merchantid,create_by,create_time,update_by,update_time)
+		incomemerchantaccountorder(id,userid,merchantname,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,fewamount,expireddate,amount,incomeamount,realamount,resulturl,qrocde,status,remark,merchantid,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{userid},#{merchantname},#{merchantcode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{fewamount},#{expireddate},#{amount},#{incomeamount},#{realamount},#{resulturl},#{qrocde},#{status},#{remark},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{userid},#{merchantname},#{qrcodeaislecode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{fewamount},#{expireddate},#{amount},#{incomeamount},#{realamount},#{resulturl},#{qrocde},#{status},#{remark},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		incomemerchantaccountorder(id,tenant_id,userid,merchantname,merchantcode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,fewamount,expireddate,amount,realamount,resulturl,qrocde,status,remark,merchantid,create_by,create_time,update_by,update_time)
+		incomemerchantaccountorder(id,tenant_id,userid,merchantname,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,fewamount,expireddate,amount,realamount,resulturl,qrocde,status,remark,merchantid,create_by,create_time,update_by,update_time)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{userid},#{merchantname},#{merchantcode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{fewamount},#{expireddate},#{amount},#{realamount},#{resulturl},#{qrocde},#{status},#{remark},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
+			(#{id},#{tenant_id},#{userid},#{merchantname},#{qrcodeaislecode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{fewamount},#{expireddate},#{amount},#{realamount},#{resulturl},#{qrocde},#{status},#{remark},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -52,8 +52,8 @@
 			<if test="merchantname != null">
 				merchantname= #{merchantname},
 			</if>
-			<if test="merchantcode != null">
-				merchantcode= #{merchantcode},
+			<if test="qrcodeaislecode != null">
+				qrcodeaislecode= #{qrcodeaislecode},
 			</if>
 			<if test="qrcodeaisleid != null">
 				qrcodeaisleid= #{qrcodeaisleid},
@@ -162,8 +162,8 @@
 			<if test="name != null and name != ''">
 				and name like "%"#{name}"%"
 			</if>
-			<if test="orderBy != null and Dir != null">
-				order by ${orderBy} ${Dir}
+			<if test="orderBy != null and dir!= null">
+				order by ${orderBy} ${dir}
 			</if>
 			<if test="pageStart != null and pageEnd != null">
 				LIMIT #{pageStart},#{pageEnd}

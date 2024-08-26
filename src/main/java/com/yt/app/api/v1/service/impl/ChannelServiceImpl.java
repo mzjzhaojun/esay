@@ -13,6 +13,7 @@ import com.yt.app.api.v1.vo.SysTyBalance;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.constant.SystemConstant;
+import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Channel;
@@ -204,5 +205,12 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 		} finally {
 			lock.unlock();
 		}
+	}
+
+	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+	public Channel getData() {
+		Channel t = mapper.getByUserId(SysUserContext.getUserId());
+		return t;
 	}
 }
