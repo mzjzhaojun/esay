@@ -33,6 +33,7 @@ import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.runnable.GetExchangeChannelOrderNumThread;
 import com.yt.app.common.runnable.GetPayoutChannelOrderNumThread;
+import com.yt.app.common.runnable.NotifyQrcodeIncomeThread;
 import com.yt.app.common.runnable.NotifyTyPayoutThread;
 import com.yt.app.common.util.RedisUtil;
 
@@ -142,8 +143,8 @@ public class TaskConfig {
 			log.info("通知ID：" + p.getId() + " 状态：" + p.getStatus());
 			p.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_65);
 			if (incomemapper.put(p) > 0) {
-//				NotifyTyPayoutThread nf = new NotifyTyPayoutThread(p.getId());
-//				threadpooltaskexecutor.execute(nf);
+				NotifyQrcodeIncomeThread nf = new NotifyQrcodeIncomeThread(p.getId());
+				threadpooltaskexecutor.execute(nf);
 			}
 		}
 	}

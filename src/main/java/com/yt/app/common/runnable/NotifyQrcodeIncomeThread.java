@@ -4,7 +4,7 @@ import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
-import com.yt.app.api.v1.vo.PayResultVO;
+import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
 import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.common.yt.YtBody;
@@ -29,20 +29,17 @@ public class NotifyQrcodeIncomeThread implements Runnable {
 		MerchantMapper merchantmapper = BeanContext.getApplicationContext().getBean(MerchantMapper.class);
 		Income income = mapper.get(id);
 		Merchant merchant = merchantmapper.get(income.getMerchantid());
-		PayResultVO ss = new PayResultVO();
-//		ss.setMerchantid(income.getMerchantcode());
-//		ss.setPayorderid(income.getMerchantordernum());
-//		ss.setMerchantorderid(income.getMerchantorderid());
-//		ss.setPayamt(income.getAmount());
-//		ss.setBankcode(income.getBankcode());
-//		ss.setCode(income.getStatus());
-//		ss.setRemark(income.getRemark());
-		log.info("通知 start---------------------商户单号：" + income.getMerchantordernum());
+		QueryQrcodeResultVO qqr = new QueryQrcodeResultVO();
+		qqr.setPay_memberid(income.getMerchantcode());
+		qqr.setPay_orderid(income.getMerchantorderid());
+		qqr.setPay_amount(income.getAmount().toString());
+		qqr.setPay_code(income.getStatus());
+		log.info("代收通知 start---------------------商户单号：" + income.getMerchantordernum());
 		int i = 1;
 		while (true) {
 			YtBody result;
 			try {
-				result = PayUtil.SendIncomeNotify(income.getNotifyurl(), ss, merchant.getAppkey());
+				result = PayUtil.SendIncomeNotify(income.getNotifyurl(), qqr, merchant.getAppkey());
 				// 通知到
 				if (result.getCode() == 200) {
 					income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_63);

@@ -37,7 +37,7 @@ public class NotifyTyPayoutThread implements Runnable {
 		ss.setBankcode(payout.getBankcode());
 		ss.setCode(payout.getStatus());
 		ss.setRemark(payout.getRemark());
-		log.info("通知 start---------------------商户单号：" + payout.getMerchantordernum());
+		log.info("代付通知 start---------------------商户单号：" + payout.getMerchantordernum());
 		int i = 1;
 		while (true) {
 			YtBody result;

@@ -72,7 +72,11 @@ public class DateTimeUtil {
 	}
 
 	public static Date addMinute(int minute) {
-		return add(getNow(), minute, 12);
+		return add(getNow(), minute, Calendar.MINUTE);
+	}
+
+	public static Date addHour(int hour) {
+		return add(getNow(), hour, Calendar.HOUR);
 	}
 
 	public static Date addMonths(Date date, int months) {

@@ -202,29 +202,26 @@ public class PayUtil {
 		return data;
 	}
 
-	// 代付盘口通知
-	public static YtBody SendIncomeNotify(String url, PayResultVO ss, String key) {
+	// 代收盘口通知
+	public static YtBody SendIncomeNotify(String url, QueryQrcodeResultVO ss, String key) {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.add("user-agent",
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 		// 签名
-		String signParams = Md5Notify(ss, key);
+		String signParams = SignMd5QueryResultQrocde(ss, key);
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("merchantid", ss.getMerchantid());
-		map.add("payorderid", ss.getPayorderid());
-		map.add("merchantorderid", ss.getMerchantorderid());
-		map.add("payamt", ss.getPayamt());
-		map.add("bankcode", ss.getBankcode());
-		map.add("code", ss.getCode());
-		map.add("remark", ss.getRemark());
-		map.add("sign", signParams);
+		map.add("pay_memberid", ss.getPay_memberid());
+		map.add("pay_orderid", ss.getPay_orderid());
+		map.add("pay_amount", ss.getPay_amount());
+		map.add("pay_code", ss.getPay_code());
+		map.add("pay_md5sign", signParams);
 		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		ResponseEntity<YtBody> sov = resttemplate.exchange(url, HttpMethod.POST, httpEntity, YtBody.class);
 		YtBody data = sov.getBody();
-		log.info("盘口" + ss.getPayorderid() + "通知返回:" + data.getCode());
+		log.info("盘口" + ss.getPay_orderid() + "通知返回:" + data.getCode());
 		return data;
 	}
 
