@@ -260,4 +260,23 @@ public class PayUtil {
 		return MD5Utils.md5(stringSignTemp).toUpperCase();
 	}
 
+	// 测试tron
+	public static void TestSendTron() {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+		headers.add("user-agent",
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
+
+		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/getaccount",
+				HttpMethod.POST, httpEntity, Object.class);
+		String data = sov.getBody().toString();
+		System.out.println(data);
+	}
+
 }

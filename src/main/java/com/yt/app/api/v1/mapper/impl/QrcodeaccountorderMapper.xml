@@ -156,6 +156,9 @@
 		from qrcodeaccountorder
 		<where>
 			1=1
+			<if test="userid != null and userid != ''">
+				and userid = #{userid}
+			</if>
 			<if test="name != null and name != ''">
 				and name like "%"#{name}"%"
 			</if>
@@ -173,6 +176,9 @@
 		select count(*) from qrcodeaccountorder
 		<where>
 			1=1
+			<if test="userid != null and userid != ''">
+				and userid = #{userid}
+			</if>
 			<if test="name != null and name != ''">
 				and name like "%"#{name}"%"
 			</if>

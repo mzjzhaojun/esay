@@ -25,6 +25,7 @@ import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtRequestEntity;
 import com.yt.app.common.common.yt.YtResponseEntity;
+import com.yt.app.common.util.PayUtil;
 
 /**
  * @author zj defaulttest
@@ -96,6 +97,12 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 			HttpServletResponse response) {
 		Income income = incomeservice.get(id);
 		return new YtResponseEntity<Object>(new YtBody(income.getStatus()));
+	}
+
+	@RequestMapping(value = "/trontest", method = RequestMethod.GET)
+	public YtResponseEntity<Object> trontest(HttpServletRequest request, HttpServletResponse response) {
+		PayUtil.TestSendTron();
+		return new YtResponseEntity<Object>(new YtBody(1));
 	}
 
 }
