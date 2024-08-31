@@ -12,6 +12,7 @@ import com.yt.app.common.base.context.JwtUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccountorder;
+import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.api.v1.entity.Systemaccountrecord;
@@ -274,6 +275,32 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 
 			scr.setUsdtbalance(t.getUsdtbalance());//
 			scr.setRemark("商户USDT提现：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
+			systemcapitalrecordmapper.post(scr);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+
+	}
+
+	@Override
+	public void updateIncome(Incomemerchantaccountorder mao) {
+		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
+		try {
+			lock.lock();
+			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
+			Systemaccountrecord scr = new Systemaccountrecord();
+			scr.setSystemaccountid(t.getId());
+			scr.setName(mao.getMerchantname());
+			scr.setType(DictionaryResource.ORDERTYPE_27);
+			scr.setPretotalincome(t.getTotalincome());
+			scr.setPosttotalincome(t.getTotalincome() + mao.getAmount());
+			scr.setAmount(mao.getAmount());
+			t.setTotalincome(t.getTotalincome() + mao.getAmount());
+			t.setBalance(t.getTotalincome() - t.getWithdrawamount());
+			mapper.put(t);
+			scr.setBalance(t.getBalance());//
+			scr.setRemark("代收金额：" + String.format("%.2f", mao.getAmount()) + "  单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 		} catch (Exception e) {
 		} finally {

@@ -20,6 +20,7 @@ import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccount;
+import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Incomemerchantaccount;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.PayoutMerchantaccount;
@@ -291,6 +292,23 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		try {
 			lock.lock();
 			Merchant m = mapper.get(ma.getMerchantid());
+			m.setBalance(ma.getBalance());
+			mapper.put(m);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	@Override
+	public void updateIncome(Income t) {
+		RLock lock = RedissonUtil.getLock(t.getMerchantid());
+		try {
+			lock.lock();
+			Merchant m = mapper.get(t.getMerchantid());
+			Incomemerchantaccount ma = incomemerchantaccountmapper.getByUserId(m.getUserid());
+			m.setCount(m.getCount() + t.getAmount());// 总量不包含手续费和交易费
+			m.setTodaycount(m.getTodaycount() + t.getAmount());// 当日
 			m.setBalance(ma.getBalance());
 			mapper.put(m);
 		} catch (Exception e) {

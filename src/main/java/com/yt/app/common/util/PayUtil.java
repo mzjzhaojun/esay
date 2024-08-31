@@ -88,10 +88,8 @@ public class PayUtil {
 	public static String SendTySubmit(Payout pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
 		headers.add("user-agent",
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-
 		String signParams = "merchant_id=" + cl.getCode() + "&merchant_order_id=" + pt.getOrdernum()
 				+ "&pay_type=912&pay_amt=" + String.format("%.2f", pt.getAmount()) + "&notify_url="
 				+ cl.getApireusultip() + "&return_url=127.0.0.1&bank_code=" + pt.getBankcode() + "&bank_num="
@@ -132,7 +130,6 @@ public class PayUtil {
 
 	// 老李代付查单
 	public static SysTyOrder SendTySelectOrder(String ordernum, Channel cl) {
-
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.add("user-agent",
@@ -189,10 +186,8 @@ public class PayUtil {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
 		headers.add("user-agent",
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add("mchid", cl.getCode());
 		map.add("sign_type", "RSA2");
@@ -210,8 +205,8 @@ public class PayUtil {
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		//
-		ResponseEntity<SysHsQuery> sov = resttemplate.exchange(cl.getApiip() + "/Payment/Dfpay/balance.do", HttpMethod.POST,
-				httpEntity, SysHsQuery.class);
+		ResponseEntity<SysHsQuery> sov = resttemplate.exchange(cl.getApiip() + "/Payment/Dfpay/balance.do",
+				HttpMethod.POST, httpEntity, SysHsQuery.class);
 		SysHsQuery data = sov.getBody();
 		log.info("宏盛余额返回消息：" + data.getTrade_state());
 		if (data.getStatus().equals("success")) {
@@ -311,7 +306,6 @@ public class PayUtil {
 		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 		headers.add("user-agent",
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
 
@@ -327,10 +321,8 @@ public class PayUtil {
 	public static SysHsOrder SendHSSubmit(Income pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
 		headers.add("user-agent",
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add("memberid", cl.getCode());
 		map.add("appid", cl.getApikey());
@@ -373,10 +365,8 @@ public class PayUtil {
 	public static String SendHSQuerySubmit(String orderid, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
 		headers.add("user-agent",
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add("memberid", cl.getCode());
 		map.add("appid", cl.getApikey());

@@ -78,7 +78,6 @@ public class Yta {
 				Long id = (Long) mg.invoke(args[0]);
 				if (id == null) {
 					Long ids = e.nextId();
-					log.info("生成雪花算法id:" + ids);
 					Method ms = args[0].getClass().getDeclaredMethod("setId", Long.class);
 					ms.invoke(args[0], ids);
 				}
@@ -95,6 +94,7 @@ public class Yta {
 			if (result != null) {
 				return result;
 			} else {
+				log.info("从数据库读取数据");
 				result = joinPoint.proceed(args);
 				if (result != null && d.isCache()) {
 					rs.setObjectEx(classname, key, result, c.getExpire(), TimeUnit.SECONDS);

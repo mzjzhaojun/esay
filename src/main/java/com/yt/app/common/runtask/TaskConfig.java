@@ -205,7 +205,7 @@ public class TaskConfig {
 				qrcodeaccountordermapper.put(qao);
 				//
 				Incomemerchantaccountorder imqao = incomemerchantaccountordermapper
-						.getByOrderNum(p.getMerchantordernum());
+						.getByOrderNum(p.getMerchantorderid());
 				imqao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
 				incomemerchantaccountordermapper.put(imqao);
 				// 释放收款码数据
