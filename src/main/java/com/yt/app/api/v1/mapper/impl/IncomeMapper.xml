@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.IncomeMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,merchantuserid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislename,agentid,agentordernum,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,resulturl,fewamount,notifyurl,notifystatus,incomeamount,merchantincomeamount,channelincomeamount,remark,version
+		id,tenant_id,merchantuserid,ordernum,channelid,merchantid,merchantname,merchantcode,merchantordernum,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislecode,qrcodeaislename,agentid,agentordernum,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,resulturl,fewamount,notifyurl,notifystatus,incomeamount,merchantincomeamount,channelincomeamount,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -17,9 +17,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Income">
 		insert into
-		income(id,merchantuserid,ordernum,merchantid,merchantname,merchantcode,merchantordernum,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislename,agentid,agentordernum,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,resulturl,fewamount,notifyurl,notifystatus,incomeamount,merchantincomeamount,channelincomeamount,remark)
+		income(id,merchantuserid,ordernum,channelid,merchantid,merchantname,merchantcode,merchantordernum,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislecode,qrcodeaislename,agentid,agentordernum,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,resulturl,fewamount,notifyurl,notifystatus,incomeamount,merchantincomeamount,channelincomeamount,remark)
 		values
-		(#{id},#{merchantuserid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantorderid},#{backforwardurl},#{expireddate},#{expiredminute},#{qrcodeaisleid},#{qrcodeaislename},#{agentid},#{agentordernum},#{agentincome},#{qrcodeid},#{qrcodename},#{qrcodeordernum},#{qrcodeuserid},#{amount},#{realamount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{qrcode},#{type},#{resulturl},#{fewamount},#{notifyurl},#{notifystatus},#{incomeamount},#{merchantincomeamount},#{channelincomeamount},#{remark})
+		(#{id},#{merchantuserid},#{ordernum},#{channelid},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantorderid},#{backforwardurl},#{expireddate},#{expiredminute},#{qrcodeaisleid},#{qrcodeaislecode},#{qrcodeaislename},#{agentid},#{agentordernum},#{agentincome},#{qrcodeid},#{qrcodename},#{qrcodeordernum},#{qrcodeuserid},#{amount},#{realamount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{qrcode},#{type},#{resulturl},#{fewamount},#{notifyurl},#{notifystatus},#{incomeamount},#{merchantincomeamount},#{channelincomeamount},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -208,8 +208,26 @@
 		from income
 		<where>
 			1=1
-			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+			<if test="ordernum != null and ordernum != ''">
+				and ordernum = #{ordernum}
+			</if>
+			<if test="merchantorderid != null and merchantorderid != ''">
+				and merchantorderid = #{merchantorderid}
+			</if>
+			<if test="amount != null and amount != ''">
+				and amount = #{amount}
+			</if>
+			<if test="status != null and status != ''">
+				and status = #{status}
+			</if>
+			<if test="qrcodeaislename != null and qrcodeaislename != ''">
+				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename} , '%' )
+			</if>
+			<if test="merchantname != null and merchantname != ''">
+				and merchantname LIKE CONCAT( '%', #{merchantname} , '%' )
+			</if>
+			<if test="stime != null and etime != ''">
+				and successtime BETWEEN  #{stime} AND  #{etime}
 			</if>
 			<if test="orderBy != null and dir!= null">
 				order by ${orderBy} ${dir}
@@ -225,8 +243,26 @@
 		select count(*) from income
 		<where>
 			1=1
-			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+			<if test="ordernum != null and ordernum != ''">
+				and ordernum = #{ordernum}
+			</if>
+			<if test="merchantorderid != null and merchantorderid != ''">
+				and merchantorderid = #{merchantorderid}
+			</if>
+			<if test="amount != null and amount != ''">
+				and amount = #{amount}
+			</if>
+			<if test="status != null and status != ''">
+				and status = #{status}
+			</if>
+			<if test="qrcodeaislename != null and qrcodeaislename != ''">
+				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename} , '%' )
+			</if>
+			<if test="merchantname != null and merchantname != ''">
+				and merchantname LIKE CONCAT( '%', #{merchantname} , '%' )
+			</if>
+			<if test="stime != null and etime != ''">
+				and successtime BETWEEN  #{stime} AND  #{etime}
 			</if>
 		</where>
 	</select>

@@ -111,4 +111,14 @@ public interface MerchantqrcodeaisleMapper extends YtIBaseMapper<Merchantqrcodea
 	 */
 	@YtRedisCacheAnnotation(classs = Merchantqrcodeaisle.class)
 	public List<Merchantqrcodeaisle> getByMid(Long mid);
+
+	/**
+	 * deleteByQrcodeaisleId
+	 *
+	 * @param id id
+	 * @return count
+	 */
+	@YtRedisCacheEvictAnnotation(classs = { Merchantqrcodeaisle.class })
+	public Integer deleteByQrcodeaisleId(Long id);
+
 }

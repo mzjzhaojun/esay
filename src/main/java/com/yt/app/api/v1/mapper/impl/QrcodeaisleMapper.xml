@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.QrcodeaisleMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,name,nikname,code,status,type,qrcodecount,remark,create_by,create_time,update_by,update_time,version
+		id,tenant_id,userid,name,nikname,code,status,type,qrcodecount,remark,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -17,9 +17,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Qrcodeaisle">
 		insert into
-		qrcodeaisle(id,name,nikname,code,status,type,qrcodecount,remark,create_by,create_time,update_by,update_time)
+		qrcodeaisle(id,userid,name,nikname,code,status,type,qrcodecount,remark,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{name},#{nikname},#{code},#{status},#{type},#{qrcodecount},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{userid},#{name},#{nikname},#{code},#{status},#{type},#{qrcodecount},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -113,6 +113,9 @@
 		from qrcodeaisle
 		<where>
 			1=1
+			<if test="userid != null">
+				and userid= #{userid}
+			</if>
 			<if test="name != null and name != ''">
 				and name like "%"#{name}"%"
 			</if>
@@ -130,6 +133,9 @@
 		select count(*) from qrcodeaisle
 		<where>
 			1=1
+			<if test="userid != null">
+				and userid= #{userid}
+			</if>
 			<if test="name != null and name != ''">
 				and name like "%"#{name}"%"
 			</if>

@@ -1,5 +1,8 @@
 package com.yt.app.api.v1.controller;
 
+import java.io.IOException;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -8,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yt.app.api.v1.dbo.SysQueryDTO;
@@ -51,7 +55,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		return new YtResponseEntity<Object>(yb);
 	}
 
-	// 盘口查单
+	// 代付盘口查单
 	@RequestMapping(value = "/query", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tyquery(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -59,7 +63,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		return new YtResponseEntity<Object>(new YtBody(pt));
 	}
 
-	// 盘口下单
+	// 代付盘口下单
 	@RequestMapping(value = "/submit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submit(YtRequestEntity<PaySubmitDTO> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -75,7 +79,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		return new YtResponseEntity<Object>(new YtBody(pt));
 	}
 
-	// 拉码下单
+	// 代收盘口下单
 	@RequestMapping(value = "/submitqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submitqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -83,12 +87,24 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		return new YtResponseEntity<Object>(new YtBody(yb));
 	}
 
-	// 拉码查单
+	// 代收盘口查单
 	@RequestMapping(value = "/queryqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> queryqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
 		QueryQrcodeResultVO yb = incomeservice.queryqrcode(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(yb));
+	}
+
+	// 宏盛代收回调
+	@RequestMapping(value = "/hscallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void hscallback(@RequestParam Map<String, String> params, HttpServletRequest request,
+			HttpServletResponse response) {
+		incomeservice.hscallback(params);
+		try {
+			response.getWriter().print("success");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// index

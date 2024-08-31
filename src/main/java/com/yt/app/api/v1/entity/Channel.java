@@ -49,6 +49,8 @@ public class Channel extends YtBaseEntity<Channel> {
 	String firstmatchmoney;
 	String apiip;
 	String apikey;
+	String privatersa;
+	String publicrsa;
 	String apireusultip;
 	String remark;
 	Integer version;

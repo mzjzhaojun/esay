@@ -34,7 +34,7 @@ public class NotifyQrcodeIncomeThread implements Runnable {
 		qqr.setPay_orderid(income.getMerchantorderid());
 		qqr.setPay_amount(income.getAmount().toString());
 		qqr.setPay_code(income.getStatus());
-		log.info("代收通知 start---------------------商户单号：" + income.getMerchantordernum());
+		log.info("代收通知 start-----------商户单号：" + income.getOrdernum());
 		int i = 1;
 		while (true) {
 			YtBody result;
@@ -42,6 +42,7 @@ public class NotifyQrcodeIncomeThread implements Runnable {
 				result = PayUtil.SendIncomeNotify(income.getNotifyurl(), qqr, merchant.getAppkey());
 				// 通知到
 				if (result.getCode() == 200) {
+					log.info("代收通知成功，商户单号：" + income.getOrdernum());
 					income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_63);
 					int j = mapper.put(income);
 					if (j > 0) {
@@ -55,13 +56,14 @@ public class NotifyQrcodeIncomeThread implements Runnable {
 				try {
 					Thread.sleep(1000 * 60 * 10);
 					i++;
+					if (i >= 3) {
+						log.info("代收通知失败XXXXXX商户单号：" + income.getOrdernum());
+						income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_64);
+						mapper.put(income);
+						break;
+					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-				}
-				if (i > 3) {
-					income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_64);
-					mapper.put(income);
-					break;
 				}
 			}
 		}

@@ -37,6 +37,11 @@
 		delete from merchantqrcodeaisle
 		where id = #{id}
 	</delete>
+	
+	<delete id="deleteByQrcodeaisleId" parameterType="java.lang.Long">
+		delete from merchantqrcodeaisle
+		where qrcodeaisleid = #{id}
+	</delete>
 	<!-- update -->
 	<update id="put"
 		parameterType="com.yt.app.api.v1.entity.Merchantqrcodeaisle">

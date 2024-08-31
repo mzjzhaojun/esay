@@ -16,7 +16,6 @@ import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yt.app.api.v1.entity.Sysconfig;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -72,12 +71,6 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 	@Override
 	public void initExchangeData() {
 		// test
-		QueryWrapper<Sysconfig> p = new QueryWrapper<Sysconfig>();
-
-		List<Sysconfig> count = mapper.selectList(p);
-
-		System.out.println("实时汇率：" + count.get(0).getExchange());
-
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("user-agent",
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");

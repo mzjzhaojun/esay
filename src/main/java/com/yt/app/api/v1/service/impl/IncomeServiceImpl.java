@@ -3,6 +3,7 @@ package com.yt.app.api.v1.service.impl;
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.stereotype.Service;
 
 import com.yt.app.api.v1.mapper.ChannelMapper;
@@ -45,9 +46,12 @@ import com.yt.app.common.util.RedisUtil;
 import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.StringUtil;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.util.RandomUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,7 +64,7 @@ import java.util.stream.Collectors;
  * 
  * @version v1 @createdate2024-08-22 23:02:54
  */
-
+@Slf4j
 @Service
 public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implements IncomeService {
 
@@ -145,7 +149,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			throw new YtException("商户被冻结!");
 		}
 		String sign = PayUtil.SignMd5SubmitQrocde(qs, mc.getAppkey());
-		System.out.println(sign);
 		if (!sign.equals(qs.getPay_md5sign())) {
 			throw new YtException("签名不正确!");
 		}
@@ -210,11 +213,11 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			Assert.notNull(qd, "没有可用的渠道!");
 		}
 		// 开始业务
-		System.out.println("====================" + qd.getName());
 		Channel channel = channelmapper.getByUserId(qd.getUserid());
 
 		income = new Income();
 		// 商戶
+		income.setChannelid(channel.getId());
 		income.setMerchantuserid(mc.getUserid());
 		income.setOrdernum(StringUtil.getOrderNum());
 		income.setMerchantorderid(qs.getPay_orderid());
@@ -227,6 +230,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setExpiredminute(qd.getExpireminute());
 		income.setQrcodeaisleid(qas.getId());
 		income.setQrcodeaislename(qas.getName());
+		income.setQrcodeaislecode(qas.getCode());
 		// 收款码
 		income.setQrcodeuserid(qd.getUserid());
 		income.setQrcodeid(qd.getId());
@@ -237,9 +241,16 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
 		income.setNotifyurl(qs.getPay_notifyurl());
-		income.setQrcode(qd.getFixedcode());
-		income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
 		income.setBackforwardurl(qs.getPay_callbackurl());
+		income.setQrcode(qd.getFixedcode());
+		// 动态码直接去线上拿连接
+		if (qd.getDynamic()) {
+			String resulturl = PayUtil.SendHSSubmit(income, channel);
+			Assert.notNull(resulturl, "获取渠道订单失败!");
+			income.setResulturl(resulturl);
+		} else {
+			income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
+		}
 		income.setChannelincomeamount(
 				NumberUtil.multiply(income.getAmount().toString(), "0." + channel.getCollection(), 2).doubleValue());
 		income.setMerchantincomeamount(
@@ -326,7 +337,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	public Double getFewAmount(Long qid) {
 		Double min = 0.01;
-		for (int i = 1; i <= 20; i++) {
+		for (int i = 1; i <= 30; i++) {
 			String key = SystemConstant.CACHE_SYS_QRCODE + qid + "" + min;
 			if (!RedisUtil.hasKey(key)) {
 				RedisUtil.set(key, min.toString());
@@ -350,8 +361,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		if (mc == null) {
 			throw new YtException("商户不存在!");
 		}
-		String sign = PayUtil.SignMd5SubmitQrocde(qs, mc.getAppkey());
-		System.out.println(sign);
+		String sign = PayUtil.SignMd5QueryQrocde(qs, mc.getAppkey());
 		if (!sign.equals(qs.getPay_md5sign())) {
 			throw new YtException("签名不正确!");
 		}
@@ -368,5 +378,42 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	@Override
 	public Income getByOrderNum(String ordernum) {
 		return mapper.getByOrderNum(ordernum);
+	}
+
+	@Override
+	public void hscallback(@RequestParam Map<String, String> params) {
+		String orderid = params.get("orderid").toString();
+		String status = params.get("status").toString();
+		log.info("宏盛通知返回消息：orderid" + orderid + " status:" + status);
+		Income income = mapper.getByOrderNum(orderid);
+		Channel channel = channelmapper.get(income.getChannelid());
+		String returnstate = PayUtil.SendHSQuerySubmit(orderid, channel);
+		Assert.notNull(returnstate, "宏盛获取渠道订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			income.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			if (income.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61)
+				income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
+
+			income.setSuccesstime(DateTimeUtil.getNow());
+			income.setBacklong(DateUtil.between(income.getSuccesstime(), income.getCreate_time(), DateUnit.SECOND));
+			//
+			mapper.put(income);
+			//
+			Qrcodeaccountorder qrcodeaccountorder = qrcodeaccountordermapper.getByOrderNum(income.getQrcodeordernum());
+			qrcodeaccountservice.updateTotalincome(qrcodeaccountorder);
+
+			Incomemerchantaccountorder incomemerchantaccountorder = incomemerchantaccountordermapper
+					.getByOrderNum(income.getMerchantordernum());
+			//
+			incomemerchantaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			incomemerchantaccountordermapper.put(incomemerchantaccountorder);
+			//
+			incomemerchantaccountservice.updateTotalincome(incomemerchantaccountorder);
+			//
+			qrcodeaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			//
+			qrcodeaccountordermapper.put(qrcodeaccountorder);
+		}
+
 	}
 }

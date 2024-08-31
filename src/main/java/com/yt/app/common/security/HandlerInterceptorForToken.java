@@ -90,8 +90,6 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 	}
 
 	public boolean matches(HttpServletRequest request) {
-		String url = request.getServletPath();
-		System.out.println(url);
 		for (AntPathRequestMatcher rm : requestMatchers) {
 			if (rm.matches(request)) {
 				return true;

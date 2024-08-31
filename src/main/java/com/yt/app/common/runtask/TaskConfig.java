@@ -188,15 +188,15 @@ public class TaskConfig {
 	}
 
 	/**
-	 * 超時3+3分钟未支付订单处理
+	 * 超時3+10分钟未支付订单处理
 	 */
 	@Scheduled(cron = "0/30 * * * * ?")
 	public void income() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Income> list = incomemapper.selectAddlist();
 		for (Income p : list) {
-			log.info("代收单号ID：" + p.getId() + " 状态：" + p.getStatus());
 			if (p.getExpireddate().getTime() < new Date().getTime()) {
+				log.info("代收支付超时单号ID：" + p.getOrdernum() + " 状态：" + p.getStatus());
 				p.setStatus(DictionaryResource.PAYOUTSTATUS_53);
 				incomemapper.put(p);
 				//

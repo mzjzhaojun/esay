@@ -2,6 +2,8 @@ package com.yt.app.api.v1.service;
 
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.vo.IncomeVO;
@@ -27,4 +29,6 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	// 拉码下单查单
 	QueryQrcodeResultVO queryqrcode(QrcodeSubmitDTO qs);
+
+	void hscallback(@RequestParam Map<String, String> params);
 }

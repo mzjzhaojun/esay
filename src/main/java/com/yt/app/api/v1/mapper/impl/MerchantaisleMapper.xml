@@ -32,6 +32,12 @@
 		delete from merchantaisle
 		where id = #{id}
 	</delete>
+	
+	<!-- deleteById -->
+	<delete id="deleteByAisleid" parameterType="java.lang.Long">
+		delete from merchantaisle
+		where aisleid = #{id}
+	</delete>
 	<!-- update -->
 	<update id="put"
 		parameterType="com.yt.app.api.v1.entity.Merchantaisle">

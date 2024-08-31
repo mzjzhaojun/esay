@@ -3,15 +3,22 @@ package com.yt.app.api.v1.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+
+import com.yt.app.api.v1.mapper.MerchantqrcodeaisleMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleMapper;
+import com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper;
 import com.yt.app.api.v1.service.QrcodeaisleService;
+import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.constant.SystemConstant;
+import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Qrcodeaisle;
 import com.yt.app.api.v1.vo.QrcodeaisleVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.util.RedisUtil;
+
+import cn.hutool.core.lang.Assert;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,9 +35,16 @@ public class QrcodeaisleServiceImpl extends YtBaseServiceImpl<Qrcodeaisle, Long>
 	@Autowired
 	private QrcodeaisleMapper mapper;
 
+	@Autowired
+	private QrcodeaisleqrcodeMapper qrcodeaisleqrcodemapper;
+
+	@Autowired
+	private MerchantqrcodeaisleMapper merchantqrcodeaislemapper;
+
 	@Override
 	@Transactional
 	public Integer post(Qrcodeaisle t) {
+		t.setUserid(SysUserContext.getUserId());
 		Integer i = mapper.post(t);
 		return i;
 	}
@@ -45,6 +59,17 @@ public class QrcodeaisleServiceImpl extends YtBaseServiceImpl<Qrcodeaisle, Long>
 	public Qrcodeaisle get(Long id) {
 		Qrcodeaisle t = mapper.get(id);
 		return t;
+	}
+
+	@Override
+	@Transactional
+	public Integer delete(Long id) {
+		// 删除关联表
+		Integer i = mapper.delete(id);
+		Assert.equals(i, 1, ServiceConstant.DELETE_FAIL_MSG);
+		qrcodeaisleqrcodemapper.deleteByQrcodeaisleId(id);
+		merchantqrcodeaislemapper.deleteByQrcodeaisleId(id);
+		return i;
 	}
 
 	@Override

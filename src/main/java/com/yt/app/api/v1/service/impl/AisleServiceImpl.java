@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.AisleMapper;
+import com.yt.app.api.v1.mapper.MerchantaisleMapper;
 import com.yt.app.api.v1.service.AisleService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
+import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Aisle;
@@ -13,6 +15,8 @@ import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.RedisUtil;
+
+import cn.hutool.core.lang.Assert;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,10 +33,23 @@ public class AisleServiceImpl extends YtBaseServiceImpl<Aisle, Long> implements 
 	@Autowired
 	private AisleMapper mapper;
 
+	@Autowired
+	private MerchantaisleMapper merchantaislemapper;
+
 	@Override
 	@Transactional
 	public Integer post(Aisle t) {
 		Integer i = mapper.post(t);
+		return i;
+	}
+
+	@Override
+	@Transactional
+	public Integer delete(Long id) {
+		// 删除关联表
+		Integer i = mapper.delete(id);
+		Assert.equals(i, 1, ServiceConstant.DELETE_FAIL_MSG);
+		merchantaislemapper.deleteByAisleid(id);
 		return i;
 	}
 
