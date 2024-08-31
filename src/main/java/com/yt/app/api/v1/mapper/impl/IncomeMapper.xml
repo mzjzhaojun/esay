@@ -214,6 +214,9 @@
 			<if test="merchantorderid != null and merchantorderid != ''">
 				and merchantorderid = #{merchantorderid}
 			</if>
+			<if test="qrcodeordernum != null and qrcodeordernum != ''">
+				and qrcodeordernum = #{qrcodeordernum}
+			</if>
 			<if test="amount != null and amount != ''">
 				and amount = #{amount}
 			</if>
@@ -248,6 +251,9 @@
 			</if>
 			<if test="merchantorderid != null and merchantorderid != ''">
 				and merchantorderid = #{merchantorderid}
+			</if>
+			<if test="qrcodeordernum != null and qrcodeordernum != ''">
+				and qrcodeordernum = #{qrcodeordernum}
 			</if>
 			<if test="amount != null and amount != ''">
 				and amount = #{amount}
