@@ -148,8 +148,14 @@
 			<if test="userid != null">
 				and userid= #{userid}
 			</if>
+			<if test="status != null">
+				and status= #{status}
+			</if>
+			<if test="code != null">
+				and code= #{code}
+			</if>
 			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+				and name like CONCAT( '%', #{name} , '%' )
 			</if>
 			<if test="orderBy != null and dir!= null">
 				order by ${orderBy} ${dir}
@@ -168,8 +174,14 @@
 			<if test="userid != null">
 				and userid= #{userid}
 			</if>
+			<if test="status != null">
+				and status= #{status}
+			</if>
+			<if test="code != null">
+				and code= #{code}
+			</if>
 			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+				and name like CONCAT( '%', #{name} , '%' )
 			</if>
 		</where>
 	</select>

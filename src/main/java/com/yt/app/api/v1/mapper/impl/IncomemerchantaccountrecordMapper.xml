@@ -135,8 +135,11 @@
 			<if test="userid != null and userid != ''">
 				and userid = #{userid}
 			</if>
-			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+			<if test="ordernum != null and ordernum != ''">
+				AND ordernum = #{ordernum}
+			</if>
+			<if test="type != null and type != ''">
+				AND type = #{type}
 			</if>
 			<if test="orderBy != null and dir!= null">
 				order by ${orderBy} ${dir}
@@ -154,6 +157,12 @@
 			1=1
 			<if test="userid != null and userid != ''">
 				and userid = #{userid}
+			</if>
+			<if test="ordernum != null and ordernum != ''">
+				AND ordernum = #{ordernum}
+			</if>
+			<if test="type != null and type != ''">
+				AND type = #{type}
 			</if>
 			<if test="name != null and name != ''">
 				and name like "%"#{name}"%"

@@ -324,7 +324,7 @@ public class PayUtil {
 	}
 
 	// 宏盛代收下单
-	public static String SendHSSubmit(Income pt, Channel cl) {
+	public static SysHsOrder SendHSSubmit(Income pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -364,7 +364,7 @@ public class PayUtil {
 		SysHsOrder data = sov.getBody();
 		log.info("宏盛返回消息：" + data.getMsg());
 		if (data.getStatus().equals("ok")) {
-			return data.getPay_url();
+			return data;
 		}
 		return null;
 	}

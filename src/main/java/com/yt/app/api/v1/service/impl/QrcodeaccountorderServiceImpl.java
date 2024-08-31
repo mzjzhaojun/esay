@@ -75,7 +75,7 @@ public class QrcodeaccountorderServiceImpl extends YtBaseServiceImpl<Qrcodeaccou
 			qrcodeaccountservice.updateTotalincome(qrcodeaccountorder);
 
 			Incomemerchantaccountorder incomemerchantaccountorder = incomemerchantaccountordermapper
-					.getByOrderNum(income.getMerchantordernum());
+					.getByOrderNum(income.getMerchantorderid());
 			//
 			incomemerchantaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 			incomemerchantaccountordermapper.put(incomemerchantaccountorder);

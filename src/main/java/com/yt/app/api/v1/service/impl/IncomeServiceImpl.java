@@ -34,6 +34,7 @@ import com.yt.app.api.v1.entity.Qrcodeaisleqrcode;
 import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.api.v1.vo.QrcodeResultVO;
 import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
+import com.yt.app.api.v1.vo.SysHsOrder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.config.YtConfig;
@@ -141,6 +142,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		// 盘口商户
 		Merchant mc = merchantmapper.getByCode(qs.getPay_memberid());
+
 		if (mc == null) {
 			throw new YtException("商户不存在!");
 		}
@@ -235,7 +237,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setQrcodeuserid(qd.getUserid());
 		income.setQrcodeid(qd.getId());
 		income.setQrcodename(qd.getName());
-		income.setQrcodeordernum("IC" + StringUtil.getOrderNum());
 		income.setAmount(Double.valueOf(qs.getPay_amount()));
 
 		income.setStatus(DictionaryResource.PAYOUTSTATUS_50);
@@ -245,9 +246,10 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setQrcode(qd.getFixedcode());
 		// 动态码直接去线上拿连接
 		if (qd.getDynamic()) {
-			String resulturl = PayUtil.SendHSSubmit(income, channel);
-			Assert.notNull(resulturl, "获取渠道订单失败!");
-			income.setResulturl(resulturl);
+			SysHsOrder sho = PayUtil.SendHSSubmit(income, channel);
+			Assert.notNull(sho, "获取渠道订单失败!");
+			income.setResulturl(sho.getPay_url());
+			income.setQrcodeordernum(sho.getSys_order_no());
 		} else {
 			income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
 		}
@@ -307,7 +309,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		imao.setQrcodeaislename(income.getQrcodeaislename());
 		imao.setQrcodename(income.getQrcodename());
 		imao.setQrcodeid(income.getQrcodeid());
-		imao.setOrdernum(income.getMerchantordernum());
+		imao.setOrdernum(income.getMerchantorderid());
 		imao.setQrcodecode(qd.getCode());
 		imao.setType(income.getType());
 		imao.setFewamount(income.getFewamount());
@@ -332,6 +334,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qr.setPay_viewurl(income.getResulturl());
 		String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
 		qr.setPay_md5sign(signresult);
+		TenantIdContext.remove();
 		return qr;
 	}
 
@@ -403,7 +406,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			qrcodeaccountservice.updateTotalincome(qrcodeaccountorder);
 
 			Incomemerchantaccountorder incomemerchantaccountorder = incomemerchantaccountordermapper
-					.getByOrderNum(income.getMerchantordernum());
+					.getByOrderNum(income.getMerchantorderid());
 			//
 			incomemerchantaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 			incomemerchantaccountordermapper.put(incomemerchantaccountorder);
