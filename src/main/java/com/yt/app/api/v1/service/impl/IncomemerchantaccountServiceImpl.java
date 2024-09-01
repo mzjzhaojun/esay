@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountMapper;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountrecordMapper;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
-import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Incomemerchantaccount;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
@@ -36,9 +35,6 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 
 	@Autowired
 	private IncomemerchantaccountrecordMapper incomemerchantaccountrecordmapper;
-
-	@Autowired
-	private MerchantService merchantservice;
 
 	@Override
 	@Transactional
@@ -136,8 +132,6 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			t.setToincomeamount(maaj.getPretoincomeamount());// 待收入减去金额.
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 			mapper.put(t);
-			// 更新余额
-			merchantservice.updateInCome(t);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();

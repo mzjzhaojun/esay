@@ -15,6 +15,7 @@ import com.yt.app.api.v1.mapper.QrcodeMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper;
+import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.IncomeService;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
 import com.yt.app.api.v1.service.MerchantService;
@@ -97,6 +98,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	private QrcodeaccountService qrcodeaccountservice;
 	@Autowired
 	private MerchantService merchantservice;
+	@Autowired
+	private ChannelService channelservice;
 	@Autowired
 	private SystemaccountService systemaccountservice;
 
@@ -407,6 +410,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		String status = params.get("status").toString();
 		log.info("宏盛通知返回消息：orderid" + orderid + " status:" + status);
 		Income income = mapper.getByOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
 		Channel channel = channelmapper.get(income.getChannelid());
 		String returnstate = PayUtil.SendHSQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "宏盛获取渠道订单失败!");
@@ -425,7 +429,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			qrcodeaccountordermapper.put(qrcodeaccountorder);
 			// 计算渠道收入
 			qrcodeaccountservice.updateTotalincome(qrcodeaccountorder);
-
 			//
 			Incomemerchantaccountorder incomemerchantaccountorder = incomemerchantaccountordermapper
 					.getByOrderNum(income.getMerchantorderid());
@@ -436,8 +439,14 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 			// 计算商户主账号
 			merchantservice.updateIncome(income);
+
+			// 计算渠道主账号
+			channelservice.updateIncome(income);
+
 			// 计算系统收入
-			systemaccountservice.updateIncome(incomemerchantaccountorder);
+			systemaccountservice.updateIncome(income);
+			
+			TenantIdContext.remove();
 		}
 
 	}

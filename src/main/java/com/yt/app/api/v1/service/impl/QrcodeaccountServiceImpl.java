@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.QrcodeaccountMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountrecordMapper;
-import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Qrcodeaccount;
@@ -35,9 +34,6 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 
 	@Autowired
 	private QrcodeaccountrecordMapper qrcodeaccountrecordmapper;
-
-	@Autowired
-	private ChannelService channelservice;
 
 	@Override
 	@Transactional
@@ -135,8 +131,6 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			t.setToincomeamount(maaj.getPretoincomeamount());// 待收入减去金额.
 			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 			mapper.put(t);
-			// 更新余额
-			channelservice.updateIncome(t);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();

@@ -65,6 +65,15 @@
 			<if test="onecost != null">
 				onecost= #{onecost},
 			</if>
+			<if test="todaycost != null">
+				todaycost= #{todaycost},
+			</if>
+			<if test="todaycount != null">
+				todaycount= #{todaycount},
+			</if>
+			<if test="count != null">
+				count= #{count},
+			</if>
 			<if test="collection != null">
 				collection= #{collection},
 			</if>

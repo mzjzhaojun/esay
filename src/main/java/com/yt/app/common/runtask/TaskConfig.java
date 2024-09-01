@@ -196,6 +196,7 @@ public class TaskConfig {
 		List<Income> list = incomemapper.selectAddlist();
 		for (Income p : list) {
 			if (p.getExpireddate().getTime() < new Date().getTime()) {
+				TenantIdContext.setTenantId(p.getTenant_id());
 				log.info("代收支付超时单号ID：" + p.getOrdernum() + " 状态：" + p.getStatus());
 				p.setStatus(DictionaryResource.PAYOUTSTATUS_53);
 				incomemapper.put(p);
@@ -214,6 +215,7 @@ public class TaskConfig {
 				// 处理账户
 				qrcodeaccountservice.cancleTotalincome(qao);
 				incomemerchantaccountservice.cancleTotalincome(imqao);
+				TenantIdContext.remove();
 			}
 		}
 	}

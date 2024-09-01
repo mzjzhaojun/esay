@@ -286,19 +286,6 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		}
 	}
 
-	@Override
-	public void updateInCome(Incomemerchantaccount ma) {
-		RLock lock = RedissonUtil.getLock(ma.getMerchantid());
-		try {
-			lock.lock();
-			Merchant m = mapper.get(ma.getMerchantid());
-			m.setBalance(ma.getBalance());
-			mapper.put(m);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
 
 	@Override
 	public void updateIncome(Income t) {
@@ -307,8 +294,8 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 			lock.lock();
 			Merchant m = mapper.get(t.getMerchantid());
 			Incomemerchantaccount ma = incomemerchantaccountmapper.getByUserId(m.getUserid());
-			m.setCount(m.getCount() + t.getAmount());// 总量不包含手续费和交易费
-			m.setTodaycount(m.getTodaycount() + t.getAmount());// 当日
+			m.setCount(m.getCount() + t.getAmount());
+			m.setTodaycount(m.getTodaycount() + t.getAmount());
 			m.setBalance(ma.getBalance());
 			mapper.put(m);
 		} catch (Exception e) {

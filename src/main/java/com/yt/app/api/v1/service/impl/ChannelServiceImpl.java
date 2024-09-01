@@ -19,6 +19,7 @@ import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccount;
 import com.yt.app.api.v1.entity.Exchange;
+import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Qrcodeaccount;
 import com.yt.app.api.v1.entity.User;
@@ -202,23 +203,27 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	}
 
 	@Override
-	public void updateIncome(Qrcodeaccount t) {
-		RLock lock = RedissonUtil.getLock(t.getChannelid());
-		try {
-			lock.lock();
-			Channel a = mapper.get(t.getChannelid());
-			a.setBalance(t.getBalance());
-			mapper.put(a);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Channel getData() {
 		Channel t = mapper.getByUserId(SysUserContext.getUserId());
 		return t;
+	}
+	
+	
+	@Override
+	public void updateIncome(Income t) {
+		RLock lock = RedissonUtil.getLock(t.getMerchantid());
+		try {
+			lock.lock();
+			Channel m = mapper.get(t.getMerchantid());
+			Channelaccount ma = channelaccountmapper.getByUserId(m.getUserid());
+			m.setCount(m.getCount() + t.getAmount());
+			m.setTodaycount(m.getTodaycount() + t.getAmount());
+			m.setBalance(ma.getBalance());
+			mapper.put(m);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
 	}
 }

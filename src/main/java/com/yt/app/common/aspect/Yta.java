@@ -94,7 +94,6 @@ public class Yta {
 			if (result != null) {
 				return result;
 			} else {
-				log.info("从数据库读取数据");
 				result = joinPoint.proceed(args);
 				if (result != null && d.isCache()) {
 					rs.setObjectEx(classname, key, result, c.getExpire(), TimeUnit.SECONDS);
