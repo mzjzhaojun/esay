@@ -208,17 +208,16 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 		Channel t = mapper.getByUserId(SysUserContext.getUserId());
 		return t;
 	}
-	
-	
+
 	@Override
 	public void updateIncome(Income t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
-			Channel m = mapper.get(t.getMerchantid());
-			Channelaccount ma = channelaccountmapper.getByUserId(m.getUserid());
-			m.setCount(m.getCount() + t.getAmount());
-			m.setTodaycount(m.getTodaycount() + t.getAmount());
+			Channel m = mapper.get(t.getChannelid());
+			Qrcodeaccount ma = qrcodeaccountmapper.getByUserId(m.getUserid());
+			m.setCount(m.getCount() + t.getChannelincomeamount());
+			m.setTodaycount(m.getTodaycount() + t.getChannelincomeamount());
 			m.setBalance(ma.getBalance());
 			mapper.put(m);
 		} catch (Exception e) {

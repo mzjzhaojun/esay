@@ -286,7 +286,6 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		}
 	}
 
-
 	@Override
 	public void updateIncome(Income t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
@@ -294,8 +293,8 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 			lock.lock();
 			Merchant m = mapper.get(t.getMerchantid());
 			Incomemerchantaccount ma = incomemerchantaccountmapper.getByUserId(m.getUserid());
-			m.setCount(m.getCount() + t.getAmount());
-			m.setTodaycount(m.getTodaycount() + t.getAmount());
+			m.setCount(m.getCount() + t.getMerchantincomeamount());
+			m.setTodaycount(m.getTodaycount() + t.getMerchantincomeamount());
 			m.setBalance(ma.getBalance());
 			mapper.put(m);
 		} catch (Exception e) {
