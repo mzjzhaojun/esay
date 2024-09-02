@@ -75,6 +75,10 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("incomemerchantaccountrecord");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("incomemerchantaccountorder");
 
+		// 报表
+		MybatisPlusConfig.TENANT_ID_TABLE.add("channelstatisticalreports");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantstatisticalreports");
+
 	}
 
 }

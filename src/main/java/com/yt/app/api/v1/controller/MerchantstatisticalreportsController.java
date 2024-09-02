@@ -15,46 +15,38 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
 
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
-import com.yt.app.api.v1.service.QrcodeaccountService;
-import com.yt.app.api.v1.entity.Qrcodeaccount;
-import com.yt.app.api.v1.vo.QrcodeaccountVO;
+import com.yt.app.api.v1.service.MerchantstatisticalreportsService;
+import com.yt.app.api.v1.entity.Merchantstatisticalreports;
+import com.yt.app.api.v1.vo.MerchantstatisticalreportsVO;
 
 /**
  * @author zj defaulttest
  * 
- * @version v1 @createdate2024-08-23 22:50:47
+ * @version v1 @createdate2024-09-02 12:01:51
  */
 
 @RestController
-@RequestMapping("/rest/v1/qrcodeaccount")
-public class QrcodeaccountController extends YtBaseEncipherControllerImpl<Qrcodeaccount, Long> {
+@RequestMapping("/rest/v1/merchantstatisticalreports")
+public class MerchantstatisticalreportsController
+		extends YtBaseEncipherControllerImpl<Merchantstatisticalreports, Long> {
 
 	@Autowired
-	private QrcodeaccountService service;
+	private MerchantstatisticalreportsService service;
 
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Qrcodeaccount> list = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		YtIPage<Merchantstatisticalreports> list = service
+				.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}
 
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<QrcodeaccountVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		YtIPage<MerchantstatisticalreportsVO> pagebean = service
+				.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
-	}
-
-	/**
-	 * 
-	 * 
-	 * @version 1.1
-	 */
-	@RequestMapping(value = "/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> data(HttpServletRequest request, HttpServletResponse response) {
-		Qrcodeaccount t = service.getData();
-		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}
 }

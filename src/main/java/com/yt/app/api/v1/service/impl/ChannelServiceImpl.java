@@ -6,9 +6,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ChannelaccountMapper;
+import com.yt.app.api.v1.mapper.ChannelstatisticalreportsMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountMapper;
+import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.ChannelService;
+import com.yt.app.api.v1.vo.QrcodeaccountorderVO;
 import com.yt.app.api.v1.vo.SysTyBalance;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.AppConstant;
@@ -18,6 +21,7 @@ import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccount;
+import com.yt.app.api.v1.entity.Channelstatisticalreports;
 import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Payout;
@@ -56,6 +60,12 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 
 	@Autowired
 	private QrcodeaccountMapper qrcodeaccountmapper;
+
+	@Autowired
+	private QrcodeaccountorderMapper qrcodeaccountordermapper;
+
+	@Autowired
+	private ChannelstatisticalreportsMapper channelstatisticalreportsmapper;
 
 	@Override
 	@Transactional
@@ -211,7 +221,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 
 	@Override
 	public void updateIncome(Income t) {
-		RLock lock = RedissonUtil.getLock(t.getMerchantid());
+		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
 			lock.lock();
 			Channel m = mapper.get(t.getChannelid());
@@ -220,6 +230,37 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 			m.setTodaycount(m.getTodaycount() + t.getChannelincomeamount());
 			m.setBalance(ma.getBalance());
 			mapper.put(m);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	@Override
+	public void updateDayValue(Channel c) {
+		RLock lock = RedissonUtil.getLock(c.getId());
+		try {
+			lock.lock();
+			TenantIdContext.setTenantId(c.getTenant_id());
+			// 插入报表数据
+			Channelstatisticalreports csr = new Channelstatisticalreports();
+			csr.setBalance(c.getBalance());
+			csr.setUserid(c.getUserid());
+			csr.setMerchantid(c.getId());
+			csr.setTodayincome(c.getTodaycount());
+			csr.setIncomecount(c.getCount());
+			// 查询每日统计数据
+			QrcodeaccountorderVO imaov = qrcodeaccountordermapper.countOrder(c.getUserid());
+			csr.setTodayorder(imaov.getOrdercount());
+			csr.setTodayorderamount(imaov.getAmount());
+			QrcodeaccountorderVO imaovsuccess = qrcodeaccountordermapper.countSuccessOrder(c.getUserid());
+			csr.setSuccessorder(imaovsuccess.getOrdercount());
+			csr.setTodaysuccessorderamount(imaovsuccess.getAmount());
+			channelstatisticalreportsmapper.post(csr);
+
+			// 清空每日数据
+			mapper.updatetodayvalue(c.getId());
+			TenantIdContext.remove();
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();

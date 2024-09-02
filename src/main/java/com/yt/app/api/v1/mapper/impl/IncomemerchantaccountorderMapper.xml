@@ -137,7 +137,7 @@
 		from incomemerchantaccountorder
 		where ordernum= #{ordernum}
 	</select>
-	
+
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
@@ -172,13 +172,15 @@
 				and status = #{status}
 			</if>
 			<if test="qrcodeaislename != null and qrcodeaislename != ''">
-				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename} , '%' )
+				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename}
+				, '%' )
 			</if>
 			<if test="merchantname != null and merchantname != ''">
-				and merchantname LIKE CONCAT( '%', #{merchantname} , '%' )
+				and merchantname LIKE CONCAT( '%', #{merchantname} , '%'
+				)
 			</if>
 			<if test="stime != null and etime != ''">
-				and create_time BETWEEN  #{stime} AND  #{etime}
+				and create_time BETWEEN #{stime} AND #{etime}
 			</if>
 			<if test="orderBy != null and dir!= null">
 				order by ${orderBy} ${dir}
@@ -207,13 +209,15 @@
 				and status = #{status}
 			</if>
 			<if test="qrcodeaislename != null and qrcodeaislename != ''">
-				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename} , '%' )
+				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename}
+				, '%' )
 			</if>
 			<if test="merchantname != null and merchantname != ''">
-				and merchantname LIKE CONCAT( '%', #{merchantname} , '%' )
+				and merchantname LIKE CONCAT( '%', #{merchantname} , '%'
+				)
 			</if>
 			<if test="stime != null and etime != ''">
-				and create_time BETWEEN  #{stime} AND  #{etime}
+				and create_time BETWEEN #{stime} AND #{etime}
 			</if>
 		</where>
 	</select>
@@ -233,5 +237,34 @@
 				</foreach>
 			</if>
 		</where>
+	</select>
+
+	<select id="countOrder"  resultMap="ResultMapVO"  parameterType="java.lang.Long">
+		SELECT
+		count(*)  as ordercount,
+		sum(amount) as amount
+		FROM
+		incomemerchantaccountorder
+		WHERE
+		userid = #{id}
+		AND create_time >= CONCAT(CURDATE(), ' 00:00:00')
+		AND create_time &lt; CONCAT(CURDATE() + INTERVAL 1 DAY,' 00:00:00')
+		GROUP BY
+		amount
+	</select>
+	
+	<select id="countSuccessOrder"  resultMap="ResultMapVO"  parameterType="java.lang.Long">
+		SELECT
+		count(*) as ordercount,
+		sum(amount) as amount
+		FROM
+		incomemerchantaccountorder
+		WHERE
+		userid = #{id}
+		AND `status` = 52
+		AND create_time >= CONCAT(CURDATE(), ' 00:00:00')
+		AND create_time &lt; CONCAT(CURDATE() + INTERVAL 1 DAY,' 00:00:00')
+		GROUP BY
+		amount
 	</select>
 </mapper>

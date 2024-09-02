@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.QrcodeaccountMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountrecordMapper;
 import com.yt.app.api.v1.service.QrcodeaccountService;
+import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Qrcodeaccount;
 import com.yt.app.api.v1.entity.Qrcodeaccountorder;
@@ -173,5 +174,11 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 		} finally {
 			lock.unlock();
 		}
+	}
+
+	@Override
+	public Qrcodeaccount getData() {
+		Qrcodeaccount t = mapper.getByUserId(SysUserContext.getUserId());
+		return t;
 	}
 }

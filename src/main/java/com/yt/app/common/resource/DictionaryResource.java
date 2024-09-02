@@ -27,6 +27,7 @@ public class DictionaryResource implements Serializable {
 	public static final long SYSTEM_ADMINTYPE_4 = 4;// 商户
 	public static final long SYSTEM_ADMINTYPE_5 = 5; // 代理
 	public static final long SYSTEM_ADMINTYPE_6 = 6; // 渠道
+	public static final long SYSTEM_ADMINTYPE_7 = 7; // 代收商户
 
 	/**
 	 * 支付

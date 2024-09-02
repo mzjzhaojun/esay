@@ -105,4 +105,22 @@ public interface QrcodeaccountorderMapper extends YtIBaseMapper<Qrcodeaccountord
 	 */
 	@YtRedisCacheAnnotation(classs = Qrcodeaccountorder.class)
 	public Qrcodeaccountorder getByOrderNum(String ordernum);
+
+	/**
+	 * countorder
+	 *
+	 * @param id id
+	 * @return Incomemerchantaccountorder
+	 */
+	@YtRedisCacheAnnotation(classs = Qrcodeaccountorder.class)
+	public QrcodeaccountorderVO countOrder(Long id);
+
+	/**
+	 * countsuccessorder
+	 *
+	 * @param id id
+	 * @return Incomemerchantaccountorder
+	 */
+	@YtRedisCacheAnnotation(classs = Qrcodeaccountorder.class)
+	public QrcodeaccountorderVO countSuccessOrder(Long id);
 }

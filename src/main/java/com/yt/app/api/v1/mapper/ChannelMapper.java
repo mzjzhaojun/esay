@@ -103,4 +103,13 @@ public interface ChannelMapper extends YtIBaseMapper<Channel> {
 	 */
 	@YtRedisCacheAnnotation(classs = Channel.class)
 	public Channel getByUserId(Long userid);
+
+	/**
+	 * update
+	 * 
+	 * @param o Merchant
+	 * @return count
+	 */
+	@YtRedisCacheEvictAnnotation(classs = { Channel.class })
+	public Integer updatetodayvalue(Long id);
 }

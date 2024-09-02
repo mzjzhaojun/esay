@@ -15,46 +15,37 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
 
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
-import com.yt.app.api.v1.service.QrcodeaccountService;
-import com.yt.app.api.v1.entity.Qrcodeaccount;
-import com.yt.app.api.v1.vo.QrcodeaccountVO;
+import com.yt.app.api.v1.service.SystemstatisticalreportsService;
+import com.yt.app.api.v1.entity.Systemstatisticalreports;
+import com.yt.app.api.v1.vo.SystemstatisticalreportsVO;
 
 /**
  * @author zj defaulttest
  * 
- * @version v1 @createdate2024-08-23 22:50:47
+ * @version v1 @createdate2024-09-02 14:45:16
  */
 
 @RestController
-@RequestMapping("/rest/v1/qrcodeaccount")
-public class QrcodeaccountController extends YtBaseEncipherControllerImpl<Qrcodeaccount, Long> {
+@RequestMapping("/rest/v1/systemstatisticalreports")
+public class SystemstatisticalreportsController extends YtBaseEncipherControllerImpl<Systemstatisticalreports, Long> {
 
 	@Autowired
-	private QrcodeaccountService service;
+	private SystemstatisticalreportsService service;
 
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Qrcodeaccount> list = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		YtIPage<Systemstatisticalreports> list = service
+				.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}
 
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<QrcodeaccountVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		YtIPage<SystemstatisticalreportsVO> pagebean = service
+				.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
-	}
-
-	/**
-	 * 
-	 * 
-	 * @version 1.1
-	 */
-	@RequestMapping(value = "/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> data(HttpServletRequest request, HttpServletResponse response) {
-		Qrcodeaccount t = service.getData();
-		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}
 }

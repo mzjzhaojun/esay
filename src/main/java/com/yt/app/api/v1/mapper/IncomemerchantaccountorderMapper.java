@@ -104,4 +104,22 @@ public interface IncomemerchantaccountorderMapper extends YtIBaseMapper<Incomeme
 	 */
 	@YtRedisCacheAnnotation(classs = Incomemerchantaccountorder.class)
 	public Incomemerchantaccountorder getByOrderNum(String ordernum);
+
+	/**
+	 * countorder
+	 *
+	 * @param id id
+	 * @return Incomemerchantaccountorder
+	 */
+	@YtRedisCacheAnnotation(classs = Incomemerchantaccountorder.class)
+	public IncomemerchantaccountorderVO countOrder(Long id);
+
+	/**
+	 * countsuccessorder
+	 *
+	 * @param id id
+	 * @return Incomemerchantaccountorder
+	 */
+	@YtRedisCacheAnnotation(classs = Incomemerchantaccountorder.class)
+	public IncomemerchantaccountorderVO countSuccessOrder(Long id);
 }

@@ -1,6 +1,5 @@
 package com.yt.app;
 
-
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -11,9 +10,9 @@ import org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-//import java.util.Arrays;
-//import com.yt.app.common.common.YtAutoCode;
-//import com.yt.app.common.util.NumberUtil;
+import java.util.Arrays;
+import com.yt.app.common.common.YtAutoCode;
+import com.yt.app.common.util.NumberUtil;
 
 /**
  * by jz
@@ -35,6 +34,6 @@ public class AppRun extends SpringBootServletInitializer {
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(new Class[] { AppRun.class }, args);
-		// YtAutoCode.u().p(Arrays.asList("incomemerchantaccountorder"));
+		// YtAutoCode.u().p(Arrays.asList("systemstatisticalreports"));
 	}
 }

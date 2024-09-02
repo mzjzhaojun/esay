@@ -11,47 +11,33 @@ import com.yt.app.common.base.BaseVO;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-08-23 23:31:35
+ * @version v1 @createdate2024-09-02 14:45:16
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class IncomemerchantaccountorderVO extends BaseVO {
+public class SystemstatisticalreportsVO extends BaseVO {
 
 	private static final long serialVersionUID = 1L;
 
 	Long id;
 	Long tenant_id;
 	Long userid;
-	String merchantname;
-	String qrcodeaislecode;
-	Long qrcodeaisleid;
-	String qrcodeaislename;
-	String qrcodename;
-	Long qrcodeid;
-	String qrcodecode;
-	String ordernum;
-	String type;
-	String typename;
-	Double fewamount;
-	java.util.Date expireddate;
-	Double amount;
-	Double realamount;
-	String resulturl;
-	String qrocde;
-	Integer status;
-	String statusname;
-	String remark;
-	String imgurl;
+	Long merchantid;
+	Object todayincome;
+	Object incomecount;
+	Object balance;
+	Integer todayorder;
+	Integer successorder;
+	Object todayorderamount;
+	Object todaysuccessorderamount;
+	Integer type;
 	Long create_by;
 	java.util.Date create_time;
 	Long update_by;
 	java.util.Date update_time;
-	Double incomeamount;
+	String remark;
 	Integer version;
-
-	// 订单总数
-	Integer ordercount;
 }

@@ -8,10 +8,13 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.AgentMapper;
 import com.yt.app.api.v1.mapper.ExchangeMerchantaccountMapper;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountMapper;
+import com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
+import com.yt.app.api.v1.mapper.MerchantstatisticalreportsMapper;
 import com.yt.app.api.v1.mapper.PayoutMerchantaccountMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.MerchantService;
+import com.yt.app.api.v1.vo.IncomemerchantaccountorderVO;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.context.SysUserContext;
@@ -23,6 +26,7 @@ import com.yt.app.api.v1.entity.ExchangeMerchantaccount;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Incomemerchantaccount;
 import com.yt.app.api.v1.entity.Merchant;
+import com.yt.app.api.v1.entity.Merchantstatisticalreports;
 import com.yt.app.api.v1.entity.PayoutMerchantaccount;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.User;
@@ -66,6 +70,12 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 
 	@Autowired
 	private IncomemerchantaccountMapper incomemerchantaccountmapper;
+
+	@Autowired
+	private IncomemerchantaccountorderMapper incomemerchantaccountordermapper;
+
+	@Autowired
+	private MerchantstatisticalreportsMapper merchantstatisticalreportsmapper;
 
 	@Override
 	@Transactional
@@ -301,5 +311,37 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		} finally {
 			lock.unlock();
 		}
+	}
+
+	@Override
+	public void updateDayValue(Merchant m) {
+		RLock lock = RedissonUtil.getLock(m.getId());
+		try {
+			lock.lock();
+			TenantIdContext.setTenantId(m.getTenant_id());
+			// 插入报表数据
+			Merchantstatisticalreports msr = new Merchantstatisticalreports();
+			msr.setBalance(m.getBalance());
+			msr.setUserid(m.getUserid());
+			msr.setMerchantid(m.getId());
+			msr.setTodayincome(m.getTodaycount());
+			msr.setIncomecount(m.getCount());
+			// 查询每日统计数据
+			IncomemerchantaccountorderVO imaov = incomemerchantaccountordermapper.countOrder(m.getUserid());
+			msr.setTodayorder(imaov.getOrdercount());
+			msr.setTodayorderamount(imaov.getAmount());
+			IncomemerchantaccountorderVO imaovsuccess = incomemerchantaccountordermapper
+					.countSuccessOrder(m.getUserid());
+			msr.setSuccessorder(imaovsuccess.getOrdercount());
+			msr.setTodaysuccessorderamount(imaovsuccess.getAmount());
+			merchantstatisticalreportsmapper.post(msr);
+			// 清空每日数据
+			mapper.updatetodayvalue(m.getId());
+			TenantIdContext.remove();
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+
 	}
 }

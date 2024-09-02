@@ -36,4 +36,6 @@ public interface MerchantService extends YtIBaseService<Merchant, Long> {
 	void withdrawamountUsdt(ExchangeMerchantaccount t);
 
 	Merchant getData();
+
+	void updateDayValue(Merchant c);
 }

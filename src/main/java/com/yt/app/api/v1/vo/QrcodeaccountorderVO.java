@@ -51,4 +51,6 @@ public class QrcodeaccountorderVO extends BaseVO {
 	java.util.Date update_time;
 	Double incomeamount;
 	Integer version;
+	// 订单总数
+	Integer ordercount;
 }

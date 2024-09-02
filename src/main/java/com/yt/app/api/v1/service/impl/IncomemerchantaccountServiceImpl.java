@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountMapper;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountrecordMapper;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
+import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Incomemerchantaccount;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
@@ -174,5 +175,11 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 		} finally {
 			lock.unlock();
 		}
+	}
+
+	@Override
+	public Incomemerchantaccount getData() {
+		Incomemerchantaccount t = mapper.getByUserId(SysUserContext.getUserId());
+		return t;
 	}
 }

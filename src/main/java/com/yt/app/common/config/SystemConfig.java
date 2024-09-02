@@ -55,11 +55,11 @@ public class SystemConfig {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		int i = Runtime.getRuntime().availableProcessors();
 		// 核心线程数目
-		executor.setCorePoolSize(i * 2);
+		executor.setCorePoolSize(i * 4);
 		// 指定最大线程数
-		executor.setMaxPoolSize(i * 2);
+		executor.setMaxPoolSize(i * 4);
 		// 队列中最大的数目
-		executor.setQueueCapacity(i * 2 * 10);
+		executor.setQueueCapacity(i * 4 * 10);
 		// 线程名称前缀
 		executor.setThreadNamePrefix("ThreadPoolTaskExecutor-");
 		// rejection-policy：当pool已经达到max size的时候，如何处理新任务

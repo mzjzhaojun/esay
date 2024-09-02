@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
+import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
@@ -17,6 +18,7 @@ import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Qrcodeaccountorder;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
+import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ExchangeMapper;
 import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper;
@@ -25,9 +27,12 @@ import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
+import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
+import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.api.v1.service.SysconfigService;
+import com.yt.app.api.v1.service.SystemstatisticalreportsService;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.resource.DictionaryResource;
@@ -62,6 +67,15 @@ public class TaskConfig {
 	private MerchantMapper merchantmapper;
 
 	@Autowired
+	private ChannelService channelservice;
+
+	@Autowired
+	private MerchantService merchantservice;
+
+	@Autowired
+	private ChannelMapper channelmapper;
+
+	@Autowired
 	private TgmerchantgroupMapper tgmerchantgroupmapper;
 
 	@Autowired
@@ -78,6 +92,9 @@ public class TaskConfig {
 
 	@Autowired
 	private IncomemerchantaccountService incomemerchantaccountservice;
+
+	@Autowired
+	private SystemstatisticalreportsService systemstatisticalreportsservice;
 
 	/**
 	 * 更新实时汇率
@@ -96,19 +113,33 @@ public class TaskConfig {
 	 */
 	@Scheduled(cron = "59 59 23 * * ?")
 	public void updateTodayValue() throws InterruptedException {
+		TenantIdContext.removeFlag();
+		//系统
+		systemstatisticalreportsservice.updateDayValue();
+
+		// 商户
 		List<Merchant> listm = merchantmapper.list(new HashMap<String, Object>());
 		listm.forEach(m -> {
-			merchantmapper.updatetodayvalue(m.getId());
+			// 单日数据
+			merchantservice.updateDayValue(m);
 		});
+		// 渠道
+		List<Channel> listc = channelmapper.list(new HashMap<String, Object>());
+		listc.forEach(c -> {
+			// 单日数据
+			channelservice.updateDayValue(c);
+		});
+		// 飞机商户
 		List<Tgmerchantgroup> listtmg = tgmerchantgroupmapper.list(new HashMap<String, Object>());
 		listtmg.forEach(mg -> {
 			tgmerchantgroupmapper.updatetodayvalue(mg.getId());
 		});
-
+		// 飞机渠道
 		List<Tgchannelgroup> listtcg = tgchannelgroupmapper.list(new HashMap<String, Object>());
 		listtcg.forEach(mg -> {
 			tgchannelgroupmapper.updatetodayvalue(mg.getId());
 		});
+
 	}
 
 	/**

@@ -43,7 +43,7 @@ public class TenantIdContext {
 
 	public static void remove() {
 		TENANT_ID_THREAD_LOCAL.remove();
-		TENANT_ID_FLAG_THREAD_LOCAL.remove();
+		TENANT_ID_FLAG_THREAD_LOCAL.set(false);
 	}
 
 }

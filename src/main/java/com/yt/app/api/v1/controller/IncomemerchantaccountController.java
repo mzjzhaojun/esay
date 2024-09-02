@@ -47,4 +47,15 @@ public class IncomemerchantaccountController extends YtBaseEncipherControllerImp
 				.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
+
+	/**
+	 * 
+	 * 
+	 * @version 1.1
+	 */
+	@RequestMapping(value = "/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> data(HttpServletRequest request, HttpServletResponse response) {
+		Incomemerchantaccount t = service.getData();
+		return new YtResponseEncryptEntity<Object>(new YtBody(t));
+	}
 }

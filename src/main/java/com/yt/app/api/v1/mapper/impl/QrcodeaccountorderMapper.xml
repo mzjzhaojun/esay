@@ -231,4 +231,32 @@
 			</if>
 		</where>
 	</select>
+	<select id="countOrder"  resultMap="ResultMapVO"  parameterType="java.lang.Long">
+		SELECT
+		count(*)  as ordercount,
+		sum(amount) as amount
+		FROM
+		qrcodeaccountorder
+		WHERE
+		userid = #{id}
+		AND create_time >= CONCAT(CURDATE(), ' 00:00:00')
+		AND create_time &lt; CONCAT(CURDATE() + INTERVAL 1 DAY,' 00:00:00')
+		GROUP BY
+		amount
+	</select>
+	
+	<select id="countSuccessOrder"  resultMap="ResultMapVO"  parameterType="java.lang.Long">
+		SELECT
+		count(*) as ordercount,
+		sum(amount) as amount
+		FROM
+		qrcodeaccountorder
+		WHERE
+		userid = #{id}
+		AND `status` = 52
+		AND create_time >= CONCAT(CURDATE(), ' 00:00:00')
+		AND create_time &lt; CONCAT(CURDATE() + INTERVAL 1 DAY,' 00:00:00')
+		GROUP BY
+		amount
+	</select>
 </mapper>
