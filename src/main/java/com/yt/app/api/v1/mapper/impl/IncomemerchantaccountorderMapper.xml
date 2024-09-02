@@ -242,7 +242,8 @@
 	<select id="countOrder"  resultMap="ResultMapVO"  parameterType="java.lang.Long">
 		SELECT
 		count(*)  as ordercount,
-		sum(amount) as amount
+		sum(amount) as amount,
+		sum(realamount) as realamount
 		FROM
 		incomemerchantaccountorder
 		WHERE
@@ -250,13 +251,14 @@
 		AND create_time >= CONCAT(CURDATE(), ' 00:00:00')
 		AND create_time &lt; CONCAT(CURDATE() + INTERVAL 1 DAY,' 00:00:00')
 		GROUP BY
-		amount
+		amount,realamount
 	</select>
 	
 	<select id="countSuccessOrder"  resultMap="ResultMapVO"  parameterType="java.lang.Long">
 		SELECT
 		count(*) as ordercount,
-		sum(amount) as amount
+		sum(amount) as amount,
+		sum(realamount) as realamount
 		FROM
 		incomemerchantaccountorder
 		WHERE
@@ -265,6 +267,6 @@
 		AND create_time >= CONCAT(CURDATE(), ' 00:00:00')
 		AND create_time &lt; CONCAT(CURDATE() + INTERVAL 1 DAY,' 00:00:00')
 		GROUP BY
-		amount
+		amount,realamount
 	</select>
 </mapper>

@@ -28,6 +28,8 @@ public class Channelstatisticalreports extends YtBaseEntity<Channelstatisticalre
 	Long merchantid;
 	Double todayincome;
 	Double incomecount;
+	Double incomeuserpaycount;
+	Double incomeuserpaysuccesscount;
 	Double balance;
 	Integer todayorder;
 	Integer successorder;

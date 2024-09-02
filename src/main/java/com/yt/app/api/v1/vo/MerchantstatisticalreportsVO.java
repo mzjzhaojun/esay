@@ -28,6 +28,8 @@ public class MerchantstatisticalreportsVO extends BaseVO {
 	Long merchantid;
 	Double todayincome;
 	Double incomecount;
+	Double incomeuserpaycount;
+	Double incomeuserpaysuccesscount;
 	Double balance;
 	Integer todayorder;
 	Integer successorder;

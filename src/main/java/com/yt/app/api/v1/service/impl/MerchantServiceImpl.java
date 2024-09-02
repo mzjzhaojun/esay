@@ -328,10 +328,12 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 			msr.setIncomecount(m.getCount());
 			// 查询每日统计数据
 			IncomemerchantaccountorderVO imaov = incomemerchantaccountordermapper.countOrder(m.getUserid());
+			msr.setIncomeuserpaycount(imaov.getRealamount());
 			msr.setTodayorder(imaov.getOrdercount());
 			msr.setTodayorderamount(imaov.getAmount());
 			IncomemerchantaccountorderVO imaovsuccess = incomemerchantaccountordermapper
 					.countSuccessOrder(m.getUserid());
+			msr.setIncomeuserpaysuccesscount(imaovsuccess.getRealamount());
 			msr.setSuccessorder(imaovsuccess.getOrdercount());
 			msr.setTodaysuccessorderamount(imaovsuccess.getAmount());
 			merchantstatisticalreportsmapper.post(msr);
