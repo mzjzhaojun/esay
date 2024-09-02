@@ -72,7 +72,7 @@ public class PayoutMerchantaccountorderController
 
 	/**
 	 * 
-	 * 提现
+	 * 代付提现
 	 * 
 	 * @version 1.1
 	 */
@@ -125,4 +125,35 @@ public class PayoutMerchantaccountorderController
 		service.incomemanual(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(1));
 	}
+	
+	
+	/**
+	 * 
+	 * 商户代收提现
+	 * 
+	 * @version 1.1
+	 */
+	@RequestMapping(value = "/incomewithdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> incomewithdraw(
+			YtRequestDecryptEntity<PayoutMerchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request,
+			HttpServletResponse response) {
+		Integer i = service.incomewithdraw(YtRequestDecryptEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(i));
+	}
+	
+	/**
+	 * 处理代收提现
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/incomewithdrawmanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> incomewithdrawmanual(YtRequestDecryptEntity<PayoutMerchantaccountorder> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		service.incomewithdrawmanual(requestEntity.getBody());
+		return new YtResponseEntity<Object>(new YtBody(1));
+	}
+	
 }

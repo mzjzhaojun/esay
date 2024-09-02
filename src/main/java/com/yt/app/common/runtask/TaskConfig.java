@@ -114,7 +114,7 @@ public class TaskConfig {
 	@Scheduled(cron = "59 59 23 * * ?")
 	public void updateTodayValue() throws InterruptedException {
 		TenantIdContext.removeFlag();
-		//系统
+		// 系统
 		systemstatisticalreportsservice.updateDayValue();
 
 		// 商户
@@ -242,10 +242,12 @@ public class TaskConfig {
 				incomemerchantaccountordermapper.put(imqao);
 				// 释放收款码数据
 				String key = SystemConstant.CACHE_SYS_QRCODE + p.getQrcodeid() + "" + p.getFewamount();
-				RedisUtil.delete(key);
+				if (RedisUtil.hasKey(key))
+					RedisUtil.delete(key);
 				// 处理账户
 				qrcodeaccountservice.cancleTotalincome(qao);
 				incomemerchantaccountservice.cancleTotalincome(imqao);
+
 				TenantIdContext.remove();
 			}
 		}

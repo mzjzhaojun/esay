@@ -6,15 +6,21 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountMapper;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountrecordMapper;
+import com.yt.app.api.v1.mapper.PayoutMerchantaccountrecordMapper;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
+import com.yt.app.api.v1.service.MerchantService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Incomemerchantaccount;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.entity.Incomemerchantaccountrecord;
+import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
+import com.yt.app.api.v1.entity.PayoutMerchantaccountrecord;
 import com.yt.app.api.v1.vo.IncomemerchantaccountVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.RedissonUtil;
 
@@ -36,6 +42,12 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 
 	@Autowired
 	private IncomemerchantaccountrecordMapper incomemerchantaccountrecordmapper;
+
+	@Autowired
+	private PayoutMerchantaccountrecordMapper payoutmerchantaccountrecordmapper;
+	
+	@Autowired
+	private MerchantService merchantservice;
 
 	@Override
 	@Transactional
@@ -66,6 +78,9 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 		return new YtPageBean<IncomemerchantaccountVO>(param, list, count);
 	}
 
+	/**
+	 * 新增代收
+	 */
 	@Override
 	@Transactional
 	public void totalincome(Incomemerchantaccountorder t) {
@@ -101,6 +116,9 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 		}
 	}
 
+	/**
+	 * 代收 成功
+	 */
 	@Override
 	@Transactional
 	public void updateTotalincome(Incomemerchantaccountorder mao) {
@@ -181,5 +199,135 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 	public Incomemerchantaccount getData() {
 		Incomemerchantaccount t = mapper.getByUserId(SysUserContext.getUserId());
 		return t;
+	}
+
+	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+	public Incomemerchantaccount getDataBank(Long id) {
+		Incomemerchantaccount t = mapper.getByMerchantId(id);
+		return t;
+	}
+
+	/**
+	 * =============================================================提现
+	 * 
+	 */
+
+	// 待确认支出
+	@Override
+	@Transactional
+	public void withdrawamount(PayoutMerchantaccountorder t) {
+		RLock lock = RedissonUtil.getLock(t.getMerchantid());
+		try {
+			lock.lock();
+			Incomemerchantaccount ma = mapper.getByUserId(t.getUserid());
+			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
+
+			maaj.setUserid(t.getUserid());
+			maaj.setMerchantname(t.getUsername());
+			maaj.setOrdernum(t.getOrdernum());
+			maaj.setType(DictionaryResource.RECORDTYPE_90);
+			// 变更前
+			maaj.setPretotalincome(ma.getTotalincome());// 总收入
+			maaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
+			maaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
+			maaj.setPretowithdrawamount(ma.getTowithdrawamount() + t.getAmountreceived());// 待确认支出
+			// 变更后
+			maaj.setPosttotalincome(ma.getTotalincome());// 总收入
+			maaj.setPosttoincomeamount(0.00);// 确认收入
+			maaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
+			maaj.setPosttowithdrawamount(0.00);// 确认支出
+			maaj.setRemark("冻结待提现￥：" + String.format("%.2f", t.getAmountreceived()));
+			//
+			payoutmerchantaccountrecordmapper.post(maaj);
+
+			ma.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
+			ma.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
+			ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
+			mapper.put(ma);
+
+			merchantservice.withdrawamount(ma);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	// 提现成功
+	@Override
+	@Transactional
+	public void updateWithdrawamount(PayoutMerchantaccountorder mao) {
+		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
+		try {
+			lock.lock();
+			Incomemerchantaccount t = mapper.getByUserId(mao.getUserid());
+			//
+			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
+			//
+			maaj.setUserid(t.getUserid());
+			maaj.setMerchantname(mao.getUsername());
+			maaj.setOrdernum(mao.getOrdernum());
+			maaj.setType(DictionaryResource.RECORDTYPE_91);
+
+			// 变更前
+			maaj.setPretotalincome(t.getTotalincome());// 总收入
+			maaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
+			maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
+			maaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
+			// 变更后
+			maaj.setPosttotalincome(t.getTotalincome());// 总收入
+			maaj.setPosttoincomeamount(0.00);// 确认收入
+			maaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());// 总支出
+			maaj.setPosttowithdrawamount(mao.getAmountreceived());// 确认支出
+			maaj.setRemark("提现成功￥：" + String.format("%.2f", mao.getAmountreceived()));
+			//
+			payoutmerchantaccountrecordmapper.post(maaj);
+
+			t.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
+			t.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
+			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
+			mapper.put(t);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	// 提现失败
+	@Override
+	@Transactional
+	public void turndownWithdrawamount(PayoutMerchantaccountorder mao) {
+		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
+		try {
+			lock.lock();
+			Incomemerchantaccount t = mapper.getByUserId(mao.getUserid());
+			//
+			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
+			maaj.setUserid(t.getUserid());
+			maaj.setMerchantname(mao.getUsername());
+			maaj.setOrdernum(mao.getOrdernum());
+			maaj.setType(DictionaryResource.RECORDTYPE_92);
+
+			// 变更前
+			maaj.setPretotalincome(t.getTotalincome());// 总收入
+			maaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
+			maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
+			maaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
+			// 变更后
+			maaj.setPosttotalincome(t.getTotalincome());// 总收入
+			maaj.setPosttoincomeamount(0.00);// 确认收入
+			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
+			maaj.setPosttowithdrawamount(0.00);// 确认支出
+			maaj.setRemark("审核拒绝提现￥：" + String.format("%.2f", mao.getAmountreceived()));
+			//
+			payoutmerchantaccountrecordmapper.post(maaj);
+
+			t.setTowithdrawamount(maaj.getPretowithdrawamount());
+			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
+			mapper.put(t);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
 	}
 }

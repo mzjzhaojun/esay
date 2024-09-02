@@ -104,4 +104,13 @@ public interface IncomemerchantaccountMapper extends YtIBaseMapper<Incomemerchan
 	 */
 	@YtRedisCacheAnnotation(classs = Incomemerchantaccount.class)
 	public Incomemerchantaccount getByUserId(Long userid);
+
+	/**
+	 * get
+	 *
+	 * @param id id
+	 * @return Incomemerchantaccount
+	 */
+	@YtRedisCacheAnnotation(classs = Incomemerchantaccount.class)
+	public Incomemerchantaccount getByMerchantId(Long id);
 }

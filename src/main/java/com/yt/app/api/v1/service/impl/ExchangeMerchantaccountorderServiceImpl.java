@@ -263,12 +263,12 @@ public class ExchangeMerchantaccountorderServiceImpl extends YtBaseServiceImpl<E
 	@Transactional
 	public void withdrawmanual(ExchangeMerchantaccountorder mco) {
 		RLock lock = RedissonUtil.getLock(mco.getId());
+		User u = usermapper.get(SysUserContext.getUserId());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()),
+				System.currentTimeMillis());
+		Assert.isTrue(isValid, "验证码错误！");
 		try {
 			lock.lock();
-			User u = usermapper.get(SysUserContext.getUserId());
-			boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()),
-					System.currentTimeMillis());
-			Assert.isTrue(isValid, "验证码错误！");
 			ExchangeMerchantaccountorder mao = mapper.get(mco.getId());
 			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_10)) {
 				mao.setStatus(mco.getStatus());

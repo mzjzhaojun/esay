@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtIPage;
@@ -56,6 +57,18 @@ public class IncomemerchantaccountController extends YtBaseEncipherControllerImp
 	@RequestMapping(value = "/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> data(HttpServletRequest request, HttpServletResponse response) {
 		Incomemerchantaccount t = service.getData();
+		return new YtResponseEncryptEntity<Object>(new YtBody(t));
+	}
+
+	/**
+	 * 
+	 * 
+	 * @version 1.1
+	 */
+	@RequestMapping(value = "/bank/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> bank(@PathVariable Long id, HttpServletRequest request,
+			HttpServletResponse response) {
+		Incomemerchantaccount t = service.getDataBank(id);
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}
 }

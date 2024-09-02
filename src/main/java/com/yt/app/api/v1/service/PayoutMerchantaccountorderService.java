@@ -24,4 +24,9 @@ public interface PayoutMerchantaccountorderService extends YtIBaseService<Payout
 	void withdrawmanual(PayoutMerchantaccountorder mco);
 
 	Integer cancleWithdraw(Long id);
+	
+	Integer incomewithdraw(PayoutMerchantaccountorder mco);
+	
+	// 代收提现
+		void incomewithdrawmanual(PayoutMerchantaccountorder mco);
 }

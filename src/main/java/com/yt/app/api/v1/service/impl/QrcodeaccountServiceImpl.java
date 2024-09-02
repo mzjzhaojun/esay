@@ -65,6 +65,9 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 		return new YtPageBean<QrcodeaccountVO>(param, list, count);
 	}
 
+	/**
+	 * 代收新增
+	 */
 	@Override
 	@Transactional
 	public void totalincome(Qrcodeaccountorder t) {
@@ -100,6 +103,9 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 		}
 	}
 
+	/**
+	 * 代收成功
+	 */
 	@Override
 	@Transactional
 	public void updateTotalincome(Qrcodeaccountorder mao) {
