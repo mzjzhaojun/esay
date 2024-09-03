@@ -1,6 +1,5 @@
 package com.yt.app.api.v1.dbo;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,10 +31,8 @@ public class SysUserPermDTO extends BaseDTO implements CheckParam {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@ApiModelProperty(value = "用户ID")
 	private Long userId;
 
-	@ApiModelProperty(value = "账号")
 	private String username;
 
 	@Override

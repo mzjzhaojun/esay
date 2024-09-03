@@ -1,7 +1,5 @@
 package com.yt.app.api.v1.dbo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,14 +21,11 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel("保存用户角色参数")
 public class SysUserRoleSaveDTO {
 
 	@NotNull(message = "用户id不能为空！")
-	@ApiModelProperty("用户ID")
 	private Long userId;
 
-	@ApiModelProperty("角色ids")
 	private List<Long> roleIdList;
 
 }

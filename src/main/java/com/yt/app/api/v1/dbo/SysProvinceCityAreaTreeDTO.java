@@ -1,7 +1,5 @@
 package com.yt.app.api.v1.dbo;
 
-import io.swagger.annotations.ApiModelProperty;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -34,7 +32,6 @@ public class SysProvinceCityAreaTreeDTO extends BaseDTO implements HandleParam {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@ApiModelProperty("是否存在门店（1:是 0:否）")
 	private Boolean isShop;
 
 	/**
@@ -42,7 +39,6 @@ public class SysProvinceCityAreaTreeDTO extends BaseDTO implements HandleParam {
 	 */
 	@Max(3)
 	@Min(1)
-	@ApiModelProperty("类型（1:省 2:市 3:区） -- 用于查询第几级下的数据")
 	private Integer type;
 
 	@Override

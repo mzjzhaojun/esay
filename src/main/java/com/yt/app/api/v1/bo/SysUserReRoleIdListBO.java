@@ -1,6 +1,5 @@
 package com.yt.app.api.v1.bo;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,10 +20,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class SysUserReRoleIdListBO {
 
-	@ApiModelProperty(value = "用户ID")
 	private Long user_id;
 
-	@ApiModelProperty(value = "角色ID")
 	private Long role_id;
 
 }

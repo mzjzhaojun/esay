@@ -125,8 +125,8 @@
 		from merchantstatisticalreports
 		<where>
 			1=1
-			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+			<if test="userid != null and userid != ''">
+				and userid = #{userid}
 			</if>
 			<if test="orderBy != null and dir != null">
 				order by ${orderBy} ${dir}
@@ -142,8 +142,8 @@
 		select count(*) from merchantstatisticalreports
 		<where>
 			1=1
-			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+			<if test="userid != null and userid != ''">
+				and userid = #{userid}
 			</if>
 		</where>
 	</select>

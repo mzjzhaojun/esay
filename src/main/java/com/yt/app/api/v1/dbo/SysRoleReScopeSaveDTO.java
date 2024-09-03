@@ -1,6 +1,5 @@
 package com.yt.app.api.v1.dbo;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,10 +35,8 @@ public class SysRoleReScopeSaveDTO extends BaseDTO {
 	private static final long serialVersionUID = 1L;
 
 	@NotNull(message = "角色ID不能为空！")
-	@ApiModelProperty(value = "角色ID")
 	private Long roleId;
 
-	@ApiModelProperty(value = "数据权限ids")
 	private List<Long> scopeIdList;
 
 }

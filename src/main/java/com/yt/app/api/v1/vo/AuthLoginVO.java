@@ -1,7 +1,5 @@
 package com.yt.app.api.v1.vo;
 
-import io.swagger.annotations.ApiModelProperty;
-
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
@@ -18,13 +16,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class AuthLoginVO {
 
-	@ApiModelProperty("认证请求头名")
 	private String tokenName;
 
-	@ApiModelProperty("认证值")
 	private String tokenValue;
 
-	@ApiModelProperty("租戶")
 	private Long tenantId;
 
 }

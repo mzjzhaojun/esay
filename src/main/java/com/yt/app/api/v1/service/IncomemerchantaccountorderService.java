@@ -1,5 +1,7 @@
 package com.yt.app.api.v1.service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Map;
 
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
@@ -14,5 +16,8 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface IncomemerchantaccountorderService extends YtIBaseService<Incomemerchantaccountorder, Long> {
+	
 	YtIPage<IncomemerchantaccountorderVO> page(Map<String, Object> param);
+
+	ByteArrayOutputStream download(Map<String, Object> param) throws IOException;
 }

@@ -2,7 +2,6 @@ package com.yt.app.api.v1.vo;
 
 import com.yt.app.common.base.BaseVO;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,16 +29,12 @@ public class SysRoleScopeListVO extends BaseVO {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@ApiModelProperty("主键ID")
 	private Long id;
 
-	@ApiModelProperty("租户ID")
 	private Integer tenantId;
 
-	@ApiModelProperty("角色ID")
 	private Long roleId;
 
-	@ApiModelProperty("数据权限ID")
 	private Long scopeId;
 
 	public void handleData() {
