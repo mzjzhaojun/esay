@@ -128,4 +128,17 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		return new YtResponseEntity<Object>(new YtBody(data));
 	}
 
+	/**
+	 * tron测试
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/generateaddress", method = RequestMethod.GET)
+	public YtResponseEntity<Object> generateaddress(HttpServletRequest request, HttpServletResponse response) {
+		TronUtil.generateAddress();
+		return new YtResponseEntity<Object>(new YtBody(1));
+	}
+
 }

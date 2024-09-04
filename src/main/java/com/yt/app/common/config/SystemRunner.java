@@ -25,6 +25,10 @@ import com.yt.app.common.util.RsaUtil;
 @Slf4j
 @Component
 public class SystemRunner implements CommandLineRunner {
+
+	@Autowired
+	YtConfig appConfig;
+
 	@Autowired
 	private RoleService roleservice;
 
@@ -52,7 +56,9 @@ public class SystemRunner implements CommandLineRunner {
 		roleservice.refreshSuperAdminPerm();
 
 		// 注册机器人
-		tgbotservice.initBot();
+		if (!appConfig.getWorkerKey().equals("1")) {
+			tgbotservice.initBot();
+		}
 
 		log.info("服务初始化之后，执行方法 end...");
 	}

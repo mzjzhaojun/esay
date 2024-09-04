@@ -59,11 +59,16 @@ public class TronUtil {
 	}
 
 	public static List<String> generateAddress() {
-		// generate random address
-		// SECP256K1.KeyPair kp = SECP256K1.KeyPair.generate();
-
-		// SECP256K1.PublicKey pubKey = kp.getPublicKey();
-
+		
+//		ECKey key = new ECKey();
+//	    String publicAddress = key.to
+//	    System.out.println("Private Key: " + key.getPrivateKeyAsHex());
+//	    System.out.println("Public Address: " + publicAddress);
+//	    
+//		// generate random address
+//		SECP256K1.KeyPair kp = SECP256K1.KeyPair.generate();
+//
+//		SECP256K1.PublicKey pubKey = kp.getPublicKey();
 //		Keccak.Digest256 digest = new Keccak.Digest256();
 //		digest.update(pubKey.getEncoded(), 0, 64);
 //		byte[] raw = digest.digest();
