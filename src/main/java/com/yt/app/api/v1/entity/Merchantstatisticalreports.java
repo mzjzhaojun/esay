@@ -35,7 +35,7 @@ public class Merchantstatisticalreports extends YtBaseEntity<Merchantstatistical
 	Integer successorder;
 	Double todayorderamount;
 	Double todaysuccessorderamount;
-	Integer type;
+	String dateval;
 	String remark;
 	Integer version;
 }

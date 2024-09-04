@@ -191,13 +191,14 @@
 			<if test="status != null and status != ''">
 				and status = #{status}
 			</if>
+			<if test="dateval != null and dateval != ''">
+				and create_time LIKE CONCAT(#{dateval} , '%')
+			</if>
 			<if test="qrcodeaislename != null and qrcodeaislename != ''">
-				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename}
-				, '%' )
+				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename}, '%' )
 			</if>
 			<if test="merchantname != null and merchantname != ''">
-				and merchantname LIKE CONCAT( '%', #{merchantname} , '%'
-				)
+				and merchantname LIKE CONCAT( '%', #{merchantname} , '%')
 			</if>
 			<if test="stime != null and etime != ''">
 				and create_time BETWEEN #{stime} AND #{etime}

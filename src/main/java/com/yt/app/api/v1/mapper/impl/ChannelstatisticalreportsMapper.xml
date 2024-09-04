@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.ChannelstatisticalreportsMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,channelid,todayincome,incomecount,incomeuserpaycount,incomeuserpaysuccesscount,balance,todayorder,successorder,todayorderamount,todaysuccessorderamount,type,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,userid,channelid,todayincome,incomecount,incomeuserpaycount,incomeuserpaysuccesscount,balance,todayorder,successorder,todayorderamount,todaysuccessorderamount,dateval,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -18,18 +18,18 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Channelstatisticalreports">
 		insert into
-		channelstatisticalreports(id,userid,channelid,todayincome,incomecount,incomeuserpaycount,incomeuserpaysuccesscount,balance,todayorder,successorder,todayorderamount,todaysuccessorderamount,type,create_by,create_time,update_by,update_time,remark)
+		channelstatisticalreports(id,userid,channelid,todayincome,incomecount,incomeuserpaycount,incomeuserpaysuccesscount,balance,todayorder,successorder,todayorderamount,todaysuccessorderamount,dateval,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{userid},#{channelid},#{todayincome},#{incomecount},#{incomeuserpaycount},#{incomeuserpaysuccesscount},#{balance},#{todayorder},#{successorder},#{todayorderamount},#{todaysuccessorderamount},#{type},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{userid},#{channelid},#{todayincome},#{incomecount},#{incomeuserpaycount},#{incomeuserpaysuccesscount},#{balance},#{todayorder},#{successorder},#{todayorderamount},#{todaysuccessorderamount},#{dateval},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		channelstatisticalreports(id,tenant_id,userid,channelid,todayincome,incomecount,balance,todayorder,successorder,todayorderamount,todaysuccessorderamount,type,create_by,create_time,update_by,update_time,remark)
+		channelstatisticalreports(id,tenant_id,userid,channelid,todayincome,incomecount,balance,todayorder,successorder,todayorderamount,todaysuccessorderamount,dateval,create_by,create_time,update_by,update_time,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{userid},#{channelid},#{todayincome},#{incomecount},#{balance},#{todayorder},#{successorder},#{todayorderamount},#{todaysuccessorderamount},#{type},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+			(#{id},#{tenant_id},#{userid},#{channelid},#{todayincome},#{incomecount},#{balance},#{todayorder},#{successorder},#{todayorderamount},#{todaysuccessorderamount},#{dateval},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -72,8 +72,8 @@
 			<if test="todaysuccessorderamount != null">
 				todaysuccessorderamount= #{todaysuccessorderamount},
 			</if>
-			<if test="type != null">
-				type= #{type},
+			<if test="dateval != null">
+				dateval= #{dateval},
 			</if>
 			<if test="create_by != null">
 				create_by= #{create_by},

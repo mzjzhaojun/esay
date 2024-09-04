@@ -1,10 +1,12 @@
 package com.yt.app.api.v1.controller;
 
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
 import com.yt.app.common.common.yt.YtResponseEntity;
 
@@ -55,4 +57,24 @@ public class ChannelaccountorderController extends YtBaseEncipherControllerImpl<
 		service.incomemanual(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(1));
 	}
+	
+//	@RequestMapping(value = "/download", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+//	public ResponseEntity<InputStreamResource> download(YtRequestDecryptEntity<Object> requestEntity,
+//			HttpServletRequest request, HttpServletResponse response) throws IOException {
+//		ByteArrayOutputStream outputStream = service
+//				.download(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+//		InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(outputStream.toByteArray()));
+//		return ResponseEntity.ok().header("Content-Disposition", "attachment; filename=test-export.xlsx")
+//				.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
+//	}
+//
+//	@RequestMapping(value = "/reconciliation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+//	public ResponseEntity<InputStreamResource> reconciliation(YtRequestDecryptEntity<Object> requestEntity,
+//			HttpServletRequest request, HttpServletResponse response) throws IOException {
+//		ByteArrayOutputStream outputStream = service
+//				.download(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+//		InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(outputStream.toByteArray()));
+//		return ResponseEntity.ok().header("Content-Disposition", "attachment; filename=test-export.xlsx")
+//				.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
+//	}
 }

@@ -35,7 +35,7 @@ public class ChannelstatisticalreportsVO extends BaseVO {
 	Integer successorder;
 	Double todayorderamount;
 	Double todaysuccessorderamount;
-	Integer type;
+	String dateval;
 	Long create_by;
 	java.util.Date create_time;
 	Long update_by;

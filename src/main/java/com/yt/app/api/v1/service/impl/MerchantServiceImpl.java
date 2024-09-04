@@ -327,13 +327,14 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	}
 
 	@Override
-	public void updateDayValue(Merchant m) {
+	public void updateDayValue(Merchant m, String date) {
 		RLock lock = RedissonUtil.getLock(m.getId());
 		try {
 			lock.lock();
 			TenantIdContext.setTenantId(m.getTenant_id());
 			// 插入报表数据
 			Merchantstatisticalreports msr = new Merchantstatisticalreports();
+			msr.setDateval(date);
 			msr.setBalance(m.getBalance());
 			msr.setUserid(m.getUserid());
 			msr.setMerchantid(m.getId());

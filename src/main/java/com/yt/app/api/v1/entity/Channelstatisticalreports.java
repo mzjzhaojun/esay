@@ -35,7 +35,7 @@ public class Channelstatisticalreports extends YtBaseEntity<Channelstatisticalre
 	Integer successorder;
 	Double todayorderamount;
 	Double todaysuccessorderamount;
-	Integer type;
+	String dateval;
 	String remark;
 	Integer version;
 }

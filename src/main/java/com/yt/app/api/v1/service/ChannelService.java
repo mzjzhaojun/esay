@@ -30,5 +30,5 @@ public interface ChannelService extends YtIBaseService<Channel, Long> {
 	void updateIncome(Income t);
 
 	//
-	void updateDayValue(Channel c);
+	void updateDayValue(Channel c, String date);
 }

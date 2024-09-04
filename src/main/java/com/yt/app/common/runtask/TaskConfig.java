@@ -40,6 +40,7 @@ import com.yt.app.common.runnable.GetExchangeChannelOrderNumThread;
 import com.yt.app.common.runnable.GetPayoutChannelOrderNumThread;
 import com.yt.app.common.runnable.NotifyQrcodeIncomeThread;
 import com.yt.app.common.runnable.NotifyTyPayoutThread;
+import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.RedisUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -116,18 +117,18 @@ public class TaskConfig {
 		TenantIdContext.removeFlag();
 		// 系统
 		systemstatisticalreportsservice.updateDayValue();
-
+		String date = DateTimeUtil.getDateTime(new Date(), DateTimeUtil.DEFAULT_DATE_FORMAT);
 		// 商户
 		List<Merchant> listm = merchantmapper.list(new HashMap<String, Object>());
 		listm.forEach(m -> {
 			// 单日数据
-			merchantservice.updateDayValue(m);
+			merchantservice.updateDayValue(m,date);
 		});
 		// 渠道
 		List<Channel> listc = channelmapper.list(new HashMap<String, Object>());
 		listc.forEach(c -> {
 			// 单日数据
-			channelservice.updateDayValue(c);
+			channelservice.updateDayValue(c,date);
 		});
 		// 飞机商户
 		List<Tgmerchantgroup> listtmg = tgmerchantgroupmapper.list(new HashMap<String, Object>());

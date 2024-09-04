@@ -237,13 +237,14 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	}
 
 	@Override
-	public void updateDayValue(Channel c) {
+	public void updateDayValue(Channel c, String date) {
 		RLock lock = RedissonUtil.getLock(c.getId());
 		try {
 			lock.lock();
 			TenantIdContext.setTenantId(c.getTenant_id());
 			// 插入报表数据
 			Channelstatisticalreports csr = new Channelstatisticalreports();
+			csr.setDateval(date);
 			csr.setBalance(c.getBalance());
 			csr.setUserid(c.getUserid());
 			csr.setChannelid(c.getId());
@@ -254,7 +255,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 			csr.setIncomeuserpaycount(imaov.getRealamount());
 			csr.setTodayorder(imaov.getOrdercount());
 			csr.setTodayorderamount(imaov.getAmount());
-			
+
 			QrcodeaccountorderVO imaovsuccess = qrcodeaccountordermapper.countSuccessOrder(c.getUserid());
 			csr.setIncomeuserpaysuccesscount(imaovsuccess.getRealamount());
 			csr.setSuccessorder(imaovsuccess.getOrdercount());

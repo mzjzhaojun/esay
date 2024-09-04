@@ -30,7 +30,7 @@ public class HandlerInterceptorForRsaKey implements HandlerInterceptor {
 
 	private static final String SIGN = "sign";
 
-	private static final String REAL_IP = "X-Real-IP";
+	private static final String REAL_IP = "X-Forwarded-For";
 
 	/**
 	 * 在业务处理器处理请求之前被调用。预处理，可以进行编码、安全控制、权限校验等处理；
@@ -39,7 +39,12 @@ public class HandlerInterceptorForRsaKey implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		String ip = request.getHeader(REAL_IP);
-		AuthContext.setIp(ip);
+		if (ip != null && ip.indexOf(",") != -1) {
+			String realip = ip.substring(0, ip.indexOf(","));
+			AuthContext.setIp(realip);
+		} else {
+			AuthContext.setIp(ip);
+		}
 		String siang = request.getHeader(SIGNA);
 		if (StringUtils.isNotBlank(siang)) {
 			AuthContext.setKey(siang);

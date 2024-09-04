@@ -67,4 +67,15 @@ public class IncomemerchantaccountorderController
 		return ResponseEntity.ok().header("Content-Disposition", "attachment; filename=test-export.xlsx")
 				.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
 	}
+
+	@RequestMapping(value = "/reconciliation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<InputStreamResource> reconciliation(YtRequestDecryptEntity<Object> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+		ByteArrayOutputStream outputStream = service
+				.reconciliation(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(outputStream.toByteArray()));
+		return ResponseEntity.ok().header("Content-Disposition", "attachment; filename=test-export.xlsx")
+				.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
+	}
+
 }

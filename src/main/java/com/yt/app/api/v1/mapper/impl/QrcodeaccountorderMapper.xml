@@ -168,6 +168,9 @@
 			<if test="status != null and status != ''">
 				and status = #{status}
 			</if>
+			<if test="dateval != null and dateval != ''">
+				and create_time LIKE CONCAT(#{dateval} , '%')
+			</if>
 			<if test="qrcodeaislename != null and qrcodeaislename != ''">
 				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename} , '%' )
 			</if>

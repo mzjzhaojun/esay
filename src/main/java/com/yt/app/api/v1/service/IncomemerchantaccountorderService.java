@@ -20,4 +20,6 @@ public interface IncomemerchantaccountorderService extends YtIBaseService<Income
 	YtIPage<IncomemerchantaccountorderVO> page(Map<String, Object> param);
 
 	ByteArrayOutputStream download(Map<String, Object> param) throws IOException;
+	
+	ByteArrayOutputStream reconciliation(Map<String, Object> param) throws IOException;
 }
