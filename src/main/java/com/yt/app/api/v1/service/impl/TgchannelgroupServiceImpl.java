@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.service.TgchannelgroupService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,6 +42,7 @@ public class TgchannelgroupServiceImpl extends YtBaseServiceImpl<Tgchannelgroup,
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Tgchannelgroup> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -53,12 +56,14 @@ public class TgchannelgroupServiceImpl extends YtBaseServiceImpl<Tgchannelgroup,
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tgchannelgroup get(Long id) {
 		Tgchannelgroup t = mapper.get(id);
 		return t;
 	}
 
 	@Override
+	@Transactional
 	public Integer putchannel(Tgchannelgroup t) {
 		mapper.updatechannelid(t.getChannelid());
 		Channel ct = channelmapper.get(t.getChannelid());

@@ -287,6 +287,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public PayResultVO query(String merchantordernum) {
 		Payout pt = mapper.getByMerchantOrdernum(merchantordernum);
 		if (pt == null) {
@@ -302,6 +303,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
+	@Transactional
 	public YtBody tycallbackpay(SysTyOrder so) {
 		RLock lock = RedissonUtil.getLock(so.getTypay_order_id());
 		try {
@@ -340,6 +342,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	// 盘口提交订单
 	@Override
+	@Transactional
 	public PayResultVO submit(PaySubmitDTO ss) {
 
 		if (ss.getMerchantid().length() > 10) {
@@ -530,6 +533,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<PayoutVO> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -697,6 +701,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
+	@Transactional
 	public void payoutmanual(Payout pt) {
 		User u = usermapper.get(SysUserContext.getUserId());
 		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(pt.getRemark()),
@@ -710,6 +715,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public PayResultVO queryblance(String merchantid) {
 		Merchant mt = merchantmapper.getByCode(merchantid);
 		Assert.notNull(mt, "没有找到商户!");

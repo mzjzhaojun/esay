@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.QrcodeaccountMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountrecordMapper;
 import com.yt.app.api.v1.service.QrcodeaccountService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Qrcodeaccount;
@@ -15,6 +16,7 @@ import com.yt.app.api.v1.entity.Qrcodeaccountrecord;
 import com.yt.app.api.v1.vo.QrcodeaccountVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.RedissonUtil;
 
@@ -44,18 +46,21 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Qrcodeaccount> list(Map<String, Object> param) {
 		List<Qrcodeaccount> list = mapper.list(param);
 		return new YtPageBean<Qrcodeaccount>(list);
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Qrcodeaccount get(Long id) {
 		Qrcodeaccount t = mapper.get(id);
 		return t;
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<QrcodeaccountVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {
@@ -183,6 +188,7 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Qrcodeaccount getData() {
 		Qrcodeaccount t = mapper.getByUserId(SysUserContext.getUserId());
 		return t;

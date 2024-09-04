@@ -7,12 +7,15 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.service.TgmerchantgroupService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.vo.TgmerchantgroupVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -40,18 +43,21 @@ public class TgmerchantgroupServiceImpl extends YtBaseServiceImpl<Tgmerchantgrou
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Tgmerchantgroup> list(Map<String, Object> param) {
 		List<Tgmerchantgroup> list = mapper.list(param);
 		return new YtPageBean<Tgmerchantgroup>(list);
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tgmerchantgroup get(Long id) {
 		Tgmerchantgroup t = mapper.get(id);
 		return t;
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<TgmerchantgroupVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {

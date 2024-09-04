@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.DbConnectionUtil;
 
@@ -593,6 +595,8 @@ public class YtAutoCode {
 					this.L.write("import " + DbConnectionUtil.basePage + "." + "vo." + bt + "VO;\r\n");
 					this.L.write("import com.yt.app.common.common.yt.YtIPage;\r\n");
 					this.L.write("import com.yt.app.common.common.yt.YtPageBean;\r\n");
+					this.L.write("import com.yt.app.common.annotation.YtDataSourceAnnotation;\r\n");
+					this.L.write("import com.yt.app.common.enums.YtDataSourceEnum;\r\n");
 					this.L.write("import java.util.Collections;\r\n");
 					this.L.write("import java.util.List;\r\n");
 					this.L.write("import java.util.Map;\r\n");
@@ -618,17 +622,20 @@ public class YtAutoCode {
 					this.L.write("}\r\n");
 					this.L.write("\r\n");
 					this.L.write("@Override\r\n");
+					this.L.write("@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)\r\n");
 					this.L.write("public YtIPage<" + bt + "> list(Map<String, Object> param) {\r\n");
 					this.L.write("List<" + bt + "> list = mapper.list(param);\r\n");
 					this.L.write("return new YtPageBean<" + bt + ">(list);\r\n");
 					this.L.write("}\r\n");
 					this.L.write("\r\n");
 					this.L.write("@Override\r\n");
+					this.L.write("@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)\r\n");
 					this.L.write("public " + bt + " get(Long id) {\r\n");
 					this.L.write("" + bt + " t = mapper.get(id);\r\n");
 					this.L.write("return t;\r\n");
 					this.L.write("}\r\n");
 					this.L.write("@Override\r\n");
+					this.L.write("@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)\r\n");
 					this.L.write("public YtIPage<" + bt + "VO> page(Map<String, Object> param) {\r\n");
 					this.L.write("int count = mapper.countlist(param);\r\n");
 					this.L.write("if (count == 0) {\r\n");

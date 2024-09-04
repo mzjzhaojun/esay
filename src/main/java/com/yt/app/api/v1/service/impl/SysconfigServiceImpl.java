@@ -87,6 +87,7 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Sysconfig getData() {
 		return mapper.getByName(ServiceConstant.SYSTEM_PAYCONFIG_EXCHANGE);
 	}

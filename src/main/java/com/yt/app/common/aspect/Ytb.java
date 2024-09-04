@@ -44,7 +44,6 @@ public class Ytb {
 				log.info("使用从数据库");
 				this.j.n();
 			} else {
-				log.info("使用主数据库");
 				this.j.o();
 			}
 		} else {

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.MerchantcustomerbanksMapper;
 import com.yt.app.api.v1.mapper.SysbankMapper;
 import com.yt.app.api.v1.service.MerchantcustomerbanksService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Exchange;
@@ -14,6 +15,7 @@ import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Sysbank;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 
 import java.util.Collections;
 import java.util.List;
@@ -85,6 +87,7 @@ public class MerchantcustomerbanksServiceImpl extends YtBaseServiceImpl<Merchant
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Merchantcustomerbanks> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -101,6 +104,7 @@ public class MerchantcustomerbanksServiceImpl extends YtBaseServiceImpl<Merchant
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Merchantcustomerbanks get(Long id) {
 		Merchantcustomerbanks t = mapper.get(id);
 		return t;

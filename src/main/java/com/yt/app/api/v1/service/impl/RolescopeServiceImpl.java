@@ -77,7 +77,7 @@ public class RolescopeServiceImpl extends YtBaseServiceImpl<Rolescope, Long> imp
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional
 	public void saveScopeData(SysRoleReScopeSaveDTO params) {
 		Long roleId = params.getRoleId();
 		List<Long> scopeIdList = params.getScopeIdList();

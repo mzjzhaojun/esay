@@ -41,7 +41,7 @@ import com.yt.app.common.util.FileUtil;
  */
 
 @RestController
-@RequestMapping("/rest/v1/file")
+@RequestMapping("/rest/v2/file")
 public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 
 	@Autowired

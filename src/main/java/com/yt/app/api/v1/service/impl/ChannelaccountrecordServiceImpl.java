@@ -55,6 +55,7 @@ public class ChannelaccountrecordServiceImpl extends YtBaseServiceImpl<Channelac
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Channelaccountrecord get(Long id) {
 		Channelaccountrecord t = mapper.get(id);
 		return t;

@@ -5,11 +5,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.TglabelMapper;
 import com.yt.app.api.v1.service.TglabelService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Tglabel;
 import com.yt.app.api.v1.vo.TglabelVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -33,18 +36,21 @@ public class TglabelServiceImpl extends YtBaseServiceImpl<Tglabel, Long> impleme
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Tglabel> list(Map<String, Object> param) {
 		List<Tglabel> list = mapper.list(param);
 		return new YtPageBean<Tglabel>(list);
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tglabel get(Long id) {
 		Tglabel t = mapper.get(id);
 		return t;
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<TglabelVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {

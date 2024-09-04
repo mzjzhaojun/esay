@@ -80,6 +80,7 @@ public class AislechannelServiceImpl extends YtBaseServiceImpl<Aislechannel, Lon
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<AislechannelVO> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {

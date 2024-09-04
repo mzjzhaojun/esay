@@ -10,6 +10,7 @@ import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
 import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.api.v1.service.QrcodeaccountorderService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
@@ -19,6 +20,7 @@ import com.yt.app.api.v1.entity.Qrcodeaccountorder;
 import com.yt.app.api.v1.vo.QrcodeaccountorderVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.RedisUtil;
 
@@ -90,18 +92,21 @@ public class QrcodeaccountorderServiceImpl extends YtBaseServiceImpl<Qrcodeaccou
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Qrcodeaccountorder> list(Map<String, Object> param) {
 		List<Qrcodeaccountorder> list = mapper.list(param);
 		return new YtPageBean<Qrcodeaccountorder>(list);
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Qrcodeaccountorder get(Long id) {
 		Qrcodeaccountorder t = mapper.get(id);
 		return t;
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<QrcodeaccountorderVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {

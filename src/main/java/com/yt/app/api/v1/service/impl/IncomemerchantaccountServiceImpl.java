@@ -57,18 +57,21 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Incomemerchantaccount> list(Map<String, Object> param) {
 		List<Incomemerchantaccount> list = mapper.list(param);
 		return new YtPageBean<Incomemerchantaccount>(list);
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Incomemerchantaccount get(Long id) {
 		Incomemerchantaccount t = mapper.get(id);
 		return t;
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<IncomemerchantaccountVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {

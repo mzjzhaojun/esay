@@ -299,6 +299,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Exchange query(String channelordernum) {
 		Exchange pt = mapper.getByChannelOrdernum(channelordernum);
 		return pt;
@@ -506,6 +507,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<ExchangeVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {

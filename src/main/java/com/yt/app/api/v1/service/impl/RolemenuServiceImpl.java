@@ -114,7 +114,7 @@ public class RolemenuServiceImpl extends YtBaseServiceImpl<Rolemenu, Long> imple
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional
 	public void delByRoleId(Long roleId) {
 		this.sysRoleMenuMapper.delete(new LambdaQueryWrapper<Rolemenu>().eq(Rolemenu::getRole_id, roleId));
 	}
