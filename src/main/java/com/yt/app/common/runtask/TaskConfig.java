@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
@@ -46,6 +47,7 @@ import com.yt.app.common.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Profile("slave")
 @Component
 public class TaskConfig {
 
@@ -122,13 +124,13 @@ public class TaskConfig {
 		List<Merchant> listm = merchantmapper.list(new HashMap<String, Object>());
 		listm.forEach(m -> {
 			// 单日数据
-			merchantservice.updateDayValue(m,date);
+			merchantservice.updateDayValue(m, date);
 		});
 		// 渠道
 		List<Channel> listc = channelmapper.list(new HashMap<String, Object>());
 		listc.forEach(c -> {
 			// 单日数据
-			channelservice.updateDayValue(c,date);
+			channelservice.updateDayValue(c, date);
 		});
 		// 飞机商户
 		List<Tgmerchantgroup> listtmg = tgmerchantgroupmapper.list(new HashMap<String, Object>());

@@ -3,5 +3,5 @@ encoding//src/main/java=UTF-8
 encoding//src/main/java/com/yt/app/api/v1/service/impl/ExchangeMerchantaccountServiceImpl.java=UTF-8
 encoding//src/main/java/com/yt/app/api/v1/service/impl/PayoutMerchantaccountServiceImpl.java=UTF-8
 encoding//src/test/java=UTF-8
-encoding/<project>=GBK
+encoding/<project>=UTF-8
 separateDerivedEncodings=true

@@ -1,10 +1,14 @@
 package com.yt.app.common.util;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.bouncycastle.jcajce.provider.digest.Keccak;
-import org.bouncycastle.util.encoders.Hex;
+import org.bitcoinj.crypto.ChildNumber;
+import org.bitcoinj.crypto.DeterministicHierarchy;
+import org.bitcoinj.crypto.DeterministicKey;
+import org.bitcoinj.crypto.HDKeyDerivation;
+import org.bitcoinj.crypto.MnemonicCode;
+import org.bitcoinj.crypto.MnemonicException;
+import org.bitcoinj.wallet.DeterministicSeed;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,11 +17,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.tron.trident.core.key.KeyPair;
+import org.tron.trident.crypto.SECP256K1;
+import org.tron.trident.crypto.tuwenitypes.Bytes32;
+
+import com.google.common.collect.ImmutableList;
 
 import lombok.extern.slf4j.Slf4j;
+import sun.security.provider.SecureRandom;
 
 @Slf4j
 public class TronUtil {
+
+	private final static ImmutableList<ChildNumber> BIP44_ETH_ACCOUNT_ZERO_PATH = ImmutableList
+			.of(new ChildNumber(44, true), new ChildNumber(195, true), ChildNumber.ZERO_HARDENED, ChildNumber.ZERO);
 
 	// 测试tron
 	public static String TestSendTron() {
@@ -60,26 +73,35 @@ public class TronUtil {
 
 	public static List<String> generateAddress() {
 		
-//		ECKey key = new ECKey();
-//	    String publicAddress = key.to
-//	    System.out.println("Private Key: " + key.getPrivateKeyAsHex());
-//	    System.out.println("Public Address: " + publicAddress);
-//	    
-//		// generate random address
-//		SECP256K1.KeyPair kp = SECP256K1.KeyPair.generate();
-//
-//		SECP256K1.PublicKey pubKey = kp.getPublicKey();
-//		Keccak.Digest256 digest = new Keccak.Digest256();
-//		digest.update(pubKey.getEncoded(), 0, 64);
-//		byte[] raw = digest.digest();
-//		byte[] rawAddr = new byte[21];
-//		rawAddr[0] = 0x41;
-//		System.arraycopy(raw, 12, rawAddr, 1, 20);
-//
-//		List keyPairReturn = new ArrayList<String>();
-//		keyPairReturn.add(Hex.toHexString(rawAddr));
-//		keyPairReturn.add(Hex.toHexString(kp.getPrivateKey().getEncoded()));
+//		 ApiWrapper apiWrapper = null;
+//	        try {
+//	            apiWrapper =new ApiWrapper(grpcEndpoint, grpcEndpointSolidity, hexPrivateKey)
 
+		SecureRandom secureRandom = new SecureRandom();
+		byte[] bytes = new byte[DeterministicSeed.DEFAULT_SEED_ENTROPY_BITS / 8];
+		secureRandom.engineNextBytes(bytes);
+		try {
+			List<String> stringList = MnemonicCode.INSTANCE.toMnemonic(bytes);
+			System.out.println(stringList);
+			
+			byte[] seed = MnemonicCode.toSeed(stringList, "");
+			DeterministicKey masterPrivateKey = HDKeyDerivation.createMasterPrivateKey(seed);
+			DeterministicHierarchy deterministicHierarchy = new DeterministicHierarchy(masterPrivateKey);
+			DeterministicKey deterministicKey = deterministicHierarchy.deriveChild(BIP44_ETH_ACCOUNT_ZERO_PATH, false,
+					true, new ChildNumber(0));
+			
+			byte[] byte2 = deterministicKey.getPrivKeyBytes();
+			SECP256K1.PrivateKey privateKey = SECP256K1.PrivateKey.create(Bytes32.wrap(byte2));
+			SECP256K1.KeyPair keyPair2 = SECP256K1.KeyPair.create(privateKey);
+			KeyPair keyPair1 = new KeyPair(keyPair2);
+			
+			
+			System.out.println(keyPair1.toPrivateKey());
+			System.out.println(keyPair1.toHexAddress());
+			System.out.println(keyPair1.toBase58CheckAddress());
+		} catch (MnemonicException.MnemonicLengthException e) {
+			throw new RuntimeException(e);
+		}
 		return null;
 	}
 
