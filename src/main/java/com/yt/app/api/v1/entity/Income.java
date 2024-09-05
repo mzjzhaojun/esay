@@ -52,6 +52,7 @@ public class Income extends YtBaseEntity<Income> {
 	Long backlong;
 	String qrcode;
 	String type;
+	Boolean dynamic;
 	String resulturl;
 	Double fewamount;
 	String notifyurl;

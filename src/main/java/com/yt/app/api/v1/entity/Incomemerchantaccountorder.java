@@ -34,6 +34,7 @@ public class Incomemerchantaccountorder extends YtBaseEntity<Incomemerchantaccou
 	String qrcodecode;
 	String ordernum;
 	String type;
+	Boolean dynamic;
 	Double fewamount;
 	java.util.Date expireddate;
 	Double amount;

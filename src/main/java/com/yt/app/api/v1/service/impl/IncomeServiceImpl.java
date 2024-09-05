@@ -242,7 +242,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());
-		income.setExpireddate(DateTimeUtil.addMinute(qd.getExpireminute() + 10));// 多加10分钟
+		income.setExpireddate(DateTimeUtil.addMinute(qd.getExpireminute() + 3));// 多加3分钟
 		// 通道
 		income.setExpiredminute(qd.getExpireminute());
 		income.setQrcodeaisleid(qas.getId());
@@ -253,6 +253,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setQrcodeid(qd.getId());
 		income.setQrcodename(qd.getName());
 		income.setAmount(Double.valueOf(qs.getPay_amount()));
+		income.setDynamic(qd.getDynamic());
 
 		income.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
@@ -321,6 +322,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qao.setResulturl(income.getResulturl());
 		qao.setMerchantname(income.getMerchantname());
 		qao.setQrocde(income.getQrcode());
+		qao.setDynamic(qd.getDynamic());
 		qao.setStatus(income.getStatus());
 		qao.setQrcodeaislecode(qas.getCode());
 		qao.setChannelid(channel.getId());
@@ -337,6 +339,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		imao.setQrcodeid(income.getQrcodeid());
 		imao.setOrdernum(income.getMerchantorderid());
 		imao.setQrcodecode(qd.getCode());
+		imao.setDynamic(qd.getDynamic());
 		imao.setType(income.getType());
 		imao.setFewamount(income.getFewamount());
 		imao.setAmount(income.getMerchantincomeamount());

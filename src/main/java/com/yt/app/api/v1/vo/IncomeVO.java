@@ -56,6 +56,7 @@ public class IncomeVO extends BaseVO {
 	java.util.Date update_time;
 	String qrcode;
 	String type;
+	Boolean dynamic;
 	String typename;
 	String resulturl;
 	Object fewamount;

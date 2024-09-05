@@ -33,6 +33,7 @@ public class QrcodeaccountorderVO extends BaseVO {
 	String qrcodecode;
 	String ordernum;
 	String type;
+	Boolean dynamic;
 	String typename;
 	Double fewamount;
 	java.util.Date expireddate;

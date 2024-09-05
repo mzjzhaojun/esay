@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.IncomeMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,merchantuserid,ordernum,channelid,merchantid,merchantname,merchantcode,merchantordernum,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislecode,qrcodeaislename,agentid,agentordernum,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,resulturl,fewamount,notifyurl,notifystatus,incomeamount,merchantincomeamount,channelincomeamount,remark,version
+		id,tenant_id,merchantuserid,ordernum,channelid,merchantid,merchantname,merchantcode,merchantordernum,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislecode,qrcodeaislename,agentid,agentordernum,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,dynamic,resulturl,fewamount,notifyurl,notifystatus,incomeamount,merchantincomeamount,channelincomeamount,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -17,9 +17,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Income">
 		insert into
-		income(id,merchantuserid,ordernum,channelid,merchantid,merchantname,merchantcode,merchantordernum,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislecode,qrcodeaislename,agentid,agentordernum,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,resulturl,fewamount,notifyurl,notifystatus,incomeamount,merchantincomeamount,channelincomeamount,remark)
+		income(id,merchantuserid,ordernum,channelid,merchantid,merchantname,merchantcode,merchantordernum,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislecode,qrcodeaislename,agentid,agentordernum,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,dynamic,resulturl,fewamount,notifyurl,notifystatus,incomeamount,merchantincomeamount,channelincomeamount,remark)
 		values
-		(#{id},#{merchantuserid},#{ordernum},#{channelid},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantorderid},#{backforwardurl},#{expireddate},#{expiredminute},#{qrcodeaisleid},#{qrcodeaislecode},#{qrcodeaislename},#{agentid},#{agentordernum},#{agentincome},#{qrcodeid},#{qrcodename},#{qrcodeordernum},#{qrcodeuserid},#{amount},#{realamount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{qrcode},#{type},#{resulturl},#{fewamount},#{notifyurl},#{notifystatus},#{incomeamount},#{merchantincomeamount},#{channelincomeamount},#{remark})
+		(#{id},#{merchantuserid},#{ordernum},#{channelid},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantorderid},#{backforwardurl},#{expireddate},#{expiredminute},#{qrcodeaisleid},#{qrcodeaislecode},#{qrcodeaislename},#{agentid},#{agentordernum},#{agentincome},#{qrcodeid},#{qrcodename},#{qrcodeordernum},#{qrcodeuserid},#{amount},#{realamount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{qrcode},#{type},#{dynamic},#{resulturl},#{fewamount},#{notifyurl},#{notifystatus},#{incomeamount},#{merchantincomeamount},#{channelincomeamount},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">

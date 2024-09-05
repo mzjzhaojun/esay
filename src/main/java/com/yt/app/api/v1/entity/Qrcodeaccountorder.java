@@ -33,6 +33,7 @@ public class Qrcodeaccountorder extends YtBaseEntity<Qrcodeaccountorder> {
 	String qrcodecode;
 	String ordernum;
 	String type;
+	Boolean dynamic;
 	Double fewamount;
 	java.util.Date expireddate;
 	Double amount;
