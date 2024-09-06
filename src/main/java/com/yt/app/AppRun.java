@@ -37,6 +37,6 @@ public class AppRun extends SpringBootServletInitializer {
 	public static void main(String[] args) throws Exception {
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
 		SpringApplication.run(new Class[] { AppRun.class }, args);
-		 //YtAutoCode.u().p(Arrays.asList("tronaddress"));
+		// YtAutoCode.u().p(Arrays.asList("tron"));
 	}
 }

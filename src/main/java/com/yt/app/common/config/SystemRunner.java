@@ -4,15 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.yt.app.api.v1.service.DictService;
 import com.yt.app.api.v1.service.RoleService;
 import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.context.TenantIdContext;
-import com.yt.app.common.runnable.TronGetAddressThread;
-import com.yt.app.common.runnable.TronGetAddressThread2;
 import com.yt.app.common.util.RsaUtil;
 
 /**
@@ -34,9 +31,6 @@ public class SystemRunner implements CommandLineRunner {
 	@Autowired
 	private DictService dictservice;
 
-	@Autowired
-	private ThreadPoolTaskExecutor threadpooltaskexecutor;
-
 	@Override
 	public void run(String... args) throws Exception {
 
@@ -53,13 +47,6 @@ public class SystemRunner implements CommandLineRunner {
 
 		// 刷新初始权限
 		roleservice.refreshSuperAdminPerm();
-
-		// 生成地址
-		TronGetAddressThread tga = new TronGetAddressThread();
-		threadpooltaskexecutor.execute(tga);
-
-		TronGetAddressThread2 tga2 = new TronGetAddressThread2();
-		threadpooltaskexecutor.execute(tga2);
 
 		log.info("system end...");
 	}
