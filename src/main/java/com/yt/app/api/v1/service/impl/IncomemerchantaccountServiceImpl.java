@@ -45,7 +45,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 
 	@Autowired
 	private PayoutMerchantaccountrecordMapper payoutmerchantaccountrecordmapper;
-	
+
 	@Autowired
 	private MerchantService merchantservice;
 

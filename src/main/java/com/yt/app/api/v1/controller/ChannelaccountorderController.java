@@ -1,6 +1,5 @@
 package com.yt.app.api.v1.controller;
 
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -57,7 +56,7 @@ public class ChannelaccountorderController extends YtBaseEncipherControllerImpl<
 		service.incomemanual(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(1));
 	}
-	
+
 //	@RequestMapping(value = "/download", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 //	public ResponseEntity<InputStreamResource> download(YtRequestDecryptEntity<Object> requestEntity,
 //			HttpServletRequest request, HttpServletResponse response) throws IOException {

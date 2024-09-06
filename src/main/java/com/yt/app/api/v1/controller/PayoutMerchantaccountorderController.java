@@ -125,8 +125,7 @@ public class PayoutMerchantaccountorderController
 		service.incomemanual(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(1));
 	}
-	
-	
+
 	/**
 	 * 
 	 * 商户代收提现
@@ -140,7 +139,7 @@ public class PayoutMerchantaccountorderController
 		Integer i = service.incomewithdraw(YtRequestDecryptEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
-	
+
 	/**
 	 * 处理代收提现
 	 * 
@@ -150,10 +149,11 @@ public class PayoutMerchantaccountorderController
 	 * @return
 	 */
 	@RequestMapping(value = "/incomewithdrawmanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> incomewithdrawmanual(YtRequestDecryptEntity<PayoutMerchantaccountorder> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEntity<Object> incomewithdrawmanual(
+			YtRequestDecryptEntity<PayoutMerchantaccountorder> requestEntity, HttpServletRequest request,
+			HttpServletResponse response) {
 		service.incomewithdrawmanual(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(1));
 	}
-	
+
 }

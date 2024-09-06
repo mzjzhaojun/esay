@@ -28,11 +28,11 @@ import com.yt.app.common.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GetPayoutChannelOrderNumThread implements Runnable {
+public class PayoutGetChannelOrderNumThread implements Runnable {
 
 	private Long id;
 
-	public GetPayoutChannelOrderNumThread(Long _id) {
+	public PayoutGetChannelOrderNumThread(Long _id) {
 		id = _id;
 	}
 

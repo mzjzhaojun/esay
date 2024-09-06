@@ -36,7 +36,7 @@ public class DbConnectionUtil {
 	public static String version;
 	public static String pagefilePath;
 
-	private static String FILE_PATH_NAME = "/application.properties";
+	private static String FILE_PATH_NAME = "/application-dev.properties";
 
 	private void init() {
 		try {

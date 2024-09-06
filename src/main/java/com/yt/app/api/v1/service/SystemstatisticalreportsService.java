@@ -15,6 +15,6 @@ import com.yt.app.common.common.yt.YtIPage;
 
 public interface SystemstatisticalreportsService extends YtIBaseService<Systemstatisticalreports, Long> {
 	YtIPage<SystemstatisticalreportsVO> page(Map<String, Object> param);
-	
+
 	void updateDayValue();
 }

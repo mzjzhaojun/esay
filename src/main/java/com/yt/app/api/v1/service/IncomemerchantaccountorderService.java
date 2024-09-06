@@ -16,10 +16,10 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface IncomemerchantaccountorderService extends YtIBaseService<Incomemerchantaccountorder, Long> {
-	
+
 	YtIPage<IncomemerchantaccountorderVO> page(Map<String, Object> param);
 
 	ByteArrayOutputStream download(Map<String, Object> param) throws IOException;
-	
+
 	ByteArrayOutputStream reconciliation(Map<String, Object> param) throws IOException;
 }

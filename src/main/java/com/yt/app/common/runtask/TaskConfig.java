@@ -37,8 +37,8 @@ import com.yt.app.api.v1.service.SystemstatisticalreportsService;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.resource.DictionaryResource;
-import com.yt.app.common.runnable.GetExchangeChannelOrderNumThread;
-import com.yt.app.common.runnable.GetPayoutChannelOrderNumThread;
+import com.yt.app.common.runnable.ExchangeGetChannelOrderNumThread;
+import com.yt.app.common.runnable.PayoutGetChannelOrderNumThread;
 import com.yt.app.common.runnable.NotifyQrcodeIncomeThread;
 import com.yt.app.common.runnable.NotifyTyPayoutThread;
 import com.yt.app.common.util.DateTimeUtil;
@@ -196,7 +196,7 @@ public class TaskConfig {
 			log.info("代付获取渠道单号ID：" + p.getId() + " 状态：" + p.getStatus());
 			p.setStatus(DictionaryResource.PAYOUTSTATUS_55);
 			if (payoutmapper.put(p) > 0) {
-				GetPayoutChannelOrderNumThread nf = new GetPayoutChannelOrderNumThread(p.getId());
+				PayoutGetChannelOrderNumThread nf = new PayoutGetChannelOrderNumThread(p.getId());
 				threadpooltaskexecutor.execute(nf);
 			}
 		}
@@ -215,7 +215,7 @@ public class TaskConfig {
 			log.info("换汇渠道单号ID：" + p.getId() + " 状态：" + p.getStatus());
 			p.setStatus(DictionaryResource.PAYOUTSTATUS_55);
 			if (exchangemapper.put(p) > 0) {
-				GetExchangeChannelOrderNumThread nf = new GetExchangeChannelOrderNumThread(p.getId());
+				ExchangeGetChannelOrderNumThread nf = new ExchangeGetChannelOrderNumThread(p.getId());
 				threadpooltaskexecutor.execute(nf);
 			}
 		}

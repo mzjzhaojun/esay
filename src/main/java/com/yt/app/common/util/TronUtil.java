@@ -1,5 +1,6 @@
 package com.yt.app.common.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bitcoinj.crypto.ChildNumber;
@@ -7,7 +8,7 @@ import org.bitcoinj.crypto.DeterministicHierarchy;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDKeyDerivation;
 import org.bitcoinj.crypto.MnemonicCode;
-import org.bitcoinj.crypto.MnemonicException;
+import org.bitcoinj.crypto.MnemonicException.MnemonicLengthException;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -71,38 +72,37 @@ public class TronUtil {
 		return data;
 	}
 
-	public static List<String> generateAddress() {
-		
-//		 ApiWrapper apiWrapper = null;
-//	        try {
-//	            apiWrapper =new ApiWrapper(grpcEndpoint, grpcEndpointSolidity, hexPrivateKey)
-
-		SecureRandom secureRandom = new SecureRandom();
-		byte[] bytes = new byte[DeterministicSeed.DEFAULT_SEED_ENTROPY_BITS / 8];
-		secureRandom.engineNextBytes(bytes);
+	public static List<String> generateAddress(List<String> stringList) {
+		List<String> listaddress = new ArrayList<String>();
 		try {
-			List<String> stringList = MnemonicCode.INSTANCE.toMnemonic(bytes);
-			System.out.println(stringList);
-			
 			byte[] seed = MnemonicCode.toSeed(stringList, "");
 			DeterministicKey masterPrivateKey = HDKeyDerivation.createMasterPrivateKey(seed);
 			DeterministicHierarchy deterministicHierarchy = new DeterministicHierarchy(masterPrivateKey);
 			DeterministicKey deterministicKey = deterministicHierarchy.deriveChild(BIP44_ETH_ACCOUNT_ZERO_PATH, false,
 					true, new ChildNumber(0));
-			
 			byte[] byte2 = deterministicKey.getPrivKeyBytes();
 			SECP256K1.PrivateKey privateKey = SECP256K1.PrivateKey.create(Bytes32.wrap(byte2));
 			SECP256K1.KeyPair keyPair2 = SECP256K1.KeyPair.create(privateKey);
 			KeyPair keyPair1 = new KeyPair(keyPair2);
-			
-			
-			System.out.println(keyPair1.toPrivateKey());
-			System.out.println(keyPair1.toHexAddress());
-			System.out.println(keyPair1.toBase58CheckAddress());
-		} catch (MnemonicException.MnemonicLengthException e) {
-			throw new RuntimeException(e);
+			listaddress.add(keyPair1.toPrivateKey());
+			listaddress.add(keyPair1.toHexAddress());
+			listaddress.add(keyPair1.toBase58CheckAddress());
+		} catch (Exception e) {
+			return null;
+		}
+		return listaddress;
+	}
+
+	public static List<String> mnemoniCode() {
+		SecureRandom secureRandom = new SecureRandom();
+		byte[] bytes = new byte[DeterministicSeed.DEFAULT_SEED_ENTROPY_BITS / 8];
+		secureRandom.engineNextBytes(bytes);
+		try {
+			List<String> stringList = MnemonicCode.INSTANCE.toMnemonic(bytes);
+			return stringList;
+		} catch (MnemonicLengthException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
-
 }

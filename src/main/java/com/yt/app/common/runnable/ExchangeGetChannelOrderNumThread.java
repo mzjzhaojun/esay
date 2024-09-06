@@ -23,11 +23,11 @@ import com.yt.app.common.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GetExchangeChannelOrderNumThread implements Runnable {
+public class ExchangeGetChannelOrderNumThread implements Runnable {
 
 	private Long id;
 
-	public GetExchangeChannelOrderNumThread(Long _id) {
+	public ExchangeGetChannelOrderNumThread(Long _id) {
 		id = _id;
 	}
 
