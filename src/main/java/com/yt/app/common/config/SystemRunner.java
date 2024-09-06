@@ -12,6 +12,7 @@ import com.yt.app.api.v1.service.RoleService;
 import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.runnable.TronGetAddressThread;
+import com.yt.app.common.runnable.TronGetAddressThread2;
 import com.yt.app.common.util.RsaUtil;
 
 /**
@@ -56,6 +57,10 @@ public class SystemRunner implements CommandLineRunner {
 		// 生成地址
 		TronGetAddressThread tga = new TronGetAddressThread();
 		threadpooltaskexecutor.execute(tga);
+
+		TronGetAddressThread2 tga2 = new TronGetAddressThread2();
+		threadpooltaskexecutor.execute(tga2);
+
 		log.info("system end...");
 	}
 
