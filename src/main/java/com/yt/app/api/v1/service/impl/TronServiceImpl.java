@@ -1,15 +1,9 @@
 package com.yt.app.api.v1.service.impl;
 
+import org.bouncycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
+import org.tron.trident.core.key.KeyPair;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.TronMapper;
 import com.yt.app.api.v1.service.TronService;
@@ -20,10 +14,17 @@ import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.enums.YtDataSourceEnum;
+import com.yt.app.common.util.TronUtil;
+
+import cn.hutool.http.HttpRequest;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigInteger;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,8 +36,12 @@ import java.util.Map;
 @Slf4j
 @Service
 public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements TronService {
+
 	@Autowired
 	private TronMapper mapper;
+
+	// final static String URL = "https://nile.trongrid.io";
+	final static String URL = "https://api.trongrid.io";
 
 	@Override
 	@Transactional
@@ -72,497 +77,359 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 
 	@Override
 	public boolean validateaddress(String address) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("address", address);
+		map.put("visible", true);
 
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/validateaddress",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
-		return false;
+		String sub_url = URL + "/wallet/validateaddress";
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
+				.execute().body();
+		log.info("响应的消息:" + body);
+		return true;
 	}
 
 	@Override
-	public void createaccount(String owneraddress, String address) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
+	public void createaccount(String owneraddress, String toaddress) {
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("owner_address", owneraddress);
+		map.put("account_address", toaddress);
+		map.put("visible", true);
 
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/createaccount",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
-
+		String sub_url = URL + "/wallet/createaccount";
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
+				.execute().body();
+		log.info("响应的消息:" + body);
 	}
 
 	@Override
 	public void getaccount(String address) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("address", address);
+		map.put("visible", true);
 
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/getaccount",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
-
+		String sub_url = URL + "/wallet/getaccount ";
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
+				.execute().body();
+		log.info("响应的消息:" + body);
 	}
 
 	@Override
 	public void updateaccount(String name, String address) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/updateaccount",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
 
 	}
 
 	@Override
 	public void getaccountbalance(String address, Integer block) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/getaccountbalance",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
 
 	}
 
 	@Override
 	public void setaccountid(String address, Long accountid) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/setaccountid",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
 
 	}
 
 	@Override
 	public void getaccountbyid(Long accountid) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/getaccountbyid",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
 
 	}
 
 	@Override
-	public void createtransaction(String toaddress, String owneraddress) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
+	public void createtransaction(String privatekey, String toaddress, String owneraddress, Integer amount) {
+		KeyPair keyPair = new KeyPair(privatekey);
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("owner_address", owneraddress);
+		map.put("to_address", toaddress);
+		map.put("amount", amount);
+		map.put("visible", true);
 
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/createtransaction",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
+		String sub_url = URL + "/wallet/createtransaction";
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
+				.execute().body();
+		log.info("创建交易,响应的消息:" + body);
 
+		JSONObject obj = JSONUtil.parseObj(body);
+		String txId = obj.getStr("txID");
+		byte[] decode = Hex.decode(txId);
+		byte[] bytes = KeyPair.signTransaction(decode, keyPair);
+		String signatureHex = TronUtil.bytesToHex(bytes);
+
+		HashMap<String, Object> parame = new HashMap<>();
+		parame.put("signature", signatureHex);
+		parame.put("txID", txId);
+		parame.put("visible", true);
+		parame.put("raw_data", obj.getJSONObject("raw_data"));
+		parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
+
+		log.info("广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(map));
+
+		broadcasttransaction(parame);
 	}
 
 	@Override
-	public void broadcasttransaction(String signature, String txid) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/broadcasttransaction",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
-
+	public void broadcasttransaction(HashMap<String, Object> map) {
+		String sub_url = URL + "/wallet/broadcasttransaction";
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
+				.execute().body();
+		log.info("响应的消息:" + body);
 	}
 
 	@Override
-	public void broadcasthex(String transaction) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/broadcasthex",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
+	public void broadcasthex(String address) {
 
 	}
 
 	@Override
 	public void getsignweight(String signature, String txid) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/getsignweight",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
 
 	}
 
 	@Override
 	public void getapprovedlist(String signature, String txid) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/getapprovedlist",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
 
 	}
 
 	@Override
 	public void getaccountresource(String address) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/getaccountresource",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
-
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("address", address);
+		map.put("visible", true);
+		String sub_url = URL + "/wallet/getaccountresource";
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
+				.execute().body();
+		log.info("响应的消息:" + body);
 	}
 
 	@Override
 	public void getaccountnet(String address) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/getaccountnet",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("address", address);
+		map.put("visible", true);
+		String sub_url = URL + "/wallet/getaccountnet";
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
+				.execute().body();
+		log.info("响应的消息:" + body);
 
 	}
 
 	@Override
-	public void freezebalancev2(String owneraddress, Integer frozenbalance, String resource) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
+	public void freezebalancev2(String privatekey, String owneraddress, BigInteger frozenbalance, String resource) {
+		KeyPair keyPair = new KeyPair(privatekey);
 
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/freezebalancev2",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("owner_address", owneraddress);
+		map.put("frozen_balance", frozenbalance);
+		map.put("resource", resource);
+		map.put("visible", true);
+		String sub_url = URL + "/wallet/freezebalancev2";
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
+				.execute().body();
+		log.info("响应的消息:" + body);
 
+		JSONObject obj = JSONUtil.parseObj(body);
+		String txId = obj.getStr("txID");
+		byte[] decode = Hex.decode(txId);
+		byte[] bytes = KeyPair.signTransaction(decode, keyPair);
+		String signatureHex = TronUtil.bytesToHex(bytes);
+
+		HashMap<String, Object> parame = new HashMap<>();
+		parame.put("signature", signatureHex);
+		parame.put("txID", txId);
+		parame.put("visible", true);
+		parame.put("raw_data", obj.getJSONObject("raw_data"));
+		parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
+
+		log.info("广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(map));
+
+		broadcasttransaction(parame);
+	}
+
+	@Override
+	public void unfreezebalancev2(String privatekey, String owneraddress, BigInteger frozenbalance, String resource) {
+		KeyPair keyPair = new KeyPair(privatekey);
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("owner_address", owneraddress);
+		map.put("frozen_balance", frozenbalance);
+		map.put("resource", resource);
+		map.put("visible", true);
+		String sub_url = URL + "/wallet/unfreezebalancev2";
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
+				.execute().body();
+		log.info("响应的消息:" + body);
+
+		JSONObject obj = JSONUtil.parseObj(body);
+		String txId = obj.getStr("txID");
+		byte[] decode = Hex.decode(txId);
+		byte[] bytes = KeyPair.signTransaction(decode, keyPair);
+		String signatureHex = TronUtil.bytesToHex(bytes);
+
+		HashMap<String, Object> parame = new HashMap<>();
+		parame.put("signature", signatureHex);
+		parame.put("txID", txId);
+		parame.put("visible", true);
+		parame.put("raw_data", obj.getJSONObject("raw_data"));
+		parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
+
+		log.info("广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(map));
+
+		broadcasttransaction(parame);
+	}
+
+	@Override
+	public void cancelallunfreezev2(String privatekey, String owneraddress) {
+		KeyPair keyPair = new KeyPair(privatekey);
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("owner_address", owneraddress);
+		map.put("visible", true);
+		String sub_url = URL + "/wallet/cancelallunfreezev2";
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
+				.execute().body();
+		log.info("响应的消息:" + body);
+
+		JSONObject obj = JSONUtil.parseObj(body);
+		String txId = obj.getStr("txID");
+		byte[] decode = Hex.decode(txId);
+		byte[] bytes = KeyPair.signTransaction(decode, keyPair);
+		String signatureHex = TronUtil.bytesToHex(bytes);
+
+		HashMap<String, Object> parame = new HashMap<>();
+		parame.put("signature", signatureHex);
+		parame.put("txID", txId);
+		parame.put("visible", true);
+		parame.put("raw_data", obj.getJSONObject("raw_data"));
+		parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
+
+		log.info("广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(map));
+
+		broadcasttransaction(parame);
+	}
+
+	// 将带宽或者能量资源代理给其它账户
+	@Override
+	public void delegateresource(String privatekey, String owneraddress, String receiveraddress, BigInteger balance,
+			String resource, boolean lock, Integer lockperiod) {
+		KeyPair keyPair = new KeyPair(privatekey);
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("owner_address", owneraddress);
+		map.put("receiver_address", receiveraddress);
+		map.put("balance", balance);
+		map.put("resource", resource);
+		map.put("lock", lock);
+		map.put("lock_period", lockperiod);
+		map.put("visible", true);
+		String sub_url = URL + "/wallet/delegateresource";
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
+				.execute().body();
+		log.info("响应的消息:" + body);
+
+		JSONObject obj = JSONUtil.parseObj(body);
+		String txId = obj.getStr("txID");
+		byte[] decode = Hex.decode(txId);
+		byte[] bytes = KeyPair.signTransaction(decode, keyPair);
+		String signatureHex = TronUtil.bytesToHex(bytes);
+
+		HashMap<String, Object> parame = new HashMap<>();
+		parame.put("signature", signatureHex);
+		parame.put("txID", txId);
+		parame.put("visible", true);
+		parame.put("raw_data", obj.getJSONObject("raw_data"));
+		parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
+
+		log.info("广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(map));
+
+		broadcasttransaction(parame);
+	}
+
+	// 取消为目标地址代理的带宽或者能量
+	@Override
+	public void undelegateresource(String privatekey, String owneraddress, String receiveraddress, BigInteger balance,
+			String resource) {
+		KeyPair keyPair = new KeyPair(privatekey);
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("owner_address", owneraddress);
+		map.put("receiver_address", receiveraddress);
+		map.put("balance", balance);
+		map.put("resource", resource);
+		map.put("visible", true);
+		String sub_url = URL + "/wallet/undelegateresource";
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
+				.execute().body();
+		log.info("响应的消息:" + body);
+
+		JSONObject obj = JSONUtil.parseObj(body);
+		String txId = obj.getStr("txID");
+		byte[] decode = Hex.decode(txId);
+		byte[] bytes = KeyPair.signTransaction(decode, keyPair);
+		String signatureHex = TronUtil.bytesToHex(bytes);
+
+		HashMap<String, Object> parame = new HashMap<>();
+		parame.put("signature", signatureHex);
+		parame.put("txID", txId);
+		parame.put("visible", true);
+		parame.put("raw_data", obj.getJSONObject("raw_data"));
+		parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
+
+		log.info("广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(map));
+
+		broadcasttransaction(parame);
 	}
 
 	@Override
 	public void getnowblock() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/getnowblock",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
 
 	}
 
 	@Override
 	public void getblock(String idornum) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/getblock", HttpMethod.POST,
-				httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
 
 	}
 
 	@Override
 	public void getblockbynum(Integer num) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/getblockbynum",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
 
 	}
 
 	@Override
 	public void getblockbyid(String value) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/getblockbyid",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
 
 	}
 
 	@Override
 	public void getblockbylatestnum(Integer num) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/getblockbylatestnum",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
 
 	}
 
 	@Override
 	public void getblockbalance(String hash, Integer number) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/getblockbalance",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
 
 	}
 
 	@Override
 	public void gettransactionbyid(String txid) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/gettransactionbyid",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
 
 	}
 
 	@Override
 	public void gettransactioninfobyid(String txid) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/gettransactioninfobyid",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
 
 	}
 
 	@Override
 	public void gettransactioncountbyblocknum(Integer number) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange(
-				"https://nile.trongrid.io/wallet/gettransactioncountbyblocknum", HttpMethod.POST, httpEntity,
-				Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
 
 	}
 
 	@Override
 	public void gettransactioninfobyblocknum(Integer number) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange(
-				"https://nile.trongrid.io/wallet/gettransactioninfobyblocknum", HttpMethod.POST, httpEntity,
-				Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
 
 	}
 
 	@Override
 	public void getnodeinfo() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/getnodeinfo",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
 
 	}
+
 }

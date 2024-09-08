@@ -3,12 +3,12 @@ package com.yt.app.api.v1.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
-import com.yt.app.api.v1.mapper.TglabelMapper;
+import com.yt.app.api.v1.mapper.TgchannelgrouplabelMapper;
 import com.yt.app.api.v1.service.TglabelService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
-import com.yt.app.api.v1.entity.Tglabel;
-import com.yt.app.api.v1.vo.TglabelVO;
+import com.yt.app.api.v1.entity.Tgchannelgrouplabel;
+import com.yt.app.api.v1.vo.TgchannelgrouplabelVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
@@ -24,39 +24,39 @@ import java.util.Map;
  */
 
 @Service
-public class TglabelServiceImpl extends YtBaseServiceImpl<Tglabel, Long> implements TglabelService {
+public class TglabelServiceImpl extends YtBaseServiceImpl<Tgchannelgrouplabel, Long> implements TglabelService {
 	@Autowired
-	private TglabelMapper mapper;
+	private TgchannelgrouplabelMapper mapper;
 
 	@Override
 	@Transactional
-	public Integer post(Tglabel t) {
+	public Integer post(Tgchannelgrouplabel t) {
 		Integer i = mapper.post(t);
 		return i;
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Tglabel> list(Map<String, Object> param) {
-		List<Tglabel> list = mapper.list(param);
-		return new YtPageBean<Tglabel>(list);
+	public YtIPage<Tgchannelgrouplabel> list(Map<String, Object> param) {
+		List<Tgchannelgrouplabel> list = mapper.list(param);
+		return new YtPageBean<Tgchannelgrouplabel>(list);
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public Tglabel get(Long id) {
-		Tglabel t = mapper.get(id);
+	public Tgchannelgrouplabel get(Long id) {
+		Tgchannelgrouplabel t = mapper.get(id);
 		return t;
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<TglabelVO> page(Map<String, Object> param) {
+	public YtIPage<TgchannelgrouplabelVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {
-			return new YtPageBean<TglabelVO>(Collections.emptyList());
+			return new YtPageBean<TgchannelgrouplabelVO>(Collections.emptyList());
 		}
-		List<TglabelVO> list = mapper.page(param);
-		return new YtPageBean<TglabelVO>(param, list, count);
+		List<TgchannelgrouplabelVO> list = mapper.page(param);
+		return new YtPageBean<TgchannelgrouplabelVO>(param, list, count);
 	}
 }

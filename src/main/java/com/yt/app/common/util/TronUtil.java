@@ -1,5 +1,6 @@
 package com.yt.app.common.util;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,67 +11,18 @@ import org.bitcoinj.crypto.HDKeyDerivation;
 import org.bitcoinj.crypto.MnemonicCode;
 import org.bitcoinj.crypto.MnemonicException.MnemonicLengthException;
 import org.bitcoinj.wallet.DeterministicSeed;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 import org.tron.trident.core.key.KeyPair;
 import org.tron.trident.crypto.SECP256K1;
 import org.tron.trident.crypto.tuwenitypes.Bytes32;
 
 import com.google.common.collect.ImmutableList;
 
-import lombok.extern.slf4j.Slf4j;
 import sun.security.provider.SecureRandom;
 
-@Slf4j
 public class TronUtil {
 
 	private final static ImmutableList<ChildNumber> BIP44_ETH_ACCOUNT_ZERO_PATH = ImmutableList
 			.of(new ChildNumber(44, true), new ChildNumber(195, true), ChildNumber.ZERO_HARDENED, ChildNumber.ZERO);
-
-	// 测试tron
-	public static String TestSendTron() {
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io http://192.168.110.129:8090
-		ResponseEntity<Object> sov = resttemplate.exchange("https://nile.trongrid.io/wallet/getaccount",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
-		return data;
-	}
-
-	public static String CreateAccount() {
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("owner_address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-		map.add("account_address", "418b0F566C0a7940362979a634B0fBD79ce95273FF");
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		// https://nile.trongrid.io
-		ResponseEntity<Object> sov = resttemplate.exchange("http://192.168.110.129:8090/wallet/getaccount",
-				HttpMethod.POST, httpEntity, Object.class);
-		String data = sov.getBody().toString();
-		log.info("tron：" + data);
-		return data;
-	}
 
 	public static List<String> generateAddress(List<String> stringList) {
 		List<String> listaddress = new ArrayList<String>();
@@ -105,4 +57,10 @@ public class TronUtil {
 		}
 		return null;
 	}
+
+	public static String bytesToHex(byte[] bytes) {
+		BigInteger bi = new BigInteger(1, bytes);
+		return String.format("%0" + (bytes.length << 1) + "X", bi);
+	}
+
 }

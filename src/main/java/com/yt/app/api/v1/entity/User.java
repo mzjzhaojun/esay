@@ -40,6 +40,7 @@ public class User extends YtBaseEntity<User> {
 	Long dept_id;
 	List<Long> post_idlist;
 	Integer is_fixed;
+	Integer twostatus;
 	Long accounttype;
 	String accounttypename;
 	Integer is_deleted;

@@ -16,8 +16,8 @@ import com.yt.app.common.util.RequestUtil;
 
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.TglabelService;
-import com.yt.app.api.v1.entity.Tglabel;
-import com.yt.app.api.v1.vo.TglabelVO;
+import com.yt.app.api.v1.entity.Tgchannelgrouplabel;
+import com.yt.app.api.v1.vo.TgchannelgrouplabelVO;
 
 /**
  * @author zj defaulttest
@@ -27,7 +27,7 @@ import com.yt.app.api.v1.vo.TglabelVO;
 
 @RestController
 @RequestMapping("/rest/v1/tglabel")
-public class TglabelController extends YtBaseEncipherControllerImpl<Tglabel, Long> {
+public class TgchannelgrouplabelController extends YtBaseEncipherControllerImpl<Tgchannelgrouplabel, Long> {
 
 	@Autowired
 	private TglabelService service;
@@ -36,14 +36,15 @@ public class TglabelController extends YtBaseEncipherControllerImpl<Tglabel, Lon
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Tglabel> list = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		YtIPage<Tgchannelgrouplabel> list = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}
 
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<TglabelVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		YtIPage<TgchannelgrouplabelVO> pagebean = service
+				.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 }

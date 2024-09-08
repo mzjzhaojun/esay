@@ -8,9 +8,9 @@ import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.util.TronUtil;
 
-public class TronGetAddressThread implements Runnable {
+public class TronGetAddressThread7 implements Runnable {
 
-	public TronGetAddressThread() {
+	public TronGetAddressThread7() {
 	}
 
 	@Override
@@ -24,14 +24,15 @@ public class TronGetAddressThread implements Runnable {
 				if (listaddress != null) {
 					String address = listaddress.get(2);
 					String endchar = address.substring(address.length() - 1);
-					String startchar = address.substring(address.length() - 7, address.length() - 1);
-					String sixchar = endchar + endchar + endchar + endchar + endchar + endchar;
+					String startchar = address.substring(address.length() - 8, address.length() - 1);
+					String sixchar = endchar + endchar + endchar + endchar + endchar + endchar + endchar;
 					if (sixchar.equalsIgnoreCase(startchar)) {
 						Tronaddress t = new Tronaddress();
 						t.setAddress(address);
 						t.setPrivatekey(listaddress.get(0));
 						t.setHexaddress(listaddress.get(1));
 						t.setMnemoniccode(liststringcode.toString());
+						t.setRemark(7 + "");
 						mapper.post(t);
 					}
 				}

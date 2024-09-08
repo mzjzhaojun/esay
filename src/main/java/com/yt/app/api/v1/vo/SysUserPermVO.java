@@ -47,6 +47,9 @@ public class SysUserPermVO extends BaseVO {
 	private String nickname;
 
 	private Integer sex;
+	
+	private Integer twostatus;
+	
 	private String sexname;
 
 	private String phone;

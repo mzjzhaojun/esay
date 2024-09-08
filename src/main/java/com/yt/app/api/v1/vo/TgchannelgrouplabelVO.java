@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class TglabelVO extends BaseVO {
+public class TgchannelgrouplabelVO extends BaseVO {
 
 	private static final long serialVersionUID = 1L;
 

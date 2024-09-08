@@ -14,6 +14,7 @@ import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.common.bot.ChannelMsgBot;
 import com.yt.app.common.bot.MerchantMsgBot;
+import com.yt.app.common.bot.TronFlashExchangeBot;
 import com.yt.app.common.bot.BookAccountBot;
 import com.yt.app.api.v1.entity.Tgbot;
 import com.yt.app.api.v1.vo.TgbotVO;
@@ -36,16 +37,20 @@ import java.util.Map;
 
 @Service
 public class TgbotServiceImpl extends YtBaseServiceImpl<Tgbot, Long> implements TgbotService {
-	@Autowired
-	private TgbotMapper mapper;
 
 	private TelegramBotsApi botsApi;
+
+	@Autowired
+	private TgbotMapper mapper;
 
 	@Autowired
 	private MerchantMsgBot merchantbot;
 
 	@Autowired
 	private ChannelMsgBot channelbot;
+
+	@Autowired
+	private TronFlashExchangeBot tronflashexchangebot;
 
 	public TgbotServiceImpl() {
 		try {
@@ -107,6 +112,7 @@ public class TgbotServiceImpl extends YtBaseServiceImpl<Tgbot, Long> implements 
 		try {
 			botsApi.registerBot(merchantbot);
 			botsApi.registerBot(channelbot);
+			botsApi.registerBot(tronflashexchangebot);
 			for (Tgbot tb : list) {
 				BookAccountBot mb = new BookAccountBot(tb.getName(), tb.getToken());
 				botsApi.registerBot(mb);

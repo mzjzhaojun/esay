@@ -3,7 +3,6 @@ package com.yt.app.api.v1.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 
-import com.esotericsoftware.minlog.Log;
 import com.yt.app.api.v1.bo.JwtUserBO;
 import com.yt.app.api.v1.bo.SysScopeDataBO;
 import com.yt.app.api.v1.dbo.AuthLoginDTO;
@@ -90,9 +89,11 @@ public class AuthServiceImpl implements AuthService {
 		// 校验原始密码是否正确
 		Assert.isTrue(isValid, "密码错误！");
 
-		isValid = GoogleAuthenticatorUtil.checkCode(userPerm.getTwofactorcode(), Long.parseLong(params.getCode()),
-				System.currentTimeMillis());
-		// Assert.isTrue(isValid, "验证码错误！");
+		if (userPerm.getTwostatus() == 1) {
+			isValid = GoogleAuthenticatorUtil.checkCode(userPerm.getTwofactorcode(), Long.parseLong(params.getCode()),
+					System.currentTimeMillis());
+			Assert.isTrue(isValid, "验证码错误！");
+		}
 
 		// 拿到下级角色ids
 		List<Long> roleIdList = userPerm.getRoleIdList();
@@ -141,7 +142,7 @@ public class AuthServiceImpl implements AuthService {
 		boolean isValid = PasswordUtil.isValidPassword(password, u.getPassword());
 		// 校验原始密码是否正确
 		Assert.isTrue(isValid, "密码错误！");
-
+		u.setTwostatus(1);
 		u.setTwofactorcode(twocode);
 		boolean flag = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(code),
 				System.currentTimeMillis());
@@ -161,9 +162,11 @@ public class AuthServiceImpl implements AuthService {
 		// 校验原始密码是否正确
 		Assert.isTrue(isValid, "密码错误！");
 
-		isValid = GoogleAuthenticatorUtil.checkCode(userPerm.getTwofactorcode(), Long.parseLong(params.getCode()),
-				System.currentTimeMillis());
-		Assert.isTrue(isValid, "验证码错误！");
+		if (userPerm.getTwostatus() == 1) {
+			isValid = GoogleAuthenticatorUtil.checkCode(userPerm.getTwofactorcode(), Long.parseLong(params.getCode()),
+					System.currentTimeMillis());
+			Assert.isTrue(isValid, "验证码错误！");
+		}
 
 		// 写入登录日志
 		logsservice.post(Logs.builder().optname(username).optdate(new Date()).requestip(AuthContext.getIp())
@@ -177,7 +180,6 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public String getPublicKey(HttpServletRequest request) {
 		String ip = AuthContext.getIp();
-		Log.info("================" + ip);
 		if (ip == null) {
 			return RsaUtil.getPublicKey();
 		}

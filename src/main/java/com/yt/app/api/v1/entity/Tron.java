@@ -7,29 +7,29 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 
 import com.yt.app.common.base.YtBaseEntity;
+
 /**
-* @author zj default
-* 
-* @version v1
-* @createdate2024-09-06 16:03:13
-*/
+ * @author zj default
+ * 
+ * @version v1 @createdate2024-09-06 16:03:13
+ */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Tron extends YtBaseEntity<Tron>{
+public class Tron extends YtBaseEntity<Tron> {
 
-private static final long serialVersionUID=1L;
+	private static final long serialVersionUID = 1L;
 
-Long id;
-Long tenant_id;
-String privatekey;
-String hexaddress;
-String address;
-Boolean status;
-String mnemoniccode;
-Object balance;
-String remark;
-Integer version;
+	Long id;
+	Long tenant_id;
+	String privatekey;
+	String hexaddress;
+	String address;
+	Boolean status;
+	String mnemoniccode;
+	Object balance;
+	String remark;
+	Integer version;
 }

@@ -1,5 +1,7 @@
 package com.yt.app.api.v1.service;
 
+import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.yt.app.api.v1.entity.Tron;
@@ -20,7 +22,7 @@ public interface TronService extends YtIBaseService<Tron, Long> {
 	boolean validateaddress(String address);
 
 	// 创建账户
-	void createaccount(String owneraddress, String address);
+	void createaccount(String owneraddress, String toaddress);
 
 	// 获取账户
 	void getaccount(String address);
@@ -38,13 +40,13 @@ public interface TronService extends YtIBaseService<Tron, Long> {
 	void getaccountbyid(Long accountid);
 
 	// 创建交易
-	void createtransaction(String toaddress, String owneraddress);
+	void createtransaction(String privatekey, String toaddress, String owneraddress, Integer amount);
 
 	// 广播交易
-	void broadcasttransaction(String signature, String txid);
+	void broadcasttransaction(HashMap<String, Object> map);
 
 	// 广播签名交易后的字符串
-	void broadcasthex(String transaction);
+	void broadcasthex(String address);
 
 	// 查询签名交易后的总权重
 	void getsignweight(String signature, String txid);
@@ -59,7 +61,21 @@ public interface TronService extends YtIBaseService<Tron, Long> {
 	void getaccountnet(String address);
 
 	// 质押trx
-	void freezebalancev2(String owneraddress, Integer frozenbalance, String resource);
+	void freezebalancev2(String privatekey, String owneraddress, BigInteger frozenbalance, String resource);
+
+	// 解锁TRX
+	void unfreezebalancev2(String privatekey, String owneraddress, BigInteger frozenbalance, String resource);
+
+	// 取消质押
+	void cancelallunfreezev2(String privatekey, String owneraddress);
+
+	// 将带宽或者能量资源代理给其它账户
+	void delegateresource(String privatekey, String owneraddress, String receiveraddress, BigInteger balance,
+			String resource, boolean lock, Integer lockperiod);
+
+	// 取消为目标地址代理的带宽或者能量
+	void undelegateresource(String privatekey, String owneraddress, String receiveraddress, BigInteger balance,
+			String resource);
 
 	// 查询最新区块信息
 	void getnowblock();

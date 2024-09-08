@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Tglabel extends YtBaseEntity<Tglabel> {
+public class Tgchannelgrouplabel extends YtBaseEntity<Tgchannelgrouplabel> {
 
 	private static final long serialVersionUID = 1L;
 

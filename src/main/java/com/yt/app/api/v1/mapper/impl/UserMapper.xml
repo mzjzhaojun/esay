@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.UserMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,username,nickname,twofactorcode,sex,phone,email,avatar_url,dept_id,post_id_list,is_fixed,accounttype,create_by,create_time,update_by,update_time,is_deleted,version
+		id,tenant_id,username,nickname,twofactorcode,twostatus,sex,phone,email,avatar_url,dept_id,post_id_list,is_fixed,accounttype,create_by,create_time,update_by,update_time,is_deleted,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -53,6 +53,9 @@
 			</if>
 			<if test="twofactorcode != null">
 				twofactorcode= #{twofactorcode},
+			</if>
+			<if test="twostatus != null">
+				twostatus= #{twostatus},
 			</if>
 			<if test="nickname!= null">
 				nickname= #{nickname},
@@ -201,6 +204,7 @@
 		<result property="nickname" column="nickname" />
 		<result property="phone" column="phone" />
 		<result property="sex" column="sex" />
+		<result property="twostatus" column="twostatus" />
 		<result property="email" column="email" />
 		<result property="avatar_url" column="avatar_url" />
 		<result property="create_time" column="create_time" />
@@ -228,6 +232,7 @@
 		su.password,
 		su.nickname,
 		su.sex,
+		su.twostatus,
 		su.phone,
 		su.email,
 		su.avatar_url,

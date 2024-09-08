@@ -2,8 +2,8 @@ package com.yt.app.api.v1.mapper;
 
 import java.util.List;
 import java.util.Map;
-import com.yt.app.api.v1.entity.Tglabel;
-import com.yt.app.api.v1.vo.TglabelVO;
+import com.yt.app.api.v1.entity.Tgchannelgrouplabel;
+import com.yt.app.api.v1.vo.TgchannelgrouplabelVO;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
 import com.yt.app.common.base.YtIBaseMapper;
@@ -14,14 +14,14 @@ import com.yt.app.common.base.YtIBaseMapper;
  * @version v1 @createdate2024-07-02 20:41:40
  */
 
-public interface TglabelMapper extends YtIBaseMapper<Tglabel> {
+public interface TgchannelgrouplabelMapper extends YtIBaseMapper<Tgchannelgrouplabel> {
 	/**
 	 * add
 	 * 
 	 * @param o Tglabel
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Tglabel.class })
+	@YtRedisCacheEvictAnnotation(classs = { Tgchannelgrouplabel.class })
 	public Integer post(Object t);
 
 	/**
@@ -30,8 +30,8 @@ public interface TglabelMapper extends YtIBaseMapper<Tglabel> {
 	 * @param o Tglabellist
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Tglabel.class })
-	public Integer batchSava(List<Tglabel> list);
+	@YtRedisCacheEvictAnnotation(classs = { Tgchannelgrouplabel.class })
+	public Integer batchSava(List<Tgchannelgrouplabel> list);
 
 	/**
 	 * update
@@ -39,7 +39,7 @@ public interface TglabelMapper extends YtIBaseMapper<Tglabel> {
 	 * @param o Tglabel
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Tglabel.class })
+	@YtRedisCacheEvictAnnotation(classs = { Tgchannelgrouplabel.class })
 	public Integer put(Object t);
 
 	/**
@@ -48,8 +48,8 @@ public interface TglabelMapper extends YtIBaseMapper<Tglabel> {
 	 * @param id id
 	 * @return Tglabel
 	 */
-	@YtRedisCacheAnnotation(classs = Tglabel.class)
-	public Tglabel get(Long id);
+	@YtRedisCacheAnnotation(classs = Tgchannelgrouplabel.class)
+	public Tgchannelgrouplabel get(Long id);
 
 	/**
 	 * delete
@@ -57,7 +57,7 @@ public interface TglabelMapper extends YtIBaseMapper<Tglabel> {
 	 * @param id id
 	 * @return count
 	 */
-	@YtRedisCacheEvictAnnotation(classs = { Tglabel.class })
+	@YtRedisCacheEvictAnnotation(classs = { Tgchannelgrouplabel.class })
 	public Integer delete(Long id);
 
 	/**
@@ -66,7 +66,7 @@ public interface TglabelMapper extends YtIBaseMapper<Tglabel> {
 	 * @param param map
 	 * @return count
 	 */
-	@YtRedisCacheAnnotation(classs = Tglabel.class)
+	@YtRedisCacheAnnotation(classs = Tgchannelgrouplabel.class)
 	public Integer countlist(Map<String, Object> param);
 
 	/**
@@ -75,8 +75,8 @@ public interface TglabelMapper extends YtIBaseMapper<Tglabel> {
 	 * @param param map
 	 * @return listTglabel
 	 */
-	@YtRedisCacheAnnotation(classs = Tglabel.class)
-	public List<Tglabel> list(Map<String, Object> param);
+	@YtRedisCacheAnnotation(classs = Tgchannelgrouplabel.class)
+	public List<Tgchannelgrouplabel> list(Map<String, Object> param);
 
 	/**
 	 * map
@@ -84,8 +84,8 @@ public interface TglabelMapper extends YtIBaseMapper<Tglabel> {
 	 * @param param map
 	 * @return mapTglabel
 	 */
-	@YtRedisCacheAnnotation(classs = Tglabel.class)
-	public List<TglabelVO> page(Map<String, Object> param);
+	@YtRedisCacheAnnotation(classs = Tgchannelgrouplabel.class)
+	public List<TgchannelgrouplabelVO> page(Map<String, Object> param);
 
 	/**
 	 * listbyids
@@ -93,6 +93,6 @@ public interface TglabelMapper extends YtIBaseMapper<Tglabel> {
 	 * @param id long[]ids
 	 * @return listTglabel
 	 */
-	@YtRedisCacheAnnotation(classs = Tglabel.class)
-	public List<Tglabel> listByArrayId(long[] id);
+	@YtRedisCacheAnnotation(classs = Tgchannelgrouplabel.class)
+	public List<Tgchannelgrouplabel> listByArrayId(long[] id);
 }
