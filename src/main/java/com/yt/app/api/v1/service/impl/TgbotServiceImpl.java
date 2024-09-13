@@ -14,7 +14,7 @@ import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.common.bot.ChannelMsgBot;
 import com.yt.app.common.bot.MerchantMsgBot;
-import com.yt.app.common.bot.TronFlashExchangeBot;
+import com.yt.app.common.bot.TronBot;
 import com.yt.app.common.bot.BookAccountBot;
 import com.yt.app.api.v1.entity.Tgbot;
 import com.yt.app.api.v1.vo.TgbotVO;
@@ -50,7 +50,7 @@ public class TgbotServiceImpl extends YtBaseServiceImpl<Tgbot, Long> implements 
 	private ChannelMsgBot channelbot;
 
 	@Autowired
-	private TronFlashExchangeBot tronflashexchangebot;
+	private TronBot tronflashexchangebot;
 
 	public TgbotServiceImpl() {
 		try {

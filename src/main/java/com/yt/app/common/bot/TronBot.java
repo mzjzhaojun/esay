@@ -21,7 +21,7 @@ import com.yt.app.common.bot.message.impl.StartMessage;
 import com.yt.app.common.bot.message.impl.USDTFlashExchangeMessage;
 
 @Component
-public class TronFlashExchangeBot extends TelegramLongPollingBot {
+public class TronBot extends TelegramLongPollingBot {
 	@Autowired
 	private StartMessage startmessage;
 	@Autowired
