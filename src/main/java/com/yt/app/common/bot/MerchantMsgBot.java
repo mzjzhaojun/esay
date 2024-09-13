@@ -135,7 +135,7 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 			sendText(chatid, sb.toString());
 		} else if (message.equals("#d")) {
 			// 充值地址
-			Sysconfig pc = payconfigservice.getData();
+			Sysconfig pc = payconfigservice.getUsdtExchangeData();
 			if (pc != null) {
 				String msg = "USDT地址：" + pc.getUsdt() + "";
 				sendReplyText(chatid, messageid, msg);

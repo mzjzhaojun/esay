@@ -38,7 +38,7 @@ public class MerchantqrcodeaisleServiceImpl extends YtBaseServiceImpl<Merchantqr
 	public Integer post(Merchantqrcodeaisle t) {
 		Merchantqrcodeaisle m = mapper.getByMidAid(t.getQrcodeaisleid(), t.getMerchantid());
 		Assert.isNull(m, "已经存在的通道");
-		t.setCollection(1);
+		t.setCollection(8.8);
 		Integer i = mapper.post(t);
 		return i;
 	}

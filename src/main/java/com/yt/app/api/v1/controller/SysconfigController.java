@@ -46,7 +46,7 @@ public class SysconfigController extends YtBaseEncipherControllerImpl<Sysconfig,
 	 */
 	@RequestMapping(value = "/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> data(HttpServletRequest request, HttpServletResponse response) {
-		Sysconfig t = service.getData();
+		Sysconfig t = service.getUsdtExchangeData();
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}
 }

@@ -135,6 +135,9 @@
 			<if test="ordernum != null and ordernum != ''">
 				AND ordernum = #{ordernum}
 			</if>
+			<if test="userid != null and userid != ''">
+				AND userid = #{userid}
+			</if>
 			<if test="type != null and type != ''">
 				AND type = #{type}
 			</if>
@@ -157,6 +160,9 @@
 			</if>
 			<if test="type != null and type != ''">
 				AND type = #{type}
+			</if>
+			<if test="userid != null and userid != ''">
+				AND userid = #{userid}
 			</if>
 		</where>
 	</select>

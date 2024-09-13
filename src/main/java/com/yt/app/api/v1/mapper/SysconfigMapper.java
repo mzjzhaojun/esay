@@ -102,7 +102,7 @@ public interface SysconfigMapper extends YtIBaseMapper<Sysconfig> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Sysconfig.class })
-	public Integer putExchange(Double value);
+	public Integer putUsdtExchange(Double value);
 
 	/**
 	 * get
@@ -112,5 +112,15 @@ public interface SysconfigMapper extends YtIBaseMapper<Sysconfig> {
 	 */
 	@YtRedisCacheAnnotation(classs = Sysconfig.class)
 	public Sysconfig getByName(String name);
+	
+	/**
+	 * update
+	 * 
+	 * @param o Payconfig
+	 * @return count
+	 */
+	@YtRedisCacheEvictAnnotation(classs = { Sysconfig.class })
+	public Integer putUsdtToTrxExchange(Double value);
+	
 
 }

@@ -44,7 +44,7 @@ public interface SystemConstant {
 	/**
 	 * 实时汇率
 	 */
-	String CACHE_SYS_EXCHANGE = "payboot:system:exchange:topone";
+	String CACHE_SYS_EXCHANGE = "payboot:system:exchange:";
 
 	/**
 	 * 挂碼

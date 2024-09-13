@@ -1,6 +1,5 @@
 package com.yt.app.api.v1.controller;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -64,7 +63,7 @@ public class TronController extends YtBaseEncipherControllerImpl<Tron, Long> {
 	private static String privatekey = "2e396342743d788071a6a84201e455dc760bccad5457d352bd37ef73f0e001f3";
 
 	// # 手续费 1trx = 1000000 sun
-	private static BigDecimal decimal = new BigDecimal("1000000");
+	// private static BigDecimal decimal = new BigDecimal("1000000");
 
 	String owner_address = "TXwicckHsDxze9DUNnevHjQU4oYMN9vyRi";
 

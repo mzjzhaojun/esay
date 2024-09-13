@@ -10,12 +10,6 @@ import org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import java.util.Arrays;
-import java.util.TimeZone;
-
-import com.yt.app.common.common.YtAutoCode;
-import com.yt.app.common.util.NumberUtil;
-
 /**
  * by jz
  * 
@@ -35,7 +29,6 @@ public class AppRun extends SpringBootServletInitializer {
 	}
 
 	public static void main(String[] args) throws Exception {
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
 		SpringApplication.run(new Class[] { AppRun.class }, args);
 		// YtAutoCode.u().p(Arrays.asList("tronmember", "tronrecord"));
 	}

@@ -34,9 +34,15 @@
 		= #{id}
 	</delete>
 
-	<update id="putExchange" parameterType="java.lang.Double">
+	<update id="putUsdtExchange" parameterType="java.lang.Double">
 		update sysconfig set
 		exchange = #{value} where id = 1
+	</update>
+
+	<update id="putUsdtToTrxExchange"
+		parameterType="java.lang.Double">
+		update sysconfig set
+		exchange = #{value} where id = 2
 	</update>
 
 	<!-- update -->

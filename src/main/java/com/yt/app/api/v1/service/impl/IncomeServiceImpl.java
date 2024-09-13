@@ -270,10 +270,10 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
 		}
 		// 渠道收入
-		income.setChannelincomeamount(
-				NumberUtil.multiply(income.getAmount().toString(), "0." + channel.getCollection(), 2).doubleValue());
+		income.setChannelincomeamount(NumberUtil
+				.multiply(income.getAmount().toString(), (channel.getCollection() / 100) + "", 2).doubleValue());
 		income.setMerchantincomeamount(
-				NumberUtil.multiply(income.getAmount().toString(), "0." + mqd.getCollection(), 2).doubleValue());
+				NumberUtil.multiply(income.getAmount().toString(), (mqd.getCollection() / 100) + "", 2).doubleValue());
 		// 系统收入
 		income.setIncomeamount(Double
 				.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount()))));
@@ -317,8 +317,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qao.setQrcodecode(qd.getCode());
 		qao.setType(income.getType());
 		qao.setFewamount(income.getFewamount());
-		qao.setAmount(income.getChannelincomeamount());
-		qao.setRealamount(income.getAmount());
+		qao.setAmount(income.getAmount());
+		qao.setRealamount(income.getRealamount());
 		qao.setResulturl(income.getResulturl());
 		qao.setMerchantname(income.getMerchantname());
 		qao.setQrocde(income.getQrcode());
@@ -342,8 +342,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		imao.setDynamic(qd.getDynamic());
 		imao.setType(income.getType());
 		imao.setFewamount(income.getFewamount());
-		imao.setAmount(income.getMerchantincomeamount());
-		imao.setRealamount(income.getAmount());
+		imao.setAmount(income.getAmount());
+		imao.setRealamount(income.getRealamount());
 		imao.setResulturl(income.getResulturl());
 		imao.setMerchantname(income.getMerchantname());
 		imao.setQrocde(income.getQrcode());

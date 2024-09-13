@@ -37,6 +37,6 @@ public class MerchantqrcodeaisleVO extends BaseVO {
 	String nikname;
 	String type;
 	String typename;
-	Integer collection;
+	Double collection;
 	String remark;
 }

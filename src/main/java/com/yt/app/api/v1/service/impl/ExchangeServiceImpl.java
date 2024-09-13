@@ -129,7 +129,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	@Autowired
 	private MerchantcustomerbanksService merchantcustomerbanksservice;
 	@Autowired
-	private SysconfigService payconfigservice;
+	private SysconfigService sysconfigservice;
 
 	@Override
 	@Transactional
@@ -344,7 +344,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			throw new YtException("商戶沒有配置通道!");
 		}
 
-		Sysconfig pc = payconfigservice.getData();
+		Sysconfig pc = sysconfigservice.getUsdtExchangeData();
 
 		Exchange pt = new Exchange();
 		pt.setAccname(ss.getBankowner());

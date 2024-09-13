@@ -23,6 +23,7 @@ import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.RedisUtil;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,8 +70,12 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 	}
 
 	@Override
-	public void initExchangeData() {
-		// test
+	public void initSystemData() {
+		getUsdtExchange();
+		getUsdtToTrx();
+	}
+
+	private void getUsdtExchange() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("user-agent",
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
@@ -82,14 +87,38 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 		SysOxxVo data = sov.getBody();
 		List<Object> list = data.getData().getSell();
 		Double exchange = Double.valueOf(BeanUtil.beanToMap(list.get(0)).get("price").toString());
-		mapper.putExchange(exchange);
-		RedisUtil.set(SystemConstant.CACHE_SYS_EXCHANGE, exchange.toString());
+		mapper.putUsdtExchange(exchange);
+		RedisUtil.set(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTEXCHANGE,
+				exchange.toString());
+	}
+
+	private void getUsdtToTrx() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("user-agent",
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		HttpEntity<Resource> httpEntity = new HttpEntity<Resource>(headers);
+		RestTemplate resttemplate = new RestTemplate();
+		ResponseEntity<JSONObject> sov = resttemplate.exchange(
+				"https://c.tronlink.org/v1/cryptocurrency/getprice?symbol=USDT&convert=TRX", HttpMethod.GET, httpEntity,
+				JSONObject.class);
+		JSONObject data = sov.getBody();
+		Double price = data.getJSONObject("data").getJSONObject("USDT").getJSONObject("quote").getJSONObject("TRX")
+				.getDouble("price");
+		mapper.putUsdtToTrxExchange(price);
+		RedisUtil.set(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTOTEXCHANGE,
+				price.toString());
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public Sysconfig getData() {
-		return mapper.getByName(ServiceConstant.SYSTEM_PAYCONFIG_EXCHANGE);
+	public Sysconfig getUsdtExchangeData() {
+		return mapper.getByName(ServiceConstant.SYSTEM_PAYCONFIG_USDTEXCHANGE);
+	}
+
+	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+	public Sysconfig getUsdtToTrxExchangeData() {
+		return mapper.getByName(ServiceConstant.SYSTEM_PAYCONFIG_USDTOTEXCHANGE);
 	}
 
 	@Override

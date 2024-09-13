@@ -113,6 +113,7 @@ public class TgbotServiceImpl extends YtBaseServiceImpl<Tgbot, Long> implements 
 			botsApi.registerBot(merchantbot);
 			botsApi.registerBot(channelbot);
 			botsApi.registerBot(tronflashexchangebot);
+
 			for (Tgbot tb : list) {
 				BookAccountBot mb = new BookAccountBot(tb.getName(), tb.getToken());
 				botsApi.registerBot(mb);
