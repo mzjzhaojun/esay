@@ -20,7 +20,7 @@ import com.yt.app.api.v1.entity.Tgbotgrouprecord;
 import com.yt.app.api.v1.vo.TgbotgrouprecordVO;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2024-04-03 16:45:21
  */

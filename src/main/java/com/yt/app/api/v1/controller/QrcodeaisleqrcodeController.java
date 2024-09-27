@@ -20,7 +20,7 @@ import com.yt.app.api.v1.entity.Qrcodeaisleqrcode;
 import com.yt.app.api.v1.vo.QrcodeaisleqrcodeVO;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2024-08-22 14:27:18
  */

@@ -22,9 +22,9 @@ import com.yt.app.common.common.yt.YtResponseEntity;
 import com.yt.app.common.util.AuthUtil;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
- * @version v1 @createdate2018-09-27 09:52:46
+ * @version v1
  */
 
 @RestController

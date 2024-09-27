@@ -20,7 +20,7 @@ import com.yt.app.api.v1.entity.Qrcodeaccountrecord;
 import com.yt.app.api.v1.vo.QrcodeaccountrecordVO;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2024-08-23 22:50:47
  */

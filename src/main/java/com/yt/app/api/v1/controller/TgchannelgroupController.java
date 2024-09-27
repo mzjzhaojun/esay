@@ -19,7 +19,7 @@ import com.yt.app.api.v1.service.TgchannelgroupService;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2023-12-27 21:37:32
  */

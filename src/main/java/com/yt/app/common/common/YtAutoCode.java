@@ -670,7 +670,7 @@ public class YtAutoCode {
 					this.L.write("import " + DbConnectionUtil.basePage + "." + "vo." + bt + "VO;\r\n");
 					this.L.write("\r\n");
 					this.L.write("/**\r\n");
-					this.L.write("* @author zj defaulttest\r\n");
+					this.L.write("* @author yyds\r\n");
 					this.L.write("* \r\n");
 					this.L.write("* @version " + DbConnectionUtil.version + "\r\n");
 					this.L.write("* @createdate" + DateTimeUtil.getDateTime() + "\r\n");

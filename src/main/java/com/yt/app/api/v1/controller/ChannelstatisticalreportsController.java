@@ -20,7 +20,7 @@ import com.yt.app.api.v1.entity.Channelstatisticalreports;
 import com.yt.app.api.v1.vo.ChannelstatisticalreportsVO;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2024-09-02 12:03:33
  */

@@ -144,6 +144,7 @@ public class AuthServiceImpl implements AuthService {
 		Assert.isTrue(isValid, "密码错误！");
 		u.setTwostatus(1);
 		u.setTwofactorcode(twocode);
+		System.out.println(System.currentTimeMillis());
 		boolean flag = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(code),
 				System.currentTimeMillis());
 		if (flag) {
@@ -180,22 +181,17 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public String getPublicKey(HttpServletRequest request) {
 		String ip = AuthContext.getIp();
-		if (ip == null) {
-			return RsaUtil.getPublicKey();
-		}
 		boolean isValid = false;
-		if (!AuthUtil.isMobileDevice(request.getHeader("User-Agent"))) {
-			// 判断ip 是否在配置内
-			List<Merchant> listm = merchantmapper.getListAll(new HashMap<String, Object>());
-			for (int i = 0; i < listm.size(); i++) {
-				if (listm.get(i).getIpaddress() != null && listm.get(i).getIpaddress().indexOf(ip) >= 0) {
-					isValid = true;
-					break;
-				}
+		// 判断ip 是否在配置内
+		List<Merchant> listm = merchantmapper.getListAll(new HashMap<String, Object>());
+		for (int i = 0; i < listm.size(); i++) {
+			if (listm.get(i).getIpaddress() != null && listm.get(i).getIpaddress().indexOf(ip) >= 0) {
+				isValid = true;
+				break;
 			}
-			if (!isValid)
-				throw new YtException(YtCodeEnum.YT402.getDesc(), YtCodeEnum.YT402);
 		}
+		if (!isValid)
+			throw new YtException(YtCodeEnum.YT402.getDesc(), YtCodeEnum.YT402);
 		return RsaUtil.getPublicKey();
 	}
 

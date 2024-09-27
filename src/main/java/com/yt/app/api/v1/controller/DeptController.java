@@ -23,7 +23,7 @@ import com.yt.app.api.v1.dbo.SysDeptTreeDTO;
 import com.yt.app.api.v1.entity.Dept;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2023-10-27 14:55:02
  */

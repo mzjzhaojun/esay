@@ -19,7 +19,7 @@ import com.yt.app.api.v1.service.SysbankService;
 import com.yt.app.api.v1.entity.Sysbank;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2024-01-18 11:28:36
  */

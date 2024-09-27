@@ -19,7 +19,7 @@ import com.yt.app.api.v1.service.ChannelaccountrecordService;
 import com.yt.app.api.v1.entity.Channelaccountrecord;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2023-11-18 12:44:01
  */

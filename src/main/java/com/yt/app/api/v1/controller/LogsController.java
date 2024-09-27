@@ -19,7 +19,7 @@ import com.yt.app.api.v1.service.LogsService;
 import com.yt.app.api.v1.entity.Logs;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2023-10-31 13:31:43
  */

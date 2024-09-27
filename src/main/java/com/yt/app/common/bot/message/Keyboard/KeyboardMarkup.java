@@ -25,7 +25,7 @@ public class KeyboardMarkup {
 		kbr.add(kbb1);
 		kbr.add(kbb2);
 		listkby.add(kbr);
-		
+
 		rkm.setKeyboard(listkby);
 		return rkm;
 	}

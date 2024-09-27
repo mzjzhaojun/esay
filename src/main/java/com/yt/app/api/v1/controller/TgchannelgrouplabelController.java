@@ -20,7 +20,7 @@ import com.yt.app.api.v1.entity.Tgchannelgrouplabel;
 import com.yt.app.api.v1.vo.TgchannelgrouplabelVO;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2024-07-02 20:41:40
  */

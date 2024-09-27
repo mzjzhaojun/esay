@@ -12,13 +12,13 @@ public class InlineKeyboard {
 		List<InlineKeyboardButton> inlinekeyboardbuttons = new ArrayList<>();
 
 		InlineKeyboardButton inlinekeyboardbutton = new InlineKeyboardButton();
-		inlinekeyboardbutton.setText("A兑换自己用");
-		inlinekeyboardbutton.setCallbackData(CallBackDataResource.flash_exchange_201);
+		inlinekeyboardbutton.setText(ButtonResource.flash_exchange_201.getName());
+		inlinekeyboardbutton.setCallbackData(ButtonResource.flash_exchange_201.getCallBackData());
 		inlinekeyboardbuttons.add(inlinekeyboardbutton);
 
 		InlineKeyboardButton inlinekeyboardbutton2 = new InlineKeyboardButton();
-		inlinekeyboardbutton2.setText("B兑换给朋友");
-		inlinekeyboardbutton2.setCallbackData(CallBackDataResource.flash_exchange_202);
+		inlinekeyboardbutton2.setText(ButtonResource.flash_exchange_202.getName());
+		inlinekeyboardbutton2.setCallbackData(ButtonResource.flash_exchange_202.getCallBackData());
 		inlinekeyboardbuttons.add(inlinekeyboardbutton2);
 
 		listinlinekeyboardbuttons.add(inlinekeyboardbuttons);

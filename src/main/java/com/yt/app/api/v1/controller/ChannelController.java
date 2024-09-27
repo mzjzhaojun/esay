@@ -20,7 +20,7 @@ import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.entity.Channel;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2023-11-12 10:55:20
  */

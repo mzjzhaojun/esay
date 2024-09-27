@@ -20,7 +20,7 @@ import com.yt.app.api.v1.entity.Merchantqrcodeaisle;
 import com.yt.app.api.v1.vo.MerchantqrcodeaisleVO;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2024-08-22 16:58:38
  */

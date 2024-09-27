@@ -19,7 +19,7 @@ import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.entity.Merchant;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2023-11-11 15:34:24
  */

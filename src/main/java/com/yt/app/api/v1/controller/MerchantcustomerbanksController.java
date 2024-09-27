@@ -19,7 +19,7 @@ import com.yt.app.api.v1.service.MerchantcustomerbanksService;
 import com.yt.app.api.v1.entity.Merchantcustomerbanks;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2024-01-18 18:43:33
  */

@@ -19,7 +19,7 @@ import com.yt.app.api.v1.service.ConfigService;
 import com.yt.app.api.v1.entity.Config;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2023-11-02 20:38:10
  */

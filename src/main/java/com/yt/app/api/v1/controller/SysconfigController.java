@@ -19,7 +19,7 @@ import com.yt.app.api.v1.service.SysconfigService;
 import com.yt.app.api.v1.entity.Sysconfig;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2023-11-15 18:42:54
  */

@@ -15,9 +15,9 @@ import com.yt.app.api.v1.service.IncomeService;
 import com.yt.app.common.resource.DictionaryResource;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
- * @version v1 @createdate2018-09-27 09:52:46
+ * @version v1
  */
 
 @Controller

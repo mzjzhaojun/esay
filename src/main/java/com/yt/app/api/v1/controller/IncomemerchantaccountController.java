@@ -21,7 +21,7 @@ import com.yt.app.api.v1.entity.Incomemerchantaccount;
 import com.yt.app.api.v1.vo.IncomemerchantaccountVO;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2024-08-22 23:02:54
  */

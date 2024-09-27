@@ -23,7 +23,7 @@ import com.yt.app.api.v1.entity.Tron;
 import com.yt.app.api.v1.vo.TronVO;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2024-09-06 16:03:13
  */
@@ -57,17 +57,21 @@ public class TronController extends YtBaseEncipherControllerImpl<Tron, Long> {
 	}
 
 	// TNeVJQ1kN8NmNosDeXwYEb3D4Nep6h3eXU
+	// TUrntwm5t9umKhC7jv89RXGo33qcTFAAAA
 	// static String owneraddress = "418b0F566C0a7940362979a634B0fBD79ce95273FF";
 	// TBeFnZXX6X3r12mkByQT5877PYKWz2L4jQ
 	// static String toaddress = "41cf33c59d7ce3699bfc3724977094fd7aced689d3";
-	private static String privatekey = "2e396342743d788071a6a84201e455dc760bccad5457d352bd37ef73f0e001f3";
+	// private static String privatekey =
+	// "2e396342743d788071a6a84201e455dc760bccad5457d352bd37ef73f0e001f3";
+
+	private static String privatekey = "63d99b74511082f06e3f5f4b6e02e663c9a43939525368060da19b704f2b9aa4";
 
 	// # 手续费 1trx = 1000000 sun
 	// private static BigDecimal decimal = new BigDecimal("1000000");
 
-	String owner_address = "TXwicckHsDxze9DUNnevHjQU4oYMN9vyRi";
+	String owner_address = "TUrntwm5t9umKhC7jv89RXGo33qcTFAAAA";
 
-	String to_address = "TUrntwm5t9umKhC7jv89RXGo33qcTFAAAA";
+	String to_address = "TNeVJQ1kN8NmNosDeXwYEb3D4Nep6h3eXU";
 
 	/**
 	 * 验证账号是否存在
@@ -157,7 +161,7 @@ public class TronController extends YtBaseEncipherControllerImpl<Tron, Long> {
 	 */
 	@RequestMapping(value = "/wallet/freezebalancev2", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> freezebalancev2(HttpServletRequest request, HttpServletResponse response) {
-		service.freezebalancev2(privatekey, owner_address, new BigInteger("100000000"), "ENERGY");
+		service.freezebalancev2(privatekey, owner_address, new BigInteger("1000000000"), "ENERGY");
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
 
@@ -170,7 +174,7 @@ public class TronController extends YtBaseEncipherControllerImpl<Tron, Long> {
 	 */
 	@RequestMapping(value = "/wallet/delegateresource", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> delegateresource(HttpServletRequest request, HttpServletResponse response) {
-		service.delegateresource(privatekey, owner_address, to_address, new BigInteger("30000000"), "ENERGY", true,
+		service.delegateresource(privatekey, owner_address, to_address, new BigInteger("1000000000"), "ENERGY", true,
 				1200);
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}

@@ -19,7 +19,7 @@ import com.yt.app.api.v1.service.TgmerchantgrouplabelService;
 import com.yt.app.api.v1.entity.Tgmerchantgrouplabel;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2023-11-26 13:20:46
  */

@@ -23,6 +23,7 @@ import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
+import com.yt.app.common.base.context.AuthContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
@@ -156,9 +157,12 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		// 盘口商户
 		Merchant mc = merchantmapper.getByCode(qs.getPay_memberid());
-
 		if (mc == null) {
 			throw new YtException("商户不存在!");
+		}
+		String ip = AuthContext.getIp();
+		if (mc.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
 		}
 		TenantIdContext.setTenantId(mc.getTenant_id());
 		if (!mc.getStatus()) {
@@ -393,6 +397,10 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		if (mc == null) {
 			throw new YtException("商户不存在!");
 		}
+		String ip = AuthContext.getIp();
+		if (mc.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
 		String sign = PayUtil.SignMd5QueryQrocde(qs, mc.getAppkey());
 		if (!sign.equals(qs.getPay_md5sign())) {
 			throw new YtException("签名不正确!");
@@ -420,6 +428,10 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Income income = mapper.getByOrderNum(orderid);
 		TenantIdContext.setTenantId(income.getTenant_id());
 		Channel channel = channelmapper.get(income.getChannelid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
 		String returnstate = PayUtil.SendHSQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "宏盛获取渠道订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {

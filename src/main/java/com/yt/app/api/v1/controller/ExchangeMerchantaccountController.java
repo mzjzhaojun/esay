@@ -20,7 +20,7 @@ import com.yt.app.api.v1.service.ExchangeMerchantaccountService;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccount;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2023-11-15 09:44:15
  */

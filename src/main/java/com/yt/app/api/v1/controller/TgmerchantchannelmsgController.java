@@ -20,7 +20,7 @@ import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
 import com.yt.app.api.v1.vo.TgmerchantchannelmsgVO;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2024-07-04 16:47:48
  */

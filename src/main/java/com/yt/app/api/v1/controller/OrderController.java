@@ -31,9 +31,9 @@ import com.yt.app.common.common.yt.YtRequestEntity;
 import com.yt.app.common.common.yt.YtResponseEntity;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
- * @version v1 @createdate2018-09-27 09:52:46
+ * @version v1
  */
 
 @RestController
@@ -70,15 +70,21 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		return new YtResponseEntity<Object>(new YtBody(sr));
 	}
 
-	// 盘口查询余额
+	// 代付盘口查询余额
 	@RequestMapping(value = "/querybalance", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> query(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request,
 			HttpServletResponse response) {
-		PayResultVO pt = service.query(requestEntity.getBody().getMerchantid());
-		return new YtResponseEntity<Object>(new YtBody(pt));
+		return new YtResponseEntity<Object>(new YtBody(100));
 	}
 
-	// 代收盘口下单
+	/**
+	 * 代收盘口下单
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/submitqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submitqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -86,7 +92,14 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		return new YtResponseEntity<Object>(new YtBody(yb));
 	}
 
-	// 代收盘口查单
+	/**
+	 * 代收盘口查单
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/queryqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> queryqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -94,7 +107,14 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		return new YtResponseEntity<Object>(new YtBody(yb));
 	}
 
-	// 宏盛代收回调
+	/**
+	 * 宏盛代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/hscallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public void hscallback(@RequestParam Map<String, String> params, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -106,7 +126,13 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		}
 	}
 
-	// index
+	/**
+	 * qrcode扫码支付查询支付状态
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/income/{id}", method = RequestMethod.GET)
 	public YtResponseEntity<Object> queryIncomeOrder(@PathVariable Long id, HttpServletRequest request,
 			HttpServletResponse response) {

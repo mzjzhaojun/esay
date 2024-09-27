@@ -2,7 +2,10 @@ package com.yt.app.common.bot.message.impl;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.constant.SystemConstant;
@@ -26,6 +29,22 @@ public class USDTFlashExchangeMessage implements UpdateService {
 				+ "例如: “10U” 可实时计算10U可兑换的TRX数量; \r\n" + "例如: “100TRX” 可实时计算100TRX可兑换的U数量;");
 		sendMessage.enableMarkdown(true);
 		sendMessage.setReplyMarkup(InlineKeyboard.getInlineKeyboardMarkup());
+		return sendMessage;
+	}
+
+	public SendMessage excuteExchange(Update update) {
+		SendMessage sendMessage = new SendMessage();
+		
+		Message originalMessage = update.getCallbackQuery().getMessage();
+		User sender = update.getCallbackQuery().getFrom();
+
+		EditMessageReplyMarkup editMessageReplyMarkup = new EditMessageReplyMarkup();
+		editMessageReplyMarkup.setChatId(String.valueOf(sender.getId()));
+		editMessageReplyMarkup.setMessageId(originalMessage.getMessageId());
+
+		sendMessage.setChatId(originalMessage.getChatId().toString());
+		sendMessage.setText("请输入兑换地址：");
+
 		return sendMessage;
 	}
 }

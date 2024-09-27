@@ -20,7 +20,7 @@ import com.yt.app.api.v1.vo.AislechannelVO;
 import com.yt.app.api.v1.entity.Aislechannel;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2023-11-13 10:16:34
  */

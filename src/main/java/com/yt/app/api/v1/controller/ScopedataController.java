@@ -20,7 +20,7 @@ import com.yt.app.api.v1.dbo.SysScopeDataBaseDTO;
 import com.yt.app.api.v1.entity.Scopedata;
 
 /**
- * @author zj defaulttest
+ * @author yyds
  * 
  * @version v1 @createdate2023-10-25 17:20:27
  */
