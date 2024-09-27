@@ -24,11 +24,21 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	YtIPage<IncomeVO> page(Map<String, Object> param);
 
+	// h5上家下单
+	QrcodeResultVO submitInCome(QrcodeSubmitDTO qs);
+
+	// h5上家查单
+	QueryQrcodeResultVO queryInCome(QrcodeSubmitDTO qs);
+
 	// 拉码下单查单
 	QrcodeResultVO submitQrcode(QrcodeSubmitDTO qs);
 
 	// 拉码下单查单
 	QueryQrcodeResultVO queryqrcode(QrcodeSubmitDTO qs);
 
+	// 宏盛回调
 	void hscallback(@RequestParam Map<String, String> params);
+
+	// yjj回调
+	void yjjcallback(@RequestParam Map<String, String> params);
 }

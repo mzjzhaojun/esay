@@ -78,7 +78,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	}
 
 	/**
-	 * 代收盘口下单
+	 * 代收扫码盘口下单
 	 * 
 	 * @param requestEntity
 	 * @param request
@@ -93,7 +93,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	}
 
 	/**
-	 * 代收盘口查单
+	 * 代收扫码盘口查单
 	 * 
 	 * @param requestEntity
 	 * @param request
@@ -104,6 +104,36 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	public YtResponseEntity<Object> queryqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
 		QueryQrcodeResultVO yb = incomeservice.queryqrcode(requestEntity.getBody());
+		return new YtResponseEntity<Object>(new YtBody(yb));
+	}
+
+	/**
+	 * 代收盘口下单
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/submitincome", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> submitincome(YtRequestEntity<QrcodeSubmitDTO> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		QrcodeResultVO yb = incomeservice.submitInCome(requestEntity.getBody());
+		return new YtResponseEntity<Object>(new YtBody(yb));
+	}
+
+	/**
+	 * 代收盘口查单
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/queryincome", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> queryincome(YtRequestEntity<QrcodeSubmitDTO> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		QueryQrcodeResultVO yb = incomeservice.queryInCome(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(yb));
 	}
 
@@ -128,6 +158,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 
 	/**
 	 * qrcode扫码支付查询支付状态
+	 * 
 	 * @param id
 	 * @param request
 	 * @param response
@@ -138,5 +169,24 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 			HttpServletResponse response) {
 		Income income = incomeservice.get(id);
 		return new YtResponseEntity<Object>(new YtBody(income.getStatus()));
+	}
+
+	/**
+	 * YJJ代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/yjjcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void yjjcallback(@RequestParam Map<String, String> params, HttpServletRequest request,
+			HttpServletResponse response) {
+		incomeservice.yjjcallback(params);
+		try {
+			response.getWriter().print("success");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

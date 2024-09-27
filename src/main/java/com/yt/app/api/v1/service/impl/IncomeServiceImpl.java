@@ -40,6 +40,7 @@ import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.api.v1.vo.QrcodeResultVO;
 import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
 import com.yt.app.api.v1.vo.SysHsOrder;
+import com.yt.app.api.v1.vo.SysYjjOrder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.config.YtConfig;
@@ -191,6 +192,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		Merchantqrcodeaisle mqd = listmc.stream().filter(mqds -> mqds.getQrcodeaisleid().equals(qas.getId()))
 				.findFirst().get();
+		Assert.notNull(mqd, "通道没有权限!");
 		List<Qrcodeaisleqrcode> listqaq = qrcodeaisleqrcodemapper.getByQrcodeAisleId(qas.getId());
 		long[] qaqids = listqaq.stream().mapToLong(qaq -> qaq.getQrcodelid()).distinct().toArray();
 		List<Qrcode> listqrcode = qrcodemapper.listByArrayId(qaqids);
@@ -267,7 +269,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		// 动态码直接去线上拿连接
 		if (qd.getDynamic()) {
 			SysHsOrder sho = PayUtil.SendHSSubmit(income, channel);
-			Assert.notNull(sho, "获取渠道订单失败!");
+			Assert.notNull(sho, "宏盛获取渠道订单失败!");
 			income.setResulturl(sho.getPay_url());
 			income.setQrcodeordernum(sho.getSys_order_no());
 		} else {
@@ -469,5 +471,247 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			TenantIdContext.remove();
 		}
 
+	}
+
+	@Override
+	public void yjjcallback(Map<String, String> params) {
+		String orderid = params.get("order_id").toString();
+		String status = params.get("status").toString();
+		log.info("YJJ通知返回消息：orderid" + orderid + " status:" + status);
+		Income income = mapper.getByOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getChannelid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendYJJQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "YJJ获取渠道订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			// 計算代收
+			income.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			if (income.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61)
+				income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
+			income.setSuccesstime(DateTimeUtil.getNow());
+			income.setBacklong(DateUtil.between(income.getSuccesstime(), income.getCreate_time(), DateUnit.SECOND));
+			//
+			mapper.put(income);
+			// 渠道
+			Qrcodeaccountorder qrcodeaccountorder = qrcodeaccountordermapper.getByOrderNum(income.getQrcodeordernum());
+			qrcodeaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			qrcodeaccountordermapper.put(qrcodeaccountorder);
+			// 计算渠道收入
+			qrcodeaccountservice.updateTotalincome(qrcodeaccountorder);
+			//
+			Incomemerchantaccountorder incomemerchantaccountorder = incomemerchantaccountordermapper
+					.getByOrderNum(income.getMerchantorderid());
+			incomemerchantaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			incomemerchantaccountordermapper.put(incomemerchantaccountorder);
+			// 计算商户收入
+			incomemerchantaccountservice.updateTotalincome(incomemerchantaccountorder);
+
+			// 计算商户主账号
+			merchantservice.updateIncome(income);
+
+			// 计算渠道主账号
+			channelservice.updateIncome(income);
+
+			// 计算系统收入
+			systemaccountservice.updateIncome(income);
+
+			TenantIdContext.remove();
+		}
+
+	}
+
+	@Override
+	public QrcodeResultVO submitInCome(QrcodeSubmitDTO qs) {
+		// 验证
+		if (qs.getPay_memberid().length() > 10) {
+			throw new YtException("商户号错误!");
+		}
+
+		if (Double.valueOf(qs.getPay_amount()) < 10) {
+			throw new YtException("支付金额错误!");
+		}
+		// 盘口商户
+		Merchant mc = merchantmapper.getByCode(qs.getPay_memberid());
+		if (mc == null) {
+			throw new YtException("商户不存在!");
+		}
+		String ip = AuthContext.getIp();
+		if (mc.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		TenantIdContext.setTenantId(mc.getTenant_id());
+		if (!mc.getStatus()) {
+			throw new YtException("商户被冻结!");
+		}
+		String sign = PayUtil.SignMd5SubmitQrocde(qs, mc.getAppkey());
+		log.info(sign);
+		if (!sign.equals(qs.getPay_md5sign())) {
+			throw new YtException("签名不正确!");
+		}
+		Income income = mapper.getByMerchantOrderNum(qs.getPay_orderid());
+		if (income != null) {
+			throw new YtException("已经存在订单!");
+		}
+		List<Merchantqrcodeaisle> listmc = merchantqrcodeaislemapper.getByMid(mc.getId());
+		if (listmc == null || listmc.size() == 0) {
+			throw new YtException("商戶还沒有配置通道!");
+		}
+		long[] qraids = listmc.stream().mapToLong(qa -> qa.getQrcodeaisleid()).distinct().toArray();
+		List<Qrcodeaisle> listqa = qrcodeaislemapper.listByArrayId(qraids);
+		Qrcodeaisle qas;
+		try {
+			qas = listqa.stream().filter(qa -> qa.getCode().equals(qs.getPay_aislecode())).findFirst().get();
+		} catch (Exception e1) {
+			throw new YtException(qs.getPay_aislecode() + "通道没有权限");
+		}
+		Merchantqrcodeaisle mqd = listmc.stream().filter(mqds -> mqds.getQrcodeaisleid().equals(qas.getId()))
+				.findFirst().get();
+		Assert.notNull(mqd, "通道没有权限!");
+		// 开始业务
+		Channel channel = channelmapper.getByUserId(qas.getUserid());
+
+		income = new Income();
+		// 商戶
+		income.setChannelid(channel.getId());
+		income.setMerchantuserid(mc.getUserid());
+		income.setOrdernum(StringUtil.getOrderNum());
+		income.setMerchantorderid(qs.getPay_orderid());
+		income.setMerchantordernum("IM" + StringUtil.getOrderNum());
+		income.setMerchantcode(mc.getCode());
+		income.setMerchantname(mc.getName());
+		income.setMerchantid(mc.getId());
+		income.setExpireddate(DateTimeUtil.addMinute(10));// 多加3分钟
+		// 通道
+		income.setExpiredminute(10);
+		income.setQrcodeaisleid(qas.getId());
+		income.setQrcodeaislename(qas.getName());
+		income.setQrcodeaislecode(qas.getCode());
+		// 收款码
+		income.setQrcodeuserid(qas.getUserid());
+		income.setAmount(Double.valueOf(qs.getPay_amount()));
+		income.setDynamic(qas.getDynamic());
+
+		income.setStatus(DictionaryResource.PAYOUTSTATUS_50);
+		income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
+		income.setNotifyurl(qs.getPay_notifyurl());
+		income.setBackforwardurl(qs.getPay_callbackurl());
+		// 动态码直接去线上拿连接
+		if (!qas.getDynamic()) {
+			SysYjjOrder sho = PayUtil.SendYJJSubmit(income, channel);
+			Assert.notNull(sho, "YJJ获取渠道订单失败!");
+			income.setResulturl(sho.getData().getPay_url());
+			income.setQrcodeordernum(sho.getData().getOrder_id());
+		} else {
+			income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
+		}
+		// 渠道收入
+		income.setChannelincomeamount(NumberUtil
+				.multiply(income.getAmount().toString(), (channel.getCollection() / 100) + "", 2).doubleValue());
+		income.setMerchantincomeamount(
+				NumberUtil.multiply(income.getAmount().toString(), (mqd.getCollection() / 100) + "", 2).doubleValue());
+		// 系统收入
+		income.setIncomeamount(Double
+				.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount()))));
+		// 商户收入
+		income.setMerchantincomeamount(
+				Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount()))));
+		// 计算当前码可生成的订单
+		income.setFewamount(0.00);
+		income.setRealamount(income.getAmount());
+		int i = mapper.post(income);
+		if (i == 0) {
+			throw new YtException("当前通道码繁忙");
+		}
+
+		// 添加qrcode订单
+		Qrcodeaccountorder qao = new Qrcodeaccountorder();
+		qao.setUserid(income.getQrcodeuserid());
+		qao.setQrcodeaisleid(income.getQrcodeaisleid());
+		qao.setQrcodeaislename(income.getQrcodeaislename());
+		qao.setQrcodename(income.getQrcodename());
+		qao.setQrcodeid(income.getQrcodeid());
+		qao.setOrdernum(income.getQrcodeordernum());
+		qao.setType(income.getType());
+		qao.setFewamount(income.getFewamount());
+		qao.setAmount(income.getAmount());
+		qao.setRealamount(income.getRealamount());
+		qao.setResulturl(income.getResulturl());
+		qao.setMerchantname(income.getMerchantname());
+		qao.setQrocde(income.getQrcode());
+		qao.setDynamic(qas.getDynamic());
+		qao.setStatus(income.getStatus());
+		qao.setQrcodeaislecode(qas.getCode());
+		qao.setChannelid(channel.getId());
+		qao.setExpireddate(income.getExpireddate());
+		qao.setIncomeamount(income.getChannelincomeamount());
+		qrcodeaccountordermapper.post(qao);
+		qrcodeaccountservice.totalincome(qao);
+		// 添加商戶订单
+		Incomemerchantaccountorder imao = new Incomemerchantaccountorder();
+		imao.setUserid(income.getMerchantuserid());
+		imao.setQrcodeaisleid(income.getQrcodeaisleid());
+		imao.setQrcodeaislename(income.getQrcodeaislename());
+		imao.setQrcodename(income.getQrcodename());
+		imao.setQrcodeid(income.getQrcodeid());
+		imao.setOrdernum(income.getMerchantorderid());
+		imao.setDynamic(qas.getDynamic());
+		imao.setType(income.getType());
+		imao.setFewamount(income.getFewamount());
+		imao.setAmount(income.getAmount());
+		imao.setRealamount(income.getRealamount());
+		imao.setResulturl(income.getResulturl());
+		imao.setMerchantname(income.getMerchantname());
+		imao.setQrocde(income.getQrcode());
+		imao.setStatus(income.getStatus());
+		imao.setQrcodeaislecode(qas.getCode());
+		imao.setMerchantid(mc.getId());
+		imao.setExpireddate(income.getExpireddate());
+		imao.setIncomeamount(income.getMerchantincomeamount());
+		incomemerchantaccountordermapper.post(imao);
+		incomemerchantaccountservice.totalincome(imao);
+
+		QrcodeResultVO qr = new QrcodeResultVO();
+		qr.setPay_memberid(mc.getCode());
+		qr.setPay_orderid(qs.getPay_orderid());
+		qr.setPay_amount(qs.getPay_amount());
+		qr.setPay_aislecode(qs.getPay_aislecode());
+		qr.setPay_viewurl(income.getResulturl());
+		String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
+		qr.setPay_md5sign(signresult);
+		TenantIdContext.remove();
+		return qr;
+	}
+
+	@Override
+	public QueryQrcodeResultVO queryInCome(QrcodeSubmitDTO qs) {
+		// 验证
+		if (qs.getPay_memberid().length() > 10) {
+			throw new YtException("商户号错误!");
+		}
+		// 盘口商户
+		Merchant mc = merchantmapper.getByCode(qs.getPay_memberid());
+		if (mc == null) {
+			throw new YtException("商户不存在!");
+		}
+		String ip = AuthContext.getIp();
+		if (mc.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String sign = PayUtil.SignMd5QueryQrocde(qs, mc.getAppkey());
+		if (!sign.equals(qs.getPay_md5sign())) {
+			throw new YtException("签名不正确!");
+		}
+		Income income = mapper.getByMerchantOrderNum(qs.getPay_orderid());
+		QueryQrcodeResultVO qrv = new QueryQrcodeResultVO();
+		qrv.setPay_code(income.getStatus());
+		qrv.setPay_amount(income.getAmount().toString());
+		qrv.setPay_memberid(mc.getCode());
+		qrv.setPay_orderid(qs.getPay_orderid());
+		qrv.setPay_md5sign(PayUtil.SignMd5QueryResultQrocde(qrv, mc.getAppkey()));
+		return qrv;
 	}
 }

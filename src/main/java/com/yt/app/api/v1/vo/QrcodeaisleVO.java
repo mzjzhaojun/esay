@@ -31,6 +31,7 @@ public class QrcodeaisleVO extends BaseVO {
 	String type;
 	String typename;
 	Integer qrcodecount;
+	Boolean dynamic;
 	String remark;
 	Long create_by;
 	java.util.Date create_time;
