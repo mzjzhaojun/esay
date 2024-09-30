@@ -41,4 +41,7 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	// yjj回调
 	void yjjcallback(@RequestParam Map<String, String> params);
+
+	void alipayftfcallback(@RequestParam Map<String, String> params);
+
 }

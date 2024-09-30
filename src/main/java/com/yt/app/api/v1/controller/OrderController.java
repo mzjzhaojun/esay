@@ -157,7 +157,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	}
 
 	/**
-	 * qrcode扫码支付查询支付状态
+	 * 查询代收支付状态
 	 * 
 	 * @param id
 	 * @param request
@@ -186,6 +186,25 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		try {
 			response.getWriter().print("success");
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 支付宝当面付回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/alipayftfcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void alipayftfcallback(@RequestParam Map<String, String> params, HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			incomeservice.alipayftfcallback(params);
+			response.getWriter().print("success");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

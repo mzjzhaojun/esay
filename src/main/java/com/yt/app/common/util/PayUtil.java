@@ -437,11 +437,11 @@ public class PayUtil {
 		map.add("notice_url", cl.getApireusultip());
 		map.add("return_url", pt.getBackforwardurl());
 
-		String signContent = "amount=" + pt.getAmount() + "&type=1&code=" + pt.getQrcodeaislecode() + "&merchant_id="
+		String signContent = "amount=" + pt.getAmount() + "&code=" + pt.getQrcodeaislecode() + "&merchant_id="
 				+ cl.getCode() + "&notice_url=" + cl.getApireusultip() + "&order_no=" + pt.getOrdernum()
-				+ "&return_url=" + pt.getBackforwardurl() + "&sign=" + cl.getApikey();
-		String sign = MD5Utils.md5(signContent.toUpperCase());
-		map.add("sign", sign);
+				+ "&return_url=" + pt.getBackforwardurl() + "&type=1&sign=" + cl.getApikey();
+		String sign = MD5Utils.md5(signContent);
+		map.add("sign", sign.toUpperCase());
 		log.info("YJJ下单签名：" + sign + "===" + signContent);
 
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
@@ -451,7 +451,7 @@ public class PayUtil {
 				httpEntity, SysYjjOrder.class);
 		SysYjjOrder data = sov.getBody();
 		log.info("YJJ返回消息：" + data.getMsg());
-		if (data.getCode().equals("ok")) {
+		if (data.getCode().equals("0")) {
 			return data;
 		}
 		return null;
@@ -470,9 +470,9 @@ public class PayUtil {
 
 		String signContent = "amount=" + amount + "&merchant_id=" + cl.getCode() + "&order_id=" + orderid + "&sign="
 				+ cl.getApikey();
-		String sign = MD5Utils.md5(signContent.toUpperCase());
+		String sign = MD5Utils.md5(signContent);
 		map.add("sign", sign);
-		log.info("YJJ查单签名：" + sign);
+		log.info("YJJ查单签名：" + sign.toUpperCase());
 
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();

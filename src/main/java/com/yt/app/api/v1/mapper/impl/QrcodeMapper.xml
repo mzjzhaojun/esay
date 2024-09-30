@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.QrcodeMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,name,nkname,mobile,code,status,balance,expireminute,type,min,max,weight,mtorder,dynamic,fixedcode,firstmatch,firstmatchmoney,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,userid,name,nkname,mobile,code,status,balance,expireminute,type,min,max,weight,mtorder,dynamic,accountsplit,fixedcode,firstmatch,firstmatchmoney,yestodayorder,yestodayincome,todayorder,todayincome,appid,appprivatekey,apppublickey,alipaypublickey,alipayprovatekey,limits,todaylimits,notifyurl,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -17,9 +17,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Qrcode">
 		insert into
-		qrcode(id,userid,name,nkname,mobile,code,status,balance,expireminute,type,min,max,weight,mtorder,dynamic,fixedcode,firstmatch,firstmatchmoney,create_by,create_time,update_by,update_time,remark)
+		qrcode(id,userid,name,nkname,mobile,code,status,balance,expireminute,type,min,max,weight,mtorder,dynamic,accountsplit,fixedcode,firstmatch,firstmatchmoney,appid,appprivatekey,apppublickey,alipaypublickey,alipayprovatekey,limits,todaylimits,notifyurl,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{userid},#{name},#{nkname},#{mobile},#{code},#{status},#{balance},#{expireminute},#{type},#{min},#{max},#{weight},#{mtorder},#{dynamic},#{fixedcode},#{firstmatch},#{firstmatchmoney},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{userid},#{name},#{nkname},#{mobile},#{code},#{status},#{balance},#{expireminute},#{type},#{min},#{max},#{weight},#{mtorder},#{dynamic},#{accountsplit},#{fixedcode},#{firstmatch},#{firstmatchmoney},#{appid},#{appprivatekey},#{apppublickey},#{alipaypublickey},#{alipayprovatekey},#{limits},#{todaylimits},#{notifyurl},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -86,6 +86,9 @@
 			<if test="dynamic != null">
 				dynamic= #{dynamic},
 			</if>
+			<if test="accountsplit != null">
+				accountsplit= #{accountsplit},
+			</if>
 			<if test="fixedcode != null">
 				fixedcode= #{fixedcode},
 			</if>
@@ -94,6 +97,36 @@
 			</if>
 			<if test="firstmatchmoney != null">
 				firstmatchmoney= #{firstmatchmoney},
+			</if>
+			<if test="appid != null">
+				appid= #{appid},
+			</if>
+			<if test="appprivatekey != null">
+				appprivatekey= #{appprivatekey},
+			</if>
+			<if test="apppublickey != null">
+				apppublickey= #{apppublickey},
+			</if>
+			<if test="alipaypublickey != null">
+				alipaypublickey= #{alipaypublickey},
+			</if>
+			<if test="alipayprovatekey != null">
+				alipayprovatekey= #{alipayprovatekey},
+			</if>
+			<if test="limits != null">
+				limits= #{limits},
+			</if>
+			<if test="todaylimits != null">
+				todaylimits= #{todaylimits},
+			</if>
+			<if test="incomesum != null">
+				incomesum= #{incomesum},
+			</if>
+			<if test="ordersum != null">
+				ordersum= #{ordersum},
+			</if>
+			<if test="notifyurl != null">
+				notifyurl= #{notifyurl},
 			</if>
 			<if test="create_by != null">
 				create_by= #{create_by},
@@ -132,8 +165,23 @@
 		from qrcode
 		<where>
 			1=1
+			<if test="userid != null">
+				and userid= #{userid}
+			</if>
+			<if test="status != null">
+				and status= #{status}
+			</if>
+			<if test="code != null">
+				and code= #{code}
+			</if>
+			<if test="type != null">
+				and type= #{type}
+			</if>
 			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+				and name like CONCAT( '%', #{name} , '%' )
+			</if>
+			<if test="orderBy != null and dir!= null">
+				order by ${orderBy} ${dir}
 			</if>
 		</where>
 	</select>
@@ -153,6 +201,9 @@
 			</if>
 			<if test="code != null">
 				and code= #{code}
+			</if>
+			<if test="type != null">
+				and type= #{type}
 			</if>
 			<if test="name != null and name != ''">
 				and name like CONCAT( '%', #{name} , '%' )
@@ -179,6 +230,9 @@
 			</if>
 			<if test="code != null">
 				and code= #{code}
+			</if>
+			<if test="type != null">
+				and type= #{type}
 			</if>
 			<if test="name != null and name != ''">
 				and name like CONCAT( '%', #{name} , '%' )

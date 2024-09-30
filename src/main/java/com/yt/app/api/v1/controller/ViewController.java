@@ -27,9 +27,8 @@ public class ViewController {
 	@Autowired
 	private IncomeService service;
 
-	// index
 	@RequestMapping(value = "/income/{orderid}", method = RequestMethod.GET)
-	public String submitqrcode(@PathVariable String orderid, Model model, HttpServletRequest request,
+	public String income(@PathVariable String orderid, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 		Income income = service.getByOrderNum(orderid);
 		model.addAttribute("incomeid", income.getId());
@@ -42,6 +41,8 @@ public class ViewController {
 			return "static/wxview";
 		else if (income.getType().equals(DictionaryResource.BANK_TYPE_123.toString()))
 			return "static/aliview";
+		else if (income.getType().equals(DictionaryResource.BANK_TYPE_502.toString()))
+			return "static/h5aliview";
 		return "static/othview";
 	}
 

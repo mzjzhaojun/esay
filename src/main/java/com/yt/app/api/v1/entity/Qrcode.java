@@ -38,9 +38,24 @@ public class Qrcode extends YtBaseEntity<Qrcode> {
 	Integer weight;
 	Integer mtorder;
 	Boolean dynamic;
+	Boolean accountsplit;
 	String fixedcode;
 	Boolean firstmatch;
 	String firstmatchmoney;
+	Integer yestodayorder;
+	Double yestodayincome;
+	Integer todayorder;
+	Double todayincome;
+	String appid;
+	String appprivatekey;
+	String apppublickey;
+	String alipaypublickey;
+	String alipayprovatekey;
+	Double limits;
+	Double todaylimits;
+	Double incomesum;
+	Integer ordersum;
+	String notifyurl;
 	String remark;
 	Integer version;
 }

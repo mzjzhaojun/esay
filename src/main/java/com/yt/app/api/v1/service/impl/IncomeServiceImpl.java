@@ -15,6 +15,9 @@ import com.yt.app.api.v1.mapper.QrcodeMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper;
+import com.yt.app.api.v1.model.result.AlipayF2FPrecreateResult;
+import com.yt.app.api.v1.model.result.AlipayF2FQueryResult;
+import com.yt.app.api.v1.service.AlipayTradeService;
 import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.IncomeService;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
@@ -26,6 +29,14 @@ import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.AuthContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.domain.AlipayTradePrecreateModel;
+import com.alipay.api.domain.AlipayTradeQueryModel;
+import com.alipay.api.request.AlipayTradePrecreateRequest;
+import com.alipay.api.request.AlipayTradeQueryRequest;
+import com.alipay.api.response.AlipayTradePrecreateResponse;
+import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Income;
@@ -39,14 +50,15 @@ import com.yt.app.api.v1.entity.Qrcodeaisleqrcode;
 import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.api.v1.vo.QrcodeResultVO;
 import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
-import com.yt.app.api.v1.vo.SysHsOrder;
 import com.yt.app.api.v1.vo.SysYjjOrder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.YtException;
+import com.yt.app.common.resource.Constants;
 import com.yt.app.common.resource.DictionaryResource;
+import com.yt.app.common.util.AliPayUtil;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.NumberUtil;
 import com.yt.app.common.util.PayUtil;
@@ -106,6 +118,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	private ChannelService channelservice;
 	@Autowired
 	private SystemaccountService systemaccountservice;
+	@Autowired
+	private AlipayTradeService tradeService;
 
 	@Override
 	@Transactional
@@ -153,7 +167,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			throw new YtException("商户号错误!");
 		}
 
-		if (Double.valueOf(qs.getPay_amount()) < 10) {
+		if (Double.valueOf(qs.getPay_amount()) < 1) {
 			throw new YtException("支付金额错误!");
 		}
 		// 盘口商户
@@ -265,16 +279,19 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
 		income.setNotifyurl(qs.getPay_notifyurl());
 		income.setBackforwardurl(qs.getPay_callbackurl());
-		income.setQrcode(qd.getFixedcode());
+
 		// 动态码直接去线上拿连接
 		if (qd.getDynamic()) {
-			SysHsOrder sho = PayUtil.SendHSSubmit(income, channel);
-			Assert.notNull(sho, "宏盛获取渠道订单失败!");
-			income.setResulturl(sho.getPay_url());
-			income.setQrcodeordernum(sho.getSys_order_no());
+			AlipayTradePrecreateResponse atp = alif2f(qd, income.getOrdernum(), income.getAmount(),
+					qd.getExpireminute());
+			Assert.notNull(atp, "获取支付宝单号错误!");
+			income.setQrcode(atp.getQrCode());
+			income.setQrcodeordernum("QM" + StringUtil.getOrderNum());
+			income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
 		} else {
 			income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
 		}
+		Assert.notNull(mqd.getCollection(), "渠道点位未配置!");
 		// 渠道收入
 		income.setChannelincomeamount(NumberUtil
 				.multiply(income.getAmount().toString(), (channel.getCollection() / 100) + "", 2).doubleValue());
@@ -531,7 +548,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			throw new YtException("商户号错误!");
 		}
 
-		if (Double.valueOf(qs.getPay_amount()) < 10) {
+		if (Double.valueOf(qs.getPay_amount()) < 1) {
 			throw new YtException("支付金额错误!");
 		}
 		// 盘口商户
@@ -605,6 +622,11 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			Assert.notNull(sho, "YJJ获取渠道订单失败!");
 			income.setResulturl(sho.getData().getPay_url());
 			income.setQrcodeordernum(sho.getData().getOrder_id());
+
+//			SysHsOrder sho = PayUtil.SendHSSubmit(income, channel);
+//			Assert.notNull(sho, "宏盛获取渠道订单失败!");
+//			income.setResulturl(sho.getPay_url());
+//			income.setQrcodeordernum(sho.getSys_order_no());
 		} else {
 			income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
 		}
@@ -713,5 +735,121 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qrv.setPay_orderid(qs.getPay_orderid());
 		qrv.setPay_md5sign(PayUtil.SignMd5QueryResultQrocde(qrv, mc.getAppkey()));
 		return qrv;
+	}
+
+	public AlipayTradePrecreateResponse alif2f(Qrcode qrcode, String ordernum, Double amount, Integer exp) {
+		try {
+			AlipayClient client = AliPayUtil.initAliPay(qrcode.getAppid(), qrcode.getAppprivatekey(),
+					qrcode.getApppublickey(), qrcode.getAlipaypublickey(), qrcode.getAlipayprovatekey());
+			AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
+			AlipayTradePrecreateModel model = new AlipayTradePrecreateModel();
+			model.setOutTradeNo(ordernum);
+			model.setTotalAmount(amount.toString());
+			model.setSubject(qrcode.getName() + StringUtil.getUUID());
+			model.setTimeoutExpress(exp + "m");
+			request.setBizModel(model);
+			request.setNotifyUrl(qrcode.getNotifyurl());
+			AlipayF2FPrecreateResult result = tradeService.tradePrecreate(request, client);
+			switch (result.getTradeStatus()) {
+			case SUCCESS:
+				log.info("支付宝预下单成功: )");
+				AlipayTradePrecreateResponse response = result.getResponse();
+				log.info(String.format("code:%s, msg:%s", response.getCode(), response.getMsg()));
+				log.info(response.getBody());
+				return response;
+			case FAILED:
+				log.error("支付宝预下单失败!!!");
+				break;
+			case UNKNOWN:
+				log.error("系统异常，预下单状态未知!!!");
+				break;
+			default:
+				log.error("不支持的交易状态，交易返回异常!!!");
+				break;
+			}
+		} catch (AlipayApiException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public void alipayftfcallback(Map<String, String> params) {
+		String trade_no = params.get("trade_no").toString();
+		String out_trade_no = params.get("out_trade_no").toString();
+		Income income = mapper.getByOrderNum(out_trade_no);
+		Qrcode qrcode = qrcodemapper.get(income.getQrcodeid());
+		try {
+			AlipayClient client = AliPayUtil.initAliPay(qrcode.getAppid(), qrcode.getAppprivatekey(),
+					qrcode.getApppublickey(), qrcode.getAlipaypublickey(), qrcode.getAlipayprovatekey());
+			AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
+			AlipayTradeQueryModel model = new AlipayTradeQueryModel();
+			model.setTradeNo(trade_no);
+			request.setBizModel(model);
+			AlipayF2FQueryResult result = tradeService.queryTradeResult(request, client);
+			switch (result.getTradeStatus()) {
+			case SUCCESS:
+				log.info("支付宝查单成功: )");
+				AlipayTradeQueryResponse response = result.getResponse();
+				if (response.getCode().equals(Constants.SUCCESS)) {
+					success(income, trade_no);
+				}
+				break;
+			case FAILED:
+				log.error("支付宝预下单失败!!!");
+				break;
+			case UNKNOWN:
+				log.error("系统异常，预下单状态未知!!!");
+				break;
+			default:
+				log.error("不支持的交易状态，交易返回异常!!!");
+				break;
+			}
+		} catch (AlipayApiException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void success(Income income, String trade_no) {
+		TenantIdContext.setTenantId(income.getTenant_id());
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			// 渠道
+			Qrcodeaccountorder qrcodeaccountorder = qrcodeaccountordermapper.getByOrderNum(income.getQrcodeordernum());
+			qrcodeaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			qrcodeaccountorder.setOrdernum(trade_no);
+			qrcodeaccountordermapper.put(qrcodeaccountorder);
+
+			// 計算代收
+			income.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			income.setQrcodeordernum(trade_no);
+			if (income.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61)
+				income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
+			income.setSuccesstime(DateTimeUtil.getNow());
+			income.setBacklong(DateUtil.between(income.getSuccesstime(), income.getCreate_time(), DateUnit.SECOND));
+			//
+			mapper.put(income);
+
+			// 计算渠道收入
+			qrcodeaccountservice.updateTotalincome(qrcodeaccountorder);
+			//
+			Incomemerchantaccountorder incomemerchantaccountorder = incomemerchantaccountordermapper
+					.getByOrderNum(income.getMerchantorderid());
+			incomemerchantaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			incomemerchantaccountordermapper.put(incomemerchantaccountorder);
+			// 计算商户收入
+			incomemerchantaccountservice.updateTotalincome(incomemerchantaccountorder);
+
+			// 计算商户主账号
+			merchantservice.updateIncome(income);
+
+			// 计算渠道主账号
+			channelservice.updateIncome(income);
+
+			// 计算系统收入
+			systemaccountservice.updateIncome(income);
+
+			TenantIdContext.remove();
+		}
+
 	}
 }
