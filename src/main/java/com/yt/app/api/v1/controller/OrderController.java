@@ -46,6 +46,21 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	@Autowired
 	private IncomeService incomeservice;
 
+	/**
+	 * html查询代收支付状态
+	 * 
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/income/{id}", method = RequestMethod.GET)
+	public YtResponseEntity<Object> queryIncomeOrder(@PathVariable Long id, HttpServletRequest request,
+			HttpServletResponse response) {
+		Income income = incomeservice.get(id);
+		return new YtResponseEntity<Object>(new YtBody(income.getStatus()));
+	}
+
 	// 菲律宾代付回调
 	@RequestMapping(value = "/tycallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request,
@@ -78,7 +93,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	}
 
 	/**
-	 * 代收扫码盘口下单
+	 * 代收本地原生支付
 	 * 
 	 * @param requestEntity
 	 * @param request
@@ -108,7 +123,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	}
 
 	/**
-	 * 代收盘口下单
+	 * 代收远程系统下单
 	 * 
 	 * @param requestEntity
 	 * @param request
@@ -154,21 +169,6 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * 查询代收支付状态
-	 * 
-	 * @param id
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "/income/{id}", method = RequestMethod.GET)
-	public YtResponseEntity<Object> queryIncomeOrder(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
-		Income income = incomeservice.get(id);
-		return new YtResponseEntity<Object>(new YtBody(income.getStatus()));
 	}
 
 	/**

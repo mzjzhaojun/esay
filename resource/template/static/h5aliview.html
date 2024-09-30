@@ -42,9 +42,9 @@ div {
 <body onLoad="initdata()">
 	<div class="alert"></div>
 	<div
-		style="width: 100%; height: 100%; background: #228B22; display: flex; justify-content: center; align-items: center; margin: 0px; padding: 0px;">
+		style="width: 100%; height: 100%; background: #f7f7f7; display: flex; justify-content: center; align-items: center; margin: 0px; padding: 0px;">
 		<div
-			style="background: #f5f5f5; width: 90%; height: 90%; border-radius: 30px;">
+			style="background: #FFFFFF; width: 360px; height: 90%; border-radius: 20px;">
 			<!-- 头部 -->
 			<!-- 中部 -->
 			<div
@@ -57,17 +57,19 @@ div {
 			</div>
 			<div
 				style="width: 100%; height: 8%; display: flex; justify-content: center; align-items: center;">
-				<div style="font-size: 30px; font-weight: 2px;">￥</div>
-				<div id="amount" style="font-size: 25px; font-weight: 2px;"></div>
+				<div style="font-size: 30px;color: red;  font-weight: 2px;">￥</div>
+				<div id="amount" style="font-size: 25px; color: red; font-weight: 2px;"></div>
 			</div>
 			<div id="count-down"
 				style="width: 100%; height: 10%; display: flex; justify-content: center; align-items: center;">
-
-				<div class="mr-4">还有</div>
-				<div style="background: #ffe600; border-radius: 5px; padding: 4px;"
+				<div class="mr-4">剩</div>
+				<div style="color: red; border-radius: 5px; padding: 4px;"
+					id="hour">00</div>
+				<div class="pl-2 pr-2">:</div>
+				<div style="color: red; border-radius: 5px; padding: 4px;"
 					id="minute">00</div>
-				<div class="pl-2 pr-2">分</div>
-				<div style="background: #ffe600; border-radius: 5px; padding: 4px;"
+				<div class="pl-2 pr-2">:</div>
+				<div style="color: red; border-radius: 5px; padding: 4px;"
 					id="second">00</div>
 				<div class="ml-4">秒后过期</div>
 			</div>
@@ -76,8 +78,8 @@ div {
 				style="width: 100%; height: 15%; display: flex; justify-content: center; align-items: center;">
 				<a id="pay_btn" href="">
 					<button type="button"
-						style="border-radius: 5px; background-color: royalblue; color: #FFFFFF; font-size: 22px; height: 45px; width: 340px; bolder: 0;">
-						点击打开支付宝APP</button>
+						style="border-radius: 5px; background-color: red; color: #FFFFFF; font-size: 22px; height: 70px; width: 350px; bolder: 0;">
+						确认支付</button>
 				</a>
 			</div>
 			<div

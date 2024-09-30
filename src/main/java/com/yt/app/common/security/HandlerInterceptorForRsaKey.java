@@ -9,6 +9,8 @@ import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.util.AesUtil;
 import com.yt.app.common.util.RsaUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * </p>
  *
  */
+@Slf4j
 public class HandlerInterceptorForRsaKey implements HandlerInterceptor {
 
 	public HandlerInterceptorForRsaKey(YtConfig config) {
@@ -39,6 +42,7 @@ public class HandlerInterceptorForRsaKey implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		String ip = request.getHeader(REAL_IP);
+		log.info(ip);
 		if (ip != null && ip.indexOf(",") != -1) {
 			String realip = ip.substring(0, ip.indexOf(","));
 			AuthContext.setIp(realip);

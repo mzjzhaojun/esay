@@ -11,7 +11,7 @@ import com.yt.app.api.v1.model.TradeStatus;
 import com.yt.app.api.v1.model.result.AlipayF2FPrecreateResult;
 import com.yt.app.api.v1.model.result.AlipayF2FQueryResult;
 import com.yt.app.api.v1.service.AlipayTradeService;
-import com.yt.app.common.resource.Constants;
+import com.yt.app.common.resource.DictionaryResource;
 
 import org.springframework.stereotype.Service;
 
@@ -49,7 +49,7 @@ public class AbsAlipayTradeService implements AlipayTradeService {
 		AlipayTradePrecreateResponse response = (AlipayTradePrecreateResponse) getResponse(client, request);
 
 		AlipayF2FPrecreateResult result = new AlipayF2FPrecreateResult(response);
-		if (response != null && Constants.SUCCESS.equals(response.getCode())) {
+		if (response != null && DictionaryResource.SUCCESS.equals(response.getCode())) {
 			// 预下单交易成功
 			result.setTradeStatus(TradeStatus.SUCCESS);
 
@@ -66,12 +66,12 @@ public class AbsAlipayTradeService implements AlipayTradeService {
 
 	// 交易异常，或发生系统错误
 	protected boolean tradeError(AlipayResponse response) {
-		return response == null || Constants.ERROR.equals(response.getCode());
+		return response == null || DictionaryResource.ERROR.equals(response.getCode());
 	}
 
 	// 查询返回“支付成功”
 	protected boolean querySuccess(AlipayTradeQueryResponse response) {
-		return response != null && Constants.SUCCESS.equals(response.getCode())
+		return response != null && DictionaryResource.SUCCESS.equals(response.getCode())
 				&& ("TRADE_SUCCESS".equals(response.getTradeStatus())
 						|| "TRADE_FINISHED".equals(response.getTradeStatus()));
 	}

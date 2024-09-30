@@ -10,6 +10,14 @@ import java.io.Serializable;
  */
 public class DictionaryResource implements Serializable {
 
+	public static final String SUCCESS = "10000"; // 成功
+	public static final String PAYING = "10003"; // 用户支付中
+	public static final String FAILED = "40004"; // 失败
+	public static final String ERROR = "20000"; // 系统异常
+
+	public static final String HSAISLE = "宏盛"; // 宏盛
+	public static final String YJJAISLE = "雨将军"; // YJJ
+
 	/**
 	 * 
 	 */
@@ -141,7 +149,7 @@ public class DictionaryResource implements Serializable {
 	public static final Integer BANK_TYPE_121 = 121; // 银行卡扫码
 	public static final Integer BANK_TYPE_122 = 122; // 微信扫码
 	public static final Integer BANK_TYPE_123 = 123; // 支付宝扫码
-	public static final Integer BANK_TYPE_502= 502; // 支付宝原生
+	public static final Integer BANK_TYPE_502 = 502; // 支付宝原生
 
 	/**
 	 * 换汇资金明细类型

@@ -50,13 +50,13 @@ import com.yt.app.api.v1.entity.Qrcodeaisleqrcode;
 import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.api.v1.vo.QrcodeResultVO;
 import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
+import com.yt.app.api.v1.vo.SysHsOrder;
 import com.yt.app.api.v1.vo.SysYjjOrder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.YtException;
-import com.yt.app.common.resource.Constants;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.AliPayUtil;
 import com.yt.app.common.util.DateTimeUtil;
@@ -616,17 +616,22 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
 		income.setNotifyurl(qs.getPay_notifyurl());
 		income.setBackforwardurl(qs.getPay_callbackurl());
-		// 动态码直接去线上拿连接
+		// 远程当面付
 		if (!qas.getDynamic()) {
-			SysYjjOrder sho = PayUtil.SendYJJSubmit(income, channel);
-			Assert.notNull(sho, "YJJ获取渠道订单失败!");
-			income.setResulturl(sho.getData().getPay_url());
-			income.setQrcodeordernum(sho.getData().getOrder_id());
-
-//			SysHsOrder sho = PayUtil.SendHSSubmit(income, channel);
-//			Assert.notNull(sho, "宏盛获取渠道订单失败!");
-//			income.setResulturl(sho.getPay_url());
-//			income.setQrcodeordernum(sho.getSys_order_no());
+			switch (channel.getName()) {
+			case DictionaryResource.YJJAISLE:
+				SysYjjOrder syo = PayUtil.SendYJJSubmit(income, channel);
+				Assert.notNull(syo, "YJJ获取渠道订单失败!");
+				income.setResulturl(syo.getData().getPay_url());
+				income.setQrcodeordernum(syo.getData().getOrder_id());
+				break;
+			case DictionaryResource.HSAISLE:
+				SysHsOrder sho = PayUtil.SendHSSubmit(income, channel);
+				Assert.notNull(sho, "宏盛获取渠道订单失败!");
+				income.setResulturl(sho.getPay_url());
+				income.setQrcodeordernum(sho.getSys_order_no());
+				break;
+			}
 		} else {
 			income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
 		}
@@ -791,7 +796,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			case SUCCESS:
 				log.info("支付宝查单成功: )");
 				AlipayTradeQueryResponse response = result.getResponse();
-				if (response.getCode().equals(Constants.SUCCESS)) {
+				if (response.getCode().equals(DictionaryResource.SUCCESS)) {
 					success(income, trade_no);
 				}
 				break;
