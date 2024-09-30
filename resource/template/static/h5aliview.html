@@ -166,11 +166,11 @@ div {
 											'<div style="background: #409eff; ">订单已过期,如果你已经支付,请五分钟后查看账户</div>');
 							$('#btn-down').html('<div></div>');
 						} else {
-							setTimeout("checkpaystatus()", 2000);
+							setTimeout("checkpaystatus()", 3000);
 						}
 					},
 					error : function() {
-						setTimeout("checkpaystatus()", 2000);
+						setTimeout("checkpaystatus()", 3000);
 					}
 				});
 	}
