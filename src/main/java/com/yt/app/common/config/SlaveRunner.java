@@ -41,24 +41,9 @@ public class SlaveRunner implements CommandLineRunner {
 		TronGetAddressThread7 tga71 = new TronGetAddressThread7();
 		threadpooltaskexecutor.execute(tga71);
 
-		// 生成地址7
-		TronGetAddressThread7 tga72 = new TronGetAddressThread7();
-		threadpooltaskexecutor.execute(tga72);
-
-		// 生成地址7
-		TronGetAddressThread7 tga73 = new TronGetAddressThread7();
-		threadpooltaskexecutor.execute(tga73);
-
 		// 生成地址6
 		TronGetAddressThread6 tga6 = new TronGetAddressThread6();
 		threadpooltaskexecutor.execute(tga6);
 
-		// 生成地址6
-		TronGetAddressThread6 tga61 = new TronGetAddressThread6();
-		threadpooltaskexecutor.execute(tga61);
-
-		// 生成地址6
-		TronGetAddressThread6 tga62 = new TronGetAddressThread6();
-		threadpooltaskexecutor.execute(tga62);
 	}
 }

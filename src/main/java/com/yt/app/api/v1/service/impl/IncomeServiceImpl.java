@@ -375,7 +375,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());
-		income.setExpireddate(DateTimeUtil.addMinute(10));// 多加3分钟
+		income.setExpireddate(DateTimeUtil.addMinute(10));// 默认10分钟
 		// 通道
 		income.setExpiredminute(10);
 		income.setQrcodeaisleid(qas.getId());
