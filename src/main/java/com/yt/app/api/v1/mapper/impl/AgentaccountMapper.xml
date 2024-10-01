@@ -13,9 +13,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Agentaccount">
 		insert into
-		agentaccount(id,userid,agentid,totalincome,withdrawamount,towithdrawamount,toincomeamount,balance,create_by,create_time,update_by,update_time,remark)
+		agentaccount(id,userid,agentid,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{userid},#{agentid},#{totalincome},#{withdrawamount},#{towithdrawamount},#{toincomeamount},#{balance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{userid},#{agentid},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">

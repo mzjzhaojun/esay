@@ -14,9 +14,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.ExchangeMerchantaccount">
 		insert into
-		exchangemerchantaccount(id,userid,merchantid,totalincome,withdrawamount,towithdrawamount,toincomeamount,balance,create_by,create_time,update_by,update_time,remark)
+		exchangemerchantaccount(id,userid,merchantid,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{userid},#{merchantid},#{totalincome},#{withdrawamount},#{towithdrawamount},#{toincomeamount},#{balance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{userid},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">

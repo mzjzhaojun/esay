@@ -13,9 +13,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Systemaccount">
 		insert into
-		systemaccount(id,totalincome,withdrawamount,balance,usdttotalincome,usdtwithdrawamount,usdtbalance,create_by,create_time,update_by,update_time,remark,userid)
+		systemaccount(id,userid,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{totalincome},#{withdrawamount},#{balance},#{usdttotalincome},#{usdtwithdrawamount},#{usdtbalance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark},#{userid})
+		(#{id},#{userid},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<insert id="postAndTanantId"
 		parameterType="com.yt.app.api.v1.entity.Systemaccount">

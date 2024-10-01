@@ -13,9 +13,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Channelaccount">
 		insert into
-		channelaccount(id,channelid,userid,totalincome,withdrawamount,towithdrawamount,toincomeamount,balance,create_by,create_time,update_by,update_time,remark)
+		channelaccount(id,channelid,userid,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{channelid},#{userid},#{totalincome},#{withdrawamount},#{towithdrawamount},#{toincomeamount},#{balance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{channelid},#{userid},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">

@@ -12,9 +12,9 @@
 	<!-- add -->
 	<insert id="post" parameterType="com.yt.app.api.v1.entity.Agent">
 		insert into
-		agent(id,name,nkname,remark,balance,status,exchange,onecost,downpoint,create_by,create_time,update_by,update_time,ipaddress,userid)
+		agent(id,name,nkname,remark,status,exchange,onecost,downpoint,create_by,create_time,update_by,update_time,ipaddress,userid)
 		values
-		(#{id},#{name},#{nkname},#{remark},#{balance},#{status},#{exchange},#{onecost},#{downpoint},#{create_by},#{create_time},#{update_by},#{update_time},#{ipaddress},#{userid})
+		(#{id},#{name},#{nkname},#{remark},#{status},#{exchange},#{onecost},#{downpoint},#{create_by},#{create_time},#{update_by},#{update_time},#{ipaddress},#{userid})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
