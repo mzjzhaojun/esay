@@ -14,6 +14,8 @@ import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
 
+import cn.hutool.core.lang.Assert;
+
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.IncomeService;
 import com.yt.app.api.v1.entity.Income;
@@ -45,5 +47,21 @@ public class IncomeController extends YtBaseEncipherControllerImpl<Income, Long>
 			HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<IncomeVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
+	}
+
+	@RequestMapping(value = "/makeuporder", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> makeuporder(YtRequestDecryptEntity<Income> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		Integer i = service.makeuporder(requestEntity.getBody());
+		Assert.notEquals(i, 0, "新增失败！");
+		return new YtResponseEncryptEntity<Object>(new YtBody(i));
+	}
+
+	@RequestMapping(value = "/notify", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> notify(YtRequestDecryptEntity<Income> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		Integer i = service.notify(requestEntity.getBody());
+		Assert.notEquals(i, 0, "更新失败！");
+		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 }

@@ -85,7 +85,7 @@
 				version= #{version}+1
 			</if>
 		</set>
-		where id = #{id} and version = #{version}
+		where id = #{id} 
 	</update>
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"

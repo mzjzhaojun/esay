@@ -108,21 +108,6 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	}
 
 	/**
-	 * 代收扫码盘口查单
-	 * 
-	 * @param requestEntity
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "/queryqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> queryqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
-		QueryQrcodeResultVO yb = incomeservice.queryqrcode(requestEntity.getBody());
-		return new YtResponseEntity<Object>(new YtBody(yb));
-	}
-
-	/**
 	 * 代收远程系统下单
 	 * 
 	 * @param requestEntity
