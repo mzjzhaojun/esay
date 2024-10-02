@@ -126,6 +126,8 @@
 		a.status STATUS,
 		a.nikname nikname,
 		a.type type,
+		m.name as mname,
+		m.code as mcode,
 		a.remark remark
 		FROM
 		merchantqrcodeaisle ma

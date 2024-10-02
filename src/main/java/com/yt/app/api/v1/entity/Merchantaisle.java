@@ -29,6 +29,8 @@ public class Merchantaisle extends YtBaseEntity<Merchantaisle> {
 	Integer version;
 	String name;
 	String code;
+	String mname;
+	String mcode;
 	Boolean status;
 	String nikname;
 	String type;

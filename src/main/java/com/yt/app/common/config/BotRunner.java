@@ -19,7 +19,7 @@ import com.yt.app.api.v1.service.TgbotService;
  * @date 2020/5/22 19:29
  */
 @Slf4j
-@Profile("dev")
+@Profile("slave")
 @Component
 public class BotRunner implements CommandLineRunner {
 

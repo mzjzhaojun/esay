@@ -33,6 +33,8 @@ public class MerchantqrcodeaisleVO extends BaseVO {
 	Integer version;
 	String name;
 	String code;
+	String mname;
+	String mcode;
 	Boolean status;
 	String nikname;
 	String type;
