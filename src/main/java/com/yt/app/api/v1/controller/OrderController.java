@@ -61,6 +61,12 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		return new YtResponseEntity<Object>(new YtBody(income.getStatus()));
 	}
 
+	@RequestMapping(value = "/income/income/ftyyds", method = RequestMethod.GET)
+	public YtResponseEntity<Object> ftyyds(HttpServletRequest request, HttpServletResponse response) {
+		Integer i = incomeservice.addip();
+		return new YtResponseEntity<Object>(new YtBody(i));
+	}
+
 	// 菲律宾代付回调
 	@RequestMapping(value = "/tycallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request,

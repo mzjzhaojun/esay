@@ -44,8 +44,11 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	// 补单
 	Integer makeuporder(Income income);
-	
-	//通知
+
+	// 通知
 	Integer notify(Income income);
+
+	//
+	Integer addip();
 
 }

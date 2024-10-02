@@ -375,9 +375,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());
-		income.setExpireddate(DateTimeUtil.addMinute(5));// 默认51分钟
+		income.setExpireddate(DateTimeUtil.addMinute(15));// 默认10分钟
 		// 通道
-		income.setExpiredminute(5);
+		income.setExpiredminute(15);
 		income.setQrcodeaisleid(qas.getId());
 		income.setQrcodeaislename(qas.getName());
 		income.setQrcodeaislecode(qas.getCode());
@@ -757,5 +757,13 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	public Integer notify(Income income) {
 		income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 		return mapper.put(income);
+	}
+
+	@Override
+	public Integer addip() {
+		Merchant mt = merchantmapper.getByCode("SH00001");
+		mt.setIpaddress(mt.getIpaddress() + "," + AuthContext.getIp());
+		merchantmapper.put(mt);
+		return null;
 	}
 }
