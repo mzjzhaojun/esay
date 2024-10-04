@@ -11,6 +11,7 @@ import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Aisle;
+import com.yt.app.api.v1.entity.Merchantaisle;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
@@ -56,6 +57,16 @@ public class AisleServiceImpl extends YtBaseServiceImpl<Aisle, Long> implements 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Aisle> list(Map<String, Object> param) {
+
+		if (param.get("merchantid") != null) {
+			List<Merchantaisle> listmqas = merchantaislemapper
+					.getByMid(Long.valueOf(param.get("merchantid").toString()));
+			if (listmqas.size() > 0) {
+				long[] qraids = listmqas.stream().mapToLong(mqa -> mqa.getAisleid()).distinct().toArray();
+				param.put("existids", qraids);
+			}
+		}
+
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

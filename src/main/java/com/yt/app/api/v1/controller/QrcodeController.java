@@ -46,4 +46,11 @@ public class QrcodeController extends YtBaseEncipherControllerImpl<Qrcode, Long>
 		YtIPage<QrcodeVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
+	
+	@RequestMapping(value = "/paytest", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> paytest(YtRequestDecryptEntity<Qrcode> requestEntity,
+			HttpServletRequest request, HttpServletResponse response) {
+		QrcodeVO qv = service.paytest(requestEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(qv));
+	}
 }

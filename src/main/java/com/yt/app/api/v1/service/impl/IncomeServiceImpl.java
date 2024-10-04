@@ -582,7 +582,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setQrcodeid(qd.getId());
 		income.setQrcodename(qd.getName());
 		income.setAmount(Double.valueOf(qs.getPay_amount()));
-		income.setDynamic(qd.getDynamic());
+		income.setDynamic(qas.getDynamic());
 
 		income.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);

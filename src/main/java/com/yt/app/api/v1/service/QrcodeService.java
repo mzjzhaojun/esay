@@ -15,4 +15,6 @@ import com.yt.app.common.common.yt.YtIPage;
 
 public interface QrcodeService extends YtIBaseService<Qrcode, Long> {
 	YtIPage<QrcodeVO> page(Map<String, Object> param);
+
+	QrcodeVO paytest(Qrcode qv);
 }

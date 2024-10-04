@@ -94,6 +94,13 @@
 			<if test="status != null">
 				and status = #{status}
 			</if>
+			<if test="existids != null and existids.length > 0">
+				and id not in
+				<foreach item="item" index="index" collection="existids"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
 			<if test="orderBy != null and dir!= null">
 				order by ${orderBy} ${dir}
 			</if>
@@ -135,6 +142,13 @@
 			</if>
 			<if test="status != null">
 				and status = #{status}
+			</if>
+			<if test="existids != null and existids.length > 0">
+				and id not in
+				<foreach item="item" index="index" collection="existids"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
 			</if>
 		</where>
 	</select>

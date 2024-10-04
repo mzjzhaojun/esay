@@ -40,10 +40,9 @@ public class SecurityUtil {
 			SerializeConfig serializeConfig = new SerializeConfig();
 			serializeConfig.put(Long.class, ToStringSerializer.instance);
 			serializeConfig.put(Long.TYPE, ToStringSerializer.instance);
-			serializeConfig.put(Date.class, new SimpleDateFormatSerializer("YY-MM-dd HH:mm"));
+			serializeConfig.put(Date.class, new SimpleDateFormatSerializer("YY-MM-dd HH:mm:ss"));
 			String dataString = JSON.toJSONString(object, serializeConfig, SerializerFeature.PrettyFormat);
-			String data = AesUtil.encrypt(dataString, AuthContext.getAesKey());
-			return data;
+			return AesUtil.encrypt(dataString, AuthContext.getAesKey());
 		} catch (Throwable e) {
 			throw new YtException("用户长时间未登录！", YtCodeEnum.YT401);
 		}

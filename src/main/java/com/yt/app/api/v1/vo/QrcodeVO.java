@@ -61,5 +61,6 @@ public class QrcodeVO extends BaseVO {
 	Long update_by;
 	java.util.Date update_time;
 	String remark;
+	String payurl;
 	Integer version;
 }

@@ -199,15 +199,16 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	@Override
 	public Integer getRemotebalance(Long id) {
 		Channel cl = mapper.get(id);
-		if (cl.getCode().equals("240852173")) {
-			// 宏盛代收
-			String balance = PayUtil.SendHsSelectBalance(cl);
-			if (balance != null)
-				cl.setRemotebalance(Double.valueOf(balance));
-		} else {
-			// 老李代付
-			SysTyBalance stb = PayUtil.SendTySelectBalance(cl);
-			cl.setRemotebalance(stb.getAvailableBalance());
+		switch (cl.getName()) {
+		case DictionaryResource.YJJAISLE:
+						SysTyBalance stb = PayUtil.SendTySelectBalance(cl);
+						cl.setRemotebalance(stb.getAvailableBalance());
+			break;
+		case DictionaryResource.HSAISLE:
+						String balance = PayUtil.SendHsSelectBalance(cl);
+						if (balance != null)
+							cl.setRemotebalance(Double.valueOf(balance));
+			break;
 		}
 		return mapper.put(cl);
 	}

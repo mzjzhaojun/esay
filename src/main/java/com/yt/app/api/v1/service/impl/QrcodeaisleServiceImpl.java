@@ -13,6 +13,7 @@ import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
+import com.yt.app.api.v1.entity.Merchantqrcodeaisle;
 import com.yt.app.api.v1.entity.Qrcodeaisle;
 import com.yt.app.api.v1.vo.QrcodeaisleVO;
 import com.yt.app.common.common.yt.YtIPage;
@@ -79,6 +80,15 @@ public class QrcodeaisleServiceImpl extends YtBaseServiceImpl<Qrcodeaisle, Long>
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<QrcodeaisleVO> page(Map<String, Object> param) {
+		if (param.get("merchantid") != null) {
+			List<Merchantqrcodeaisle> listmqas = merchantqrcodeaislemapper
+					.getByMid(Long.valueOf(param.get("merchantid").toString()));
+			if (listmqas.size() > 0) {
+				long[] qraids = listmqas.stream().mapToLong(mqa -> mqa.getQrcodeaisleid()).distinct().toArray();
+				param.put("existids", qraids);
+			}
+		}
+
 		int count = mapper.countlist(param);
 		if (count == 0) {
 			return new YtPageBean<QrcodeaisleVO>(Collections.emptyList());
