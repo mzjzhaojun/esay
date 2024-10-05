@@ -17,6 +17,7 @@ public class DictionaryResource implements Serializable {
 
 	public static final String HSAISLE = "宏盛"; // 宏盛
 	public static final String YJJAISLE = "雨将军"; // YJJ
+	public static final String WDAISLE = "豌豆"; // WDAISLE
 
 	/**
 	 * 
@@ -146,15 +147,27 @@ public class DictionaryResource implements Serializable {
 	public static final Integer TGBOTGROUPRECORD_TYPE_WITHDRAW = 112; // 减款
 	public static final Integer TGBOTGROUPRECORD_TYPE_USDT = 113; // 下发
 
-	public static final Integer BANK_TYPE_121 = 121; // 银行卡扫码
-	public static final Integer BANK_TYPE_122 = 122; // 微信扫码
-	public static final Integer BANK_TYPE_123 = 123; // 支付宝扫码
-	public static final Integer BANK_TYPE_502 = 502; // 支付宝原生
+	public static final Integer BANK_TYPE_121 = 121; // 银行卡
+	public static final Integer BANK_TYPE_122 = 122; // 微信
+	public static final Integer BANK_TYPE_123 = 123; // 支付宝
 
 	/**
 	 * 换汇资金明细类型
 	 */
 	public static final Integer LOG_TYPE_201 = 201; // web
 	public static final Integer LOG_TYPE_202 = 202; // app
+
+	public static final Integer PROJECT_TYPE_501 = 501;
+	public static final Integer PROJECT_TYPE_502 = 502;
+	public static final Integer PROJECT_TYPE_503 = 503;
+	public static final Integer PROJECT_TYPE_504 = 504;
+	public static final Integer PROJECT_TYPE_505 = 505;
+	public static final Integer PROJECT_TYPE_506 = 506;
+	public static final Integer PROJECT_TYPE_507 = 507;
+	public static final Integer PROJECT_TYPE_508 = 508;
+	public static final Integer PROJECT_TYPE_509 = 509;
+	public static final Integer PROJECT_TYPE_510 = 510;
+	public static final Integer PROJECT_TYPE_511 = 511;
+	public static final Integer PROJECT_TYPE_512 = 512;
 
 }

@@ -51,6 +51,7 @@ import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.api.v1.vo.QrcodeResultVO;
 import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
 import com.yt.app.api.v1.vo.SysHsOrder;
+import com.yt.app.api.v1.vo.SysWdOrder;
 import com.yt.app.api.v1.vo.SysYjjOrder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -312,7 +313,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			throw new YtException("非法请求!");
 		}
 		String returnstate = PayUtil.SendHSQuerySubmit(orderid, channel);
-		Assert.notNull(returnstate, "宏盛获取渠道订单失败!");
+		Assert.notNull(returnstate, "宏盛通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
 			TenantIdContext.remove();
@@ -333,7 +334,28 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			throw new YtException("非法请求!");
 		}
 		String returnstate = PayUtil.SendYJJQuerySubmit(orderid, income.getAmount(), channel);
-		Assert.notNull(returnstate, "YJJ获取渠道订单失败!");
+		Assert.notNull(returnstate, "YJJ通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
+			TenantIdContext.remove();
+		}
+
+	}
+
+	@Override
+	public void wdcallback(Map<String, String> params) {
+		String orderid = params.get("payOrderId").toString();
+		String status = params.get("state").toString();
+		log.info("豌豆通知返回消息：orderid" + orderid + " status:" + status);
+		Income income = mapper.getByOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getChannelid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendWdQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "豌豆通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
 			TenantIdContext.remove();
@@ -405,8 +427,16 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				income.setResulturl(sho.getPay_url());
 				income.setQrcodeordernum(sho.getSys_order_no());
 				break;
+			case DictionaryResource.WDAISLE:
+				SysWdOrder wd = PayUtil.SendWdSubmit(income, channel);
+				Assert.notNull(wd, "豌豆获取渠道订单失败!");
+				income.setResulturl(wd.getData().getPayData());
+				income.setQrcodeordernum(wd.getData().getPayOrderId());
+				break;
 			}
-		} else {
+		} else
+
+		{
 			income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
 		}
 		// 渠道收入
@@ -423,6 +453,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		// 计算当前码可生成的订单
 		income.setFewamount(0.00);
 		income.setRealamount(income.getAmount());
+		income.setType(DictionaryResource.PROJECT_TYPE_512.toString());
 		int i = mapper.post(income);
 		if (i == 0) {
 			throw new YtException("当前通道码繁忙");

@@ -48,6 +48,7 @@ public class QrcodeVO extends BaseVO {
 	Integer todayorder;
 	Double todayincome;
 	String appid;
+	String notifyurl;
 	String appprivatekey;
 	String apppublickey;
 	String alipaypublickey;

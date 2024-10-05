@@ -41,7 +41,7 @@ public class ViewController {
 			return "static/wxview";
 		else if (income.getType().equals(DictionaryResource.BANK_TYPE_123.toString()))
 			return "static/aliview";
-		else if (income.getType().equals(DictionaryResource.BANK_TYPE_502.toString()))
+		else if (income.getType().equals(DictionaryResource.PROJECT_TYPE_505.toString()))
 			return "static/h5aliview";
 		return "static/othview";
 	}

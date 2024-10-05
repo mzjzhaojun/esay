@@ -182,6 +182,25 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	}
 
 	/**
+	 * YJJ代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/wdcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void wdcallback(@RequestParam Map<String, String> params, HttpServletRequest request,
+			HttpServletResponse response) {
+		incomeservice.wdcallback(params);
+		try {
+			response.getWriter().print("success");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * 支付宝当面付回调
 	 * 
 	 * @param requestEntity

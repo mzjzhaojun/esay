@@ -23,6 +23,8 @@ import com.yt.app.api.v1.vo.SysHsOrder;
 import com.yt.app.api.v1.vo.SysHsQuery;
 import com.yt.app.api.v1.vo.SysTyBalance;
 import com.yt.app.api.v1.vo.SysTyOrder;
+import com.yt.app.api.v1.vo.SysWdOrder;
+import com.yt.app.api.v1.vo.SysWdQuery;
 import com.yt.app.api.v1.vo.SysYJJQuery;
 import com.yt.app.api.v1.vo.SysYjjOrder;
 import com.yt.app.common.common.yt.YtBody;
@@ -183,40 +185,6 @@ public class PayUtil {
 		return data;
 	}
 
-	// 宏盛代收查余额
-	public static String SendHsSelectBalance(Channel cl) {
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-		map.add("mchid", cl.getCode());
-		map.add("sign_type", "RSA2");
-
-		String signContent = "mchid=" + cl.getCode();
-		String sign = "";
-		try {
-			sign = sign(signContent, cl.getPrivatersa());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		map.add("sign", sign);
-		log.info("宏盛余额签名：" + sign);
-
-		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
-		RestTemplate resttemplate = new RestTemplate();
-		//
-		ResponseEntity<SysHsQuery> sov = resttemplate.exchange(cl.getApiip() + "/Payment/Dfpay/balance.do",
-				HttpMethod.POST, httpEntity, SysHsQuery.class);
-		SysHsQuery data = sov.getBody();
-		log.info("宏盛余额返回消息：" + data.getTrade_state());
-		if (data.getStatus().equals("success")) {
-			return data.getBalance();
-		}
-		return null;
-	}
-
 	// 代付盘口通知
 	public static YtBody SendPayoutNotify(String url, PayResultVO ss, String key) {
 
@@ -301,6 +269,8 @@ public class PayUtil {
 		return MD5Utils.md5(stringSignTemp).toUpperCase();
 	}
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	// 宏盛代收下单
 	public static SysHsOrder SendHSSubmit(Income pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
@@ -376,6 +346,40 @@ public class PayUtil {
 		log.info("宏盛查单返回消息：" + data.getTrade_state());
 		if (data.getTrade_state().equals("SUCCESS")) {
 			return data.getTrade_state();
+		}
+		return null;
+	}
+
+	// 宏盛代收查余额
+	public static String SendHsGetBalance(Channel cl) {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.add("user-agent",
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		map.add("mchid", cl.getCode());
+		map.add("sign_type", "RSA2");
+
+		String signContent = "mchid=" + cl.getCode();
+		String sign = "";
+		try {
+			sign = sign(signContent, cl.getPrivatersa());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		map.add("sign", sign);
+		log.info("宏盛余额签名：" + sign);
+
+		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysHsQuery> sov = resttemplate.exchange(cl.getApiip() + "/Payment/Dfpay/balance.do",
+				HttpMethod.POST, httpEntity, SysHsQuery.class);
+		SysHsQuery data = sov.getBody();
+		log.info("宏盛余额返回消息：" + data.getTrade_state());
+		if (data.getStatus().equals("success")) {
+			return data.getBalance();
 		}
 		return null;
 	}
@@ -471,7 +475,7 @@ public class PayUtil {
 		String signContent = "amount=" + amount + "&merchant_id=" + cl.getCode() + "&order_id=" + orderid + "&sign="
 				+ cl.getApikey();
 		String sign = MD5Utils.md5(signContent);
-		map.add("sign", sign);
+		map.add("sign", sign.toUpperCase());
 		log.info("YJJ查单签名：" + sign.toUpperCase());
 
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
@@ -483,6 +487,105 @@ public class PayUtil {
 		log.info("YJJ查单返回消息：" + data.getMsg());
 		if (data.getMsg().equals("ok")) {
 			return data.getData().getStatus();
+		}
+		return null;
+	}
+
+	// 豌豆代收对接
+	public static SysWdOrder SendWdSubmit(Income pt, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.add("user-agent",
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		Long time = DateTimeUtil.getNow().getTime();
+		map.add("mchNo", cl.getCode());
+		map.add("productId", pt.getQrcodeaislecode());
+		map.add("mchOrderNo", pt.getOrdernum());
+		map.add("reqTime", time.toString());
+		map.add("amount", String.format("%.0f", pt.getAmount()));
+		map.add("notifyUrl", cl.getApireusultip());
+		map.add("clientIp", "127.0.0.1");
+
+		String signContent = "amount=" + String.format("%.0f", pt.getAmount()) + "&clientIp=127.0.0.1&mchNo="
+				+ cl.getCode() + "&mchOrderNo=" + pt.getOrdernum() + "&notifyUrl=" + cl.getApireusultip()
+				+ "&productId=" + pt.getQrcodeaislecode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
+
+		String sign = MD5Utils.md5(signContent);
+		map.add("sign", sign.toUpperCase());
+		log.info("豌豆下单签名：" + sign.toUpperCase() + "===" + signContent);
+
+		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysWdOrder> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/unifiedOrder", HttpMethod.POST,
+				httpEntity, SysWdOrder.class);
+		SysWdOrder data = sov.getBody();
+		log.info("豌豆返回消息：" + data.getMsg());
+		if (data.getCode().equals("0")) {
+			return data;
+		}
+		return null;
+	}
+
+	// 豌豆代收查单
+	public static String SendWdQuerySubmit(String orderid, Double amount, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.add("user-agent",
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		map.add("mchNo", cl.getCode());
+		map.add("amount", amount.toString());
+		map.add("mchOrderNo", orderid);
+
+		String signContent = "amount=" + amount + "&mchNo=" + cl.getCode() + "&mchOrderNo=" + orderid + "&key="
+				+ cl.getApikey();
+		String sign = MD5Utils.md5(signContent);
+		map.add("sign", sign.toUpperCase());
+		log.info("豌豆查单签名：" + sign.toUpperCase());
+
+		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysWdQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/query", HttpMethod.POST,
+				httpEntity, SysWdQuery.class);
+		SysWdQuery data = sov.getBody();
+		log.info("豌豆查单返回消息：" + data.getMsg());
+		if (data.getMsg().equals("0")) {
+			return data.getData().getState();
+		}
+		return null;
+	}
+
+	public static String SendWdGetBalance(Channel cl) {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.add("user-agent",
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		map.add("mchNo", cl.getCode());
+
+		String signContent = "mchNo=" + cl.getCode() + "&key=" + cl.getApikey();
+		String sign = "";
+		try {
+			sign = sign(signContent, cl.getPrivatersa());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		map.add("sign", sign.toUpperCase());
+		log.info("豌豆余额签名：" + sign);
+
+		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysWdQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/mch/queryBalance", HttpMethod.POST,
+				httpEntity, SysWdQuery.class);
+		SysWdQuery data = sov.getBody();
+		log.info("豌豆余额返回消息：" + data.getData().getBalance());
+		if (data.getMsg().equals("0")) {
+			return data.getData().getBalance().toString();
 		}
 		return null;
 	}
