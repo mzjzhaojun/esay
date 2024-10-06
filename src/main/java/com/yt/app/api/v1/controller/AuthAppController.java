@@ -16,7 +16,7 @@ import com.yt.app.api.v1.vo.AuthLoginVO;
 import com.yt.app.common.base.constant.SecurityConstant;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.common.common.yt.YtBody;
-import com.yt.app.common.common.yt.YtRequestDecryptEntity;
+import com.yt.app.common.common.yt.YtRequestEntity;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
 import com.yt.app.common.common.yt.YtResponseEntity;
 import com.yt.app.common.util.AuthUtil;
@@ -35,14 +35,14 @@ public class AuthAppController extends YtBaseEncipherControllerImpl<User, Long> 
 	private AuthService authservice;
 
 	@RequestMapping(value = "/loginapp", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> loginapp(YtRequestDecryptEntity<AuthLoginDTO> requestEntity,
+	public YtResponseEntity<Object> loginapp(YtRequestEntity<AuthLoginDTO> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
 		AuthLoginVO u = authservice.loginapp(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(u));
 	}
 
 	@RequestMapping(value = "/logoutapp", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public YtResponseEncryptEntity<Object> logoutvue(YtRequestDecryptEntity<User> requestEntity,
+	public YtResponseEncryptEntity<Object> logoutvue(YtRequestEntity<User> requestEntity,
 			HttpServletRequest request, HttpServletResponse response) {
 		String token = request.getHeader(SecurityConstant.AUTHORIZATION_KEY);
 		AuthUtil.logout(token);

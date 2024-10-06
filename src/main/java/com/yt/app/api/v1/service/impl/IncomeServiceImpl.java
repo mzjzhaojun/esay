@@ -347,7 +347,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		String orderid = params.get("payOrderId").toString();
 		String status = params.get("state").toString();
 		log.info("豌豆通知返回消息：orderid" + orderid + " status:" + status);
-		Income income = mapper.getByOrderNum(orderid);
+		Income income = mapper.getByQrcodeOrderNum(orderid);
 		TenantIdContext.setTenantId(income.getTenant_id());
 		Channel channel = channelmapper.get(income.getChannelid());
 		String ip = AuthContext.getIp();

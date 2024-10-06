@@ -51,7 +51,9 @@
 		<includeCallerData>true</includeCallerData>
 	</appender>
 
-    <logger name="com.yt.app" level="debug"></logger>
+    <logger name="com.yt.app" level="debug"></logger>    
+    
+    <logger name="org.bitcoinj.crypto.MnemonicCode" level="error"></logger>    
     
 	<root level="info"><!-- debug error -->
 		<appender-ref ref="ASYNC-FILE" />

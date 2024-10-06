@@ -503,13 +503,14 @@ public class PayUtil {
 		map.add("productId", pt.getQrcodeaislecode());
 		map.add("mchOrderNo", pt.getOrdernum());
 		map.add("reqTime", time.toString());
-		map.add("amount", String.format("%.0f", pt.getAmount()));
+		map.add("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
 		map.add("notifyUrl", cl.getApireusultip());
 		map.add("clientIp", "127.0.0.1");
 
-		String signContent = "amount=" + String.format("%.0f", pt.getAmount()) + "&clientIp=127.0.0.1&mchNo="
-				+ cl.getCode() + "&mchOrderNo=" + pt.getOrdernum() + "&notifyUrl=" + cl.getApireusultip()
-				+ "&productId=" + pt.getQrcodeaislecode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
+		String signContent = "amount=" + String.format("%.2f", pt.getAmount()).replace(".", "")
+				+ "&clientIp=127.0.0.1&mchNo=" + cl.getCode() + "&mchOrderNo=" + pt.getOrdernum() + "&notifyUrl="
+				+ cl.getApireusultip() + "&productId=" + pt.getQrcodeaislecode() + "&reqTime=" + time.toString()
+				+ "&key=" + cl.getApikey();
 
 		String sign = MD5Utils.md5(signContent);
 		map.add("sign", sign.toUpperCase());
@@ -535,15 +536,17 @@ public class PayUtil {
 		headers.add("user-agent",
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		Long time = DateTimeUtil.getNow().getTime();
 		map.add("mchNo", cl.getCode());
-		map.add("amount", amount.toString());
-		map.add("mchOrderNo", orderid);
+		map.add("amount", String.format("%.2f", amount).replace(".", ""));
+		map.add("payOrderId", orderid);
+		map.add("reqTime", time.toString());
 
-		String signContent = "amount=" + amount + "&mchNo=" + cl.getCode() + "&mchOrderNo=" + orderid + "&key="
-				+ cl.getApikey();
+		String signContent = "amount=" + String.format("%.2f", amount).replace(".", "") + "&mchNo=" + cl.getCode()
+				+ "&payOrderId=" + orderid + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
 		String sign = MD5Utils.md5(signContent);
 		map.add("sign", sign.toUpperCase());
-		log.info("豌豆查单签名：" + sign.toUpperCase());
+		log.info("豌豆查单签名：" + sign.toUpperCase() + "===" + signContent);
 
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
@@ -552,7 +555,7 @@ public class PayUtil {
 				httpEntity, SysWdQuery.class);
 		SysWdQuery data = sov.getBody();
 		log.info("豌豆查单返回消息：" + data.getMsg());
-		if (data.getMsg().equals("0")) {
+		if (data.getCode().equals("0")) {
 			return data.getData().getState();
 		}
 		return null;
@@ -565,9 +568,10 @@ public class PayUtil {
 		headers.add("user-agent",
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		Long time = DateTimeUtil.getNow().getTime();
 		map.add("mchNo", cl.getCode());
-
-		String signContent = "mchNo=" + cl.getCode() + "&key=" + cl.getApikey();
+		map.add("reqTime", time.toString());
+		String signContent = "mchNo=" + cl.getCode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
 		String sign = "";
 		try {
 			sign = sign(signContent, cl.getPrivatersa());
@@ -584,7 +588,7 @@ public class PayUtil {
 				httpEntity, SysWdQuery.class);
 		SysWdQuery data = sov.getBody();
 		log.info("豌豆余额返回消息：" + data.getData().getBalance());
-		if (data.getMsg().equals("0")) {
+		if (data.getCode().equals("0")) {
 			return data.getData().getBalance().toString();
 		}
 		return null;
