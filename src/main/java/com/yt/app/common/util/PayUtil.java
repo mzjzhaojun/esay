@@ -1,6 +1,8 @@
 package com.yt.app.common.util;
 
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +23,8 @@ import com.yt.app.api.v1.vo.QrcodeResultVO;
 import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
 import com.yt.app.api.v1.vo.SysHsOrder;
 import com.yt.app.api.v1.vo.SysHsQuery;
+import com.yt.app.api.v1.vo.SysRblOrder;
+import com.yt.app.api.v1.vo.SysRblQuery;
 import com.yt.app.api.v1.vo.SysTyBalance;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.api.v1.vo.SysWdOrder;
@@ -561,6 +565,7 @@ public class PayUtil {
 		return null;
 	}
 
+	// 豌豆查询余额
 	public static String SendWdGetBalance(Channel cl) {
 
 		HttpHeaders headers = new HttpHeaders();
@@ -572,12 +577,7 @@ public class PayUtil {
 		map.add("mchNo", cl.getCode());
 		map.add("reqTime", time.toString());
 		String signContent = "mchNo=" + cl.getCode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
-		String sign = "";
-		try {
-			sign = sign(signContent, cl.getPrivatersa());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		String sign = MD5Utils.md5(signContent);
 		map.add("sign", sign.toUpperCase());
 		log.info("豌豆余额签名：" + sign);
 
@@ -590,6 +590,106 @@ public class PayUtil {
 		log.info("豌豆余额返回消息：" + data.getData().getBalance());
 		if (data.getCode().equals("0")) {
 			return data.getData().getBalance().toString();
+		}
+		return null;
+	}
+
+	// 日不落代收对接
+	public static SysRblOrder SendRblSubmit(Income pt, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent",
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Map<String, Object> map = new HashMap<String, Object>();
+		Long time = DateTimeUtil.getNow().getTime();
+		map.put("mchId", cl.getCode());
+		map.put("wayCode", pt.getQrcodeaislecode());
+		map.put("outTradeNo", pt.getOrdernum());
+		map.put("subject", time.toString());
+		map.put("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
+		map.put("notifyUrl", cl.getApireusultip());
+		map.put("returnUrl", pt.getBackforwardurl());
+		map.put("clientIp", "127.0.0.1");
+		map.put("reqTime", time.toString());
+
+		String signContent = "amount=" + String.format("%.2f", pt.getAmount()).replace(".", "")
+				+ "&clientIp=127.0.0.1&mchId=" + cl.getCode() + "&notifyUrl=" + cl.getApireusultip() + "&outTradeNo="
+				+ pt.getOrdernum() + "&reqTime=" + time.toString() + "&returnUrl=" + pt.getBackforwardurl()
+				+ "&subject=" + time.toString() + "&wayCode=" + pt.getQrcodeaislecode() + "&key=" + cl.getApikey();
+
+		String sign = MD5Utils.md5(signContent);
+		map.put("sign", sign);
+		log.info("日不落下单签名：" + sign + "===" + signContent);
+
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysRblOrder> sov = resttemplate.postForEntity(cl.getApiip() + "/api/pay/order", httpEntity,
+				SysRblOrder.class);
+		SysRblOrder data = sov.getBody();
+		log.info("日不落返回消息：" + data.getMessage());
+		if (data.getCode().equals("0")) {
+			return data;
+		}
+		return null;
+	}
+
+	// 日不落代收查单
+	public static String SendRblQuerySubmit(String orderid, Double amount, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent",
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Map<String, Object> map = new HashMap<String, Object>();
+		Long time = DateTimeUtil.getNow().getTime();
+		map.put("mchId", cl.getCode());
+		map.put("outTradeNo", orderid);
+		map.put("reqTime", time.toString());
+
+		String signContent = "mchId=" + cl.getCode() + "&outTradeNo=" + orderid + "&reqTime=" + time.toString()
+				+ "&key=" + cl.getApikey();
+		String sign = MD5Utils.md5(signContent);
+		map.put("sign", sign);
+		log.info("日不落查单签名：" + sign + "===" + signContent);
+
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysRblQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/api/pay/query", httpEntity,
+				SysRblQuery.class);
+		SysRblQuery data = sov.getBody();
+		log.info("日不落查单返回消息：" + data.getMessage());
+		if (data.getCode().equals("0") && data.getData().getState().equals("1")) {
+			return data.getData().getState();
+		}
+		return null;
+	}
+
+	// 日不落查询余额
+	public static String SendRblGetBalance(Channel cl) {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent",
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Map<String, Object> map = new HashMap<String, Object>();
+		Long time = DateTimeUtil.getNow().getTime();
+		map.put("mchId", cl.getCode());
+		map.put("reqTime", time.toString());
+		String signContent = "mchId=" + cl.getCode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
+		String sign = MD5Utils.md5(signContent);
+		map.put("sign", sign);
+		log.info("日不落查单签名：" + sign + "===" + signContent);
+
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysRblQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/api/mch/balance", httpEntity,
+				SysRblQuery.class);
+		SysRblQuery data = sov.getBody();
+		log.info("日不落余额返回消息：" + data.getData().getBalance());
+		if (data.getCode().equals("0")) {
+			return data.getData().getBalance();
 		}
 		return null;
 	}

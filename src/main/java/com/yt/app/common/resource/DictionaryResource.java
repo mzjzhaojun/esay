@@ -15,10 +15,11 @@ public class DictionaryResource implements Serializable {
 	public static final String FAILED = "40004"; // 失败
 	public static final String ERROR = "20000"; // 系统异常
 
+	public static final String LLAISLE = "老李代付"; // 老李代付
 	public static final String HSAISLE = "宏盛"; // 宏盛
 	public static final String YJJAISLE = "雨将军"; // YJJ
 	public static final String WDAISLE = "豌豆"; // WDAISLE
-
+	public static final String RBLAISLE = "日不落"; // WDAISLE
 	/**
 	 * 
 	 */

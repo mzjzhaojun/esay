@@ -44,7 +44,7 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 
 	private Pattern allowedMethods = Pattern.compile("^(HEAD|TRACE|OPTIONS)$");
 
-	private AntPathRequestMatcher[] requestMatchers = { new AntPathRequestMatcher("/rest/v1/auth/**"),
+	private AntPathRequestMatcher[] requestMatchers = { new AntPathRequestMatcher("/app/v1/auth/**"), new AntPathRequestMatcher("/rest/v1/auth/**"),
 			new AntPathRequestMatcher("/rest/v2/file/dt/**"), new AntPathRequestMatcher("/rest/v1/order/**"),
 			new AntPathRequestMatcher("/rest/v1/view/**"), new AntPathRequestMatcher("/rest/v1/tron/**"),
 			new AntPathRequestMatcher("/static/**") };

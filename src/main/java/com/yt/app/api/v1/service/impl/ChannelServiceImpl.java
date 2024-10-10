@@ -199,13 +199,24 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	@Override
 	public Integer getRemotebalance(Long id) {
 		Channel cl = mapper.get(id);
+		String balance = null;
 		switch (cl.getName()) {
-		case DictionaryResource.YJJAISLE:
+		case DictionaryResource.LLAISLE:
 			SysTyBalance stb = PayUtil.SendTySelectBalance(cl);
 			cl.setRemotebalance(stb.getAvailableBalance());
 			break;
 		case DictionaryResource.HSAISLE:
-			String balance = PayUtil.SendHsGetBalance(cl);
+			balance = PayUtil.SendHsGetBalance(cl);
+			if (balance != null)
+				cl.setRemotebalance(Double.valueOf(balance));
+			break;
+		case DictionaryResource.WDAISLE:
+			balance = PayUtil.SendWdGetBalance(cl);
+			if (balance != null)
+				cl.setRemotebalance(Double.valueOf(balance));
+			break;
+		case DictionaryResource.RBLAISLE:
+			balance = PayUtil.SendRblGetBalance(cl);
 			if (balance != null)
 				cl.setRemotebalance(Double.valueOf(balance));
 			break;

@@ -29,6 +29,7 @@ import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtRequestEntity;
 import com.yt.app.common.common.yt.YtResponseEntity;
+import com.yt.app.common.util.RequestUtil;
 
 /**
  * @author yyds
@@ -182,7 +183,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	}
 
 	/**
-	 * YJJ代收回调
+	 * 豌豆代收回调
 	 * 
 	 * @param requestEntity
 	 * @param request
@@ -193,6 +194,25 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	public void wdcallback(@RequestParam Map<String, String> params, HttpServletRequest request,
 			HttpServletResponse response) {
 		incomeservice.wdcallback(params);
+		try {
+			response.getWriter().print("success");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 日不落代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/rblcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void rblcallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request,
+			HttpServletResponse response) {
+		incomeservice.rblcallback(RequestUtil.requestEntityToParamMap(requestEntity));
 		try {
 			response.getWriter().print("success");
 		} catch (IOException e) {

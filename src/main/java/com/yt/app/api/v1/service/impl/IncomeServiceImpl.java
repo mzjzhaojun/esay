@@ -51,6 +51,7 @@ import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.api.v1.vo.QrcodeResultVO;
 import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
 import com.yt.app.api.v1.vo.SysHsOrder;
+import com.yt.app.api.v1.vo.SysRblOrder;
 import com.yt.app.api.v1.vo.SysWdOrder;
 import com.yt.app.api.v1.vo.SysYjjOrder;
 import com.yt.app.common.common.yt.YtIPage;
@@ -364,6 +365,27 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
+	public void rblcallback(Map<String, Object> params) {
+		String orderid = params.get("outTradeNo").toString();
+		String status = params.get("state").toString();
+		log.info("豌豆通知返回消息：orderid" + orderid + " status:" + status);
+		Income income = mapper.getByOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getChannelid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendRblQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "豌豆通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
+			TenantIdContext.remove();
+		}
+
+	}
+
+	@Override
 	public QrcodeResultVO submitInCome(QrcodeSubmitDTO qs) {
 		// 验证
 		Merchant mc = checkparam(qs);
@@ -432,6 +454,12 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				Assert.notNull(wd, "豌豆获取渠道订单失败!");
 				income.setResulturl(wd.getData().getPayData());
 				income.setQrcodeordernum(wd.getData().getPayOrderId());
+				break;
+			case DictionaryResource.RBLAISLE:
+				SysRblOrder rbl = PayUtil.SendRblSubmit(income, channel);
+				Assert.notNull(rbl, "豌豆获取渠道订单失败!");
+				income.setResulturl(rbl.getData().getPayUrl());
+				income.setQrcodeordernum(rbl.getData().getTradeNo());
 				break;
 			}
 		} else
