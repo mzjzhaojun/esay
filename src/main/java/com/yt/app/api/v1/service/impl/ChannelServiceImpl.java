@@ -220,6 +220,11 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 			if (balance != null)
 				cl.setRemotebalance(Double.valueOf(balance));
 			break;
+		case DictionaryResource.GZAISLE:
+			balance = PayUtil.SendGzGetBalance(cl);
+			if (balance != null)
+				cl.setRemotebalance(Double.valueOf(balance));
+			break;
 		}
 		return mapper.put(cl);
 	}
@@ -233,10 +238,10 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 
 	@Override
 	public void updateIncome(Income t) {
-		RLock lock = RedissonUtil.getLock(t.getChannelid());
+		RLock lock = RedissonUtil.getLock(t.getQrcodeid());
 		try {
 			lock.lock();
-			Channel m = mapper.get(t.getChannelid());
+			Channel m = mapper.get(t.getQrcodeid());
 			Qrcodeaccount ma = qrcodeaccountmapper.getByUserId(m.getUserid());
 			m.setCount(m.getCount() + t.getChannelincomeamount());
 			m.setTodaycount(m.getTodaycount() + t.getChannelincomeamount());

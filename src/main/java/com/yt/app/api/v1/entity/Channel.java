@@ -28,6 +28,7 @@ public class Channel extends YtBaseEntity<Channel> {
 	String name;
 	String nkname;
 	String code;
+	String aislecode;
 	Boolean status;
 	Double balance;
 	Double remotebalance;

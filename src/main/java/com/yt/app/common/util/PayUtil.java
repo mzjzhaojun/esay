@@ -21,6 +21,9 @@ import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.vo.PayResultVO;
 import com.yt.app.api.v1.vo.QrcodeResultVO;
 import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
+import com.yt.app.api.v1.vo.SysGzOrder;
+import com.yt.app.api.v1.vo.SysGzOrderDto;
+import com.yt.app.api.v1.vo.SysGzQuery;
 import com.yt.app.api.v1.vo.SysHsOrder;
 import com.yt.app.api.v1.vo.SysHsQuery;
 import com.yt.app.api.v1.vo.SysRblOrder;
@@ -284,7 +287,7 @@ public class PayUtil {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add("memberid", cl.getCode());
 		map.add("appid", cl.getApikey());
-		map.add("bankcode", pt.getQrcodeaislecode());
+		map.add("bankcode", pt.getQrcodecode());
 		map.add("orderid", pt.getOrdernum());
 		map.add("applydate", DateTimeUtil.getDateTime());
 		map.add("amount", pt.getAmount().toString());
@@ -294,7 +297,7 @@ public class PayUtil {
 		map.add("sign_type", "RSA2");
 
 		String signContent = "amount=" + pt.getAmount() + "&appid=" + cl.getApikey() + "&applydate="
-				+ DateTimeUtil.getDateTime() + "&bankcode=" + pt.getQrcodeaislecode() + "&memberid=" + cl.getCode()
+				+ DateTimeUtil.getDateTime() + "&bankcode=" + pt.getQrcodecode() + "&memberid=" + cl.getCode()
 				+ "&notify_url=" + cl.getApireusultip() + "&orderid=" + pt.getOrdernum() + "&return_url="
 				+ pt.getBackforwardurl();
 		String sign = "";
@@ -438,14 +441,14 @@ public class PayUtil {
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add("merchant_id", cl.getCode());
-		map.add("code", pt.getQrcodeaislecode());
+		map.add("code", pt.getQrcodecode());
 		map.add("order_no", pt.getOrdernum());
 		map.add("type", "1");
 		map.add("amount", pt.getAmount().toString());
 		map.add("notice_url", cl.getApireusultip());
 		map.add("return_url", pt.getBackforwardurl());
 
-		String signContent = "amount=" + pt.getAmount() + "&code=" + pt.getQrcodeaislecode() + "&merchant_id="
+		String signContent = "amount=" + pt.getAmount() + "&code=" + pt.getQrcodecode() + "&merchant_id="
 				+ cl.getCode() + "&notice_url=" + cl.getApireusultip() + "&order_no=" + pt.getOrdernum()
 				+ "&return_url=" + pt.getBackforwardurl() + "&type=1&sign=" + cl.getApikey();
 		String sign = MD5Utils.md5(signContent);
@@ -504,7 +507,7 @@ public class PayUtil {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		Long time = DateTimeUtil.getNow().getTime();
 		map.add("mchNo", cl.getCode());
-		map.add("productId", pt.getQrcodeaislecode());
+		map.add("productId", pt.getQrcodecode());
 		map.add("mchOrderNo", pt.getOrdernum());
 		map.add("reqTime", time.toString());
 		map.add("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
@@ -513,7 +516,7 @@ public class PayUtil {
 
 		String signContent = "amount=" + String.format("%.2f", pt.getAmount()).replace(".", "")
 				+ "&clientIp=127.0.0.1&mchNo=" + cl.getCode() + "&mchOrderNo=" + pt.getOrdernum() + "&notifyUrl="
-				+ cl.getApireusultip() + "&productId=" + pt.getQrcodeaislecode() + "&reqTime=" + time.toString()
+				+ cl.getApireusultip() + "&productId=" + pt.getQrcodecode() + "&reqTime=" + time.toString()
 				+ "&key=" + cl.getApikey();
 
 		String sign = MD5Utils.md5(signContent);
@@ -603,7 +606,7 @@ public class PayUtil {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Long time = DateTimeUtil.getNow().getTime();
 		map.put("mchId", cl.getCode());
-		map.put("wayCode", pt.getQrcodeaislecode());
+		map.put("wayCode", pt.getQrcodecode());
 		map.put("outTradeNo", pt.getOrdernum());
 		map.put("subject", time.toString());
 		map.put("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
@@ -615,7 +618,7 @@ public class PayUtil {
 		String signContent = "amount=" + String.format("%.2f", pt.getAmount()).replace(".", "")
 				+ "&clientIp=127.0.0.1&mchId=" + cl.getCode() + "&notifyUrl=" + cl.getApireusultip() + "&outTradeNo="
 				+ pt.getOrdernum() + "&reqTime=" + time.toString() + "&returnUrl=" + pt.getBackforwardurl()
-				+ "&subject=" + time.toString() + "&wayCode=" + pt.getQrcodeaislecode() + "&key=" + cl.getApikey();
+				+ "&subject=" + time.toString() + "&wayCode=" + pt.getQrcodecode() + "&key=" + cl.getApikey();
 
 		String sign = MD5Utils.md5(signContent);
 		map.put("sign", sign);
@@ -689,6 +692,123 @@ public class PayUtil {
 		SysRblQuery data = sov.getBody();
 		log.info("日不落余额返回消息：" + data.getData().getBalance());
 		if (data.getCode().equals("0")) {
+			return data.getData().getBalance();
+		}
+		return null;
+	}
+
+	// 公子代收对接
+	public static SysGzOrder SendGzSubmit(Income pt, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent",
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Map<String, Object> map = new HashMap<String, Object>();
+		Long time = DateTimeUtil.getNow().getTime();
+		map.put("merchant_num", cl.getCode());
+		map.put("business", "quick");
+		SysGzOrderDto sgod = new SysGzOrderDto();
+
+		sgod.setOut_trade_no(pt.getOrdernum());
+		sgod.setChannel(pt.getQrcodecode());
+		sgod.setNotify_url(cl.getApireusultip());
+		sgod.setAmount(pt.getAmount().toString());
+		sgod.setReturn_url(pt.getBackforwardurl());
+
+		map.put("biz_content", sgod);
+
+		map.put("timestamp", time.toString());
+
+		String signContent = "amount=" + pt.getAmount() + "&merchant_num=" + cl.getCode() + "&notify_url="
+				+ cl.getApireusultip() + "&out_trade_no=" + pt.getOrdernum() + "&timestamp=" + time.toString()
+				+ "&return_url=" + pt.getBackforwardurl() + "&channel="
+				+ pt.getQrcodecode() + "&key=" + cl.getApikey();
+
+		String sign = MD5Utils.md5(signContent);
+		map.put("sign", sign);
+		log.info("公子下单签名：" + sign + "===" + signContent);
+
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysGzOrder> sov = resttemplate.postForEntity(cl.getApiip() + "/api/gateway", httpEntity,
+				SysGzOrder.class);
+		SysGzOrder data = sov.getBody();
+		log.info("公子返回消息：" + data.getMessage());
+		if (data.getCode().equals("0000")) {
+			return data;
+		}
+		return null;
+	}
+
+	// 公子代收查单
+	public static String SendGzQuerySubmit(String orderid, Double amount, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent",
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Map<String, Object> map = new HashMap<String, Object>();
+		Long time = DateTimeUtil.getNow().getTime();
+		map.put("merchant_num", cl.getCode());
+		map.put("business", "query_order");
+		SysGzOrderDto sgod = new SysGzOrderDto();
+
+		sgod.setOut_trade_no(orderid);
+
+		map.put("biz_content", sgod);
+
+		map.put("timestamp", time.toString());
+
+		String signContent = "amount=" + amount + "&merchant_num=" + cl.getCode() + "&key=" + cl.getApikey();
+
+		String sign = MD5Utils.md5(signContent);
+		map.put("sign", sign);
+		log.info("公子查单签名：" + sign + "===" + signContent);
+
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysGzQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/api/gateway", httpEntity,
+				SysGzQuery.class);
+		SysGzQuery data = sov.getBody();
+		log.info("公子查单返回消息：" + data.getMessage());
+		if (data.getCode().equals("0000") && data.getData().getStatus().equals("1")) {
+			return data.getData().getStatus();
+		}
+		return null;
+	}
+
+	// 公子查询余额
+	public static String SendGzGetBalance(Channel cl) {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent",
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Map<String, Object> map = new HashMap<String, Object>();
+		Long time = DateTimeUtil.getNow().getTime();
+		map.put("merchant_num", cl.getCode());
+		map.put("business", "balance");
+		SysGzOrderDto sgod = new SysGzOrderDto();
+
+		map.put("biz_content", sgod);
+
+		map.put("timestamp", time.toString());
+
+		String signContent = "merchant_num=" + cl.getCode() + "&key=" + cl.getApikey();
+
+		String sign = MD5Utils.md5(signContent);
+		map.put("sign", sign);
+		log.info("公子查单签名：" + sign + "===" + signContent);
+
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysGzQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/api/gateway", httpEntity,
+				SysGzQuery.class);
+		SysGzQuery data = sov.getBody();
+		log.info("公子余额返回消息：" + data.getData().getBalance());
+		if (data.getCode().equals("0000")) {
 			return data.getData().getBalance();
 		}
 		return null;

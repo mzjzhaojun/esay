@@ -219,6 +219,25 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 公子代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/gzcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void gzcallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request,
+			HttpServletResponse response) {
+		incomeservice.gzcallback(RequestUtil.requestEntityToParamMap(requestEntity));
+		try {
+			response.getWriter().print("success");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * 支付宝当面付回调

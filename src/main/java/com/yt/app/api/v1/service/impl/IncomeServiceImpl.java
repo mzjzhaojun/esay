@@ -56,6 +56,7 @@ import com.yt.app.api.v1.entity.Qrcodeaisleqrcode;
 import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.api.v1.vo.QrcodeResultVO;
 import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
+import com.yt.app.api.v1.vo.SysGzOrder;
 import com.yt.app.api.v1.vo.SysHsOrder;
 import com.yt.app.api.v1.vo.SysRblOrder;
 import com.yt.app.api.v1.vo.SysWdOrder;
@@ -172,6 +173,117 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return new YtPageBean<IncomeVO>(param, list, count);
 	}
 
+	@Override
+	public Income getByOrderNum(String ordernum) {
+		return mapper.getByOrderNum(ordernum);
+	}
+
+	@Override
+	public void hscallback(@RequestParam Map<String, String> params) {
+		String orderid = params.get("orderid").toString();
+		String status = params.get("status").toString();
+		log.info("宏盛通知返回消息：orderid" + orderid + " status:" + status);
+		Income income = mapper.getByOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendHSQuerySubmit(orderid, channel);
+		Assert.notNull(returnstate, "宏盛通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
+			TenantIdContext.remove();
+		}
+
+	}
+
+	@Override
+	public void yjjcallback(Map<String, String> params) {
+		String orderid = params.get("order_id").toString();
+		String status = params.get("status").toString();
+		log.info("YJJ通知返回消息：orderid" + orderid + " status:" + status);
+		Income income = mapper.getByOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendYJJQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "YJJ通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
+			TenantIdContext.remove();
+		}
+
+	}
+
+	@Override
+	public void wdcallback(Map<String, String> params) {
+		String orderid = params.get("payOrderId").toString();
+		String status = params.get("state").toString();
+		log.info("豌豆通知返回消息：orderid" + orderid + " status:" + status);
+		Income income = mapper.getByQrcodeOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendWdQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "豌豆通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
+			TenantIdContext.remove();
+		}
+
+	}
+
+	@Override
+	public void rblcallback(Map<String, Object> params) {
+		String orderid = params.get("outTradeNo").toString();
+		String status = params.get("state").toString();
+		log.info("日不落通知返回消息：orderid" + orderid + " status:" + status);
+		Income income = mapper.getByOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendRblQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "日不落通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
+			TenantIdContext.remove();
+		}
+	}
+
+	@Override
+	public void gzcallback(Map<String, Object> params) {
+		String orderid = params.get("out_trade_no").toString();
+		String status = params.get("pay_status").toString();
+		log.info("公子通知返回消息：orderid" + orderid + " status:" + status);
+		Income income = mapper.getByOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendGzQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "公子通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
+			TenantIdContext.remove();
+		}
+	}
+
+	/**
+	 * 自营渠道下单
+	 */
 	@Override
 	@Transactional
 	public QrcodeResultVO submitQrcode(QrcodeSubmitDTO qs) {
@@ -309,96 +421,11 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return min;
 	}
 
+	/**
+	 * 上游渠道下单
+	 */
 	@Override
-	public Income getByOrderNum(String ordernum) {
-		return mapper.getByOrderNum(ordernum);
-	}
-
-	@Override
-	public void hscallback(@RequestParam Map<String, String> params) {
-		String orderid = params.get("orderid").toString();
-		String status = params.get("status").toString();
-		log.info("宏盛通知返回消息：orderid" + orderid + " status:" + status);
-		Income income = mapper.getByOrderNum(orderid);
-		TenantIdContext.setTenantId(income.getTenant_id());
-		Channel channel = channelmapper.get(income.getChannelid());
-		String ip = AuthContext.getIp();
-		if (channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
-		}
-		String returnstate = PayUtil.SendHSQuerySubmit(orderid, channel);
-		Assert.notNull(returnstate, "宏盛通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-			success(income);
-			TenantIdContext.remove();
-		}
-
-	}
-
-	@Override
-	public void yjjcallback(Map<String, String> params) {
-		String orderid = params.get("order_id").toString();
-		String status = params.get("status").toString();
-		log.info("YJJ通知返回消息：orderid" + orderid + " status:" + status);
-		Income income = mapper.getByOrderNum(orderid);
-		TenantIdContext.setTenantId(income.getTenant_id());
-		Channel channel = channelmapper.get(income.getChannelid());
-		String ip = AuthContext.getIp();
-		if (channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
-		}
-		String returnstate = PayUtil.SendYJJQuerySubmit(orderid, income.getAmount(), channel);
-		Assert.notNull(returnstate, "YJJ通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-			success(income);
-			TenantIdContext.remove();
-		}
-
-	}
-
-	@Override
-	public void wdcallback(Map<String, String> params) {
-		String orderid = params.get("payOrderId").toString();
-		String status = params.get("state").toString();
-		log.info("豌豆通知返回消息：orderid" + orderid + " status:" + status);
-		Income income = mapper.getByQrcodeOrderNum(orderid);
-		TenantIdContext.setTenantId(income.getTenant_id());
-		Channel channel = channelmapper.get(income.getChannelid());
-		String ip = AuthContext.getIp();
-		if (channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
-		}
-		String returnstate = PayUtil.SendWdQuerySubmit(orderid, income.getAmount(), channel);
-		Assert.notNull(returnstate, "豌豆通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-			success(income);
-			TenantIdContext.remove();
-		}
-
-	}
-
-	@Override
-	public void rblcallback(Map<String, Object> params) {
-		String orderid = params.get("outTradeNo").toString();
-		String status = params.get("state").toString();
-		log.info("日不落通知返回消息：orderid" + orderid + " status:" + status);
-		Income income = mapper.getByOrderNum(orderid);
-		TenantIdContext.setTenantId(income.getTenant_id());
-		Channel channel = channelmapper.get(income.getChannelid());
-		String ip = AuthContext.getIp();
-		if (channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
-		}
-		String returnstate = PayUtil.SendRblQuerySubmit(orderid, income.getAmount(), channel);
-		Assert.notNull(returnstate, "日不落通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-			success(income);
-			TenantIdContext.remove();
-		}
-
-	}
-
-	@Override
+	@Transactional
 	public QrcodeResultVO submitInCome(QrcodeSubmitDTO qs) {
 		// 验证
 		Merchant mc = checkparam(qs);
@@ -407,7 +434,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
 		Aisle aisle = aislemapper.getByCode(qs.getPay_aislecode());
 		Assert.notNull(aisle, "没有可用通道!");
-		Merchantaisle opt = merchantaislemapper.getByMidAid(aisle.getId(),mc.getId() );
+		Merchantaisle opt = merchantaislemapper.getByMidAid(aisle.getId(), mc.getId());
 		Assert.notNull(opt, "没有可用通道!");
 		List<Aislechannel> listac = aislechannelmapper.getByAisleId(aisle.getId());
 		Assert.notEmpty(listac, "没有可用通道!");
@@ -454,7 +481,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 		Income income = new Income();
 		// 商戶
-		income.setChannelid(channel.getId());
 		income.setMerchantuserid(mc.getUserid());
 		income.setOrdernum("in_come" + StringUtil.getOrderNum());
 		income.setMerchantorderid(qs.getPay_orderid());
@@ -462,13 +488,17 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());
-		income.setExpireddate(DateTimeUtil.addMinute(15));// 默认10分钟
+		income.setExpireddate(DateTimeUtil.addMinute(1));// 默认10分钟
 		// 通道
 		income.setExpiredminute(15);
 		income.setDynamic(aisle.getDynamic());
 		income.setQrcodeaisleid(aisle.getId());
 		income.setQrcodeaislename(aisle.getName());
 		income.setQrcodeaislecode(aisle.getCode());
+		// 渠道产品
+		income.setQrcodeid(channel.getId());
+		income.setQrcodecode(channel.getAislecode());
+		income.setQrcodename(channel.getName());
 		// 收款码
 		income.setAmount(Double.valueOf(qs.getPay_amount()));
 
@@ -502,6 +532,12 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			income.setResulturl(rbl.getData().getPayUrl());
 			income.setQrcodeordernum(rbl.getData().getTradeNo());
 			break;
+		case DictionaryResource.GZAISLE:
+			SysGzOrder gz = PayUtil.SendGzSubmit(income, channel);
+			Assert.notNull(gz, "公子获取渠道订单失败!");
+			income.setResulturl(gz.getData().getPay_url());
+			income.setQrcodeordernum(gz.getData().getOrder_id());
+			break;
 		}
 		// 渠道收入
 		income.setChannelincomeamount(NumberUtil
@@ -529,6 +565,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
+	@Transactional
 	public QueryQrcodeResultVO queryInCome(QrcodeSubmitDTO qs) {
 		// 验证
 		if (qs.getPay_memberid().length() > 10) {
@@ -659,7 +696,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	private Income addIncome(Channel channel, Qrcodeaisle qas, Merchant mc, QrcodeSubmitDTO qs, Qrcode qd) {
 		Income income = new Income();
 		// 商戶
-		income.setChannelid(channel.getId());
 		income.setMerchantuserid(mc.getUserid());
 		income.setOrdernum("in_come" + StringUtil.getOrderNum());
 		income.setMerchantorderid(qs.getPay_orderid());
@@ -667,16 +703,18 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());
-		income.setExpireddate(DateTimeUtil.addMinute(qd.getExpireminute() + 3));// 多加3分钟
+		income.setExpireddate(DateTimeUtil.addMinute(qd.getExpireminute()));// 多加3分钟
 		// 通道
 		income.setExpiredminute(qd.getExpireminute());
 		income.setQrcodeaisleid(qas.getId());
 		income.setQrcodeaislename(qas.getName());
 		income.setQrcodeaislecode(qas.getCode());
-		// 收款码
+		// 收款产品
 		income.setQrcodeuserid(qd.getUserid());
 		income.setQrcodeid(qd.getId());
 		income.setQrcodename(qd.getName());
+		income.setQrcodecode(qd.getCode());
+		
 		income.setAmount(Double.valueOf(qs.getPay_amount()));
 		income.setDynamic(qas.getDynamic());
 
@@ -828,13 +866,10 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		incomemerchantaccountordermapper.put(incomemerchantaccountorder);
 		// 计算商户收入
 		incomemerchantaccountservice.updateTotalincome(incomemerchantaccountorder);
-
 		// 计算商户主账号
 		merchantservice.updateIncome(income);
-
 		// 计算渠道主账号
 		channelservice.updateIncome(income);
-
 		// 计算系统收入
 		systemaccountservice.updateIncome(income);
 	}
@@ -847,7 +882,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			qrcodeaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 			qrcodeaccountorder.setOrdernum(trade_no);
 			qrcodeaccountordermapper.put(qrcodeaccountorder);
-
 			// 計算代收
 			income.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 			income.setQrcodeordernum(trade_no);
@@ -857,7 +891,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			income.setBacklong(DateUtil.between(income.getSuccesstime(), income.getCreate_time(), DateUnit.SECOND));
 			//
 			mapper.put(income);
-
 			// 计算渠道收入
 			qrcodeaccountservice.updateTotalincome(qrcodeaccountorder);
 			//
@@ -867,16 +900,12 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			incomemerchantaccountordermapper.put(incomemerchantaccountorder);
 			// 计算商户收入
 			incomemerchantaccountservice.updateTotalincome(incomemerchantaccountorder);
-
 			// 计算商户主账号
 			merchantservice.updateIncome(income);
-
 			// 计算渠道主账号
 			channelservice.updateIncome(income);
-
 			// 计算系统收入
 			systemaccountservice.updateIncome(income);
-
 			TenantIdContext.remove();
 		}
 
