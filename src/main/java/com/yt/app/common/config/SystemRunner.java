@@ -2,6 +2,8 @@ package com.yt.app.common.config;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.TimeZone;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -35,7 +37,9 @@ public class SystemRunner implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 
 		log.info("system start...");
-
+		
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
+		
 		// 设置默认租户
 		TenantIdContext.setTenantId(AppConstant.SYSTEM_TENANT_ID);
 
