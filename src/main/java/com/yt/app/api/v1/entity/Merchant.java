@@ -36,6 +36,7 @@ public class Merchant extends YtBaseEntity<Merchant> {
 	Double todaycount;
 	Double count;
 	Double exchange;
+	Double collection;
 	Double onecost;
 	Double downpoint;
 	Double exchangeonecost;

@@ -39,8 +39,8 @@ import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.runnable.ExchangeGetChannelOrderNumThread;
 import com.yt.app.common.runnable.PayoutGetChannelOrderNumThread;
-import com.yt.app.common.runnable.NotifyQrcodeIncomeThread;
-import com.yt.app.common.runnable.NotifyTyPayoutThread;
+import com.yt.app.common.runnable.InComeNotifyThread;
+import com.yt.app.common.runnable.PayoutNotifyThread;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.RedisUtil;
 
@@ -155,10 +155,10 @@ public class TaskConfig {
 		TenantIdContext.removeFlag();
 		List<Payout> list = payoutmapper.selectNotifylist();
 		for (Payout p : list) {
-			log.info("通知ID：" + p.getId() + " 状态：" + p.getStatus());
+			log.info("代付通知ID：" + p.getOrdernum() + " 状态：" + p.getStatus());
 			p.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_65);
 			if (payoutmapper.put(p) > 0) {
-				NotifyTyPayoutThread nf = new NotifyTyPayoutThread(p.getId());
+				PayoutNotifyThread nf = new PayoutNotifyThread(p.getId());
 				threadpooltaskexecutor.execute(nf);
 			}
 		}
@@ -174,17 +174,17 @@ public class TaskConfig {
 		TenantIdContext.removeFlag();
 		List<Income> list = incomemapper.selectNotifylist();
 		for (Income p : list) {
-			log.info("通知ID：" + p.getId() + " 状态：" + p.getStatus());
+			log.info("代收通知ID：" + p.getOrdernum() + " 状态：" + p.getStatus());
 			p.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_65);
 			if (incomemapper.put(p) > 0) {
-				NotifyQrcodeIncomeThread nf = new NotifyQrcodeIncomeThread(p.getId());
+				InComeNotifyThread nf = new InComeNotifyThread(p.getId());
 				threadpooltaskexecutor.execute(nf);
 			}
 		}
 	}
 
 	/**
-	 * 代付线上获取单号
+	 * 代付线上下单
 	 * 
 	 * @throws InterruptedException
 	 */
@@ -203,7 +203,7 @@ public class TaskConfig {
 	}
 
 	/**
-	 * 换汇线上获取单号
+	 * 换汇线上下单
 	 * 
 	 * @throws InterruptedException
 	 */
@@ -222,9 +222,9 @@ public class TaskConfig {
 	}
 
 	/**
-	 * 超時3+10分钟未支付订单处理
+	 * 代收超时分钟未支付订单处理
 	 */
-	@Scheduled(cron = "0/30 * * * * ?")
+	@Scheduled(cron = "0/59 * * * * ?")
 	public void income() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Income> list = incomemapper.selectAddlist();

@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.MerchantMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,name,nikname,code,remark,balance,usdtbalance,status,todaycost,todaycount,count,exchange,onecost,downpoint,exchangeonecost,exchangedownpoint,agentid,agentname,create_by,create_time,update_by,update_time,backpay,clearingtype,ipaddress,tenant_id,userid,appkey,apireusultip,version
+		id,name,nikname,code,remark,balance,usdtbalance,status,todaycost,todaycount,count,exchange,collection,onecost,downpoint,exchangeonecost,exchangedownpoint,agentid,agentname,create_by,create_time,update_by,update_time,backpay,clearingtype,ipaddress,tenant_id,userid,appkey,apireusultip,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -79,6 +79,9 @@
 			</if>
 			<if test="onecost != null">
 				onecost= #{onecost},
+			</if>
+			<if test="collection != null">
+				collection= #{collection},
 			</if>
 			<if test="downpoint != null">
 				downpoint= #{downpoint},

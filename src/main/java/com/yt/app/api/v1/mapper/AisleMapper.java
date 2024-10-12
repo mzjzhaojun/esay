@@ -94,4 +94,14 @@ public interface AisleMapper extends YtIBaseMapper<Aisle> {
 	 */
 	@YtRedisCacheAnnotation(classs = Aisle.class)
 	public List<Aisle> listByArrayId(long[] id);
+
+	/**
+	 * get
+	 *
+	 * @param id id
+	 * @return Aisle
+	 */
+	@YtRedisCacheAnnotation(classs = Aisle.class)
+	public Aisle getByCode(String code);
+
 }

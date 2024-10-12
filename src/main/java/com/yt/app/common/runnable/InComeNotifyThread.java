@@ -14,11 +14,11 @@ import com.yt.app.common.util.PayUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class NotifyQrcodeIncomeThread implements Runnable {
+public class InComeNotifyThread implements Runnable {
 
 	private Long id;
 
-	public NotifyQrcodeIncomeThread(Long _id) {
+	public InComeNotifyThread(Long _id) {
 		id = _id;
 	}
 
@@ -54,7 +54,7 @@ public class NotifyQrcodeIncomeThread implements Runnable {
 				e1.printStackTrace();
 			} finally {
 				try {
-					Thread.sleep(1000 * 60 * 10);
+					Thread.sleep(1000 * 60 * 5);
 					i++;
 					if (i >= 3) {
 						log.info("代收通知失败XXXXXX商户单号：" + income.getOrdernum());
@@ -67,7 +67,7 @@ public class NotifyQrcodeIncomeThread implements Runnable {
 				}
 			}
 		}
-		log.info("通知 end---------------------");
+		log.info("代收通知 end---------------------"+ income.getOrdernum());
 	}
 
 }

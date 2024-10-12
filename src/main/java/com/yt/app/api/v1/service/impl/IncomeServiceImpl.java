@@ -6,10 +6,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.stereotype.Service;
 
+import com.yt.app.api.v1.mapper.AisleMapper;
+import com.yt.app.api.v1.mapper.AislechannelMapper;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
+import com.yt.app.api.v1.mapper.MerchantaisleMapper;
 import com.yt.app.api.v1.mapper.MerchantqrcodeaisleMapper;
 import com.yt.app.api.v1.mapper.QrcodeMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
@@ -38,10 +41,13 @@ import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
+import com.yt.app.api.v1.entity.Aisle;
+import com.yt.app.api.v1.entity.Aislechannel;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.entity.Merchant;
+import com.yt.app.api.v1.entity.Merchantaisle;
 import com.yt.app.api.v1.entity.Merchantqrcodeaisle;
 import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Qrcodeaccountorder;
@@ -96,6 +102,12 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	private IncomeMapper mapper;
 	@Autowired
 	private QrcodeMapper qrcodemapper;
+	@Autowired
+	private AisleMapper aislemapper;
+	@Autowired
+	private MerchantaisleMapper merchantaislemapper;
+	@Autowired
+	private AislechannelMapper aislechannelmapper;
 	@Autowired
 	private QrcodeaisleMapper qrcodeaislemapper;
 	@Autowired
@@ -230,11 +242,12 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Income income = addIncome(channel, qas, mc, qs, qd);
 		// 动态码直接去线上拿连接
 		if (qd.getDynamic()) {
+			// 阿里当面付和订单码
 			AlipayTradePrecreateResponse atp = alif2f(qd, income.getOrdernum(), income.getAmount(),
 					qd.getExpireminute());
 			Assert.notNull(atp, "获取支付宝单号错误!");
 			income.setQrcode(atp.getQrCode());
-			income.setQrcodeordernum("QM" + StringUtil.getOrderNum());
+			income.setQrcodeordernum("in_come_qrcode" + StringUtil.getOrderNum());
 			income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
 		} else {
 			income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
@@ -276,7 +289,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		if (i == 0) {
 			throw new YtException("当前通道码繁忙");
 		}
-		QrcodeResultVO result = addOtherOrder(income, channel, qas, mc, qs);
+		QrcodeResultVO result = addOtherOrderMqd(income, channel, qas, mc, qs);
 		TenantIdContext.remove();
 		return result;
 	}
@@ -368,7 +381,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	public void rblcallback(Map<String, Object> params) {
 		String orderid = params.get("outTradeNo").toString();
 		String status = params.get("state").toString();
-		log.info("豌豆通知返回消息：orderid" + orderid + " status:" + status);
+		log.info("日不落通知返回消息：orderid" + orderid + " status:" + status);
 		Income income = mapper.getByOrderNum(orderid);
 		TenantIdContext.setTenantId(income.getTenant_id());
 		Channel channel = channelmapper.get(income.getChannelid());
@@ -377,7 +390,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			throw new YtException("非法请求!");
 		}
 		String returnstate = PayUtil.SendRblQuerySubmit(orderid, income.getAmount(), channel);
-		Assert.notNull(returnstate, "豌豆通知反查订单失败!");
+		Assert.notNull(returnstate, "日不落通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
 			TenantIdContext.remove();
@@ -391,87 +404,111 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Merchant mc = checkparam(qs);
 		TenantIdContext.setTenantId(mc.getTenant_id());
 
-		List<Merchantqrcodeaisle> listmc = merchantqrcodeaislemapper.getByMid(mc.getId());
-		if (listmc == null || listmc.size() == 0) {
-			throw new YtException("商戶还沒有配置通道!");
+		////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
+		Aisle aisle = aislemapper.getByCode(qs.getPay_aislecode());
+		Assert.notNull(aisle, "没有可用通道!");
+		Merchantaisle opt = merchantaislemapper.getByMidAid(aisle.getId(),mc.getId() );
+		Assert.notNull(opt, "没有可用通道!");
+		List<Aislechannel> listac = aislechannelmapper.getByAisleId(aisle.getId());
+		Assert.notEmpty(listac, "没有可用通道!");
+		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
+		List<Channel> listc = channelmapper.listByArrayId(cids);
+		Assert.notEmpty(listc, "没有可用渠道!");
+		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= Double.valueOf(qs.getPay_amount())
+				&& c.getMin() <= Double.valueOf(qs.getPay_amount())).collect(Collectors.toList());
+		Assert.notEmpty(listcmm, "金额超出限额!");
+		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
+		Channel channel = null;
+		if (listcf.size() > 0) {
+			for (int j = 0; j < listcf.size(); j++) {
+				Channel cc = listcf.get(j);
+				String[] match = cc.getFirstmatchmoney().split(",");
+				for (int i = 0; i < match.length; i++) {
+					String number = match[i];
+					if (number.indexOf("-") == -1 && Double.valueOf(qs.getPay_amount()) == Double.valueOf(number)) {
+						channel = cc;
+					} else {
+						String[] matchs = number.split("-");
+						Integer min = Integer.parseInt(matchs[0]);
+						Integer max = Integer.parseInt(matchs[1]);
+						if (Double.valueOf(qs.getPay_amount()) >= min && Double.valueOf(qs.getPay_amount()) <= max) {
+							channel = cc;
+						}
+					}
+				}
+			}
+		} else {
+			List<WeightRandom.WeightObj<String>> weightList = new ArrayList<>(); //
+			double count = 0;
+			for (Channel cml : listcmm) {
+				count = count + cml.getWeight();
+			}
+			for (Channel cmm : listcmm) {
+				weightList.add(new WeightRandom.WeightObj<String>(cmm.getCode(), (cmm.getWeight() / count) * 100));
+			}
+			WeightRandom<String> wr = RandomUtil.weightRandom(weightList);
+			String code = wr.next();
+			channel = listc.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
+			Assert.notNull(channel, "没有可用的渠道!");
 		}
-		long[] qraids = listmc.stream().mapToLong(qa -> qa.getQrcodeaisleid()).distinct().toArray();
-		List<Qrcodeaisle> listqa = qrcodeaislemapper.listByArrayId(qraids);
-		Qrcodeaisle qas;
-		try {
-			qas = listqa.stream().filter(qa -> qa.getCode().equals(qs.getPay_aislecode())).findFirst().get();
-		} catch (Exception e1) {
-			throw new YtException(qs.getPay_aislecode() + "通道没有权限");
-		}
-		Merchantqrcodeaisle mqd = listmc.stream().filter(mqds -> mqds.getQrcodeaisleid().equals(qas.getId()))
-				.findFirst().get();
-		Assert.notNull(mqd, "通道没有权限!");
-		// 开始业务
-		Channel channel = channelmapper.getByUserId(qas.getUserid());
 
 		Income income = new Income();
 		// 商戶
 		income.setChannelid(channel.getId());
 		income.setMerchantuserid(mc.getUserid());
-		income.setOrdernum(StringUtil.getOrderNum());
+		income.setOrdernum("in_come" + StringUtil.getOrderNum());
 		income.setMerchantorderid(qs.getPay_orderid());
-		income.setMerchantordernum("IM" + StringUtil.getOrderNum());
+		income.setMerchantordernum("in_come_mct" + StringUtil.getOrderNum());
 		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());
 		income.setExpireddate(DateTimeUtil.addMinute(15));// 默认10分钟
 		// 通道
 		income.setExpiredminute(15);
-		income.setQrcodeaisleid(qas.getId());
-		income.setQrcodeaislename(qas.getName());
-		income.setQrcodeaislecode(qas.getCode());
+		income.setDynamic(aisle.getDynamic());
+		income.setQrcodeaisleid(aisle.getId());
+		income.setQrcodeaislename(aisle.getName());
+		income.setQrcodeaislecode(aisle.getCode());
 		// 收款码
-		income.setQrcodeuserid(qas.getUserid());
 		income.setAmount(Double.valueOf(qs.getPay_amount()));
-		income.setDynamic(qas.getDynamic());
 
 		income.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
 		income.setNotifyurl(qs.getPay_notifyurl());
 		income.setBackforwardurl(qs.getPay_callbackurl());
 		// 远程当面付
-		if (!qas.getDynamic()) {
-			switch (channel.getName()) {
-			case DictionaryResource.YJJAISLE:
-				SysYjjOrder syo = PayUtil.SendYJJSubmit(income, channel);
-				Assert.notNull(syo, "YJJ获取渠道订单失败!");
-				income.setResulturl(syo.getData().getPay_url());
-				income.setQrcodeordernum(syo.getData().getOrder_id());
-				break;
-			case DictionaryResource.HSAISLE:
-				SysHsOrder sho = PayUtil.SendHSSubmit(income, channel);
-				Assert.notNull(sho, "宏盛获取渠道订单失败!");
-				income.setResulturl(sho.getPay_url());
-				income.setQrcodeordernum(sho.getSys_order_no());
-				break;
-			case DictionaryResource.WDAISLE:
-				SysWdOrder wd = PayUtil.SendWdSubmit(income, channel);
-				Assert.notNull(wd, "豌豆获取渠道订单失败!");
-				income.setResulturl(wd.getData().getPayData());
-				income.setQrcodeordernum(wd.getData().getPayOrderId());
-				break;
-			case DictionaryResource.RBLAISLE:
-				SysRblOrder rbl = PayUtil.SendRblSubmit(income, channel);
-				Assert.notNull(rbl, "豌豆获取渠道订单失败!");
-				income.setResulturl(rbl.getData().getPayUrl());
-				income.setQrcodeordernum(rbl.getData().getTradeNo());
-				break;
-			}
-		} else
-
-		{
-			income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
+		switch (channel.getName()) {
+		case DictionaryResource.YJJAISLE:
+			SysYjjOrder syo = PayUtil.SendYJJSubmit(income, channel);
+			Assert.notNull(syo, "YJJ获取渠道订单失败!");
+			income.setResulturl(syo.getData().getPay_url());
+			income.setQrcodeordernum(syo.getData().getOrder_id());
+			break;
+		case DictionaryResource.HSAISLE:
+			SysHsOrder sho = PayUtil.SendHSSubmit(income, channel);
+			Assert.notNull(sho, "宏盛获取渠道订单失败!");
+			income.setResulturl(sho.getPay_url());
+			income.setQrcodeordernum(sho.getSys_order_no());
+			break;
+		case DictionaryResource.WDAISLE:
+			SysWdOrder wd = PayUtil.SendWdSubmit(income, channel);
+			Assert.notNull(wd, "豌豆获取渠道订单失败!");
+			income.setResulturl(wd.getData().getPayData());
+			income.setQrcodeordernum(wd.getData().getPayOrderId());
+			break;
+		case DictionaryResource.RBLAISLE:
+			SysRblOrder rbl = PayUtil.SendRblSubmit(income, channel);
+			Assert.notNull(rbl, "日不落获取渠道订单失败!");
+			income.setResulturl(rbl.getData().getPayUrl());
+			income.setQrcodeordernum(rbl.getData().getTradeNo());
+			break;
 		}
 		// 渠道收入
 		income.setChannelincomeamount(NumberUtil
 				.multiply(income.getAmount().toString(), (channel.getCollection() / 100) + "", 2).doubleValue());
+		// 商户收入
 		income.setMerchantincomeamount(
-				NumberUtil.multiply(income.getAmount().toString(), (mqd.getCollection() / 100) + "", 2).doubleValue());
+				NumberUtil.multiply(income.getAmount().toString(), (mc.getCollection() / 100) + "", 2).doubleValue());
 		// 系统收入
 		income.setIncomeamount(Double
 				.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount()))));
@@ -486,7 +523,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		if (i == 0) {
 			throw new YtException("当前通道码繁忙");
 		}
-		QrcodeResultVO result = addOtherOrder(income, channel, qas, mc, qs);
+		QrcodeResultVO result = addOtherOrder(income, channel, aisle, mc, qs);
 		TenantIdContext.remove();
 		return result;
 	}
@@ -624,9 +661,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		// 商戶
 		income.setChannelid(channel.getId());
 		income.setMerchantuserid(mc.getUserid());
-		income.setOrdernum(StringUtil.getOrderNum());
+		income.setOrdernum("in_come" + StringUtil.getOrderNum());
 		income.setMerchantorderid(qs.getPay_orderid());
-		income.setMerchantordernum("IM" + StringUtil.getOrderNum());
+		income.setMerchantordernum("in_come_mct" + StringUtil.getOrderNum());
 		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());
@@ -650,7 +687,66 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return income;
 	}
 
-	private QrcodeResultVO addOtherOrder(Income income, Channel channel, Qrcodeaisle qas, Merchant mc,
+	private QrcodeResultVO addOtherOrder(Income income, Channel channel, Aisle qas, Merchant mc, QrcodeSubmitDTO qs) {
+		// 添加qrcode订单
+		Qrcodeaccountorder qao = new Qrcodeaccountorder();
+		qao.setUserid(income.getQrcodeuserid());
+		qao.setQrcodeaisleid(income.getQrcodeaisleid());
+		qao.setQrcodeaislename(income.getQrcodeaislename());
+		qao.setQrcodename(income.getQrcodename());
+		qao.setQrcodeid(income.getQrcodeid());
+		qao.setOrdernum(income.getQrcodeordernum());
+		qao.setType(income.getType());
+		qao.setFewamount(income.getFewamount());
+		qao.setAmount(income.getAmount());
+		qao.setRealamount(income.getRealamount());
+		qao.setResulturl(income.getResulturl());
+		qao.setMerchantname(income.getMerchantname());
+		qao.setQrocde(income.getQrcode());
+		qao.setDynamic(qas.getDynamic());
+		qao.setStatus(income.getStatus());
+		qao.setQrcodeaislecode(qas.getCode());
+		qao.setChannelid(channel.getId());
+		qao.setExpireddate(income.getExpireddate());
+		qao.setIncomeamount(income.getChannelincomeamount());
+		qrcodeaccountordermapper.post(qao);
+		qrcodeaccountservice.totalincome(qao);
+		// 添加商戶订单
+		Incomemerchantaccountorder imao = new Incomemerchantaccountorder();
+		imao.setUserid(income.getMerchantuserid());
+		imao.setQrcodeaisleid(income.getQrcodeaisleid());
+		imao.setQrcodeaislename(income.getQrcodeaislename());
+		imao.setQrcodename(income.getQrcodename());
+		imao.setQrcodeid(income.getQrcodeid());
+		imao.setOrdernum(income.getMerchantorderid());
+		imao.setDynamic(qas.getDynamic());
+		imao.setType(income.getType());
+		imao.setFewamount(income.getFewamount());
+		imao.setAmount(income.getAmount());
+		imao.setRealamount(income.getRealamount());
+		imao.setResulturl(income.getResulturl());
+		imao.setMerchantname(income.getMerchantname());
+		imao.setQrocde(income.getQrcode());
+		imao.setStatus(income.getStatus());
+		imao.setQrcodeaislecode(qas.getCode());
+		imao.setMerchantid(mc.getId());
+		imao.setExpireddate(income.getExpireddate());
+		imao.setIncomeamount(income.getMerchantincomeamount());
+		incomemerchantaccountordermapper.post(imao);
+		incomemerchantaccountservice.totalincome(imao);
+
+		QrcodeResultVO qr = new QrcodeResultVO();
+		qr.setPay_memberid(mc.getCode());
+		qr.setPay_orderid(qs.getPay_orderid());
+		qr.setPay_amount(qs.getPay_amount());
+		qr.setPay_aislecode(qs.getPay_aislecode());
+		qr.setPay_viewurl(income.getResulturl());
+		String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
+		qr.setPay_md5sign(signresult);
+		return qr;
+	}
+
+	private QrcodeResultVO addOtherOrderMqd(Income income, Channel channel, Qrcodeaisle qas, Merchant mc,
 			QrcodeSubmitDTO qs) {
 		// 添加qrcode订单
 		Qrcodeaccountorder qao = new Qrcodeaccountorder();
@@ -791,7 +887,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Income newincome = mapper.get(inc.getId());
 
 		newincome.setId(null);
-		newincome.setOrdernum(StringUtil.getOrderNum());
+		newincome.setOrdernum("in_come" + StringUtil.getOrderNum());
 		newincome.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		newincome.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
 		Integer i = mapper.post(newincome);

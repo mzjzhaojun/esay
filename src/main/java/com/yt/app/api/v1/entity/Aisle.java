@@ -26,6 +26,7 @@ public class Aisle extends YtBaseEntity<Aisle> {
 	String name;
 	String code;
 	Boolean status;
+	Boolean dynamic;
 	String nikname;
 	String type;
 	String typename;
