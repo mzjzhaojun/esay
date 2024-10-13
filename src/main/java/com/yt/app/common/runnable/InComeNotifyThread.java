@@ -51,7 +51,7 @@ public class InComeNotifyThread implements Runnable {
 					break;
 				}
 			} catch (Exception e1) {
-				e1.printStackTrace();
+				log.info("代收通知错误：" + e1.getMessage());
 			} finally {
 				try {
 					Thread.sleep(1000 * 60 * 5);
@@ -67,7 +67,7 @@ public class InComeNotifyThread implements Runnable {
 				}
 			}
 		}
-		log.info("代收通知 end---------------------"+ income.getOrdernum());
+		log.info("代收通知 end---------------------" + income.getOrdernum());
 	}
 
 }

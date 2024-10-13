@@ -104,7 +104,7 @@ public class TaskConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0/5 * * * * ?")
+	@Scheduled(cron = "0/20 * * * * ?")
 	public void getOKXExchange() throws InterruptedException {
 		payconfigservice.initSystemData();
 	}
@@ -150,7 +150,7 @@ public class TaskConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0/10 * * * * ?")
+	@Scheduled(cron = "0/20 * * * * ?")
 	public void notifyPayout() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Payout> list = payoutmapper.selectNotifylist();
@@ -169,7 +169,7 @@ public class TaskConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0/10 * * * * ?")
+	@Scheduled(cron = "0/15 * * * * ?")
 	public void notifyIncome() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Income> list = incomemapper.selectNotifylist();
@@ -188,7 +188,7 @@ public class TaskConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0/5 * * * * ?")
+	@Scheduled(cron = "0/15 * * * * ?")
 	public void payout() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Payout> list = payoutmapper.selectAddlist();
@@ -207,7 +207,7 @@ public class TaskConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0/5 * * * * ?")
+	@Scheduled(cron = "0/15 * * * * ?")
 	public void exchange() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Exchange> list = exchangemapper.selectAddlist();
@@ -224,7 +224,7 @@ public class TaskConfig {
 	/**
 	 * 代收超时分钟未支付订单处理
 	 */
-	@Scheduled(cron = "0/59 * * * * ?")
+	@Scheduled(cron = "0/50 * * * * ?")
 	public void income() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Income> list = incomemapper.selectAddlist();
