@@ -40,6 +40,7 @@ public class IncomeVO extends BaseVO {
 	Object agentincome;
 	Object qrcodeid;
 	String qrcodename;
+	String qrcodecode;
 	String qrcodeaislecode;
 	String qrcodeordernum;
 	String qrcodeuserid;

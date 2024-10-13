@@ -273,7 +273,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		if (channel.getIpaddress().indexOf(ip) == -1) {
 			throw new YtException("非法请求!");
 		}
-		String returnstate = PayUtil.SendGzQuerySubmit(orderid, income.getAmount(), channel);
+		String returnstate = PayUtil.SendGzQuerySubmit(orderid,channel);
 		Assert.notNull(returnstate, "公子通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
@@ -488,9 +488,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());
-		income.setExpireddate(DateTimeUtil.addMinute(1));// 默认10分钟
+		income.setExpireddate(DateTimeUtil.addMinute(10));// 默认10分钟
 		// 通道
-		income.setExpiredminute(15);
+		income.setExpiredminute(10);
 		income.setDynamic(aisle.getDynamic());
 		income.setQrcodeaisleid(aisle.getId());
 		income.setQrcodeaislename(aisle.getName());
@@ -499,6 +499,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setQrcodeid(channel.getId());
 		income.setQrcodecode(channel.getAislecode());
 		income.setQrcodename(channel.getName());
+		income.setQrcodeuserid(channel.getUserid());
 		// 收款码
 		income.setAmount(Double.valueOf(qs.getPay_amount()));
 
@@ -535,8 +536,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		case DictionaryResource.GZAISLE:
 			SysGzOrder gz = PayUtil.SendGzSubmit(income, channel);
 			Assert.notNull(gz, "公子获取渠道订单失败!");
-			income.setResulturl(gz.getData().getPay_url());
-			income.setQrcodeordernum(gz.getData().getOrder_id());
+			income.setResulturl(gz.getResponse().getPay_url());
+			income.setQrcodeordernum(gz.getResponse().getOrder_id());
 			break;
 		}
 		// 渠道收入

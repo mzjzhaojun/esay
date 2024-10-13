@@ -47,7 +47,7 @@ import com.yt.app.common.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Profile("master")
+@Profile("dev")
 @Component
 public class TaskConfig {
 

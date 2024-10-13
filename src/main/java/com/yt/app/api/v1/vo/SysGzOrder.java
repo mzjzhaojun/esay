@@ -22,7 +22,7 @@ public class SysGzOrder extends BaseVO {
 	String code;
 	String message;
 	String sign;
-	response data;
+	response response;
 
 	@Data
 	public class response {

@@ -29,6 +29,7 @@ public class AislechannelVO extends BaseVO {
 	String name;
 	String nkname;
 	String code;
+	String aislecode;
 	Boolean status;
 	Double balance;
 	Double exchange;

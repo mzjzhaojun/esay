@@ -99,7 +99,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			maaj.setType(DictionaryResource.RECORDTYPE_30);
 			// 变更前
 			maaj.setPretotalincome(ma.getTotalincome());// 总收入
-			maaj.setPretoincomeamount(ma.getToincomeamount() + t.getAmount());// 待确认收入
+			maaj.setPretoincomeamount(ma.getToincomeamount() + t.getIncomeamount());// 待确认收入
 			maaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
 			maaj.setPretowithdrawamount(ma.getTowithdrawamount());// 待确认支出
 			// 变更后
@@ -108,7 +108,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			maaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出金额
 
-			maaj.setRemark("商户新增代收人民币￥：" + String.format("%.2f", t.getAmount()));
+			maaj.setRemark("商户新增代收人民币￥：" + String.format("%.2f", t.getIncomeamount()));
 			//
 			incomemerchantaccountrecordmapper.post(maaj);
 			ma.setToincomeamount(maaj.getPretoincomeamount());
@@ -138,15 +138,15 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			maaj.setType(DictionaryResource.RECORDTYPE_31);
 			//
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
-			maaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmount());// 待确认收入
+			maaj.setPretoincomeamount(t.getToincomeamount() - mao.getIncomeamount());// 待确认收入
 			maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPretowithdrawamount(t.getTowithdrawamount());// 待确认支出
 			//
-			maaj.setPosttotalincome(t.getTotalincome() + mao.getAmount());// 总收入
-			maaj.setPosttoincomeamount(mao.getAmount());// 确认收入
+			maaj.setPosttotalincome(t.getTotalincome() + mao.getIncomeamount());// 总收入
+			maaj.setPosttoincomeamount(mao.getIncomeamount());// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("商户代收成功￥：" + String.format("%.2f", mao.getAmount()));
+			maaj.setRemark("商户代收成功￥：" + String.format("%.2f", mao.getIncomeamount()));
 			//
 			incomemerchantaccountrecordmapper.post(maaj);
 
