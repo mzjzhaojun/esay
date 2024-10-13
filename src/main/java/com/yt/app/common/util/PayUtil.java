@@ -227,6 +227,7 @@ public class PayUtil {
 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 		// 签名
 		String signParams = SignMd5QueryResultQrocde(ss, key);
+		log.info("商户代收盘口通知签名" + signParams);
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		map.add("pay_memberid", ss.getPay_memberid());
 		map.add("pay_orderid", ss.getPay_orderid());
