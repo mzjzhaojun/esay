@@ -42,6 +42,7 @@ import com.yt.app.common.util.RedisUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
+@SuppressWarnings("deprecation")
 @Slf4j
 @Component
 public class MerchantMsgBot extends TelegramLongPollingBot {

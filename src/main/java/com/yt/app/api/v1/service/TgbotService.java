@@ -15,6 +15,4 @@ import com.yt.app.common.common.yt.YtIPage;
 
 public interface TgbotService extends YtIBaseService<Tgbot, Long> {
 	YtIPage<TgbotVO> page(Map<String, Object> param);
-
-	void initBot();
 }

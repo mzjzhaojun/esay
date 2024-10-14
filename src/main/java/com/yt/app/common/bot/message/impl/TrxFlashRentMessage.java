@@ -3,7 +3,7 @@ package com.yt.app.common.bot.message.impl;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
-import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.MaybeInaccessibleMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
@@ -14,7 +14,7 @@ import com.yt.app.common.bot.message.Keyboard.InlineKeyboard;
 import com.yt.app.common.util.RedisUtil;
 
 @Component
-public class USDTFlashExchangeMessage implements UpdateService {
+public class TrxFlashRentMessage implements UpdateService {
 
 	@Override
 	public SendMessage getUpdate(Update update) {
@@ -22,20 +22,20 @@ public class USDTFlashExchangeMessage implements UpdateService {
 				RedisUtil.get(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTOTEXCHANGE));
 		SendMessage sendMessage = new SendMessage();
 		sendMessage.setChatId(update.getMessage().getChatId().toString());
-		sendMessage.setText("*实时汇率*\r\n" + "1 USDT = " + (price - 0.65) + " TRX  \r\n" + "100 TRX = "
-				+ 100 / (price + 0.65) + " USDT   \r\n" + "\r\n" + "自动兑换地址:\r\n"
+		sendMessage.setText("*实时汇率*\r\n" + "1 USDT = " + (price - 0.65) + " TRX  \r\n" + "\r\n" + "自动兑换地址:\r\n"
 				+ "`TUrntwm5t9umKhC7jv89RXGo33qcTFAAAA` (点击地址自动复制)\r\n" + "\r\n" + "请不要使用交易所转账‼️\r\n"
-				+ "切记切记，否则丢失自负‼️\r\n" + "\r\n" + "转账即兑，全自动返，等值 1u 起换\r\n" + "\r\n" + "输入兑换数量\r\n"
-				+ "例如: “10U” 可实时计算10U可兑换的TRX数量; \r\n" + "例如: “100TRX” 可实时计算100TRX可兑换的U数量;");
+				+ "切记切记，否则丢失自负‼️\r\n" + "\r\n" + "转账即兑，全自动返，等值 10u 起换\r\n" + "\r\n" + "选择兑换数量\r\n"
+				+ "例如: “10U” 可实时计算10U可兑换的TRX数量=" + (10 * (price - 0.65)) + "\r\n");
 		sendMessage.enableMarkdown(true);
 		sendMessage.setReplyMarkup(InlineKeyboard.getInlineKeyboardMarkup());
 		return sendMessage;
 	}
-
+	
+	
 	public SendMessage excuteExchange(Update update) {
 		SendMessage sendMessage = new SendMessage();
 		
-		Message originalMessage = update.getCallbackQuery().getMessage();
+		MaybeInaccessibleMessage  originalMessage = update.getCallbackQuery().getMessage();
 		User sender = update.getCallbackQuery().getFrom();
 
 		EditMessageReplyMarkup editMessageReplyMarkup = new EditMessageReplyMarkup();
@@ -44,7 +44,7 @@ public class USDTFlashExchangeMessage implements UpdateService {
 
 		sendMessage.setChatId(originalMessage.getChatId().toString());
 		sendMessage.setText("请输入兑换地址：");
-
+		sendMessage.setReplyMarkup(InlineKeyboard.getInlineKeyboardMarkup());
 		return sendMessage;
 	}
 }

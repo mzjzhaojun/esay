@@ -2,6 +2,8 @@ package com.yt.app.common.bot;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.CopyMessage;
 import org.telegram.telegrambots.meta.api.methods.ForwardMessage;
@@ -15,40 +17,30 @@ import com.yt.app.api.v1.entity.Tgbotgroup;
 import com.yt.app.api.v1.entity.Tgbotgrouprecord;
 import com.yt.app.api.v1.mapper.TgbotgroupMapper;
 import com.yt.app.api.v1.mapper.TgbotgrouprecordMapper;
-import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
+@SuppressWarnings("deprecation")
 @Slf4j
+@Component
 public class BookAccountBot extends TelegramLongPollingBot {
 
+	@Autowired
 	private TgbotgroupMapper tgbotgroupmapper;
+	@Autowired
 	private TgbotgrouprecordMapper tgbotgrouprecordmapper;
-
-	private String name;
-	private String token;
-
-	public BookAccountBot() {
-	}
-
-	public BookAccountBot(String _name, String _token) {
-		tgbotgroupmapper = BeanContext.getApplicationContext().getBean(TgbotgroupMapper.class);
-		tgbotgrouprecordmapper = BeanContext.getApplicationContext().getBean(TgbotgrouprecordMapper.class);
-		name = _name;
-		token = _token;
-	}
 
 	@Override
 	public String getBotUsername() {
-		return name;
+		return "飞兔运营";
 	}
 
 	@Override
 	public String getBotToken() {
-		return token;
+		return "7126079871:AAFQOkrsh2s3ytDrP4ERtMwpWryV3Zs8jc8";
 	}
 
 	@Override

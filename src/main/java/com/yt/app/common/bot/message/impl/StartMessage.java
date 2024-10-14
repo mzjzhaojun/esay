@@ -19,22 +19,24 @@ public class StartMessage implements UpdateService {
 	public SendMessage getUpdate(Update update) {
 		SendMessage sendMessage = new SendMessage();
 		sendMessage.setChatId(update.getMessage().getChatId().toString());
-		sendMessage.setText("欢迎使用TRX能量租用,能量兑换综合机器人,请勿使用交易所USDT转入");
+		sendMessage.setText("欢迎使用TRX兑换综合机器人,请勿使用交易所USDT转入");
 		ReplyKeyboardMarkup rkm = new ReplyKeyboardMarkup();
 		rkm.setResizeKeyboard(true);
-		rkm.setOneTimeKeyboard(true);
-		rkm.setSelective(true);
+		rkm.setOneTimeKeyboard(false);
+		rkm.setSelective(false);
+		rkm.setIsPersistent(true);
 		List<KeyboardRow> listkby = new ArrayList<KeyboardRow>();
 		KeyboardButton kbb = new KeyboardButton();
-		kbb.setText("⚡能量闪租");
+		kbb.setText("⚡TRX闪兑");
 		KeyboardButton kbb1 = new KeyboardButton();
-		kbb1.setText("✔TRX闪兑");
-		KeyboardButton kbb2 = new KeyboardButton();
-		kbb2.setText("🧑‍🚀联系客服");
+		kbb1.setText("✈飞机账号");
+		KeyboardButton kbb3 = new KeyboardButton();
+		kbb3.setText("🧑‍🚀联系客服");
+
 		KeyboardRow kbr = new KeyboardRow();
 		kbr.add(kbb);
 		kbr.add(kbb1);
-		kbr.add(kbb2);
+		kbr.add(kbb3);
 		listkby.add(kbr);
 		rkm.setKeyboard(listkby);
 		sendMessage.setReplyMarkup(rkm);

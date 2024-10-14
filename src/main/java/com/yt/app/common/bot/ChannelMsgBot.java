@@ -30,6 +30,7 @@ import com.yt.app.common.base.context.TenantIdContext;
 
 import lombok.extern.slf4j.Slf4j;
 
+@SuppressWarnings("deprecation")
 @Slf4j
 @Component
 public class ChannelMsgBot extends TelegramLongPollingBot {

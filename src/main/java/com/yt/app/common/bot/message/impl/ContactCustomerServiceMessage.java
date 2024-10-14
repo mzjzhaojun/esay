@@ -13,7 +13,7 @@ public class ContactCustomerServiceMessage implements UpdateService {
 	public SendMessage getUpdate(Update update) {
 		SendMessage sendMessage = new SendMessage();
 		sendMessage.setChatId(update.getMessage().getChatId().toString());
-		sendMessage.setText("@Wenxi338");
+		sendMessage.setText("@XXX");
 		return sendMessage;
 	}
 }
