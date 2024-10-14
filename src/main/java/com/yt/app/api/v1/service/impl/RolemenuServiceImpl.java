@@ -88,28 +88,22 @@ public class RolemenuServiceImpl extends YtBaseServiceImpl<Rolemenu, Long> imple
 		}
 
 		// 1、查询角色关联的旧菜单权限信息
-		List<Rolemenu> roleReMenuListOld = this.sysRoleMenuMapper
-				.selectList(new LambdaQueryWrapper<Rolemenu>().eq(Rolemenu::getRole_id, roleId));
+		List<Rolemenu> roleReMenuListOld = this.sysRoleMenuMapper.selectList(new LambdaQueryWrapper<Rolemenu>().eq(Rolemenu::getRole_id, roleId));
 		// 菜单id -> 主键id
-		Map<Long, Long> menuReIdMapOld = roleReMenuListOld.stream()
-				.collect(Collectors.toMap(Rolemenu::getMenu_id, Rolemenu::getId, (oldData, newData) -> newData));
+		Map<Long, Long> menuReIdMapOld = roleReMenuListOld.stream().collect(Collectors.toMap(Rolemenu::getMenu_id, Rolemenu::getId, (oldData, newData) -> newData));
 		// 旧菜单id
-		List<Long> roleReMenuIdListOld = roleReMenuListOld.stream().map(Rolemenu::getMenu_id)
-				.collect(Collectors.toList());
+		List<Long> roleReMenuIdListOld = roleReMenuListOld.stream().map(Rolemenu::getMenu_id).collect(Collectors.toList());
 
 		// 2、筛选出需删除的旧数据
-		List<Long> removeMenuIdList = roleReMenuIdListOld.stream().filter(oldMenuId -> !menuIdList.contains(oldMenuId))
-				.collect(Collectors.toList());
+		List<Long> removeMenuIdList = roleReMenuIdListOld.stream().filter(oldMenuId -> !menuIdList.contains(oldMenuId)).collect(Collectors.toList());
 		if (CollUtil.isNotEmpty(removeMenuIdList)) {
 			// 删除角色关联的菜单权限信息
-			this.sysRoleMenuMapper.delete(new LambdaQueryWrapper<Rolemenu>().eq(Rolemenu::getRole_id, roleId)
-					.in(Rolemenu::getMenu_id, removeMenuIdList));
+			this.sysRoleMenuMapper.delete(new LambdaQueryWrapper<Rolemenu>().eq(Rolemenu::getRole_id, roleId).in(Rolemenu::getMenu_id, removeMenuIdList));
 		}
 
 		// 3、再保存角色关联的菜单权限信息
 		List<Rolemenu> roleMenuList = Lists.newArrayList();
-		menuIdList.forEach(menuId -> roleMenuList
-				.add(Rolemenu.builder().id(menuReIdMapOld.get(menuId)).role_id(roleId).menu_id(menuId).build()));
+		menuIdList.forEach(menuId -> roleMenuList.add(Rolemenu.builder().id(menuReIdMapOld.get(menuId)).role_id(roleId).menu_id(menuId).build()));
 		this.sysRoleMenuMapper.insertBatchSomeColumn(roleMenuList);
 	}
 
@@ -131,8 +125,7 @@ public class RolemenuServiceImpl extends YtBaseServiceImpl<Rolemenu, Long> imple
 		if (CollUtil.isEmpty(delMenuIdList)) {
 			return;
 		}
-		this.sysRoleMenuMapper.delete(new LambdaQueryWrapper<Rolemenu>().in(Rolemenu::getMenu_id, delMenuIdList)
-				.notIn(Rolemenu::getRole_id, AppConstant.NOT_DEL_MENU_EXCLUDE_ROLE_ID_LIST));
+		this.sysRoleMenuMapper.delete(new LambdaQueryWrapper<Rolemenu>().in(Rolemenu::getMenu_id, delMenuIdList).notIn(Rolemenu::getRole_id, AppConstant.NOT_DEL_MENU_EXCLUDE_ROLE_ID_LIST));
 	}
 
 	@Override

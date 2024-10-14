@@ -164,8 +164,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
 		List<Channel> listc = channelmapper.listByArrayId(cids);
 		Assert.notEmpty(listc, "没有可用渠道!");
-		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount())
-				.collect(Collectors.toList());
+		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount()).collect(Collectors.toList());
 		Assert.notEmpty(listcmm, "代付金额超出限额");
 		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 		Channel cl = null;
@@ -226,8 +225,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
 		mao.setType(DictionaryResource.ORDERTYPE_23);
 		mao.setOrdernum(t.getMerchantordernum());
-		mao.setRemark("代付资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
-				+ m.getOnecost());
+		mao.setRemark("代付资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费：" + m.getOnecost());
 		merchantaccountordermapper.post(mao);
 		merchantaccountservice.payout(mao);
 		///////////////////////////////////////////////////// 计算代理订单/////////////////////////////////////////////////////
@@ -249,8 +247,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			aat.setOnecost(ag.getOnecost());// 手续费
 			aat.setType(DictionaryResource.ORDERTYPE_23);
 			aat.setOrdernum("PA" + StringUtil.getOrderNum());
-			aat.setRemark("代付资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费："
-					+ aat.getOnecost());
+			aat.setRemark("代付资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
 			t.setAgentordernum(aat.getOrdernum());
 			agentaccountordermapper.post(aat);
@@ -321,8 +318,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 						if (PayUtil.valMd5TyResultOrder(so, cl.getApikey()) && so.getPay_message() == 1) {
 							paySuccess(pt);
 						}
-					} else if (sto != null && (sto.getPay_message() == -2 || sto.getPay_message() == -3)
-							&& so.getPay_message() == -2) {
+					} else if (sto != null && (sto.getPay_message() == -2 || sto.getPay_message() == -3) && so.getPay_message() == -2) {
 						payFail(pt);
 					}
 				}
@@ -428,8 +424,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
 		List<Channel> listc = channelmapper.listByArrayId(cids);
 		Assert.notEmpty(listc, "没有可用渠道!");
-		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount())
-				.collect(Collectors.toList());
+		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount()).collect(Collectors.toList());
 		Assert.notEmpty(listcmm, "代付金额超出限额");
 		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 		Channel cl = null;
@@ -489,8 +484,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
 		mao.setType(DictionaryResource.ORDERTYPE_23);
 		mao.setOrdernum(t.getMerchantordernum());
-		mao.setRemark("代付资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费："
-				+ m.getOnecost());
+		mao.setRemark("代付资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费：" + m.getOnecost());
 		merchantaccountordermapper.post(mao);
 		merchantaccountservice.payout(mao);
 
@@ -514,8 +508,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			aat.setOnecost(ag.getOnecost());// 手续费
 			aat.setType(DictionaryResource.ORDERTYPE_23);
 			aat.setOrdernum("PA" + StringUtil.getOrderNum());
-			aat.setRemark("代付资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费："
-					+ aat.getOnecost());
+			aat.setRemark("代付资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
 			t.setAgentordernum(aat.getOrdernum());
 			agentaccountordermapper.post(aat);
@@ -704,8 +697,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Transactional
 	public void payoutmanual(Payout pt) {
 		User u = usermapper.get(SysUserContext.getUserId());
-		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(pt.getRemark()),
-				System.currentTimeMillis());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(pt.getRemark()), System.currentTimeMillis());
 		Assert.isTrue(isValid, "验证码错误！");
 		if (pt.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
 			paySuccess(pt);

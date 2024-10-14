@@ -43,8 +43,7 @@ public interface YtIBaseController<T, ID extends Serializable> {
 	 * @param o 要持久化的对象
 	 * @return 执行成功的记录个数
 	 */
-	public YtResponseEntity<Object> post(YtRequestEntity<T> requestEntity, HttpServletRequest request,
-			HttpServletResponse response);
+	public YtResponseEntity<Object> post(YtRequestEntity<T> requestEntity, HttpServletRequest request, HttpServletResponse response);
 
 	/**
 	 * 更新（持久化）对象
@@ -52,8 +51,7 @@ public interface YtIBaseController<T, ID extends Serializable> {
 	 * @param o 要持久化的对象
 	 * @return 执行成功的记录个数
 	 */
-	public YtResponseEntity<Object> put(YtRequestEntity<T> requestEntity, HttpServletRequest request,
-			HttpServletResponse response);
+	public YtResponseEntity<Object> put(YtRequestEntity<T> requestEntity, HttpServletRequest request, HttpServletResponse response);
 
 	/**
 	 * 获取指定的唯一标识符对应的持久化对象
@@ -61,8 +59,7 @@ public interface YtIBaseController<T, ID extends Serializable> {
 	 * @param id 指定的唯一标识符
 	 * @return 指定的唯一标识符对应的持久化对象，如果没有对应的持久化对象，则返回null。
 	 */
-	public YtResponseEntity<Object> get(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response);
+	public YtResponseEntity<Object> get(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response);
 
 	/**
 	 * 删除指定的唯一标识符数组对应的持久化对象
@@ -70,15 +67,13 @@ public interface YtIBaseController<T, ID extends Serializable> {
 	 * @param ids 指定的唯一标识符数组
 	 * @return 删除的对象数量
 	 */
-	public YtResponseEntity<Object> delete(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response);
+	public YtResponseEntity<Object> delete(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response);
 
 	/**
 	 * 全部数据或有分页参数返回分页数据
 	 * 
 	 * @return 查询结果列表
 	 */
-	public YtResponseEntity<Object> list(YtRequestEntity<Object> requestEntity, HttpServletRequest request,
-			HttpServletResponse response);
+	public YtResponseEntity<Object> list(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response);
 
 }

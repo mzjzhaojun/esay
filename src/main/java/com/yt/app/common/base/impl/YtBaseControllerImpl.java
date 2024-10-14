@@ -54,8 +54,7 @@ public abstract class YtBaseControllerImpl<T, ID extends Serializable> implement
 	 */
 	@Override
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> post(YtRequestEntity<T> requestEntity, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEntity<Object> post(YtRequestEntity<T> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.post(requestEntity.getBody());
 		Assert.notEquals(i, 0, "新增失败！");
 		return new YtResponseEntity<Object>(new YtBody(i));
@@ -68,8 +67,7 @@ public abstract class YtBaseControllerImpl<T, ID extends Serializable> implement
 	 */
 	@Override
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> put(YtRequestEntity<T> requestEntity, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEntity<Object> put(YtRequestEntity<T> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.put(requestEntity.getBody());
 		Assert.notEquals(i, 0, "修改失败！");
 		return new YtResponseEntity<Object>(new YtBody(i));
@@ -82,8 +80,7 @@ public abstract class YtBaseControllerImpl<T, ID extends Serializable> implement
 	 */
 	@Override
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> get(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEntity<Object> get(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 		T t = service.get(id);
 		Assert.notNull(t, "访问的资源不存在！");
 		return new YtResponseEntity<Object>(new YtBody(t));
@@ -96,8 +93,7 @@ public abstract class YtBaseControllerImpl<T, ID extends Serializable> implement
 	 */
 	@Override
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> delete(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEntity<Object> delete(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.delete(id);
 		Assert.notEquals(i, 0, "删除失败！");
 		return new YtResponseEntity<Object>(new YtBody(i));
@@ -110,8 +106,7 @@ public abstract class YtBaseControllerImpl<T, ID extends Serializable> implement
 	 */
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> list(YtRequestEntity<Object> requestEntity, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEntity<Object> list(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<?> pagebean = service.list(RequestUtil.requestEntityToParamMap(requestEntity));
 		return new YtResponseEntity<Object>(new YtBody(pagebean));
 	}

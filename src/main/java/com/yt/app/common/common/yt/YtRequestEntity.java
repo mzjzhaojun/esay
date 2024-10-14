@@ -98,8 +98,7 @@ public class YtRequestEntity<T> extends YtHttpEntity<T> {
 	 * @param method  the method
 	 * @param url     the URL
 	 */
-	public YtRequestEntity(@Nullable T body, @Nullable MultiValueMap<String, String> headers,
-			@Nullable HttpMethod method, URI url) {
+	public YtRequestEntity(@Nullable T body, @Nullable MultiValueMap<String, String> headers, @Nullable HttpMethod method, URI url) {
 
 		this(body, headers, method, url, null);
 	}
@@ -114,8 +113,7 @@ public class YtRequestEntity<T> extends YtHttpEntity<T> {
 	 * @param type    the type used for generic type resolution
 	 * @since 4.3
 	 */
-	public YtRequestEntity(@Nullable T body, @Nullable MultiValueMap<String, String> headers,
-			@Nullable HttpMethod method, URI url, @Nullable Type type) {
+	public YtRequestEntity(@Nullable T body, @Nullable MultiValueMap<String, String> headers, @Nullable HttpMethod method, URI url, @Nullable Type type) {
 
 		super(body, headers);
 		this.method = method;
@@ -168,8 +166,7 @@ public class YtRequestEntity<T> extends YtHttpEntity<T> {
 			return false;
 		}
 		YtRequestEntity<?> otherEntity = (YtRequestEntity<?>) other;
-		return (ObjectUtils.nullSafeEquals(getMethod(), otherEntity.getMethod())
-				&& ObjectUtils.nullSafeEquals(getUrl(), otherEntity.getUrl()));
+		return (ObjectUtils.nullSafeEquals(getMethod(), otherEntity.getMethod()) && ObjectUtils.nullSafeEquals(getUrl(), otherEntity.getUrl()));
 	}
 
 	@Override

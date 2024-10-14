@@ -35,8 +35,7 @@ import java.util.Map;
  */
 
 @Service
-public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomemerchantaccount, Long>
-		implements IncomemerchantaccountService {
+public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomemerchantaccount, Long> implements IncomemerchantaccountService {
 	@Autowired
 	private IncomemerchantaccountMapper mapper;
 

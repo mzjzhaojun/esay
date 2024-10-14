@@ -74,14 +74,11 @@ public class ScopedataServiceImpl extends YtBaseServiceImpl<Scopedata, Long> imp
 	public List<Scopedata> tree(SysScopeDataBaseDTO params) {
 		// 数据权限
 		List<Scopedata> scopeList = this.list(params);
-		List<Long> menuIdList = scopeList.stream().map(Scopedata::getMenu_id).distinct().sorted()
-				.collect(Collectors.toList());
-		Map<Long, List<Scopedata>> scopeMap = scopeList.stream()
-				.collect(Collectors.groupingBy(Scopedata::getMenu_id, Collectors.mapping(t -> t, Collectors.toList())));
+		List<Long> menuIdList = scopeList.stream().map(Scopedata::getMenu_id).distinct().sorted().collect(Collectors.toList());
+		Map<Long, List<Scopedata>> scopeMap = scopeList.stream().collect(Collectors.groupingBy(Scopedata::getMenu_id, Collectors.mapping(t -> t, Collectors.toList())));
 
 		// 菜单
-		List<SysMenuTreeVO> menuTree = this.tsysmenuservice
-				.tree(SysMenuTreeDTO.builder().childMenuIdList(menuIdList).type(1).build());
+		List<SysMenuTreeVO> menuTree = this.tsysmenuservice.tree(SysMenuTreeDTO.builder().childMenuIdList(menuIdList).type(1).build());
 
 		// 组装树
 		return this.recurveData(scopeMap, menuTree);
@@ -110,8 +107,7 @@ public class ScopedataServiceImpl extends YtBaseServiceImpl<Scopedata, Long> imp
 			if (CollUtil.isNotEmpty(scopeList)) {
 				childList.addAll(scopeList);
 			}
-			result.add(Scopedata.builder().custom_id("m" + menuId).custom_name(item.getName())
-					.menuFullName(item.getFullName()).children(childList).build());
+			result.add(Scopedata.builder().custom_id("m" + menuId).custom_name(item.getName()).menuFullName(item.getFullName()).children(childList).build());
 		});
 		return result;
 	}

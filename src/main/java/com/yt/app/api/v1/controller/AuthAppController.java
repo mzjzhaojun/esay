@@ -35,15 +35,13 @@ public class AuthAppController extends YtBaseEncipherControllerImpl<User, Long> 
 	private AuthService authservice;
 
 	@RequestMapping(value = "/loginapp", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> loginapp(YtRequestEntity<AuthLoginDTO> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEntity<Object> loginapp(YtRequestEntity<AuthLoginDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		AuthLoginVO u = authservice.loginapp(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(u));
 	}
 
 	@RequestMapping(value = "/logoutapp", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public YtResponseEncryptEntity<Object> logoutvue(YtRequestEntity<User> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> logoutvue(YtRequestEntity<User> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		String token = request.getHeader(SecurityConstant.AUTHORIZATION_KEY);
 		AuthUtil.logout(token);
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));

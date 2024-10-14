@@ -25,8 +25,7 @@ import java.util.stream.Collectors;
  */
 
 @Service
-public class ProvincecityareaServiceImpl extends YtBaseServiceImpl<Provincecityarea, Long>
-		implements ProvincecityareaService {
+public class ProvincecityareaServiceImpl extends YtBaseServiceImpl<Provincecityarea, Long> implements ProvincecityareaService {
 	@Autowired
 	private ProvincecityareaMapper mapper;
 
@@ -62,8 +61,7 @@ public class ProvincecityareaServiceImpl extends YtBaseServiceImpl<Provincecitya
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public List<Provincecityarea> tree(SysProvinceCityAreaTreeDTO params) {
 		List<Provincecityarea> list = this.mapper.selectDataList(params);
-		List<Provincecityarea> result = list.stream().filter(e -> e.getType().equals(params.getType()))
-				.collect(Collectors.toList());
+		List<Provincecityarea> result = list.stream().filter(e -> e.getType().equals(params.getType())).collect(Collectors.toList());
 		result.forEach(item -> item.setChildren(this.recurveTree(item.getId(), list)));
 		return result;
 	}
@@ -77,8 +75,7 @@ public class ProvincecityareaServiceImpl extends YtBaseServiceImpl<Provincecitya
 	 * @author zhengqingya
 	 */
 	private List<Provincecityarea> recurveTree(Long parentId, List<Provincecityarea> allList) {
-		List<Provincecityarea> list = allList.stream().filter(e -> parentId.equals(e.getParent_id()))
-				.collect(Collectors.toList());
+		List<Provincecityarea> list = allList.stream().filter(e -> parentId.equals(e.getParent_id())).collect(Collectors.toList());
 		for (Provincecityarea item : list) {
 			item.setChildren(this.recurveTree(item.getId(), allList));
 		}

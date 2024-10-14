@@ -38,8 +38,7 @@ import java.util.Map;
  */
 
 @Service
-public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelaccountorder, Long>
-		implements ChannelaccountorderService {
+public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelaccountorder, Long> implements ChannelaccountorderService {
 	@Autowired
 	private ChannelaccountorderMapper mapper;
 
@@ -114,8 +113,7 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 	@Transactional
 	public void incomemanual(Channelaccountorder cco) {
 		User u = usermapper.get(SysUserContext.getUserId());
-		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(cco.getRemark()),
-				System.currentTimeMillis());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(cco.getRemark()), System.currentTimeMillis());
 		Assert.isTrue(isValid, "验证码错误！");
 		Channelaccountorder mao = mapper.get(cco.getId());
 		mao.setStatus(cco.getStatus());

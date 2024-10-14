@@ -34,15 +34,13 @@ public class AuthController extends YtBaseEncipherControllerImpl<User, Long> {
 	private AuthService authservice;
 
 	@RequestMapping(value = "/loginvue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> loginvue(YtRequestDecryptEntity<AuthLoginDTO> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> loginvue(YtRequestDecryptEntity<AuthLoginDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		AuthLoginVO u = authservice.login(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(u));
 	}
 
 	@RequestMapping(value = "/logoutvue", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public YtResponseEncryptEntity<Object> logoutvue(YtRequestDecryptEntity<User> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> logoutvue(YtRequestDecryptEntity<User> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		String token = request.getHeader(SecurityConstant.AUTHORIZATION_KEY);
 		AuthUtil.logout(token);
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
@@ -54,17 +52,14 @@ public class AuthController extends YtBaseEncipherControllerImpl<User, Long> {
 	}
 
 	@RequestMapping(value = "/qrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> qrcode(YtRequestDecryptEntity<AuthLoginDTO> requestEntity,
-			HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> qrcode(YtRequestDecryptEntity<AuthLoginDTO> requestEntity, HttpServletResponse response) {
 		String qrcode = authservice.genQRImage(requestEntity.getBody().getUsername());
 		return new YtResponseEncryptEntity<Object>(new YtBody(qrcode));
 	}
 
 	@RequestMapping(value = "/verqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> verqrcode(YtRequestDecryptEntity<AuthLoginDTO> requestEntity,
-			HttpServletResponse response) {
-		Integer i = authservice.verqrcode(requestEntity.getBody().getUsername(), requestEntity.getBody().getPassword(),
-				requestEntity.getBody().getCode(), requestEntity.getBody().getTwocode());
+	public YtResponseEncryptEntity<Object> verqrcode(YtRequestDecryptEntity<AuthLoginDTO> requestEntity, HttpServletResponse response) {
+		Integer i = authservice.verqrcode(requestEntity.getBody().getUsername(), requestEntity.getBody().getPassword(), requestEntity.getBody().getCode(), requestEntity.getBody().getTwocode());
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 }

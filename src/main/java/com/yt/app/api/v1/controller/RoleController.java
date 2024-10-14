@@ -39,29 +39,25 @@ public class RoleController extends YtBaseEncipherControllerImpl<Role, Long> {
 
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<Role> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
 	@RequestMapping(value = "/tree", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> tree(YtRequestDecryptEntity<SysRoleBaseDTO> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> tree(YtRequestDecryptEntity<SysRoleBaseDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		List<SysRoleBaseVO> pagebean = service.tree(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
 	@RequestMapping(value = "/getscopeidlistbyroleid/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> SysRoleAllPermissionDetail(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> SysRoleAllPermissionDetail(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 		List<Long> list = service.selectListByRoleId(id);
 		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}
 
 	@RequestMapping(value = "/saverolereperm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> saverolereperm(YtRequestDecryptEntity<SysRoleRePermSaveDTO> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> saverolereperm(YtRequestDecryptEntity<SysRoleRePermSaveDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.saverolereperm(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}

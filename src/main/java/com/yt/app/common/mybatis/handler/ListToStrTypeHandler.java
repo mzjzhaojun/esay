@@ -29,8 +29,7 @@ import java.util.List;
 public class ListToStrTypeHandler implements TypeHandler<List<String>> {
 
 	@Override
-	public void setParameter(PreparedStatement ps, int columnIndex, List<String> columnValueList, JdbcType jdbcType)
-			throws SQLException {
+	public void setParameter(PreparedStatement ps, int columnIndex, List<String> columnValueList, JdbcType jdbcType) throws SQLException {
 		String columnValue = Joiner.on(",").join(columnValueList);
 		ps.setString(columnIndex, columnValue);
 	}

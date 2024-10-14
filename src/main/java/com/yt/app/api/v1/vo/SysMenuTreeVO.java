@@ -94,8 +94,7 @@ public class SysMenuTreeVO extends BaseVO {
 	public void handleData() {
 		this.children = CollectionUtils.isEmpty(this.children) ? Lists.newArrayList() : this.children;
 
-		this.meta = Meta.builder().isShow(this.is_show).sort(this.sort).title(this.name).icon(this.icon)
-				.isShowBreadcrumb(this.is_show_breadcrumb).build();
+		this.meta = Meta.builder().isShow(this.is_show).sort(this.sort).title(this.name).icon(this.icon).isShowBreadcrumb(this.is_show_breadcrumb).build();
 	}
 
 }

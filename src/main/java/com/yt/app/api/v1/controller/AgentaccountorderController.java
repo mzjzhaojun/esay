@@ -34,8 +34,7 @@ public class AgentaccountorderController extends YtBaseEncipherControllerImpl<Ag
 
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<Agentaccountorder> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
@@ -46,8 +45,7 @@ public class AgentaccountorderController extends YtBaseEncipherControllerImpl<Ag
 	 * @version 1.1
 	 */
 	@RequestMapping(value = "/withdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> withdraw(YtRequestDecryptEntity<Agentaccountorder> YtRequestDecryptEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> withdraw(YtRequestDecryptEntity<Agentaccountorder> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.save(YtRequestDecryptEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
@@ -61,8 +59,7 @@ public class AgentaccountorderController extends YtBaseEncipherControllerImpl<Ag
 	 * @return
 	 */
 	@RequestMapping(value = "/withdrawmanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> withdrawmanual(YtRequestDecryptEntity<Agentaccountorder> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> withdrawmanual(YtRequestDecryptEntity<Agentaccountorder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		service.withdrawmanual(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
@@ -73,8 +70,7 @@ public class AgentaccountorderController extends YtBaseEncipherControllerImpl<Ag
 	 * @version 1.1
 	 */
 	@RequestMapping(value = "/canclewithdraw/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> canclewithdraw(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> canclewithdraw(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 		Object t = service.cancleWithdraw(id);
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}

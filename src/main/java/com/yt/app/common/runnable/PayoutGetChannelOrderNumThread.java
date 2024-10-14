@@ -40,21 +40,14 @@ public class PayoutGetChannelOrderNumThread implements Runnable {
 	public void run() {
 		TenantIdContext.removeFlag();
 		PayoutMapper mapper = BeanContext.getApplicationContext().getBean(PayoutMapper.class);
-		PayoutMerchantaccountorderMapper merchantaccountordermapper = BeanContext.getApplicationContext()
-				.getBean(PayoutMerchantaccountorderMapper.class);
-		AgentaccountorderMapper agentaccountordermapper = BeanContext.getApplicationContext()
-				.getBean(AgentaccountorderMapper.class);
-		PayoutMerchantaccountService merchantaccountservice = BeanContext.getApplicationContext()
-				.getBean(PayoutMerchantaccountService.class);
-		AgentaccountService agentaccountservice = BeanContext.getApplicationContext()
-				.getBean(AgentaccountService.class);
+		PayoutMerchantaccountorderMapper merchantaccountordermapper = BeanContext.getApplicationContext().getBean(PayoutMerchantaccountorderMapper.class);
+		AgentaccountorderMapper agentaccountordermapper = BeanContext.getApplicationContext().getBean(AgentaccountorderMapper.class);
+		PayoutMerchantaccountService merchantaccountservice = BeanContext.getApplicationContext().getBean(PayoutMerchantaccountService.class);
+		AgentaccountService agentaccountservice = BeanContext.getApplicationContext().getBean(AgentaccountService.class);
 		ChannelMapper channelmapper = BeanContext.getApplicationContext().getBean(ChannelMapper.class);
-		TgchannelgroupMapper tgchannelgroupmapper = BeanContext.getApplicationContext()
-				.getBean(TgchannelgroupMapper.class);
-		ChannelaccountorderMapper channelaccountordermapper = BeanContext.getApplicationContext()
-				.getBean(ChannelaccountorderMapper.class);
-		ChannelaccountService channelaccountservice = BeanContext.getApplicationContext()
-				.getBean(ChannelaccountService.class);
+		TgchannelgroupMapper tgchannelgroupmapper = BeanContext.getApplicationContext().getBean(TgchannelgroupMapper.class);
+		ChannelaccountorderMapper channelaccountordermapper = BeanContext.getApplicationContext().getBean(ChannelaccountorderMapper.class);
+		ChannelaccountService channelaccountservice = BeanContext.getApplicationContext().getBean(ChannelaccountService.class);
 		ChannelMsgBot cbot = BeanContext.getApplicationContext().getBean(ChannelMsgBot.class);
 		Payout payout = mapper.get(id);
 		Channel channel = channelmapper.get(payout.getChannelid());
@@ -69,8 +62,7 @@ public class PayoutGetChannelOrderNumThread implements Runnable {
 					if (channelordernum == null) {
 
 						// 计算商户订单/////////////////////////////////////////////////////
-						PayoutMerchantaccountorder mao = merchantaccountordermapper
-								.getByOrdernum(payout.getMerchantordernum());
+						PayoutMerchantaccountorder mao = merchantaccountordermapper.getByOrdernum(payout.getMerchantordernum());
 						mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
 						merchantaccountordermapper.put(mao);
 						//
@@ -119,8 +111,7 @@ public class PayoutGetChannelOrderNumThread implements Runnable {
 					cat.setAmountreceived(payout.getChannelpay());
 					cat.setType(DictionaryResource.ORDERTYPE_23);
 					cat.setOrdernum(payout.getChannelordernum());
-					cat.setRemark("代付资金￥：" + cat.getAmount() + " 交易费：" + String.format("%.2f", cat.getDeal()) + " 手续费："
-							+ cat.getOnecost());
+					cat.setRemark("代付资金￥：" + cat.getAmount() + " 交易费：" + String.format("%.2f", cat.getDeal()) + " 手续费：" + cat.getOnecost());
 					channelaccountordermapper.post(cat);
 					channelaccountservice.withdrawamount(cat);
 					Tgchannelgroup tgchannelgroup = tgchannelgroupmapper.getByChannelId(payout.getChannelid());

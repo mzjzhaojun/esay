@@ -119,15 +119,13 @@ public class MenuServiceImpl extends YtBaseServiceImpl<Menu, Long> implements Me
 		List<Long> childMenuIdList = params.getChildMenuIdList();
 		if (CollUtil.isNotEmpty(childMenuIdList)) {
 			// 拿到子级第一次的父id
-			List<Long> firstParentIdList = allMenuList.stream().filter(e -> childMenuIdList.contains(e.getId()))
-					.map(SysMenuTreeVO::getParent_id).collect(Collectors.toList());
+			List<Long> firstParentIdList = allMenuList.stream().filter(e -> childMenuIdList.contains(e.getId())).map(SysMenuTreeVO::getParent_id).collect(Collectors.toList());
 			// 拿到子级关联的所有父级菜单
 			List<Long> parentIdList = Lists.newArrayList();
 			parentIdList.addAll(childMenuIdList);
 			List<Long> childReAllParentIdList = recurveAllParentIdList(firstParentIdList, allMenuList, parentIdList);
 			if (CollUtil.isNotEmpty(childReAllParentIdList)) {
-				allMenuList = allMenuList.stream().filter(e -> childReAllParentIdList.contains(e.getId()))
-						.collect(Collectors.toList());
+				allMenuList = allMenuList.stream().filter(e -> childReAllParentIdList.contains(e.getId())).collect(Collectors.toList());
 			}
 		}
 
@@ -145,18 +143,15 @@ public class MenuServiceImpl extends YtBaseServiceImpl<Menu, Long> implements Me
 	 * @author zhengqingya
 	 * @date 2020/9/10 20:56
 	 */
-	public static List<Long> recurveAllParentIdList(List<Long> nodeReParentIdList, List<SysMenuTreeVO> allList,
-			List<Long> parentIdList) {
+	public static List<Long> recurveAllParentIdList(List<Long> nodeReParentIdList, List<SysMenuTreeVO> allList, List<Long> parentIdList) {
 		parentIdList.addAll(nodeReParentIdList);
 		// 过滤掉顶级父id 0
-		List<Long> nodeReParentIdListNew = nodeReParentIdList.stream().filter(e -> !AppConstant.PARENT_ID.equals(e))
-				.collect(Collectors.toList());
+		List<Long> nodeReParentIdListNew = nodeReParentIdList.stream().filter(e -> !AppConstant.PARENT_ID.equals(e)).collect(Collectors.toList());
 		if (CollUtil.isEmpty(nodeReParentIdListNew)) {
 			// 升序 + 去重
 			return parentIdList.stream().distinct().sorted().collect(Collectors.toList());
 		}
-		List<SysMenuTreeVO> list = allList.stream().filter(item -> nodeReParentIdListNew.contains(item.getId()))
-				.collect(Collectors.toList());
+		List<SysMenuTreeVO> list = allList.stream().filter(item -> nodeReParentIdListNew.contains(item.getId())).collect(Collectors.toList());
 		List<Long> childReParentIdList = list.stream().map(SysMenuTreeVO::getParent_id).collect(Collectors.toList());
 		return recurveAllParentIdList(childReParentIdList, allList, parentIdList);
 	}
@@ -173,8 +168,7 @@ public class MenuServiceImpl extends YtBaseServiceImpl<Menu, Long> implements Me
 	 */
 	private List<SysMenuTreeVO> recurveMenu(Long parentMenuId, String parentMenuName, List<SysMenuTreeVO> allMenuList) {
 		// 存放子菜单的集合
-		List<SysMenuTreeVO> childMenuList = allMenuList.stream().filter(e -> e.getParent_id().equals(parentMenuId))
-				.collect(Collectors.toList());
+		List<SysMenuTreeVO> childMenuList = allMenuList.stream().filter(e -> e.getParent_id().equals(parentMenuId)).collect(Collectors.toList());
 		// 递归
 		childMenuList.forEach(item -> {
 			Long menuId = item.getId();

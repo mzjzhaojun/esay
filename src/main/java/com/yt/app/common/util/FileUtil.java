@@ -440,8 +440,7 @@ public class FileUtil {
 
 		fl.setFile_name(fl.getId() + "." + fl.getSuffix());
 
-		String filepath = sb.append(fl.getRoot_path()).append(fl.getRelative_path()).append(java.io.File.separator)
-				.append(fl.getFile_name()).toString();
+		String filepath = sb.append(fl.getRoot_path()).append(fl.getRelative_path()).append(java.io.File.separator).append(fl.getFile_name()).toString();
 		java.io.File file = new java.io.File(filepath);
 		if (file.exists()) {
 			if (FileUtil.isAudio(file))
@@ -481,8 +480,7 @@ public class FileUtil {
 		if (file.exists()) {
 			response.setContentType("text/csv;charset=UTF-8");
 			response.setHeader("Accept-Ranges", "bytes");
-			response.setHeader("Content-Disposition",
-					"attachment;fileName=" + DateTimeUtil.getDate() + "-" + userid + ".csv");
+			response.setHeader("Content-Disposition", "attachment;fileName=" + DateTimeUtil.getDate() + "-" + userid + ".csv");
 		}
 		try {
 			FileInputStream inputStream = new FileInputStream(file);
@@ -512,8 +510,7 @@ public class FileUtil {
 			List<File> files = new ArrayList<File>();
 			for (YtFile fl : listfiles) {
 				StringBuffer sb = new StringBuffer();
-				String filepath = sb.append(fl.getRoot_path()).append(fl.getRelative_path())
-						.append(java.io.File.separator).append(fl.getId() + "." + fl.getSuffix()).toString();
+				String filepath = sb.append(fl.getRoot_path()).append(fl.getRelative_path()).append(java.io.File.separator).append(fl.getId() + "." + fl.getSuffix()).toString();
 				File file = new File(filepath);
 				rootpath = fl.getRoot_path();
 				files.add(file);

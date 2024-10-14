@@ -21,8 +21,7 @@ import sun.security.provider.SecureRandom;
 
 public class TronUtil {
 
-	private final static ImmutableList<ChildNumber> BIP44_ETH_ACCOUNT_ZERO_PATH = ImmutableList
-			.of(new ChildNumber(44, true), new ChildNumber(195, true), ChildNumber.ZERO_HARDENED, ChildNumber.ZERO);
+	private final static ImmutableList<ChildNumber> BIP44_ETH_ACCOUNT_ZERO_PATH = ImmutableList.of(new ChildNumber(44, true), new ChildNumber(195, true), ChildNumber.ZERO_HARDENED, ChildNumber.ZERO);
 
 	public static List<String> generateAddress(List<String> stringList) {
 		List<String> listaddress = new ArrayList<String>();
@@ -30,8 +29,7 @@ public class TronUtil {
 			byte[] seed = MnemonicCode.toSeed(stringList, "");
 			DeterministicKey masterPrivateKey = HDKeyDerivation.createMasterPrivateKey(seed);
 			DeterministicHierarchy deterministicHierarchy = new DeterministicHierarchy(masterPrivateKey);
-			DeterministicKey deterministicKey = deterministicHierarchy.deriveChild(BIP44_ETH_ACCOUNT_ZERO_PATH, false,
-					true, new ChildNumber(0));
+			DeterministicKey deterministicKey = deterministicHierarchy.deriveChild(BIP44_ETH_ACCOUNT_ZERO_PATH, false, true, new ChildNumber(0));
 			byte[] byte2 = deterministicKey.getPrivKeyBytes();
 			SECP256K1.PrivateKey privateKey = SECP256K1.PrivateKey.create(Bytes32.wrap(byte2));
 			SECP256K1.KeyPair keyPair2 = SECP256K1.KeyPair.create(privateKey);

@@ -37,8 +37,7 @@ import java.util.Map;
  */
 
 @Service
-public class QrcodeaccountorderServiceImpl extends YtBaseServiceImpl<Qrcodeaccountorder, Long>
-		implements QrcodeaccountorderService {
+public class QrcodeaccountorderServiceImpl extends YtBaseServiceImpl<Qrcodeaccountorder, Long> implements QrcodeaccountorderService {
 	@Autowired
 	private QrcodeaccountorderMapper mapper;
 
@@ -76,8 +75,7 @@ public class QrcodeaccountorderServiceImpl extends YtBaseServiceImpl<Qrcodeaccou
 			//
 			qrcodeaccountservice.updateTotalincome(qrcodeaccountorder);
 
-			Incomemerchantaccountorder incomemerchantaccountorder = incomemerchantaccountordermapper
-					.getByOrderNum(income.getMerchantorderid());
+			Incomemerchantaccountorder incomemerchantaccountorder = incomemerchantaccountordermapper.getByOrderNum(income.getMerchantorderid());
 			//
 			incomemerchantaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 			incomemerchantaccountordermapper.put(incomemerchantaccountorder);

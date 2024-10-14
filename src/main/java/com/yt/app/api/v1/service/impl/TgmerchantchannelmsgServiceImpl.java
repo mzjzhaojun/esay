@@ -24,8 +24,7 @@ import java.util.Map;
  */
 
 @Service
-public class TgmerchantchannelmsgServiceImpl extends YtBaseServiceImpl<Tgmerchantchannelmsg, Long>
-		implements TgmerchantchannelmsgService {
+public class TgmerchantchannelmsgServiceImpl extends YtBaseServiceImpl<Tgmerchantchannelmsg, Long> implements TgmerchantchannelmsgService {
 	@Autowired
 	private TgmerchantchannelmsgMapper mapper;
 

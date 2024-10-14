@@ -48,10 +48,8 @@ public class YtCachingConfigurer extends CachingConfigurerSupport {
 		redisStandaloneConfiguration.setHostName(c.getHost());
 		redisStandaloneConfiguration.setPassword(c.getPassword());
 		redisStandaloneConfiguration.setDatabase(c.getDatabase());
-		JedisClientConfiguration.JedisClientConfigurationBuilder configurationBuilder = JedisClientConfiguration
-				.builder();
-		JedisClientConfiguration jedisClientConfiguration = configurationBuilder.usePooling().poolConfig(m()).and()
-				.readTimeout(Duration.ofMillis(c.getExpire())).build();
+		JedisClientConfiguration.JedisClientConfigurationBuilder configurationBuilder = JedisClientConfiguration.builder();
+		JedisClientConfiguration jedisClientConfiguration = configurationBuilder.usePooling().poolConfig(m()).and().readTimeout(Duration.ofMillis(c.getExpire())).build();
 		return new JedisConnectionFactory(redisStandaloneConfiguration, jedisClientConfiguration);
 	}
 
@@ -98,9 +96,7 @@ public class YtCachingConfigurer extends CachingConfigurerSupport {
 	@Bean
 	public RedissonClient redissonClient() {
 		Config config = new Config();
-		config.useSingleServer().setAddress("redis://" + c.getHost() + ":" + c.getPort()).setTimeout(3000)
-				.setDatabase(1).setPassword(c.getPassword()).setPingConnectionInterval(60000).setConnectionPoolSize(64)
-				.setConnectionMinimumIdleSize(10);
+		config.useSingleServer().setAddress("redis://" + c.getHost() + ":" + c.getPort()).setTimeout(3000).setDatabase(1).setPassword(c.getPassword()).setPingConnectionInterval(60000).setConnectionPoolSize(64).setConnectionMinimumIdleSize(10);
 		return Redisson.create(config);
 	}
 

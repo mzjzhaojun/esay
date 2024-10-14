@@ -24,8 +24,7 @@ import java.util.Map;
  */
 
 @Service
-public class ChannelstatisticalreportsServiceImpl extends YtBaseServiceImpl<Channelstatisticalreports, Long>
-		implements ChannelstatisticalreportsService {
+public class ChannelstatisticalreportsServiceImpl extends YtBaseServiceImpl<Channelstatisticalreports, Long> implements ChannelstatisticalreportsService {
 	@Autowired
 	private ChannelstatisticalreportsMapper mapper;
 

@@ -8,8 +8,7 @@ package com.yt.app.common.enums;
  */
 public enum YtPageBeanEnum {
 
-	PAGENO("pageNum"), PAGESIZE("pageSize"), TOTALCOUNT("totalcount"), PAGESTART("pageStart"), PAGEEND("pageEnd"),
-	PAGECOUNT("pageCount"), ORDERBY("orderBy"), DIR("dir"), ASC("asc"), DESC("desc"), TOKEN("token");
+	PAGENO("pageNum"), PAGESIZE("pageSize"), TOTALCOUNT("totalcount"), PAGESTART("pageStart"), PAGEEND("pageEnd"), PAGECOUNT("pageCount"), ORDERBY("orderBy"), DIR("dir"), ASC("asc"), DESC("desc"), TOKEN("token");
 
 	private String name;
 

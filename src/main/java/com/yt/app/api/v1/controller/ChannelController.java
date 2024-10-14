@@ -34,8 +34,7 @@ public class ChannelController extends YtBaseEncipherControllerImpl<Channel, Lon
 
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<Channel> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
@@ -47,8 +46,7 @@ public class ChannelController extends YtBaseEncipherControllerImpl<Channel, Lon
 	 */
 	@Override
 	@RequestMapping(value = "/remotebalance/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> get(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> get(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 		Integer t = service.getRemotebalance(id);
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}

@@ -269,43 +269,37 @@ public class BookAccountBot extends TelegramLongPollingBot {
 	}
 
 	public String getOrder(Tgbotgroup tbg) {
-		List<Tgbotgrouprecord> listincome = tgbotgrouprecordmapper.listByType(tbg.getTgid(),
-				DictionaryResource.TGBOTGROUPRECORD_TYPE_INCOME);
+		List<Tgbotgrouprecord> listincome = tgbotgrouprecordmapper.listByType(tbg.getTgid(), DictionaryResource.TGBOTGROUPRECORD_TYPE_INCOME);
 		StringBuffer sb = new StringBuffer();
 		Integer i = 1;
 		double countincome = 0.00;
 		double countusdt = 0.00;
 		sb.append("入款:" + listincome.size() + " 笔\n");
 		for (Tgbotgrouprecord tbgr : listincome) {
-			sb.append(i + "：" + DateTimeUtil.getDateTime(tbgr.getCreate_time(), DateTimeUtil.DEFAULT_TIME_FORMAT)
-					+ "   " + tbgr.getAmount() + "/" + tbgr.getExchange() + "=" + tbgr.getWithdrawusdt() + " " + "\n");
+			sb.append(i + "：" + DateTimeUtil.getDateTime(tbgr.getCreate_time(), DateTimeUtil.DEFAULT_TIME_FORMAT) + "   " + tbgr.getAmount() + "/" + tbgr.getExchange() + "=" + tbgr.getWithdrawusdt() + " " + "\n");
 			countincome = countincome + tbgr.getAmount();
 			countusdt = countusdt + tbgr.getWithdrawusdt();
 			i++;
 		}
 		sb.append("\n");
-		List<Tgbotgrouprecord> liswithdraw = tgbotgrouprecordmapper.listByType(tbg.getTgid(),
-				DictionaryResource.TGBOTGROUPRECORD_TYPE_WITHDRAW);
+		List<Tgbotgrouprecord> liswithdraw = tgbotgrouprecordmapper.listByType(tbg.getTgid(), DictionaryResource.TGBOTGROUPRECORD_TYPE_WITHDRAW);
 		i = 1;
 		double counwithdeaw = 0.00;
 		double outusdt = 0.00;
 		sb.append("减款:" + liswithdraw.size() + " 笔\n");
 		for (Tgbotgrouprecord tbgr : liswithdraw) {
-			sb.append(i + "：" + DateTimeUtil.getDateTime(tbgr.getCreate_time(), DateTimeUtil.DEFAULT_TIME_FORMAT)
-					+ "   " + tbgr.getAmount() + "/" + tbgr.getExchange() + "=" + tbgr.getWithdrawusdt() + " " + "\n");
+			sb.append(i + "：" + DateTimeUtil.getDateTime(tbgr.getCreate_time(), DateTimeUtil.DEFAULT_TIME_FORMAT) + "   " + tbgr.getAmount() + "/" + tbgr.getExchange() + "=" + tbgr.getWithdrawusdt() + " " + "\n");
 			counwithdeaw = counwithdeaw + tbgr.getAmount();
 			outusdt = outusdt + tbgr.getWithdrawusdt();
 			i++;
 		}
 		sb.append("\n");
-		List<Tgbotgrouprecord> listusdt = tgbotgrouprecordmapper.listByType(tbg.getTgid(),
-				DictionaryResource.TGBOTGROUPRECORD_TYPE_USDT);
+		List<Tgbotgrouprecord> listusdt = tgbotgrouprecordmapper.listByType(tbg.getTgid(), DictionaryResource.TGBOTGROUPRECORD_TYPE_USDT);
 		i = 1;
 		double usdt = 0.00;
 		sb.append("下发:" + listusdt.size() + " 笔\n");
 		for (Tgbotgrouprecord tbgr : listusdt) {
-			sb.append(i + "：" + DateTimeUtil.getDateTime(tbgr.getCreate_time(), DateTimeUtil.DEFAULT_TIME_FORMAT)
-					+ "    " + tbgr.getWithdrawusdt() + " U" + "\n");
+			sb.append(i + "：" + DateTimeUtil.getDateTime(tbgr.getCreate_time(), DateTimeUtil.DEFAULT_TIME_FORMAT) + "    " + tbgr.getWithdrawusdt() + " U" + "\n");
 			usdt = usdt + tbgr.getWithdrawusdt();
 			i++;
 		}
@@ -345,8 +339,7 @@ public class BookAccountBot extends TelegramLongPollingBot {
 
 	// 复制消息
 	public void copyMessage(Long who, Integer msgId) {
-		CopyMessage cm = CopyMessage.builder().fromChatId(who.toString()).chatId(who.toString()).messageId(msgId)
-				.build();
+		CopyMessage cm = CopyMessage.builder().fromChatId(who.toString()).chatId(who.toString()).messageId(msgId).build();
 		try {
 			execute(cm);
 		} catch (TelegramApiException e) {
@@ -356,8 +349,7 @@ public class BookAccountBot extends TelegramLongPollingBot {
 
 	// 转发
 	public void forwardMessage(Long who, Integer msgId) {
-		ForwardMessage cm = ForwardMessage.builder().fromChatId(who.toString()).chatId(who.toString()).messageId(msgId)
-				.build();
+		ForwardMessage cm = ForwardMessage.builder().fromChatId(who.toString()).chatId(who.toString()).messageId(msgId).build();
 		try {
 			execute(cm);
 		} catch (TelegramApiException e) {
@@ -366,8 +358,7 @@ public class BookAccountBot extends TelegramLongPollingBot {
 	}
 
 	public void sendMenu(Long who, String txt, InlineKeyboardMarkup kb) {
-		SendMessage sm = SendMessage.builder().chatId(who.toString()).parseMode("HTML").text(txt).replyMarkup(kb)
-				.build();
+		SendMessage sm = SendMessage.builder().chatId(who.toString()).parseMode("HTML").text(txt).replyMarkup(kb).build();
 
 		try {
 			execute(sm);

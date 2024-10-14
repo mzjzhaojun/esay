@@ -70,12 +70,10 @@ public interface TronService extends YtIBaseService<Tron, Long> {
 	void cancelallunfreezev2(String privatekey, String owneraddress);
 
 	// 将带宽或者能量资源代理给其它账户
-	void delegateresource(String privatekey, String owneraddress, String receiveraddress, BigInteger balance,
-			String resource, boolean lock, Integer lockperiod);
+	void delegateresource(String privatekey, String owneraddress, String receiveraddress, BigInteger balance, String resource, boolean lock, Integer lockperiod);
 
 	// 取消为目标地址代理的带宽或者能量
-	void undelegateresource(String privatekey, String owneraddress, String receiveraddress, BigInteger balance,
-			String resource);
+	void undelegateresource(String privatekey, String owneraddress, String receiveraddress, BigInteger balance, String resource);
 
 	// 查询最新区块信息
 	void getnowblock();

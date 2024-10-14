@@ -93,8 +93,7 @@ public class DeptServiceImpl extends YtBaseServiceImpl<Dept, Long> implements De
 			return Lists.newArrayList();
 		}
 		// 存放子集合
-		List<SysDeptTreeVO> childList = allList.stream().filter(e -> e.getParent_id().equals(parentId))
-				.collect(Collectors.toList());
+		List<SysDeptTreeVO> childList = allList.stream().filter(e -> e.getParent_id().equals(parentId)).collect(Collectors.toList());
 		// 递归
 		childList.forEach(item -> {
 			item.setChildren(this.recurveDept(item.getId(), allList, excludeDeptId));

@@ -118,8 +118,7 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 	 * @version 1.1
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> delete(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEntity<Object> delete(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.remove(id);
 		return new YtResponseEntity<Object>(new YtBody(i));
 	}
@@ -130,8 +129,7 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 	 * @version 1.1
 	 */
 	@RequestMapping(value = "/delete/array", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> deleteArray(YtRequestEntity<List<String>> requestEntity, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEntity<Object> deleteArray(YtRequestEntity<List<String>> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.removeArray(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(i));
 	}
@@ -187,8 +185,7 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 	 * @param response
 	 */
 	@RequestMapping(value = "/{id}/{size}", method = RequestMethod.GET)
-	public void dowload(@PathVariable Long id, @PathVariable Long size, HttpServletRequest request,
-			HttpServletResponse response) {
+	public void dowload(@PathVariable Long id, @PathVariable Long size, HttpServletRequest request, HttpServletResponse response) {
 		YtFile fv = service.get(id);
 		if (fv == null) {
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -196,8 +193,7 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 		}
 		try {
 			StringBuffer sb = new StringBuffer();
-			String filepath = sb.append(fv.getRoot_path()).append(fv.getRelative_path()).append(java.io.File.separator)
-					.append(fv.getFile_name()).toString();
+			String filepath = sb.append(fv.getRoot_path()).append(fv.getRelative_path()).append(java.io.File.separator).append(fv.getFile_name()).toString();
 			java.io.File file = new java.io.File(filepath);
 			if (file.exists()) {
 				if (FileUtil.isAudio(file))
@@ -234,8 +230,7 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 		}
 	}
 
-	private void sendVideo(HttpServletRequest request, HttpServletResponse response, File file, String fileName)
-			throws FileNotFoundException, IOException {
+	private void sendVideo(HttpServletRequest request, HttpServletResponse response, File file, String fileName) throws FileNotFoundException, IOException {
 		RandomAccessFile randomFile = new RandomAccessFile(file, "r");
 		long contentLength = randomFile.length();
 		String range = request.getHeader("Range");
@@ -279,8 +274,7 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 			} else {
 				length = contentLength - requestStart;
 				response.setHeader("Content-length", "" + length);
-				response.setHeader("Content-Range",
-						"bytes " + requestStart + "-" + (contentLength - 1) + "/" + contentLength);
+				response.setHeader("Content-Range", "bytes " + requestStart + "-" + (contentLength - 1) + "/" + contentLength);
 			}
 		}
 		ServletOutputStream out = response.getOutputStream();
@@ -310,8 +304,7 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/txt/dowload/{id}", method = RequestMethod.GET)
-	public void dowloadtxt(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public void dowloadtxt(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 	}
 
 	/**
@@ -322,8 +315,7 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/customer/dowload/{id}", method = RequestMethod.GET)
-	public void dowloadcustomer(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public void dowloadcustomer(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 	}
 
 	/**
@@ -334,8 +326,7 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/txt/dowloadmobile/{id}", method = RequestMethod.GET)
-	public void dowloadmobile(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public void dowloadmobile(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 	}
 
 }

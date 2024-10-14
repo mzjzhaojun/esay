@@ -33,10 +33,8 @@ public class YtPageBean<T> implements YtIPage<T>, Serializable {
 	}
 
 	public YtPageBean(Map<String, Object> param, List<T> elements, int totalCount) {
-		this.pageNo = param.get(YtPageBeanEnum.PAGENO.getValue()) == null ? 0
-				: Integer.parseInt(param.get(YtPageBeanEnum.PAGENO.getValue()).toString());
-		this.pageSize = param.get(YtPageBeanEnum.PAGESIZE.getValue()) == null ? 0
-				: Integer.parseInt(param.get(YtPageBeanEnum.PAGESIZE.getValue()).toString());
+		this.pageNo = param.get(YtPageBeanEnum.PAGENO.getValue()) == null ? 0 : Integer.parseInt(param.get(YtPageBeanEnum.PAGENO.getValue()).toString());
+		this.pageSize = param.get(YtPageBeanEnum.PAGESIZE.getValue()) == null ? 0 : Integer.parseInt(param.get(YtPageBeanEnum.PAGESIZE.getValue()).toString());
 		if (elements == null)
 			elements = new ArrayList<>();
 		this.values = elements;
@@ -75,8 +73,7 @@ public class YtPageBean<T> implements YtIPage<T>, Serializable {
 	}
 
 	public static boolean isPaging(Map<String, Object> param) {
-		if (param != null && param.get(YtPageBeanEnum.PAGENO.getValue()) != null
-				&& StringUtil.checkNotEmpty(param.get(YtPageBeanEnum.PAGENO.getValue()).toString()))
+		if (param != null && param.get(YtPageBeanEnum.PAGENO.getValue()) != null && StringUtil.checkNotEmpty(param.get(YtPageBeanEnum.PAGENO.getValue()).toString()))
 			return true;
 		else
 			return false;

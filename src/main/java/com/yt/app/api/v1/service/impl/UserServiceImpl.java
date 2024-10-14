@@ -171,8 +171,7 @@ public class UserServiceImpl extends YtBaseServiceImpl<User, Long> implements Us
 		Assert.notNull(userPerm, "用户不存在或无权限！");
 
 		// 2.权限树
-		userPerm.setPermissionTreeList(tsysmenuservice
-				.tree(SysMenuTreeDTO.builder().roleIdList(userPerm.getRoleIdList()).isOnlyShowPerm(true).build()));
+		userPerm.setPermissionTreeList(tsysmenuservice.tree(SysMenuTreeDTO.builder().roleIdList(userPerm.getRoleIdList()).isOnlyShowPerm(true).build()));
 		// 3.租户id
 		Tenant t = tenantmapper.get(userPerm.getTenantId());
 		userPerm.setTenantId(t.getId());

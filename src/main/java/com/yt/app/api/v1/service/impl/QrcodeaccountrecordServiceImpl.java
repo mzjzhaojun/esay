@@ -26,8 +26,7 @@ import java.util.Map;
  */
 
 @Service
-public class QrcodeaccountrecordServiceImpl extends YtBaseServiceImpl<Qrcodeaccountrecord, Long>
-		implements QrcodeaccountrecordService {
+public class QrcodeaccountrecordServiceImpl extends YtBaseServiceImpl<Qrcodeaccountrecord, Long> implements QrcodeaccountrecordService {
 	@Autowired
 	private QrcodeaccountrecordMapper mapper;
 

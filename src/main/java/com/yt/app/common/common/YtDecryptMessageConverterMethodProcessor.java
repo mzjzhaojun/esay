@@ -32,14 +32,12 @@ public class YtDecryptMessageConverterMethodProcessor extends AbstractMessageCon
 		super(converters);
 	}
 
-	public YtDecryptMessageConverterMethodProcessor(List<HttpMessageConverter<?>> converters,
-			ContentNegotiationManager manager) {
+	public YtDecryptMessageConverterMethodProcessor(List<HttpMessageConverter<?>> converters, ContentNegotiationManager manager) {
 
 		super(converters, manager);
 	}
 
-	public YtDecryptMessageConverterMethodProcessor(List<HttpMessageConverter<?>> converters,
-			List<Object> requestResponseBodyAdvice) {
+	public YtDecryptMessageConverterMethodProcessor(List<HttpMessageConverter<?>> converters, List<Object> requestResponseBodyAdvice) {
 
 		super(converters, null, requestResponseBodyAdvice);
 	}
@@ -55,15 +53,12 @@ public class YtDecryptMessageConverterMethodProcessor extends AbstractMessageCon
 	}
 
 	@Override
-	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-			NativeWebRequest webRequest, WebDataBinderFactory binderFactory)
-			throws IOException, HttpMediaTypeNotSupportedException {
+	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws IOException, HttpMediaTypeNotSupportedException {
 		ServletServerHttpRequest inputMessage = createInputMessage(webRequest);
 		Type paramType = getHttpEntityType(parameter);
 		Object body = readWithMessageConverters(webRequest, parameter, paramType);
 		if (YtRequestDecryptEntity.class == parameter.getParameterType()) {
-			return new YtRequestDecryptEntity<Object>(body, inputMessage.getHeaders(), inputMessage.getMethod(),
-					inputMessage.getURI());
+			return new YtRequestDecryptEntity<Object>(body, inputMessage.getHeaders(), inputMessage.getMethod(), inputMessage.getURI());
 		} else {
 			return new YtHttpEntity<Object>(body, inputMessage.getHeaders());
 		}
@@ -75,20 +70,17 @@ public class YtDecryptMessageConverterMethodProcessor extends AbstractMessageCon
 		if (parameterType instanceof ParameterizedType) {
 			ParameterizedType type = (ParameterizedType) parameterType;
 			if (type.getActualTypeArguments().length != 1) {
-				throw new IllegalArgumentException("Expected single generic parameter on '"
-						+ parameter.getParameterName() + "' in method " + parameter.getMethod());
+				throw new IllegalArgumentException("Expected single generic parameter on '" + parameter.getParameterName() + "' in method " + parameter.getMethod());
 			}
 			return type.getActualTypeArguments()[0];
 		} else if (parameterType instanceof Class) {
 			return Object.class;
 		}
-		throw new IllegalArgumentException("HttpEntity parameter '" + parameter.getParameterName() + "' in method "
-				+ parameter.getMethod() + " is not parameterized");
+		throw new IllegalArgumentException("HttpEntity parameter '" + parameter.getParameterName() + "' in method " + parameter.getMethod() + " is not parameterized");
 	}
 
 	@Override
-	public void handleReturnValue(Object returnValue, MethodParameter returnType, ModelAndViewContainer mavContainer,
-			NativeWebRequest webRequest) throws Exception {
+	public void handleReturnValue(Object returnValue, MethodParameter returnType, ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
 		mavContainer.setRequestHandled(true);
 		if (returnValue == null) {
 			return;
@@ -114,16 +106,14 @@ public class YtDecryptMessageConverterMethodProcessor extends AbstractMessageCon
 		outputMessage.flush();
 	}
 
-	private boolean isResourceNotModified(ServletServerHttpRequest inputMessage,
-			ServletServerHttpResponse outputMessage) {
+	private boolean isResourceNotModified(ServletServerHttpRequest inputMessage, ServletServerHttpResponse outputMessage) {
 		List<String> ifNoneMatch = inputMessage.getHeaders().getIfNoneMatch();
 		long ifModifiedSince = inputMessage.getHeaders().getIfModifiedSince();
 		String eTag = addEtagPadding(outputMessage.getHeaders().getETag());
 		long lastModified = outputMessage.getHeaders().getLastModified();
 		boolean notModified = false;
 
-		if (!ifNoneMatch.isEmpty() && (inputMessage.getHeaders().containsKey(HttpHeaders.IF_UNMODIFIED_SINCE)
-				|| inputMessage.getHeaders().containsKey(HttpHeaders.IF_MATCH))) {
+		if (!ifNoneMatch.isEmpty() && (inputMessage.getHeaders().containsKey(HttpHeaders.IF_UNMODIFIED_SINCE) || inputMessage.getHeaders().containsKey(HttpHeaders.IF_MATCH))) {
 		} else if (lastModified != -1 && StringUtils.hasLength(eTag)) {
 			notModified = isETagNotModified(ifNoneMatch, eTag) && isTimeStampNotModified(ifModifiedSince, lastModified);
 		} else if (lastModified != -1) {
@@ -139,8 +129,7 @@ public class YtDecryptMessageConverterMethodProcessor extends AbstractMessageCon
 			for (String clientETag : ifNoneMatch) {
 				// Compare weak/strong ETags as per
 				// https://tools.ietf.org/html/rfc7232#section-2.3
-				if (StringUtils.hasLength(clientETag)
-						&& (clientETag.replaceFirst("^W/", "").equals(etag.replaceFirst("^W/", "")))) {
+				if (StringUtils.hasLength(clientETag) && (clientETag.replaceFirst("^W/", "").equals(etag.replaceFirst("^W/", "")))) {
 					return true;
 				}
 			}
@@ -153,8 +142,7 @@ public class YtDecryptMessageConverterMethodProcessor extends AbstractMessageCon
 	}
 
 	private String addEtagPadding(String etag) {
-		if (StringUtils.hasLength(etag)
-				&& (!(etag.startsWith("\"") || etag.startsWith("W/\"")) || !etag.endsWith("\""))) {
+		if (StringUtils.hasLength(etag) && (!(etag.startsWith("\"") || etag.startsWith("W/\"")) || !etag.endsWith("\""))) {
 			etag = "\"" + etag + "\"";
 		}
 		return etag;

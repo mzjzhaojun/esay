@@ -28,8 +28,7 @@ import java.util.Map;
  */
 
 @Service
-public class MerchantqrcodeaisleServiceImpl extends YtBaseServiceImpl<Merchantqrcodeaisle, Long>
-		implements MerchantqrcodeaisleService {
+public class MerchantqrcodeaisleServiceImpl extends YtBaseServiceImpl<Merchantqrcodeaisle, Long> implements MerchantqrcodeaisleService {
 	@Autowired
 	private MerchantqrcodeaisleMapper mapper;
 

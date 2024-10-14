@@ -34,10 +34,8 @@ public class PayoutMerchantaccountController extends YtBaseEncipherControllerImp
 
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<PayoutMerchantaccount> pagebean = service
-				.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<PayoutMerchantaccount> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
@@ -69,8 +67,7 @@ public class PayoutMerchantaccountController extends YtBaseEncipherControllerImp
 	 * @version 1.1
 	 */
 	@RequestMapping(value = "/bank/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> bank(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> bank(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 		PayoutMerchantaccount t = service.getDataBank(id);
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}

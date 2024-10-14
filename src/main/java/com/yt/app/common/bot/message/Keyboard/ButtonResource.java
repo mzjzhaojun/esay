@@ -19,6 +19,7 @@ public class ButtonResource {
 			return callBackData;
 		}
 	}
+
 	public final static Button flash_exchange_10 = new Button("10U兑换", "10");
 	public final static Button flash_exchange_20 = new Button("20U兑换", "20");
 	public final static Button flash_exchange_30 = new Button("30U兑换", "30");
@@ -27,4 +28,6 @@ public class ButtonResource {
 	public final static Button flash_exchange_200 = new Button("200U兑换", "200");
 	public final static Button flash_exchange_500 = new Button("500U兑换", "500");
 	public final static Button flash_exchange_1000 = new Button("100U兑换", "1000");
+
+	public final static Button flash_exchange_back = new Button("上一步", "up");
 }

@@ -71,9 +71,7 @@ public class AbsAlipayTradeService implements AlipayTradeService {
 
 	// 查询返回“支付成功”
 	protected boolean querySuccess(AlipayTradeQueryResponse response) {
-		return response != null && DictionaryResource.SUCCESS.equals(response.getCode())
-				&& ("TRADE_SUCCESS".equals(response.getTradeStatus())
-						|| "TRADE_FINISHED".equals(response.getTradeStatus()));
+		return response != null && DictionaryResource.SUCCESS.equals(response.getCode()) && ("TRADE_SUCCESS".equals(response.getTradeStatus()) || "TRADE_FINISHED".equals(response.getTradeStatus()));
 	}
 
 	// 调用AlipayClient的execute方法，进行远程调用

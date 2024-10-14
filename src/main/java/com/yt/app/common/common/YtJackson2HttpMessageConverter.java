@@ -39,11 +39,9 @@ public class YtJackson2HttpMessageConverter extends MappingJackson2HttpMessageCo
 
 	public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
-	private static final boolean jackson23Available = ClassUtils.hasMethod(ObjectMapper.class, "canDeserialize",
-			JavaType.class, AtomicReference.class);
+	private static final boolean jackson23Available = ClassUtils.hasMethod(ObjectMapper.class, "canDeserialize", JavaType.class, AtomicReference.class);
 
-	private static final boolean jackson26Available = ClassUtils.hasMethod(ObjectMapper.class,
-			"setDefaultPrettyPrinter", PrettyPrinter.class);
+	private static final boolean jackson26Available = ClassUtils.hasMethod(ObjectMapper.class, "setDefaultPrettyPrinter", PrettyPrinter.class);
 
 	private ObjectMapper objectMapper;
 
@@ -159,15 +157,13 @@ public class YtJackson2HttpMessageConverter extends MappingJackson2HttpMessageCo
 	}
 
 	@Override
-	protected Object readInternal(Class<?> clazz, HttpInputMessage inputMessage)
-			throws IOException, HttpMessageNotReadableException {
+	protected Object readInternal(Class<?> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
 		JavaType javaType = getJavaType(clazz, null);
 		return readJavaType(javaType, inputMessage);
 	}
 
 	@Override
-	public Object read(Type type, Class<?> contextClass, HttpInputMessage inputMessage)
-			throws IOException, HttpMessageNotReadableException {
+	public Object read(Type type, Class<?> contextClass, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
 
 		JavaType javaType = getJavaType(type, contextClass);
 		return readJavaType(javaType, inputMessage);
@@ -179,8 +175,7 @@ public class YtJackson2HttpMessageConverter extends MappingJackson2HttpMessageCo
 			if (inputMessage instanceof MappingJacksonInputMessage) {
 				Class<?> deserializationView = ((MappingJacksonInputMessage) inputMessage).getDeserializationView();
 				if (deserializationView != null) {
-					return this.objectMapper.readerWithView(deserializationView).withType(javaType)
-							.readValue(inputMessage.getBody());
+					return this.objectMapper.readerWithView(deserializationView).withType(javaType).readValue(inputMessage.getBody());
 				}
 			}
 			return this.objectMapper.readValue(inputMessage.getBody(), javaType);
@@ -191,8 +186,7 @@ public class YtJackson2HttpMessageConverter extends MappingJackson2HttpMessageCo
 
 	@Override
 	@SuppressWarnings("deprecation")
-	protected void writeInternal(Object object, Type type, HttpOutputMessage outputMessage)
-			throws IOException, HttpMessageNotWritableException {
+	protected void writeInternal(Object object, Type type, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
 		JsonEncoding encoding = getJsonEncoding(outputMessage.getHeaders().getContentType());
 		JsonGenerator generator = this.objectMapper.getFactory().createGenerator(outputMessage.getBody(), encoding);
 		try {

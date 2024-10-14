@@ -25,8 +25,7 @@ import java.util.Map;
  */
 
 @Service
-public class ExchangeMerchantaccountrecordServiceImpl extends YtBaseServiceImpl<ExchangeMerchantaccountrecord, Long>
-		implements ExchangeMerchantaccountrecordService {
+public class ExchangeMerchantaccountrecordServiceImpl extends YtBaseServiceImpl<ExchangeMerchantaccountrecord, Long> implements ExchangeMerchantaccountrecordService {
 	@Autowired
 	private ExchangeMerchantaccountrecordMapper mapper;
 

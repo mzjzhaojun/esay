@@ -20,8 +20,7 @@ public class RequestUtil {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Object obj = requestEntity.getBody();
 		if (obj instanceof Map) {
-			map = requestEntity.getBody() == null ? new HashMap<String, Object>()
-					: (Map<String, Object>) requestEntity.getBody();
+			map = requestEntity.getBody() == null ? new HashMap<String, Object>() : (Map<String, Object>) requestEntity.getBody();
 		} else {
 			try {
 				map = BeanUtils.describe(obj);
@@ -61,10 +60,8 @@ public class RequestUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Map<String, Object> requestDecryptEntityToParamMap(
-			YtRequestDecryptEntity<Object> requestDecryptEntity) {
-		Map<String, Object> map = requestDecryptEntity.getBody() == null ? new HashMap<String, Object>()
-				: (Map<String, Object>) requestDecryptEntity.getBody();
+	public static Map<String, Object> requestDecryptEntityToParamMap(YtRequestDecryptEntity<Object> requestDecryptEntity) {
+		Map<String, Object> map = requestDecryptEntity.getBody() == null ? new HashMap<String, Object>() : (Map<String, Object>) requestDecryptEntity.getBody();
 		String pageNo = requestDecryptEntity.getHeaders().getFirst(YtPageBeanEnum.PAGENO.getValue());
 		String orderby = requestDecryptEntity.getHeaders().getFirst(YtPageBeanEnum.ORDERBY.getValue());
 		Integer start;

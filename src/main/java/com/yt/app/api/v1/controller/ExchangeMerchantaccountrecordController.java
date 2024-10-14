@@ -26,18 +26,15 @@ import com.yt.app.api.v1.entity.ExchangeMerchantaccountrecord;
 
 @RestController
 @RequestMapping("/rest/v1/exchangemerchantaccountrecord")
-public class ExchangeMerchantaccountrecordController
-		extends YtBaseEncipherControllerImpl<ExchangeMerchantaccountrecord, Long> {
+public class ExchangeMerchantaccountrecordController extends YtBaseEncipherControllerImpl<ExchangeMerchantaccountrecord, Long> {
 
 	@Autowired
 	private ExchangeMerchantaccountrecordService service;
 
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<ExchangeMerchantaccountrecord> pagebean = service
-				.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<ExchangeMerchantaccountrecord> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 }

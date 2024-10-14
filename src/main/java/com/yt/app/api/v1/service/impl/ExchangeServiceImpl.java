@@ -154,8 +154,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		t.setMerchantonecost(m.getExchangeonecost());
 		t.setMerchantpay((t.getAmount() / (t.getExchange() + m.getExchangedownpoint())) + t.getMerchantonecost());// 商户usdt支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);// 商戶發起
-		t.setRemark(
-				"换汇新增￥：" + String.format("%.2f", t.getAmount()) + ",USDT" + String.format("%.2f", t.getMerchantpay()));
+		t.setRemark("换汇新增￥：" + String.format("%.2f", t.getAmount()) + ",USDT" + String.format("%.2f", t.getMerchantpay()));
 
 		if (t.getMerchantpay() <= 0 || t.getMerchantpay() > ma.getBalance()) {
 			throw new YtException("账户余额不足");
@@ -170,9 +169,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
 		List<Channel> listc = channelmapper.listByArrayId(cids);
 		Assert.notEmpty(listc, "没有可用渠道!");
-		List<Channel> listcmm = listc.stream()
-				.filter(c -> c.getMax() >= t.getMerchantpay() && c.getMin() <= t.getMerchantpay())
-				.collect(Collectors.toList());
+		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getMerchantpay() && c.getMin() <= t.getMerchantpay()).collect(Collectors.toList());
 		Assert.notEmpty(listcmm, "代付金额超出限额");
 		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 		Channel cl = null;
@@ -236,8 +233,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		mao.setType(DictionaryResource.ORDERTYPE_22);
 		mao.setOrdernum(t.getMerchantordernum());
 		mao.setUsdtval(t.getMerchantpay());
-		mao.setRemark("换汇操作资金：" + t.getAmount() + " usdt：" + String.format("%.2f", t.getMerchantpay()) + " 手续费："
-				+ m.getExchangeonecost());
+		mao.setRemark("换汇操作资金：" + t.getAmount() + " usdt：" + String.format("%.2f", t.getMerchantpay()) + " 手续费：" + m.getExchangeonecost());
 		exchangemerchantaccountordermapper.post(mao);
 		exchangemerchantaccountservice.exchange(mao);
 
@@ -260,8 +256,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			aat.setOnecost(ag.getOnecost());// 手续费
 			aat.setType(DictionaryResource.ORDERTYPE_22);
 			aat.setOrdernum("EA" + StringUtil.getOrderNum());
-			aat.setRemark("换汇资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费："
-					+ aat.getOnecost());
+			aat.setRemark("换汇资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
 			t.setAgentordernum(aat.getOrdernum());
 			agentaccountordermapper.post(aat);
@@ -382,8 +377,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		t.setMerchantonecost(m.getExchangeonecost());
 		t.setMerchantpay((t.getAmount() / (t.getExchange() + m.getExchangedownpoint())) + t.getMerchantonecost());// 商户usdt支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61); // 盘口发起
-		t.setRemark("群内换汇新增￥：" + String.format("%.2f", t.getAmount()) + ",USDT"
-				+ String.format("%.2f", t.getMerchantpay()));
+		t.setRemark("群内换汇新增￥：" + String.format("%.2f", t.getAmount()) + ",USDT" + String.format("%.2f", t.getMerchantpay()));
 
 		if (ma.getBalance() < t.getMerchantpay() || t.getMerchantpay() <= 0) {
 			throw new YtException("账户余额不足!");
@@ -398,9 +392,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
 		List<Channel> listc = channelmapper.listByArrayId(cids);
 		Assert.notEmpty(listc, "没有可用渠道!");
-		List<Channel> listcmm = listc.stream()
-				.filter(c -> c.getMax() >= t.getMerchantpay() && c.getMin() <= t.getMerchantpay())
-				.collect(Collectors.toList());
+		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getMerchantpay() && c.getMin() <= t.getMerchantpay()).collect(Collectors.toList());
 		Assert.notEmpty(listcmm, "代付金额超出限额");
 		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 		Channel cl = null;
@@ -463,8 +455,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
 		mao.setType(DictionaryResource.ORDERTYPE_22);
 		mao.setOrdernum(t.getMerchantordernum());
-		mao.setRemark("群内换汇操作资金：" + t.getAmount() + " usdt：" + String.format("%.2f", t.getMerchantpay()) + " 手续费："
-				+ m.getExchangeonecost());
+		mao.setRemark("群内换汇操作资金：" + t.getAmount() + " usdt：" + String.format("%.2f", t.getMerchantpay()) + " 手续费：" + m.getExchangeonecost());
 		exchangemerchantaccountordermapper.post(mao);
 		exchangemerchantaccountservice.exchange(mao);
 
@@ -488,8 +479,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			aat.setOnecost(ag.getOnecost());// 手续费
 			aat.setType(DictionaryResource.ORDERTYPE_22);
 			aat.setOrdernum("EA" + StringUtil.getOrderNum());
-			aat.setRemark("群内换汇资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费："
-					+ aat.getOnecost());
+			aat.setRemark("群内换汇资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
 			t.setAgentordernum(aat.getOrdernum());
 			agentaccountordermapper.post(aat);
@@ -528,8 +518,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			lock.lock();
 			Exchange t = mapper.get(pt.getId());
 			// 计算商户订单/////////////////////////////////////////////////////
-			ExchangeMerchantaccountorder mao = exchangemerchantaccountordermapper
-					.getByOrdernum(t.getMerchantordernum());
+			ExchangeMerchantaccountorder mao = exchangemerchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
 			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
 			// 商户订单
 			exchangemerchantaccountordermapper.put(mao);
@@ -586,8 +575,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 				what.append("成功时间：" + DateTimeUtil.getDateTime() + "\n");
 				what.append("兑换部已处理完毕，请你们核实查看\n");
 				if (tgmerchantchannelmsg != null)
-					mbot.sendReplyText(tgmerchantchannelmsg.getChatid(), tgmerchantchannelmsg.getCreplyid(),
-							what.toString());
+					mbot.sendReplyText(tgmerchantchannelmsg.getChatid(), tgmerchantchannelmsg.getCreplyid(), what.toString());
 			}
 			// 保存客户信息
 			merchantcustomerbanksservice.add(t);
@@ -608,8 +596,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		try {
 			lock.lock();
 			// 计算商户订单/////////////////////////////////////////////////////
-			ExchangeMerchantaccountorder mao = exchangemerchantaccountordermapper
-					.getByOrdernum(t.getMerchantordernum());
+			ExchangeMerchantaccountorder mao = exchangemerchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
 			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
 			exchangemerchantaccountordermapper.put(mao);
 			//
@@ -652,8 +639,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 				what.append("失败时间：" + DateTimeUtil.getDateTime() + "\n");
 				what.append("兑换部已处理完毕，请你们核实\n");
 				if (tgmerchantchannelmsg != null)
-					mbot.sendReplyText(tgmerchantchannelmsg.getChatid(), tgmerchantchannelmsg.getCreplyid(),
-							what.toString());
+					mbot.sendReplyText(tgmerchantchannelmsg.getChatid(), tgmerchantchannelmsg.getCreplyid(), what.toString());
 			}
 			// 保存客户信息
 			merchantcustomerbanksservice.add(t);
@@ -666,8 +652,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	@Override
 	public void exchangemanual(Exchange ex) {
 		User u = usermapper.get(SysUserContext.getUserId());
-		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(ex.getRemark()),
-				System.currentTimeMillis());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(ex.getRemark()), System.currentTimeMillis());
 		Assert.isTrue(isValid, "验证码错误！");
 		if (ex.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
 			paySuccess(ex);

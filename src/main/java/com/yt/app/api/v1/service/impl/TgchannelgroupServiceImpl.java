@@ -26,8 +26,7 @@ import java.util.Map;
  */
 
 @Service
-public class TgchannelgroupServiceImpl extends YtBaseServiceImpl<Tgchannelgroup, Long>
-		implements TgchannelgroupService {
+public class TgchannelgroupServiceImpl extends YtBaseServiceImpl<Tgchannelgroup, Long> implements TgchannelgroupService {
 	@Autowired
 	private TgchannelgroupMapper mapper;
 

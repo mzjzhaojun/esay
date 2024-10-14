@@ -24,8 +24,7 @@ import java.util.Map;
  */
 
 @Service
-public class MerchantstatisticalreportsServiceImpl extends YtBaseServiceImpl<Merchantstatisticalreports, Long>
-		implements MerchantstatisticalreportsService {
+public class MerchantstatisticalreportsServiceImpl extends YtBaseServiceImpl<Merchantstatisticalreports, Long> implements MerchantstatisticalreportsService {
 	@Autowired
 	private MerchantstatisticalreportsMapper mapper;
 

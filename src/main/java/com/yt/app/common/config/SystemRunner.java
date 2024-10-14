@@ -37,9 +37,9 @@ public class SystemRunner implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 
 		log.info("system start...");
-		
+
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
-		
+
 		// 设置默认租户
 		TenantIdContext.setTenantId(AppConstant.SYSTEM_TENANT_ID);
 

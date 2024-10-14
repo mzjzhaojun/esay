@@ -805,8 +805,7 @@ public class RedisUtil {
 		return stringRedisTemplate.opsForZSet().rangeByScoreWithScores(key, min, max);
 	}
 
-	public static Set<TypedTuple<String>> zRangeByScoreWithScores(String key, double min, double max, long start,
-			long end) {
+	public static Set<TypedTuple<String>> zRangeByScoreWithScores(String key, double min, double max, long start, long end) {
 		return stringRedisTemplate.opsForZSet().rangeByScoreWithScores(key, min, max, start, end);
 	}
 

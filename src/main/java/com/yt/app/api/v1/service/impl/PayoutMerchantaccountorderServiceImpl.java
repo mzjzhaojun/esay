@@ -44,8 +44,7 @@ import java.util.Map;
  */
 
 @Service
-public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<PayoutMerchantaccountorder, Long>
-		implements PayoutMerchantaccountorderService {
+public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<PayoutMerchantaccountorder, Long> implements PayoutMerchantaccountorderService {
 	@Autowired
 	private PayoutMerchantaccountorderMapper mapper;
 
@@ -211,8 +210,7 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 	public void incomemanual(PayoutMerchantaccountorder mco) {
 		RLock lock = RedissonUtil.getLock(mco.getId());
 		User u = usermapper.get(SysUserContext.getUserId());
-		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()),
-				System.currentTimeMillis());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
 		Assert.isTrue(isValid, "验证码错误！");
 		try {
 			lock.lock();
@@ -266,8 +264,7 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 	public void withdrawmanual(PayoutMerchantaccountorder mco) {
 		RLock lock = RedissonUtil.getLock(mco.getId());
 		User u = usermapper.get(SysUserContext.getUserId());
-		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()),
-				System.currentTimeMillis());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
 		Assert.isTrue(isValid, "验证码错误！");
 		try {
 			lock.lock();
@@ -353,8 +350,7 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 	public void incomewithdrawmanual(PayoutMerchantaccountorder mco) {
 		RLock lock = RedissonUtil.getLock(mco.getId());
 		User u = usermapper.get(SysUserContext.getUserId());
-		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()),
-				System.currentTimeMillis());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
 		Assert.isTrue(isValid, "验证码错误！");
 		try {
 			lock.lock();

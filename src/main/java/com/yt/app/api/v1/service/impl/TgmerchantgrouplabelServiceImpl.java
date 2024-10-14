@@ -23,8 +23,7 @@ import java.util.Map;
  */
 
 @Service
-public class TgmerchantgrouplabelServiceImpl extends YtBaseServiceImpl<Tgmerchantgrouplabel, Long>
-		implements TgmerchantgrouplabelService {
+public class TgmerchantgrouplabelServiceImpl extends YtBaseServiceImpl<Tgmerchantgrouplabel, Long> implements TgmerchantgrouplabelService {
 	@Autowired
 	private TgmerchantgrouplabelMapper mapper;
 

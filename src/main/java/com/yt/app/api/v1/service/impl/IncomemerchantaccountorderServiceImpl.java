@@ -33,8 +33,7 @@ import java.util.Map;
  */
 
 @Service
-public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Incomemerchantaccountorder, Long>
-		implements IncomemerchantaccountorderService {
+public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Incomemerchantaccountorder, Long> implements IncomemerchantaccountorderService {
 	@Autowired
 	private IncomemerchantaccountorderMapper mapper;
 

@@ -56,8 +56,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	 * @return
 	 */
 	@RequestMapping(value = "/income/{id}", method = RequestMethod.GET)
-	public YtResponseEntity<Object> queryIncomeOrder(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEntity<Object> queryIncomeOrder(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 		Income income = incomeservice.get(id);
 		return new YtResponseEntity<Object>(new YtBody(income.getStatus()));
 	}
@@ -70,32 +69,28 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 
 	// 菲律宾代付回调
 	@RequestMapping(value = "/tycallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEntity<Object> tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtBody yb = service.tycallbackpay(requestEntity.getBody());
 		return new YtResponseEntity<Object>(yb);
 	}
 
 	// 代付盘口查单
 	@RequestMapping(value = "/query", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> tyquery(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEntity<Object> tyquery(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		PayResultVO pt = service.query(requestEntity.getBody().getMerchantorderid());
 		return new YtResponseEntity<Object>(new YtBody(pt));
 	}
 
 	// 代付盘口下单
 	@RequestMapping(value = "/submit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> submit(YtRequestEntity<PaySubmitDTO> requestEntity, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEntity<Object> submit(YtRequestEntity<PaySubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		PayResultVO sr = service.submit(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(sr));
 	}
 
 	// 代付盘口查询余额
 	@RequestMapping(value = "/querybalance", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> query(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEntity<Object> query(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		return new YtResponseEntity<Object>(new YtBody(100));
 	}
 
@@ -108,8 +103,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	 * @return
 	 */
 	@RequestMapping(value = "/submitqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> submitqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEntity<Object> submitqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		QrcodeResultVO yb = incomeservice.submitQrcode(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(yb));
 	}
@@ -123,8 +117,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	 * @return
 	 */
 	@RequestMapping(value = "/submitincome", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> submitincome(YtRequestEntity<QrcodeSubmitDTO> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEntity<Object> submitincome(YtRequestEntity<QrcodeSubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		QrcodeResultVO yb = incomeservice.submitInCome(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(yb));
 	}
@@ -138,8 +131,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	 * @return
 	 */
 	@RequestMapping(value = "/queryincome", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> queryincome(YtRequestEntity<QrcodeSubmitDTO> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEntity<Object> queryincome(YtRequestEntity<QrcodeSubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		QueryQrcodeResultVO yb = incomeservice.queryInCome(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(yb));
 	}
@@ -153,8 +145,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	 * @return
 	 */
 	@RequestMapping(value = "/hscallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public void hscallback(@RequestParam Map<String, String> params, HttpServletRequest request,
-			HttpServletResponse response) {
+	public void hscallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
 		incomeservice.hscallback(params);
 		try {
 			response.getWriter().print("success");
@@ -172,8 +163,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	 * @return
 	 */
 	@RequestMapping(value = "/yjjcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public void yjjcallback(@RequestParam Map<String, String> params, HttpServletRequest request,
-			HttpServletResponse response) {
+	public void yjjcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
 		incomeservice.yjjcallback(params);
 		try {
 			response.getWriter().print("success");
@@ -191,8 +181,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	 * @return
 	 */
 	@RequestMapping(value = "/wdcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public void wdcallback(@RequestParam Map<String, String> params, HttpServletRequest request,
-			HttpServletResponse response) {
+	public void wdcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
 		incomeservice.wdcallback(params);
 		try {
 			response.getWriter().print("success");
@@ -210,8 +199,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	 * @return
 	 */
 	@RequestMapping(value = "/rblcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void rblcallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request,
-			HttpServletResponse response) {
+	public void rblcallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		incomeservice.rblcallback(RequestUtil.requestEntityToParamMap(requestEntity));
 		try {
 			response.getWriter().print("success");
@@ -219,7 +207,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 公子代收回调
 	 * 
@@ -229,8 +217,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	 * @return
 	 */
 	@RequestMapping(value = "/gzcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void gzcallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request,
-			HttpServletResponse response) {
+	public void gzcallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		incomeservice.gzcallback(RequestUtil.requestEntityToParamMap(requestEntity));
 		try {
 			response.getWriter().print("success");
@@ -248,8 +235,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	 * @return
 	 */
 	@RequestMapping(value = "/alipayftfcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public void alipayftfcallback(@RequestParam Map<String, String> params, HttpServletRequest request,
-			HttpServletResponse response) {
+	public void alipayftfcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
 		try {
 			incomeservice.alipayftfcallback(params);
 			response.getWriter().print("success");

@@ -90,8 +90,7 @@ public class AuthServiceImpl implements AuthService {
 		Assert.isTrue(isValid, "密码错误！");
 
 		if (userPerm.getTwostatus() == 1) {
-			isValid = GoogleAuthenticatorUtil.checkCode(userPerm.getTwofactorcode(), Long.parseLong(params.getCode()),
-					System.currentTimeMillis());
+			isValid = GoogleAuthenticatorUtil.checkCode(userPerm.getTwofactorcode(), Long.parseLong(params.getCode()), System.currentTimeMillis());
 			Assert.isTrue(isValid, "验证码错误！");
 		}
 
@@ -103,8 +102,7 @@ public class AuthServiceImpl implements AuthService {
 		allRoleIdList.addAll(roleIdList);
 		if (!roleCodeList.contains(SysRoleCodeEnum.超级管理员.getCode())) {
 			for (int i = 0; i < roleIdList.size(); i++) {
-				roleIdList.forEach(
-						roleIdItem -> allRoleIdList.addAll(this.sysroleservice.getChildRoleIdList(roleIdItem)));
+				roleIdList.forEach(roleIdItem -> allRoleIdList.addAll(this.sysroleservice.getChildRoleIdList(roleIdItem)));
 			}
 
 		}
@@ -118,14 +116,10 @@ public class AuthServiceImpl implements AuthService {
 		Systemaccount sca = systemaccountmapper.getByTenantId(userPerm.getTenantId());
 
 		// 写入登录日志
-		logsservice.post(Logs.builder().optname(username).optdate(new Date()).requestip(AuthContext.getIp())
-				.type(DictionaryResource.LOG_TYPE_201).build());
+		logsservice.post(Logs.builder().optname(username).optdate(new Date()).requestip(AuthContext.getIp()).type(DictionaryResource.LOG_TYPE_201).build());
 		// 登录
-		return AuthUtil
-				.login(JwtUserBO.builder().authSourceEnum(AuthSourceEnum.B).userId(Long.valueOf(userPerm.getId()))
-						.username(userPerm.getUsername()).allRoleIdList(allRoleIdListFinal).roleCodeList(roleCodeList)
-						.deptId(userPerm.getDept_id()).scopeDataList(scopeDataList).tenantId(userPerm.getTenantId())
-						.systemaccountId(sca.getId()).accounttype(userPerm.getAccounttype()).build());
+		return AuthUtil.login(JwtUserBO.builder().authSourceEnum(AuthSourceEnum.B).userId(Long.valueOf(userPerm.getId())).username(userPerm.getUsername()).allRoleIdList(allRoleIdListFinal).roleCodeList(roleCodeList).deptId(userPerm.getDept_id())
+				.scopeDataList(scopeDataList).tenantId(userPerm.getTenantId()).systemaccountId(sca.getId()).accounttype(userPerm.getAccounttype()).build());
 	}
 
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
@@ -145,8 +139,7 @@ public class AuthServiceImpl implements AuthService {
 		u.setTwostatus(1);
 		u.setTwofactorcode(twocode);
 		System.out.println(System.currentTimeMillis());
-		boolean flag = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(code),
-				System.currentTimeMillis());
+		boolean flag = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(code), System.currentTimeMillis());
 		if (flag) {
 			usermapper.put(u);
 			return 1;
@@ -164,18 +157,15 @@ public class AuthServiceImpl implements AuthService {
 		Assert.isTrue(isValid, "密码错误！");
 
 		if (userPerm.getTwostatus() == 1) {
-			isValid = GoogleAuthenticatorUtil.checkCode(userPerm.getTwofactorcode(), Long.parseLong(params.getCode()),
-					System.currentTimeMillis());
+			isValid = GoogleAuthenticatorUtil.checkCode(userPerm.getTwofactorcode(), Long.parseLong(params.getCode()), System.currentTimeMillis());
 			Assert.isTrue(isValid, "验证码错误！");
 		}
 
 		// 写入登录日志
-		logsservice.post(Logs.builder().optname(username).optdate(new Date()).requestip(AuthContext.getIp())
-				.type(DictionaryResource.LOG_TYPE_202).build());
+		logsservice.post(Logs.builder().optname(username).optdate(new Date()).requestip(AuthContext.getIp()).type(DictionaryResource.LOG_TYPE_202).build());
 
-		return AuthUtil.login(JwtUserBO.builder().authSourceEnum(AuthSourceEnum.B)
-				.userId(Long.valueOf(userPerm.getId())).username(userPerm.getUsername()).deptId(userPerm.getDept_id())
-				.tenantId(userPerm.getTenantId()).accounttype(userPerm.getAccounttype()).build());
+		return AuthUtil.login(JwtUserBO.builder().authSourceEnum(AuthSourceEnum.B).userId(Long.valueOf(userPerm.getId())).username(userPerm.getUsername()).deptId(userPerm.getDept_id()).tenantId(userPerm.getTenantId())
+				.accounttype(userPerm.getAccounttype()).build());
 	}
 
 	@Override

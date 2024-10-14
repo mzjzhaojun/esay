@@ -46,8 +46,8 @@ public class BotRunner implements CommandLineRunner {
 		log.info("服务初始化之后，注册机器人 start...");
 
 		// 注册机器人
-		botsApi.registerBot(merchantbot);
-		botsApi.registerBot(channelbot);
+		// botsApi.registerBot(merchantbot);
+		// botsApi.registerBot(channelbot);
 		botsApi.registerBot(tronbot);
 
 		log.info("服务初始化之后，注册机器人 end...");

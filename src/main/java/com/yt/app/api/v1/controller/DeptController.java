@@ -37,15 +37,13 @@ public class DeptController extends YtBaseEncipherControllerImpl<Dept, Long> {
 
 	@Override
 	@RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<Dept> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
 	@RequestMapping(value = "/tree", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> tree(YtRequestDecryptEntity<SysDeptTreeDTO> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> tree(YtRequestDecryptEntity<SysDeptTreeDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		List<SysDeptTreeVO> tree = service.tree(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(tree));
 	}

@@ -27,26 +27,21 @@ import com.yt.app.api.v1.vo.MerchantstatisticalreportsVO;
 
 @RestController
 @RequestMapping("/rest/v1/merchantstatisticalreports")
-public class MerchantstatisticalreportsController
-		extends YtBaseEncipherControllerImpl<Merchantstatisticalreports, Long> {
+public class MerchantstatisticalreportsController extends YtBaseEncipherControllerImpl<Merchantstatisticalreports, Long> {
 
 	@Autowired
 	private MerchantstatisticalreportsService service;
 
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Merchantstatisticalreports> list = service
-				.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<Merchantstatisticalreports> list = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}
 
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<MerchantstatisticalreportsVO> pagebean = service
-				.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<MerchantstatisticalreportsVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 }

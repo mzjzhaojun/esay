@@ -81,8 +81,7 @@ public class QrcodeaisleServiceImpl extends YtBaseServiceImpl<Qrcodeaisle, Long>
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<QrcodeaisleVO> page(Map<String, Object> param) {
 		if (param.get("merchantid") != null) {
-			List<Merchantqrcodeaisle> listmqas = merchantqrcodeaislemapper
-					.getByMid(Long.valueOf(param.get("merchantid").toString()));
+			List<Merchantqrcodeaisle> listmqas = merchantqrcodeaislemapper.getByMid(Long.valueOf(param.get("merchantid").toString()));
 			if (listmqas.size() > 0) {
 				long[] qraids = listmqas.stream().mapToLong(mqa -> mqa.getQrcodeaisleid()).distinct().toArray();
 				param.put("existids", qraids);

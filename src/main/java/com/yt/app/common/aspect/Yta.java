@@ -64,8 +64,7 @@ public class Yta {
 		annotation = me.getAnnotations().length > 0 ? me.getAnnotations()[0] : null;
 		if (annotation == null) {
 			Method proxyMethod = ((MethodSignature) joinPoint.getSignature()).getMethod();
-			Method mes = proxyMethod.getDeclaringClass().getMethod(proxyMethod.getName(),
-					proxyMethod.getParameterTypes());
+			Method mes = proxyMethod.getDeclaringClass().getMethod(proxyMethod.getName(), proxyMethod.getParameterTypes());
 			annotation = mes.getAnnotations().length > 0 ? mes.getAnnotations()[0] : null;
 			if (annotation == null) {
 				result = joinPoint.proceed(args);

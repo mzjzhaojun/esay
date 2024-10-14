@@ -79,28 +79,23 @@ public class UserroleServiceImpl extends YtBaseServiceImpl<Userrole, Long> imple
 		}
 
 		// 1、查询用户关联的旧角色信息
-		List<Userrole> reRoleListOld = this.sysUserRoleMapper
-				.selectList(new LambdaQueryWrapper<Userrole>().eq(Userrole::getUser_id, userId));
+		List<Userrole> reRoleListOld = this.sysUserRoleMapper.selectList(new LambdaQueryWrapper<Userrole>().eq(Userrole::getUser_id, userId));
 		// 角色id -> 主键id
-		Map<Long, Long> roleReIdMapOld = reRoleListOld.stream()
-				.collect(Collectors.toMap(Userrole::getRole_id, Userrole::getId, (oldData, newData) -> newData));
+		Map<Long, Long> roleReIdMapOld = reRoleListOld.stream().collect(Collectors.toMap(Userrole::getRole_id, Userrole::getId, (oldData, newData) -> newData));
 		// 旧角色id
 		List<Long> reRoleIdListOld = reRoleListOld.stream().map(Userrole::getRole_id).collect(Collectors.toList());
 
 		// 2、筛选出需删除的旧数据
-		List<Long> removeRoleIdList = reRoleIdListOld.stream().filter(oldRoleId -> !roleIdList.contains(oldRoleId))
-				.collect(Collectors.toList());
+		List<Long> removeRoleIdList = reRoleIdListOld.stream().filter(oldRoleId -> !roleIdList.contains(oldRoleId)).collect(Collectors.toList());
 		if (CollUtil.isNotEmpty(removeRoleIdList)) {
 			// 删除角色关联的菜单权限信息
-			this.sysUserRoleMapper.delete(new LambdaQueryWrapper<Userrole>().eq(Userrole::getUser_id, userId)
-					.in(Userrole::getRole_id, removeRoleIdList));
+			this.sysUserRoleMapper.delete(new LambdaQueryWrapper<Userrole>().eq(Userrole::getUser_id, userId).in(Userrole::getRole_id, removeRoleIdList));
 		}
 
 		// 3、再新增角色
 		List<Userrole> saveList = Lists.newArrayList();
 
-		roleIdList.forEach(roleId -> saveList
-				.add(Userrole.builder().id(roleReIdMapOld.get(roleId)).user_id(userId).role_id(roleId).build()));
+		roleIdList.forEach(roleId -> saveList.add(Userrole.builder().id(roleReIdMapOld.get(roleId)).user_id(userId).role_id(roleId).build()));
 
 		this.sysUserRoleMapper.insertBatchSomeColumn(saveList);
 	}

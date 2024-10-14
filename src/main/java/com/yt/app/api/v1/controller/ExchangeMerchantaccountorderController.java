@@ -29,18 +29,15 @@ import com.yt.app.api.v1.entity.ExchangeMerchantaccountorder;
 
 @RestController
 @RequestMapping("/rest/v1/exchangemerchantaccountorder")
-public class ExchangeMerchantaccountorderController
-		extends YtBaseEncipherControllerImpl<ExchangeMerchantaccountorder, Long> {
+public class ExchangeMerchantaccountorderController extends YtBaseEncipherControllerImpl<ExchangeMerchantaccountorder, Long> {
 
 	@Autowired
 	private ExchangeMerchantaccountorderService service;
 
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<ExchangeMerchantaccountorder> pagebean = service
-				.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<ExchangeMerchantaccountorder> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
@@ -50,9 +47,7 @@ public class ExchangeMerchantaccountorderController
 	 * @version 1.1
 	 */
 	@RequestMapping(value = "/appwithdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> appwithdraw(
-			YtRequestDecryptEntity<ExchangeMerchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> appwithdraw(YtRequestDecryptEntity<ExchangeMerchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.appsave(YtRequestDecryptEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
@@ -64,8 +59,7 @@ public class ExchangeMerchantaccountorderController
 	 * @version 1.1
 	 */
 	@RequestMapping(value = "/cancle/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> cancle(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> cancle(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 		Object t = service.cancle(id);
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}
@@ -77,9 +71,7 @@ public class ExchangeMerchantaccountorderController
 	 * @version 1.1
 	 */
 	@RequestMapping(value = "/withdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> withdraw(
-			YtRequestDecryptEntity<ExchangeMerchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> withdraw(YtRequestDecryptEntity<ExchangeMerchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.save(YtRequestDecryptEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
@@ -90,8 +82,7 @@ public class ExchangeMerchantaccountorderController
 	 * @version 1.1
 	 */
 	@RequestMapping(value = "/canclewithdraw/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> canclewithdraw(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> canclewithdraw(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 		Object t = service.cancleWithdraw(id);
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}
@@ -105,8 +96,7 @@ public class ExchangeMerchantaccountorderController
 	 * @return
 	 */
 	@RequestMapping(value = "/withdrawmanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> withdrawmanual(YtRequestDecryptEntity<ExchangeMerchantaccountorder> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEntity<Object> withdrawmanual(YtRequestDecryptEntity<ExchangeMerchantaccountorder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		service.withdrawmanual(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(1));
 	}
@@ -120,8 +110,7 @@ public class ExchangeMerchantaccountorderController
 	 * @return
 	 */
 	@RequestMapping(value = "/incomemanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> incomemanual(YtRequestDecryptEntity<ExchangeMerchantaccountorder> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEntity<Object> incomemanual(YtRequestDecryptEntity<ExchangeMerchantaccountorder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		service.incomemanual(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(1));
 	}

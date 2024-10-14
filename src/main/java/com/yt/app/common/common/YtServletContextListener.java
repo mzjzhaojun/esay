@@ -27,8 +27,7 @@ public class YtServletContextListener implements ServletContextListener {
 	private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
 
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
-		List<HandlerMethodReturnValueHandler> handlers = new ArrayList<HandlerMethodReturnValueHandler>(
-				requestMappingHandlerAdapter.getReturnValueHandlers());
+		List<HandlerMethodReturnValueHandler> handlers = new ArrayList<HandlerMethodReturnValueHandler>(requestMappingHandlerAdapter.getReturnValueHandlers());
 		int decryptIndex = 0;
 		int encryptIndex = 0;
 		int requestIndex = 0;
@@ -61,8 +60,7 @@ public class YtServletContextListener implements ServletContextListener {
 		}
 		requestMappingHandlerAdapter.setReturnValueHandlers(handlers);
 
-		List<HandlerMethodArgumentResolver> argumentResolvers = new ArrayList<HandlerMethodArgumentResolver>(
-				requestMappingHandlerAdapter.getArgumentResolvers());
+		List<HandlerMethodArgumentResolver> argumentResolvers = new ArrayList<HandlerMethodArgumentResolver>(requestMappingHandlerAdapter.getArgumentResolvers());
 		YtDecryptMessageConverterMethodProcessor requestDecryptResponseEncryptBodyMethodProcessor2 = null;
 		for (int i = 0, length = argumentResolvers.size(); i < length; i++) {
 			HandlerMethodArgumentResolver argumentResolver = argumentResolvers.get(i);

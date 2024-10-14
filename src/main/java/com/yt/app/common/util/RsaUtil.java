@@ -75,8 +75,7 @@ public class RsaUtil {
 	 */
 	public static byte[] decryptByPrivateKey(byte[] encryptedData, String privateKey) throws Exception {
 		// base64格式的key字符串转Key对象
-		Key privateK = KeyFactory.getInstance(KEY_ALGORITHM)
-				.generatePrivate(new PKCS8EncodedKeySpec(Base64.decodeBase64(privateKey)));
+		Key privateK = KeyFactory.getInstance(KEY_ALGORITHM).generatePrivate(new PKCS8EncodedKeySpec(Base64.decodeBase64(privateKey)));
 		Cipher cipher = Cipher.getInstance(ALGORITHMS);
 		cipher.init(Cipher.DECRYPT_MODE, privateK);
 		// 分段进行解密操作
@@ -91,8 +90,7 @@ public class RsaUtil {
 	 */
 	public static byte[] encryptByPublicKey(byte[] data, String publicKey) throws Exception {
 		// base64格式的key字符串转Key对象
-		Key publicK = KeyFactory.getInstance(KEY_ALGORITHM)
-				.generatePublic(new X509EncodedKeySpec(Base64.decodeBase64(publicKey)));
+		Key publicK = KeyFactory.getInstance(KEY_ALGORITHM).generatePublic(new X509EncodedKeySpec(Base64.decodeBase64(publicKey)));
 		Cipher cipher = Cipher.getInstance(ALGORITHMS);
 		cipher.init(Cipher.ENCRYPT_MODE, publicK);
 		// 分段进行加密操作
@@ -106,8 +104,7 @@ public class RsaUtil {
 	 * @param privateKey 私钥(BASE64编码)
 	 */
 	public static byte[] encryptByPrivateKey(byte[] data, String privateKey) throws Exception {
-		Key privateK = KeyFactory.getInstance(KEY_ALGORITHM)
-				.generatePrivate(new PKCS8EncodedKeySpec(Base64.decodeBase64(privateKey)));
+		Key privateK = KeyFactory.getInstance(KEY_ALGORITHM).generatePrivate(new PKCS8EncodedKeySpec(Base64.decodeBase64(privateKey)));
 		Cipher cipher = Cipher.getInstance(ALGORITHMS);
 		cipher.init(Cipher.ENCRYPT_MODE, privateK);
 		return encryptAndDecryptOfSubsection(data, cipher, MAX_ENCRYPT_BLOCK);
@@ -120,8 +117,7 @@ public class RsaUtil {
 	 * @param publicKey     公钥(BASE64编码)
 	 */
 	public static byte[] decryptByPublicKey(byte[] encryptedData, String publicKey) throws Exception {
-		Key publicK = KeyFactory.getInstance(KEY_ALGORITHM)
-				.generatePublic(new X509EncodedKeySpec(Base64.decodeBase64(publicKey)));
+		Key publicK = KeyFactory.getInstance(KEY_ALGORITHM).generatePublic(new X509EncodedKeySpec(Base64.decodeBase64(publicKey)));
 		Cipher cipher = Cipher.getInstance(ALGORITHMS);
 		cipher.init(Cipher.ENCRYPT_MODE, publicK);
 		return encryptAndDecryptOfSubsection(encryptedData, cipher, MAX_ENCRYPT_BLOCK);

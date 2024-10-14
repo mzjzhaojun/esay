@@ -33,8 +33,7 @@ public class MerchantController extends YtBaseEncipherControllerImpl<Merchant, L
 
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<Merchant> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
@@ -45,8 +44,7 @@ public class MerchantController extends YtBaseEncipherControllerImpl<Merchant, L
 	 * @version 1.1
 	 */
 	@RequestMapping(value = "/putagent", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> putagent(YtRequestDecryptEntity<Merchant> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> putagent(YtRequestDecryptEntity<Merchant> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		Integer t = service.putagent(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}

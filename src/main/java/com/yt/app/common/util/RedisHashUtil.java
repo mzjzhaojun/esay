@@ -27,8 +27,7 @@ public class RedisHashUtil {
 		return redisTemplate.opsForHash().get(mkey, key);
 	}
 
-	public void setObjectEx(final String mkey, final String key, final Object value, final Integer timeout,
-			final TimeUnit timeUnit) {
+	public void setObjectEx(final String mkey, final String key, final Object value, final Integer timeout, final TimeUnit timeUnit) {
 		redisTemplate.opsForHash().put(mkey, key, value);
 	}
 

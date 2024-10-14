@@ -33,8 +33,7 @@ public class ProvincecityareaController extends YtBaseEncipherControllerImpl<Pro
 	private ProvincecityareaService service;
 
 	@RequestMapping(value = "/tree", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> tree(YtRequestDecryptEntity<SysProvinceCityAreaTreeDTO> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> tree(YtRequestDecryptEntity<SysProvinceCityAreaTreeDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		List<Provincecityarea> pagebean = service.tree(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}

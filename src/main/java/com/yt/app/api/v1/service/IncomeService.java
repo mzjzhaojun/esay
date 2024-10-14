@@ -44,8 +44,8 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	// 日不落回调
 	void rblcallback(Map<String, Object> params);
-	
-	//公子回调
+
+	// 公子回调
 	void gzcallback(Map<String, Object> params);
 
 	// alipay回調

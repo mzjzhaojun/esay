@@ -27,26 +27,21 @@ import com.yt.app.api.v1.vo.IncomemerchantaccountrecordVO;
 
 @RestController
 @RequestMapping("/rest/v1/incomemerchantaccountrecord")
-public class IncomemerchantaccountrecordController
-		extends YtBaseEncipherControllerImpl<Incomemerchantaccountrecord, Long> {
+public class IncomemerchantaccountrecordController extends YtBaseEncipherControllerImpl<Incomemerchantaccountrecord, Long> {
 
 	@Autowired
 	private IncomemerchantaccountrecordService service;
 
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Incomemerchantaccountrecord> list = service
-				.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<Incomemerchantaccountrecord> list = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}
 
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<IncomemerchantaccountrecordVO> pagebean = service
-				.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<IncomemerchantaccountrecordVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 }

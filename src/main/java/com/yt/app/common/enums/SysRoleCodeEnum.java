@@ -20,8 +20,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public enum SysRoleCodeEnum {
 
-	超级管理员("super_admin", 1L, "超级管理员"), 系统管理员("system_admin", 2L, "系统管理员"), 租户管理员("tenant_admin", 3L, "租户管理员"),
-	主播("anchor", 4L, "主播"),
+	超级管理员("super_admin", 1L, "超级管理员"), 系统管理员("system_admin", 2L, "系统管理员"), 租户管理员("tenant_admin", 3L, "租户管理员"), 主播("anchor", 4L, "主播"),
 //    商户管理员("merchant_admin", 4, "商户管理员")
 	;
 
@@ -30,7 +29,6 @@ public enum SysRoleCodeEnum {
 	private final String name;
 
 	public static final List<SysRoleCodeEnum> LIST = Arrays.asList(SysRoleCodeEnum.values());
-	public static final List<String> CODE_LIST = Arrays.asList(SysRoleCodeEnum.values()).stream()
-			.map(SysRoleCodeEnum::getCode).collect(Collectors.toList());
+	public static final List<String> CODE_LIST = Arrays.asList(SysRoleCodeEnum.values()).stream().map(SysRoleCodeEnum::getCode).collect(Collectors.toList());
 
 }

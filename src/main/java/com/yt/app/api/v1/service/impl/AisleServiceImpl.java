@@ -59,8 +59,7 @@ public class AisleServiceImpl extends YtBaseServiceImpl<Aisle, Long> implements 
 	public YtIPage<Aisle> list(Map<String, Object> param) {
 
 		if (param.get("merchantid") != null) {
-			List<Merchantaisle> listmqas = merchantaislemapper
-					.getByMid(Long.valueOf(param.get("merchantid").toString()));
+			List<Merchantaisle> listmqas = merchantaislemapper.getByMid(Long.valueOf(param.get("merchantid").toString()));
 			if (listmqas.size() > 0) {
 				long[] qraids = listmqas.stream().mapToLong(mqa -> mqa.getAisleid()).distinct().toArray();
 				param.put("existids", qraids);

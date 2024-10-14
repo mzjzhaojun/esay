@@ -112,8 +112,7 @@ public class YtRequestDecryptEntity<T> extends YtHttpEntity<T> {
 			return false;
 		}
 		YtRequestDecryptEntity<?> otherEntity = (YtRequestDecryptEntity<?>) other;
-		return (ObjectUtils.nullSafeEquals(this.method, otherEntity.method)
-				&& ObjectUtils.nullSafeEquals(this.url, otherEntity.url));
+		return (ObjectUtils.nullSafeEquals(this.method, otherEntity.method) && ObjectUtils.nullSafeEquals(this.url, otherEntity.url));
 	}
 
 	@Override

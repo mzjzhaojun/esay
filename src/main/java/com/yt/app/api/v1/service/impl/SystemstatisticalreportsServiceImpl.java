@@ -28,8 +28,7 @@ import java.util.Map;
  */
 
 @Service
-public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Systemstatisticalreports, Long>
-		implements SystemstatisticalreportsService {
+public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Systemstatisticalreports, Long> implements SystemstatisticalreportsService {
 	@Autowired
 	private SystemstatisticalreportsMapper mapper;
 

@@ -25,8 +25,7 @@ import java.util.Map;
  */
 
 @Service
-public class AgentaccountrecordServiceImpl extends YtBaseServiceImpl<Agentaccountrecord, Long>
-		implements AgentaccountrecordService {
+public class AgentaccountrecordServiceImpl extends YtBaseServiceImpl<Agentaccountrecord, Long> implements AgentaccountrecordService {
 	@Autowired
 	private AgentaccountrecordMapper mapper;
 

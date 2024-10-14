@@ -41,11 +41,10 @@ public class TronBot extends TelegramLongPollingBot {
 	@Override
 	public void onUpdateReceived(Update update) {
 
-		Long userId = update.hasMessage() ? update.getMessage().getFrom().getId()
-				: update.hasCallbackQuery() ? update.getCallbackQuery().getFrom().getId() : null;
-
+		Long userId = update.hasMessage() ? update.getMessage().getFrom().getId() : update.hasCallbackQuery() ? update.getCallbackQuery().getFrom().getId() : null;
+		log.info("userid: {}", userId);
 		if (userId == null) {
-			log.warn("There isn't object Message or CallbackQuery! Update: {}", update);
+			log.info("There isn't object Message or CallbackQuery! Update: {}", update);
 			return;
 		}
 
@@ -66,7 +65,7 @@ public class TronBot extends TelegramLongPollingBot {
 
 				String callbackData = update.getCallbackQuery().getData();
 				if (ButtonResource.flash_exchange_10.getCallBackData().equals(callbackData)) {
-					execute(trxflashrentmessage.excuteExchange(update));
+					execute(trxflashrentmessage.excuteEditMessage(update));
 				} else if (ButtonResource.flash_exchange_20.getCallBackData().equals(callbackData)) {
 					execute(trxflashrentmessage.excuteExchange(update));
 				}

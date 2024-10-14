@@ -33,8 +33,7 @@ public class TgchannelgroupController extends YtBaseEncipherControllerImpl<Tgcha
 
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<Tgchannelgroup> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
@@ -45,8 +44,7 @@ public class TgchannelgroupController extends YtBaseEncipherControllerImpl<Tgcha
 	 * @version 1.1
 	 */
 	@RequestMapping(value = "/putchannel", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> putmerchant(YtRequestDecryptEntity<Tgchannelgroup> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> putmerchant(YtRequestDecryptEntity<Tgchannelgroup> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		Integer t = service.putchannel(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}

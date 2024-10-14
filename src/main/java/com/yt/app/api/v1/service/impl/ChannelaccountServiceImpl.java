@@ -30,8 +30,7 @@ import java.util.Map;
  */
 
 @Service
-public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount, Long>
-		implements ChannelaccountService {
+public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount, Long> implements ChannelaccountService {
 	@Autowired
 	private ChannelaccountMapper mapper;
 	@Autowired

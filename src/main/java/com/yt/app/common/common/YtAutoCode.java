@@ -42,9 +42,7 @@ public class YtAutoCode {
 			Connection localConnection = this.M.getCon();
 			Statement localStatement = localConnection.createStatement(1004, 1007);
 			ResultSet localResultSet = null;
-			localResultSet = localStatement
-					.executeQuery("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"
-							+ DbConnectionUtil.dbName + "'");
+			localResultSet = localStatement.executeQuery("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" + DbConnectionUtil.dbName + "'");
 			while (localResultSet.next()) {
 				localArrayList.add(localResultSet.getString("TABLE_NAME"));
 			}
@@ -109,9 +107,7 @@ public class YtAutoCode {
 				r = (HashMap[]) null;
 				iRowNum = 0;
 				int iColCnt = 0;
-				rs = stmt.executeQuery(
-						"select column_name,data_type,column_comment,character_maximum_length from information_schema.columns where table_schema = '"
-								+ DbConnectionUtil.dbName + "' and table_name='" + tb + "'");
+				rs = stmt.executeQuery("select column_name,data_type,column_comment,character_maximum_length from information_schema.columns where table_schema = '" + DbConnectionUtil.dbName + "' and table_name='" + tb + "'");
 				ResultSetMetaData MetaData = rs.getMetaData();
 				iColCnt = MetaData.getColumnCount();
 				if (rs.next()) {
@@ -312,25 +308,20 @@ public class YtAutoCode {
 					this.K = new FileWriter(file);
 					this.L = new BufferedWriter(this.K);
 					this.L.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
-					this.L.write(
-							"<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\r\n");
-					this.L.write(
-							"<mapper namespace=\"" + DbConnectionUtil.basePage + ".mapper." + bt + "Mapper\">\r\n");
+					this.L.write("<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\r\n");
+					this.L.write("<mapper namespace=\"" + DbConnectionUtil.basePage + ".mapper." + bt + "Mapper\">\r\n");
 					this.L.write("<!-- Base_Column_List -->\r\n");
 					this.L.write("<sql id=\"Base_Column_List\">\r\n");
 					this.L.write("" + column + "\r\n");
 					this.L.write("</sql>\r\n");
 					this.L.write("<!-- ResultMap -->\r\n");
-					this.L.write("<resultMap id=\"ResultMap\" type=\"" + DbConnectionUtil.basePage + ".entity." + bt
-							+ "\">\r\n");
+					this.L.write("<resultMap id=\"ResultMap\" type=\"" + DbConnectionUtil.basePage + ".entity." + bt + "\">\r\n");
 					this.L.write("</resultMap>\r\n");
 					this.L.write("<!-- ResultMap -->\r\n");
-					this.L.write("<resultMap id=\"ResultMapVO\" type=\"" + DbConnectionUtil.basePage + ".vo." + bt
-							+ "VO\">\r\n");
+					this.L.write("<resultMap id=\"ResultMapVO\" type=\"" + DbConnectionUtil.basePage + ".vo." + bt + "VO\">\r\n");
 					this.L.write("</resultMap>\r\n");
 					this.L.write("<!-- add -->\r\n");
-					this.L.write("<insert id=\"post\" parameterType=\"" + DbConnectionUtil.basePage + ".entity." + bt
-							+ "\">\r\n");
+					this.L.write("<insert id=\"post\" parameterType=\"" + DbConnectionUtil.basePage + ".entity." + bt + "\">\r\n");
 					this.L.write("insert into " + tb + "(" + insertColumn + ")\r\n");
 					this.L.write("values (" + insertValue + ")\r\n");
 					this.L.write("</insert>\r\n");
@@ -350,8 +341,7 @@ public class YtAutoCode {
 					this.L.write("where id = #{id}\r\n");
 					this.L.write("</delete>\r\n");
 					this.L.write("<!-- update -->\r\n");
-					this.L.write("<update id=\"put\" parameterType=\"" + DbConnectionUtil.basePage + ".entity." + bt
-							+ "\">\r\n");
+					this.L.write("<update id=\"put\" parameterType=\"" + DbConnectionUtil.basePage + ".entity." + bt + "\">\r\n");
 					this.L.write("update " + tb + "\r\n");
 					this.L.write("<set>\r\n");
 					for (int i = 0; i < r.length; i++) {
@@ -382,8 +372,7 @@ public class YtAutoCode {
 					this.L.write("where id = #{id}\r\n");
 					this.L.write("</select>\r\n");
 					this.L.write("<!-- getList -->\r\n");
-					this.L.write(
-							"<select id=\"list\" parameterType=\"java.util.HashMap\" resultMap=\"ResultMap\">\r\n");
+					this.L.write("<select id=\"list\" parameterType=\"java.util.HashMap\" resultMap=\"ResultMap\">\r\n");
 					this.L.write("select\r\n");
 					this.L.write("<include refid=\"Base_Column_List\"/>\r\n");
 					this.L.write("from " + tb + "\r\n");
@@ -395,8 +384,7 @@ public class YtAutoCode {
 					this.L.write("</where>\r\n");
 					this.L.write("</select>\r\n");
 					this.L.write("<!-- getMap -->\r\n");
-					this.L.write(
-							"<select id=\"page\" parameterType=\"java.util.HashMap\" resultMap=\"ResultMapVO\">\r\n");
+					this.L.write("<select id=\"page\" parameterType=\"java.util.HashMap\" resultMap=\"ResultMapVO\">\r\n");
 					this.L.write("select\r\n");
 					this.L.write("<include refid=\"Base_Column_List\"/>\r\n");
 					this.L.write("from " + tb + "\r\n");
@@ -414,8 +402,7 @@ public class YtAutoCode {
 					this.L.write("</where>\r\n");
 					this.L.write("</select>\r\n");
 					this.L.write("<!-- getCount -->\r\n");
-					this.L.write(
-							"<select id=\"countlist\" parameterType=\"java.util.HashMap\" resultType=\"int\">\r\n");
+					this.L.write("<select id=\"countlist\" parameterType=\"java.util.HashMap\" resultType=\"int\">\r\n");
 					this.L.write("select count(*) from " + tb + "\r\n");
 					this.L.write("<where>\r\n");
 					this.L.write("1=1\r\n");
@@ -425,8 +412,7 @@ public class YtAutoCode {
 					this.L.write("</where>\r\n");
 					this.L.write("</select>\r\n");
 					this.L.write("<!-- listByArrayId -->\r\n");
-					this.L.write(
-							"<select id=\"listByArrayId\" parameterType=\"java.util.HashMap\" resultMap=\"ResultMap\">\r\n");
+					this.L.write("<select id=\"listByArrayId\" parameterType=\"java.util.HashMap\" resultMap=\"ResultMap\">\r\n");
 					this.L.write("select\r\n");
 					this.L.write("<include refid=\"Base_Column_List\"/>\r\n");
 					this.L.write("from " + tb + "\r\n");
@@ -434,8 +420,7 @@ public class YtAutoCode {
 					this.L.write("1=1\r\n");
 					this.L.write("<if test=\"array != null and array.length > 0\">\r\n");
 					this.L.write("and id in\r\n");
-					this.L.write(
-							"<foreach item=\"item\" index=\"index\" collection=\"array\" open=\"(\" separator=\",\" close=\")\">\r\n");
+					this.L.write("<foreach item=\"item\" index=\"index\" collection=\"array\" open=\"(\" separator=\",\" close=\")\">\r\n");
 					this.L.write("#{item}\r\n");
 					this.L.write("</foreach>\r\n");
 					this.L.write("</if>\r\n");
@@ -607,8 +592,7 @@ public class YtAutoCode {
 					this.L.write("*/\r\n");
 					this.L.write("\r\n");
 					this.L.write("@Service\r\n");
-					this.L.write("public class " + bt + "ServiceImpl extends YtBaseServiceImpl<" + bt
-							+ ", Long> implements " + bt + "Service{\r\n");
+					this.L.write("public class " + bt + "ServiceImpl extends YtBaseServiceImpl<" + bt + ", Long> implements " + bt + "Service{\r\n");
 					this.L.write("@Autowired\r\n");
 					this.L.write("private " + bt + "Mapper mapper;\r\n");
 					this.L.write("\r\n");
@@ -678,10 +662,8 @@ public class YtAutoCode {
 					this.L.write("\r\n");
 					this.L.write("\r\n");
 					this.L.write("@RestController\r\n");
-					this.L.write("@RequestMapping(\"/" + DbConnectionUtil.osName + "/" + DbConnectionUtil.version + "/"
-							+ bt.toLowerCase() + "\")\r\n");
-					this.L.write("public class " + bt + "Controller extends YtBaseEncipherControllerImpl<" + bt
-							+ ", Long> {\r\n");
+					this.L.write("@RequestMapping(\"/" + DbConnectionUtil.osName + "/" + DbConnectionUtil.version + "/" + bt.toLowerCase() + "\")\r\n");
+					this.L.write("public class " + bt + "Controller extends YtBaseEncipherControllerImpl<" + bt + ", Long> {\r\n");
 					this.L.write("\r\n");
 					this.L.write("\r\n");
 					this.L.write("\r\n");
@@ -691,23 +673,17 @@ public class YtAutoCode {
 					this.L.write("\r\n");
 					this.L.write("\r\n");
 					this.L.write("@Override\r\n");
-					this.L.write(
-							"@RequestMapping(value = \"/list\", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)\r\n");
-					this.L.write(
-							"public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {\r\n");
-					this.L.write("YtIPage<" + bt
-							+ "> list = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));\r\n");
+					this.L.write("@RequestMapping(value = \"/list\", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)\r\n");
+					this.L.write("public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {\r\n");
+					this.L.write("YtIPage<" + bt + "> list = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));\r\n");
 					this.L.write("return new YtResponseEncryptEntity<Object>(new YtBody(list));\r\n");
 					this.L.write("}\r\n");
 					this.L.write("\r\n");
 					this.L.write("\r\n");
 					this.L.write("\r\n");
-					this.L.write(
-							"@RequestMapping(value = \"/page\", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)\r\n");
-					this.L.write(
-							"public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {\r\n");
-					this.L.write("YtIPage<" + bt
-							+ "VO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));\r\n");
+					this.L.write("@RequestMapping(value = \"/page\", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)\r\n");
+					this.L.write("public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {\r\n");
+					this.L.write("YtIPage<" + bt + "VO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));\r\n");
 					this.L.write("return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));\r\n");
 					this.L.write("}\r\n");
 					this.L.write("}\r\n");

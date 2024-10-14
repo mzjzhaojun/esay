@@ -1,6 +1,5 @@
 package com.yt.app.api.v1.service.impl;
 
-import org.eclipse.jetty.util.resource.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -77,36 +76,27 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 
 	private void getUsdtExchange() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		HttpEntity<Resource> httpEntity = new HttpEntity<Resource>(headers);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
 		RestTemplate resttemplate = new RestTemplate();
-		ResponseEntity<SysOxxVo> sov = resttemplate.exchange(
-				"https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=all&userType=all",
-				HttpMethod.GET, httpEntity, SysOxxVo.class);
+		ResponseEntity<SysOxxVo> sov = resttemplate.exchange("https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=all&userType=all", HttpMethod.GET, httpEntity, SysOxxVo.class);
 		SysOxxVo data = sov.getBody();
 		List<Object> list = data.getData().getSell();
 		Double exchange = Double.valueOf(BeanUtil.beanToMap(list.get(0)).get("price").toString());
 		mapper.putUsdtExchange(exchange);
-		RedisUtil.set(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTEXCHANGE,
-				exchange.toString());
+		RedisUtil.set(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTEXCHANGE, exchange.toString());
 	}
 
 	private void getUsdtToTrx() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		HttpEntity<Resource> httpEntity = new HttpEntity<Resource>(headers);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
 		RestTemplate resttemplate = new RestTemplate();
-		ResponseEntity<JSONObject> sov = resttemplate.exchange(
-				"https://c.tronlink.org/v1/cryptocurrency/getprice?symbol=USDT&convert=TRX", HttpMethod.GET, httpEntity,
-				JSONObject.class);
+		ResponseEntity<JSONObject> sov = resttemplate.exchange("https://c.tronlink.org/v1/cryptocurrency/getprice?symbol=USDT&convert=TRX", HttpMethod.GET, httpEntity, JSONObject.class);
 		JSONObject data = sov.getBody();
-		Double price = data.getJSONObject("data").getJSONObject("USDT").getJSONObject("quote").getJSONObject("TRX")
-				.getDouble("price");
+		Double price = data.getJSONObject("data").getJSONObject("USDT").getJSONObject("quote").getJSONObject("TRX").getDouble("price");
 		mapper.putUsdtToTrxExchange(price);
-		RedisUtil.set(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTOTEXCHANGE,
-				price.toString());
+		RedisUtil.set(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTOTEXCHANGE, price.toString());
 	}
 
 	@Override
@@ -124,13 +114,10 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 	@Override
 	public List<Sysconfig> getDataTop() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		HttpEntity<Resource> httpEntity = new HttpEntity<Resource>(headers);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
 		RestTemplate resttemplate = new RestTemplate();
-		ResponseEntity<SysOxxVo> sov = resttemplate.exchange(
-				"https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=all&userType=all",
-				HttpMethod.GET, httpEntity, SysOxxVo.class);
+		ResponseEntity<SysOxxVo> sov = resttemplate.exchange("https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=all&userType=all", HttpMethod.GET, httpEntity, SysOxxVo.class);
 		SysOxxVo data = sov.getBody();
 		List<Object> list = data.getData().getSell();
 		List<Sysconfig> listpc = new ArrayList<Sysconfig>();
@@ -146,13 +133,10 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 	@Override
 	public List<Sysconfig> getAliPayDataTop() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("user-agent",
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		HttpEntity<Resource> httpEntity = new HttpEntity<Resource>(headers);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
 		RestTemplate resttemplate = new RestTemplate();
-		ResponseEntity<SysOxxVo> sov = resttemplate.exchange(
-				"https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=aliPay&userType=all",
-				HttpMethod.GET, httpEntity, SysOxxVo.class);
+		ResponseEntity<SysOxxVo> sov = resttemplate.exchange("https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=aliPay&userType=all", HttpMethod.GET, httpEntity, SysOxxVo.class);
 		SysOxxVo data = sov.getBody();
 		List<Object> list = data.getData().getSell();
 		List<Sysconfig> listpc = new ArrayList<Sysconfig>();

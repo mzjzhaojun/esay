@@ -27,8 +27,7 @@ public class SystemConfig {
 
 	@Bean(name = "Snowflake")
 	public Snowflake idworker() {
-		Snowflake snowflake = IdUtil.getSnowflake(Long.parseLong(this.g.getWorkerId()),
-				Long.parseLong(this.g.getWorkerKey()));
+		Snowflake snowflake = IdUtil.getSnowflake(Long.parseLong(this.g.getWorkerId()), Long.parseLong(this.g.getWorkerKey()));
 		return snowflake;
 	}
 

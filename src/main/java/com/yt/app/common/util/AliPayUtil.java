@@ -9,8 +9,7 @@ public class AliPayUtil {
 
 	private static String URL = "https://openapi.alipay.com/gateway.do";
 
-	public static AlipayClient initAliPay(String appid, String private_key, String app_cert_path,
-			String alipay_cert_path, String alipay_root_cert_path) throws AlipayApiException {
+	public static AlipayClient initAliPay(String appid, String private_key, String app_cert_path, String alipay_cert_path, String alipay_root_cert_path) throws AlipayApiException {
 		AlipayConfig alipayConfig = new AlipayConfig();
 		// 设置网关地址
 		alipayConfig.setServerUrl(URL);

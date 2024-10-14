@@ -99,9 +99,7 @@ public class ReflectionUtil extends org.springframework.util.ReflectionUtils {
 	 * @throws NoSuchMethodException
 	 * @throws SecurityException
 	 */
-	public static Object executeMethod(Object obj, String MethodName, boolean force, Class<?>... params)
-			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
-			SecurityException {
+	public static Object executeMethod(Object obj, String MethodName, boolean force, Class<?>... params) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		Method method = obj.getClass().getMethod(MethodName, params);
 		if (force && !method.isAccessible()) {
 			method.setAccessible(true);

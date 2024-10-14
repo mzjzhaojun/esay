@@ -24,7 +24,7 @@ public class TronGetAddressThread6 implements Runnable {
 				if (listaddress != null) {
 					String address = listaddress.get(2);
 					char endchar = address.charAt(address.length() - 1);
-					String sixchar = "" + endchar + endchar + endchar + endchar + endchar + endchar;
+					String sixchar = "" + endchar + endchar + endchar + endchar + endchar;
 					if (address.endsWith(sixchar)) {
 						Tronaddress t = new Tronaddress();
 						t.setAddress(address);

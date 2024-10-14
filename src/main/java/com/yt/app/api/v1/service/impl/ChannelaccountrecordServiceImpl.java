@@ -25,8 +25,7 @@ import java.util.Map;
  */
 
 @Service
-public class ChannelaccountrecordServiceImpl extends YtBaseServiceImpl<Channelaccountrecord, Long>
-		implements ChannelaccountrecordService {
+public class ChannelaccountrecordServiceImpl extends YtBaseServiceImpl<Channelaccountrecord, Long> implements ChannelaccountrecordService {
 	@Autowired
 	private ChannelaccountrecordMapper mapper;
 

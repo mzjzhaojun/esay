@@ -36,8 +36,7 @@ public class AuthUtil {
 	RedisUtil rs;
 
 	@Autowired
-	public AuthUtil(@Value("${sa-token.token-prefix:}") String tokenPrefix,
-			@Value("${sa-token.timeout:}") long timeout) {
+	public AuthUtil(@Value("${sa-token.token-prefix:}") String tokenPrefix, @Value("${sa-token.timeout:}") long timeout) {
 		AuthUtil.tokenPrefix = tokenPrefix;
 		AuthUtil.timeout = timeout;
 	}
@@ -60,9 +59,7 @@ public class AuthUtil {
 		// 将登录信息存储到redis
 		RedisUtil.setEx(JWT_USER_KEY + tokenValue, JSONUtil.toJsonStr(jwtUserBO), timeout, TimeUnit.SECONDS);
 
-		return AuthLoginVO.builder().tokenName(StpUtil.getTokenName())
-				.tokenValue(StrUtil.isNotBlank(tokenPrefix) ? tokenPrefix + " " + tokenValue : tokenValue)
-				.tenantId(jwtUserBO.getTenantId()).build();
+		return AuthLoginVO.builder().tokenName(StpUtil.getTokenName()).tokenValue(StrUtil.isNotBlank(tokenPrefix) ? tokenPrefix + " " + tokenValue : tokenValue).tenantId(jwtUserBO.getTenantId()).build();
 	}
 
 	/**

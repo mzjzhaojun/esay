@@ -100,8 +100,7 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 				i++;
 			}
 			sendText(tmg.getTgid(), sb.toString());
-		} else if (message.equals("#fs")
-				&& (username.equals(tmg.getAdminmangers()) || username.equals(tmg.getMangers()))) {// 汇率
+		} else if (message.equals("#fs") && (username.equals(tmg.getAdminmangers()) || username.equals(tmg.getMangers()))) {// 汇率
 			if (update.getMessage().getReplyToMessage() != null) {
 				String text = update.getMessage().getReplyToMessage().getText();
 				Integer index = text.indexOf("单号：") + 3;
@@ -132,8 +131,7 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 
 				tgchannelgroupmapper.put(tmg);
 			}
-		} else if (message.equals("#z") && (username.equals(tmg.getAdminmangers()) || username.equals(tmg.getMangers()))
-				|| username.equals(tmg.getCustomermangers())) {
+		} else if (message.equals("#z") && (username.equals(tmg.getAdminmangers()) || username.equals(tmg.getMangers())) || username.equals(tmg.getCustomermangers())) {
 			// 订单统计
 			StringBuffer sb = new StringBuffer();
 			sb.append("今日订单：" + tmg.getTodaycountorder() + " 笔\n");
@@ -180,8 +178,7 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 
 	// 复制消息
 	public void copyMessage(Long who, Integer msgId) {
-		CopyMessage cm = CopyMessage.builder().fromChatId(who.toString()).chatId(who.toString()).messageId(msgId)
-				.build();
+		CopyMessage cm = CopyMessage.builder().fromChatId(who.toString()).chatId(who.toString()).messageId(msgId).build();
 		try {
 			execute(cm);
 		} catch (TelegramApiException e) {
@@ -191,8 +188,7 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 
 	// 转发
 	public void forwardMessage(Long who, Integer msgId) {
-		ForwardMessage cm = ForwardMessage.builder().fromChatId(who.toString()).chatId(who.toString()).messageId(msgId)
-				.build();
+		ForwardMessage cm = ForwardMessage.builder().fromChatId(who.toString()).chatId(who.toString()).messageId(msgId).build();
 		try {
 			execute(cm);
 		} catch (TelegramApiException e) {
@@ -201,8 +197,7 @@ public class ChannelMsgBot extends TelegramLongPollingBot {
 	}
 
 	public void sendMenu(Long who, String txt, InlineKeyboardMarkup kb) {
-		SendMessage sm = SendMessage.builder().chatId(who.toString()).parseMode("HTML").text(txt).replyMarkup(kb)
-				.build();
+		SendMessage sm = SendMessage.builder().chatId(who.toString()).parseMode("HTML").text(txt).replyMarkup(kb).build();
 
 		try {
 			execute(sm);

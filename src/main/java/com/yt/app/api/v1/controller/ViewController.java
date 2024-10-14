@@ -28,8 +28,7 @@ public class ViewController {
 	private IncomeService service;
 
 	@RequestMapping(value = "/income/{orderid}", method = RequestMethod.GET)
-	public String income(@PathVariable String orderid, Model model, HttpServletRequest request,
-			HttpServletResponse response) {
+	public String income(@PathVariable String orderid, Model model, HttpServletRequest request, HttpServletResponse response) {
 		Income income = service.getByOrderNum(orderid);
 		model.addAttribute("incomeid", income.getId());
 		model.addAttribute("expiredminute", income.getExpiredminute());

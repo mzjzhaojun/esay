@@ -44,10 +44,8 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 
 	private Pattern allowedMethods = Pattern.compile("^(HEAD|TRACE|OPTIONS)$");
 
-	private AntPathRequestMatcher[] requestMatchers = { new AntPathRequestMatcher("/app/v1/auth/**"), new AntPathRequestMatcher("/rest/v1/auth/**"),
-			new AntPathRequestMatcher("/rest/v2/file/dt/**"), new AntPathRequestMatcher("/rest/v1/order/**"),
-			new AntPathRequestMatcher("/rest/v1/view/**"), new AntPathRequestMatcher("/rest/v1/tron/**"),
-			new AntPathRequestMatcher("/static/**") };
+	private AntPathRequestMatcher[] requestMatchers = { new AntPathRequestMatcher("/app/v1/auth/**"), new AntPathRequestMatcher("/rest/v1/auth/**"), new AntPathRequestMatcher("/rest/v2/file/dt/**"), new AntPathRequestMatcher("/rest/v1/order/**"),
+			new AntPathRequestMatcher("/rest/v1/view/**"), new AntPathRequestMatcher("/rest/v1/tron/**"), new AntPathRequestMatcher("/static/**") };
 
 	public HandlerInterceptorForToken(YtConfig config) {
 	}
@@ -57,8 +55,7 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 	 * {@link com.zhengqing.gateway.filter.AuthFilter#filter }
 	 */
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws Exception {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
 		// 判断是否放行接口
 		if (this.isOpenApi(request)) {
@@ -123,8 +120,7 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 		/**
 		 * URL鉴权 [URL-角色集合] [{'key':'GET:/web/api/user/*','value':['ADMIN','TEST']},...]
 		 */
-		Map<Object, Object> urlPermReRoleMap = RedisUtil
-				.hGetAll(SecurityConstant.URL_PERM_RE_ROLES + TenantIdContext.getTenantId());
+		Map<Object, Object> urlPermReRoleMap = RedisUtil.hGetAll(SecurityConstant.URL_PERM_RE_ROLES + TenantIdContext.getTenantId());
 
 		// 根据请求路径获取有访问权限的角色列表
 		List<String> authorizedRoleList = Lists.newLinkedList();
@@ -162,8 +158,7 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 	 * 后处理（调用了Service并返回ModelAndView，但未进行页面渲染），有机会修改ModelAndView
 	 */
 	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-			ModelAndView modelAndView) throws Exception {
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
 		HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
 	}
 
@@ -171,8 +166,7 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 	 * 在DispatcherServlet完全处理完请求后被调用，可用于清理资源等。返回处理（已经渲染了页面）
 	 */
 	@Override
-	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
-			throws Exception {
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 		HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
 		SysUserContext.remove();
 		JwtUserContext.remove();

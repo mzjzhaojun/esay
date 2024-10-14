@@ -95,8 +95,7 @@ public class MybatisPlusConfig implements TransactionManagementConfigurer {
 		sqlSessionFactory.setDataSource(ytabstractroutingdatasource());
 		sqlSessionFactory.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-		sqlSessionFactory.setMapperLocations(
-				resolver.getResources("classpath:com/yt/app/api/" + g.getVersion() + "/mapper/impl/*.xml"));
+		sqlSessionFactory.setMapperLocations(resolver.getResources("classpath:com/yt/app/api/" + g.getVersion() + "/mapper/impl/*.xml"));
 		sqlSessionFactory.setPlugins(mybatisPlusInterceptor());
 		return sqlSessionFactory.getObject();
 	}

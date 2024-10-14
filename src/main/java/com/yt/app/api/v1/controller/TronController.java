@@ -37,15 +37,13 @@ public class TronController extends YtBaseEncipherControllerImpl<Tron, Long> {
 
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<Tron> list = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}
 
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<TronVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
@@ -133,8 +131,7 @@ public class TronController extends YtBaseEncipherControllerImpl<Tron, Long> {
 	 * @return
 	 */
 	@RequestMapping(value = "/wallet/getaccountresource", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> getaccountresource(HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> getaccountresource(HttpServletRequest request, HttpServletResponse response) {
 		service.getaccountresource(owner_address);
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
@@ -174,8 +171,7 @@ public class TronController extends YtBaseEncipherControllerImpl<Tron, Long> {
 	 */
 	@RequestMapping(value = "/wallet/delegateresource", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> delegateresource(HttpServletRequest request, HttpServletResponse response) {
-		service.delegateresource(privatekey, owner_address, to_address, new BigInteger("1000000000"), "ENERGY", true,
-				1200);
+		service.delegateresource(privatekey, owner_address, to_address, new BigInteger("1000000000"), "ENERGY", true, 1200);
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
 

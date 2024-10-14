@@ -116,8 +116,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 				java.io.File f = new java.io.File(fileurl);
 				FileItem fileItem;
 				try {
-					fileItem = new DiskFileItem("mainFile", Files.probeContentType(f.toPath()), false, f.getName(),
-							(int) f.length(), f.getParentFile());
+					fileItem = new DiskFileItem("mainFile", Files.probeContentType(f.toPath()), false, f.getName(), (int) f.length(), f.getParentFile());
 					try (InputStream input = new FileInputStream(f); OutputStream os = fileItem.getOutputStream();) {
 						IOUtils.copy(input, os);
 						file = new CommonsMultipartFile(fileItem);
@@ -147,8 +146,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 		if (mat) {
 			fl = mapper.get(Long.valueOf(id));
 			if (fl != null) {
-				path = sb.append(fl.getRoot_path()).append(fl.getRelative_path()).append(java.io.File.separator)
-						.append(fl.getFile_name()).toString();
+				path = sb.append(fl.getRoot_path()).append(fl.getRelative_path()).append(java.io.File.separator).append(fl.getFile_name()).toString();
 				java.io.File deletefile = new java.io.File(path);
 				deletefile.delete();
 				fl.setFile_size((int) file.getSize());
@@ -234,8 +232,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 		YtFile fl = mapper.get(id);
 		if (fl != null) {
 			StringBuffer sb = new StringBuffer();
-			sb.append(appConfig.getFilePath()).append(fl.getRelative_path()).append(java.io.File.separator)
-					.append(fl.getFile_name()).toString();
+			sb.append(appConfig.getFilePath()).append(fl.getRelative_path()).append(java.io.File.separator).append(fl.getFile_name()).toString();
 			java.io.File deletefile = new java.io.File(sb.toString());
 			deletefile.delete();
 			i = mapper.delete(id);
@@ -251,8 +248,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 			YtFile fl = mapper.get(Long.parseLong(id));
 			if (fl != null) {
 				StringBuffer sb = new StringBuffer();
-				sb.append(appConfig.getFilePath()).append(fl.getRelative_path()).append(java.io.File.separator)
-						.append(fl.getFile_name()).toString();
+				sb.append(appConfig.getFilePath()).append(fl.getRelative_path()).append(java.io.File.separator).append(fl.getFile_name()).toString();
 				java.io.File deletefile = new java.io.File(sb.toString());
 				deletefile.delete();
 				i = mapper.delete(Long.parseLong(id));
@@ -278,8 +274,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 		if (mat) {
 			fl = mapper.get(Long.valueOf(id));
 			if (fl != null) {
-				path = sb.append(fl.getRoot_path()).append(fl.getRelative_path()).append(java.io.File.separator)
-						.append(fl.getFile_name()).toString();
+				path = sb.append(fl.getRoot_path()).append(fl.getRelative_path()).append(java.io.File.separator).append(fl.getFile_name()).toString();
 				java.io.File deletefile = new java.io.File(path);
 				deletefile.delete();
 				fl.setFile_size(100);
@@ -402,8 +397,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 		String dContentType = multipartFile.getContentType();
 		String suffix = fileType.substring(1, fileType.length());
 		// 是图片且不是gif才加水印
-		if (originFileName.contains(".unknown")
-				|| (!fileType.equalsIgnoreCase(".gif") && dContentType.contains("image"))) {
+		if (originFileName.contains(".unknown") || (!fileType.equalsIgnoreCase(".gif") && dContentType.contains("image"))) {
 			// 获取水印图片
 			InputStream inputImg = multipartFile.getInputStream();
 			Image img = ImageIO.read(inputImg);

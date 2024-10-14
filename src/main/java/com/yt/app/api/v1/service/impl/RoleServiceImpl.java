@@ -120,8 +120,7 @@ public class RoleServiceImpl extends YtBaseServiceImpl<Role, Long> implements Ro
 		Role t = sysRoleMapper.get(id);
 		Assert.notNull(t, "角色不存在！");
 		// 2、菜单权限树
-		List<SysMenuTreeVO> menuTree = tsysmenuservice
-				.tree(SysMenuTreeDTO.builder().roleIdList(Lists.newArrayList(id)).build());
+		List<SysMenuTreeVO> menuTree = tsysmenuservice.tree(SysMenuTreeDTO.builder().roleIdList(Lists.newArrayList(id)).build());
 		t.setMenuTree(menuTree);
 		return t;
 	}
@@ -186,8 +185,7 @@ public class RoleServiceImpl extends YtBaseServiceImpl<Role, Long> implements Ro
 			return Lists.newArrayList();
 		}
 		// 存放子集合
-		List<SysRoleBaseVO> childList = allList.stream().filter(e -> e.getParent_id().equals(parentId))
-				.collect(Collectors.toList());
+		List<SysRoleBaseVO> childList = allList.stream().filter(e -> e.getParent_id().equals(parentId)).collect(Collectors.toList());
 		// 递归
 		childList.forEach(item -> {
 			item.setChildren(this.recurveRole(item.getId(), allList, excludeRoleId));
@@ -214,8 +212,7 @@ public class RoleServiceImpl extends YtBaseServiceImpl<Role, Long> implements Ro
 	 */
 	private List<Long> recurveRoleId(Long parentId, List<Role> allList, List<Long> roleIdList) {
 		roleIdList.add(parentId);
-		List<Role> childList = allList.stream().filter(e -> e.getParent_id().equals(parentId))
-				.collect(Collectors.toList());
+		List<Role> childList = allList.stream().filter(e -> e.getParent_id().equals(parentId)).collect(Collectors.toList());
 		if (CollUtil.isEmpty(childList)) {
 			return roleIdList;
 		}
@@ -269,8 +266,7 @@ public class RoleServiceImpl extends YtBaseServiceImpl<Role, Long> implements Ro
 		SysUserPermVO userPerm = this.isysuserservice.getUserPerm(params);
 
 		// 2、权限树
-		userPerm.setPermissionTreeList(this.isysmenuservice
-				.tree(SysMenuTreeDTO.builder().roleIdList(userPerm.getRoleIdList()).isOnlyShowPerm(true).build()));
+		userPerm.setPermissionTreeList(this.isysmenuservice.tree(SysMenuTreeDTO.builder().roleIdList(userPerm.getRoleIdList()).isOnlyShowPerm(true).build()));
 
 		userPerm.handleData();
 		return userPerm;
@@ -284,11 +280,9 @@ public class RoleServiceImpl extends YtBaseServiceImpl<Role, Long> implements Ro
 		Assert.notNull(sysRole, "角色不存在！");
 
 		// 2、菜单权限树
-		List<SysMenuTreeVO> menuTree = this.isysmenuservice
-				.tree(SysMenuTreeDTO.builder().roleIdList(Lists.newArrayList(roleId)).build());
+		List<SysMenuTreeVO> menuTree = this.isysmenuservice.tree(SysMenuTreeDTO.builder().roleIdList(Lists.newArrayList(roleId)).build());
 
-		return SysRoleAllPermissionDetailVO.builder().roleId(sysRole.getId()).name(sysRole.getName())
-				.code(sysRole.getCode()).status(sysRole.getStatus()).menuTree(menuTree).build();
+		return SysRoleAllPermissionDetailVO.builder().roleId(sysRole.getId()).name(sysRole.getName()).code(sysRole.getCode()).status(sysRole.getStatus()).menuTree(menuTree).build();
 	}
 
 	@Transactional

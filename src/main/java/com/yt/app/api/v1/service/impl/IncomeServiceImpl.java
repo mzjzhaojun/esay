@@ -273,7 +273,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		if (channel.getIpaddress().indexOf(ip) == -1) {
 			throw new YtException("非法请求!");
 		}
-		String returnstate = PayUtil.SendGzQuerySubmit(orderid,channel);
+		String returnstate = PayUtil.SendGzQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "公子通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
@@ -304,15 +304,13 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		} catch (Exception e1) {
 			throw new YtException(qs.getPay_aislecode() + "通道没有权限");
 		}
-		Merchantqrcodeaisle mqd = listmc.stream().filter(mqds -> mqds.getQrcodeaisleid().equals(qas.getId()))
-				.findFirst().get();
+		Merchantqrcodeaisle mqd = listmc.stream().filter(mqds -> mqds.getQrcodeaisleid().equals(qas.getId())).findFirst().get();
 		Assert.notNull(mqd, "通道没有权限!");
 		List<Qrcodeaisleqrcode> listqaq = qrcodeaisleqrcodemapper.getByQrcodeAisleId(qas.getId());
 		long[] qaqids = listqaq.stream().mapToLong(qaq -> qaq.getQrcodelid()).distinct().toArray();
 		List<Qrcode> listqrcode = qrcodemapper.listByArrayId(qaqids);
 		Double amount = Double.valueOf(qs.getPay_amount());
-		List<Qrcode> listcmm = listqrcode.stream().filter(c -> c.getMax() >= amount && c.getMin() <= amount)
-				.collect(Collectors.toList());
+		List<Qrcode> listcmm = listqrcode.stream().filter(c -> c.getMax() >= amount && c.getMin() <= amount).collect(Collectors.toList());
 		Assert.notEmpty(listcmm, "代收金额超出限额");
 		List<Qrcode> listcf = listcmm.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 		Qrcode qd = null;
@@ -355,8 +353,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		// 动态码直接去线上拿连接
 		if (qd.getDynamic()) {
 			// 阿里当面付和订单码
-			AlipayTradePrecreateResponse atp = alif2f(qd, income.getOrdernum(), income.getAmount(),
-					qd.getExpireminute());
+			AlipayTradePrecreateResponse atp = alif2f(qd, income.getOrdernum(), income.getAmount(), qd.getExpireminute());
 			Assert.notNull(atp, "获取支付宝单号错误!");
 			income.setQrcode(atp.getQrCode());
 			income.setQrcodeordernum("in_come_qrcode" + StringUtil.getOrderNum());
@@ -366,16 +363,12 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		Assert.notNull(mqd.getCollection(), "渠道点位未配置!");
 		// 渠道收入
-		income.setChannelincomeamount(NumberUtil
-				.multiply(income.getAmount().toString(), (channel.getCollection() / 100) + "", 2).doubleValue());
-		income.setMerchantincomeamount(
-				NumberUtil.multiply(income.getAmount().toString(), (mqd.getCollection() / 100) + "", 2).doubleValue());
+		income.setChannelincomeamount(NumberUtil.multiply(income.getAmount().toString(), (channel.getCollection() / 100) + "", 2).doubleValue());
+		income.setMerchantincomeamount(NumberUtil.multiply(income.getAmount().toString(), (mqd.getCollection() / 100) + "", 2).doubleValue());
 		// 系统收入
-		income.setIncomeamount(Double
-				.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount()))));
+		income.setIncomeamount(Double.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount()))));
 		// 商户收入
-		income.setMerchantincomeamount(
-				Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount()))));
+		income.setMerchantincomeamount(Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount()))));
 		// 计算当前码可生成的订单
 		RLock lock = RedissonUtil.getLock(qd.getId());
 		Integer i = 0;
@@ -441,8 +434,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
 		List<Channel> listc = channelmapper.listByArrayId(cids);
 		Assert.notEmpty(listc, "没有可用渠道!");
-		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= Double.valueOf(qs.getPay_amount())
-				&& c.getMin() <= Double.valueOf(qs.getPay_amount())).collect(Collectors.toList());
+		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= Double.valueOf(qs.getPay_amount()) && c.getMin() <= Double.valueOf(qs.getPay_amount())).collect(Collectors.toList());
 		Assert.notEmpty(listcmm, "金额超出限额!");
 		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 		Channel channel = null;
@@ -541,17 +533,13 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			break;
 		}
 		// 渠道收入
-		income.setChannelincomeamount(NumberUtil
-				.multiply(income.getAmount().toString(), (channel.getCollection() / 100) + "", 2).doubleValue());
+		income.setChannelincomeamount(NumberUtil.multiply(income.getAmount().toString(), (channel.getCollection() / 100) + "", 2).doubleValue());
 		// 商户收入
-		income.setMerchantincomeamount(
-				NumberUtil.multiply(income.getAmount().toString(), (mc.getCollection() / 100) + "", 2).doubleValue());
+		income.setMerchantincomeamount(NumberUtil.multiply(income.getAmount().toString(), (mc.getCollection() / 100) + "", 2).doubleValue());
 		// 系统收入
-		income.setIncomeamount(Double
-				.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount()))));
+		income.setIncomeamount(Double.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount()))));
 		// 商户收入
-		income.setMerchantincomeamount(
-				Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount()))));
+		income.setMerchantincomeamount(Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount()))));
 		// 计算当前码可生成的订单
 		income.setFewamount(0.00);
 		income.setRealamount(income.getAmount());
@@ -597,8 +585,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	public AlipayTradePrecreateResponse alif2f(Qrcode qrcode, String ordernum, Double amount, Integer exp) {
 		try {
-			AlipayClient client = AliPayUtil.initAliPay(qrcode.getAppid(), qrcode.getAppprivatekey(),
-					qrcode.getApppublickey(), qrcode.getAlipaypublickey(), qrcode.getAlipayprovatekey());
+			AlipayClient client = AliPayUtil.initAliPay(qrcode.getAppid(), qrcode.getAppprivatekey(), qrcode.getApppublickey(), qrcode.getAlipaypublickey(), qrcode.getAlipayprovatekey());
 			AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
 			AlipayTradePrecreateModel model = new AlipayTradePrecreateModel();
 			model.setOutTradeNo(ordernum);
@@ -638,8 +625,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Income income = mapper.getByOrderNum(out_trade_no);
 		Qrcode qrcode = qrcodemapper.get(income.getQrcodeid());
 		try {
-			AlipayClient client = AliPayUtil.initAliPay(qrcode.getAppid(), qrcode.getAppprivatekey(),
-					qrcode.getApppublickey(), qrcode.getAlipaypublickey(), qrcode.getAlipayprovatekey());
+			AlipayClient client = AliPayUtil.initAliPay(qrcode.getAppid(), qrcode.getAppprivatekey(), qrcode.getApppublickey(), qrcode.getAlipaypublickey(), qrcode.getAlipayprovatekey());
 			AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
 			AlipayTradeQueryModel model = new AlipayTradeQueryModel();
 			model.setTradeNo(trade_no);
@@ -715,7 +701,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setQrcodeid(qd.getId());
 		income.setQrcodename(qd.getName());
 		income.setQrcodecode(qd.getCode());
-		
+
 		income.setAmount(Double.valueOf(qs.getPay_amount()));
 		income.setDynamic(qas.getDynamic());
 
@@ -785,8 +771,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return qr;
 	}
 
-	private QrcodeResultVO addOtherOrderMqd(Income income, Channel channel, Qrcodeaisle qas, Merchant mc,
-			QrcodeSubmitDTO qs) {
+	private QrcodeResultVO addOtherOrderMqd(Income income, Channel channel, Qrcodeaisle qas, Merchant mc, QrcodeSubmitDTO qs) {
 		// 添加qrcode订单
 		Qrcodeaccountorder qao = new Qrcodeaccountorder();
 		qao.setUserid(income.getQrcodeuserid());
@@ -861,8 +846,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		// 计算渠道收入
 		qrcodeaccountservice.updateTotalincome(qrcodeaccountorder);
 		//
-		Incomemerchantaccountorder incomemerchantaccountorder = incomemerchantaccountordermapper
-				.getByOrderNum(income.getMerchantorderid());
+		Incomemerchantaccountorder incomemerchantaccountorder = incomemerchantaccountordermapper.getByOrderNum(income.getMerchantorderid());
 		incomemerchantaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 		incomemerchantaccountordermapper.put(incomemerchantaccountorder);
 		// 计算商户收入
@@ -895,8 +879,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			// 计算渠道收入
 			qrcodeaccountservice.updateTotalincome(qrcodeaccountorder);
 			//
-			Incomemerchantaccountorder incomemerchantaccountorder = incomemerchantaccountordermapper
-					.getByOrderNum(income.getMerchantorderid());
+			Incomemerchantaccountorder incomemerchantaccountorder = incomemerchantaccountordermapper.getByOrderNum(income.getMerchantorderid());
 			incomemerchantaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 			incomemerchantaccountordermapper.put(incomemerchantaccountorder);
 			// 计算商户收入
@@ -922,14 +905,12 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		newincome.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
 		Integer i = mapper.post(newincome);
 
-		Qrcodeaccountorder newqrcodeaccountorder = qrcodeaccountordermapper
-				.getByOrderNum(newincome.getQrcodeordernum());
+		Qrcodeaccountorder newqrcodeaccountorder = qrcodeaccountordermapper.getByOrderNum(newincome.getQrcodeordernum());
 		newqrcodeaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		qrcodeaccountordermapper.put(newqrcodeaccountorder);
 		qrcodeaccountservice.totalincome(newqrcodeaccountorder);
 
-		Incomemerchantaccountorder newincomemerchantaccountorder = incomemerchantaccountordermapper
-				.getByOrderNum(newincome.getMerchantorderid());
+		Incomemerchantaccountorder newincomemerchantaccountorder = incomemerchantaccountordermapper.getByOrderNum(newincome.getMerchantorderid());
 		newincomemerchantaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		incomemerchantaccountordermapper.put(newincomemerchantaccountorder);
 		incomemerchantaccountservice.totalincome(newincomemerchantaccountorder);

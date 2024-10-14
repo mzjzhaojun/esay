@@ -57,8 +57,7 @@ public class YtWebMvcConfigurationSupport extends WebMvcConfigurationSupport {
 		localObjectMapper.registerModule(localSimpleModule);
 		localObjectMapper.setDateFormat(new SimpleDateFormat("YY-MM-dd"));
 		localObjectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-		YtJackson2HttpMessageConverter localMappingJackson2HttpMessageConverter = new YtJackson2HttpMessageConverter(
-				localObjectMapper);
+		YtJackson2HttpMessageConverter localMappingJackson2HttpMessageConverter = new YtJackson2HttpMessageConverter(localObjectMapper);
 		return localMappingJackson2HttpMessageConverter;
 	}
 
@@ -66,8 +65,7 @@ public class YtWebMvcConfigurationSupport extends WebMvcConfigurationSupport {
 	public YtMessageConverterMethodProcessor n() {
 		List<HttpMessageConverter<?>> paramList = new ArrayList<HttpMessageConverter<?>>();
 		paramList.add(t());
-		YtMessageConverterMethodProcessor localythttpentitymethodprocessor = new YtMessageConverterMethodProcessor(
-				paramList);
+		YtMessageConverterMethodProcessor localythttpentitymethodprocessor = new YtMessageConverterMethodProcessor(paramList);
 		return localythttpentitymethodprocessor;
 	}
 
@@ -85,8 +83,7 @@ public class YtWebMvcConfigurationSupport extends WebMvcConfigurationSupport {
 		localObjectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 
 		localObjectMapper.registerModule(localSimpleModule);
-		YtDecryptJackson2HttpMessageConverter localMappingJackson2HttpMessageConverter = new YtDecryptJackson2HttpMessageConverter(
-				localObjectMapper, g);
+		YtDecryptJackson2HttpMessageConverter localMappingJackson2HttpMessageConverter = new YtDecryptJackson2HttpMessageConverter(localObjectMapper, g);
 		return localMappingJackson2HttpMessageConverter;
 	}
 
@@ -94,8 +91,7 @@ public class YtWebMvcConfigurationSupport extends WebMvcConfigurationSupport {
 	public YtDecryptMessageConverterMethodProcessor m() {
 		List<HttpMessageConverter<?>> paramList = new ArrayList<HttpMessageConverter<?>>();
 		paramList.add(k());
-		YtDecryptMessageConverterMethodProcessor localrequestdecryptresponseencryptbodymethodprocessor = new YtDecryptMessageConverterMethodProcessor(
-				paramList);
+		YtDecryptMessageConverterMethodProcessor localrequestdecryptresponseencryptbodymethodprocessor = new YtDecryptMessageConverterMethodProcessor(paramList);
 		return localrequestdecryptresponseencryptbodymethodprocessor;
 	}
 
@@ -115,8 +111,7 @@ public class YtWebMvcConfigurationSupport extends WebMvcConfigurationSupport {
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry paramResourceHandlerRegistry) {
-		paramResourceHandlerRegistry.addResourceHandler(new String[] { "/**" })
-				.addResourceLocations(new String[] { "classpath:/template/" });
+		paramResourceHandlerRegistry.addResourceHandler(new String[] { "/**" }).addResourceLocations(new String[] { "classpath:/template/" });
 		paramResourceHandlerRegistry.addResourceHandler("/").addResourceLocations("classpath:/index.html");
 		super.addResourceHandlers(paramResourceHandlerRegistry);
 	}

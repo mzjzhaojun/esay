@@ -82,8 +82,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("visible", true);
 
 		String sub_url = URL + "/wallet/validateaddress";
-		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
-				.execute().body();
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
 		log.info("响应的消息:" + body);
 		return true;
 	}
@@ -96,8 +95,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("visible", true);
 
 		String sub_url = URL + "/wallet/createaccount";
-		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
-				.execute().body();
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
 		log.info("响应的消息:" + body);
 	}
 
@@ -108,8 +106,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("visible", true);
 
 		String sub_url = URL + "/wallet/getaccount ";
-		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
-				.execute().body();
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
 		log.info("响应的消息:" + body);
 	}
 
@@ -143,8 +140,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("visible", true);
 
 		String sub_url = URL + "/wallet/createtransaction";
-		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
-				.execute().body();
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
 		log.info("创建交易,响应的消息:" + body);
 
 		JSONObject obj = JSONUtil.parseObj(body);
@@ -168,8 +164,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 	@Override
 	public void broadcasttransaction(HashMap<String, Object> map) {
 		String sub_url = URL + "/wallet/broadcasttransaction";
-		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
-				.execute().body();
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
 		log.info("响应的消息:" + body);
 	}
 
@@ -194,8 +189,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("address", address);
 		map.put("visible", true);
 		String sub_url = URL + "/wallet/getaccountresource";
-		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
-				.execute().body();
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
 		log.info("响应的消息:" + body);
 	}
 
@@ -205,8 +199,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("address", address);
 		map.put("visible", true);
 		String sub_url = URL + "/wallet/getaccountnet";
-		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
-				.execute().body();
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
 		log.info("响应的消息:" + body);
 
 	}
@@ -221,8 +214,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("resource", resource);
 		map.put("visible", true);
 		String sub_url = URL + "/wallet/freezebalancev2";
-		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
-				.execute().body();
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
 		log.info("响应的消息:" + body);
 
 		JSONObject obj = JSONUtil.parseObj(body);
@@ -253,8 +245,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("resource", resource);
 		map.put("visible", true);
 		String sub_url = URL + "/wallet/unfreezebalancev2";
-		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
-				.execute().body();
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
 		log.info("响应的消息:" + body);
 
 		JSONObject obj = JSONUtil.parseObj(body);
@@ -283,8 +274,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("owner_address", owneraddress);
 		map.put("visible", true);
 		String sub_url = URL + "/wallet/cancelallunfreezev2";
-		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
-				.execute().body();
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
 		log.info("响应的消息:" + body);
 
 		JSONObject obj = JSONUtil.parseObj(body);
@@ -307,8 +297,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 
 	// 将带宽或者能量资源代理给其它账户
 	@Override
-	public void delegateresource(String privatekey, String owneraddress, String receiveraddress, BigInteger balance,
-			String resource, boolean lock, Integer lockperiod) {
+	public void delegateresource(String privatekey, String owneraddress, String receiveraddress, BigInteger balance, String resource, boolean lock, Integer lockperiod) {
 		KeyPair keyPair = new KeyPair(privatekey);
 
 		HashMap<String, Object> map = new HashMap<>();
@@ -320,8 +309,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("lock_period", lockperiod);
 		map.put("visible", true);
 		String sub_url = URL + "/wallet/delegateresource";
-		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
-				.execute().body();
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
 		log.info("响应的消息:" + body);
 
 		JSONObject obj = JSONUtil.parseObj(body);
@@ -344,8 +332,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 
 	// 取消为目标地址代理的带宽或者能量
 	@Override
-	public void undelegateresource(String privatekey, String owneraddress, String receiveraddress, BigInteger balance,
-			String resource) {
+	public void undelegateresource(String privatekey, String owneraddress, String receiveraddress, BigInteger balance, String resource) {
 		KeyPair keyPair = new KeyPair(privatekey);
 
 		HashMap<String, Object> map = new HashMap<>();
@@ -355,8 +342,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("resource", resource);
 		map.put("visible", true);
 		String sub_url = URL + "/wallet/undelegateresource";
-		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map))
-				.execute().body();
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
 		log.info("响应的消息:" + body);
 
 		JSONObject obj = JSONUtil.parseObj(body);

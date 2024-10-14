@@ -24,8 +24,7 @@ import java.util.Map;
  */
 
 @Service
-public class TgbotgrouprecordServiceImpl extends YtBaseServiceImpl<Tgbotgrouprecord, Long>
-		implements TgbotgrouprecordService {
+public class TgbotgrouprecordServiceImpl extends YtBaseServiceImpl<Tgbotgrouprecord, Long> implements TgbotgrouprecordService {
 	@Autowired
 	private TgbotgrouprecordMapper mapper;
 

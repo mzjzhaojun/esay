@@ -14,7 +14,7 @@ import com.yt.app.common.base.YtIBaseService;
 public interface SysconfigService extends YtIBaseService<Sysconfig, Long> {
 
 	Sysconfig getUsdtExchangeData();
-	
+
 	Sysconfig getUsdtToTrxExchangeData();
 
 	List<Sysconfig> getDataTop();

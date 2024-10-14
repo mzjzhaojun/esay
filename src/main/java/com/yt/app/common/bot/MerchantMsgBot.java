@@ -145,11 +145,9 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 			}
 		} else if (message.equals("#y")) {
 			// 余额
-			PayoutMerchantaccount merchantaccount = merchantaccountmapper
-					.getByUserId(merchantmapper.get(tmg.getMerchantid()).getUserid());
+			PayoutMerchantaccount merchantaccount = merchantaccountmapper.getByUserId(merchantmapper.get(tmg.getMerchantid()).getUserid());
 			if (merchantaccount != null) {
-				String msg = "账户可用余额：" + merchantaccount.getBalance() + "\n总充值金额：" + merchantaccount.getTotalincome()
-						+ "\n总支出金额：" + merchantaccount.getWithdrawamount();
+				String msg = "账户可用余额：" + merchantaccount.getBalance() + "\n总充值金额：" + merchantaccount.getTotalincome() + "\n总支出金额：" + merchantaccount.getWithdrawamount();
 				sendReplyText(chatid, messageid, msg);
 			} else {
 				sendText(chatid, "没有查询到账户信息！");
@@ -162,16 +160,13 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 				String msg = "订单号：" + orderno + "\n没有查询到此订单，请核实订单号在发送。";
 				sendReplyText(chatid, messageid, msg);
 			} else {
-				String msg = "订单号：" + orderno + "\n名字:" + po.getAccname() + "\n卡号:" + po.getAccnumer() + "\n金额:"
-						+ po.getAmount() + "\n已经联系通道部加急处理，稍后查看回复你结果。";
+				String msg = "订单号：" + orderno + "\n名字:" + po.getAccname() + "\n卡号:" + po.getAccnumer() + "\n金额:" + po.getAmount() + "\n已经联系通道部加急处理，稍后查看回复你结果。";
 				sendReplyText(chatid, messageid, msg);
 				Tgchannelgroup tcg = tgchannelgroupmapper.getByChannelId(po.getChannelid());
-				String cmsg = "订单号：" + po.getChannelordernum() + "\n名字:" + po.getAccname() + "\n卡号:" + po.getAccnumer()
-						+ "\n金额:" + po.getAmount() + "\n客户加急催单。请回复！";
+				String cmsg = "订单号：" + po.getChannelordernum() + "\n名字:" + po.getAccname() + "\n卡号:" + po.getAccnumer() + "\n金额:" + po.getAmount() + "\n客户加急催单。请回复！";
 				cbot.sendText(tcg.getTgid(), cmsg);
 			}
-		} else if (message.equals("#z") && (username.equals(tmg.getAdminmangers()) || username.equals(tmg.getMangers()))
-				|| username.equals(tmg.getCustomermangers())) {
+		} else if (message.equals("#z") && (username.equals(tmg.getAdminmangers()) || username.equals(tmg.getMangers())) || username.equals(tmg.getCustomermangers())) {
 			// 订单统计
 			StringBuffer sb = new StringBuffer();
 			sb.append("今日订单：" + tmg.getTodaycountorder() + " 笔\n");
@@ -183,19 +178,16 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 			sb.append("总打款：" + tmg.getCount() + " ￥\n");
 			sb.append("\n");
 			sendText(chatid, sb.toString());
-		} else if (message.indexOf("#e") >= 0
-				&& (username.equals(tmg.getAdminmangers()) || username.equals(tmg.getMangers()))) {
+		} else if (message.indexOf("#e") >= 0 && (username.equals(tmg.getAdminmangers()) || username.equals(tmg.getMangers()))) {
 			// 二维码收款单
 			Double amount = 0.00;
 			String str = message.substring(2, message.length());
 			if (str.matches("-?\\d+(\\.\\d+)?")) {
 				amount = Double.valueOf(str);
 			}
-			if (update.getMessage().getReplyToMessage() != null
-					&& update.getMessage().getReplyToMessage().getPhoto().size() != 0) {
+			if (update.getMessage().getReplyToMessage() != null && update.getMessage().getReplyToMessage().getPhoto().size() != 0) {
 				Integer replyid = update.getMessage().getReplyToMessage().getMessageId();
-				PhotoSize photo = update.getMessage().getReplyToMessage().getPhoto()
-						.get(update.getMessage().getReplyToMessage().getPhoto().size() - 1);
+				PhotoSize photo = update.getMessage().getReplyToMessage().getPhoto().get(update.getMessage().getReplyToMessage().getPhoto().size() - 1);
 				GetFile getFile = new GetFile();
 				getFile.setFileId(photo.getFileId());
 				try {
@@ -277,8 +269,7 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 
 	// 复制消息
 	public void copyMessage(Long who, Integer msgId) {
-		CopyMessage cm = CopyMessage.builder().fromChatId(who.toString()).chatId(who.toString()).messageId(msgId)
-				.build();
+		CopyMessage cm = CopyMessage.builder().fromChatId(who.toString()).chatId(who.toString()).messageId(msgId).build();
 		try {
 			execute(cm);
 		} catch (TelegramApiException e) {
@@ -288,8 +279,7 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 
 	// 转发
 	public void forwardMessage(Long who, Integer msgId) {
-		ForwardMessage cm = ForwardMessage.builder().fromChatId(who.toString()).chatId(who.toString()).messageId(msgId)
-				.build();
+		ForwardMessage cm = ForwardMessage.builder().fromChatId(who.toString()).chatId(who.toString()).messageId(msgId).build();
 		try {
 			execute(cm);
 		} catch (TelegramApiException e) {
@@ -298,8 +288,7 @@ public class MerchantMsgBot extends TelegramLongPollingBot {
 	}
 
 	public void sendMenu(Long who, String txt, InlineKeyboardMarkup kb) {
-		SendMessage sm = SendMessage.builder().chatId(who.toString()).parseMode("HTML").text(txt).replyMarkup(kb)
-				.build();
+		SendMessage sm = SendMessage.builder().chatId(who.toString()).parseMode("HTML").text(txt).replyMarkup(kb).build();
 
 		try {
 			execute(sm);

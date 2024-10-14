@@ -38,16 +38,14 @@ public class UserController extends YtBaseEncipherControllerImpl<User, Long> {
 
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<User> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
 	@Override
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> put(YtRequestDecryptEntity<User> YtRequestDecryptEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> put(YtRequestDecryptEntity<User> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
 		User u = YtRequestDecryptEntity.getBody();
 		u.setToken(request.getHeader(SecurityConstant.AUTHORIZATION_KEY));
 		Integer i = service.put(u);
@@ -55,16 +53,13 @@ public class UserController extends YtBaseEncipherControllerImpl<User, Long> {
 	}
 
 	@RequestMapping(value = "/getUserPerm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> getUserPerm(YtRequestDecryptEntity<SysUserPermDTO> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
-		SysUserPermVO suserperm = service
-				.getUserPerm(SysUserPermDTO.builder().userId(SysUserContext.getUserId()).build());
+	public YtResponseEncryptEntity<Object> getUserPerm(YtRequestDecryptEntity<SysUserPermDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		SysUserPermVO suserperm = service.getUserPerm(SysUserPermDTO.builder().userId(SysUserContext.getUserId()).build());
 		return new YtResponseEncryptEntity<Object>(new YtBody(suserperm));
 	}
 
 	@RequestMapping(value = "/resetpassword", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> resetpassword(YtRequestDecryptEntity<User> YtRequestDecryptEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> resetpassword(YtRequestDecryptEntity<User> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
 		User u = YtRequestDecryptEntity.getBody();
 		u.setToken(request.getHeader(SecurityConstant.AUTHORIZATION_KEY));
 		Integer i = service.resetpassword(u);

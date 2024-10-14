@@ -30,8 +30,7 @@ import cn.hutool.core.lang.Assert;
  * 
  */
 @RestController
-public abstract class YtBaseEncipherControllerImpl<T, ID extends Serializable>
-		implements YtIBaseEncipherController<T, ID> {
+public abstract class YtBaseEncipherControllerImpl<T, ID extends Serializable> implements YtIBaseEncipherController<T, ID> {
 
 	@Autowired
 	private YtIBaseService<T, Long> service;
@@ -43,8 +42,7 @@ public abstract class YtBaseEncipherControllerImpl<T, ID extends Serializable>
 	 */
 	@Override
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> post(YtRequestDecryptEntity<T> YtRequestDecryptEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> post(YtRequestDecryptEntity<T> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.post(YtRequestDecryptEntity.getBody());
 		Assert.notEquals(i, 0, "新增失败！");
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
@@ -57,8 +55,7 @@ public abstract class YtBaseEncipherControllerImpl<T, ID extends Serializable>
 	 */
 	@Override
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> put(YtRequestDecryptEntity<T> YtRequestDecryptEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> put(YtRequestDecryptEntity<T> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.put(YtRequestDecryptEntity.getBody());
 		Assert.notEquals(i, 0, "修改失败！");
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
@@ -71,8 +68,7 @@ public abstract class YtBaseEncipherControllerImpl<T, ID extends Serializable>
 	 */
 	@Override
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> get(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> get(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 		T t = service.get(id);
 		Assert.notNull(t, "访问的资源不存在！");
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
@@ -85,8 +81,7 @@ public abstract class YtBaseEncipherControllerImpl<T, ID extends Serializable>
 	 */
 	@Override
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> delete(@PathVariable Long id, HttpServletRequest request,
-			HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> delete(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.delete(id);
 		Assert.notEquals(i, 0, "删除失败！");
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
@@ -99,8 +94,7 @@ public abstract class YtBaseEncipherControllerImpl<T, ID extends Serializable>
 	 */
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> YtRequestDecryptEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<?> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(YtRequestDecryptEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}

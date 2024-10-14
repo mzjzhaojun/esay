@@ -17,45 +17,45 @@ import java.util.List;
 import java.util.Map;
 
 /**
-* @author zj default
-* 
-* @version v1
-* @createdate2024-09-08 01:31:33
-*/
+ * @author zj default
+ * 
+ * @version v1 @createdate2024-09-08 01:31:33
+ */
 
 @Service
-public class TronrecordServiceImpl extends YtBaseServiceImpl<Tronrecord, Long> implements TronrecordService{
-@Autowired
-private TronrecordMapper mapper;
+public class TronrecordServiceImpl extends YtBaseServiceImpl<Tronrecord, Long> implements TronrecordService {
+	@Autowired
+	private TronrecordMapper mapper;
 
-@Override
-@Transactional
-public Integer post(Tronrecord t) {
-Integer i = mapper.post(t);
-return i;
-}
+	@Override
+	@Transactional
+	public Integer post(Tronrecord t) {
+		Integer i = mapper.post(t);
+		return i;
+	}
 
-@Override
-@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-public YtIPage<Tronrecord> list(Map<String, Object> param) {
-List<Tronrecord> list = mapper.list(param);
-return new YtPageBean<Tronrecord>(list);
-}
+	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+	public YtIPage<Tronrecord> list(Map<String, Object> param) {
+		List<Tronrecord> list = mapper.list(param);
+		return new YtPageBean<Tronrecord>(list);
+	}
 
-@Override
-@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-public Tronrecord get(Long id) {
-Tronrecord t = mapper.get(id);
-return t;
-}
-@Override
-@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-public YtIPage<TronrecordVO> page(Map<String, Object> param) {
-int count = mapper.countlist(param);
-if (count == 0) {
-return new YtPageBean<TronrecordVO>(Collections.emptyList());
-}
-List<TronrecordVO> list = mapper.page(param);
-return new YtPageBean<TronrecordVO>(param, list, count);
-}
+	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+	public Tronrecord get(Long id) {
+		Tronrecord t = mapper.get(id);
+		return t;
+	}
+
+	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+	public YtIPage<TronrecordVO> page(Map<String, Object> param) {
+		int count = mapper.countlist(param);
+		if (count == 0) {
+			return new YtPageBean<TronrecordVO>(Collections.emptyList());
+		}
+		List<TronrecordVO> list = mapper.page(param);
+		return new YtPageBean<TronrecordVO>(param, list, count);
+	}
 }

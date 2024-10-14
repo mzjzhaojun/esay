@@ -35,15 +35,11 @@ public class ExchangeGetChannelOrderNumThread implements Runnable {
 	public void run() {
 		TenantIdContext.removeFlag();
 		ExchangeMapper mapper = BeanContext.getApplicationContext().getBean(ExchangeMapper.class);
-		TgmerchantchannelmsgMapper tgmerchantchannelmsgmapper = BeanContext.getApplicationContext()
-				.getBean(TgmerchantchannelmsgMapper.class);
+		TgmerchantchannelmsgMapper tgmerchantchannelmsgmapper = BeanContext.getApplicationContext().getBean(TgmerchantchannelmsgMapper.class);
 		ChannelMapper channelmapper = BeanContext.getApplicationContext().getBean(ChannelMapper.class);
-		TgchannelgroupMapper tgchannelgroupmapper = BeanContext.getApplicationContext()
-				.getBean(TgchannelgroupMapper.class);
-		ChannelaccountorderMapper channelaccountordermapper = BeanContext.getApplicationContext()
-				.getBean(ChannelaccountorderMapper.class);
-		ChannelaccountService channelaccountservice = BeanContext.getApplicationContext()
-				.getBean(ChannelaccountService.class);
+		TgchannelgroupMapper tgchannelgroupmapper = BeanContext.getApplicationContext().getBean(TgchannelgroupMapper.class);
+		ChannelaccountorderMapper channelaccountordermapper = BeanContext.getApplicationContext().getBean(ChannelaccountorderMapper.class);
+		ChannelaccountService channelaccountservice = BeanContext.getApplicationContext().getBean(ChannelaccountService.class);
 		ChannelMsgBot cbot = BeanContext.getApplicationContext().getBean(ChannelMsgBot.class);
 		Exchange exchange = mapper.get(id);
 		Random rd = new Random();

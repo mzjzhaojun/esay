@@ -34,8 +34,7 @@ public class MenuController extends YtBaseEncipherControllerImpl<Menu, Long> {
 	private MenuService service;
 
 	@RequestMapping(value = "/tree", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> tree(YtRequestDecryptEntity<SysMenuTreeDTO> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> tree(YtRequestDecryptEntity<SysMenuTreeDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		List<SysMenuTreeVO> list = service.tree(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}

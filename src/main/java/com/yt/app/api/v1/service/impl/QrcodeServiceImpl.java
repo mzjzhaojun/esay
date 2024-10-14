@@ -89,8 +89,7 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	public YtIPage<QrcodeVO> page(Map<String, Object> param) {
 
 		if (param.get("qrcodeaisleid") != null) {
-			List<Qrcodeaisleqrcode> listmqas = qrcodeaisleqrcodemapper
-					.getByQrcodeAisleId(Long.valueOf(param.get("qrcodeaisleid").toString()));
+			List<Qrcodeaisleqrcode> listmqas = qrcodeaisleqrcodemapper.getByQrcodeAisleId(Long.valueOf(param.get("qrcodeaisleid").toString()));
 			if (listmqas.size() > 0) {
 				long[] qraids = listmqas.stream().mapToLong(mqa -> mqa.getQrcodelid()).distinct().toArray();
 				param.put("existids", qraids);
@@ -119,8 +118,7 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 
 	public AlipayTradePrecreateResponse alif2f(Qrcode qrcode, Double amount, Integer exp) {
 		try {
-			AlipayClient client = AliPayUtil.initAliPay(qrcode.getAppid(), qrcode.getAppprivatekey(),
-					qrcode.getApppublickey(), qrcode.getAlipaypublickey(), qrcode.getAlipayprovatekey());
+			AlipayClient client = AliPayUtil.initAliPay(qrcode.getAppid(), qrcode.getAppprivatekey(), qrcode.getApppublickey(), qrcode.getAlipaypublickey(), qrcode.getAlipayprovatekey());
 			AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
 			AlipayTradePrecreateModel model = new AlipayTradePrecreateModel();
 			model.setOutTradeNo(StringUtil.getOrderNum());

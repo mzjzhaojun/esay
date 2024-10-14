@@ -116,8 +116,7 @@ public interface QrcodeaisleqrcodeMapper extends YtIBaseMapper<Qrcodeaisleqrcode
 	 * @return
 	 */
 	@YtRedisCacheAnnotation(classs = Qrcodeaisleqrcode.class)
-	public Qrcodeaisleqrcode getByAidCid(@Param("qrcodelid") Long qrcodelid,
-			@Param("qrcodeaisleid") Long qrcodeaisleid);
+	public Qrcodeaisleqrcode getByAidCid(@Param("qrcodelid") Long qrcodelid, @Param("qrcodeaisleid") Long qrcodeaisleid);
 
 	/**
 	 * deleteByQrcodeaisleId

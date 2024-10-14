@@ -142,8 +142,7 @@ public class YtHttpEntity<T> {
 			return false;
 		}
 		YtHttpEntity<?> otherEntity = (YtHttpEntity<?>) other;
-		return (ObjectUtils.nullSafeEquals(this.headers, otherEntity.headers)
-				&& ObjectUtils.nullSafeEquals(this.body, otherEntity.body));
+		return (ObjectUtils.nullSafeEquals(this.headers, otherEntity.headers) && ObjectUtils.nullSafeEquals(this.body, otherEntity.body));
 	}
 
 	@Override

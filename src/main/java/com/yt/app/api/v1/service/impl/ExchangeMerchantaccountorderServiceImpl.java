@@ -43,8 +43,7 @@ import java.util.Map;
  */
 
 @Service
-public class ExchangeMerchantaccountorderServiceImpl extends YtBaseServiceImpl<ExchangeMerchantaccountorder, Long>
-		implements ExchangeMerchantaccountorderService {
+public class ExchangeMerchantaccountorderServiceImpl extends YtBaseServiceImpl<ExchangeMerchantaccountorder, Long> implements ExchangeMerchantaccountorderService {
 	@Autowired
 	private ExchangeMerchantaccountorderMapper mapper;
 
@@ -209,8 +208,7 @@ public class ExchangeMerchantaccountorderServiceImpl extends YtBaseServiceImpl<E
 		try {
 			lock.lock();
 			User u = usermapper.get(SysUserContext.getUserId());
-			boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()),
-					System.currentTimeMillis());
+			boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
 			Assert.isTrue(isValid, "验证码错误！");
 			ExchangeMerchantaccountorder mao = mapper.get(mco.getId());
 			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_10)) {
@@ -264,8 +262,7 @@ public class ExchangeMerchantaccountorderServiceImpl extends YtBaseServiceImpl<E
 	public void withdrawmanual(ExchangeMerchantaccountorder mco) {
 		RLock lock = RedissonUtil.getLock(mco.getId());
 		User u = usermapper.get(SysUserContext.getUserId());
-		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()),
-				System.currentTimeMillis());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
 		Assert.isTrue(isValid, "验证码错误！");
 		try {
 			lock.lock();

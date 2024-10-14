@@ -33,8 +33,7 @@ public class ScopedataController extends YtBaseEncipherControllerImpl<Scopedata,
 	private ScopedataService service;
 
 	@RequestMapping(value = "/tree", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> tree(YtRequestDecryptEntity<SysScopeDataBaseDTO> requestEntity,
-			HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> tree(YtRequestDecryptEntity<SysScopeDataBaseDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		List<Scopedata> list = service.tree(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}

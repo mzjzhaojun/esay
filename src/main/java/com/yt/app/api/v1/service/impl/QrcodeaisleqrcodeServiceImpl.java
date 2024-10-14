@@ -29,8 +29,7 @@ import java.util.Map;
  */
 
 @Service
-public class QrcodeaisleqrcodeServiceImpl extends YtBaseServiceImpl<Qrcodeaisleqrcode, Long>
-		implements QrcodeaisleqrcodeService {
+public class QrcodeaisleqrcodeServiceImpl extends YtBaseServiceImpl<Qrcodeaisleqrcode, Long> implements QrcodeaisleqrcodeService {
 	@Autowired
 	private QrcodeaisleqrcodeMapper mapper;
 

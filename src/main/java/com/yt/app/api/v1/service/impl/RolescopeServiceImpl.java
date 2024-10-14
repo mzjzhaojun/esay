@@ -89,14 +89,11 @@ public class RolescopeServiceImpl extends YtBaseServiceImpl<Rolescope, Long> imp
 		}
 
 		// 1、查询角色关联的旧菜单权限信息
-		List<Rolescope> roleReDataListOld = this.sysRoleScopeMapper
-				.selectList(new LambdaQueryWrapper<Rolescope>().eq(Rolescope::getRole_id, roleId));
+		List<Rolescope> roleReDataListOld = this.sysRoleScopeMapper.selectList(new LambdaQueryWrapper<Rolescope>().eq(Rolescope::getRole_id, roleId));
 		// 权限id -> 主键id
-		Map<Long, Long> mapOld = roleReDataListOld.stream()
-				.collect(Collectors.toMap(Rolescope::getScope_id, Rolescope::getId, (oldData, newData) -> newData));
+		Map<Long, Long> mapOld = roleReDataListOld.stream().collect(Collectors.toMap(Rolescope::getScope_id, Rolescope::getId, (oldData, newData) -> newData));
 		// 旧权限id
-		List<Long> roleReScopeIdListOld = roleReDataListOld.stream().map(Rolescope::getScope_id)
-				.collect(Collectors.toList());
+		List<Long> roleReScopeIdListOld = roleReDataListOld.stream().map(Rolescope::getScope_id).collect(Collectors.toList());
 
 		// 2、拿到要删除的旧权限id
 		List<Long> delScopeIdList = CollUtil.subtractToList(roleReScopeIdListOld, scopeIdList);
@@ -107,8 +104,7 @@ public class RolescopeServiceImpl extends YtBaseServiceImpl<Rolescope, Long> imp
 
 		// 3、再保存角色关联的权限信息
 		List<Rolescope> roleScopeList = Lists.newArrayList();
-		scopeIdList.forEach(scopeId -> roleScopeList
-				.add(Rolescope.builder().id(mapOld.get(scopeId)).role_id(roleId).scope_id(scopeId).build()));
+		scopeIdList.forEach(scopeId -> roleScopeList.add(Rolescope.builder().id(mapOld.get(scopeId)).role_id(roleId).scope_id(scopeId).build()));
 		this.sysRoleScopeMapper.insertBatchSomeColumn(roleScopeList);
 	}
 

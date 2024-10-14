@@ -43,8 +43,7 @@ import java.util.Map;
  */
 
 @Service
-public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccountorder, Long>
-		implements AgentaccountorderService {
+public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccountorder, Long> implements AgentaccountorderService {
 
 	@Autowired
 	private AgentaccountorderMapper mapper;
@@ -140,8 +139,7 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 	@Transactional
 	public void withdrawmanual(Agentaccountorder aco) {
 		User u = usermapper.get(SysUserContext.getUserId());
-		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(aco.getRemark()),
-				System.currentTimeMillis());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(aco.getRemark()), System.currentTimeMillis());
 		Assert.isTrue(isValid, "验证码错误！");
 		Agentaccountorder mao = mapper.get(aco.getId());
 		mao.setStatus(aco.getStatus());
