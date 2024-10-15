@@ -15,4 +15,6 @@ import com.yt.app.common.common.yt.YtIPage;
 
 public interface TronmemberService extends YtIBaseService<Tronmember, Long> {
 	YtIPage<TronmemberVO> page(Map<String, Object> param);
+
+	Tronmember getByTgId(Long id);
 }

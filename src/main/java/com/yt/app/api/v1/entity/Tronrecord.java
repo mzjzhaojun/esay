@@ -32,9 +32,5 @@ public class Tronrecord extends YtBaseEntity<Tronrecord> {
 	Object sunamount;
 	Object trxamount;
 	String remark;
-	Long create_by;
-	java.util.Date create_time;
-	Long update_by;
-	java.util.Date update_time;
 	Integer version;
 }

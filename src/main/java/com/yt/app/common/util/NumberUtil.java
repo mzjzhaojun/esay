@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
+import com.yt.app.common.base.constant.SystemConstant;
+
 /**
  * 数字工具类
  * 
@@ -139,6 +141,36 @@ public class NumberUtil {
 	public static String getRunningCode() {
 		String code = String.valueOf(new Date().getTime());
 		return String.valueOf(Long.parseLong(code.substring(code.length() - 8)) + 10000000); // 流水编号
+	}
+
+	public static Double getIncomeFewAmount(Long qid) {
+		Double min = 0.01;
+		for (int i = 1; i <= 30; i++) {
+			String key = SystemConstant.CACHE_SYS_QRCODE + qid + "" + min;
+			if (!RedisUtil.hasKey(key)) {
+				RedisUtil.set(key, min.toString());
+				return min;
+			} else {
+				min = min + 0.01;
+			}
+		}
+		min = 10.00;
+		return min;
+	}
+
+	public static Double getExchangeFewAmount(String qid) {
+		Double min = 0.001;
+		for (int i = 1; i <= 100; i++) {
+			String key = SystemConstant.CACHE_SYS_EXCHANGETRX + qid + "" + min;
+			if (!RedisUtil.hasKey(key)) {
+				RedisUtil.set(key, min.toString());
+				return min;
+			} else {
+				min = min + 0.001;
+			}
+		}
+		min = 10.00;
+		return min;
 	}
 
 }

@@ -50,4 +50,9 @@ public interface SystemConstant {
 	 * 挂碼
 	 */
 	String CACHE_SYS_QRCODE = "payboot:system:qrcode:";
+
+	/**
+	 * 兑换trx
+	 */
+	String CACHE_SYS_EXCHANGETRX = "payboot:system:exchangetrx:";
 }

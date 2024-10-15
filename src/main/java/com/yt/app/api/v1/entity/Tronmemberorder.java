@@ -11,27 +11,35 @@ import com.yt.app.common.base.YtBaseEntity;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2024-09-08 01:31:33
+ * @version v1 @createdate2024-10-15 00:23:49
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Tronmember extends YtBaseEntity<Tronmember> {
+public class Tronmemberorder extends YtBaseEntity<Tronmemberorder> {
 
 	private static final long serialVersionUID = 1L;
 
 	Long id;
 	Long tenant_id;
+	Long chatid;
+	Integer messageid;
 	Long tgid;
-	String name;
-	Object usdtbalance;
-	Object trxbalance;
-	Object sunbalance;
-	Object netbalance;
-	Integer integral;
-	String address;
+	String ordernum;
+	Integer type;
+	String goodsname;
+	String fromaddress;
+	Double amount;
+	Double realamount;
+	Integer trxamount;
+	Double usdtamount;
+	Double fewamount;
+	String incomeaddress;
+	Integer status;
 	String remark;
+	java.util.Date successdate;
+	java.util.Date expireddate;
 	Integer version;
 }

@@ -2,6 +2,10 @@ package com.yt.app.common.bot.message.Keyboard;
 
 public class ButtonResource {
 
+	public final static String EXCHANGE = "兑换";
+
+	public final static String UPSTEP = "撤销重选";
+
 	public static class Button {
 		private String name;
 		private String callBackData;
@@ -20,14 +24,14 @@ public class ButtonResource {
 		}
 	}
 
-	public final static Button flash_exchange_10 = new Button("10U兑换", "10");
-	public final static Button flash_exchange_20 = new Button("20U兑换", "20");
-	public final static Button flash_exchange_30 = new Button("30U兑换", "30");
-	public final static Button flash_exchange_50 = new Button("50U兑换", "50");
-	public final static Button flash_exchange_100 = new Button("100U兑换", "100");
-	public final static Button flash_exchange_200 = new Button("200U兑换", "200");
-	public final static Button flash_exchange_500 = new Button("500U兑换", "500");
-	public final static Button flash_exchange_1000 = new Button("100U兑换", "1000");
+	public final static Button FLASH_EXCHANGE_10 = new Button("兑换10U", "10兑换");
+	public final static Button FLASH_EXCHANGE_20 = new Button("兑换20U", "20兑换");
+	public final static Button FLASH_EXCHANGE_30 = new Button("兑换30U", "30兑换");
+	public final static Button FLASH_EXCHANGE_50 = new Button("兑换50U", "50兑换");
+	public final static Button FLASH_EXCHANGE_100 = new Button("兑换100U", "100兑换");
+	public final static Button FLASH_EXCHANGE_200 = new Button("兑换200U", "200兑换");
+	public final static Button FLASH_EXCHANGE_500 = new Button("兑换500U", "500兑换");
+	public final static Button FLASH_EXCHANGE_1000 = new Button("兑换1000U", "1000兑换");
 
-	public final static Button flash_exchange_back = new Button("上一步", "up");
+	public final static Button FLASH_EXCHANGE_BACK = new Button(UPSTEP, UPSTEP);
 }

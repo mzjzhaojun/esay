@@ -6,12 +6,12 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.constant.SystemConstant;
-import com.yt.app.common.bot.message.UpdateService;
+import com.yt.app.common.bot.message.UpdateMessageService;
 import com.yt.app.common.bot.message.Keyboard.InlineKeyboard;
 import com.yt.app.common.util.RedisUtil;
 
 @Component
-public class MemberFlashExchangeMessage implements UpdateService {
+public class MemberFlashExchangeMessage implements UpdateMessageService {
 
 	@Override
 	public SendMessage getUpdate(Update update) {

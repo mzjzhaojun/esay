@@ -1,76 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yt.app.api.v1.mapper.TronmemberMapper">
+<mapper
+	namespace="com.yt.app.api.v1.mapper.TronmemberorderMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,tgid,name,usdtbalance,trxbalance,sunbalance,netbalance,integral,address,remark,create_by,create_time,update_by,update_time,version
+		id,tenant_id,chatid,messageid,tgid,ordernum,type,goodsname,fromaddress,amount,realamount,trxamount,usdtamount,fewamount,incomeaddress,status,remark,successdate,expireddate,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Tronmember">
+		type="com.yt.app.api.v1.entity.Tronmemberorder">
 	</resultMap>
 	<!-- ResultMap -->
 	<resultMap id="ResultMapVO"
-		type="com.yt.app.api.v1.vo.TronmemberVO">
+		type="com.yt.app.api.v1.vo.TronmemberorderVO">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Tronmember">
+		parameterType="com.yt.app.api.v1.entity.Tronmemberorder">
 		insert into
-		tronmember(id,tgid,name,remark,create_by,create_time,update_by,update_time)
+		tronmemberorder(id,tenant_id,chatid,messageid,tgid,ordernum,type,goodsname,fromaddress,amount,realamount,trxamount,usdtamount,fewamount,incomeaddress,status,remark,successdate,expireddate,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{tgid},#{name},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{tenant_id},#{chatid},#{messageid},#{tgid},#{ordernum},#{type},#{goodsname},#{fromaddress},#{amount},#{realamount},#{trxamount},#{usdtamount},#{fewamount},#{incomeaddress},#{status},#{remark},#{successdate},#{expireddate},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		tronmember(id,tenant_id,tgid,name,usdtbalance,trxbalance,sunbalance,netbalance,integral,address,remark,create_by,create_time,update_by,update_time)
+		tronmemberorder(id,tenant_id,chatid,messageid,tgid,ordernum,type,goodsname,fromaddress,amount,realamount,trxamount,usdtamount,fewamount,incomeaddress,status,remark,successdate,expireddate,create_by,create_time,update_by,update_time)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{tgid},#{name},#{usdtbalance},#{trxbalance},#{sunbalance},#{netbalance},#{integral},#{address},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+			(#{id},#{tenant_id},#{chatid},#{messageid},#{tgid},#{ordernum},#{type},#{goodsname},#{fromaddress},#{amount},#{realamount},#{trxamount},#{usdtamount},#{fewamount},#{incomeaddress},#{status},#{remark},#{successdate},#{expireddate},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from tronmember
-		where id
-		= #{id}
+		delete from tronmemberorder
+		where id = #{id}
 	</delete>
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Tronmember">
-		update tronmember
+		parameterType="com.yt.app.api.v1.entity.Tronmemberorder">
+		update tronmemberorder
 		<set>
 			<if test="tenant_id != null">
 				tenant_id= #{tenant_id},
 			</if>
+			<if test="chatid != null">
+				chatid= #{chatid},
+			</if>
+			<if test="messageid != null">
+				messageid= #{messageid},
+			</if>
 			<if test="tgid != null">
 				tgid= #{tgid},
 			</if>
-			<if test="name != null">
-				name= #{name},
+			<if test="ordernum != null">
+				ordernum= #{ordernum},
 			</if>
-			<if test="usdtbalance != null">
-				usdtbalance= #{usdtbalance},
+			<if test="type != null">
+				type= #{type},
 			</if>
-			<if test="trxbalance != null">
-				trxbalance= #{trxbalance},
+			<if test="goodsname != null">
+				goodsname= #{goodsname},
 			</if>
-			<if test="sunbalance != null">
-				sunbalance= #{sunbalance},
+			<if test="fromaddress != null">
+				fromaddress= #{fromaddress},
 			</if>
-			<if test="netbalance != null">
-				netbalance= #{netbalance},
+			<if test="amount != null">
+				amount= #{amount},
 			</if>
-			<if test="integral != null">
-				integral= #{integral},
+			<if test="realamount != null">
+				realamount= #{realamount},
 			</if>
-			<if test="address != null">
-				address= #{address},
+			<if test="trxamount != null">
+				trxamount= #{trxamount},
+			</if>
+			<if test="usdtamount != null">
+				usdtamount= #{usdtamount},
+			</if>
+			<if test="fewamount != null">
+				fewamount= #{fewamount},
+			</if>
+			<if test="incomeaddress != null">
+				incomeaddress= #{incomeaddress},
+			</if>
+			<if test="status != null">
+				status= #{status},
 			</if>
 			<if test="remark != null">
 				remark= #{remark},
+			</if>
+			<if test="successdate != null">
+				successdate= #{successdate},
+			</if>
+			<if test="expireddate != null">
+				expireddate= #{expireddate},
 			</if>
 			<if test="create_by != null">
 				create_by= #{create_by},
@@ -88,30 +112,22 @@
 				version= #{version}+1
 			</if>
 		</set>
-		where id = #{id}
+		where id = #{id} and version = #{version}
 	</update>
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from tronmember
+		from tronmemberorder
 		where id = #{id}
-	</select>
-	<!--getById -->
-	<select id="getByTgId" parameterType="java.lang.Long"
-		resultMap="ResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from tronmember
-		where tgid= #{tgid}
 	</select>
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from tronmember
+		from tronmemberorder
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -124,7 +140,7 @@
 		resultMap="ResultMapVO">
 		select
 		<include refid="Base_Column_List" />
-		from tronmember
+		from tronmemberorder
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -141,7 +157,7 @@
 	<!-- getCount -->
 	<select id="countlist" parameterType="java.util.HashMap"
 		resultType="int">
-		select count(*) from tronmember
+		select count(*) from tronmemberorder
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -154,7 +170,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from tronmember
+		from tronmemberorder
 		<where>
 			1=1
 			<if test="array != null and array.length > 0">

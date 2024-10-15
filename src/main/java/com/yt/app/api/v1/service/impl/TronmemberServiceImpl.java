@@ -58,4 +58,10 @@ public class TronmemberServiceImpl extends YtBaseServiceImpl<Tronmember, Long> i
 		List<TronmemberVO> list = mapper.page(param);
 		return new YtPageBean<TronmemberVO>(param, list, count);
 	}
+
+	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+	public Tronmember getByTgId(Long id) {
+		return mapper.getByTgId(id);
+	}
 }

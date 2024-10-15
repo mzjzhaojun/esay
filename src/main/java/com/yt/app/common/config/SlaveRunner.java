@@ -9,6 +9,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.yt.app.common.runnable.TronGetAddressThread6;
+import com.yt.app.common.tron.TronMonitor;
 
 /**
  * <p>
@@ -32,25 +33,25 @@ public class SlaveRunner implements CommandLineRunner {
 
 		log.info("slave 服务初始化之后，执行生成靓号地址...");
 
-		// 生成地址6
-		TronGetAddressThread6 tga62 = new TronGetAddressThread6();
-		threadpooltaskexecutor.execute(tga62);
-
-		// 生成地址6
-		TronGetAddressThread6 tga63 = new TronGetAddressThread6();
-		threadpooltaskexecutor.execute(tga63);
-
-		// 生成地址6
-		TronGetAddressThread6 tga64 = new TronGetAddressThread6();
-		threadpooltaskexecutor.execute(tga64);
-
-		// 生成地址6
-		TronGetAddressThread6 tga66 = new TronGetAddressThread6();
-		threadpooltaskexecutor.execute(tga66);
-
-		// 生成地址6
-		TronGetAddressThread6 tga68 = new TronGetAddressThread6();
-		threadpooltaskexecutor.execute(tga68);
+//		// 生成地址6
+//		TronGetAddressThread6 tga62 = new TronGetAddressThread6();
+//		threadpooltaskexecutor.execute(tga62);
+//
+//		// 生成地址6
+//		TronGetAddressThread6 tga63 = new TronGetAddressThread6();
+//		threadpooltaskexecutor.execute(tga63);
+//
+//		// 生成地址6
+//		TronGetAddressThread6 tga64 = new TronGetAddressThread6();
+//		threadpooltaskexecutor.execute(tga64);
+//
+//		// 生成地址6
+//		TronGetAddressThread6 tga66 = new TronGetAddressThread6();
+//		threadpooltaskexecutor.execute(tga66);
+//
+//		// 生成地址6
+//		TronGetAddressThread6 tga68 = new TronGetAddressThread6();
+//		threadpooltaskexecutor.execute(tga68);
 
 	}
 }

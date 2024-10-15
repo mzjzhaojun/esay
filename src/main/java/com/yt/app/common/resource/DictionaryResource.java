@@ -172,4 +172,8 @@ public class DictionaryResource implements Serializable {
 	public static final Integer PROJECT_TYPE_511 = 511;
 	public static final Integer PROJECT_TYPE_512 = 512;
 
+	// 兑换类型
+	public static final Integer EXCHANGE_TYPE_601 = 601;
+	public static final Integer EXCHANGE_TYPE_602 = 602;
+
 }

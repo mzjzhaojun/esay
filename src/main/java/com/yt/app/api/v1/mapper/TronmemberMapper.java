@@ -95,4 +95,14 @@ public interface TronmemberMapper extends YtIBaseMapper<Tronmember> {
 	 */
 	@YtRedisCacheAnnotation(classs = Tronmember.class)
 	public List<Tronmember> listByArrayId(long[] id);
+
+	/**
+	 * getByTgId
+	 *
+	 * @param id id
+	 * @return count
+	 */
+	@YtRedisCacheAnnotation(classs = Tronmember.class)
+	public Tronmember getByTgId(Long id);
+
 }

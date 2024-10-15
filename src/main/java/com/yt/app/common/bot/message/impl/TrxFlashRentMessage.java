@@ -1,56 +1,78 @@
 package com.yt.app.common.bot.message.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.MaybeInaccessibleMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
+import com.yt.app.api.v1.entity.Tronmember;
+import com.yt.app.api.v1.entity.Tronmemberorder;
+import com.yt.app.api.v1.mapper.TronmemberorderMapper;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.constant.SystemConstant;
-import com.yt.app.common.bot.message.UpdateService;
+import com.yt.app.common.bot.message.UpdateMessageService;
+import com.yt.app.common.bot.message.Keyboard.ButtonResource;
 import com.yt.app.common.bot.message.Keyboard.InlineKeyboard;
+import com.yt.app.common.resource.DictionaryResource;
+import com.yt.app.common.util.NumberUtil;
 import com.yt.app.common.util.RedisUtil;
+import com.yt.app.common.util.StringUtil;
 
 @Component
-public class TrxFlashRentMessage implements UpdateService {
+public class TrxFlashRentMessage implements UpdateMessageService {
+
+	@Autowired
+	private TronmemberorderMapper tronmemberordermapper;
 
 	@Override
 	public SendMessage getUpdate(Update update) {
 		Double price = Double.valueOf(RedisUtil.get(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTOTEXCHANGE));
 		SendMessage sendMessage = new SendMessage();
 		sendMessage.setChatId(update.getMessage().getChatId().toString());
-		sendMessage.setText("*实时汇率*\r\n" + "1 USDT = " + (price - 0.65) + " TRX  \r\n" + "\r\n" + "自动兑换地址:\r\n" + "`TUrntwm5t9umKhC7jv89RXGo33qcTFAAAA` (点击地址自动复制)\r\n" + "\r\n" + "请不要使用交易所转账‼️\r\n" + "切记切记，否则丢失自负‼️\r\n" + "\r\n"
-				+ "转账即兑，全自动返，等值 10u 起换\r\n" + "\r\n" + "选择兑换数量\r\n" + "例如: “10U” 可实时计算10U可兑换的TRX数量=" + (10 * (price - 0.65)) + "\r\n");
+		sendMessage.setText("*实时汇率*\r\n" + "1 USDT = " + (price - 0.62) + " TRX  \r\n" + "\r\n" + "自动兑换地址:\r\n" + "`TUrntwm5t9umKhC7jv89RXGo33qcTFAAAA` (点击地址自动复制)\r\n" + "\r\n" + "请不要使用交易所转账‼️\r\n" + "切记切记，否则丢失自负‼️\r\n" + "\r\n"
+				+ "转账即兑，全自动返，等值 10u 起换\r\n" + "\r\n" + "选择兑换数量\r\n" + "例如: “10U” 可实时计算10U可兑换的TRX数量=" + (10 * (price - 0.62)) + "\r\n");
 		sendMessage.enableMarkdown(true);
 		sendMessage.setReplyMarkup(InlineKeyboard.getInlineKeyboardMarkup());
 		return sendMessage;
 	}
 
-	public EditMessageText excuteEditMessage(Update update) {
-
-		MaybeInaccessibleMessage originalMessage = update.getCallbackQuery().getMessage();
+	public EditMessageText excuteExchange(Update update, Tronmember tronmember) {
+		Double price = Double.valueOf(RedisUtil.get(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTOTEXCHANGE));
+		String callbackdata = update.getCallbackQuery().getData();
+		Double amount = Double.valueOf(callbackdata.replace(ButtonResource.EXCHANGE, ""));
 		User sender = update.getCallbackQuery().getFrom();
-
+		MaybeInaccessibleMessage originalMessage = update.getCallbackQuery().getMessage();
+		Double fewamount = NumberUtil.getExchangeFewAmount(callbackdata);
+		Integer i = 0;
+		Tronmemberorder tronmemberorder = new Tronmemberorder();
+		if (fewamount < 3) {
+			tronmemberorder.setAmount(amount);
+			tronmemberorder.setChatid(sender.getId());
+			tronmemberorder.setMessageid(originalMessage.getMessageId());
+			tronmemberorder.setTrxamount(Integer.parseInt(String.format("%.0f", (amount * (price - 0.62)))));
+			tronmemberorder.setGoodsname("购买 " + tronmemberorder.getTrxamount() + " TRX");
+			tronmemberorder.setUsdtamount(amount);
+			tronmemberorder.setFewamount(fewamount);
+			tronmemberorder.setRealamount(amount - fewamount);
+			tronmemberorder.setTgid(tronmember.getTgid());
+			tronmemberorder.setOrdernum("E" + StringUtil.getOrderNum());
+			tronmemberorder.setType(DictionaryResource.EXCHANGE_TYPE_601);
+			tronmemberorder.setStatus(DictionaryResource.PAYOUTSTATUS_50);
+			i = tronmemberordermapper.post(tronmemberorder);
+		}
 		EditMessageText editmessagetext = new EditMessageText();
 		editmessagetext.setChatId(String.valueOf(sender.getId()));
 		editmessagetext.setMessageId(originalMessage.getMessageId());
-		editmessagetext.setText("12333333333333333333333");
-		editmessagetext.setReplyMarkup(InlineKeyboard.getInlineKeyboardMarkup2());
+		if (i > 0) {
+			editmessagetext.setText("*订单信息*\r\n" + "单号： " + tronmemberorder.getOrdernum() + " \r\n" + "商品： " + tronmemberorder.getGoodsname() + " \r\n" + "支付： *" + tronmemberorder.getRealamount() + "*U\r\n"+ "\r\n" + "支付地址:\r\n"
+					+ "`TUrntwm5t9umKhC7jv89RXGo33qcTFAAAA` (点击地址自动复制)\r\n" + "\r\n" + "请不要使用交易所转账‼️\r\n" + "\r\n" + "请一定按照订单显示金额支付‼️\r\n" + "\r\n" + "转账即兑，全自动返\r\n" + "\r\n" + "请在 *5分钟* 内完成支付\r\n");
+		} else {
+			editmessagetext.setText("当前服务器繁忙请稍后再试");
+		}
+		editmessagetext.enableMarkdown(true);
 		return editmessagetext;
-	}
-
-	public EditMessageReplyMarkup excuteExchange(Update update) {
-		MaybeInaccessibleMessage originalMessage = update.getCallbackQuery().getMessage();
-		User sender = update.getCallbackQuery().getFrom();
-
-		EditMessageReplyMarkup editMessageReplyMarkup = new EditMessageReplyMarkup();
-		editMessageReplyMarkup.setChatId(String.valueOf(sender.getId()));
-		editMessageReplyMarkup.setMessageId(originalMessage.getMessageId());
-		editMessageReplyMarkup.setReplyMarkup(InlineKeyboard.getInlineKeyboardMarkup2());
-
-		return editMessageReplyMarkup;
 	}
 }

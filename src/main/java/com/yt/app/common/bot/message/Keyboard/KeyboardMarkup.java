@@ -16,9 +16,9 @@ public class KeyboardMarkup {
 		rkm.setIsPersistent(true);
 		List<KeyboardRow> listkby = new ArrayList<KeyboardRow>();
 		KeyboardButton kbb = new KeyboardButton();
-		kbb.setText("⚡TRX闪兑");
+		kbb.setText("⚡购买TRX");
 		KeyboardButton kbb1 = new KeyboardButton();
-		kbb1.setText("✈飞机账号");
+		kbb1.setText("✈购买飞机会员");
 		KeyboardButton kbb3 = new KeyboardButton();
 		kbb3.setText("🧑‍🚀联系客服");
 		KeyboardRow kbr = new KeyboardRow();

@@ -10,10 +10,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-import com.yt.app.common.bot.message.UpdateService;
+import com.yt.app.common.bot.message.UpdateMessageService;
 
 @Component
-public class StartMessage implements UpdateService {
+public class StartMessage implements UpdateMessageService {
 
 	@Override
 	public SendMessage getUpdate(Update update) {
@@ -27,9 +27,9 @@ public class StartMessage implements UpdateService {
 		rkm.setIsPersistent(true);
 		List<KeyboardRow> listkby = new ArrayList<KeyboardRow>();
 		KeyboardButton kbb = new KeyboardButton();
-		kbb.setText("⚡TRX闪兑");
+		kbb.setText("⚡购买TRX");
 		KeyboardButton kbb1 = new KeyboardButton();
-		kbb1.setText("✈飞机账号");
+		kbb1.setText("✈购买飞机会员");
 		KeyboardButton kbb3 = new KeyboardButton();
 		kbb3.setText("🧑‍🚀联系客服");
 

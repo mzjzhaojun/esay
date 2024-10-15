@@ -1,5 +1,6 @@
 package com.yt.app.api.v1.controller;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,7 +66,7 @@ public class TronController extends YtBaseEncipherControllerImpl<Tron, Long> {
 	private static String privatekey = "63d99b74511082f06e3f5f4b6e02e663c9a43939525368060da19b704f2b9aa4";
 
 	// # 手续费 1trx = 1000000 sun
-	// private static BigDecimal decimal = new BigDecimal("1000000");
+	private static BigDecimal decimal = new BigDecimal("1000000");
 
 	String owner_address = "TUrntwm5t9umKhC7jv89RXGo33qcTFAAAA";
 
@@ -119,7 +120,8 @@ public class TronController extends YtBaseEncipherControllerImpl<Tron, Long> {
 	 */
 	@RequestMapping(value = "/wallet/createtransaction", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> createtransaction(HttpServletRequest request, HttpServletResponse response) {
-		service.createtransaction(privatekey, to_address, owner_address, 100);
+		BigDecimal amount = new BigDecimal("100");
+		service.createtransaction(privatekey, to_address, owner_address, amount.multiply(decimal).toBigInteger());
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
 

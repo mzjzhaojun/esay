@@ -380,7 +380,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				income.setRealamount(income.getAmount());
 				i = mapper.post(income);
 			} else {
-				Double fewamount = getFewAmount(qd.getId());
+				Double fewamount = NumberUtil.getIncomeFewAmount(qd.getId());
 				if (fewamount < 3) {
 					income.setFewamount(fewamount);
 					income.setRealamount(income.getAmount() - fewamount);
@@ -397,21 +397,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		QrcodeResultVO result = addOtherOrderMqd(income, channel, qas, mc, qs);
 		TenantIdContext.remove();
 		return result;
-	}
-
-	public Double getFewAmount(Long qid) {
-		Double min = 0.01;
-		for (int i = 1; i <= 30; i++) {
-			String key = SystemConstant.CACHE_SYS_QRCODE + qid + "" + min;
-			if (!RedisUtil.hasKey(key)) {
-				RedisUtil.set(key, min.toString());
-				return min;
-			} else {
-				min = min + 0.01;
-			}
-		}
-		min = 3.33;
-		return min;
 	}
 
 	/**
