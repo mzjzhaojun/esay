@@ -468,10 +468,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("value", txid);
 		map.put("visible", true);
 		String sub_url = URL + "/wallet/gettransactionbyid";
-		long beginTime = System.currentTimeMillis();
 		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
-		long time = System.currentTimeMillis() - beginTime;
-		log.info(">>>>>>>>>>>>>>>>>>>> 处理时间  Time = {} /ms", time);
 		return body;
 	}
 
@@ -557,6 +554,15 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 
 			return broadcasttransaction(parame);
 		}
+	}
+
+	@Override
+	public String getTest() {
+		HashMap<String, Object> map = new HashMap<>();
+		String sub_url = "http://192.168.18.4:8080/esay/rest/v1/order/income/1845491796000641024";
+		String body = HttpRequest.get(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
+		log.info("getTest:" + body);
+		return body;
 	}
 
 }

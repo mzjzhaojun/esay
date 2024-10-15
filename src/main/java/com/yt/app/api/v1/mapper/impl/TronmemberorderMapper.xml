@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.TronmemberorderMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,chatid,messageid,tgid,ordernum,type,goodsname,fromaddress,amount,realamount,trxamount,usdtamount,fewamount,incomeaddress,status,remark,successdate,expireddate,create_by,create_time,update_by,update_time,version
+		id,tenant_id,chatid,messageid,tgid,txid,ordernum,type,goodsname,fromaddress,amount,realamount,trxamount,usdtamount,fewamount,incomeaddress,status,remark,successdate,expireddate,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -18,9 +18,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Tronmemberorder">
 		insert into
-		tronmemberorder(id,tenant_id,chatid,messageid,tgid,ordernum,type,goodsname,fromaddress,amount,realamount,trxamount,usdtamount,fewamount,incomeaddress,status,remark,successdate,expireddate,create_by,create_time,update_by,update_time)
+		tronmemberorder(id,tenant_id,chatid,messageid,tgid,txid,ordernum,type,goodsname,fromaddress,amount,realamount,trxamount,usdtamount,fewamount,incomeaddress,status,remark,successdate,expireddate,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{tenant_id},#{chatid},#{messageid},#{tgid},#{ordernum},#{type},#{goodsname},#{fromaddress},#{amount},#{realamount},#{trxamount},#{usdtamount},#{fewamount},#{incomeaddress},#{status},#{remark},#{successdate},#{expireddate},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{tenant_id},#{chatid},#{messageid},#{tgid},#{txid},#{ordernum},#{type},#{goodsname},#{fromaddress},#{amount},#{realamount},#{trxamount},#{usdtamount},#{fewamount},#{incomeaddress},#{status},#{remark},#{successdate},#{expireddate},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -53,6 +53,9 @@
 			</if>
 			<if test="tgid != null">
 				tgid= #{tgid},
+			</if>
+			<if test="txid != null">
+				txid= #{txid},
 			</if>
 			<if test="ordernum != null">
 				ordernum= #{ordernum},
@@ -121,6 +124,15 @@
 		<include refid="Base_Column_List" />
 		from tronmemberorder
 		where id = #{id}
+	</select>
+	
+	<!--getById -->
+	<select id="getByTxId" parameterType="java.lang.String"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tronmemberorder
+		where txid= #{txid}
 	</select>
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"

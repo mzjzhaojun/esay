@@ -16,6 +16,8 @@ import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.abi.FunctionEncoder;
 
+import com.yt.app.api.v1.entity.Tronmemberorder;
+import com.yt.app.api.v1.mapper.TronmemberorderMapper;
 import com.yt.app.api.v1.service.TronService;
 import com.yt.app.common.util.TransformUtil;
 import com.yt.app.common.util.TronUtil;
@@ -32,6 +34,8 @@ public class TronMonitor {
 
 	@Autowired
 	private TronService tronservice;
+	@Autowired
+	private TronmemberorderMapper tronmemberordermapper;
 
 	private BigDecimal decimal = new BigDecimal("1000000");
 
@@ -52,7 +56,6 @@ public class TronMonitor {
 			JSONObject jsonObject = JSONUtil.parseObj(responseString);
 			BigInteger blockNumber = jsonObject.getJSONObject("block_header").getJSONObject("raw_data").getBigInteger("number");
 			CURRENT_SYNC_BLOCK_NUMBER = blockNumber.subtract(BLOCKS);
-			log.info("blockNumber=" + blockNumber);
 		}
 	}
 
@@ -61,11 +64,14 @@ public class TronMonitor {
 	 *
 	 * @throws Throwable
 	 */
-	@Scheduled(cron = "0/20 * * * * ?")
+	@Scheduled(cron = "0/30 * * * * ?")
 	public void charge() throws Throwable {
 		if (CURRENT_SYNC_BLOCK_NUMBER != null) {
+			long beginTime1 = System.currentTimeMillis();
 			String responseString = tronservice.getnowblock();
 			JSONObject jsonObject = JSONUtil.parseObj(responseString);
+			long time1 = System.currentTimeMillis() - beginTime1;
+			log.info(">>>>>>>>>>>>>>>>>>>> 处理时间  Time = {} /ms", time1);
 			BigInteger blockNumber = jsonObject.getJSONObject("block_header").getJSONObject("raw_data").getBigInteger("number");
 			TRC20_TARGET_BLOCK_NUMBER = blockNumber.subtract(BLOCKS);
 			if (CURRENT_SYNC_BLOCK_NUMBER.compareTo(TRC20_TARGET_BLOCK_NUMBER) <= 0) {
@@ -76,20 +82,22 @@ public class TronMonitor {
 					parseArray.forEach(e -> {
 						try {
 							String txId = JSONUtil.parseObj(e.toString()).getStr("id");
-							// 查询数据库如果有不继续执行
-							JSONObject parseObject = JSONUtil.parseObj(tronservice.gettransactionbyid(txId));
-							if (parseObject != null && parseObject.getJSONArray("ret") != null) {
-								String contractRet = parseObject.getJSONArray("ret").getJSONObject(0).getStr("contractRet");
-								log.info("contractRet:" + contractRet +" txid="+ txId);
-								// 交易成功
-								if ("SUCCESS".equalsIgnoreCase(contractRet)) {
-									String type = parseObject.getJSONObject("raw_data").getJSONArray("contract").getJSONObject(0).getStr("type");
-									if ("TriggerSmartContract".equalsIgnoreCase(type)) {
-										// 合约地址转账
-										triggerSmartContract(parseObject, txId);
-									} else if ("TransferContract".equalsIgnoreCase(type)) {
-										// trx 转账
-										transferContract(parseObject);
+							Tronmemberorder tronmemberorder = tronmemberordermapper.getByTxId(txId);
+							if (tronmemberorder == null) {
+								JSONObject parseObject = JSONUtil.parseObj(tronservice.gettransactionbyid(txId));
+								if (parseObject != null && parseObject.getJSONArray("ret") != null) {
+									String contractRet = parseObject.getJSONArray("ret").getJSONObject(0).getStr("contractRet");
+									// log.info("contractRet:" + contractRet +" txid="+ txId);
+									// 交易成功
+									if ("SUCCESS".equalsIgnoreCase(contractRet)) {
+										String type = parseObject.getJSONObject("raw_data").getJSONArray("contract").getJSONObject(0).getStr("type");
+										if ("TriggerSmartContract".equalsIgnoreCase(type)) {
+											// 合约地址转账
+											triggerSmartContract(parseObject, txId);
+										} else if ("TransferContract".equalsIgnoreCase(type)) {
+											// trx 转账
+											transferContract(parseObject);
+										}
 									}
 								}
 							}
@@ -99,6 +107,7 @@ public class TronMonitor {
 					});
 				}
 				CURRENT_SYNC_BLOCK_NUMBER = CURRENT_SYNC_BLOCK_NUMBER.add(BigInteger.ONE);
+				log.info("blockNumber:" + CURRENT_SYNC_BLOCK_NUMBER + " ==" + TRC20_TARGET_BLOCK_NUMBER);
 				charge();
 			}
 		} else {

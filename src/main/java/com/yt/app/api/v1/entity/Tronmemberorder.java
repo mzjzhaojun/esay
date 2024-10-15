@@ -28,6 +28,7 @@ public class Tronmemberorder extends YtBaseEntity<Tronmemberorder> {
 	Integer messageid;
 	Long tgid;
 	String ordernum;
+	String txid;
 	Integer type;
 	String goodsname;
 	String fromaddress;

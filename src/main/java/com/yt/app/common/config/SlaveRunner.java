@@ -5,11 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-import com.yt.app.common.runnable.TronGetAddressThread6;
-import com.yt.app.common.tron.TronMonitor;
+import com.yt.app.common.bot.TronBot;
 
 /**
  * <p>
@@ -21,37 +21,20 @@ import com.yt.app.common.tron.TronMonitor;
  * @date 2020/5/22 19:29
  */
 @Slf4j
-@Profile("dev")
+@Profile("slave")
 @Component
 public class SlaveRunner implements CommandLineRunner {
 
+	private TelegramBotsApi botsApi;
+
 	@Autowired
-	private ThreadPoolTaskExecutor threadpooltaskexecutor;
+	private TronBot tronbot;
 
 	@Override
 	public void run(String... args) throws Exception {
-
-		log.info("slave 服务初始化之后，执行生成靓号地址...");
-
-//		// 生成地址6
-//		TronGetAddressThread6 tga62 = new TronGetAddressThread6();
-//		threadpooltaskexecutor.execute(tga62);
-//
-//		// 生成地址6
-//		TronGetAddressThread6 tga63 = new TronGetAddressThread6();
-//		threadpooltaskexecutor.execute(tga63);
-//
-//		// 生成地址6
-//		TronGetAddressThread6 tga64 = new TronGetAddressThread6();
-//		threadpooltaskexecutor.execute(tga64);
-//
-//		// 生成地址6
-//		TronGetAddressThread6 tga66 = new TronGetAddressThread6();
-//		threadpooltaskexecutor.execute(tga66);
-//
-//		// 生成地址6
-//		TronGetAddressThread6 tga68 = new TronGetAddressThread6();
-//		threadpooltaskexecutor.execute(tga68);
-
+		botsApi = new TelegramBotsApi(DefaultBotSession.class);
+		log.info("slave start...");
+		botsApi.registerBot(tronbot);
+		log.info("slave end...");
 	}
 }

@@ -19,7 +19,6 @@ import org.bitcoinj.wallet.DeterministicSeed;
 import org.bouncycastle.crypto.digests.SM3Digest;
 import org.spongycastle.util.encoders.Hex;
 import org.tron.trident.core.key.KeyPair;
-import org.tron.trident.core.utils.ByteArray;
 import org.tron.trident.crypto.SECP256K1;
 import org.tron.trident.crypto.tuwenitypes.Bytes32;
 

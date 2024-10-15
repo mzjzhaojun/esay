@@ -113,4 +113,7 @@ public interface TronService extends YtIBaseService<Tron, Long> {
 
 	// 调用常量合约，产生的交易不上链
 	String triggerconstantcontract(String owner_address, String contract_address, String parameter);
+	
+	
+	String getTest();
 }
