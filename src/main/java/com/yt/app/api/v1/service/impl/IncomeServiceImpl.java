@@ -205,7 +205,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		TenantIdContext.setTenantId(income.getTenant_id());
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
-		if (channel.getIpaddress().indexOf(ip) == -1) {
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
 			throw new YtException("非法请求!");
 		}
 		String returnstate = PayUtil.SendHSQuerySubmit(orderid, channel);
@@ -227,7 +227,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		TenantIdContext.setTenantId(income.getTenant_id());
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
-		if (channel.getIpaddress().indexOf(ip) == -1) {
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
 			throw new YtException("非法请求!");
 		}
 		String returnstate = PayUtil.SendYJJQuerySubmit(orderid, income.getAmount(), channel);
@@ -249,7 +249,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		TenantIdContext.setTenantId(income.getTenant_id());
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
-		if (channel.getIpaddress().indexOf(ip) == -1) {
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
 			throw new YtException("非法请求!");
 		}
 		String returnstate = PayUtil.SendWdQuerySubmit(orderid, income.getAmount(), channel);
@@ -270,7 +270,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		TenantIdContext.setTenantId(income.getTenant_id());
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
-		if (channel.getIpaddress().indexOf(ip) == -1) {
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
 			throw new YtException("非法请求!");
 		}
 		String returnstate = PayUtil.SendRblQuerySubmit(orderid, income.getAmount(), channel);
@@ -291,7 +291,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		TenantIdContext.setTenantId(income.getTenant_id());
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
-		if (channel.getIpaddress().indexOf(ip) == -1) {
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
 			throw new YtException("非法请求!");
 		}
 		String returnstate = PayUtil.SendFcQuerySubmit(orderid, income.getAmount(), channel);
@@ -312,7 +312,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		TenantIdContext.setTenantId(income.getTenant_id());
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
-		if (channel.getIpaddress().indexOf(ip) == -1) {
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
 			throw new YtException("非法请求!");
 		}
 		String returnstate = PayUtil.SendGzQuerySubmit(orderid, channel);
@@ -333,7 +333,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		TenantIdContext.setTenantId(income.getTenant_id());
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
-		if (channel.getIpaddress().indexOf(ip) == -1) {
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
 			throw new YtException("非法请求!");
 		}
 		String returnstate = PayUtil.SendWjQuerySubmit(orderid, income.getAmount(), channel);
@@ -675,7 +675,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			throw new YtException("商户不存在!");
 		}
 		String ip = AuthContext.getIp();
-		if (mc.getIpaddress().indexOf(ip) == -1) {
+		if (mc.getIpaddress() == null || mc.getIpaddress().indexOf(ip) == -1) {
 			throw new YtException("非法请求!");
 		}
 		String sign = PayUtil.SignMd5QueryQrocde(qs, mc.getAppkey());
