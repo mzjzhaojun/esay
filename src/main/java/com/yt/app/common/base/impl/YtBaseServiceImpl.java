@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
 
 import cn.hutool.core.lang.Assert;
 
@@ -19,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.base.constant.ServiceConstant;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.YtIBaseMapper;
 
 /**
@@ -52,7 +51,6 @@ public abstract class YtBaseServiceImpl<T, ID extends Serializable> implements Y
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public T get(Long id) {
 		T t = mapper.get(id);
 		Assert.notNull(t, ServiceConstant.SELECT_FAIL_MSG);
@@ -68,7 +66,6 @@ public abstract class YtBaseServiceImpl<T, ID extends Serializable> implements Y
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<T> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -81,14 +78,12 @@ public abstract class YtBaseServiceImpl<T, ID extends Serializable> implements Y
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public List<T> list() {
 		Map<String, Object> param = new HashMap<String, Object>();
 		return mapper.list(param);
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public List<T> listByArrayId(long[] id) {
 		return mapper.listByArrayId(id);
 	}

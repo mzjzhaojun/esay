@@ -9,7 +9,7 @@ import com.yt.app.api.v1.mapper.IncomemerchantaccountrecordMapper;
 import com.yt.app.api.v1.mapper.PayoutMerchantaccountrecordMapper;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
 import com.yt.app.api.v1.service.MerchantService;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Incomemerchantaccount;
@@ -20,7 +20,7 @@ import com.yt.app.api.v1.entity.PayoutMerchantaccountrecord;
 import com.yt.app.api.v1.vo.IncomemerchantaccountVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
+
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.RedissonUtil;
 
@@ -56,21 +56,21 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Incomemerchantaccount> list(Map<String, Object> param) {
 		List<Incomemerchantaccount> list = mapper.list(param);
 		return new YtPageBean<Incomemerchantaccount>(list);
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Incomemerchantaccount get(Long id) {
 		Incomemerchantaccount t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<IncomemerchantaccountVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {
@@ -204,7 +204,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Incomemerchantaccount getDataBank(Long id) {
 		Incomemerchantaccount t = mapper.getByMerchantId(id);
 		return t;

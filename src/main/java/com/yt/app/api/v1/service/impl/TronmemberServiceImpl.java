@@ -10,8 +10,7 @@ import com.yt.app.api.v1.entity.Tronmember;
 import com.yt.app.api.v1.vo.TronmemberVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
-import com.yt.app.common.enums.YtDataSourceEnum;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -35,21 +34,21 @@ public class TronmemberServiceImpl extends YtBaseServiceImpl<Tronmember, Long> i
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Tronmember> list(Map<String, Object> param) {
 		List<Tronmember> list = mapper.list(param);
 		return new YtPageBean<Tronmember>(list);
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Tronmember get(Long id) {
 		Tronmember t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<TronmemberVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {
@@ -60,7 +59,7 @@ public class TronmemberServiceImpl extends YtBaseServiceImpl<Tronmember, Long> i
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Tronmember getByTgId(Long id) {
 		return mapper.getByTgId(id);
 	}

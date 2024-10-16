@@ -12,7 +12,7 @@ import com.yt.app.api.v1.mapper.UserroleMapper;
 import com.yt.app.api.v1.service.MenuService;
 import com.yt.app.api.v1.service.UserService;
 import com.yt.app.api.v1.vo.SysUserPermVO;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.context.JwtUserContext;
 import com.yt.app.common.base.context.SysUserContext;
@@ -27,7 +27,7 @@ import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.entity.Userrole;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
+
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.AuthUtil;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
@@ -111,7 +111,7 @@ public class UserServiceImpl extends YtBaseServiceImpl<User, Long> implements Us
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<User> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -156,14 +156,14 @@ public class UserServiceImpl extends YtBaseServiceImpl<User, Long> implements Us
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public User get(Long id) {
 		User t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public SysUserPermVO getUserPerm(SysUserPermDTO params) {
 		// 1.
 		SysUserPermVO userPerm = mapper.selectUserPerm(params);
@@ -192,7 +192,7 @@ public class UserServiceImpl extends YtBaseServiceImpl<User, Long> implements Us
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Integer checkgoogle(Long code) {
 		User u = mapper.get(SysUserContext.getUserId());
 		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), code, System.currentTimeMillis());

@@ -67,11 +67,8 @@ public class TronMonitor {
 	@Scheduled(cron = "0/30 * * * * ?")
 	public void charge() throws Throwable {
 		if (CURRENT_SYNC_BLOCK_NUMBER != null) {
-			long beginTime1 = System.currentTimeMillis();
 			String responseString = tronservice.getnowblock();
 			JSONObject jsonObject = JSONUtil.parseObj(responseString);
-			long time1 = System.currentTimeMillis() - beginTime1;
-			log.info(">>>>>>>>>>>>>>>>>>>> 处理时间  Time = {} /ms", time1);
 			BigInteger blockNumber = jsonObject.getJSONObject("block_header").getJSONObject("raw_data").getBigInteger("number");
 			TRC20_TARGET_BLOCK_NUMBER = blockNumber.subtract(BLOCKS);
 			if (CURRENT_SYNC_BLOCK_NUMBER.compareTo(TRC20_TARGET_BLOCK_NUMBER) <= 0) {
@@ -83,6 +80,9 @@ public class TronMonitor {
 						try {
 							String txId = JSONUtil.parseObj(e.toString()).getStr("id");
 							Tronmemberorder tronmemberorder = tronmemberordermapper.getByTxId(txId);
+							long beginTime1 = System.currentTimeMillis();
+							long time1 = System.currentTimeMillis() - beginTime1;
+							log.info(">>>>>>>>>>>>>>>>>>>> 处理时间  Time = {} /ms", time1);
 							if (tronmemberorder == null) {
 								JSONObject parseObject = JSONUtil.parseObj(tronservice.gettransactionbyid(txId));
 								if (parseObject != null && parseObject.getJSONArray("ret") != null) {

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.RolescopeMapper;
 import com.yt.app.api.v1.service.RolescopeService;
 import com.yt.app.api.v1.vo.SysRoleScopeListVO;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Lists;
@@ -15,7 +15,6 @@ import com.yt.app.api.v1.dbo.SysRoleReScopeSaveDTO;
 import com.yt.app.api.v1.entity.Rolescope;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
 
 import cn.hutool.core.collection.CollUtil;
 
@@ -43,7 +42,7 @@ public class RolescopeServiceImpl extends YtBaseServiceImpl<Rolescope, Long> imp
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Rolescope> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -57,21 +56,21 @@ public class RolescopeServiceImpl extends YtBaseServiceImpl<Rolescope, Long> imp
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Rolescope get(Long id) {
 		Rolescope t = sysRoleScopeMapper.get(id);
 		return t;
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public List<Long> getScopeIdListByRoleId(Long roleId) {
 		List<SysRoleScopeListVO> list = sysRoleScopeMapper.selectListByRoleId(roleId);
 		return list.stream().map(SysRoleScopeListVO::getScopeId).collect(Collectors.toList());
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public List<SysScopeDataBO> getScopeListReRoleIdList(List<Long> roleIdList) {
 		return this.sysRoleScopeMapper.selectScopeListReRoleIdList(roleIdList);
 	}

@@ -5,13 +5,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.ExchangeMerchantaccountrecordMapper;
 import com.yt.app.api.v1.service.ExchangeMerchantaccountrecordService;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccountrecord;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
+
 import com.yt.app.common.util.RedisUtil;
 
 import java.util.Collections;
@@ -37,7 +37,7 @@ public class ExchangeMerchantaccountrecordServiceImpl extends YtBaseServiceImpl<
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<ExchangeMerchantaccountrecord> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -54,7 +54,7 @@ public class ExchangeMerchantaccountrecordServiceImpl extends YtBaseServiceImpl<
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public ExchangeMerchantaccountrecord get(Long id) {
 		ExchangeMerchantaccountrecord t = mapper.get(id);
 		return t;

@@ -5,13 +5,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.TgbotgrouprecordMapper;
 import com.yt.app.api.v1.service.TgbotgrouprecordService;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Tgbotgrouprecord;
 import com.yt.app.api.v1.vo.TgbotgrouprecordVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,21 +35,21 @@ public class TgbotgrouprecordServiceImpl extends YtBaseServiceImpl<Tgbotgrouprec
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Tgbotgrouprecord> list(Map<String, Object> param) {
 		List<Tgbotgrouprecord> list = mapper.list(param);
 		return new YtPageBean<Tgbotgrouprecord>(list);
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Tgbotgrouprecord get(Long id) {
 		Tgbotgrouprecord t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<TgbotgrouprecordVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {

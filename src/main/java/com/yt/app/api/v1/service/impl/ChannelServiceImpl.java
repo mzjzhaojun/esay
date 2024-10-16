@@ -13,7 +13,7 @@ import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.vo.QrcodeaccountorderVO;
 import com.yt.app.api.v1.vo.SysTyBalance;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
@@ -29,7 +29,7 @@ import com.yt.app.api.v1.entity.Qrcodeaccount;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
+
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PasswordUtil;
@@ -107,7 +107,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Channel> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -124,7 +124,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Channel get(Long id) {
 		Channel t = mapper.get(id);
 		return t;
@@ -230,7 +230,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Channel getData() {
 		Channel t = mapper.getByUserId(SysUserContext.getUserId());
 		return t;

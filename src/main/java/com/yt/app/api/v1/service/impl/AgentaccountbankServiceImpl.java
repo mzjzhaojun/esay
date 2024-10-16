@@ -5,14 +5,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.AgentaccountbankMapper;
 import com.yt.app.api.v1.service.AgentaccountbankService;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agentaccountbank;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
+
 import com.yt.app.common.util.RedisUtil;
 
 import java.util.Collections;
@@ -40,7 +40,6 @@ public class AgentaccountbankServiceImpl extends YtBaseServiceImpl<Agentaccountb
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Agentaccountbank> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -57,7 +56,6 @@ public class AgentaccountbankServiceImpl extends YtBaseServiceImpl<Agentaccountb
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Agentaccountbank get(Long id) {
 		Agentaccountbank t = mapper.get(id);
 		return t;

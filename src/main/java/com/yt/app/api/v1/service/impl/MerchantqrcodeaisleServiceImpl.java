@@ -5,14 +5,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.MerchantqrcodeaisleMapper;
 import com.yt.app.api.v1.service.MerchantqrcodeaisleService;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Merchantqrcodeaisle;
 import com.yt.app.api.v1.vo.MerchantqrcodeaisleVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
+
 import com.yt.app.common.util.RedisUtil;
 
 import cn.hutool.core.lang.Assert;
@@ -43,21 +43,21 @@ public class MerchantqrcodeaisleServiceImpl extends YtBaseServiceImpl<Merchantqr
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Merchantqrcodeaisle> list(Map<String, Object> param) {
 		List<Merchantqrcodeaisle> list = mapper.list(param);
 		return new YtPageBean<Merchantqrcodeaisle>(list);
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Merchantqrcodeaisle get(Long id) {
 		Merchantqrcodeaisle t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<MerchantqrcodeaisleVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {

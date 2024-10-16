@@ -6,9 +6,8 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.yt.app.api.v1.entity.YtFile;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.YtIBaseService;
-import com.yt.app.common.enums.YtDataSourceEnum;
 
 /**
  * @author zj default
@@ -23,7 +22,6 @@ public interface FileService extends YtIBaseService<YtFile, Long> {
 	 * @param file
 	 * @return
 	 */
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	YtFile addFile(MultipartFile file) throws IOException;
 
 	/**
@@ -32,7 +30,6 @@ public interface FileService extends YtIBaseService<YtFile, Long> {
 	 * @param file
 	 * @return
 	 */
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	YtFile addFile(MultipartFile file, String url, String watermark) throws IOException;
 
 	/**
@@ -41,7 +38,6 @@ public interface FileService extends YtIBaseService<YtFile, Long> {
 	 * @param id
 	 * @return
 	 */
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	Integer remove(long id);
 
 	/**
@@ -50,7 +46,6 @@ public interface FileService extends YtIBaseService<YtFile, Long> {
 	 * @param list
 	 * @return
 	 */
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	Integer removeArray(List<String> list);
 
 	/**
@@ -59,7 +54,6 @@ public interface FileService extends YtIBaseService<YtFile, Long> {
 	 * @param file
 	 * @return
 	 */
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	YtFile addImg(String file, String url) throws IOException;
 
 	/**
@@ -68,7 +62,6 @@ public interface FileService extends YtIBaseService<YtFile, Long> {
 	 * @param file
 	 * @return
 	 */
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	YtFile addFileVideo(MultipartFile file, Integer size) throws Exception;
 
 }

@@ -12,8 +12,7 @@ import com.yt.app.api.v1.entity.Tron;
 import com.yt.app.api.v1.vo.TronVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
-import com.yt.app.common.enums.YtDataSourceEnum;
+
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.util.TronUtil;
 
@@ -52,21 +51,21 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Tron> list(Map<String, Object> param) {
 		List<Tron> list = mapper.list(param);
 		return new YtPageBean<Tron>(list);
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Tron get(Long id) {
 		Tron t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<TronVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {
@@ -558,11 +557,18 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 
 	@Override
 	public String getTest() {
-		HashMap<String, Object> map = new HashMap<>();
-		String sub_url = "http://192.168.18.4:8080/esay/rest/v1/order/income/1845491796000641024";
-		String body = HttpRequest.get(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
-		log.info("getTest:" + body);
-		return body;
+//		HashMap<String, Object> map = new HashMap<>();
+//		String sub_url = "http://192.168.18.4:8080/esay/rest/v1/order/income/1845491796000641024";
+//		String body = HttpRequest.get(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
+//		log.info("getTest:" + body);
+//		return body;
+		Tron t = new Tron();
+		t.setAddress("1231231");
+		t.setBalance(111.11);
+		mapper.post(t);
+		Tron tron = mapper.get(t.getId());
+		System.out.println(tron);
+		return "";
 	}
 
 }

@@ -5,13 +5,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.ProvincecityareaMapper;
 import com.yt.app.api.v1.service.ProvincecityareaService;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.dbo.SysProvinceCityAreaTreeDTO;
 import com.yt.app.api.v1.entity.Provincecityarea;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +36,7 @@ public class ProvincecityareaServiceImpl extends YtBaseServiceImpl<Provincecitya
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Provincecityarea> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -51,14 +50,14 @@ public class ProvincecityareaServiceImpl extends YtBaseServiceImpl<Provincecitya
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Provincecityarea get(Long id) {
 		Provincecityarea t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public List<Provincecityarea> tree(SysProvinceCityAreaTreeDTO params) {
 		List<Provincecityarea> list = this.mapper.selectDataList(params);
 		List<Provincecityarea> result = list.stream().filter(e -> e.getType().equals(params.getType())).collect(Collectors.toList());

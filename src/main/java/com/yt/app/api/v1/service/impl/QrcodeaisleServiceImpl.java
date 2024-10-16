@@ -8,7 +8,7 @@ import com.yt.app.api.v1.mapper.MerchantqrcodeaisleMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper;
 import com.yt.app.api.v1.service.QrcodeaisleService;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
@@ -18,7 +18,7 @@ import com.yt.app.api.v1.entity.Qrcodeaisle;
 import com.yt.app.api.v1.vo.QrcodeaisleVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
+
 import com.yt.app.common.util.RedisUtil;
 
 import cn.hutool.core.lang.Assert;
@@ -53,14 +53,14 @@ public class QrcodeaisleServiceImpl extends YtBaseServiceImpl<Qrcodeaisle, Long>
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Qrcodeaisle> list(Map<String, Object> param) {
 		List<Qrcodeaisle> list = mapper.list(param);
 		return new YtPageBean<Qrcodeaisle>(list);
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Qrcodeaisle get(Long id) {
 		Qrcodeaisle t = mapper.get(id);
 		return t;
@@ -78,7 +78,7 @@ public class QrcodeaisleServiceImpl extends YtBaseServiceImpl<Qrcodeaisle, Long>
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<QrcodeaisleVO> page(Map<String, Object> param) {
 		if (param.get("merchantid") != null) {
 			List<Merchantqrcodeaisle> listmqas = merchantqrcodeaislemapper.getByMid(Long.valueOf(param.get("merchantid").toString()));

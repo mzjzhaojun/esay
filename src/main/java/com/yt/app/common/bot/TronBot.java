@@ -77,7 +77,7 @@ public class TronBot extends TelegramLongPollingBot {
 				log.info(callbackData);
 				if (callbackData.endsWith(ButtonResource.EXCHANGE)) {
 					execute(trxflashrentmessage.excuteExchange(update, tronmember));
-				} 
+				}
 			} else if (update.hasMessage() && update.getMessage().hasPhoto()) {
 			} else if (update.hasMessage() && update.getMessage().hasAudio()) {
 			} else if (update.hasMessage() && update.getMessage().hasVideo()) {

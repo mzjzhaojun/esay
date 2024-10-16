@@ -5,12 +5,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.LogsMapper;
 import com.yt.app.api.v1.service.LogsService;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Logs;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +34,7 @@ public class LogsServiceImpl extends YtBaseServiceImpl<Logs, Long> implements Lo
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Logs> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -49,7 +48,7 @@ public class LogsServiceImpl extends YtBaseServiceImpl<Logs, Long> implements Lo
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Logs get(Long id) {
 		Logs t = mapper.get(id);
 		return t;

@@ -30,7 +30,7 @@ import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.api.v1.vo.PayoutVO;
 import com.yt.app.api.v1.vo.PayResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
@@ -53,7 +53,7 @@ import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
+
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
@@ -263,7 +263,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Payout> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -277,14 +277,14 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Payout get(Long id) {
 		Payout t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public PayResultVO query(String merchantordernum) {
 		Payout pt = mapper.getByMerchantOrdernum(merchantordernum);
 		if (pt == null) {
@@ -526,7 +526,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<PayoutVO> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -707,7 +707,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public PayResultVO queryblance(String merchantid) {
 		Merchant mt = merchantmapper.getByCode(merchantid);
 		Assert.notNull(mt, "没有找到商户!");

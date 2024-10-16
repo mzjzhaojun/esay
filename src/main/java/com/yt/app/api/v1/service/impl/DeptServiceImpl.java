@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.DeptMapper;
 import com.yt.app.api.v1.service.DeptService;
 import com.yt.app.api.v1.vo.SysDeptTreeVO;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.google.common.collect.Lists;
@@ -14,7 +14,6 @@ import com.yt.app.api.v1.dbo.SysDeptTreeDTO;
 import com.yt.app.api.v1.entity.Dept;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
@@ -44,7 +43,7 @@ public class DeptServiceImpl extends YtBaseServiceImpl<Dept, Long> implements De
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Dept> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -58,14 +57,14 @@ public class DeptServiceImpl extends YtBaseServiceImpl<Dept, Long> implements De
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Dept get(Long id) {
 		Dept t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public List<SysDeptTreeVO> tree(SysDeptTreeDTO params) {
 		Map<String, Object> param = BeanUtil.beanToMap(params);
 		List<SysDeptTreeVO> list = this.mapper.selectDataList(param);

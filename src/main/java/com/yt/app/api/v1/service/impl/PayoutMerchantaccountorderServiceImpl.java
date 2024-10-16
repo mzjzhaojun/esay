@@ -13,7 +13,7 @@ import com.yt.app.api.v1.service.IncomemerchantaccountService;
 import com.yt.app.api.v1.service.PayoutMerchantaccountService;
 import com.yt.app.api.v1.service.PayoutMerchantaccountorderService;
 import com.yt.app.api.v1.service.SystemaccountService;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
@@ -23,7 +23,7 @@ import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
+
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
@@ -181,7 +181,7 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<PayoutMerchantaccountorder> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -198,7 +198,7 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public PayoutMerchantaccountorder get(Long id) {
 		PayoutMerchantaccountorder t = mapper.get(id);
 		return t;

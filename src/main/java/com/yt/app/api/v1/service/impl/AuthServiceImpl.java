@@ -21,12 +21,12 @@ import com.yt.app.api.v1.service.RolescopeService;
 import com.yt.app.api.v1.service.UserService;
 import com.yt.app.api.v1.vo.AuthLoginVO;
 import com.yt.app.api.v1.vo.SysUserPermVO;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.context.AuthContext;
 import com.yt.app.common.enums.AuthSourceEnum;
 import com.yt.app.common.enums.SysRoleCodeEnum;
 import com.yt.app.common.enums.YtCodeEnum;
-import com.yt.app.common.enums.YtDataSourceEnum;
+
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.AuthUtil;
@@ -122,12 +122,10 @@ public class AuthServiceImpl implements AuthService {
 				.scopeDataList(scopeDataList).tenantId(userPerm.getTenantId()).systemaccountId(sca.getId()).accounttype(userPerm.getAccounttype()).build());
 	}
 
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public String genQRImage(String username) {
 		return GoogleAuthenticatorUtil.getQrCodeText(GoogleAuthenticatorUtil.getSecretKey(), username, "");
 	}
 
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Integer verqrcode(String username, String password, String code, String twocode) {
 		Integer i = 0;
 		User u = usermapper.getByUserName(username);

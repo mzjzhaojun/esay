@@ -11,7 +11,7 @@ import com.yt.app.api.v1.mapper.AgentaccountrecordMapper;
 import com.yt.app.api.v1.mapper.AgentaccountbankMapper;
 import com.yt.app.api.v1.service.AgentService;
 import com.yt.app.api.v1.service.AgentaccountService;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agent;
@@ -21,7 +21,7 @@ import com.yt.app.api.v1.entity.Agentaccountbank;
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
+
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.RedissonUtil;
 
@@ -60,7 +60,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Agentaccount> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -74,21 +74,21 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Agentaccount get(Long id) {
 		Agentaccount t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Agentaccount getData() {
 		Agentaccount ac = mapper.getByUserId(SysUserContext.getUserId());
 		return ac;
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Agentaccount getDataBank() {
 		Agentaccount t = mapper.getByUserId(SysUserContext.getUserId());
 		List<Agentaccountbank> listbanks = agentaccountbankmapper.listByUserid(SysUserContext.getUserId());
@@ -97,7 +97,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Agentaccount getDataBank(Long id) {
 		Agent m = agentmapper.get(id);
 		Agentaccount t = mapper.getByUserId(m.getUserid());

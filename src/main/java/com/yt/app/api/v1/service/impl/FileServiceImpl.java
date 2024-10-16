@@ -27,12 +27,12 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import com.yt.app.api.v1.entity.YtFile;
 import com.yt.app.api.v1.mapper.FileMapper;
 import com.yt.app.api.v1.service.FileService;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.config.YtConfig;
-import com.yt.app.common.enums.YtDataSourceEnum;
+
 import com.yt.app.common.util.FileUtil;
 import com.yt.app.common.util.VideoUtil;
 
@@ -57,7 +57,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 	Snowflake idworker;
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<YtFile> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {

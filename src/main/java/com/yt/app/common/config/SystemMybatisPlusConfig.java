@@ -80,8 +80,8 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantstatisticalreports");
 
 		// tron
-		MybatisPlusConfig.TENANT_ID_TABLE.add("tron");
-		MybatisPlusConfig.TENANT_ID_TABLE.add("tronaddress");
+		// MybatisPlusConfig.TENANT_ID_TABLE.add("tron");
+		// MybatisPlusConfig.TENANT_ID_TABLE.add("tronaddress");
 
 	}
 

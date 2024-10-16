@@ -5,13 +5,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.PayoutMerchantaccountrecordMapper;
 import com.yt.app.api.v1.service.PayoutMerchantaccountrecordService;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.PayoutMerchantaccountrecord;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
+
 import com.yt.app.common.util.RedisUtil;
 
 import java.util.Collections;
@@ -37,7 +37,7 @@ public class PayoutMerchantaccountrecordServiceImpl extends YtBaseServiceImpl<Pa
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<PayoutMerchantaccountrecord> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -54,7 +54,7 @@ public class PayoutMerchantaccountrecordServiceImpl extends YtBaseServiceImpl<Pa
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public PayoutMerchantaccountrecord get(Long id) {
 		PayoutMerchantaccountrecord t = mapper.get(id);
 		return t;

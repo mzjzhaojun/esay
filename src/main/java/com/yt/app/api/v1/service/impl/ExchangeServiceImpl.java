@@ -28,7 +28,7 @@ import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.MerchantcustomerbanksService;
 import com.yt.app.api.v1.service.SysconfigService;
 import com.yt.app.api.v1.service.SystemaccountService;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
@@ -54,7 +54,7 @@ import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
+
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
@@ -273,7 +273,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Exchange> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -287,14 +287,14 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Exchange get(Long id) {
 		Exchange t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Exchange query(String channelordernum) {
 		Exchange pt = mapper.getByChannelOrdernum(channelordernum);
 		return pt;
@@ -497,7 +497,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<ExchangeVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {

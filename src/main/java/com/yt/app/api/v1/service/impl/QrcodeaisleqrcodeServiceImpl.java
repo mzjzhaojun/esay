@@ -7,14 +7,13 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.QrcodeaisleMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper;
 import com.yt.app.api.v1.service.QrcodeaisleqrcodeService;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Qrcodeaisle;
 import com.yt.app.api.v1.entity.Qrcodeaisleqrcode;
 import com.yt.app.api.v1.vo.QrcodeaisleqrcodeVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
 
 import cn.hutool.core.lang.Assert;
 
@@ -59,21 +58,21 @@ public class QrcodeaisleqrcodeServiceImpl extends YtBaseServiceImpl<Qrcodeaisleq
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Qrcodeaisleqrcode> list(Map<String, Object> param) {
 		List<Qrcodeaisleqrcode> list = mapper.list(param);
 		return new YtPageBean<Qrcodeaisleqrcode>(list);
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Qrcodeaisleqrcode get(Long id) {
 		Qrcodeaisleqrcode t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<QrcodeaisleqrcodeVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {

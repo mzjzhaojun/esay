@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.yt.app.api.v1.entity.YtFile;
-import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
 import com.yt.app.common.base.YtIBaseMapper;
 
@@ -39,7 +38,7 @@ public interface FileMapper extends YtIBaseMapper<YtFile> {
 	 * @Ytparam id 指定的唯一标识符
 	 * @Ytreturn 指定的唯一标识符对应的持久化对象，如果没有对应的持久化对象，则返回null。
 	 */
-	@YtRedisCacheAnnotation(classs = YtFile.class)
+	@YtRedisCacheEvictAnnotation(classs = { YtFile.class })
 	public YtFile get(Long id);
 
 	/**
@@ -57,7 +56,7 @@ public interface FileMapper extends YtIBaseMapper<YtFile> {
 	 * @Ytparam param 查询参数
 	 * @Ytreturn 数据总数
 	 */
-	@YtRedisCacheAnnotation(classs = YtFile.class)
+	@YtRedisCacheEvictAnnotation(classs = { YtFile.class })
 	public Integer countlist(Map<String, Object> param);
 
 	/**
@@ -66,7 +65,7 @@ public interface FileMapper extends YtIBaseMapper<YtFile> {
 	 * @Ytparam param 查询参数
 	 * @Ytreturn 数据总数
 	 */
-	@YtRedisCacheAnnotation(classs = YtFile.class)
+	@YtRedisCacheEvictAnnotation(classs = { YtFile.class })
 	public Integer countmap(Map<String, Object> param);
 
 	/**
@@ -75,7 +74,7 @@ public interface FileMapper extends YtIBaseMapper<YtFile> {
 	 * @Ytparam param 查询参数
 	 * @Ytreturn 数据
 	 */
-	@YtRedisCacheAnnotation(classs = YtFile.class)
+	@YtRedisCacheEvictAnnotation(classs = { YtFile.class })
 	public List<YtFile> list(Map<String, Object> param);
 
 	/**
@@ -84,6 +83,6 @@ public interface FileMapper extends YtIBaseMapper<YtFile> {
 	 * @Ytparam param 查询参数
 	 * @Ytreturn 数据
 	 */
-	@YtRedisCacheAnnotation(classs = YtFile.class)
+	@YtRedisCacheEvictAnnotation(classs = { YtFile.class })
 	public List<Map<String, Object>> map(Map<String, Object> param);
 }

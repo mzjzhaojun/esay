@@ -27,7 +27,7 @@ import com.yt.app.api.v1.service.IncomemerchantaccountService;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.api.v1.service.SystemaccountService;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.AuthContext;
 import com.yt.app.common.base.context.TenantIdContext;
@@ -64,7 +64,7 @@ import com.yt.app.api.v1.vo.SysYjjOrder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.config.YtConfig;
-import com.yt.app.common.enums.YtDataSourceEnum;
+
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.AliPayUtil;
@@ -144,21 +144,21 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Income> list(Map<String, Object> param) {
 		List<Income> list = mapper.list(param);
 		return new YtPageBean<Income>(list);
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Income get(Long id) {
 		Income t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<IncomeVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {

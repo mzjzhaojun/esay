@@ -10,8 +10,6 @@ import com.yt.app.api.v1.entity.Tronaddress;
 import com.yt.app.api.v1.vo.TronaddressVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
-import com.yt.app.common.enums.YtDataSourceEnum;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,21 +34,21 @@ public class TronaddressServiceImpl extends YtBaseServiceImpl<Tronaddress, Long>
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Tronaddress> list(Map<String, Object> param) {
 		List<Tronaddress> list = mapper.list(param);
 		return new YtPageBean<Tronaddress>(list);
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Tronaddress get(Long id) {
 		Tronaddress t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<TronaddressVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.RolemenuMapper;
 import com.yt.app.api.v1.service.RolemenuService;
 import com.yt.app.api.v1.vo.SysRoleReBtnPermListVO;
-import com.yt.app.common.annotation.YtDataSourceAnnotation;
+
 import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -15,7 +15,6 @@ import com.yt.app.api.v1.dbo.SysRoleReMenuSaveDTO;
 import com.yt.app.api.v1.entity.Rolemenu;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.enums.YtDataSourceEnum;
 
 import cn.hutool.core.collection.CollUtil;
 
@@ -43,7 +42,7 @@ public class RolemenuServiceImpl extends YtBaseServiceImpl<Rolemenu, Long> imple
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public YtIPage<Rolemenu> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -57,20 +56,20 @@ public class RolemenuServiceImpl extends YtBaseServiceImpl<Rolemenu, Long> imple
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public Rolemenu get(Long id) {
 		Rolemenu t = sysRoleMenuMapper.get(id);
 		return t;
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public List<Long> getMenuIdsByRoleId(Long roleId) {
 		return this.sysRoleMenuMapper.selectMenuIdsByRoleId(roleId);
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public List<Long> getMenuIdsByRoleIds(List<Long> roleIdList) {
 		return this.sysRoleMenuMapper.selectMenuIdsByRoleIds(roleIdList);
 	}
@@ -114,7 +113,7 @@ public class RolemenuServiceImpl extends YtBaseServiceImpl<Rolemenu, Long> imple
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+
 	public List<Integer> getMenuIdList(Integer tenantId) {
 		return this.sysRoleMenuMapper.selectMenuIdList(tenantId);
 	}
