@@ -80,9 +80,9 @@ public class TronMonitor {
 						try {
 							String txId = JSONUtil.parseObj(e.toString()).getStr("id");
 							Tronmemberorder tronmemberorder = tronmemberordermapper.getByTxId(txId);
-							long beginTime1 = System.currentTimeMillis();
-							long time1 = System.currentTimeMillis() - beginTime1;
-							log.info(">>>>>>>>>>>>>>>>>>>> 处理时间  Time = {} /ms", time1);
+//							long beginTime1 = System.currentTimeMillis();
+//							long time1 = System.currentTimeMillis() - beginTime1;
+//							log.info(">>>>>>>>>>>>>>>>>>>> 处理时间  Time = {} /ms", time1);
 							if (tronmemberorder == null) {
 								JSONObject parseObject = JSONUtil.parseObj(tronservice.gettransactionbyid(txId));
 								if (parseObject != null && parseObject.getJSONArray("ret") != null) {

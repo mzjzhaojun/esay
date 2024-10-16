@@ -225,6 +225,16 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 			if (balance != null)
 				cl.setRemotebalance(Double.valueOf(balance));
 			break;
+		case DictionaryResource.WJAISLE:
+			balance = PayUtil.SendWjGetBalance(cl);
+			if (balance != null)
+				cl.setRemotebalance(Double.valueOf(balance));
+			break;
+		case DictionaryResource.FCAISLE:
+			balance = PayUtil.SendFcGetBalance(cl);
+			if (balance != null)
+				cl.setRemotebalance(Double.valueOf(balance));
+			break;
 		}
 		return mapper.put(cl);
 	}

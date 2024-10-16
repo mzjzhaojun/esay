@@ -32,6 +32,8 @@ import com.yt.app.api.v1.vo.SysTyBalance;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.api.v1.vo.SysWdOrder;
 import com.yt.app.api.v1.vo.SysWdQuery;
+import com.yt.app.api.v1.vo.SysWjOrder;
+import com.yt.app.api.v1.vo.SysWjQuery;
 import com.yt.app.api.v1.vo.SysYJJQuery;
 import com.yt.app.api.v1.vo.SysYjjOrder;
 import com.yt.app.common.common.yt.YtBody;
@@ -515,7 +517,7 @@ public class PayUtil {
 		ResponseEntity<SysWdQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/query", HttpMethod.POST, httpEntity, SysWdQuery.class);
 		SysWdQuery data = sov.getBody();
 		log.info("豌豆查单返回消息：" + data.getMsg());
-		if (data.getCode().equals("0")) {
+		if (data.getCode().equals("0") && data.getData().getState().equals("2")) {
 			return data.getData().getState();
 		}
 		return null;
@@ -738,6 +740,187 @@ public class PayUtil {
 		log.info("公子余额返回消息：" + data.getMessage());
 		if (data.getCode().equals("0000")) {
 			return data.getResponse().getBalance();
+		}
+		return null;
+	}
+
+	// 玩家代收对接
+	public static SysWjOrder SendWjSubmit(Income pt, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		Long time = DateTimeUtil.getNow().getTime();
+		map.add("mchNo", cl.getCode());
+		map.add("productId", pt.getQrcodecode());
+		map.add("mchOrderNo", pt.getOrdernum());
+		map.add("reqTime", time.toString());
+		map.add("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
+		map.add("notifyUrl", cl.getApireusultip());
+		map.add("clientIp", "127.0.0.1");
+
+		String signContent = "amount=" + String.format("%.2f", pt.getAmount()).replace(".", "") + "&clientIp=127.0.0.1&mchNo=" + cl.getCode() + "&mchOrderNo=" + pt.getOrdernum() + "&notifyUrl=" + cl.getApireusultip() + "&productId="
+				+ pt.getQrcodecode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
+
+		String sign = MD5Utils.md5(signContent);
+		map.add("sign", sign.toUpperCase());
+		log.info("玩家下单签名：" + sign.toUpperCase() + "===" + signContent);
+
+		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysWjOrder> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/unifiedOrder", HttpMethod.POST, httpEntity, SysWjOrder.class);
+		SysWjOrder data = sov.getBody();
+		log.info("玩家返回消息：" + data.getMsg());
+		if (data.getCode().equals("0")) {
+			return data;
+		}
+		return null;
+	}
+
+	// 玩家代收查单
+	public static String SendWjQuerySubmit(String orderid, Double amount, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		Long time = DateTimeUtil.getNow().getTime();
+		map.add("mchNo", cl.getCode());
+		map.add("amount", String.format("%.2f", amount).replace(".", ""));
+		map.add("payOrderId", orderid);
+		map.add("reqTime", time.toString());
+
+		String signContent = "amount=" + String.format("%.2f", amount).replace(".", "") + "&mchNo=" + cl.getCode() + "&payOrderId=" + orderid + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
+		String sign = MD5Utils.md5(signContent);
+		map.add("sign", sign.toUpperCase());
+		log.info("玩家查单签名：" + sign.toUpperCase() + "===" + signContent);
+
+		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysWjQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/query", HttpMethod.POST, httpEntity, SysWjQuery.class);
+		SysWjQuery data = sov.getBody();
+		log.info("玩家查单返回消息：" + data.getMsg());
+		if (data.getCode().equals("0") && data.getData().getState().equals("2")) {
+			return data.getData().getState();
+		}
+		return null;
+	}
+
+	// 玩家查询余额
+	public static String SendWjGetBalance(Channel cl) {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		Long time = DateTimeUtil.getNow().getTime();
+		map.add("mchNo", cl.getCode());
+		map.add("reqTime", time.toString());
+		String signContent = "mchNo=" + cl.getCode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
+		String sign = MD5Utils.md5(signContent);
+		map.add("sign", sign.toUpperCase());
+		log.info("玩家余额签名：" + sign);
+
+		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysWjQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/mch/queryBalance", HttpMethod.POST, httpEntity, SysWjQuery.class);
+		SysWjQuery data = sov.getBody();
+		log.info("玩家余额返回消息：" + data.getData().getBalance());
+		if (data.getCode().equals("0")) {
+			return data.getData().getBalance().toString();
+		}
+		return null;
+	}
+
+	// 翡翠代收对接
+	public static SysRblOrder SendFcSubmit(Income pt, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Map<String, Object> map = new HashMap<String, Object>();
+		Long time = DateTimeUtil.getNow().getTime();
+		map.put("mchId", cl.getCode());
+		map.put("wayCode", pt.getQrcodecode());
+		map.put("outTradeNo", pt.getOrdernum());
+		map.put("subject", time.toString());
+		map.put("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
+		map.put("notifyUrl", cl.getApireusultip());
+		map.put("returnUrl", pt.getBackforwardurl());
+		map.put("clientIp", "127.0.0.1");
+		map.put("reqTime", time.toString());
+
+		String signContent = "amount=" + String.format("%.2f", pt.getAmount()).replace(".", "") + "&clientIp=127.0.0.1&mchId=" + cl.getCode() + "&notifyUrl=" + cl.getApireusultip() + "&outTradeNo=" + pt.getOrdernum() + "&reqTime=" + time.toString()
+				+ "&returnUrl=" + pt.getBackforwardurl() + "&subject=" + time.toString() + "&wayCode=" + pt.getQrcodecode() + "&key=" + cl.getApikey();
+
+		String sign = MD5Utils.md5(signContent);
+		map.put("sign", sign);
+		log.info("翡翠下单签名：" + sign + "===" + signContent);
+
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysRblOrder> sov = resttemplate.postForEntity(cl.getApiip() + "/Pay_SG.html", httpEntity, SysRblOrder.class);
+		SysRblOrder data = sov.getBody();
+		log.info("翡翠返回消息：" + data.getMessage());
+		if (data.getCode().equals("0")) {
+			return data;
+		}
+		return null;
+	}
+
+	// 翡翠代收查单
+	public static String SendFcQuerySubmit(String orderid, Double amount, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Map<String, Object> map = new HashMap<String, Object>();
+		Long time = DateTimeUtil.getNow().getTime();
+		map.put("mchId", cl.getCode());
+		map.put("outTradeNo", orderid);
+		map.put("reqTime", time.toString());
+
+		String signContent = "mchId=" + cl.getCode() + "&outTradeNo=" + orderid + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
+		String sign = MD5Utils.md5(signContent);
+		map.put("sign", sign);
+		log.info("翡翠查单签名：" + sign + "===" + signContent);
+
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysRblQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/Pay_Query.html", httpEntity, SysRblQuery.class);
+		SysRblQuery data = sov.getBody();
+		log.info("翡翠查单返回消息：" + data.getMessage());
+		if (data.getCode().equals("0") && data.getData().getState().equals("1")) {
+			return data.getData().getState();
+		}
+		return null;
+	}
+
+	// 翡翠查询余额
+	public static String SendFcGetBalance(Channel cl) {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Map<String, Object> map = new HashMap<String, Object>();
+		Long time = DateTimeUtil.getNow().getTime();
+		map.put("mchId", cl.getCode());
+		map.put("reqTime", time.toString());
+		String signContent = "mchId=" + cl.getCode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
+		String sign = MD5Utils.md5(signContent);
+		map.put("sign", sign);
+		log.info("翡翠查单签名：" + sign + "===" + signContent);
+
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysRblQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/Pay_Querybalance.html", httpEntity, SysRblQuery.class);
+		SysRblQuery data = sov.getBody();
+		log.info("翡翠余额返回消息：" + data.getData().getBalance());
+		if (data.getCode().equals("0")) {
+			return data.getData().getBalance();
 		}
 		return null;
 	}

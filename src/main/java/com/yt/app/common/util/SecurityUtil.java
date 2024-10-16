@@ -15,6 +15,9 @@ import com.yt.app.common.base.context.AuthContext;
 import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.exption.YtException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SecurityUtil {
 	/**
 	 * API解密
@@ -25,7 +28,7 @@ public class SecurityUtil {
 			byte[] plaintext = RsaUtil.decryptByPrivateKey(Base64.decodeBase64(aesKey), RsaUtil.getPrivateKey());
 			aesKey = new String(plaintext);
 			data = AesUtil.decrypt(data, aesKey);
-			System.out.println(data);
+			log.info("param:" + data);
 			return cleanXSS(data);
 		} catch (Throwable e) {
 			throw new YtException("用户长时间未登录！", YtCodeEnum.YT401);

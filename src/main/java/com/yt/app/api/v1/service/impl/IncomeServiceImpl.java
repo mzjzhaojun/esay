@@ -60,6 +60,7 @@ import com.yt.app.api.v1.vo.SysGzOrder;
 import com.yt.app.api.v1.vo.SysHsOrder;
 import com.yt.app.api.v1.vo.SysRblOrder;
 import com.yt.app.api.v1.vo.SysWdOrder;
+import com.yt.app.api.v1.vo.SysWjOrder;
 import com.yt.app.api.v1.vo.SysYjjOrder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -238,7 +239,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			success(income);
 			TenantIdContext.remove();
 		}
-
 	}
 
 	@Override
@@ -262,6 +262,26 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
+	public void fccallback(Map<String, Object> params) {
+		String orderid = params.get("outTradeNo").toString();
+		String status = params.get("state").toString();
+		log.info("翡翠通知返回消息：orderid" + orderid + " status:" + status);
+		Income income = mapper.getByOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendFcQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "翡翠通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
+			TenantIdContext.remove();
+		}
+	}
+
+	@Override
 	public void gzcallback(Map<String, Object> params) {
 		String orderid = params.get("out_trade_no").toString();
 		String status = params.get("pay_status").toString();
@@ -275,6 +295,26 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		String returnstate = PayUtil.SendGzQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "公子通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
+			TenantIdContext.remove();
+		}
+	}
+
+	@Override
+	public void wjcallback(Map<String, String> params) {
+		String orderid = params.get("payOrderId").toString();
+		String status = params.get("state").toString();
+		log.info("玩家通知返回消息：orderid" + orderid + " status:" + status);
+		Income income = mapper.getByQrcodeOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendWjQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "玩家通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
 			TenantIdContext.remove();
@@ -488,7 +528,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		switch (channel.getName()) {
 		case DictionaryResource.YJJAISLE:
 			SysYjjOrder syo = PayUtil.SendYJJSubmit(income, channel);
-			Assert.notNull(syo, "YJJ获取渠道订单失败!");
+			Assert.notNull(syo, "雨将军获取渠道订单失败!");
 			income.setResulturl(syo.getData().getPay_url());
 			income.setQrcodeordernum(syo.getData().getOrder_id());
 			break;
@@ -515,6 +555,18 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			Assert.notNull(gz, "公子获取渠道订单失败!");
 			income.setResulturl(gz.getResponse().getPay_url());
 			income.setQrcodeordernum(gz.getResponse().getOrder_id());
+			break;
+		case DictionaryResource.WJAISLE:
+			SysWjOrder wj = PayUtil.SendWjSubmit(income, channel);
+			Assert.notNull(wj, "玩家获取渠道订单失败!");
+			income.setResulturl(wj.getData().getPayData());
+			income.setQrcodeordernum(wj.getData().getPayOrderId());
+			break;
+		case DictionaryResource.FCAISLE:
+			SysRblOrder fc = PayUtil.SendFcSubmit(income, channel);
+			Assert.notNull(fc, "翡翠获取渠道订单失败!");
+			income.setResulturl(fc.getData().getPayUrl());
+			income.setQrcodeordernum(fc.getData().getTradeNo());
 			break;
 		}
 		// 渠道收入

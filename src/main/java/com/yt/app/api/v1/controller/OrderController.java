@@ -227,6 +227,42 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	}
 
 	/**
+	 * 玩家代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/wjcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void wjcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		incomeservice.wjcallback(params);
+		try {
+			response.getWriter().print("success");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 翡翠代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/fccallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void fccallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		incomeservice.fccallback(RequestUtil.requestEntityToParamMap(requestEntity));
+		try {
+			response.getWriter().print("success");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * 支付宝当面付回调
 	 * 
 	 * @param requestEntity

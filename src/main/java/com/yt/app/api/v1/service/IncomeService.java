@@ -2,8 +2,6 @@ package com.yt.app.api.v1.service;
 
 import java.util.Map;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.vo.IncomeVO;
@@ -34,22 +32,28 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 	QrcodeResultVO submitQrcode(QrcodeSubmitDTO qs);
 
 	// 宏盛回调
-	void hscallback(@RequestParam Map<String, String> params);
+	void hscallback(Map<String, String> params);
 
 	// yjj回调
-	void yjjcallback(@RequestParam Map<String, String> params);
+	void yjjcallback(Map<String, String> params);
 
 	// 豌豆回调
-	void wdcallback(@RequestParam Map<String, String> params);
+	void wdcallback(Map<String, String> params);
+
+	// 玩家回调
+	void wjcallback(Map<String, String> params);
 
 	// 日不落回调
 	void rblcallback(Map<String, Object> params);
+
+	// 翡翠回调
+	void fccallback(Map<String, Object> params);
 
 	// 公子回调
 	void gzcallback(Map<String, Object> params);
 
 	// alipay回調
-	void alipayftfcallback(@RequestParam Map<String, String> params);
+	void alipayftfcallback(Map<String, String> params);
 
 	// 补单
 	Integer makeuporder(Income income);
