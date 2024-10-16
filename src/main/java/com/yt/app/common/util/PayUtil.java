@@ -428,7 +428,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysYjjOrder> sov = resttemplate.exchange(cl.getApiip() + "/index/order", HttpMethod.POST, httpEntity, SysYjjOrder.class);
 		SysYjjOrder data = sov.getBody();
-		log.info("YJJ返回消息：" + data.getMsg());
+		log.info("YJJ返回消息：" + data);
 		if (data.getCode().equals("0")) {
 			return data;
 		}
@@ -455,7 +455,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysYJJQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/index/query", HttpMethod.POST, httpEntity, SysYJJQuery.class);
 		SysYJJQuery data = sov.getBody();
-		log.info("YJJ查单返回消息：" + data.getMsg());
+		log.info("YJJ查单返回消息：" + data);
 		if (data.getMsg().equals("ok")) {
 			return data.getData().getStatus();
 		}
@@ -489,7 +489,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysWdOrder> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/unifiedOrder", HttpMethod.POST, httpEntity, SysWdOrder.class);
 		SysWdOrder data = sov.getBody();
-		log.info("豌豆返回消息：" + data.getMsg());
+		log.info("豌豆返回消息：" + data);
 		if (data.getCode().equals("0")) {
 			return data;
 		}
@@ -518,7 +518,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysWdQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/query", HttpMethod.POST, httpEntity, SysWdQuery.class);
 		SysWdQuery data = sov.getBody();
-		log.info("豌豆查单返回消息：" + data.getMsg());
+		log.info("豌豆查单返回消息：" + data);
 		if (data.getCode().equals("0") && data.getData().getState().equals("2")) {
 			return data.getData().getState();
 		}
@@ -545,7 +545,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysWdQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/mch/queryBalance", HttpMethod.POST, httpEntity, SysWdQuery.class);
 		SysWdQuery data = sov.getBody();
-		log.info("豌豆余额返回消息：" + data.getData().getBalance());
+		log.info("豌豆余额返回消息：" + data);
 		if (data.getCode().equals("0")) {
 			return data.getData().getBalance().toString();
 		}
@@ -581,7 +581,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysRblOrder> sov = resttemplate.postForEntity(cl.getApiip() + "/api/pay/order", httpEntity, SysRblOrder.class);
 		SysRblOrder data = sov.getBody();
-		log.info("日不落返回消息：" + data.getMessage());
+		log.info("日不落返回消息：" + data);
 		if (data.getCode().equals("0")) {
 			return data;
 		}
@@ -609,7 +609,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysRblQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/api/pay/query", httpEntity, SysRblQuery.class);
 		SysRblQuery data = sov.getBody();
-		log.info("日不落查单返回消息：" + data.getMessage());
+		log.info("日不落查单返回消息：" + data);
 		if (data.getCode().equals("0") && data.getData().getState().equals("1")) {
 			return data.getData().getState();
 		}
@@ -636,7 +636,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysRblQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/api/mch/balance", httpEntity, SysRblQuery.class);
 		SysRblQuery data = sov.getBody();
-		log.info("日不落余额返回消息：" + data.getData().getBalance());
+		log.info("日不落余额返回消息：" + data);
 		if (data.getCode().equals("0")) {
 			return data.getData().getBalance();
 		}
@@ -670,7 +670,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysGzOrder> sov = resttemplate.postForEntity(cl.getApiip() + "/api/gateway", httpEntity, SysGzOrder.class);
 		SysGzOrder data = sov.getBody();
-		log.info("公子返回消息：" + data.getMessage());
+		log.info("公子返回消息：" + data);
 		if (data.getCode().equals("0000")) {
 			return data;
 		}
@@ -704,7 +704,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysGzQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/api/gateway", httpEntity, SysGzQuery.class);
 		SysGzQuery data = sov.getBody();
-		log.info("公子查单返回消息：" + data.getMessage());
+		log.info("公子查单返回消息：" + data);
 		if (data.getCode().equals("0000") && data.getResponse().getStatus().equals("2")) {
 			return data.getResponse().getStatus();
 		}
@@ -739,7 +739,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysGzQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/api/gateway", httpEntity, SysGzQuery.class);
 		SysGzQuery data = sov.getBody();
-		log.info("公子余额返回消息：" + data.getMessage());
+		log.info("公子余额返回消息：" + data);
 		if (data.getCode().equals("0000")) {
 			return data.getResponse().getBalance();
 		}
@@ -773,7 +773,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysWjOrder> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/unifiedOrder", HttpMethod.POST, httpEntity, SysWjOrder.class);
 		SysWjOrder data = sov.getBody();
-		log.info("玩家返回消息：" + data.getMsg());
+		log.info("玩家返回消息：" + data);
 		if (data.getCode().equals("0")) {
 			return data;
 		}
@@ -802,7 +802,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysWjQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/query", HttpMethod.POST, httpEntity, SysWjQuery.class);
 		SysWjQuery data = sov.getBody();
-		log.info("玩家查单返回消息：" + data.getMsg());
+		log.info("玩家查单返回消息：" + data);
 		if (data.getCode().equals("0") && data.getData().getState().equals("2")) {
 			return data.getData().getState();
 		}
@@ -829,7 +829,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysWjQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/mch/queryBalance", HttpMethod.POST, httpEntity, SysWjQuery.class);
 		SysWjQuery data = sov.getBody();
-		log.info("玩家余额返回消息：" + data.getData().getBalance());
+		log.info("玩家余额返回消息：" + data);
 		if (data.getCode().equals("0")) {
 			return data.getData().getBalance().toString();
 		}
@@ -865,7 +865,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysFcOrder> sov = resttemplate.postForEntity(cl.getApiip() + "/Pay_SG.html", httpEntity, SysFcOrder.class);
 		SysFcOrder data = sov.getBody();
-		log.info("翡翠返回消息：" + data.getMessage());
+		log.info("翡翠返回消息：" + data);
 		if (data.getCode().equals("0")) {
 			return data;
 		}
@@ -893,7 +893,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysFcQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/Pay_Query.html", httpEntity, SysFcQuery.class);
 		SysFcQuery data = sov.getBody();
-		log.info("翡翠查单返回消息：" + data.getMessage());
+		log.info("翡翠查单返回消息：" + data);
 		if (data.getCode().equals("0") && data.getData().getState().equals("1")) {
 			return data.getData().getState();
 		}
@@ -920,7 +920,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysFcQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/Pay_Querybalance.html", httpEntity, SysFcQuery.class);
 		SysFcQuery data = sov.getBody();
-		log.info("翡翠余额返回消息：" + data.getData().getBalance());
+		log.info("翡翠余额返回消息：" + data);
 		if (data.getCode().equals("0")) {
 			return data.getData().getBalance();
 		}
