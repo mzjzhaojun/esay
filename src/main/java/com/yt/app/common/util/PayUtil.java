@@ -22,6 +22,8 @@ import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.vo.PayResultVO;
 import com.yt.app.api.v1.vo.QrcodeResultVO;
 import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
+import com.yt.app.api.v1.vo.SysFcOrder;
+import com.yt.app.api.v1.vo.SysFcQuery;
 import com.yt.app.api.v1.vo.SysGzOrder;
 import com.yt.app.api.v1.vo.SysGzQuery;
 import com.yt.app.api.v1.vo.SysHsOrder;
@@ -835,7 +837,7 @@ public class PayUtil {
 	}
 
 	// 翡翠代收对接
-	public static SysRblOrder SendFcSubmit(Income pt, Channel cl) {
+	public static SysFcOrder SendFcSubmit(Income pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
@@ -861,8 +863,8 @@ public class PayUtil {
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		//
-		ResponseEntity<SysRblOrder> sov = resttemplate.postForEntity(cl.getApiip() + "/Pay_SG.html", httpEntity, SysRblOrder.class);
-		SysRblOrder data = sov.getBody();
+		ResponseEntity<SysFcOrder> sov = resttemplate.postForEntity(cl.getApiip() + "/Pay_SG.html", httpEntity, SysFcOrder.class);
+		SysFcOrder data = sov.getBody();
 		log.info("翡翠返回消息：" + data.getMessage());
 		if (data.getCode().equals("0")) {
 			return data;
@@ -889,8 +891,8 @@ public class PayUtil {
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		//
-		ResponseEntity<SysRblQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/Pay_Query.html", httpEntity, SysRblQuery.class);
-		SysRblQuery data = sov.getBody();
+		ResponseEntity<SysFcQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/Pay_Query.html", httpEntity, SysFcQuery.class);
+		SysFcQuery data = sov.getBody();
 		log.info("翡翠查单返回消息：" + data.getMessage());
 		if (data.getCode().equals("0") && data.getData().getState().equals("1")) {
 			return data.getData().getState();
@@ -916,8 +918,8 @@ public class PayUtil {
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		//
-		ResponseEntity<SysRblQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/Pay_Querybalance.html", httpEntity, SysRblQuery.class);
-		SysRblQuery data = sov.getBody();
+		ResponseEntity<SysFcQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/Pay_Querybalance.html", httpEntity, SysFcQuery.class);
+		SysFcQuery data = sov.getBody();
 		log.info("翡翠余额返回消息：" + data.getData().getBalance());
 		if (data.getCode().equals("0")) {
 			return data.getData().getBalance();

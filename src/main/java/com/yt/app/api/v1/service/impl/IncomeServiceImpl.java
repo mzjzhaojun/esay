@@ -56,6 +56,7 @@ import com.yt.app.api.v1.entity.Qrcodeaisleqrcode;
 import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.api.v1.vo.QrcodeResultVO;
 import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
+import com.yt.app.api.v1.vo.SysFcOrder;
 import com.yt.app.api.v1.vo.SysGzOrder;
 import com.yt.app.api.v1.vo.SysHsOrder;
 import com.yt.app.api.v1.vo.SysRblOrder;
@@ -563,7 +564,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			income.setQrcodeordernum(wj.getData().getPayOrderId());
 			break;
 		case DictionaryResource.FCAISLE:
-			SysRblOrder fc = PayUtil.SendFcSubmit(income, channel);
+			SysFcOrder fc = PayUtil.SendFcSubmit(income, channel);
 			Assert.notNull(fc, "翡翠获取渠道订单失败!");
 			income.setResulturl(fc.getData().getPayUrl());
 			income.setQrcodeordernum(fc.getData().getTradeNo());
