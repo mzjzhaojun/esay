@@ -7,7 +7,6 @@ import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
 import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
-import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.PayUtil;
 
@@ -37,11 +36,10 @@ public class InComeNotifyThread implements Runnable {
 		log.info("代收通知 start-----------商户单号：" + income.getOrdernum() + " url:" + income.getNotifyurl());
 		int i = 1;
 		while (true) {
-			YtBody result;
 			try {
-				result = PayUtil.SendIncomeNotify(income.getNotifyurl(), qqr, merchant.getAppkey());
+				String result = PayUtil.SendIncomeNotify(income.getNotifyurl(), qqr, merchant.getAppkey());
 				// 通知到
-				if (result.getCode() == 200) {
+				if (result.equals("success")) {
 					log.info("代收通知成功，商户单号：" + income.getOrdernum());
 					income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_63);
 					int j = mapper.put(income);

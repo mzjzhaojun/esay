@@ -38,7 +38,6 @@ import com.yt.app.api.v1.vo.SysWjOrder;
 import com.yt.app.api.v1.vo.SysWjQuery;
 import com.yt.app.api.v1.vo.SysYJJQuery;
 import com.yt.app.api.v1.vo.SysYjjOrder;
-import com.yt.app.common.common.yt.YtBody;
 import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -178,7 +177,7 @@ public class PayUtil {
 	}
 
 	// 代付盘口通知
-	public static YtBody SendPayoutNotify(String url, PayResultVO ss, String key) {
+	public static String SendPayoutNotify(String url, PayResultVO ss, String key) {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -196,14 +195,14 @@ public class PayUtil {
 		map.add("sign", signParams);
 		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
-		ResponseEntity<YtBody> sov = resttemplate.exchange(url, HttpMethod.POST, httpEntity, YtBody.class);
-		YtBody data = sov.getBody();
-		log.info("商户代付盘口通知" + ss.getPayorderid() + "通知返回:" + data.getCode());
+		ResponseEntity<String> sov = resttemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
+		String data = sov.getBody();
+		log.info("商户代付盘口通知" + ss.getPayorderid() + "通知返回:" + data);
 		return data;
 	}
 
 	// 代收盘口通知
-	public static YtBody SendIncomeNotify(String url, QueryQrcodeResultVO ss, String key) {
+	public static String SendIncomeNotify(String url, QueryQrcodeResultVO ss, String key) {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -219,9 +218,9 @@ public class PayUtil {
 		map.add("pay_md5sign", signParams);
 		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
-		ResponseEntity<YtBody> sov = resttemplate.exchange(url, HttpMethod.POST, httpEntity, YtBody.class);
-		YtBody data = sov.getBody();
-		log.info("商户代收盘口通知" + ss.getPay_orderid() + "通知返回:" + data.getCode());
+		ResponseEntity<String> sov = resttemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
+		String data = sov.getBody();
+		log.info("商户代收盘口通知" + ss.getPay_orderid() + "通知返回:" + data);
 		return data;
 	}
 

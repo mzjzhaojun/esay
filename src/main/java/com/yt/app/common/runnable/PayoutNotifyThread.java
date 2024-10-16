@@ -7,7 +7,6 @@ import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.vo.PayResultVO;
 import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
-import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.PayUtil;
 
@@ -40,11 +39,10 @@ public class PayoutNotifyThread implements Runnable {
 		log.info("代付通知 start---------------------商户单号：" + payout.getOrdernum());
 		int i = 1;
 		while (true) {
-			YtBody result;
 			try {
-				result = PayUtil.SendPayoutNotify(payout.getNotifyurl(), ss, merchant.getAppkey());
+				String result = PayUtil.SendPayoutNotify(payout.getNotifyurl(), ss, merchant.getAppkey());
 				// 通知到
-				if (result.getCode() == 200) {
+				if (result.equals("success")) {
 					log.info("代付通知成功，商户单号：" + payout.getOrdernum());
 					payout.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_63);
 					int j = mapper.put(payout);
