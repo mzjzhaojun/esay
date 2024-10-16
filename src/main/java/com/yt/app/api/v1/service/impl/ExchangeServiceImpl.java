@@ -28,7 +28,7 @@ import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.MerchantcustomerbanksService;
 import com.yt.app.api.v1.service.SysconfigService;
 import com.yt.app.api.v1.service.SystemaccountService;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
@@ -54,7 +54,7 @@ import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
@@ -273,7 +273,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Exchange> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -287,20 +287,21 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Exchange get(Long id) {
 		Exchange t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Exchange query(String channelordernum) {
 		Exchange pt = mapper.getByChannelOrdernum(channelordernum);
 		return pt;
 	}
 
 	@Override
+	@Transactional
 	public YtBody tycallbackpay(SysTyOrder so) {
 		RLock lock = RedissonUtil.getLock(so.getTypay_order_id());
 		try {
@@ -329,6 +330,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 	// API提交订单
 	@Override
+	@Transactional
 	public Exchange submit(PaySubmitDTO ss) {
 		String id = ss.getMerchantid();
 		Merchant mc = merchantmapper.get(Long.valueOf(id));
@@ -356,9 +358,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		return pt;
 	}
 
-	@Transactional
 	public void addExchange(Exchange t, Merchant m) {
-
 		if (!m.getStatus()) {
 			throw new YtException("商户被冻结!");
 		}
@@ -497,7 +497,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<ExchangeVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {
@@ -650,6 +650,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	}
 
 	@Override
+	@Transactional
 	public void exchangemanual(Exchange ex) {
 		User u = usermapper.get(SysUserContext.getUserId());
 		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(ex.getRemark()), System.currentTimeMillis());
@@ -662,6 +663,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	}
 
 	@Override
+	@Transactional
 	public Exchange submit(String ordernum) {
 		Exchange ex = mapper.getByOrdernum(ordernum);
 		if (ex.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51))

@@ -27,7 +27,7 @@ import com.yt.app.api.v1.service.IncomemerchantaccountService;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.api.v1.service.SystemaccountService;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.AuthContext;
 import com.yt.app.common.base.context.TenantIdContext;
@@ -66,7 +66,7 @@ import com.yt.app.api.v1.vo.SysYjjOrder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.config.YtConfig;
-
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.AliPayUtil;
@@ -146,21 +146,21 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Income> list(Map<String, Object> param) {
 		List<Income> list = mapper.list(param);
 		return new YtPageBean<Income>(list);
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Income get(Long id) {
 		Income t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<IncomeVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {
@@ -176,11 +176,13 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Income getByOrderNum(String ordernum) {
 		return mapper.getByOrderNum(ordernum);
 	}
 
 	@Override
+	@Transactional
 	public void hscallback(@RequestParam Map<String, String> params) {
 		String orderid = params.get("orderid").toString();
 		String status = params.get("status").toString();
@@ -202,6 +204,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
+	@Transactional
 	public void yjjcallback(Map<String, String> params) {
 		String orderid = params.get("order_id").toString();
 		String status = params.get("status").toString();
@@ -223,6 +226,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
+	@Transactional
 	public void wdcallback(Map<String, String> params) {
 		String orderid = params.get("payOrderId").toString();
 		String status = params.get("state").toString();
@@ -243,6 +247,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
+	@Transactional
 	public void rblcallback(Map<String, Object> params) {
 		String orderid = params.get("outTradeNo").toString();
 		String status = params.get("state").toString();
@@ -263,6 +268,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
+	@Transactional
 	public void fccallback(Map<String, Object> params) {
 		String orderid = params.get("outTradeNo").toString();
 		String status = params.get("state").toString();
@@ -283,6 +289,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
+	@Transactional
 	public void gzcallback(Map<String, Object> params) {
 		String orderid = params.get("out_trade_no").toString();
 		String status = params.get("pay_status").toString();
@@ -303,6 +310,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
+	@Transactional
 	public void wjcallback(Map<String, String> params) {
 		String orderid = params.get("payOrderId").toString();
 		String status = params.get("state").toString();
@@ -621,6 +629,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return qrv;
 	}
 
+	@Transactional
 	public AlipayTradePrecreateResponse alif2f(Qrcode qrcode, String ordernum, Double amount, Integer exp) {
 		try {
 			AlipayClient client = AliPayUtil.initAliPay(qrcode.getAppid(), qrcode.getAppprivatekey(), qrcode.getApppublickey(), qrcode.getAlipaypublickey(), qrcode.getAlipayprovatekey());
@@ -657,6 +666,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
+	@Transactional
 	public void alipayftfcallback(Map<String, String> params) {
 		String trade_no = params.get("trade_no").toString();
 		String out_trade_no = params.get("out_trade_no").toString();
@@ -702,7 +712,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Merchant mc = merchantmapper.getByCode(qs.getPay_memberid());
 		Assert.notNull(mc, "商户不存在!");
 		String ip = AuthContext.getIp();
-		if (mc.getIpaddress().indexOf(ip) == -1) {
+		if (mc.getIpaddress() == null || mc.getIpaddress().indexOf(ip) == -1) {
 			throw new YtException("非法请求!");
 		}
 		if (!mc.getStatus()) {
@@ -718,6 +728,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return mc;
 	}
 
+	@Transactional
 	private Income addIncome(Channel channel, Qrcodeaisle qas, Merchant mc, QrcodeSubmitDTO qs, Qrcode qd) {
 		Income income = new Income();
 		// 商戶
@@ -750,6 +761,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return income;
 	}
 
+	@Transactional
 	private QrcodeResultVO addOtherOrder(Income income, Channel channel, Aisle qas, Merchant mc, QrcodeSubmitDTO qs) {
 		// 添加qrcode订单
 		Qrcodeaccountorder qao = new Qrcodeaccountorder();
@@ -764,6 +776,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qao.setAmount(income.getAmount());
 		qao.setRealamount(income.getRealamount());
 		qao.setResulturl(income.getResulturl());
+		qao.setQrcodecode(income.getQrcodecode());
 		qao.setMerchantname(income.getMerchantname());
 		qao.setQrocde(income.getQrcode());
 		qao.setDynamic(qas.getDynamic());
@@ -788,6 +801,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		imao.setAmount(income.getAmount());
 		imao.setRealamount(income.getRealamount());
 		imao.setResulturl(income.getResulturl());
+		imao.setQrcodecode(income.getQrcodecode());
 		imao.setMerchantname(income.getMerchantname());
 		imao.setQrocde(income.getQrcode());
 		imao.setStatus(income.getStatus());
@@ -809,6 +823,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return qr;
 	}
 
+	@Transactional
 	private QrcodeResultVO addOtherOrderMqd(Income income, Channel channel, Qrcodeaisle qas, Merchant mc, QrcodeSubmitDTO qs) {
 		// 添加qrcode订单
 		Qrcodeaccountorder qao = new Qrcodeaccountorder();
@@ -823,6 +838,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qao.setAmount(income.getAmount());
 		qao.setRealamount(income.getRealamount());
 		qao.setResulturl(income.getResulturl());
+		qao.setQrcodecode(income.getQrcodecode());
 		qao.setMerchantname(income.getMerchantname());
 		qao.setQrocde(income.getQrcode());
 		qao.setDynamic(qas.getDynamic());
@@ -845,6 +861,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		imao.setType(income.getType());
 		imao.setFewamount(income.getFewamount());
 		imao.setAmount(income.getAmount());
+		imao.setQrcodecode(income.getQrcodecode());
 		imao.setRealamount(income.getRealamount());
 		imao.setResulturl(income.getResulturl());
 		imao.setMerchantname(income.getMerchantname());
@@ -868,6 +885,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return qr;
 	}
 
+	@Transactional
 	private void success(Income income) {
 		// 計算代收
 		income.setStatus(DictionaryResource.PAYOUTSTATUS_52);
@@ -897,6 +915,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		systemaccountservice.updateIncome(income);
 	}
 
+	@Transactional
 	private void success(Income income, String trade_no) {
 		TenantIdContext.setTenantId(income.getTenant_id());
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
@@ -934,6 +953,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
+	@Transactional
 	public Integer makeuporder(Income inc) {
 		Income newincome = mapper.get(inc.getId());
 
@@ -958,12 +978,14 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
+	@Transactional
 	public Integer notify(Income income) {
 		income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 		return mapper.put(income);
 	}
 
 	@Override
+	@Transactional
 	public Integer addip() {
 		Merchant mt = merchantmapper.getByCode("SH00001");
 		mt.setIpaddress(mt.getIpaddress() + "," + AuthContext.getIp());

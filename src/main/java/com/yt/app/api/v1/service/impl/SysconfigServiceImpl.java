@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.SysconfigMapper;
 import com.yt.app.api.v1.service.SysconfigService;
 import com.yt.app.api.v1.vo.SysOxxVo;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Sysconfig;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.RedisUtil;
 
 import cn.hutool.core.bean.BeanUtil;
@@ -48,7 +48,7 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Sysconfig> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -62,13 +62,14 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Sysconfig get(Long id) {
 		Sysconfig t = mapper.get(id);
 		return t;
 	}
 
 	@Override
+	@Transactional
 	public void initSystemData() {
 		getUsdtExchange();
 		getUsdtToTrx();
@@ -100,13 +101,13 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Sysconfig getUsdtExchangeData() {
 		return mapper.getByName(ServiceConstant.SYSTEM_PAYCONFIG_USDTEXCHANGE);
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Sysconfig getUsdtToTrxExchangeData() {
 		return mapper.getByName(ServiceConstant.SYSTEM_PAYCONFIG_USDTOTEXCHANGE);
 	}

@@ -5,11 +5,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.TronmemberorderMapper;
 import com.yt.app.api.v1.service.TronmemberorderService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Tronmemberorder;
 import com.yt.app.api.v1.vo.TronmemberorderVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,21 +36,21 @@ public class TronmemberorderServiceImpl extends YtBaseServiceImpl<Tronmemberorde
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Tronmemberorder> list(Map<String, Object> param) {
 		List<Tronmemberorder> list = mapper.list(param);
 		return new YtPageBean<Tronmemberorder>(list);
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tronmemberorder get(Long id) {
 		Tronmemberorder t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<TronmemberorderVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {

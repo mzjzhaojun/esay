@@ -11,7 +11,7 @@ import com.yt.app.api.v1.mapper.PayoutMerchantaccountrecordMapper;
 import com.yt.app.api.v1.mapper.MerchantaccountbankMapper;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.PayoutMerchantaccountService;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Merchant;
@@ -21,7 +21,7 @@ import com.yt.app.api.v1.entity.Merchantaccountbank;
 import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.RedissonUtil;
 
@@ -61,7 +61,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<PayoutMerchantaccount> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -75,21 +75,21 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public PayoutMerchantaccount get(Long id) {
 		PayoutMerchantaccount t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public PayoutMerchantaccount getData() {
 		PayoutMerchantaccount t = mapper.getByUserId(SysUserContext.getUserId());
 		return t;
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public PayoutMerchantaccount getDataBank() {
 		PayoutMerchantaccount t = mapper.getByUserId(SysUserContext.getUserId());
 		List<Merchantaccountbank> listbanks = merchantaccountbankmapper.listByUserid(SysUserContext.getUserId());
@@ -98,7 +98,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public PayoutMerchantaccount getDataBank(Long id) {
 		Merchant m = merchantmapper.get(id);
 		PayoutMerchantaccount t = mapper.getByUserId(m.getUserid());

@@ -7,12 +7,13 @@ import org.tron.trident.core.key.KeyPair;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.TronMapper;
 import com.yt.app.api.v1.service.TronService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Tron;
 import com.yt.app.api.v1.vo.TronVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.util.TronUtil;
 
@@ -51,21 +52,21 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Tron> list(Map<String, Object> param) {
 		List<Tron> list = mapper.list(param);
 		return new YtPageBean<Tron>(list);
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tron get(Long id) {
 		Tron t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<TronVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {

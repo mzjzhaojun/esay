@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.SystemaccountMapper;
 import com.yt.app.api.v1.mapper.SystemaccountrecordMapper;
 import com.yt.app.api.v1.service.SystemaccountService;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.context.JwtUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agentaccountorder;
@@ -18,7 +18,7 @@ import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.api.v1.entity.Systemaccountrecord;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.RedissonUtil;
 
@@ -48,7 +48,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Systemaccount> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -62,12 +62,14 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Systemaccount get(Long id) {
 		Systemaccount t = mapper.get(id);
 		return t;
 	}
 
+	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Systemaccount getData() {
 		Systemaccount t = mapper.get(JwtUserContext.get().getSystemaccountId());
 		return t;
@@ -224,6 +226,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 * 换汇收入
 	 */
 	@Override
+	@Transactional
 	public void updateUsdtTotalincome(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
@@ -256,6 +259,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 * 换汇支出
 	 */
 	@Override
+	@Transactional
 	public void updateUsdtWithdrawamount(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
@@ -284,6 +288,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	}
 
 	@Override
+	@Transactional
 	public void updateIncome(Income mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {

@@ -15,7 +15,7 @@ import com.yt.app.api.v1.mapper.PayoutMerchantaccountMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.vo.IncomemerchantaccountorderVO;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
@@ -32,7 +32,7 @@ import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PasswordUtil;
@@ -144,7 +144,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Merchant> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -158,7 +158,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Merchant get(Long id) {
 		Merchant t = mapper.get(id);
 		return t;
@@ -231,13 +231,14 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Merchant getData() {
 		Merchant t = mapper.getByUserId(SysUserContext.getUserId());
 		return t;
 	}
 
 	@Override
+	@Transactional
 	public void withdrawamount(PayoutMerchantaccount ma) {
 		RLock lock = RedissonUtil.getLock(ma.getMerchantid());
 		try {
@@ -252,6 +253,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	}
 
 	@Override
+	@Transactional
 	public void withdrawamount(Incomemerchantaccount ma) {
 		RLock lock = RedissonUtil.getLock(ma.getMerchantid());
 		try {
@@ -266,6 +268,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	}
 
 	@Override
+	@Transactional
 	public void updateExchange(Exchange t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
@@ -281,6 +284,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	}
 
 	@Override
+	@Transactional
 	public void updateInComeUsdt(ExchangeMerchantaccount t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
@@ -296,6 +300,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	}
 
 	@Override
+	@Transactional
 	public void withdrawamountUsdt(ExchangeMerchantaccount t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
@@ -310,6 +315,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	}
 
 	@Override
+	@Transactional
 	public void updateIncome(Income t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
@@ -327,6 +333,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	}
 
 	@Override
+	@Transactional
 	public void updateDayValue(Merchant m, String date) {
 		RLock lock = RedissonUtil.getLock(m.getId());
 		try {

@@ -5,14 +5,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.QrcodeaccountrecordMapper;
 import com.yt.app.api.v1.service.QrcodeaccountrecordService;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Qrcodeaccountrecord;
 import com.yt.app.api.v1.vo.QrcodeaccountrecordVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.RedisUtil;
 
 import java.util.Collections;
@@ -38,21 +38,21 @@ public class QrcodeaccountrecordServiceImpl extends YtBaseServiceImpl<Qrcodeacco
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Qrcodeaccountrecord> list(Map<String, Object> param) {
 		List<Qrcodeaccountrecord> list = mapper.list(param);
 		return new YtPageBean<Qrcodeaccountrecord>(list);
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Qrcodeaccountrecord get(Long id) {
 		Qrcodeaccountrecord t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<QrcodeaccountrecordVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {

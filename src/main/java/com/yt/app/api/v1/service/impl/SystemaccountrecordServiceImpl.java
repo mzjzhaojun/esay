@@ -5,13 +5,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.SystemaccountrecordMapper;
 import com.yt.app.api.v1.service.SystemaccountrecordService;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Systemaccountrecord;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.RedisUtil;
 
 import java.util.Collections;
@@ -37,7 +37,7 @@ public class SystemaccountrecordServiceImpl extends YtBaseServiceImpl<Systemacco
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Systemaccountrecord> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -54,7 +54,7 @@ public class SystemaccountrecordServiceImpl extends YtBaseServiceImpl<Systemacco
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Systemaccountrecord get(Long id) {
 		Systemaccountrecord t = mapper.get(id);
 		return t;

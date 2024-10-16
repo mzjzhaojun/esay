@@ -3,7 +3,6 @@ package com.yt.app.common.aspect;
 import com.google.gson.Gson;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
-import com.yt.app.common.common.YtRoutingDataSource;
 import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.config.YtRedis;
 import com.yt.app.common.util.RedisHashUtil;
@@ -49,9 +48,6 @@ public class Yta {
 	@Autowired
 	Gson g;
 
-	@Autowired
-	private YtRoutingDataSource j;
-
 	@Pointcut("(execution(* com.yt.app.api.v1.mapper..*(..))) || (execution(* com.yt.app.common.base.YtIBaseMapper.*(..))) ")
 	public void a() {
 	}
@@ -76,7 +72,6 @@ public class Yta {
 			}
 		}
 		if (annotation.annotationType().equals(YtRedisCacheEvictAnnotation.class)) {
-			this.j.o();
 			if (getMethodMatchesPost(methodName)) {
 				Method mg = args[0].getClass().getDeclaredMethod("getId");
 				Long id = (Long) mg.invoke(args[0]);
@@ -91,7 +86,6 @@ public class Yta {
 			}
 			result = joinPoint.proceed(args);
 		} else if (annotation.annotationType().equals(YtRedisCacheAnnotation.class)) {
-			this.j.n();
 			if (d.isCache()) {
 				log.info("从缓存读取数据");
 				result = rs.getObjectEx(classname, key);

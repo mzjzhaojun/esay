@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.SystemaccountMapper;
 import com.yt.app.api.v1.mapper.SystemstatisticalreportsMapper;
 import com.yt.app.api.v1.service.SystemstatisticalreportsService;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.BaseConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Systemaccount;
@@ -15,6 +15,7 @@ import com.yt.app.api.v1.entity.Systemstatisticalreports;
 import com.yt.app.api.v1.vo.SystemstatisticalreportsVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,21 +43,21 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Systemstatisticalreports> list(Map<String, Object> param) {
 		List<Systemstatisticalreports> list = mapper.list(param);
 		return new YtPageBean<Systemstatisticalreports>(list);
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Systemstatisticalreports get(Long id) {
 		Systemstatisticalreports t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<SystemstatisticalreportsVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {
@@ -67,12 +68,12 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 	}
 
 	@Override
+	@Transactional
 	public void updateDayValue() {
 		Systemaccount sa = systemaccountmapper.getByTenantId(BaseConstant.FEITU_TENANT_ID);
 		Systemstatisticalreports t = new Systemstatisticalreports();
 		t.setIncomecount(sa.getTotalincome());
 		t.setBalance(sa.getBalance());
 		mapper.post(t);
-
 	}
 }

@@ -8,14 +8,14 @@ import com.yt.app.api.v1.mapper.ChannelaccountMapper;
 import com.yt.app.api.v1.mapper.ChannelaccountrecordMapper;
 import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.ChannelaccountService;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Channelaccount;
 import com.yt.app.api.v1.entity.Channelaccountrecord;
 import com.yt.app.api.v1.entity.Channelaccountorder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.RedissonUtil;
 
@@ -46,7 +46,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Channelaccount> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -60,7 +60,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Channelaccount get(Long id) {
 		Channelaccount t = mapper.get(id);
 		return t;

@@ -7,11 +7,12 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.DeptMapper;
 import com.yt.app.api.v1.mapper.PostMapper;
 import com.yt.app.api.v1.service.PostService;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Post;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +40,7 @@ public class PostServiceImpl extends YtBaseServiceImpl<Post, Long> implements Po
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Post> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -56,7 +57,7 @@ public class PostServiceImpl extends YtBaseServiceImpl<Post, Long> implements Po
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Post get(Long id) {
 		Post t = mapper.get(id);
 		return t;

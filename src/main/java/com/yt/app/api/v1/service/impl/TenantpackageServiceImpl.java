@@ -5,11 +5,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.TenantpackageMapper;
 import com.yt.app.api.v1.service.TenantpackageService;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Tenantpackage;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +35,7 @@ public class TenantpackageServiceImpl extends YtBaseServiceImpl<Tenantpackage, L
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Tenantpackage> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -48,7 +49,7 @@ public class TenantpackageServiceImpl extends YtBaseServiceImpl<Tenantpackage, L
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tenantpackage get(Long id) {
 		Tenantpackage t = mapper.get(id);
 		return t;

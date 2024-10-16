@@ -5,14 +5,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountrecordMapper;
 import com.yt.app.api.v1.service.IncomemerchantaccountrecordService;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Incomemerchantaccountrecord;
 import com.yt.app.api.v1.vo.IncomemerchantaccountrecordVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.RedisUtil;
 
 import java.util.Collections;
@@ -38,21 +38,21 @@ public class IncomemerchantaccountrecordServiceImpl extends YtBaseServiceImpl<In
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Incomemerchantaccountrecord> list(Map<String, Object> param) {
 		List<Incomemerchantaccountrecord> list = mapper.list(param);
 		return new YtPageBean<Incomemerchantaccountrecord>(list);
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Incomemerchantaccountrecord get(Long id) {
 		Incomemerchantaccountrecord t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<IncomemerchantaccountrecordVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {

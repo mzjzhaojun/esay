@@ -27,12 +27,12 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import com.yt.app.api.v1.entity.YtFile;
 import com.yt.app.api.v1.mapper.FileMapper;
 import com.yt.app.api.v1.service.FileService;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.config.YtConfig;
-
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.FileUtil;
 import com.yt.app.common.util.VideoUtil;
 
@@ -57,7 +57,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 	Snowflake idworker;
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	public YtIPage<YtFile> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -71,6 +71,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 
 	@Override
 	@Transactional
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	public YtFile addFile(MultipartFile file) throws IOException {
 		String filename = file.getOriginalFilename();
 		String type = (filename.substring(filename.lastIndexOf(".") + 1));
@@ -108,6 +109,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 
 	@Override
 	@Transactional
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	public YtFile addFile(MultipartFile file, String url, String watermark) throws IOException {
 		String fileurl = null;
 		if (watermark != null) {// 需要添加水印
@@ -227,6 +229,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 
 	@Override
 	@Transactional
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	public Integer remove(long id) {
 		Integer i = 0;
 		YtFile fl = mapper.get(id);
@@ -242,6 +245,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 
 	@Override
 	@Transactional
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	public Integer removeArray(List<String> list) {
 		Integer i = 0;
 		for (String id : list) {
@@ -259,6 +263,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 
 	@Override
 	@Transactional
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	public YtFile addImg(String imgStr, String url) throws IOException {
 		String type = "jpeg";
 		Date uploaddate = new Date();
@@ -343,6 +348,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 
 	@Override
 	@Transactional
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	public YtFile addFileVideo(MultipartFile file, Integer size) throws Exception {
 		String filename = file.getOriginalFilename();
 		String type = (filename.substring(filename.lastIndexOf(".") + 1));

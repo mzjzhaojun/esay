@@ -8,7 +8,7 @@ import com.yt.app.api.v1.mapper.AgentMapper;
 import com.yt.app.api.v1.mapper.AgentaccountMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.AgentService;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
@@ -19,7 +19,7 @@ import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PasswordUtil;
@@ -94,7 +94,7 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Agent> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
@@ -108,7 +108,7 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Agent get(Long id) {
 		Agent t = mapper.get(id);
 		return t;
@@ -168,6 +168,7 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 	}
 
 	@Override
+	@Transactional
 	public void updateExchange(Exchange t) {
 		RLock lock = RedissonUtil.getLock(t.getAgentid());
 		try {

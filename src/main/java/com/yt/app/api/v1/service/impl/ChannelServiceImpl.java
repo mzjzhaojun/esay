@@ -13,7 +13,7 @@ import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.vo.QrcodeaccountorderVO;
 import com.yt.app.api.v1.vo.SysTyBalance;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.AppConstant;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
@@ -29,7 +29,7 @@ import com.yt.app.api.v1.entity.Qrcodeaccount;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PasswordUtil;
@@ -124,7 +124,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Channel get(Long id) {
 		Channel t = mapper.get(id);
 		return t;
@@ -169,6 +169,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	}
 
 	@Override
+	@Transactional
 	public void withdrawamount(Channelaccount t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
@@ -197,6 +198,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Integer getRemotebalance(Long id) {
 		Channel cl = mapper.get(id);
 		String balance = null;
@@ -240,13 +242,14 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Channel getData() {
 		Channel t = mapper.getByUserId(SysUserContext.getUserId());
 		return t;
 	}
 
 	@Override
+	@Transactional
 	public void updateIncome(Income t) {
 		RLock lock = RedissonUtil.getLock(t.getQrcodeid());
 		try {
@@ -264,6 +267,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	}
 
 	@Override
+	@Transactional
 	public void updateDayValue(Channel c, String date) {
 		RLock lock = RedissonUtil.getLock(c.getId());
 		try {

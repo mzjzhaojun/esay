@@ -9,14 +9,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper;
 import com.yt.app.api.v1.service.IncomemerchantaccountorderService;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.vo.IncomemerchantaccountorderVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.RedisUtil;
 
@@ -45,7 +45,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Incomemerchantaccountorder> list(Map<String, Object> param) {
 		List<Incomemerchantaccountorder> list = mapper.list(param);
 		return new YtPageBean<Incomemerchantaccountorder>(list);
@@ -59,7 +59,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<IncomemerchantaccountorderVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {
@@ -74,7 +74,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public ByteArrayOutputStream download(Map<String, Object> param) throws IOException {
 		SXSSFWorkbook workbook = new SXSSFWorkbook();
 		SXSSFSheet sheet = workbook.createSheet("Sheet");
@@ -136,7 +136,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public ByteArrayOutputStream reconciliation(Map<String, Object> param) throws IOException {
 		SXSSFWorkbook workbook = new SXSSFWorkbook();
 		SXSSFSheet sheet = workbook.createSheet("Sheet");

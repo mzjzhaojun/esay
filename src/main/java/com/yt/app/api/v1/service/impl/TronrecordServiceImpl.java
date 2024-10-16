@@ -5,11 +5,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.TronrecordMapper;
 import com.yt.app.api.v1.service.TronrecordService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Tronrecord;
 import com.yt.app.api.v1.vo.TronrecordVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,21 +36,21 @@ public class TronrecordServiceImpl extends YtBaseServiceImpl<Tronrecord, Long> i
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Tronrecord> list(Map<String, Object> param) {
 		List<Tronrecord> list = mapper.list(param);
 		return new YtPageBean<Tronrecord>(list);
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tronrecord get(Long id) {
 		Tronrecord t = mapper.get(id);
 		return t;
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<TronrecordVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {

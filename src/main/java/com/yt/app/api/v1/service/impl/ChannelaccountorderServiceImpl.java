@@ -9,7 +9,7 @@ import com.yt.app.api.v1.mapper.ChannelaccountorderMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.api.v1.service.ChannelaccountorderService;
-
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
@@ -18,7 +18,7 @@ import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
@@ -86,7 +86,7 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 	}
 
 	@Override
-
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<Channelaccountorder> list(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
