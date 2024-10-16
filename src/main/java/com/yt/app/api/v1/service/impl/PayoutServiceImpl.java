@@ -245,7 +245,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			aat.setDeal(t.getMerchantdeal() * (ag.getExchange() / 100));// 交易费
 			aat.setAmountreceived(aat.getDeal() + ag.getOnecost());// 总费用
 			aat.setOnecost(ag.getOnecost());// 手续费
-			aat.setType(DictionaryResource.ORDERTYPE_23);
+			aat.setType(DictionaryResource.ORDERTYPE_23.toString());
 			aat.setOrdernum("PA" + StringUtil.getOrderNum());
 			aat.setRemark("代付资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
@@ -506,7 +506,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			aat.setDeal(t.getMerchantdeal() * (ag.getExchange() / 100));// 交易费
 			aat.setAmountreceived(aat.getDeal() + ag.getOnecost());// 总费用
 			aat.setOnecost(ag.getOnecost());// 手续费
-			aat.setType(DictionaryResource.ORDERTYPE_23);
+			aat.setType(DictionaryResource.ORDERTYPE_23.toString());
 			aat.setOrdernum("PA" + StringUtil.getOrderNum());
 			aat.setRemark("代付资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());

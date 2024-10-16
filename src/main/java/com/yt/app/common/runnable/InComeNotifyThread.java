@@ -34,7 +34,7 @@ public class InComeNotifyThread implements Runnable {
 		qqr.setPay_orderid(income.getMerchantorderid());
 		qqr.setPay_amount(income.getAmount().toString());
 		qqr.setPay_code(income.getStatus());
-		log.info("代收通知 start-----------商户单号：" + income.getOrdernum());
+		log.info("代收通知 start-----------商户单号：" + income.getOrdernum() + " url:" + income.getNotifyurl());
 		int i = 1;
 		while (true) {
 			YtBody result;

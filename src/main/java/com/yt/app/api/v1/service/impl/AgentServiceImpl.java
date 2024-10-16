@@ -15,6 +15,7 @@ import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccount;
 import com.yt.app.api.v1.entity.Exchange;
+import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtIPage;
@@ -154,12 +155,12 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 
 	@Override
 	@Transactional
-	public void updateIncome(Agentaccount t) {
+	public void updateIncome(Income t) {
 		RLock lock = RedissonUtil.getLock(t.getAgentid());
 		try {
 			lock.lock();
 			Agent a = mapper.get(t.getAgentid());
-			a.setBalance(t.getBalance());
+			a.setBalance(a.getBalance() + t.getAgentincome());
 			mapper.put(a);
 		} catch (Exception e) {
 		} finally {

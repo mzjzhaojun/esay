@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
+import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.Income;
@@ -19,6 +20,7 @@ import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Qrcodeaccountorder;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
+import com.yt.app.api.v1.mapper.AgentaccountorderMapper;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ExchangeMapper;
 import com.yt.app.api.v1.mapper.IncomeMapper;
@@ -28,6 +30,7 @@ import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
+import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
 import com.yt.app.api.v1.service.MerchantService;
@@ -47,7 +50,7 @@ import com.yt.app.common.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Profile("master")
+@Profile("dev")
 @Component
 public class TaskConfig {
 
@@ -98,6 +101,12 @@ public class TaskConfig {
 
 	@Autowired
 	private SystemstatisticalreportsService systemstatisticalreportsservice;
+
+	@Autowired
+	private AgentaccountorderMapper agentaccountordermapper;
+
+	@Autowired
+	private AgentaccountService agentaccountservice;
 
 	/**
 	 * 更新实时汇率
@@ -242,6 +251,16 @@ public class TaskConfig {
 				Incomemerchantaccountorder imqao = incomemerchantaccountordermapper.getByOrderNum(p.getMerchantorderid());
 				imqao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
 				incomemerchantaccountordermapper.put(imqao);
+
+				// 计算代理
+				if (p.getAgentid() != null) {
+					Agentaccountorder aao = agentaccountordermapper.getByOrdernum(p.getAgentordernum());
+					aao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
+					agentaccountordermapper.put(aao);
+					//
+					agentaccountservice.turndownTotalincome(aao);
+				}
+
 				// 释放收款码数据
 				String key = SystemConstant.CACHE_SYS_QRCODE + p.getQrcodeid() + "" + p.getFewamount();
 				if (RedisUtil.hasKey(key))

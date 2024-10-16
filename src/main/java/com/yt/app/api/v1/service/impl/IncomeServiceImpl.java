@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.stereotype.Service;
 
+import com.yt.app.api.v1.mapper.AgentMapper;
+import com.yt.app.api.v1.mapper.AgentaccountorderMapper;
 import com.yt.app.api.v1.mapper.AisleMapper;
 import com.yt.app.api.v1.mapper.AislechannelMapper;
 import com.yt.app.api.v1.mapper.ChannelMapper;
@@ -20,6 +22,8 @@ import com.yt.app.api.v1.mapper.QrcodeaisleMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper;
 import com.yt.app.api.v1.model.result.AlipayF2FPrecreateResult;
 import com.yt.app.api.v1.model.result.AlipayF2FQueryResult;
+import com.yt.app.api.v1.service.AgentService;
+import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.AlipayTradeService;
 import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.IncomeService;
@@ -41,6 +45,8 @@ import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
+import com.yt.app.api.v1.entity.Agent;
+import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Aisle;
 import com.yt.app.api.v1.entity.Aislechannel;
 import com.yt.app.api.v1.entity.Channel;
@@ -108,6 +114,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	@Autowired
 	private AisleMapper aislemapper;
 	@Autowired
+	private AgentMapper agentmapper;
+	@Autowired
 	private MerchantaisleMapper merchantaislemapper;
 	@Autowired
 	private AislechannelMapper aislechannelmapper;
@@ -122,6 +130,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	@Autowired
 	private QrcodeaccountorderMapper qrcodeaccountordermapper;
 	@Autowired
+	private AgentaccountorderMapper agentaccountordermapper;
+	@Autowired
 	private IncomemerchantaccountorderMapper incomemerchantaccountordermapper;
 	@Autowired
 	private ChannelMapper channelmapper;
@@ -135,6 +145,10 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	private ChannelService channelservice;
 	@Autowired
 	private SystemaccountService systemaccountservice;
+	@Autowired
+	private AgentaccountService agentaccountservice;
+	@Autowired
+	private AgentService agentservice;
 	@Autowired
 	private AlipayTradeService tradeService;
 
@@ -411,13 +425,38 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
 		}
 		Assert.notNull(mqd.getCollection(), "渠道点位未配置!");
+		///////////////////////////////////////////////////// 计算代理订单/////////////////////////////////////////////////////
+		if (mc.getAgentid() != null) {
+			Agent ag = agentmapper.get(mc.getAgentid());
+			income.setAgentid(ag.getId());
+			Agentaccountorder aat = new Agentaccountorder();
+			aat.setAgentid(ag.getId());
+			aat.setUserid(ag.getUserid());
+			aat.setUsername(ag.getName());
+			aat.setNkname(ag.getNkname());
+			aat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+			aat.setExchange(ag.getExchange());
+			aat.setAmount(income.getAmount());// 金额
+			aat.setDeal(income.getAmount() * (ag.getExchange() / 100));// 交易费
+			aat.setAmountreceived(aat.getDeal() + ag.getOnecost());// 总费用
+			aat.setOnecost(ag.getOnecost());// 手续费
+			aat.setType(income.getType());
+			aat.setOrdernum("income_agent_" + StringUtil.getOrderNum());
+			aat.setRemark("代收资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
+			income.setAgentincome(aat.getAmountreceived());
+			income.setAgentordernum(aat.getOrdernum());
+			agentaccountordermapper.post(aat);
+			agentaccountservice.totalincome(aat);
+		} else {
+			income.setAgentincome(0.00);
+		}
 		// 渠道收入
 		income.setChannelincomeamount(NumberUtil.multiply(income.getAmount().toString(), (channel.getCollection() / 100) + "", 2).doubleValue());
 		income.setMerchantincomeamount(NumberUtil.multiply(income.getAmount().toString(), (mqd.getCollection() / 100) + "", 2).doubleValue());
 		// 系统收入
 		income.setIncomeamount(Double.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount()))));
 		// 商户收入
-		income.setMerchantincomeamount(Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount()))));
+		income.setMerchantincomeamount(Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount() - income.getAgentincome()))));
 		// 计算当前码可生成的订单
 		RLock lock = RedissonUtil.getLock(qd.getId());
 		Integer i = 0;
@@ -578,6 +617,30 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			income.setQrcodeordernum(fc.getData().getTradeNo());
 			break;
 		}
+		if (mc.getAgentid() != null) {
+			Agent ag = agentmapper.get(mc.getAgentid());
+			income.setAgentid(ag.getId());
+			Agentaccountorder aat = new Agentaccountorder();
+			aat.setAgentid(ag.getId());
+			aat.setUserid(ag.getUserid());
+			aat.setUsername(ag.getName());
+			aat.setNkname(ag.getNkname());
+			aat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+			aat.setExchange(ag.getExchange());
+			aat.setAmount(income.getAmount());// 金额
+			aat.setDeal(income.getAmount() * (ag.getExchange() / 100));// 交易费
+			aat.setAmountreceived(aat.getDeal() + ag.getOnecost());// 总费用
+			aat.setOnecost(ag.getOnecost());// 手续费
+			aat.setType(income.getType());
+			aat.setOrdernum("income_agent_" + StringUtil.getOrderNum());
+			aat.setRemark("代收资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
+			income.setAgentincome(aat.getAmountreceived());
+			income.setAgentordernum(aat.getOrdernum());
+			agentaccountordermapper.post(aat);
+			agentaccountservice.totalincome(aat);
+		} else {
+			income.setAgentincome(0.00);
+		}
 		// 渠道收入
 		income.setChannelincomeamount(NumberUtil.multiply(income.getAmount().toString(), (channel.getCollection() / 100) + "", 2).doubleValue());
 		// 商户收入
@@ -585,7 +648,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		// 系统收入
 		income.setIncomeamount(Double.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount()))));
 		// 商户收入
-		income.setMerchantincomeamount(Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount()))));
+		income.setMerchantincomeamount(Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount() - income.getAgentincome()))));
 		// 计算当前码可生成的订单
 		income.setFewamount(0.00);
 		income.setRealamount(income.getAmount());
@@ -763,6 +826,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	@Transactional
 	private QrcodeResultVO addOtherOrder(Income income, Channel channel, Aisle qas, Merchant mc, QrcodeSubmitDTO qs) {
+
 		// 添加qrcode订单
 		Qrcodeaccountorder qao = new Qrcodeaccountorder();
 		qao.setUserid(income.getQrcodeuserid());
@@ -931,6 +995,18 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 			income.setSuccesstime(DateTimeUtil.getNow());
 			income.setBacklong(DateUtil.between(income.getSuccesstime(), income.getCreate_time(), DateUnit.SECOND));
+
+			// 计算代理
+			if (income.getAgentid() != null) {
+				Agentaccountorder aao = agentaccountordermapper.getByOrdernum(income.getAgentordernum());
+				aao.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+				// 代理订单
+				agentaccountordermapper.put(aao);
+				// 代理账户
+				agentaccountservice.updateTotalincome(aao);
+				// 计算代理数据
+				agentservice.updateIncome(income);
+			}
 			//
 			mapper.put(income);
 			// 计算渠道收入

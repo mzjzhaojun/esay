@@ -64,19 +64,19 @@ public class DictionaryResource implements Serializable {
 	public static final Integer ORDERTYPE_28 = 28; // 代收提现
 
 	/**
-	 * 代付资金明细类型
+	 * 收入支出资金明细类型
 	 */
-	public static final Integer RECORDTYPE_30 = 30; // 充值待确认
-	public static final Integer RECORDTYPE_31 = 31; // 充值成功
+	public static final Integer RECORDTYPE_30 = 30; // 收入待确认
+	public static final Integer RECORDTYPE_31 = 31; // 收入成功
 
-	public static final Integer RECORDTYPE_32 = 32; // 充值失败
-	public static final Integer RECORDTYPE_33 = 33; // 充值取消
+	public static final Integer RECORDTYPE_32 = 32; // 收入失败
+	public static final Integer RECORDTYPE_33 = 33; // 收入取消
 
-	public static final Integer RECORDTYPE_34 = 34; // 代付待确认
-	public static final Integer RECORDTYPE_35 = 35; // 代付成功
+	public static final Integer RECORDTYPE_34 = 34; // 支出待确认
+	public static final Integer RECORDTYPE_35 = 35; // 支出成功
 
-	public static final Integer RECORDTYPE_36 = 36; // 代付失败
-	public static final Integer RECORDTYPE_37 = 37; // 代付取消
+	public static final Integer RECORDTYPE_36 = 36; // 支出失败
+	public static final Integer RECORDTYPE_37 = 37; // 支出取消
 
 	/**
 	 * 换汇资金明细类型

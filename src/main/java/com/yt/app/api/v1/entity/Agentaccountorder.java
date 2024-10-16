@@ -28,7 +28,7 @@ public class Agentaccountorder extends YtBaseEntity<Agentaccountorder> {
 	Long agentid;
 	String username;
 	String nkname;
-	Integer type;
+	String type;
 	Double amount;
 	String accname;
 	String accnumber;

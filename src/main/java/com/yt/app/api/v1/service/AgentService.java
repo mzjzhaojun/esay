@@ -3,6 +3,7 @@ package com.yt.app.api.v1.service;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccount;
 import com.yt.app.api.v1.entity.Exchange;
+import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.common.base.YtIBaseService;
 
@@ -19,5 +20,5 @@ public interface AgentService extends YtIBaseService<Agent, Long> {
 
 	void updateExchange(Exchange t);
 
-	void updateIncome(Agentaccount t);
+	void updateIncome(Income t);
 }
