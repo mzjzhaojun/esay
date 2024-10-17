@@ -269,6 +269,16 @@ public class TaskConfig {
 				qrcodeaccountservice.cancleTotalincome(qao);
 				incomemerchantaccountservice.cancleTotalincome(imqao);
 
+				// 计算代理
+				if (p.getAgentid() != null) {
+					Agentaccountorder aao = agentaccountordermapper.getByOrdernum(p.getAgentordernum());
+					aao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
+					// 代理订单
+					agentaccountordermapper.put(aao);
+					// 代理账户
+					agentaccountservice.cancleTotalincome(aao);
+				}
+
 				TenantIdContext.remove();
 			}
 		}

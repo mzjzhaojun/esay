@@ -177,7 +177,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
-			maaj.setPretoincomeamount(t.getToincomeamount() - mao.getAmount());// 待确认收入
+			maaj.setPretoincomeamount(t.getToincomeamount() - mao.getIncomeamount());// 待确认收入
 			maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPretowithdrawamount(t.getTowithdrawamount());// 待确认支出
 			// 变更后
@@ -185,7 +185,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("超时支付,取消订单：" + String.format("%.2f", mao.getAmount()));
+			maaj.setRemark("超时支付,取消订单：" + String.format("%.2f", mao.getIncomeamount()));
 			//
 			incomemerchantaccountrecordmapper.post(maaj);
 

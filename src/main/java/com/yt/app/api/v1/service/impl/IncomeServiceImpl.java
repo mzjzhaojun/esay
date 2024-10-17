@@ -986,6 +986,19 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setBacklong(DateUtil.between(income.getSuccesstime(), income.getCreate_time(), DateUnit.SECOND));
 		//
 		mapper.put(income);
+		
+		// 计算代理
+		if (income.getAgentid() != null) {
+			Agentaccountorder aao = agentaccountordermapper.getByOrdernum(income.getAgentordernum());
+			aao.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			// 代理订单
+			agentaccountordermapper.put(aao);
+			// 代理账户
+			agentaccountservice.updateTotalincome(aao);
+			// 计算代理数据
+			agentservice.updateIncome(income);
+		}
+					
 		// 渠道
 		Qrcodeaccountorder qrcodeaccountorder = qrcodeaccountordermapper.getByOrderNum(income.getQrcodeordernum());
 		qrcodeaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);

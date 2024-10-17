@@ -237,7 +237,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(mao.getUsername());
 			aaaj.setOrdernum(mao.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_37);
+			aaaj.setType(DictionaryResource.RECORDTYPE_33);
 
 			// 变更前
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
