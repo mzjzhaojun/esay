@@ -139,6 +139,8 @@
 		c.status status,
 		c.exchange exchange,
 		c.onecost onecost,
+		c.collection collection,
+		c.weight weight,
 		c.remark remark
 		FROM
 		aislechannel ac

@@ -36,6 +36,7 @@ public class AislechannelVO extends BaseVO {
 	Double onecost;
 	Double downpoint;
 	Double costexchange;
+	Double collection;
 	Integer min;
 	Integer max;
 	Integer weight;

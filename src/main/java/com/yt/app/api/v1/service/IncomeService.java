@@ -49,6 +49,9 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 	// 翡翠回调
 	void fccallback(Map<String, Object> params);
 
+	// 翡翠回调
+	void aklcallback(Map<String, Object> params);
+
 	// 公子回调
 	void gzcallback(Map<String, Object> params);
 

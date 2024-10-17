@@ -61,12 +61,6 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 		return new YtResponseEntity<Object>(new YtBody(income.getStatus()));
 	}
 
-	@RequestMapping(value = "/income/income/ftyyds", method = RequestMethod.GET)
-	public YtResponseEntity<Object> ftyyds(HttpServletRequest request, HttpServletResponse response) {
-		Integer i = incomeservice.addip();
-		return new YtResponseEntity<Object>(new YtBody(i));
-	}
-
 	// 菲律宾代付回调
 	@RequestMapping(value = "/tycallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
@@ -255,6 +249,24 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	@RequestMapping(value = "/fccallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void fccallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		incomeservice.fccallback(RequestUtil.requestEntityToParamMap(requestEntity));
+		try {
+			response.getWriter().print("success");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 翡翠代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/aklcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void aklcallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		incomeservice.aklcallback(RequestUtil.requestEntityToParamMap(requestEntity));
 		try {
 			response.getWriter().print("success");
 		} catch (IOException e) {

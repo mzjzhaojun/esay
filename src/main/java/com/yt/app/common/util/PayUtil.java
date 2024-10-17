@@ -925,4 +925,95 @@ public class PayUtil {
 		}
 		return null;
 	}
+
+	// 奥克兰代收对接
+	public static SysFcOrder SendAklSubmit(Income pt, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Map<String, Object> map = new HashMap<String, Object>();
+		Long time = DateTimeUtil.getNow().getTime();
+		map.put("mchId", cl.getCode());
+		map.put("wayCode", pt.getQrcodecode());
+		map.put("outTradeNo", pt.getOrdernum());
+		map.put("subject", time.toString());
+		map.put("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
+		map.put("notifyUrl", cl.getApireusultip());
+		map.put("returnUrl", pt.getBackforwardurl());
+		map.put("clientIp", "127.0.0.1");
+		map.put("reqTime", time.toString());
+
+		String signContent = "amount=" + String.format("%.2f", pt.getAmount()).replace(".", "") + "&clientIp=127.0.0.1&mchId=" + cl.getCode() + "&notifyUrl=" + cl.getApireusultip() + "&outTradeNo=" + pt.getOrdernum() + "&reqTime=" + time.toString()
+				+ "&returnUrl=" + pt.getBackforwardurl() + "&subject=" + time.toString() + "&wayCode=" + pt.getQrcodecode() + "&key=" + cl.getApikey();
+
+		String sign = MD5Utils.md5(signContent);
+		map.put("sign", sign);
+		log.info("奥克兰下单签名：" + sign + "===" + signContent);
+
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysFcOrder> sov = resttemplate.postForEntity(cl.getApiip() + "/Pay_SG.html", httpEntity, SysFcOrder.class);
+		SysFcOrder data = sov.getBody();
+		log.info("奥克兰返回消息：" + data);
+		if (data.getCode().equals("0")) {
+			return data;
+		}
+		return null;
+	}
+
+	// 奥克兰代收查单
+	public static String SendAklQuerySubmit(String orderid, Double amount, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Map<String, Object> map = new HashMap<String, Object>();
+		Long time = DateTimeUtil.getNow().getTime();
+		map.put("mchId", cl.getCode());
+		map.put("outTradeNo", orderid);
+		map.put("reqTime", time.toString());
+
+		String signContent = "mchId=" + cl.getCode() + "&outTradeNo=" + orderid + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
+		String sign = MD5Utils.md5(signContent);
+		map.put("sign", sign);
+		log.info("奥克兰查单签名：" + sign + "===" + signContent);
+
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysFcQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/Pay_Query.html", httpEntity, SysFcQuery.class);
+		SysFcQuery data = sov.getBody();
+		log.info("奥克兰查单返回消息：" + data);
+		if (data.getCode().equals("0") && data.getData().getState().equals("1")) {
+			return data.getData().getState();
+		}
+		return null;
+	}
+
+	// 奥克兰查询余额
+	public static String SendAklGetBalance(Channel cl) {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Map<String, Object> map = new HashMap<String, Object>();
+		Long time = DateTimeUtil.getNow().getTime();
+		map.put("mchId", cl.getCode());
+		map.put("reqTime", time.toString());
+		String signContent = "mchId=" + cl.getCode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
+		String sign = MD5Utils.md5(signContent);
+		map.put("sign", sign);
+		log.info("奥克兰查单签名：" + sign + "===" + signContent);
+
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<SysFcQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/Pay_Querybalance.html", httpEntity, SysFcQuery.class);
+		SysFcQuery data = sov.getBody();
+		log.info("奥克兰余额返回消息：" + data);
+		if (data.getCode().equals("0")) {
+			return data.getData().getBalance();
+		}
+		return null;
+	}
 }

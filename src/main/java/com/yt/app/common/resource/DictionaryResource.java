@@ -23,6 +23,7 @@ public class DictionaryResource implements Serializable {
 	public static final String GZAISLE = "公子"; // WDAISLE
 	public static final String WJAISLE = "玩家"; // WJAISLE
 	public static final String FCAISLE = "翡翠"; // FCAISLE
+	public static final String AKLAISLE = "奥克兰"; // AKLAISLE
 	/**
 	 * 
 	 */

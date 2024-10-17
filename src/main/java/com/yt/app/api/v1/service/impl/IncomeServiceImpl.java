@@ -304,6 +304,27 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	@Override
 	@Transactional
+	public void aklcallback(Map<String, Object> params) {
+		String orderid = params.get("outTradeNo").toString();
+		String status = params.get("state").toString();
+		log.info("奥克兰通知返回消息：orderid" + orderid + " status:" + status);
+		Income income = mapper.getByOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendAklQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "奥克兰通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
+			TenantIdContext.remove();
+		}
+	}
+
+	@Override
+	@Transactional
 	public void gzcallback(Map<String, Object> params) {
 		String orderid = params.get("out_trade_no").toString();
 		String status = params.get("pay_status").toString();
@@ -615,6 +636,12 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			Assert.notNull(fc, "翡翠获取渠道订单失败!");
 			income.setResulturl(fc.getData().getPayUrl());
 			income.setQrcodeordernum(fc.getData().getTradeNo());
+			break;
+		case DictionaryResource.AKLAISLE:
+			SysFcOrder akl = PayUtil.SendAklSubmit(income, channel);
+			Assert.notNull(akl, "奥克兰获取渠道订单失败!");
+			income.setResulturl(akl.getData().getPayUrl());
+			income.setQrcodeordernum(akl.getData().getTradeNo());
 			break;
 		}
 		if (mc.getAgentid() != null) {
