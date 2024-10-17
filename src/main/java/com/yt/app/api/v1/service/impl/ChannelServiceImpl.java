@@ -198,7 +198,6 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Integer getRemotebalance(Long id) {
 		Channel cl = mapper.get(id);
 		String balance = null;

@@ -79,9 +79,7 @@ public class AuthServiceImpl implements AuthService {
 	private MerchantMapper merchantmapper;
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public AuthLoginVO login(AuthLoginDTO params) {
-
 		String username = params.getUsername();
 		String password = params.getPassword();
 		SysUserPermVO userPerm = sysroleservice.getUserPerm(SysUserPermDTO.builder().username(username).build());
@@ -94,7 +92,6 @@ public class AuthServiceImpl implements AuthService {
 			isValid = GoogleAuthenticatorUtil.checkCode(userPerm.getTwofactorcode(), Long.parseLong(params.getCode()), System.currentTimeMillis());
 			Assert.isTrue(isValid, "验证码错误！");
 		}
-
 		// 拿到下级角色ids
 		List<Long> roleIdList = userPerm.getRoleIdList();
 		Assert.isTrue(CollUtil.isNotEmpty(roleIdList), "无权限，请先分配权限！");
@@ -127,7 +124,7 @@ public class AuthServiceImpl implements AuthService {
 		return GoogleAuthenticatorUtil.getQrCodeText(GoogleAuthenticatorUtil.getSecretKey(), username, "");
 	}
 
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+	@Override
 	public Integer verqrcode(String username, String password, String code, String twocode) {
 		Integer i = 0;
 		User u = usermapper.getByUserName(username);
@@ -147,7 +144,6 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public AuthLoginVO loginapp(AuthLoginDTO params) {
 		String username = params.getUsername();
 		String password = params.getPassword();
