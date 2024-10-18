@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.SystemstatisticalreportsMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,merchantid,todayincome,incomecount,balance,todayorder,successorder,todayorderamount,todaysuccessorderamount,type,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,userid,merchantid,todayincome,incomecount,dateval,balance,todayorder,successorder,todayorderamount,todaysuccessorderamount,type,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -18,9 +18,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Systemstatisticalreports">
 		insert into
-		systemstatisticalreports(id,userid,merchantid,todayincome,incomecount,balance,todayorder,successorder,todayorderamount,todaysuccessorderamount,type,create_by,create_time,update_by,update_time,remark)
+		systemstatisticalreports(id,userid,merchantid,todayincome,incomecount,dateval,balance,todayorder,successorder,todayorderamount,todaysuccessorderamount,type,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{userid},#{merchantid},#{todayincome},#{incomecount},#{balance},#{todayorder},#{successorder},#{todayorderamount},#{todaysuccessorderamount},#{type},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{userid},#{merchantid},#{todayincome},#{incomecount},#{dateval},#{balance},#{todayorder},#{successorder},#{todayorderamount},#{todaysuccessorderamount},#{type},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
