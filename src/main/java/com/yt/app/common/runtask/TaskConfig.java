@@ -253,15 +253,6 @@ public class TaskConfig {
 				imqao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
 				incomemerchantaccountordermapper.put(imqao);
 
-				// 计算代理
-				if (p.getAgentid() != null) {
-					Agentaccountorder aao = agentaccountordermapper.getByOrdernum(p.getAgentordernum());
-					aao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
-					agentaccountordermapper.put(aao);
-					//
-					agentaccountservice.turndownTotalincome(aao);
-				}
-
 				// 释放收款码数据
 				String key = SystemConstant.CACHE_SYS_QRCODE + p.getQrcodeid() + "" + p.getFewamount();
 				if (RedisUtil.hasKey(key))
