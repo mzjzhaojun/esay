@@ -280,6 +280,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 			// 插入报表数据
 			Channelstatisticalreports csr = new Channelstatisticalreports();
 			csr.setDateval(date);
+			csr.setName(c.getName());
 			csr.setBalance(c.getBalance());
 			csr.setUserid(c.getUserid());
 			csr.setChannelid(c.getId());

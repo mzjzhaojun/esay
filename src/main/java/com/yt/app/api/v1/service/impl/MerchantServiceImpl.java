@@ -342,6 +342,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 			// 插入报表数据
 			Merchantstatisticalreports msr = new Merchantstatisticalreports();
 			msr.setDateval(date);
+			msr.setName(m.getName());
 			msr.setBalance(m.getBalance());
 			msr.setUserid(m.getUserid());
 			msr.setMerchantid(m.getId());

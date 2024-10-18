@@ -69,9 +69,10 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 
 	@Override
 	@Transactional
-	public void updateDayValue() {
+	public void updateDayValue(String date) {
 		Systemaccount sa = systemaccountmapper.getByTenantId(BaseConstant.FEITU_TENANT_ID);
 		Systemstatisticalreports t = new Systemstatisticalreports();
+		t.setDateval(date);
 		t.setIncomecount(sa.getTotalincome());
 		t.setBalance(sa.getBalance());
 		mapper.post(t);

@@ -648,11 +648,12 @@ public class PayUtil {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 		Map<String, String> map = new HashMap<String, String>();
-		Long time = System.currentTimeMillis() / 1000;
-		map.put("merchant_num", cl.getCode());
-		map.put("business", "quick");
-		map.put("biz_content", "{\"out_trade_no\":\"" + pt.getOrdernum() + "\",\"amount\":" + pt.getAmount() + ",\"channel\":\"" + pt.getQrcodecode() + "\",\"notify_url\":\"" + cl.getApireusultip() + "\",\"ip\":\"127.0.0.1\"}");
-		map.put("timestamp", time.toString());
+		map.put("merchantId", cl.getCode());
+		map.put("orderId", pt.getOrdernum());
+		map.put("orderAmount", pt.getAmount().toString());
+		map.put("channelType", pt.getQrcodecode());
+		map.put("notifyUrl", cl.getApireusultip());
+		map.put("returnUrl", pt.getBackforwardurl());
 		TreeMap<String, String> sortedMap = new TreeMap<>(map);
 		String signContent = "";
 		for (String key : sortedMap.keySet()) {
@@ -667,10 +668,10 @@ public class PayUtil {
 		HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		//
-		ResponseEntity<SysGzOrder> sov = resttemplate.postForEntity(cl.getApiip() + "/api/gateway", httpEntity, SysGzOrder.class);
+		ResponseEntity<SysGzOrder> sov = resttemplate.postForEntity(cl.getApiip() + "/api/newOrder", httpEntity, SysGzOrder.class);
 		SysGzOrder data = sov.getBody();
 		log.info("公子返回消息：" + data);
-		if (data.getCode().equals("0000")) {
+		if (data.getCode().equals("200")) {
 			return data;
 		}
 		return null;
@@ -682,11 +683,8 @@ public class PayUtil {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 		Map<String, String> map = new HashMap<String, String>();
-		Long time = System.currentTimeMillis() / 1000;
-		map.put("merchant_num", cl.getCode());
-		map.put("business", "recharge_order");
-		map.put("biz_content", "{\"out_trade_no\":\"" + orderid + "\",\"ip\":\"127.0.0.1\"}");
-		map.put("timestamp", time.toString());
+		map.put("merchantId", cl.getCode());
+		map.put("orderId", orderid);
 		TreeMap<String, String> sortedMap = new TreeMap<>(map);
 		String signContent = "";
 		for (String key : sortedMap.keySet()) {
@@ -701,11 +699,11 @@ public class PayUtil {
 		HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		//
-		ResponseEntity<SysGzQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/api/gateway", httpEntity, SysGzQuery.class);
+		ResponseEntity<SysGzQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/api/queryOrder", httpEntity, SysGzQuery.class);
 		SysGzQuery data = sov.getBody();
 		log.info("公子查单返回消息：" + data);
-		if (data.getCode().equals("0000") && data.getResponse().getStatus().equals("2")) {
-			return data.getResponse().getStatus();
+		if (data.getCode().equals("200") && data.getData().getStatus().equals("paid")) {
+			return data.getData().getStatus();
 		}
 		return null;
 	}
@@ -717,11 +715,7 @@ public class PayUtil {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 		Map<String, String> map = new HashMap<String, String>();
-		Long time = System.currentTimeMillis() / 1000;
-		map.put("merchant_num", cl.getCode());
-		map.put("business", "balance");
-		map.put("biz_content", "{\"out_trade_no\":\"" + time + "\",\"ip\":\"127.0.0.1\"}");
-		map.put("timestamp", time.toString());
+		map.put("merchantId", cl.getCode());
 		TreeMap<String, String> sortedMap = new TreeMap<>(map);
 		String signContent = "";
 		for (String key : sortedMap.keySet()) {
@@ -736,11 +730,11 @@ public class PayUtil {
 		HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		//
-		ResponseEntity<SysGzQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/api/gateway", httpEntity, SysGzQuery.class);
+		ResponseEntity<SysGzQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/api/queryOrderV2", httpEntity, SysGzQuery.class);
 		SysGzQuery data = sov.getBody();
 		log.info("公子余额返回消息：" + data);
-		if (data.getCode().equals("0000")) {
-			return data.getResponse().getBalance();
+		if (data.getCode().equals("200")) {
+			return "0";
 		}
 		return null;
 	}

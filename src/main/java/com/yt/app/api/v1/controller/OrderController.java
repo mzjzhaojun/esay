@@ -210,9 +210,9 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/gzcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void gzcallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		incomeservice.gzcallback(RequestUtil.requestEntityToParamMap(requestEntity));
+	@RequestMapping(value = "/gzcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void gzcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		incomeservice.gzcallback(params);
 		try {
 			response.getWriter().print("success");
 		} catch (IOException e) {

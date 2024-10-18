@@ -20,19 +20,13 @@ public class SysGzOrder extends BaseVO {
 	 */
 	private static final long serialVersionUID = 1L;
 	String code;
-	String message;
+	String msg;
 	String sign;
-	response response;
+	data data;
 
 	@Data
-	public class response {
-		String merchant_num;
-		String business;
-		String out_trade_no;
-		String amount;
-		String pay_url;
+	public class data {
+		String payUrl;
 		String order_id;
-		String type;
-		String time;
 	}
 }

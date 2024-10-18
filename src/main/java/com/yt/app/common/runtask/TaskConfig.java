@@ -126,9 +126,10 @@ public class TaskConfig {
 	@Scheduled(cron = "59 59 23 * * ?")
 	public void updateTodayValue() throws InterruptedException {
 		TenantIdContext.removeFlag();
-		// 系统
-		systemstatisticalreportsservice.updateDayValue();
 		String date = DateTimeUtil.getDateTime(new Date(), DateTimeUtil.DEFAULT_DATE_FORMAT);
+		// 系统
+		systemstatisticalreportsservice.updateDayValue(date);
+
 		// 商户
 		List<Merchant> listm = merchantmapper.list(new HashMap<String, Object>());
 		listm.forEach(m -> {

@@ -31,6 +31,7 @@ public class ChannelstatisticalreportsVO extends BaseVO {
 	Double incomeuserpaycount;
 	Double incomeuserpaysuccesscount;
 	Double balance;
+	String name;
 	Integer todayorder;
 	Integer successorder;
 	Double todayorderamount;

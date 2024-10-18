@@ -53,7 +53,7 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 	void aklcallback(Map<String, Object> params);
 
 	// 公子回调
-	void gzcallback(Map<String, Object> params);
+	void gzcallback(Map<String, String> params);
 
 	// alipay回調
 	void alipayftfcallback(Map<String, String> params);

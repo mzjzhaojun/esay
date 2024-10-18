@@ -20,18 +20,15 @@ public class SysGzQuery extends BaseVO {
 	 */
 	private static final long serialVersionUID = 1L;
 	String code;
-	String message;
+	String msg;
 	String sign;
-	response response;
+	data data;
 
 	@Data
-	public class response {
-		String merchant_num;
-		String business;
-		String out_trade_no;
-		String amount;
-		String order_id;
+	public class data {
+		String merchantId;
+		String orderId;
 		String status;
-		String balance;
+		String sign;
 	}
 }

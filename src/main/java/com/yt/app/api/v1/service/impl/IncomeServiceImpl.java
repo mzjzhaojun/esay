@@ -325,9 +325,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	@Override
 	@Transactional
-	public void gzcallback(Map<String, Object> params) {
-		String orderid = params.get("out_trade_no").toString();
-		String status = params.get("pay_status").toString();
+	public void gzcallback(Map<String, String> params) {
+		String orderid = params.get("orderId").toString();
+		String status = params.get("status").toString();
 		log.info("公子通知返回消息：orderid" + orderid + " status:" + status);
 		Income income = mapper.getByOrderNum(orderid);
 		TenantIdContext.setTenantId(income.getTenant_id());
@@ -475,9 +475,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setChannelincomeamount(NumberUtil.multiply(income.getAmount().toString(), (channel.getCollection() / 100) + "", 2).doubleValue());
 		income.setMerchantincomeamount(NumberUtil.multiply(income.getAmount().toString(), (mqd.getCollection() / 100) + "", 2).doubleValue());
 		// 系统收入
-		income.setIncomeamount(Double.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount()))));
+		income.setIncomeamount(Double.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount() - income.getAgentincome()))));
 		// 商户收入
-		income.setMerchantincomeamount(Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount() - income.getAgentincome()))));
+		income.setMerchantincomeamount(Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount()))));
 		// 计算当前码可生成的订单
 		RLock lock = RedissonUtil.getLock(qd.getId());
 		Integer i = 0;
@@ -622,8 +622,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		case DictionaryResource.GZAISLE:
 			SysGzOrder gz = PayUtil.SendGzSubmit(income, channel);
 			Assert.notNull(gz, "公子获取渠道订单失败!");
-			income.setResulturl(gz.getResponse().getPay_url());
-			income.setQrcodeordernum(gz.getResponse().getOrder_id());
+			income.setResulturl(gz.getData().getPayUrl());
+			income.setQrcodeordernum(income.getMerchantordernum());
 			break;
 		case DictionaryResource.WJAISLE:
 			SysWjOrder wj = PayUtil.SendWjSubmit(income, channel);
@@ -673,9 +673,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		// 商户收入
 		income.setMerchantincomeamount(NumberUtil.multiply(income.getAmount().toString(), (mc.getCollection() / 100) + "", 2).doubleValue());
 		// 系统收入
-		income.setIncomeamount(Double.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount()))));
+		income.setIncomeamount(Double.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount() - income.getAgentincome()))));
 		// 商户收入
-		income.setMerchantincomeamount(Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount() - income.getAgentincome()))));
+		income.setMerchantincomeamount(Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount()))));
 		// 计算当前码可生成的订单
 		income.setFewamount(0.00);
 		income.setRealamount(income.getAmount());
@@ -986,7 +986,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setBacklong(DateUtil.between(income.getSuccesstime(), income.getCreate_time(), DateUnit.SECOND));
 		//
 		mapper.put(income);
-		
+
 		// 计算代理
 		if (income.getAgentid() != null) {
 			Agentaccountorder aao = agentaccountordermapper.getByOrdernum(income.getAgentordernum());
@@ -998,7 +998,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			// 计算代理数据
 			agentservice.updateIncome(income);
 		}
-					
+
 		// 渠道
 		Qrcodeaccountorder qrcodeaccountorder = qrcodeaccountordermapper.getByOrderNum(income.getQrcodeordernum());
 		qrcodeaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);

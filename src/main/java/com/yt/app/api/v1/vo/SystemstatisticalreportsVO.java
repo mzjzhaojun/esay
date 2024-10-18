@@ -29,6 +29,7 @@ public class SystemstatisticalreportsVO extends BaseVO {
 	Object todayincome;
 	Object incomecount;
 	Object balance;
+	String dateval;
 	Integer todayorder;
 	Integer successorder;
 	Object todayorderamount;

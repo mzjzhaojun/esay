@@ -30,6 +30,7 @@ public class MerchantstatisticalreportsVO extends BaseVO {
 	Double incomecount;
 	Double incomeuserpaycount;
 	Double incomeuserpaysuccesscount;
+	String name;
 	Double balance;
 	Integer todayorder;
 	Integer successorder;
