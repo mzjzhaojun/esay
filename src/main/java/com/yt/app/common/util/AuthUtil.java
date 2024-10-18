@@ -28,16 +28,13 @@ public class AuthUtil {
 
 	private final static String JWT_USER_KEY = "payboot:login:";
 
-	private static String tokenPrefix;
-
 	private static long timeout;
 
 	@Autowired
 	RedisUtil rs;
 
 	@Autowired
-	public AuthUtil(@Value("${sa-token.token-prefix:}") String tokenPrefix, @Value("${sa-token.timeout:}") long timeout) {
-		AuthUtil.tokenPrefix = tokenPrefix;
+	public AuthUtil(@Value("${config.timeout:}") long timeout) {
 		AuthUtil.timeout = timeout;
 	}
 
@@ -59,7 +56,7 @@ public class AuthUtil {
 		// 将登录信息存储到redis
 		RedisUtil.setEx(JWT_USER_KEY + tokenValue, JSONUtil.toJsonStr(jwtUserBO), timeout, TimeUnit.SECONDS);
 
-		return AuthLoginVO.builder().tokenName(StpUtil.getTokenName()).tokenValue(StrUtil.isNotBlank(tokenPrefix) ? tokenPrefix + " " + tokenValue : tokenValue).tenantId(jwtUserBO.getTenantId()).build();
+		return AuthLoginVO.builder().tokenName(StpUtil.getTokenName()).tokenValue(tokenValue).tenantId(jwtUserBO.getTenantId()).build();
 	}
 
 	/**
@@ -92,6 +89,12 @@ public class AuthUtil {
 		return JSONUtil.toBean(userObj, JwtUserBO.class);
 	}
 
+	/**
+	 * 判断是否手机登录
+	 * 
+	 * @param requestHeader
+	 * @return
+	 */
 	public static boolean isMobileDevice(String requestHeader) {
 		String[] deviceArray = new String[] { "android", "iphone" };
 		if (requestHeader == null)
