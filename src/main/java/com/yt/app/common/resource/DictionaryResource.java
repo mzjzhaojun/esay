@@ -157,7 +157,7 @@ public class DictionaryResource implements Serializable {
 	public static final Integer BANK_TYPE_123 = 123; // 支付宝
 
 	/**
-	 * 换汇资金明细类型
+	 * 登錄日志類型
 	 */
 	public static final Integer LOG_TYPE_201 = 201; // web
 	public static final Integer LOG_TYPE_202 = 202; // app

@@ -24,6 +24,7 @@ public class Logs implements Serializable {
 	String optname;
 	java.util.Date optdate;
 	Integer type;
+	String typename;
 	String method;
 	String requesturl;
 	String requestparams;

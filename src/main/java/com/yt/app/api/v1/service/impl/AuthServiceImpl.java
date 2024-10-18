@@ -114,7 +114,7 @@ public class AuthServiceImpl implements AuthService {
 		Systemaccount sca = systemaccountmapper.getByTenantId(userPerm.getTenantId());
 
 		// 写入登录日志
-		logsservice.post(Logs.builder().optname(username).optdate(new Date()).requestip(AuthContext.getIp()).type(DictionaryResource.LOG_TYPE_201).build());
+		logsservice.post(Logs.builder().method("POST").optname(username).optdate(new Date()).requestip(AuthContext.getIp()).type(DictionaryResource.LOG_TYPE_201).build());
 		// 登录
 		return AuthUtil.login(JwtUserBO.builder().authSourceEnum(AuthSourceEnum.B).userId(Long.valueOf(userPerm.getId())).username(userPerm.getUsername()).allRoleIdList(allRoleIdListFinal).roleCodeList(roleCodeList).deptId(userPerm.getDept_id())
 				.scopeDataList(scopeDataList).tenantId(userPerm.getTenantId()).systemaccountId(sca.getId()).accounttype(userPerm.getAccounttype()).build());

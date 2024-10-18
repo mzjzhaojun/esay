@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.LogsMapper;
 import com.yt.app.api.v1.service.LogsService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
+import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Logs;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
+import com.yt.app.common.util.RedisUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -45,6 +47,9 @@ public class LogsServiceImpl extends YtBaseServiceImpl<Logs, Long> implements Lo
 			}
 		}
 		List<Logs> list = mapper.list(param);
+		list.forEach(lg -> {
+			lg.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + lg.getType()));
+		});
 		return new YtPageBean<Logs>(param, list, count);
 	}
 
