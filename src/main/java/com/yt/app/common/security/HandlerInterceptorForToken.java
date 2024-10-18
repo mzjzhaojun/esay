@@ -113,7 +113,7 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 		JwtUserBO jwtUserBO = AuthUtil.getLoginUser(token);
 		String method = request.getMethod();
 		String path = request.getRequestURI();
-		// "GET:/web/api/user/*"
+		
 		String restfulPath = method + ":" + path;
 
 		log.info("request url:" + restfulPath);
