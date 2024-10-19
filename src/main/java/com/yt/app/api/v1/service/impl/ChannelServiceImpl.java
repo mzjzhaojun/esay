@@ -263,6 +263,8 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 			m.setCount(m.getCount() + t.getChannelincomeamount());
 			m.setTodaycount(m.getTodaycount() + t.getChannelincomeamount());
 			m.setBalance(ma.getBalance());
+			m.setTodayincomecount(m.getTodayincomecount() + t.getAmount());
+			m.setIncomecount(m.getIncomecount() + t.getAmount());
 			mapper.put(m);
 		} catch (Exception e) {
 		} finally {

@@ -29,7 +29,7 @@ public class Ytc {
 		long beginTime = System.currentTimeMillis();
 		Object result = pjp.proceed(pjp.getArgs());
 		long time = System.currentTimeMillis() - beginTime;
-		log.info(">>>>>>>>>>>>>>>>>>>> 处理时间  Time = {} /ms", time);
+		log.info(">>>>>>>>>>>>>>>>>>>> End  Time = {} /ms", time);
 		return result;
 	}
 }

@@ -160,7 +160,7 @@ public class TaskConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0/20 * * * * ?")
+	@Scheduled(cron = "0/15 * * * * ?")
 	public void notifyPayout() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Payout> list = payoutmapper.selectNotifylist();
@@ -179,7 +179,7 @@ public class TaskConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0/15 * * * * ?")
+	@Scheduled(cron = "0/10 * * * * ?")
 	public void notifyIncome() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Income> list = incomemapper.selectNotifylist();

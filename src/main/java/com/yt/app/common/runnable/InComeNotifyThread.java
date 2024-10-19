@@ -39,29 +39,23 @@ public class InComeNotifyThread implements Runnable {
 			try {
 				String result = PayUtil.SendIncomeNotify(income.getNotifyurl(), qqr, merchant.getAppkey());
 				// 通知到
-				if (result.equals("success")) {
+				if (result != null && result.equals("success")) {
 					log.info("代收通知成功，商户单号：" + income.getOrdernum());
 					income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_63);
 					int j = mapper.put(income);
-					if (j > 0) {
-						income.setVersion(income.getVersion() + 1);
-					}
-					break;
+					if (j > 0)
+						break;
 				}
+				Thread.sleep(1000 * 60 * 3);
 			} catch (Exception e1) {
 				log.info("代收通知错误：" + e1.getMessage());
 			} finally {
-				try {
-					Thread.sleep(1000 * 60 * 5);
-					i++;
-					if (i >= 3) {
-						log.info("代收通知失败XXXXXX商户单号：" + income.getOrdernum());
-						income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_64);
-						mapper.put(income);
-						break;
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				i++;
+				if (i > 3) {
+					log.info("代收通知失败XXXXXX商户单号：" + income.getOrdernum());
+					income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_64);
+					mapper.put(income);
+					break;
 				}
 			}
 		}

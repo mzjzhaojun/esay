@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.ChannelMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,name,userid,nkname,code,aislecode,status,balance,remotebalance,type,exchange,collection,todaycost,todaycount,count,onecost,downpoint,costexchange,exchangeonecost,exchangedownpoint,min,max,weight,mtorder,ifordernum,firstmatch,firstmatchmoney,apiip,apikey,publicrsa,privatersa,apireusultip,ipaddress,tenant_id,remark,create_by,create_time,update_by,update_time,version
+		id,name,userid,nkname,code,aislecode,status,balance,remotebalance,type,exchange,collection,todaycost,todaycount,count,todayincomecount,incomecount,onecost,downpoint,costexchange,exchangeonecost,exchangedownpoint,min,max,weight,mtorder,ifordernum,firstmatch,firstmatchmoney,apiip,apikey,publicrsa,privatersa,apireusultip,ipaddress,tenant_id,remark,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -77,6 +77,12 @@
 			<if test="count != null">
 				count= #{count},
 			</if>
+			<if test="todayincomecount != null">
+				todayincomecount= #{todayincomecount},
+			</if>
+			<if test="incomecount != null">
+				incomecount= #{incomecount},
+			</if>
 			<if test="collection != null">
 				collection= #{collection},
 			</if>
@@ -143,7 +149,7 @@
 	
 	<update id="updatetodayvalue"  parameterType="java.lang.Long">
 		update channel
-		set todaycost = 0,todaycount = 0
+		set todaycost = 0,todaycount = 0,todayincomecount = 0
 		where id = #{id}
 	</update>
 	
