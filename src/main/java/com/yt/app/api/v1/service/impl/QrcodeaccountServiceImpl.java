@@ -122,7 +122,7 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			//
 			Qrcodeaccountrecord maaj = new Qrcodeaccountrecord();
 			maaj.setUserid(t.getUserid());
-			maaj.setChannelname(mao.getMerchantname());
+			maaj.setChannelname(mao.getQrcodename());
 			maaj.setOrdernum(mao.getOrdernum());
 			maaj.setType(DictionaryResource.RECORDTYPE_31);
 			//
@@ -161,7 +161,7 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			//
 			Qrcodeaccountrecord maaj = new Qrcodeaccountrecord();
 			maaj.setUserid(t.getUserid());
-			maaj.setChannelname(mao.getMerchantname());
+			maaj.setChannelname(mao.getQrcodename());
 			maaj.setOrdernum(mao.getOrdernum());
 			maaj.setType(DictionaryResource.RECORDTYPE_33);
 
