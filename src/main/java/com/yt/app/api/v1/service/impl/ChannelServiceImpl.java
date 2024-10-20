@@ -296,10 +296,14 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 
 			QrcodeaccountorderVO imaovsuccess = qrcodeaccountordermapper.countSuccessOrder(c.getUserid(), date);
 			csr.setSuccessorder(imaovsuccess.getOrdercount());
-			csr.setIncomeuserpaycount(imaov.getAmount());
-			csr.setIncomeuserpaysuccesscount(imaov.getIncomeamount());
+			csr.setIncomeuserpaycount(imaovsuccess.getAmount());
+			csr.setIncomeuserpaysuccesscount(imaovsuccess.getIncomeamount());
 
-			csr.setPayoutrate(Double.valueOf((csr.getSuccessorder() / csr.getTodayorder()) * 100));
+			try {
+				csr.setPayoutrate(Double.valueOf((csr.getSuccessorder() / (csr.getTodayorder() / 100))));
+			} catch (Exception e) {
+				csr.setPayoutrate(0.0);
+			}
 
 			channelstatisticalreportsmapper.post(csr);
 

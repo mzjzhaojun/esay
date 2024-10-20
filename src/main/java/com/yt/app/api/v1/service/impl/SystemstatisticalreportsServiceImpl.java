@@ -87,10 +87,14 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 
 		IncomeVO imaovsuccess = incomemapper.countSuccessOrder(date);
 		t.setSuccessorder(imaovsuccess.getOrdercount());
-		t.setIncomeuserpaycount(imaov.getAmount());
-		t.setIncomeuserpaysuccesscount(imaov.getIncomeamount());
+		t.setIncomeuserpaycount(imaovsuccess.getAmount());
+		t.setIncomeuserpaysuccesscount(imaovsuccess.getIncomeamount());
 
-		t.setPayoutrate(Double.valueOf((t.getSuccessorder() / t.getTodayorder()) * 100));
+		try {
+			t.setPayoutrate(Double.valueOf((t.getSuccessorder() / (t.getTodayorder() / 100))));
+		} catch (Exception e) {
+			t.setPayoutrate(0.0);
+		}
 
 		mapper.post(t);
 	}
