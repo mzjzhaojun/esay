@@ -31,6 +31,7 @@ public class Merchantstatisticalreports extends YtBaseEntity<Merchantstatistical
 	Double incomeuserpaycount;
 	Double incomeuserpaysuccesscount;
 	Double balance;
+	Double payoutrate;
 	String name;
 	Integer todayorder;
 	Integer successorder;

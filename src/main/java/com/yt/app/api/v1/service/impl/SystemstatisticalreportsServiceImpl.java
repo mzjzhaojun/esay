@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
+import com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.SystemaccountMapper;
 import com.yt.app.api.v1.mapper.SystemstatisticalreportsMapper;
 import com.yt.app.api.v1.service.SystemstatisticalreportsService;
@@ -12,6 +13,7 @@ import com.yt.app.common.base.constant.BaseConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.api.v1.entity.Systemstatisticalreports;
+import com.yt.app.api.v1.vo.IncomemerchantaccountorderVO;
 import com.yt.app.api.v1.vo.SystemstatisticalreportsVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -34,6 +36,9 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 
 	@Autowired
 	private SystemaccountMapper systemaccountmapper;
+
+	@Autowired
+	private IncomemerchantaccountorderMapper incomemerchantaccountordermapper;
 
 	@Override
 	@Transactional
@@ -74,7 +79,17 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 		Systemstatisticalreports t = new Systemstatisticalreports();
 		t.setDateval(date);
 		t.setIncomecount(sa.getTotalincome());
-		t.setBalance(sa.getBalance());
+		// 查询每日统计数据
+		IncomemerchantaccountorderVO imaov = incomemerchantaccountordermapper.countOrder(null, date);
+		t.setTodayorder(imaov.getOrdercount());
+		t.setTodayorderamount(imaov.getAmount());
+
+		IncomemerchantaccountorderVO imaovsuccess = incomemerchantaccountordermapper.countSuccessOrder(null, date);
+		t.setSuccessorder(imaovsuccess.getOrdercount());
+		t.setTodaysuccessorderamount(imaovsuccess.getAmount());
+
+		t.setPayoutrate(Double.valueOf((t.getSuccessorder() / t.getTodayorder()) * 100));
+
 		mapper.post(t);
 	}
 }

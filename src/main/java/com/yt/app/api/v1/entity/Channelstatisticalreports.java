@@ -31,6 +31,7 @@ public class Channelstatisticalreports extends YtBaseEntity<Channelstatisticalre
 	Double incomeuserpaycount;
 	Double incomeuserpaysuccesscount;
 	Double balance;
+	Double payoutrate;
 	String name;
 	Integer todayorder;
 	Integer successorder;

@@ -123,10 +123,11 @@ public class TaskConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "59 59 23 * * ?")
+	@Scheduled(cron = "55 59 23 * * ?")
 	public void updateTodayValue() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		String date = DateTimeUtil.getDateTime(new Date(), DateTimeUtil.DEFAULT_DATE_FORMAT);
+		Thread.sleep(60000 * 15);
 		// 系统
 		systemstatisticalreportsservice.updateDayValue(date);
 

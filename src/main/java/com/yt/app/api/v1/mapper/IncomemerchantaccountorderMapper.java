@@ -2,6 +2,9 @@ package com.yt.app.api.v1.mapper;
 
 import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.vo.IncomemerchantaccountorderVO;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
@@ -112,7 +115,7 @@ public interface IncomemerchantaccountorderMapper extends YtIBaseMapper<Incomeme
 	 * @return Incomemerchantaccountorder
 	 */
 	@YtRedisCacheAnnotation(classs = Incomemerchantaccountorder.class)
-	public IncomemerchantaccountorderVO countOrder(Long id);
+	public IncomemerchantaccountorderVO countOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
 
 	/**
 	 * countsuccessorder
@@ -121,5 +124,5 @@ public interface IncomemerchantaccountorderMapper extends YtIBaseMapper<Incomeme
 	 * @return Incomemerchantaccountorder
 	 */
 	@YtRedisCacheAnnotation(classs = Incomemerchantaccountorder.class)
-	public IncomemerchantaccountorderVO countSuccessOrder(Long id);
+	public IncomemerchantaccountorderVO countSuccessOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
 }

@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.ChannelstatisticalreportsMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,channelid,todayincome,incomecount,incomeuserpaycount,incomeuserpaysuccesscount,name,balance,todayorder,successorder,todayorderamount,todaysuccessorderamount,dateval,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,userid,channelid,todayincome,incomecount,incomeuserpaycount,incomeuserpaysuccesscount,name,balance,payoutrate,todayorder,successorder,todayorderamount,todaysuccessorderamount,dateval,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -18,9 +18,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Channelstatisticalreports">
 		insert into
-		channelstatisticalreports(id,userid,channelid,todayincome,incomecount,incomeuserpaycount,incomeuserpaysuccesscount,name,balance,todayorder,successorder,todayorderamount,todaysuccessorderamount,dateval,create_by,create_time,update_by,update_time,remark)
+		channelstatisticalreports(id,userid,channelid,todayincome,incomecount,incomeuserpaycount,incomeuserpaysuccesscount,name,balance,payoutrate,todayorder,successorder,todayorderamount,todaysuccessorderamount,dateval,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{userid},#{channelid},#{todayincome},#{incomecount},#{incomeuserpaycount},#{incomeuserpaysuccesscount},#{name},#{balance},#{todayorder},#{successorder},#{todayorderamount},#{todaysuccessorderamount},#{dateval},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{userid},#{channelid},#{todayincome},#{incomecount},#{incomeuserpaycount},#{incomeuserpaysuccesscount},#{name},#{balance},#{payoutrate},#{todayorder},#{successorder},#{todayorderamount},#{todaysuccessorderamount},#{dateval},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">

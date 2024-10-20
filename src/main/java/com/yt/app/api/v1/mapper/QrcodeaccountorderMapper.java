@@ -3,6 +3,8 @@ package com.yt.app.api.v1.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.yt.app.api.v1.entity.Qrcodeaccountorder;
 import com.yt.app.api.v1.vo.QrcodeaccountorderVO;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
@@ -113,7 +115,7 @@ public interface QrcodeaccountorderMapper extends YtIBaseMapper<Qrcodeaccountord
 	 * @return Incomemerchantaccountorder
 	 */
 	@YtRedisCacheAnnotation(classs = Qrcodeaccountorder.class)
-	public QrcodeaccountorderVO countOrder(Long id);
+	public QrcodeaccountorderVO countOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
 
 	/**
 	 * countsuccessorder
@@ -122,5 +124,5 @@ public interface QrcodeaccountorderMapper extends YtIBaseMapper<Qrcodeaccountord
 	 * @return Incomemerchantaccountorder
 	 */
 	@YtRedisCacheAnnotation(classs = Qrcodeaccountorder.class)
-	public QrcodeaccountorderVO countSuccessOrder(Long id);
+	public QrcodeaccountorderVO countSuccessOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
 }

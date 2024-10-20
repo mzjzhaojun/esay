@@ -289,15 +289,17 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 			csr.setTodayincome(c.getTodaycount());
 			csr.setIncomecount(c.getCount());
 			// 查询每日统计数据
-			QrcodeaccountorderVO imaov = qrcodeaccountordermapper.countOrder(c.getUserid());
+			QrcodeaccountorderVO imaov = qrcodeaccountordermapper.countOrder(c.getUserid(),date);
 			csr.setIncomeuserpaycount(imaov.getRealamount());
 			csr.setTodayorder(imaov.getOrdercount());
 			csr.setTodayorderamount(imaov.getAmount());
 
-			QrcodeaccountorderVO imaovsuccess = qrcodeaccountordermapper.countSuccessOrder(c.getUserid());
+			QrcodeaccountorderVO imaovsuccess = qrcodeaccountordermapper.countSuccessOrder(c.getUserid(),date);
 			csr.setIncomeuserpaysuccesscount(imaovsuccess.getRealamount());
 			csr.setSuccessorder(imaovsuccess.getOrdercount());
 			csr.setTodaysuccessorderamount(imaovsuccess.getAmount());
+			csr.setPayoutrate(Double.valueOf((csr.getSuccessorder() / csr.getTodayorder()) * 100));
+			
 			channelstatisticalreportsmapper.post(csr);
 
 			// 清空每日数据
