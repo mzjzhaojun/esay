@@ -11,6 +11,7 @@ import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.SystemstatisticalreportsService;
 import com.yt.app.common.base.context.BeanContext;
+import com.yt.app.common.base.context.TenantIdContext;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,7 +32,7 @@ public class StatisticsThread implements Runnable {
 			Thread.sleep(60000 * 15);
 		} catch (InterruptedException e) {
 		}
-
+		TenantIdContext.removeFlag();
 		SystemstatisticalreportsService systemstatisticalreportsservice = BeanContext.getApplicationContext().getBean(SystemstatisticalreportsService.class);
 		MerchantService merchantservice = BeanContext.getApplicationContext().getBean(MerchantService.class);
 		MerchantMapper merchantmapper = BeanContext.getApplicationContext().getBean(MerchantMapper.class);
