@@ -309,4 +309,29 @@
 			notifystatus = 62
 		</where>
 	</select>
+	
+	<select id="countOrder"  resultMap="ResultMapVO" >
+		SELECT
+		count(*)  as ordercount,
+		sum(amount) as amount,
+		sum(incomeamount) as incomeamount
+		FROM
+		income
+		WHERE
+		create_time >= CONCAT(#{dateval}, ' 00:00:00')
+		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
+	</select>
+	
+	<select id="countSuccessOrder"  resultMap="ResultMapVO" >
+		SELECT
+		count(*) as ordercount,
+		sum(amount) as amount,
+		sum(incomeamount) as incomeamount
+		FROM
+		income
+		WHERE
+		status = 52
+		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
+		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
+	</select>
 </mapper>

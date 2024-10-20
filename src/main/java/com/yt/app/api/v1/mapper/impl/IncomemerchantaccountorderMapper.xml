@@ -264,14 +264,11 @@
 		SELECT
 		count(*)  as ordercount,
 		sum(amount) as amount,
-		sum(realamount) as realamount
+		sum(incomeamount) as incomeamount
 		FROM
 		incomemerchantaccountorder
 		WHERE
-		1=1
-		<if test="userid != null and userid != ''">
-				and userid = #{userid}
-		</if>
+		userid = #{userid}
 		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
 		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
 	</select>
@@ -280,15 +277,12 @@
 		SELECT
 		count(*) as ordercount,
 		sum(amount) as amount,
-		sum(realamount) as realamount
+		sum(incomeamount) as incomeamount
 		FROM
 		incomemerchantaccountorder
 		WHERE
-		1=1
-		<if test="userid != null and userid != ''">
-				and userid = #{userid}
-		</if>
-		AND `status` = 52
+		userid = #{userid}
+		AND status = 52
 		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
 		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
 	</select>

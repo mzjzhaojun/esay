@@ -3,6 +3,8 @@ package com.yt.app.api.v1.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
@@ -137,4 +139,22 @@ public interface IncomeMapper extends YtIBaseMapper<Income> {
 	 */
 	@YtRedisCacheAnnotation(classs = Income.class)
 	public List<Income> selectNotifylist();
+
+	/**
+	 * countorder
+	 *
+	 * @param id id
+	 * @return Incomemerchantaccountorder
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public IncomeVO countOrder(@Param("dateval") String dateval);
+
+	/**
+	 * countsuccessorder
+	 *
+	 * @param id id
+	 * @return Incomemerchantaccountorder
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public IncomeVO countSuccessOrder(@Param("dateval") String dateval);
 }

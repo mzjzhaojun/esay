@@ -28,6 +28,8 @@ public class Systemstatisticalreports extends YtBaseEntity<Systemstatisticalrepo
 	Long merchantid;
 	Double todayincome;
 	Double incomecount;
+	Double incomeuserpaycount;
+	Double incomeuserpaysuccesscount;
 	Double payoutrate;
 	String dateval;
 	Integer todayorder;

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
-import com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper;
+import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.SystemaccountMapper;
 import com.yt.app.api.v1.mapper.SystemstatisticalreportsMapper;
 import com.yt.app.api.v1.service.SystemstatisticalreportsService;
@@ -13,7 +13,7 @@ import com.yt.app.common.base.constant.BaseConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.api.v1.entity.Systemstatisticalreports;
-import com.yt.app.api.v1.vo.IncomemerchantaccountorderVO;
+import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.api.v1.vo.SystemstatisticalreportsVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -38,7 +38,7 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 	private SystemaccountMapper systemaccountmapper;
 
 	@Autowired
-	private IncomemerchantaccountorderMapper incomemerchantaccountordermapper;
+	private IncomeMapper incomemapper;
 
 	@Override
 	@Transactional
@@ -80,13 +80,15 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 		t.setDateval(date);
 		t.setIncomecount(sa.getTotalincome());
 		// 查询每日统计数据
-		IncomemerchantaccountorderVO imaov = incomemerchantaccountordermapper.countOrder(null, date);
+		IncomeVO imaov = incomemapper.countOrder(date);
 		t.setTodayorder(imaov.getOrdercount());
 		t.setTodayorderamount(imaov.getAmount());
+		t.setTodaysuccessorderamount(imaov.getIncomeamount());
 
-		IncomemerchantaccountorderVO imaovsuccess = incomemerchantaccountordermapper.countSuccessOrder(null, date);
+		IncomeVO imaovsuccess = incomemapper.countSuccessOrder(date);
 		t.setSuccessorder(imaovsuccess.getOrdercount());
-		t.setTodaysuccessorderamount(imaovsuccess.getAmount());
+		t.setIncomeuserpaycount(imaov.getAmount());
+		t.setIncomeuserpaysuccesscount(imaov.getIncomeamount());
 
 		t.setPayoutrate(Double.valueOf((t.getSuccessorder() / t.getTodayorder()) * 100));
 

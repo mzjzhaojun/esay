@@ -37,15 +37,15 @@ public class IncomeVO extends BaseVO {
 	String qrcodeaislename;
 	Long agentid;
 	String agentordernum;
-	Object agentincome;
-	Object qrcodeid;
+	Double agentincome;
+	Double qrcodeid;
 	String qrcodename;
 	String qrcodecode;
 	String qrcodeaislecode;
 	String qrcodeordernum;
 	String qrcodeuserid;
-	Object amount;
-	Object realamount;
+	Double amount;
+	Double realamount;
 	Integer status;
 	String statusname;
 	java.util.Date successtime;
@@ -60,7 +60,7 @@ public class IncomeVO extends BaseVO {
 	Boolean dynamic;
 	String typename;
 	String resulturl;
-	Object fewamount;
+	Double fewamount;
 	String notifyurl;
 	Integer notifystatus;
 	String notifystatusname;
@@ -69,4 +69,7 @@ public class IncomeVO extends BaseVO {
 	Double merchantincomeamount;
 	Double channelincomeamount;
 	Integer version;
+
+	// 订单总数
+	Integer ordercount;
 }
