@@ -78,6 +78,7 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 		Systemaccount sa = systemaccountmapper.getByTenantId(BaseConstant.FEITU_TENANT_ID);
 		Systemstatisticalreports t = new Systemstatisticalreports();
 		t.setDateval(date);
+		
 		t.setIncomecount(sa.getTotalincome());
 		// 查询每日统计数据
 		IncomeVO imaov = incomemapper.countOrder(date);
@@ -89,7 +90,7 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 		t.setSuccessorder(imaovsuccess.getOrdercount());
 		t.setIncomeuserpaycount(imaovsuccess.getAmount());
 		t.setIncomeuserpaysuccesscount(imaovsuccess.getIncomeamount());
-
+		t.setTodayincome(imaovsuccess.getIncomeamount());
 		try {
 			t.setPayoutrate(Double.valueOf((t.getSuccessorder() / (t.getTodayorder() / 100))));
 		} catch (Exception e) {
