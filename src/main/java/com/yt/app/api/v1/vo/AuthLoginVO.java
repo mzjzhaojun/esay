@@ -21,5 +21,7 @@ public class AuthLoginVO {
 	private String tokenValue;
 
 	private Long tenantId;
+	
+	private Long userid;
 
 }
