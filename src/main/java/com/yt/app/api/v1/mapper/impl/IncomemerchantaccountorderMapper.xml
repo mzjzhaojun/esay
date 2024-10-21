@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,merchantname,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,payoutrate,dynamic,fewamount,expireddate,amount,incomeamount,realamount,resulturl,qrocde,status,remark,merchantid,create_by,create_time,update_by,update_time,version
+		id,tenant_id,userid,merchantname,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,dynamic,fewamount,expireddate,amount,incomeamount,realamount,resulturl,qrocde,status,remark,merchantid,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -18,9 +18,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Incomemerchantaccountorder">
 		insert into
-		incomemerchantaccountorder(id,userid,merchantname,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,dynamic,payoutrate,fewamount,expireddate,amount,incomeamount,realamount,resulturl,qrocde,status,remark,merchantid,create_by,create_time,update_by,update_time)
+		incomemerchantaccountorder(id,userid,merchantname,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,dynamic,fewamount,expireddate,amount,incomeamount,realamount,resulturl,qrocde,status,remark,merchantid,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{userid},#{merchantname},#{qrcodeaislecode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{dynamic},#{payoutrate},#{fewamount},#{expireddate},#{amount},#{incomeamount},#{realamount},#{resulturl},#{qrocde},#{status},#{remark},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{userid},#{merchantname},#{qrcodeaislecode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{dynamic},#{fewamount},#{expireddate},#{amount},#{incomeamount},#{realamount},#{resulturl},#{qrocde},#{status},#{remark},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -119,7 +119,7 @@
 				version= #{version}+1
 			</if>
 		</set>
-		where id = #{id} 
+		where id = #{id}
 	</update>
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"
@@ -195,7 +195,8 @@
 				and create_time LIKE CONCAT(#{dateval} , '%')
 			</if>
 			<if test="qrcodeaislename != null and qrcodeaislename != ''">
-				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename}, '%' )
+				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename},
+				'%' )
 			</if>
 			<if test="merchantname != null and merchantname != ''">
 				and merchantname LIKE CONCAT( '%', #{merchantname} , '%')
@@ -260,30 +261,36 @@
 		</where>
 	</select>
 
-	<select id="countOrder"  resultMap="ResultMapVO" >
+	<select id="countOrder" resultMap="ResultMapVO">
 		SELECT
-		count(*)  as ordercount,
+		count(*)
+		as ordercount,
 		sum(amount) as amount,
 		sum(incomeamount) as incomeamount
 		FROM
 		incomemerchantaccountorder
 		WHERE
 		userid = #{userid}
-		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
-		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
+		AND create_time
+		>= CONCAT(#{dateval}, ' 00:00:00')
+		AND create_time &lt;
+		CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
 	</select>
-	
-	<select id="countSuccessOrder"  resultMap="ResultMapVO" >
+
+	<select id="countSuccessOrder" resultMap="ResultMapVO">
 		SELECT
 		count(*) as ordercount,
 		sum(amount) as amount,
-		sum(incomeamount) as incomeamount
+		sum(incomeamount) as
+		incomeamount
 		FROM
 		incomemerchantaccountorder
 		WHERE
 		userid = #{userid}
-		AND status = 52
+		AND
+		status = 52
 		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
-		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
+		AND
+		create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
 	</select>
 </mapper>

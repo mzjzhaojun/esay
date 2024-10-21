@@ -360,7 +360,8 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 			msr.setIncomeuserpaysuccesscount(imaovsuccess.getIncomeamount());
 
 			try {
-				msr.setPayoutrate(Double.valueOf((msr.getSuccessorder() / (msr.getTodayorder() / 100))));
+				double successRate = ((double) msr.getSuccessorder() / msr.getTodayorder()) * 100;
+				msr.setPayoutrate(successRate);
 			} catch (Exception e) {
 				msr.setPayoutrate(0.0);
 			}

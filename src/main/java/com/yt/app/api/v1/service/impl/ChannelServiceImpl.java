@@ -300,7 +300,8 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 			csr.setIncomeuserpaysuccesscount(imaovsuccess.getIncomeamount());
 
 			try {
-				csr.setPayoutrate(Double.valueOf((csr.getSuccessorder() / (csr.getTodayorder() / 100))));
+				double successRate = ((double) csr.getSuccessorder() / csr.getTodayorder()) * 100;
+				csr.setPayoutrate(successRate);
 			} catch (Exception e) {
 				csr.setPayoutrate(0.0);
 			}
