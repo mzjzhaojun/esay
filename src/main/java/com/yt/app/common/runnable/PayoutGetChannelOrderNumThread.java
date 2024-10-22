@@ -7,19 +7,16 @@ import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccountorder;
 import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.api.v1.entity.Payout;
-import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.mapper.AgentaccountorderMapper;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ChannelaccountorderMapper;
 import com.yt.app.api.v1.mapper.PayoutMerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
-import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.api.v1.service.PayoutMerchantaccountService;
 import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
-import com.yt.app.common.bot.ChannelMsgBot;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.PayUtil;
@@ -45,10 +42,8 @@ public class PayoutGetChannelOrderNumThread implements Runnable {
 		PayoutMerchantaccountService merchantaccountservice = BeanContext.getApplicationContext().getBean(PayoutMerchantaccountService.class);
 		AgentaccountService agentaccountservice = BeanContext.getApplicationContext().getBean(AgentaccountService.class);
 		ChannelMapper channelmapper = BeanContext.getApplicationContext().getBean(ChannelMapper.class);
-		TgchannelgroupMapper tgchannelgroupmapper = BeanContext.getApplicationContext().getBean(TgchannelgroupMapper.class);
 		ChannelaccountorderMapper channelaccountordermapper = BeanContext.getApplicationContext().getBean(ChannelaccountorderMapper.class);
 		ChannelaccountService channelaccountservice = BeanContext.getApplicationContext().getBean(ChannelaccountService.class);
-		ChannelMsgBot cbot = BeanContext.getApplicationContext().getBean(ChannelMsgBot.class);
 		Payout payout = mapper.get(id);
 		Channel channel = channelmapper.get(payout.getChannelid());
 		Random rd = new Random();
@@ -114,17 +109,6 @@ public class PayoutGetChannelOrderNumThread implements Runnable {
 					cat.setRemark("代付资金￥：" + cat.getAmount() + " 交易费：" + String.format("%.2f", cat.getDeal()) + " 手续费：" + cat.getOnecost());
 					channelaccountordermapper.post(cat);
 					channelaccountservice.withdrawamount(cat);
-					Tgchannelgroup tgchannelgroup = tgchannelgroupmapper.getByChannelId(payout.getChannelid());
-					StringBuffer what = new StringBuffer();
-					what.append("状态：新增代付\n");
-					what.append("单号：" + payout.getChannelordernum() + "\n");
-					what.append("姓名：" + payout.getAccname() + "\n");
-					what.append("卡号：" + payout.getAccnumer() + "\n");
-					what.append("金额：" + payout.getAmount() + "\n");
-					what.append("发起时间：" + DateTimeUtil.getDateTime() + "\n");
-					what.append("请你们尽快处理\n");
-					if (tgchannelgroup != null)
-						cbot.sendText(tgchannelgroup.getTgid(), what.toString());
 					break;
 				}
 			} catch (Exception e1) {

@@ -14,7 +14,7 @@ import com.yt.app.common.bot.message.impl.TrxFlashRentMessage;
 
 import lombok.extern.slf4j.Slf4j;
 
-import com.yt.app.common.bot.message.impl.StartMessage;
+import com.yt.app.common.bot.message.impl.TronStartMessage;
 import com.yt.app.common.bot.message.impl.MemberFlashExchangeMessage;
 
 @SuppressWarnings("deprecation")
@@ -22,7 +22,7 @@ import com.yt.app.common.bot.message.impl.MemberFlashExchangeMessage;
 @Component
 public class TronBot extends TelegramLongPollingBot {
 	@Autowired
-	private StartMessage startmessage;
+	private TronStartMessage startmessage;
 	@Autowired
 	private TrxFlashRentMessage trxflashrentmessage;
 	@Autowired

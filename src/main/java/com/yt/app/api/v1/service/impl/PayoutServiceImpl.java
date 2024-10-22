@@ -16,7 +16,6 @@ import com.yt.app.api.v1.mapper.PayoutMerchantaccountMapper;
 import com.yt.app.api.v1.mapper.PayoutMerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantaisleMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
-import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.AgentService;
 import com.yt.app.api.v1.service.AgentaccountService;
@@ -35,7 +34,6 @@ import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
-import com.yt.app.common.bot.MerchantMsgBot;
 import com.yt.app.api.v1.dbo.PaySubmitDTO;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccountorder;
@@ -48,7 +46,6 @@ import com.yt.app.api.v1.entity.PayoutMerchantaccount;
 import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.api.v1.entity.Merchantaisle;
 import com.yt.app.api.v1.entity.Payout;
-import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtIPage;
@@ -121,10 +118,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	private PayoutMerchantaccountMapper merchantaccountmapper;
 	@Autowired
 	private MerchantaisleMapper merchantaislemapper;
-	@Autowired
-	private MerchantMsgBot mbot;
-	@Autowired
-	private TgmerchantgroupMapper tgmerchantgroupmapper;
 	@Autowired
 	private MerchantcustomerbanksService merchantcustomerbanksservice;
 
@@ -601,20 +594,10 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				//
 				int i = mapper.put(t);
 				if (i > 0) {
-					Tgmerchantgroup tgmerchantgroup = tgmerchantgroupmapper.getByMerchantId(t.getMerchantid());
-					StringBuffer what = new StringBuffer();
-					what.append("状态：代付成功\n");
-					what.append("单号：" + t.getMerchantordernum() + "\n");
-					what.append("姓名：" + t.getAccname() + "\n");
-					what.append("卡号：" + t.getAccnumer() + "\n");
-					what.append("金额：" + t.getAmount() + "\n");
-					what.append("成功时间：" + DateTimeUtil.getDateTime() + "\n");
-					what.append("业务部已处理完毕，请你们核实\n");
-					if (tgmerchantgroup != null)
-						mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
+					// 保存客户信息
+					merchantcustomerbanksservice.add(t);
 				}
-				// 保存客户信息
-				merchantcustomerbanksservice.add(t);
+
 			} else {
 				throw new YtException("已经处理完成，不要重复处理");
 			}
@@ -669,20 +652,10 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				t.setBacklong(DateTimeUtil.diffDays(t.getSuccesstime(), t.getCreate_time()));
 				int i = mapper.put(t);
 				if (i > 0) {
-					Tgmerchantgroup tgmerchantgroup = tgmerchantgroupmapper.getByMerchantId(t.getMerchantid());
-					StringBuffer what = new StringBuffer();
-					what.append("状态：代付失败\n");
-					what.append("单号：" + t.getMerchantordernum() + "\n");
-					what.append("姓名：" + t.getAccname() + "\n");
-					what.append("卡号：" + t.getAccnumer() + "\n");
-					what.append("金额：" + t.getAmount() + "\n");
-					what.append("失败时间：" + DateTimeUtil.getDateTime() + "\n");
-					what.append("业务部已处理完毕，请你们核实查看\n");
-					if (tgmerchantgroup != null)
-						mbot.sendText(tgmerchantgroup.getTgid(), what.toString());
+					// 保存客户信息
+					merchantcustomerbanksservice.add(t);
 				}
-				// 保存客户信息
-				merchantcustomerbanksservice.add(t);
+
 			} else {
 				throw new YtException("已经处理完成，不要重复处理");
 			}

@@ -36,6 +36,7 @@ import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.AuthContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
+import com.yt.app.common.bot.ChannelBot;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.domain.AlipayTradePrecreateModel;
@@ -151,6 +152,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	private AgentService agentservice;
 	@Autowired
 	private AlipayTradeService tradeService;
+	@Autowired
+	private ChannelBot channelbot;
 
 	@Override
 	@Transactional
@@ -597,49 +600,73 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		switch (channel.getName()) {
 		case DictionaryResource.YJJAISLE:
 			SysYjjOrder syo = PayUtil.SendYJJSubmit(income, channel);
-			Assert.notNull(syo, "雨将军获取渠道订单失败!");
+			if (syo == null) {
+				channelbot.notifyChannel(channel);
+				throw new YtException("雨将军获取渠道订单失败!");
+			}
 			income.setResulturl(syo.getData().getPay_url());
 			income.setQrcodeordernum(syo.getData().getOrder_id());
 			break;
 		case DictionaryResource.HSAISLE:
 			SysHsOrder sho = PayUtil.SendHSSubmit(income, channel);
-			Assert.notNull(sho, "宏盛获取渠道订单失败!");
+			if (sho == null) {
+				channelbot.notifyChannel(channel);
+				throw new YtException("宏盛获取渠道订单失败!");
+			}
 			income.setResulturl(sho.getPay_url());
 			income.setQrcodeordernum(sho.getSys_order_no());
 			break;
 		case DictionaryResource.WDAISLE:
 			SysWdOrder wd = PayUtil.SendWdSubmit(income, channel);
-			Assert.notNull(wd, "豌豆获取渠道订单失败!");
+			if (wd == null) {
+				channelbot.notifyChannel(channel);
+				throw new YtException("豌豆获取渠道订单失败!");
+			}
 			income.setResulturl(wd.getData().getPayData());
 			income.setQrcodeordernum(wd.getData().getPayOrderId());
 			break;
 		case DictionaryResource.RBLAISLE:
 			SysRblOrder rbl = PayUtil.SendRblSubmit(income, channel);
-			Assert.notNull(rbl, "日不落获取渠道订单失败!");
+			if (rbl == null) {
+				channelbot.notifyChannel(channel);
+				throw new YtException("日不落获取渠道订单失败!");
+			}
 			income.setResulturl(rbl.getData().getPayUrl());
 			income.setQrcodeordernum(rbl.getData().getTradeNo());
 			break;
 		case DictionaryResource.GZAISLE:
 			SysGzOrder gz = PayUtil.SendGzSubmit(income, channel);
-			Assert.notNull(gz, "公子获取渠道订单失败!");
+			if (gz == null) {
+				channelbot.notifyChannel(channel);
+				throw new YtException("公子获取渠道订单失败!");
+			}
 			income.setResulturl(gz.getData().getPayUrl());
 			income.setQrcodeordernum(income.getMerchantordernum());
 			break;
 		case DictionaryResource.WJAISLE:
 			SysWjOrder wj = PayUtil.SendWjSubmit(income, channel);
-			Assert.notNull(wj, "玩家获取渠道订单失败!");
+			if (wj == null) {
+				channelbot.notifyChannel(channel);
+				throw new YtException("玩家获取渠道订单失败!");
+			}
 			income.setResulturl(wj.getData().getPayData());
 			income.setQrcodeordernum(wj.getData().getPayOrderId());
 			break;
 		case DictionaryResource.FCAISLE:
 			SysFcOrder fc = PayUtil.SendFcSubmit(income, channel);
-			Assert.notNull(fc, "翡翠获取渠道订单失败!");
+			if (fc == null) {
+				channelbot.notifyChannel(channel);
+				throw new YtException("翡翠获取渠道订单失败!");
+			}
 			income.setResulturl(fc.getData().getPayUrl());
 			income.setQrcodeordernum(fc.getData().getTradeNo());
 			break;
 		case DictionaryResource.AKLAISLE:
 			SysFcOrder akl = PayUtil.SendAklSubmit(income, channel);
-			Assert.notNull(akl, "奥克兰获取渠道订单失败!");
+			if (akl == null) {
+				channelbot.notifyChannel(channel);
+				throw new YtException("奥克兰获取渠道订单失败!");
+			}
 			income.setResulturl(akl.getData().getPayUrl());
 			income.setQrcodeordernum(akl.getData().getTradeNo());
 			break;

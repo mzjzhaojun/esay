@@ -64,9 +64,10 @@ public class TgchannelgroupServiceImpl extends YtBaseServiceImpl<Tgchannelgroup,
 	@Override
 	@Transactional
 	public Integer putchannel(Tgchannelgroup t) {
-		mapper.updatechannelid(t.getChannelid());
 		Channel ct = channelmapper.get(t.getChannelid());
 		t.setChannelname(ct.getName());
+		t.setChannelid(t.getChannelid());
+		t.setTenant_id(ct.getTenant_id());
 		return mapper.put(t);
 	}
 }

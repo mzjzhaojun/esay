@@ -16,7 +16,6 @@ import com.yt.app.api.v1.mapper.ExchangeMerchantaccountMapper;
 import com.yt.app.api.v1.mapper.ExchangeMerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.MerchantaisleMapper;
-import com.yt.app.api.v1.mapper.TgmerchantchannelmsgMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.AgentService;
 import com.yt.app.api.v1.service.AgentaccountService;
@@ -33,7 +32,6 @@ import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
-import com.yt.app.common.bot.MerchantMsgBot;
 import com.yt.app.api.v1.dbo.PaySubmitDTO;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccountorder;
@@ -47,7 +45,6 @@ import com.yt.app.api.v1.entity.ExchangeMerchantaccountorder;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Merchantaisle;
 import com.yt.app.api.v1.entity.Sysconfig;
-import com.yt.app.api.v1.entity.Tgmerchantchannelmsg;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.vo.ExchangeVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
@@ -122,10 +119,6 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	private ExchangeMerchantaccountMapper exchangemerchantaccountmapper;
 	@Autowired
 	private MerchantaisleMapper merchantaislemapper;
-	@Autowired
-	private MerchantMsgBot mbot;
-	@Autowired
-	private TgmerchantchannelmsgMapper tgmerchantchannelmsgmapper;
 	@Autowired
 	private MerchantcustomerbanksService merchantcustomerbanksservice;
 	@Autowired
@@ -561,24 +554,9 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			t.setImgurl(pt.getImgurl());
 			//
 			int i = mapper.put(t);
-			if (i > 0) {
-				Tgmerchantchannelmsg tgmerchantchannelmsg = tgmerchantchannelmsgmapper.getOrderNum(t.getOrdernum());
-				StringBuffer what = new StringBuffer();
-				String strnum = t.getAccnumer();
-				if (strnum == null)
-					strnum = "收款码";
-				what.append("状态：换汇成功\n");
-				what.append("单号：" + t.getMerchantordernum() + "\n");
-				what.append("姓名：" + t.getAccname() + "\n");
-				what.append("卡号：" + strnum + "\n");
-				what.append("金额：" + t.getAmount() + "\n");
-				what.append("成功时间：" + DateTimeUtil.getDateTime() + "\n");
-				what.append("兑换部已处理完毕，请你们核实查看\n");
-				if (tgmerchantchannelmsg != null)
-					mbot.sendReplyText(tgmerchantchannelmsg.getChatid(), tgmerchantchannelmsg.getCreplyid(), what.toString());
-			}
-			// 保存客户信息
-			merchantcustomerbanksservice.add(t);
+
+			if (i > 0)
+				merchantcustomerbanksservice.add(t);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -625,24 +603,8 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			t.setBacklong(DateTimeUtil.diffDays(t.getSuccesstime(), t.getCreate_time()));
 			t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 			int i = mapper.put(t);
-			if (i > 0) {
-				Tgmerchantchannelmsg tgmerchantchannelmsg = tgmerchantchannelmsgmapper.getOrderNum(t.getOrdernum());
-				StringBuffer what = new StringBuffer();
-				String strnum = t.getAccnumer();
-				if (strnum == null)
-					strnum = "收款码";
-				what.append("状态：换汇失败\n");
-				what.append("单号：" + t.getMerchantordernum() + "\n");
-				what.append("姓名：" + t.getAccname() + "\n");
-				what.append("卡号：" + strnum + "\n");
-				what.append("金额：" + t.getAmount() + "\n");
-				what.append("失败时间：" + DateTimeUtil.getDateTime() + "\n");
-				what.append("兑换部已处理完毕，请你们核实\n");
-				if (tgmerchantchannelmsg != null)
-					mbot.sendReplyText(tgmerchantchannelmsg.getChatid(), tgmerchantchannelmsg.getCreplyid(), what.toString());
-			}
-			// 保存客户信息
-			merchantcustomerbanksservice.add(t);
+			if (i > 0)
+				merchantcustomerbanksservice.add(t);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();

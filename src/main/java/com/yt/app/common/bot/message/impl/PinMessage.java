@@ -1,7 +1,9 @@
 package com.yt.app.common.bot.message.impl;
 
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.pinnedmessages.PinChatMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import com.yt.app.common.bot.message.UpdateMessageService;
@@ -13,13 +15,20 @@ import com.yt.app.common.bot.message.UpdateMessageService;
  *
  */
 @Component
-public class StartMessage implements UpdateMessageService {
+public class PinMessage implements UpdateMessageService {
 
 	@Override
 	public SendMessage getUpdate(Update update) {
 		SendMessage sendMessage = new SendMessage();
 		sendMessage.setChatId(update.getMessage().getChatId().toString());
-		sendMessage.setText("当前群Tgid:" + update.getMessage().getChatId()+"请在后台系统绑定。");
+
+		return sendMessage;
+	}
+
+	public PinChatMessage getUpdate(Message msg) {
+		PinChatMessage sendMessage = new PinChatMessage();
+		sendMessage.setChatId(msg.getChatId().toString());
+		sendMessage.setMessageId(msg.getMessageId());
 		return sendMessage;
 	}
 }

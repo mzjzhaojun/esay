@@ -92,8 +92,10 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 		t.setIncomeuserpaysuccesscount(imaovsuccess.getIncomeamount());
 		t.setTodayincome(imaovsuccess.getIncomeamount());
 		try {
-			double successRate = ((double) t.getSuccessorder() / t.getTodayorder()) * 100;
-			t.setPayoutrate(successRate);
+			if (t.getSuccessorder() > 0) {
+				double successRate = ((double) t.getSuccessorder() / t.getTodayorder()) * 100;
+				t.setPayoutrate(successRate);
+			}
 		} catch (Exception e) {
 			t.setPayoutrate(0.0);
 		}

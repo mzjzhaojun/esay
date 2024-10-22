@@ -69,9 +69,10 @@ public class TgmerchantgroupServiceImpl extends YtBaseServiceImpl<Tgmerchantgrou
 	@Override
 	@Transactional
 	public Integer putmerchant(Tgmerchantgroup t) {
-		mapper.updatemerchantid(t.getMerchantid());
 		Merchant mt = merchantmapper.get(t.getMerchantid());
 		t.setMerchantname(mt.getName());
+		t.setMerchantid(t.getMerchantid());
+		t.setTenant_id(mt.getTenant_id());
 		return mapper.put(t);
 	}
 }

@@ -20,6 +20,7 @@ import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
+import com.yt.app.common.bot.MerchantBot;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccount;
@@ -76,6 +77,9 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 
 	@Autowired
 	private MerchantstatisticalreportsMapper merchantstatisticalreportsmapper;
+
+	@Autowired
+	private MerchantBot merchantbot;
 
 	@Override
 	@Transactional
@@ -358,15 +362,17 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 			msr.setSuccessorder(imaovsuccess.getOrdercount());
 			msr.setIncomeuserpaycount(imaovsuccess.getAmount());
 			msr.setIncomeuserpaysuccesscount(imaovsuccess.getIncomeamount());
-
 			try {
-				double successRate = ((double) msr.getSuccessorder() / msr.getTodayorder()) * 100;
-				msr.setPayoutrate(successRate);
+				if (msr.getSuccessorder() > 0) {
+					double successRate = ((double) msr.getSuccessorder() / msr.getTodayorder()) * 100;
+					msr.setPayoutrate(successRate);
+				}
 			} catch (Exception e) {
 				msr.setPayoutrate(0.0);
 			}
-
 			merchantstatisticalreportsmapper.post(msr);
+			// 发送机器人数据
+			merchantbot.statisticsMerchant(m);
 			// 清空每日数据
 			mapper.updatetodayvalue(m.getId());
 			TenantIdContext.remove();

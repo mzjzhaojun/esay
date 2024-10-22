@@ -2,14 +2,9 @@ package com.yt.app.common.config;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-
-import com.yt.app.common.bot.TronBot;
 
 /**
  * <p>
@@ -25,16 +20,9 @@ import com.yt.app.common.bot.TronBot;
 @Component
 public class SlaveRunner implements CommandLineRunner {
 
-	private TelegramBotsApi botsApi;
-
-	@Autowired
-	private TronBot tronbot;
-
 	@Override
 	public void run(String... args) throws Exception {
-		botsApi = new TelegramBotsApi(DefaultBotSession.class);
 		log.info("slave start...");
-		botsApi.registerBot(tronbot);
 		log.info("slave end...");
 	}
 }

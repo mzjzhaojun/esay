@@ -29,9 +29,10 @@ public class StatisticsThread implements Runnable {
 
 		try {
 			log.info("start Statistics");
-			Thread.sleep(60000 * 15);
+			Thread.sleep(60000 * 5);
 		} catch (InterruptedException e) {
 		}
+
 		TenantIdContext.removeFlag();
 		SystemstatisticalreportsService systemstatisticalreportsservice = BeanContext.getApplicationContext().getBean(SystemstatisticalreportsService.class);
 		MerchantService merchantservice = BeanContext.getApplicationContext().getBean(MerchantService.class);
