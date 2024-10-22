@@ -51,6 +51,17 @@ public class TgchannelgroupServiceImpl extends YtBaseServiceImpl<Tgchannelgroup,
 			}
 		}
 		List<Tgchannelgroup> list = mapper.list(param);
+		list.forEach(e -> {
+			List<Long> ids = e.getChannelids();
+			if (ids != null) {
+				StringBuffer sb = new StringBuffer();
+				ids.forEach(id -> {
+					Channel channel = channelmapper.get(id);
+					sb.append(channel.getName() + " ");
+				});
+				e.setChannelname(sb.toString());
+			}
+		});
 		return new YtPageBean<Tgchannelgroup>(param, list, count);
 	}
 
@@ -64,10 +75,7 @@ public class TgchannelgroupServiceImpl extends YtBaseServiceImpl<Tgchannelgroup,
 	@Override
 	@Transactional
 	public Integer putchannel(Tgchannelgroup t) {
-		Channel ct = channelmapper.get(t.getChannelid());
-		t.setChannelname(ct.getName());
-		t.setChannelid(t.getChannelid());
-		t.setTenant_id(ct.getTenant_id());
+		t.setChannelids(t.getChannelids());
 		return mapper.put(t);
 	}
 }

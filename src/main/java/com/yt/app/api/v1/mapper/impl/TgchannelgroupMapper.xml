@@ -8,6 +8,8 @@
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
 		type="com.yt.app.api.v1.entity.Tgchannelgroup">
+		<result property="channelids" column="channelid"
+			typeHandler="com.yt.app.common.mybatis.handler.ListJsonLongTypeHandler" />
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
@@ -40,8 +42,8 @@
 			<if test="tenant_id != null">
 				tenant_id= #{tenant_id},
 			</if>
-			<if test="channelid != null">
-				channelid= #{channelid},
+			<if test="channelids != null">
+				channelid = #{channelids,jdbcType=OTHER,typeHandler=com.yt.app.common.mybatis.handler.ListJsonLongTypeHandler},
 			</if>
 			<if test="channelname != null">
 				channelname= #{channelname},
@@ -148,7 +150,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from tgchannelgroup
-		where channelid= #{channelid}
+		where channelid LIKE CONCAT( '%', #{channelid} , '%' )
 	</select>
 
 	<!-- getList -->

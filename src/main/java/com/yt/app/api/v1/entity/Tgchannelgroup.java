@@ -1,5 +1,7 @@
 package com.yt.app.api.v1.entity;
 
+import java.util.List;
+
 import com.yt.app.common.base.YtBaseEntity;
 
 import lombok.AllArgsConstructor;
@@ -24,7 +26,7 @@ public class Tgchannelgroup extends YtBaseEntity<Tgchannelgroup> {
 
 	Long id;
 	Long tenant_id;
-	Long channelid;
+	List<Long> channelids;
 	String channelname;
 	String channelnkname;
 	Boolean status;
