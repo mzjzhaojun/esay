@@ -103,7 +103,7 @@
 		<where>
 			1=1
 			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+				and name LIKE CONCAT( '%', #{name} , '%' )
 			</if>
 		</where>
 	</select>
@@ -116,7 +116,7 @@
 		<where>
 			1=1
 			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+				and name LIKE CONCAT( '%', #{name} , '%' )
 			</if>
 			<if test="orderBy != null and dir != null">
 				order by ${orderBy} ${dir}
@@ -133,7 +133,7 @@
 		<where>
 			1=1
 			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+				and name LIKE CONCAT( '%', #{name} , '%' )
 			</if>
 		</where>
 	</select>

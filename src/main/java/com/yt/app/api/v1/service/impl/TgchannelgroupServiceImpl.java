@@ -42,7 +42,7 @@ public class TgchannelgroupServiceImpl extends YtBaseServiceImpl<Tgchannelgroup,
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Tgchannelgroup> list(Map<String, Object> param) {
+	public YtIPage<Tgchannelgroup> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

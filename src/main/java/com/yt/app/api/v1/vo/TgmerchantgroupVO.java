@@ -1,5 +1,7 @@
 package com.yt.app.api.v1.vo;
 
+import java.util.List;
+
 import com.yt.app.common.base.BaseVO;
 
 import lombok.AllArgsConstructor;
@@ -26,7 +28,7 @@ public class TgmerchantgroupVO extends BaseVO {
 	Long tenant_id;
 	Long channelid;
 	String channelname;
-	Long merchantid;
+	List<Long> merchantids;
 	String merchantname;
 	String merchantcode;
 	Boolean status;

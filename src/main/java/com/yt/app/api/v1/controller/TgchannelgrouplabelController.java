@@ -26,7 +26,7 @@ import com.yt.app.api.v1.vo.TgchannelgrouplabelVO;
  */
 
 @RestController
-@RequestMapping("/rest/v1/tglabel")
+@RequestMapping("/rest/v1/tgchannelgrouplabel")
 public class TgchannelgrouplabelController extends YtBaseEncipherControllerImpl<Tgchannelgrouplabel, Long> {
 
 	@Autowired

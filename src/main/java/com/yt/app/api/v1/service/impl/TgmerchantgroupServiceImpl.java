@@ -63,16 +63,23 @@ public class TgmerchantgroupServiceImpl extends YtBaseServiceImpl<Tgmerchantgrou
 			return new YtPageBean<TgmerchantgroupVO>(Collections.emptyList());
 		}
 		List<TgmerchantgroupVO> list = mapper.page(param);
+		list.forEach(e -> {
+			List<Long> ids = e.getMerchantids();
+			if (ids != null) {
+				StringBuffer sb = new StringBuffer();
+				ids.forEach(id -> {
+					Merchant merchant = merchantmapper.get(id);
+					sb.append(merchant.getName() + " ");
+				});
+				e.setMerchantname(sb.toString());
+			}
+		});
 		return new YtPageBean<TgmerchantgroupVO>(param, list, count);
 	}
 
 	@Override
 	@Transactional
 	public Integer putmerchant(Tgmerchantgroup t) {
-		Merchant mt = merchantmapper.get(t.getMerchantid());
-		t.setMerchantname(mt.getName());
-		t.setMerchantid(t.getMerchantid());
-		t.setTenant_id(mt.getTenant_id());
 		return mapper.put(t);
 	}
 }

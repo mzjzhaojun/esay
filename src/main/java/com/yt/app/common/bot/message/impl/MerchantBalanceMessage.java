@@ -33,11 +33,15 @@ public class MerchantBalanceMessage implements UpdateMerchantMessageService {
 	public SendMessage getUpdate(Update update, Tgmerchantgroup tmg) {
 		SendMessage sendMessage = new SendMessage();
 		sendMessage.setChatId(update.getMessage().getChatId().toString());
-		if (tmg.getMerchantid() != null) {
+		if (tmg.getMerchantids() != null) {
 			TenantIdContext.removeFlag();
-			Incomemerchantaccount merchantaccount = IncomemerchantaccountMapper.getByMerchantId(tmg.getMerchantid());
-			sendMessage.setText("商户:*" + tmg.getMerchantname() + "*\r\n\r\n可用余额：" + merchantaccount.getBalance() + " \r\n总支出金额：" + merchantaccount.getWithdrawamount() + "\r\n总收入金额：" + merchantaccount.getTotalincome() + "\r\n \r\n*"
-					+ DateTimeUtil.getDateTime() + "*");
+			StringBuffer msg = new StringBuffer();
+			for (Long mid : tmg.getMerchantids()) {
+				Incomemerchantaccount merchantaccount = IncomemerchantaccountMapper.getByMerchantId(mid);
+				msg.append("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n" + "商户:*" + tmg.getMerchantname() + "*\r\n\r\n可用余额：" + merchantaccount.getBalance() + " \r\n总支出金额：" + merchantaccount.getWithdrawamount() + "\r\n总收入金额："
+						+ merchantaccount.getTotalincome() + "\r\n \r\n*" + DateTimeUtil.getDateTime() + "*");
+			}
+			sendMessage.setText(msg.toString());
 			sendMessage.enableMarkdown(true);
 		} else {
 			sendMessage.setText("系统还没有绑定商户");
@@ -51,7 +55,7 @@ public class MerchantBalanceMessage implements UpdateMerchantMessageService {
 		Tgmerchantgroup tmg = tgmerchantgroupmapper.getByMerchantId(m.getId());
 		if (tmg != null) {
 			sendMessage.setChatId(tmg.getTgid());
-			Incomemerchantaccount merchantaccount = IncomemerchantaccountMapper.getByMerchantId(tmg.getMerchantid());
+			Incomemerchantaccount merchantaccount = IncomemerchantaccountMapper.getByMerchantId(m.getId());
 			sendMessage.setText("商户:*" + tmg.getMerchantname() + "*\r\n\r\n可用余额：" + merchantaccount.getBalance() + " \r\n总支出金额：" + merchantaccount.getWithdrawamount() + "\r\n总收入金额：" + merchantaccount.getTotalincome()
 					+ "\r\n \r\n==============\r\n \r\n今日收入:" + m.getTodaycount() + "\r\n \r\n*" + DateTimeUtil.getDateTime() + "*");
 			sendMessage.enableMarkdown(true);

@@ -90,7 +90,7 @@ from tron
 <where>
 1=1
 <if test="name != null and name != ''">
-and name like "%"#{name}"%"
+and name LIKE CONCAT( '%', #{name} , '%' )
 </if>
 </where>
 </select>
@@ -102,7 +102,7 @@ from tron
 <where>
 1=1
 <if test="name != null and name != ''">
-and name like "%"#{name}"%"
+and name LIKE CONCAT( '%', #{name} , '%' )
 </if>
 <if test="orderBy != null and dir != null">
 order by ${orderBy} ${dir}
@@ -118,7 +118,7 @@ select count(*) from tron
 <where>
 1=1
 <if test="name != null and name != ''">
-and name like "%"#{name}"%"
+and name LIKE CONCAT( '%', #{name} , '%' )
 </if>
 </where>
 </select>
