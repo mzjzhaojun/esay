@@ -9,6 +9,7 @@ import com.yt.app.api.v1.entity.Incomemerchantaccount;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountMapper;
+import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.message.UpdateMerchantMessageService;
@@ -27,6 +28,9 @@ public class MerchantBalanceMessage implements UpdateMerchantMessageService {
 	private IncomemerchantaccountMapper IncomemerchantaccountMapper;
 
 	@Autowired
+	private MerchantMapper merchantmapper;
+
+	@Autowired
 	private TgmerchantgroupMapper tgmerchantgroupmapper;
 
 	@Override
@@ -37,9 +41,10 @@ public class MerchantBalanceMessage implements UpdateMerchantMessageService {
 			TenantIdContext.removeFlag();
 			StringBuffer msg = new StringBuffer();
 			for (Long mid : tmg.getMerchantids()) {
+				Merchant m = merchantmapper.get(mid);
 				Incomemerchantaccount merchantaccount = IncomemerchantaccountMapper.getByMerchantId(mid);
-				msg.append("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n" + "商户:*" + tmg.getMerchantname() + "*\r\n\r\n可用余额：" + merchantaccount.getBalance() + " \r\n总支出金额：" + merchantaccount.getWithdrawamount() + "\r\n总收入金额："
-						+ merchantaccount.getTotalincome() + "\r\n \r\n*" + DateTimeUtil.getDateTime() + "*");
+				msg.append("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n" + "商户:*" + m.getName() + "*\r\n\r\n可用余额：" + merchantaccount.getBalance() + " \r\n总支出金额：" + merchantaccount.getWithdrawamount() + "\r\n总收入金额：" + merchantaccount.getTotalincome()
+						+ "\r\n \r\n*" + DateTimeUtil.getDateTime() + "*");
 			}
 			sendMessage.setText(msg.toString());
 			sendMessage.enableMarkdown(true);
@@ -56,8 +61,8 @@ public class MerchantBalanceMessage implements UpdateMerchantMessageService {
 		if (tmg != null) {
 			sendMessage.setChatId(tmg.getTgid());
 			Incomemerchantaccount merchantaccount = IncomemerchantaccountMapper.getByMerchantId(m.getId());
-			sendMessage.setText("商户:*" + tmg.getMerchantname() + "*\r\n\r\n可用余额：" + merchantaccount.getBalance() + " \r\n总支出金额：" + merchantaccount.getWithdrawamount() + "\r\n总收入金额：" + merchantaccount.getTotalincome()
-					+ "\r\n \r\n==============\r\n \r\n今日收入:" + m.getTodaycount() + "\r\n \r\n*" + DateTimeUtil.getDateTime() + "*");
+			sendMessage.setText("商户:*" + m.getName() + "*\r\n\r\n可用余额：" + merchantaccount.getBalance() + " \r\n总支出金额：" + merchantaccount.getWithdrawamount() + "\r\n总收入金额：" + merchantaccount.getTotalincome() + "\r\n \r\n==============\r\n \r\n今日收入:"
+					+ m.getTodaycount() + "\r\n \r\n*" + DateTimeUtil.getDateTime() + "*");
 			sendMessage.enableMarkdown(true);
 		} else {
 			return null;
