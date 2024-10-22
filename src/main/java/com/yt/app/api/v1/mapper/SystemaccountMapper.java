@@ -112,4 +112,12 @@ public interface SystemaccountMapper extends YtIBaseMapper<Systemaccount> {
 	 */
 	@YtRedisCacheAnnotation(classs = Systemaccount.class)
 	public Systemaccount getByTenantId(Long userid);
+	
+	/**
+	 * 
+	 * @param userid
+	 * @return
+	 */
+	@YtRedisCacheAnnotation(classs = Systemaccount.class)
+	public Systemaccount getByUserId(Long userid);
 }

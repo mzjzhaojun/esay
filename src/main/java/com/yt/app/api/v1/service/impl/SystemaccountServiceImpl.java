@@ -71,7 +71,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Systemaccount getData() {
-		Systemaccount t = mapper.get(JwtUserContext.get().getSystemaccountId());
+		Systemaccount t = mapper.getByUserId(JwtUserContext.get().getUserId());
 		return t;
 	}
 
