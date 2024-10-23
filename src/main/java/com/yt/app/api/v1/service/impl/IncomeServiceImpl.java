@@ -476,11 +476,13 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		// 渠道收入
 		income.setChannelincomeamount(NumberUtil.multiply(income.getAmount().toString(), (channel.getCollection() / 100) + "", 2).doubleValue());
+		// 商户
 		income.setMerchantincomeamount(NumberUtil.multiply(income.getAmount().toString(), (mqd.getCollection() / 100) + "", 2).doubleValue());
 		// 系统收入
 		income.setIncomeamount(Double.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount() - income.getAgentincome()))));
 		// 商户收入
 		income.setMerchantincomeamount(Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount()))));
+		income.setCollection(mqd.getCollection());
 		// 计算当前码可生成的订单
 		RLock lock = RedissonUtil.getLock(qd.getId());
 		Integer i = 0;
@@ -706,6 +708,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		// 计算当前码可生成的订单
 		income.setFewamount(0.00);
 		income.setRealamount(income.getAmount());
+		income.setCollection(mc.getCollection());
+		income.setExchange(channel.getCollection());
 		income.setType(DictionaryResource.PROJECT_TYPE_512.toString());
 		int i = mapper.post(income);
 		if (i == 0) {
@@ -901,6 +905,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qao.setStatus(income.getStatus());
 		qao.setQrcodeaislecode(qas.getCode());
 		qao.setChannelid(channel.getId());
+		qao.setCollection(income.getExchange());
 		qao.setExpireddate(income.getExpireddate());
 		qao.setIncomeamount(income.getChannelincomeamount());
 		qrcodeaccountordermapper.post(qao);
@@ -923,6 +928,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		imao.setMerchantname(income.getMerchantname());
 		imao.setQrocde(income.getQrcode());
 		imao.setStatus(income.getStatus());
+		imao.setCollection(income.getCollection());
 		imao.setQrcodeaislecode(qas.getCode());
 		imao.setMerchantid(mc.getId());
 		imao.setExpireddate(income.getExpireddate());

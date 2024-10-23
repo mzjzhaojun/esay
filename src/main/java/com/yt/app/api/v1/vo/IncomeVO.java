@@ -45,6 +45,8 @@ public class IncomeVO extends BaseVO {
 	String qrcodeordernum;
 	String qrcodeuserid;
 	Double amount;
+	Double collection;
+	Double exchange;
 	Double realamount;
 	Integer status;
 	String statusname;

@@ -46,6 +46,8 @@ public class Income extends YtBaseEntity<Income> {
 	String qrcodeordernum;
 	Long qrcodeuserid;
 	Double amount;
+	Double collection;
+	Double exchange;
 	Double realamount;
 	Integer status;
 	java.util.Date successtime;

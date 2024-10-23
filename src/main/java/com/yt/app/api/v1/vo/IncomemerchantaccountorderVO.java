@@ -39,6 +39,7 @@ public class IncomemerchantaccountorderVO extends BaseVO {
 	Double fewamount;
 	java.util.Date expireddate;
 	Double amount;
+	Double collection;
 	Double realamount;
 	String resulturl;
 	String qrocde;

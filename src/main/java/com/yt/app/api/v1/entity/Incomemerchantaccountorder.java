@@ -38,6 +38,7 @@ public class Incomemerchantaccountorder extends YtBaseEntity<Incomemerchantaccou
 	Double fewamount;
 	java.util.Date expireddate;
 	Double amount;
+	Double collection;
 	Double realamount;
 	String resulturl;
 	String qrocde;
