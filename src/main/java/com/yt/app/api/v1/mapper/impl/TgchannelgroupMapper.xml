@@ -15,9 +15,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Tgchannelgroup">
 		insert into
-		tgchannelgroup(id,channelid,channelname,channelnkname,status,tgid,tggroupname,create_by,create_time,update_by,update_time,adminmangers,customermangers,mangers,remark)
+		tgchannelgroup(id,channelname,channelnkname,status,tgid,tggroupname,create_by,create_time,update_by,update_time,adminmangers,customermangers,mangers,remark)
 		values
-		(#{id},#{channelid},#{channelname},#{channelnkname},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{adminmangers},#{customermangers},#{mangers},#{remark})
+		(#{id},#{channelname},#{channelnkname},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{adminmangers},#{customermangers},#{mangers},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">

@@ -22,9 +22,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Tgmerchantgroup">
 		insert into
-		tgmerchantgroup(id,tenant_id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,create_by,create_time,update_by,update_time,remark)
+		tgmerchantgroup(id,merchantname,merchantcode,status,tgid,tggroupname,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{tenant_id},#{merchantid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
