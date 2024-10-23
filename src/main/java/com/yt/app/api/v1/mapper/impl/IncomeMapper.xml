@@ -230,7 +230,7 @@
 				and merchantname LIKE CONCAT( '%', #{merchantname} , '%' )
 			</if>
 			<if test="stime != null and etime != ''">
-				and successtime BETWEEN  #{stime} AND  #{etime}
+				and create_time BETWEEN  #{stime} AND  #{etime}
 			</if>
 			<if test="orderBy != null and dir!= null">
 				order by ${orderBy} ${dir}
@@ -268,7 +268,7 @@
 				and merchantname LIKE CONCAT( '%', #{merchantname} , '%' )
 			</if>
 			<if test="stime != null and etime != ''">
-				and successtime BETWEEN  #{stime} AND  #{etime}
+				and create_time BETWEEN  #{stime} AND  #{etime}
 			</if>
 		</where>
 	</select>
