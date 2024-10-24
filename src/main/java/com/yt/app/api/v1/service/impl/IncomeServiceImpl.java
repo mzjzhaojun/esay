@@ -669,8 +669,15 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		if (flage) {
 			channelbot.notifyChannel(channel);
-			income.setResulturl(appConfig.getErrorurl());
-			income.setQrcodeordernum("in_error_" + StringUtil.getOrderNum());
+			QrcodeResultVO qr = new QrcodeResultVO();
+			qr.setPay_memberid(mc.getCode());
+			qr.setPay_orderid(qs.getPay_orderid());
+			qr.setPay_amount(qs.getPay_amount());
+			qr.setPay_aislecode(qs.getPay_aislecode());
+			qr.setPay_viewurl(appConfig.getErrorurl());
+			String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
+			qr.setPay_md5sign(signresult);
+			return qr;
 		}
 		if (mc.getAgentid() != null) {
 			Agent ag = agentmapper.get(mc.getAgentid());
