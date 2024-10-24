@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" href="/favicon.ico" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>支付</title>
+<script src="/esay/static/js/jquery-3.5.1.min.js"></script>
+<style>
+html, body {
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
+div {
+	margin: 0px;
+	padding: 0px;
+}
+
+.alert {
+	display: none;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	min-width: 200px;
+	margin-left: -100px;
+	z-index: 99999;
+	padding: 15px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+}
+
+.alert-success {
+	color: #3c763d;
+	background-color: #dff0d8;
+	border-color: #d6e9c6;
+}
+</style>
+</head>
+<body>
+	<div class="alert"></div>
+	<div
+		style="width: 100%; height: 100%; background: #228B22; display: flex; justify-content: center; align-items: center; margin: 0px; padding: 0px;">
+		<div
+			style="background: #f5f5f5; width: 90%; height: 90%; border-radius: 30px;">
+			<!-- 头部 -->
+			<div
+				style="width: 100%; height: 6%; display: flex; justify-content: center; align-items: center;">
+				<img src="/esay/static/img/ali.png" width="25px" height="25px">
+				<div>支付宝</div>
+			</div>
+			<div
+				style="width: 100%; height: 4%; display: flex; justify-content: center; align-items: center;">
+				<div style="color: Orange">很抱歉通知你</div>
+			</div>
+			<div
+				style="width: 100%; height: 4%; display: flex; justify-content: center; align-items: center;">
+				<div style="color: Orange">当前通道错误，请选择其他通道付款</div>
+			</div>
+			<div
+				style="width: 100%; height: 7%; display: flex; justify-content: center; align-items: center;">
+				<div style="font-size: 30px; font-weight: 2px;">￥</div>
+				<div id="amount" style="font-size: 25px; font-weight: 2px;">0</div>
+			</div>
+			<div id="count-down"
+				style="width: 100%; height: 4%; display: flex; justify-content: center; align-items: center;">
+				<div class="mr-4">非常</div>
+				<div class="ml-4">对不起，通道异常</div>
+			</div>
+			<!-- 中部 -->
+			<div
+				style="width: 100%; height: 60%; display: flex; justify-content: center; align-items: center;">
+				<div id="qrcode_load"
+					style="background: #FFFFFF; width: 90%; height: 90%; display: flex; justify-content: center; align-items: center;">
+
+				</div>
+			</div>
+			<!-- 底部 -->
+			<div
+				style="width: 100%; height: 4%; display: flex; justify-content: center; align-items: center;">
+				<div style="color: red">请关闭返回</div>
+			</div>
+			<div
+				style="width: 100%; height: 4%; display: flex; justify-content: center; align-items: center;">
+				<div style="color: red">谢谢你的理解</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+
+</script>
+
+</html>

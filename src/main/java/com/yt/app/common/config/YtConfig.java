@@ -38,6 +38,8 @@ public class YtConfig {
 	private boolean build;
 
 	private boolean cache;
+	
+	private String errorurl;
 
 	public void setOrigin(String origin) {
 		this.origins = Arrays.asList(origin.split(","));

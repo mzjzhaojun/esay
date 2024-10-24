@@ -210,6 +210,7 @@ public class TaskConfig {
 				TenantIdContext.setTenantId(p.getTenant_id());
 				log.info("代收支付超时单号ID：" + p.getOrdernum() + " 状态：" + p.getStatus());
 				p.setStatus(DictionaryResource.PAYOUTSTATUS_53);
+				p.setRemark("取消代收资金￥：" + p.getAmount());
 				incomemapper.put(p);
 				//
 				Qrcodeaccountorder qao = qrcodeaccountordermapper.getByOrderNum(p.getQrcodeordernum());

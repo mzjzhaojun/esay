@@ -45,4 +45,9 @@ public class ViewController {
 		return "static/othview";
 	}
 
+	@RequestMapping(value = "/income/error", method = RequestMethod.GET)
+	public String income(Model model, HttpServletRequest request, HttpServletResponse response) {
+		return "static/error";
+	}
+
 }
