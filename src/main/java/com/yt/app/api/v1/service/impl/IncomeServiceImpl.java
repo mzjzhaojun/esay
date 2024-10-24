@@ -1118,7 +1118,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		newincome.setId(null);
 		newincome.setOrdernum("in_" + StringUtil.getOrderNum());
 		newincome.setStatus(DictionaryResource.PAYOUTSTATUS_50);
-		newincome.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
+		newincome.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_63);
 		newincome.setRemark("补单代收资金￥：" + newincome.getAmount());
 		Integer i = mapper.post(newincome);
 
