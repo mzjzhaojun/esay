@@ -580,9 +580,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());
-		income.setExpireddate(DateTimeUtil.addMinute(10));// 默认10分钟
+		income.setExpireddate(DateTimeUtil.addMinute(channel.getMtorder()));// 默认30分钟
 		// 通道
-		income.setExpiredminute(10);
+		income.setExpiredminute(channel.getMtorder());
 		income.setDynamic(aisle.getDynamic());
 		income.setQrcodeaisleid(aisle.getId());
 		income.setQrcodeaislename(aisle.getName());
@@ -867,7 +867,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());
-		income.setExpireddate(DateTimeUtil.addMinute(qd.getExpireminute()));// 多加3分钟
+		income.setExpireddate(DateTimeUtil.addMinute(qd.getExpireminute()));
 		// 通道
 		income.setExpiredminute(qd.getExpireminute());
 		income.setQrcodeaisleid(qas.getId());
