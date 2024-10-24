@@ -8,7 +8,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
-import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.message.UpdateMessageService;
 import com.yt.app.common.util.DateTimeUtil;
 
@@ -35,7 +34,6 @@ public class NotifyChannelMessage implements UpdateMessageService {
 	public SendMessage getNotifyUpdate(Channel cl) {
 		SendMessage sendMessage = new SendMessage();
 
-		TenantIdContext.removeFlag();
 		Tgchannelgroup tcg = tgchannelgroupmapper.getByChannelId(cl.getId());
 		if (tcg != null) {
 			sendMessage.setChatId(tcg.getTgid());
