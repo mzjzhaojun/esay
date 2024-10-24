@@ -1025,6 +1025,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setSuccesstime(DateTimeUtil.getNow());
 		income.setBacklong(DateUtil.between(income.getSuccesstime(), income.getCreate_time(), DateUnit.SECOND));
 		//
+		income.setRemark("成功代收资金￥：" + income.getAmount());
 		mapper.put(income);
 
 		// 计算代理
