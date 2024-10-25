@@ -85,7 +85,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 	 */
 	@Override
 	@Transactional
-	public void totalincome(Incomemerchantaccountorder t) {
+	public synchronized void totalincome(Incomemerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
@@ -123,7 +123,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 	 */
 	@Override
 	@Transactional
-	public void updateTotalincome(Incomemerchantaccountorder mao) {
+	public synchronized void updateTotalincome(Incomemerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -162,7 +162,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 	// 超时取消
 	@Override
 	@Transactional
-	public void cancleTotalincome(Incomemerchantaccountorder mao) {
+	public synchronized void cancleTotalincome(Incomemerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -218,7 +218,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 	// 待确认支出
 	@Override
 	@Transactional
-	public void withdrawamount(PayoutMerchantaccountorder t) {
+	public synchronized void withdrawamount(PayoutMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
@@ -258,7 +258,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 	// 提现成功
 	@Override
 	@Transactional
-	public void updateWithdrawamount(PayoutMerchantaccountorder mao) {
+	public synchronized void updateWithdrawamount(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -298,7 +298,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 	// 提现失败
 	@Override
 	@Transactional
-	public void turndownWithdrawamount(PayoutMerchantaccountorder mao) {
+	public synchronized void turndownWithdrawamount(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();

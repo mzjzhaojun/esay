@@ -140,7 +140,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 
 	@Override
 	@Transactional
-	public void updatePayout(Payout t) {
+	public synchronized void updatePayout(Payout t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
 			lock.lock();
@@ -155,7 +155,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 
 	@Override
 	@Transactional
-	public void updateIncome(Channelaccount t) {
+	public synchronized void updateIncome(Channelaccount t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
 			lock.lock();
@@ -170,7 +170,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 
 	@Override
 	@Transactional
-	public void withdrawamount(Channelaccount t) {
+	public synchronized void withdrawamount(Channelaccount t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
 			lock.lock();
@@ -184,7 +184,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	}
 
 	@Override
-	public void updateExchange(Exchange t) {
+	public synchronized void updateExchange(Exchange t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
 			lock.lock();
@@ -254,7 +254,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 
 	@Override
 	@Transactional
-	public void updateIncome(Income t) {
+	public synchronized void updateIncome(Income t) {
 		RLock lock = RedissonUtil.getLock(t.getQrcodeid());
 		try {
 			lock.lock();

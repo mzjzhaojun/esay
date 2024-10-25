@@ -112,7 +112,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	 */
 	@Override
 	@Transactional
-	public void totalincome(PayoutMerchantaccountorder t) {
+	public synchronized void totalincome(PayoutMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
@@ -150,7 +150,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	 */
 	@Override
 	@Transactional
-	public void updateTotalincome(PayoutMerchantaccountorder mao) {
+	public synchronized void updateTotalincome(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -191,7 +191,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	// 拒绝充值
 	@Override
 	@Transactional
-	public void turndownTotalincome(PayoutMerchantaccountorder mao) {
+	public synchronized void turndownTotalincome(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -228,7 +228,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	// 客户取消
 	@Override
 	@Transactional
-	public void cancleTotalincome(PayoutMerchantaccountorder mao) {
+	public synchronized void cancleTotalincome(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -270,7 +270,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	// 待确认支出
 	@Override
 	@Transactional
-	public void withdrawamount(PayoutMerchantaccountorder t) {
+	public synchronized void withdrawamount(PayoutMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
@@ -310,7 +310,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	// 提现成功
 	@Override
 	@Transactional
-	public void updateWithdrawamount(PayoutMerchantaccountorder mao) {
+	public synchronized void updateWithdrawamount(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -349,7 +349,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	// 提现失败
 	@Override
 	@Transactional
-	public void turndownWithdrawamount(PayoutMerchantaccountorder mao) {
+	public synchronized void turndownWithdrawamount(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -386,7 +386,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	// 取消提现
 	@Override
 	@Transactional
-	public void cancleWithdrawamount(PayoutMerchantaccountorder mao) {
+	public synchronized void cancleWithdrawamount(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -428,7 +428,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	// 待确认代付
 	@Override
 	@Transactional
-	public void payout(PayoutMerchantaccountorder t) {
+	public synchronized void payout(PayoutMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
@@ -464,7 +464,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	// 确认代付
 	@Override
 	@Transactional
-	public void updatePayout(PayoutMerchantaccountorder mao) {
+	public synchronized void updatePayout(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -504,7 +504,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	// 拒绝代付
 	@Override
 	@Transactional
-	public void turndownPayout(PayoutMerchantaccountorder mao) {
+	public synchronized void turndownPayout(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -542,7 +542,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	// fail
 	@Override
 	@Transactional
-	public void failPayout(PayoutMerchantaccountorder mao) {
+	public synchronized void failPayout(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -581,7 +581,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	// 取消代付
 	@Override
 	@Transactional
-	public void canclePayout(PayoutMerchantaccountorder mao) {
+	public synchronized void canclePayout(PayoutMerchantaccountorder mao) {
 		//
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
@@ -625,7 +625,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	// 待确认代付
 	@Override
 	@Transactional
-	public void exchange(PayoutMerchantaccountorder t) {
+	public synchronized void exchange(PayoutMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
@@ -661,7 +661,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	// 确认代付
 	@Override
 	@Transactional
-	public void updateExchange(PayoutMerchantaccountorder mao) {
+	public synchronized void updateExchange(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -701,7 +701,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	// 拒绝代付
 	@Override
 	@Transactional
-	public void turndownExchange(PayoutMerchantaccountorder mao) {
+	public synchronized void turndownExchange(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -739,7 +739,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	// 取消代付
 	@Override
 	@Transactional
-	public void cancleExchange(PayoutMerchantaccountorder mao) {
+	public synchronized void cancleExchange(PayoutMerchantaccountorder mao) {
 		//
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {

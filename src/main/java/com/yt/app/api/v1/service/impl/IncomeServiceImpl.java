@@ -523,7 +523,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		// 验证
 		Merchant mc = checkparam(qs);
 		TenantIdContext.setTenantId(mc.getTenant_id());
-
 		////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
 		Aisle aisle = aislemapper.getByCode(qs.getPay_aislecode());
 		Assert.notNull(aisle, "没有可用通道!");
@@ -889,9 +888,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return income;
 	}
 
-	@Transactional
+	// 上游渠道下单
 	private QrcodeResultVO addOtherOrder(Income income, Channel channel, Aisle qas, Merchant mc, QrcodeSubmitDTO qs) {
-
 		// 添加qrcode订单
 		Qrcodeaccountorder qao = new Qrcodeaccountorder();
 		qao.setUserid(income.getQrcodeuserid());
@@ -954,7 +952,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return qr;
 	}
 
-	@Transactional
 	private QrcodeResultVO addOtherOrderMqd(Income income, Channel channel, Qrcodeaisle qas, Merchant mc, QrcodeSubmitDTO qs) {
 		// 添加qrcode订单
 		Qrcodeaccountorder qao = new Qrcodeaccountorder();

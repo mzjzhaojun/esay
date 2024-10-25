@@ -202,7 +202,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 
 	@Override
 	@Transactional
-	public void updateInCome(PayoutMerchantaccount ma) {
+	public synchronized void updateInCome(PayoutMerchantaccount ma) {
 		RLock lock = RedissonUtil.getLock(ma.getMerchantid());
 		try {
 			lock.lock();
@@ -217,7 +217,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 
 	@Override
 	@Transactional
-	public void updatePayout(Payout t) {
+	public synchronized void updatePayout(Payout t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
@@ -243,7 +243,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 
 	@Override
 	@Transactional
-	public void withdrawamount(PayoutMerchantaccount ma) {
+	public synchronized void withdrawamount(PayoutMerchantaccount ma) {
 		RLock lock = RedissonUtil.getLock(ma.getMerchantid());
 		try {
 			lock.lock();
@@ -258,7 +258,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 
 	@Override
 	@Transactional
-	public void withdrawamount(Incomemerchantaccount ma) {
+	public synchronized void withdrawamount(Incomemerchantaccount ma) {
 		RLock lock = RedissonUtil.getLock(ma.getMerchantid());
 		try {
 			lock.lock();
@@ -273,7 +273,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 
 	@Override
 	@Transactional
-	public void updateExchange(Exchange t) {
+	public synchronized void updateExchange(Exchange t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
@@ -289,7 +289,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 
 	@Override
 	@Transactional
-	public void updateInComeUsdt(ExchangeMerchantaccount t) {
+	public synchronized void updateInComeUsdt(ExchangeMerchantaccount t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
@@ -305,7 +305,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 
 	@Override
 	@Transactional
-	public void withdrawamountUsdt(ExchangeMerchantaccount t) {
+	public synchronized void withdrawamountUsdt(ExchangeMerchantaccount t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
@@ -320,7 +320,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 
 	@Override
 	@Transactional
-	public void updateIncome(Income t) {
+	public synchronized void updateIncome(Income t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();

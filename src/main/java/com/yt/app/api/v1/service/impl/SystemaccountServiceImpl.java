@@ -80,7 +80,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 */
 	@Override
 	@Transactional
-	public void updateTotalincome(PayoutMerchantaccountorder mao) {
+	public synchronized void updateTotalincome(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
@@ -109,7 +109,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 */
 	@Override
 	@Transactional
-	public void updateWithdrawamount(PayoutMerchantaccountorder mao) {
+	public synchronized void updateWithdrawamount(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
@@ -138,7 +138,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 */
 	@Override
 	@Transactional
-	public void updatePayout(PayoutMerchantaccountorder mao) {
+	public synchronized void updatePayout(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
@@ -168,7 +168,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 */
 	@Override
 	@Transactional
-	public void updateWithdrawamount(Agentaccountorder mao) {
+	public synchronized void updateWithdrawamount(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
@@ -197,7 +197,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 */
 	@Override
 	@Transactional
-	public void updateExchange(ExchangeMerchantaccountorder mao) {
+	public synchronized void updateExchange(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
@@ -227,7 +227,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 */
 	@Override
 	@Transactional
-	public void updateUsdtTotalincome(ExchangeMerchantaccountorder mao) {
+	public synchronized void updateUsdtTotalincome(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
@@ -260,7 +260,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 */
 	@Override
 	@Transactional
-	public void updateUsdtWithdrawamount(ExchangeMerchantaccountorder mao) {
+	public synchronized void updateUsdtWithdrawamount(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
@@ -289,7 +289,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 
 	@Override
 	@Transactional
-	public void updateIncome(Income mao) {
+	public synchronized void updateIncome(Income mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();

@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtRequestEntity;
 import com.yt.app.common.common.yt.YtResponseEntity;
+import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.RequestUtil;
 
 /**
@@ -78,7 +80,16 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	// 代付盘口下单
 	@RequestMapping(value = "/submit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submit(YtRequestEntity<PaySubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		PayResultVO sr = service.submit(requestEntity.getBody());
+		PaySubmitDTO psdto = requestEntity.getBody();
+		RLock lock = RedissonUtil.getLock(psdto.getMerchantid());
+		PayResultVO sr = null;
+		try {
+			lock.lock();
+			sr = service.submit(psdto);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
 		return new YtResponseEntity<Object>(new YtBody(sr));
 	}
 
@@ -98,7 +109,16 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	 */
 	@RequestMapping(value = "/submitqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submitqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		QrcodeResultVO yb = incomeservice.submitQrcode(requestEntity.getBody());
+		QrcodeSubmitDTO qsdto = requestEntity.getBody();
+		RLock lock = RedissonUtil.getLock(qsdto.getPay_memberid());
+		QrcodeResultVO yb = null;
+		try {
+			lock.lock();
+			yb = incomeservice.submitQrcode(qsdto);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
 		return new YtResponseEntity<Object>(new YtBody(yb));
 	}
 
@@ -112,7 +132,16 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	 */
 	@RequestMapping(value = "/submitincome", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submitincome(YtRequestEntity<QrcodeSubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		QrcodeResultVO yb = incomeservice.submitInCome(requestEntity.getBody());
+		QrcodeSubmitDTO qsdto = requestEntity.getBody();
+		RLock lock = RedissonUtil.getLock(qsdto.getPay_memberid());
+		QrcodeResultVO yb = null;
+		try {
+			lock.lock();
+			yb = incomeservice.submitInCome(qsdto);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
 		return new YtResponseEntity<Object>(new YtBody(yb));
 	}
 
@@ -257,7 +286,7 @@ public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> 
 	}
 
 	/**
-	 * 翡翠代收回调
+	 * 奥克兰代收回调
 	 * 
 	 * @param requestEntity
 	 * @param request
