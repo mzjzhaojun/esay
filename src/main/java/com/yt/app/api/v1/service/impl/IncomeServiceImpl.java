@@ -1170,8 +1170,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 		newincome.setId(null);
 		newincome.setOrdernum("up_" + StringUtil.getOrderNum());
-		newincome.setMerchantorderid("up_" + inc.getMerchantorderid());
-		newincome.setQrcodeordernum("up_" + inc.getQrcodeordernum());
+		newincome.setMerchantorderid("up_" + newincome.getMerchantorderid());
+		newincome.setQrcodeordernum("up_" + newincome.getQrcodeordernum());
 		newincome.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		newincome.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_63);
 		newincome.setRemark("补单代收资金￥：" + newincome.getAmount());
