@@ -535,6 +535,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Assert.notEmpty(listc, "没有可用渠道!");
 		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= Double.valueOf(qs.getPay_amount()) && c.getMin() <= Double.valueOf(qs.getPay_amount())).collect(Collectors.toList());
 		Assert.notEmpty(listcmm, "金额超出限额!");
+		// 有限匹配
 		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 		Channel channel = null;
 		if (listcf.size() > 0) {
@@ -556,6 +557,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				}
 			}
 		} else {
+			// 随机权重
 			List<WeightRandom.WeightObj<String>> weightList = new ArrayList<>(); //
 			double count = 0;
 			for (Channel cml : listcmm) {
@@ -1013,6 +1015,60 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return qr;
 	}
 
+	// 补单
+	private void addMakeupOrder(Income income) {
+		// 添加qrcode订单
+		Qrcodeaccountorder qao = new Qrcodeaccountorder();
+		qao.setUserid(income.getQrcodeuserid());
+		qao.setQrcodeaisleid(income.getQrcodeaisleid());
+		qao.setQrcodeaislename(income.getQrcodeaislename());
+		qao.setQrcodename(income.getQrcodename());
+		qao.setQrcodeid(income.getQrcodeid());
+		qao.setOrdernum(income.getQrcodeordernum());
+		qao.setType(income.getType());
+		qao.setFewamount(income.getFewamount());
+		qao.setAmount(income.getAmount());
+		qao.setRealamount(income.getRealamount());
+		qao.setResulturl(income.getResulturl());
+		qao.setQrcodecode(income.getQrcodecode());
+		qao.setMerchantname(income.getMerchantname());
+		qao.setQrocde(income.getQrcode());
+		qao.setDynamic(income.getDynamic());
+		qao.setStatus(income.getStatus());
+		qao.setQrcodeaislecode(income.getQrcodeaislecode());
+		qao.setChannelid(income.getQrcodeid());
+		qao.setCollection(income.getExchange());
+		qao.setExpireddate(income.getExpireddate());
+		qao.setIncomeamount(income.getChannelincomeamount());
+		qrcodeaccountordermapper.post(qao);
+		qrcodeaccountservice.totalincome(qao);
+		// 添加商戶订单
+		Incomemerchantaccountorder imao = new Incomemerchantaccountorder();
+		imao.setUserid(income.getMerchantuserid());
+		imao.setQrcodeaisleid(income.getQrcodeaisleid());
+		imao.setQrcodeaislename(income.getQrcodeaislename());
+		imao.setQrcodename(income.getQrcodename());
+		imao.setQrcodeid(income.getQrcodeid());
+		imao.setOrdernum(income.getMerchantorderid());
+		imao.setDynamic(income.getDynamic());
+		imao.setType(income.getType());
+		imao.setFewamount(income.getFewamount());
+		imao.setAmount(income.getAmount());
+		imao.setRealamount(income.getRealamount());
+		imao.setResulturl(income.getResulturl());
+		imao.setQrcodecode(income.getQrcodecode());
+		imao.setMerchantname(income.getMerchantname());
+		imao.setQrocde(income.getQrcode());
+		imao.setStatus(income.getStatus());
+		imao.setCollection(income.getCollection());
+		imao.setQrcodeaislecode(income.getQrcodeaislecode());
+		imao.setMerchantid(income.getMerchantid());
+		imao.setExpireddate(income.getExpireddate());
+		imao.setIncomeamount(income.getMerchantincomeamount());
+		incomemerchantaccountordermapper.post(imao);
+		incomemerchantaccountservice.totalincome(imao);
+	}
+
 	@Transactional
 	private void success(Income income) {
 		// 計算代收
@@ -1113,23 +1169,18 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Income newincome = mapper.get(inc.getId());
 
 		newincome.setId(null);
-		newincome.setOrdernum("in_" + StringUtil.getOrderNum());
+		newincome.setOrdernum("up_" + StringUtil.getOrderNum());
+		newincome.setMerchantorderid("up_" + inc.getMerchantorderid());
+		newincome.setQrcodeordernum("up_" + inc.getQrcodeordernum());
 		newincome.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		newincome.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_63);
 		newincome.setRemark("补单代收资金￥：" + newincome.getAmount());
 		Integer i = mapper.post(newincome);
-
-		Qrcodeaccountorder newqrcodeaccountorder = qrcodeaccountordermapper.getByOrderNum(newincome.getQrcodeordernum());
-		newqrcodeaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_50);
-		qrcodeaccountordermapper.put(newqrcodeaccountorder);
-		qrcodeaccountservice.totalincome(newqrcodeaccountorder);
-
-		Incomemerchantaccountorder newincomemerchantaccountorder = incomemerchantaccountordermapper.getByOrderNum(newincome.getMerchantorderid());
-		newincomemerchantaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_50);
-		incomemerchantaccountordermapper.put(newincomemerchantaccountorder);
-		incomemerchantaccountservice.totalincome(newincomemerchantaccountorder);
+		// 补单（不通知）
+		addMakeupOrder(newincome);
 		//
 		success(newincome);
+
 		return i;
 	}
 
