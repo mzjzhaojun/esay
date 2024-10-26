@@ -40,6 +40,7 @@ import com.yt.app.common.runnable.PayoutGetChannelOrderNumThread;
 import com.yt.app.common.runnable.InComeNotifyThread;
 import com.yt.app.common.runnable.PayoutNotifyThread;
 import com.yt.app.common.runnable.StatisticsThread;
+import com.yt.app.common.runnable.SynChannelBalanceThread;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.RedisUtil;
 
@@ -260,7 +261,8 @@ public class TaskConfig {
 		List<Channel> list = channelmapper.getSynList();
 		for (Channel c : list) {
 			log.info("同步渠道余额：" + c.getName() + "  支付：" + c.getTodayincomecount());
-			
+			SynChannelBalanceThread scbt = new SynChannelBalanceThread(c.getId());
+			threadpooltaskexecutor.execute(scbt);
 		}
 	}
 }
