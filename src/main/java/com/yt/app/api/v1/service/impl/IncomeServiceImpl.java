@@ -841,6 +841,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Merchant mc = merchantmapper.getByCode(qs.getPay_memberid());
 		Assert.notNull(mc, "商户不存在!");
 		String ip = AuthContext.getIp();
+		if (ip == null || ip.equals("")) {
+			throw new YtException("非法请求!");
+		}
 		if (mc.getIpaddress() == null || mc.getIpaddress().indexOf(ip) == -1) {
 			throw new YtException("非法请求!");
 		}

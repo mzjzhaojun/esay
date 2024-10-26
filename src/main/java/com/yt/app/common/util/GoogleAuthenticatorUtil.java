@@ -4,8 +4,6 @@ import org.apache.commons.codec.binary.Base32;
 import org.apache.commons.codec.binary.Hex;
 import org.springframework.util.StringUtils;
 
-import lombok.extern.slf4j.Slf4j;
-
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
@@ -17,7 +15,6 @@ import java.security.SecureRandom;
 /**
  * 谷歌身份验证器工具类
  */
-@Slf4j
 public class GoogleAuthenticatorUtil {
 
 	/**
@@ -134,20 +131,5 @@ public class GoogleAuthenticatorUtil {
 		truncatedHash &= 0x7FFFFFFF;
 		truncatedHash %= 1000000;
 		return truncatedHash;
-	}
-
-	public static void main(String[] args) {
-		for (int i = 0; i < 100; i++) {
-			String secretKey = getSecretKey();
-
-			String qrcode = getQrCodeText(secretKey, "superadmin", "");
-			log.info("qrcode: " + qrcode);
-
-			log.info("secretKey：" + secretKey);
-			String code = getCode(secretKey);
-			log.info("code：" + code);
-			boolean b = checkCode(secretKey, Long.parseLong(code), System.currentTimeMillis());
-			log.info("isSuccess：" + b);
-		}
 	}
 }
