@@ -11,6 +11,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.yt.app.api.v1.entity.Agentaccountorder;
+import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
@@ -19,6 +20,7 @@ import com.yt.app.api.v1.entity.Qrcodeaccountorder;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.mapper.AgentaccountorderMapper;
+import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ExchangeMapper;
 import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper;
@@ -50,6 +52,9 @@ public class TaskConfig {
 
 	@Autowired
 	private IncomeMapper incomemapper;
+
+	@Autowired
+	private ChannelMapper channelmapper;
 
 	@Autowired
 	private PayoutMapper payoutmapper;
@@ -127,7 +132,7 @@ public class TaskConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0/15 * * * * ?")
+	// @Scheduled(cron = "0/15 * * * * ?")
 	public void notifyPayout() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Payout> list = payoutmapper.selectNotifylist();
@@ -165,7 +170,7 @@ public class TaskConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0/15 * * * * ?")
+	// @Scheduled(cron = "0/15 * * * * ?")
 	public void payout() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Payout> list = payoutmapper.selectAddlist();
@@ -184,7 +189,7 @@ public class TaskConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0/15 * * * * ?")
+	// @Scheduled(cron = "0/15 * * * * ?")
 	public void exchange() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Exchange> list = exchangemapper.selectAddlist();
@@ -241,6 +246,21 @@ public class TaskConfig {
 
 				TenantIdContext.remove();
 			}
+		}
+	}
+
+	/**
+	 * 同步渠道余额
+	 * 
+	 * @throws InterruptedException
+	 */
+	@Scheduled(cron = "0 0 0/1 * * ?")
+	public void synChannelBalance() throws InterruptedException {
+		TenantIdContext.removeFlag();
+		List<Channel> list = channelmapper.getSynList();
+		for (Channel c : list) {
+			log.info("同步渠道余额：" + c.getName() + "  支付：" + c.getTodayincomecount());
+			
 		}
 	}
 }

@@ -146,13 +146,14 @@
 		</set>
 		where id = #{id} and version= #{version}
 	</update>
-	
-	<update id="updatetodayvalue"  parameterType="java.lang.Long">
+
+	<update id="updatetodayvalue" parameterType="java.lang.Long">
 		update channel
-		set todaycost = 0,todaycount = 0,todayincomecount = 0
+		set
+		todaycost = 0,todaycount = 0,todayincomecount = 0
 		where id = #{id}
 	</update>
-	
+
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"
 		resultMap="ResultMap">
@@ -246,6 +247,15 @@
 					#{item}
 				</foreach>
 			</if>
+		</where>
+	</select>
+	<!-- getList -->
+	<select id="getSynList"   resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from channel
+		<where>
+			todayincomecount > 1
 		</where>
 	</select>
 </mapper>

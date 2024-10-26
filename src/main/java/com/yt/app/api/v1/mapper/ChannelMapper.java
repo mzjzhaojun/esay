@@ -112,4 +112,14 @@ public interface ChannelMapper extends YtIBaseMapper<Channel> {
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Channel.class })
 	public Integer updatetodayvalue(Long id);
+
+	/**
+	 * list
+	 * 
+	 * @param param map
+	 * @return listChannel
+	 */
+	@YtRedisCacheAnnotation(classs = Channel.class)
+	public List<Channel> getSynList();
+
 }

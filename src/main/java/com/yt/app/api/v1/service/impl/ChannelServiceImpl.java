@@ -199,50 +199,59 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 
 	@Override
 	public Integer getRemotebalance(Long id) {
-		Channel cl = mapper.get(id);
-		String balance = null;
-		switch (cl.getName()) {
-		case DictionaryResource.LLAISLE:
-			SysTyBalance stb = PayUtil.SendTySelectBalance(cl);
-			cl.setRemotebalance(stb.getAvailableBalance());
-			break;
-		case DictionaryResource.HSAISLE:
-			balance = PayUtil.SendHsGetBalance(cl);
-			if (balance != null)
-				cl.setRemotebalance(Double.valueOf(balance));
-			break;
-		case DictionaryResource.WDAISLE:
-			balance = PayUtil.SendWdGetBalance(cl);
-			if (balance != null)
-				cl.setRemotebalance(Double.valueOf(balance));
-			break;
-		case DictionaryResource.RBLAISLE:
-			balance = PayUtil.SendRblGetBalance(cl);
-			if (balance != null)
-				cl.setRemotebalance(Double.valueOf(balance));
-			break;
-		case DictionaryResource.GZAISLE:
-			balance = PayUtil.SendGzGetBalance(cl);
-			if (balance != null)
-				cl.setRemotebalance(Double.valueOf(balance));
-			break;
-		case DictionaryResource.WJAISLE:
-			balance = PayUtil.SendWjGetBalance(cl);
-			if (balance != null)
-				cl.setRemotebalance(Double.valueOf(balance));
-			break;
-		case DictionaryResource.FCAISLE:
-			balance = PayUtil.SendFcGetBalance(cl);
-			if (balance != null)
-				cl.setRemotebalance(Double.valueOf(balance));
-			break;
-		case DictionaryResource.AKLAISLE:
-			balance = PayUtil.SendAklGetBalance(cl);
-			if (balance != null)
-				cl.setRemotebalance(Double.valueOf(balance));
-			break;
+		RLock lock = RedissonUtil.getLock(id);
+		Integer i = 0;
+		try {
+			lock.lock();
+			Channel cl = mapper.get(id);
+			String balance = null;
+			switch (cl.getName()) {
+			case DictionaryResource.LLAISLE:
+				SysTyBalance stb = PayUtil.SendTySelectBalance(cl);
+				cl.setRemotebalance(stb.getAvailableBalance());
+				break;
+			case DictionaryResource.HSAISLE:
+				balance = PayUtil.SendHsGetBalance(cl);
+				if (balance != null)
+					cl.setRemotebalance(Double.valueOf(balance));
+				break;
+			case DictionaryResource.WDAISLE:
+				balance = PayUtil.SendWdGetBalance(cl);
+				if (balance != null)
+					cl.setRemotebalance(Double.valueOf(balance));
+				break;
+			case DictionaryResource.RBLAISLE:
+				balance = PayUtil.SendRblGetBalance(cl);
+				if (balance != null)
+					cl.setRemotebalance(Double.valueOf(balance));
+				break;
+			case DictionaryResource.GZAISLE:
+				balance = PayUtil.SendGzGetBalance(cl);
+				if (balance != null)
+					cl.setRemotebalance(Double.valueOf(balance));
+				break;
+			case DictionaryResource.WJAISLE:
+				balance = PayUtil.SendWjGetBalance(cl);
+				if (balance != null)
+					cl.setRemotebalance(Double.valueOf(balance));
+				break;
+			case DictionaryResource.FCAISLE:
+				balance = PayUtil.SendFcGetBalance(cl);
+				if (balance != null)
+					cl.setRemotebalance(Double.valueOf(balance));
+				break;
+			case DictionaryResource.AKLAISLE:
+				balance = PayUtil.SendAklGetBalance(cl);
+				if (balance != null)
+					cl.setRemotebalance(Double.valueOf(balance));
+				break;
+			}
+			i = mapper.put(cl);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
 		}
-		return mapper.put(cl);
+		return i;
 	}
 
 	@Override

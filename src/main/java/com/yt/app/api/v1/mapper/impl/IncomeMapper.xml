@@ -217,6 +217,12 @@
 			<if test="qrcodeordernum != null and qrcodeordernum != ''">
 				and qrcodeordernum = #{qrcodeordernum}
 			</if>
+			<if test="qrcodeaislecode != null and qrcodeaislecode != ''">
+				and qrcodeaislecode = #{qrcodeaislecode}
+			</if>
+			<if test="qrcodecode != null and qrcodecode != ''">
+				and qrcodecode = #{qrcodecode}
+			</if>
 			<if test="amount != null and amount != ''">
 				and amount = #{amount}
 			</if>
@@ -254,6 +260,12 @@
 			</if>
 			<if test="qrcodeordernum != null and qrcodeordernum != ''">
 				and qrcodeordernum = #{qrcodeordernum}
+			</if>
+			<if test="qrcodeaislecode != null and qrcodeaislecode != ''">
+				and qrcodeaislecode = #{qrcodeaislecode}
+			</if>
+			<if test="qrcodecode != null and qrcodecode != ''">
+				and qrcodecode = #{qrcodecode}
 			</if>
 			<if test="amount != null and amount != ''">
 				and amount = #{amount}
