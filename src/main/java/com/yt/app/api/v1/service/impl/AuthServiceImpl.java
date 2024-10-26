@@ -169,16 +169,18 @@ public class AuthServiceImpl implements AuthService {
 	public String getPublicKey(HttpServletRequest request) {
 		String ip = AuthContext.getIp();
 		boolean isValid = false;
-		// 判断ip 是否在配置内
-		List<Merchant> listm = merchantmapper.getListAll(new HashMap<String, Object>());
-		for (int i = 0; i < listm.size(); i++) {
-			if (listm.get(i).getIpaddress() != null && listm.get(i).getIpaddress().indexOf(ip) >= 0) {
-				isValid = true;
-				break;
+		if (!AuthUtil.isMobileDevice(request.getHeader("User-Agent"))) {
+			// 判断ip 是否在配置内
+			List<Merchant> listm = merchantmapper.getListAll(new HashMap<String, Object>());
+			for (int i = 0; i < listm.size(); i++) {
+				if (listm.get(i).getIpaddress() != null && listm.get(i).getIpaddress().indexOf(ip) >= 0) {
+					isValid = true;
+					break;
+				}
 			}
+			if (!isValid)
+				throw new YtException(YtCodeEnum.YT402.getDesc(), YtCodeEnum.YT402);
 		}
-		if (!isValid)
-			throw new YtException(YtCodeEnum.YT402.getDesc(), YtCodeEnum.YT402);
 		return RsaUtil.getPublicKey();
 	}
 
