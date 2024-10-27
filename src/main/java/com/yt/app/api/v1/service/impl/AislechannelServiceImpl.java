@@ -48,19 +48,6 @@ public class AislechannelServiceImpl extends YtBaseServiceImpl<Aislechannel, Lon
 		return i;
 	}
 
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Aislechannel> list(Map<String, Object> param) {
-		int count = 0;
-		if (YtPageBean.isPaging(param)) {
-			count = mapper.countlist(param);
-			if (count == 0) {
-				return new YtPageBean<Aislechannel>(Collections.emptyList());
-			}
-		}
-		List<Aislechannel> list = mapper.list(param);
-		return new YtPageBean<Aislechannel>(param, list, count);
-	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
@@ -79,7 +66,6 @@ public class AislechannelServiceImpl extends YtBaseServiceImpl<Aislechannel, Lon
 		return mapper.delete(id);
 	}
 
-	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<AislechannelVO> page(Map<String, Object> param) {
 		int count = 0;

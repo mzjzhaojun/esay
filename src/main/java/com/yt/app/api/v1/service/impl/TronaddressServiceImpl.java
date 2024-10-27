@@ -35,12 +35,6 @@ public class TronaddressServiceImpl extends YtBaseServiceImpl<Tronaddress, Long>
 		return i;
 	}
 
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Tronaddress> list(Map<String, Object> param) {
-		List<Tronaddress> list = mapper.list(param);
-		return new YtPageBean<Tronaddress>(list);
-	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)

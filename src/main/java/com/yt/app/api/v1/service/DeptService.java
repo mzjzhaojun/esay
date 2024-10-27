@@ -1,11 +1,13 @@
 package com.yt.app.api.v1.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.yt.app.api.v1.dbo.SysDeptTreeDTO;
 import com.yt.app.api.v1.entity.Dept;
 import com.yt.app.api.v1.vo.SysDeptTreeVO;
 import com.yt.app.common.base.YtIBaseService;
+import com.yt.app.common.common.yt.YtIPage;
 
 /**
  * @author zj default
@@ -14,6 +16,7 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface DeptService extends YtIBaseService<Dept, Long> {
+	YtIPage<Dept> page(Map<String, Object> param);
 
 	/**
 	 * 树

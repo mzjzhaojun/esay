@@ -14,11 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.yt.app.common.common.yt.YtBody;
 
-import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.MenuService;
 import com.yt.app.api.v1.vo.SysMenuTreeVO;
 import com.yt.app.api.v1.dbo.SysMenuTreeDTO;
-import com.yt.app.api.v1.entity.Menu;
 
 /**
  * @author yyds
@@ -28,7 +26,7 @@ import com.yt.app.api.v1.entity.Menu;
 
 @RestController
 @RequestMapping("/rest/v1/menu")
-public class MenuController extends YtBaseEncipherControllerImpl<Menu, Long> {
+public class MenuController {
 
 	@Autowired
 	private MenuService service;

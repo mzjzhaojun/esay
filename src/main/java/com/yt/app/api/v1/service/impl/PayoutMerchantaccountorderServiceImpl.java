@@ -182,7 +182,7 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<PayoutMerchantaccountorder> list(Map<String, Object> param) {
+	public YtIPage<PayoutMerchantaccountorder> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

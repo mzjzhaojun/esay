@@ -58,7 +58,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
-	public YtIPage<YtFile> list(Map<String, Object> param) {
+	public YtIPage<YtFile> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

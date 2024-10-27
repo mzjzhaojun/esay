@@ -1,6 +1,7 @@
 package com.yt.app.common.base.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yt.app.common.base.YtIBaseEncipherController;
 import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.common.yt.YtBody;
-import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
 import com.yt.app.common.util.RequestUtil;
@@ -95,8 +95,8 @@ public abstract class YtBaseEncipherControllerImpl<T, ID extends Serializable> i
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<?> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(YtRequestDecryptEntity));
-		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
+		List<T> list = service.list(RequestUtil.requestDecryptEntityToParamMap(YtRequestDecryptEntity));
+		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}
 
 }

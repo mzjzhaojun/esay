@@ -36,9 +36,9 @@ public class DeptController extends YtBaseEncipherControllerImpl<Dept, Long> {
 	private DeptService service;
 
 	@Override
-	@RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Dept> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<Dept> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 

@@ -60,12 +60,6 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 		return i;
 	}
 
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Qrcode> list(Map<String, Object> param) {
-		List<Qrcode> list = mapper.list(param);
-		return new YtPageBean<Qrcode>(list);
-	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)

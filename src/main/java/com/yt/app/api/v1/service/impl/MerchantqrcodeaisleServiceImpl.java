@@ -42,12 +42,6 @@ public class MerchantqrcodeaisleServiceImpl extends YtBaseServiceImpl<Merchantqr
 		return i;
 	}
 
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Merchantqrcodeaisle> list(Map<String, Object> param) {
-		List<Merchantqrcodeaisle> list = mapper.list(param);
-		return new YtPageBean<Merchantqrcodeaisle>(list);
-	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)

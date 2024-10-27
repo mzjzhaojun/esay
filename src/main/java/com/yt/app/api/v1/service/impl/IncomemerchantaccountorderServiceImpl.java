@@ -46,13 +46,6 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Incomemerchantaccountorder> list(Map<String, Object> param) {
-		List<Incomemerchantaccountorder> list = mapper.list(param);
-		return new YtPageBean<Incomemerchantaccountorder>(list);
-	}
-
-	@Override
-
 	public Incomemerchantaccountorder get(Long id) {
 		Incomemerchantaccountorder t = mapper.get(id);
 		return t;

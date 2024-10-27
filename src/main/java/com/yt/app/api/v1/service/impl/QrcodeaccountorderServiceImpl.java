@@ -89,12 +89,6 @@ public class QrcodeaccountorderServiceImpl extends YtBaseServiceImpl<Qrcodeaccou
 		return i;
 	}
 
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Qrcodeaccountorder> list(Map<String, Object> param) {
-		List<Qrcodeaccountorder> list = mapper.list(param);
-		return new YtPageBean<Qrcodeaccountorder>(list);
-	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)

@@ -1,11 +1,13 @@
 package com.yt.app.api.v1.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.yt.app.api.v1.dbo.SysRoleReMenuSaveDTO;
 import com.yt.app.api.v1.entity.Rolemenu;
 import com.yt.app.api.v1.vo.SysRoleReBtnPermListVO;
 import com.yt.app.common.base.YtIBaseService;
+import com.yt.app.common.common.yt.YtIPage;
 
 /**
  * @author zj default
@@ -14,6 +16,9 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface RolemenuService extends YtIBaseService<Rolemenu, Long> {
+	
+	YtIPage<Rolemenu> page(Map<String, Object> param);
+	
 	/**
 	 * 获取角色id可访问的菜单ids
 	 *

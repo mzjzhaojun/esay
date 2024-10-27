@@ -1,5 +1,7 @@
 package com.yt.app.api.v1.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,9 +34,16 @@ public class AgentaccountbankController extends YtBaseEncipherControllerImpl<Age
 	private AgentaccountbankService service;
 
 	@Override
+	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<Agentaccountbank> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
+	}
+
+	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Agentaccountbank> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
-		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
+		List<Agentaccountbank> list = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}
 }

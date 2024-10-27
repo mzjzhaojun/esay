@@ -44,7 +44,7 @@ public class RolescopeServiceImpl extends YtBaseServiceImpl<Rolescope, Long> imp
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Rolescope> list(Map<String, Object> param) {
+	public YtIPage<Rolescope> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = sysRoleScopeMapper.countlist(param);

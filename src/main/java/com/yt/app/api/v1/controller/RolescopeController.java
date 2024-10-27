@@ -32,9 +32,9 @@ public class RolescopeController extends YtBaseEncipherControllerImpl<Rolescope,
 	private RolescopeService service;
 
 	@Override
-	@RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Rolescope> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<Rolescope> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 }

@@ -12,6 +12,7 @@ import com.yt.app.api.v1.vo.SysRoleAllPermissionDetailVO;
 import com.yt.app.api.v1.vo.SysRoleBaseVO;
 import com.yt.app.api.v1.vo.SysUserPermVO;
 import com.yt.app.common.base.YtIBaseService;
+import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.enums.SysRoleCodeEnum;
 
 /**
@@ -21,6 +22,9 @@ import com.yt.app.common.enums.SysRoleCodeEnum;
  */
 
 public interface RoleService extends YtIBaseService<Role, Long> {
+	
+	YtIPage<Role> page(Map<String, Object> param);
+	
 	/**
 	 * 列表分页
 	 *

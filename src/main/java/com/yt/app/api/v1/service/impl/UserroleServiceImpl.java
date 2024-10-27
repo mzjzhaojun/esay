@@ -47,7 +47,7 @@ public class UserroleServiceImpl extends YtBaseServiceImpl<Userrole, Long> imple
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Userrole> list(Map<String, Object> param) {
+	public YtIPage<Userrole> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = sysUserRoleMapper.countlist(param);

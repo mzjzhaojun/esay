@@ -41,7 +41,7 @@ public class MerchantaccountbankServiceImpl extends YtBaseServiceImpl<Merchantac
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Merchantaccountbank> list(Map<String, Object> param) {
+	public YtIPage<Merchantaccountbank> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

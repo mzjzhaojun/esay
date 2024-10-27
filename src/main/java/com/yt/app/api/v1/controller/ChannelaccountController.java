@@ -37,9 +37,9 @@ public class ChannelaccountController extends YtBaseEncipherControllerImpl<Chann
 	private ChannelService channelservice;
 
 	@Override
-	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Channelaccount> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<Channelaccount> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
@@ -53,4 +53,5 @@ public class ChannelaccountController extends YtBaseEncipherControllerImpl<Chann
 		Channel t = channelservice.getData();
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}
+
 }

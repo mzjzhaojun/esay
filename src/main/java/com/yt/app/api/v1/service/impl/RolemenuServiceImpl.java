@@ -44,7 +44,7 @@ public class RolemenuServiceImpl extends YtBaseServiceImpl<Rolemenu, Long> imple
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Rolemenu> list(Map<String, Object> param) {
+	public YtIPage<Rolemenu> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = sysRoleMenuMapper.countlist(param);

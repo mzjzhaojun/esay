@@ -14,7 +14,6 @@ import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.service.AuthService;
 import com.yt.app.api.v1.vo.AuthLoginVO;
 import com.yt.app.common.base.constant.SecurityConstant;
-import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
@@ -28,7 +27,7 @@ import com.yt.app.common.util.AuthUtil;
  */
 @RestController
 @RequestMapping("/rest/v1/auth")
-public class AuthController extends YtBaseEncipherControllerImpl<User, Long> {
+public class AuthController {
 
 	@Autowired
 	private AuthService authservice;

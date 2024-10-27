@@ -102,7 +102,7 @@ public class RoleServiceImpl extends YtBaseServiceImpl<Role, Long> implements Ro
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Role> list(Map<String, Object> param) {
+	public YtIPage<Role> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = sysRoleMapper.countlist(param);

@@ -47,12 +47,6 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 		return i;
 	}
 
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Systemstatisticalreports> list(Map<String, Object> param) {
-		List<Systemstatisticalreports> list = mapper.list(param);
-		return new YtPageBean<Systemstatisticalreports>(list);
-	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)

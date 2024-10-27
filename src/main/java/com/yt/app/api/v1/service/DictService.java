@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.yt.app.api.v1.entity.Dict;
 import com.yt.app.common.base.YtIBaseService;
+import com.yt.app.common.common.yt.YtIPage;
 
 /**
  * @author zj default
@@ -13,6 +14,8 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface DictService extends YtIBaseService<Dict, Long> {
+	
+	YtIPage<Dict> page(Map<String, Object> param);
 
 	List<Dict> listbycode(Map<String, Object> param);
 

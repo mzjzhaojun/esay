@@ -52,12 +52,6 @@ public class QrcodeaisleServiceImpl extends YtBaseServiceImpl<Qrcodeaisle, Long>
 		return i;
 	}
 
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Qrcodeaisle> list(Map<String, Object> param) {
-		List<Qrcodeaisle> list = mapper.list(param);
-		return new YtPageBean<Qrcodeaisle>(list);
-	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)

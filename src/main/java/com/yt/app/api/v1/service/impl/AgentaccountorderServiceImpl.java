@@ -75,7 +75,7 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Agentaccountorder> list(Map<String, Object> param) {
+	public YtIPage<Agentaccountorder> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

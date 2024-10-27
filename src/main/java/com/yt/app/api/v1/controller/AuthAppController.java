@@ -11,11 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yt.app.api.v1.bo.JwtUserBO;
 import com.yt.app.api.v1.dbo.AuthLoginDTO;
-import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.service.AuthService;
 import com.yt.app.api.v1.vo.AuthLoginVO;
 import com.yt.app.common.base.constant.SecurityConstant;
-import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
@@ -30,7 +28,7 @@ import com.yt.app.common.util.AuthUtil;
 
 @RestController
 @RequestMapping("/app/v1/auth")
-public class AuthAppController extends YtBaseEncipherControllerImpl<User, Long> {
+public class AuthAppController {
 
 	@Autowired
 	private AuthService authservice;
@@ -54,4 +52,5 @@ public class AuthAppController extends YtBaseEncipherControllerImpl<User, Long> 
 		JwtUserBO jwtUserBO = AuthUtil.getLoginUser(token);
 		return new YtResponseEncryptEntity<Object>(new YtBody(jwtUserBO.getUserId()));
 	}
+
 }

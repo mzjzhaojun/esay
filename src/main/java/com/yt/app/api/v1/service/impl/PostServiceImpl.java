@@ -41,7 +41,7 @@ public class PostServiceImpl extends YtBaseServiceImpl<Post, Long> implements Po
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Post> list(Map<String, Object> param) {
+	public YtIPage<Post> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

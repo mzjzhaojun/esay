@@ -46,7 +46,7 @@ public class DictServiceImpl extends YtBaseServiceImpl<Dict, Long> implements Di
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Dict> list(Map<String, Object> param) {
+	public YtIPage<Dict> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

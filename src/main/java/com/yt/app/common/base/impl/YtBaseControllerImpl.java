@@ -1,6 +1,7 @@
 package com.yt.app.common.base.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +18,6 @@ import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.base.context.JwtUserContext;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.common.yt.YtBody;
-import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtRequestEntity;
 import com.yt.app.common.common.yt.YtResponseEntity;
 import com.yt.app.common.util.RequestUtil;
@@ -107,8 +107,8 @@ public abstract class YtBaseControllerImpl<T, ID extends Serializable> implement
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> list(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<?> pagebean = service.list(RequestUtil.requestEntityToParamMap(requestEntity));
-		return new YtResponseEntity<Object>(new YtBody(pagebean));
+		List<T> list = service.list(RequestUtil.requestEntityToParamMap(requestEntity));
+		return new YtResponseEntity<Object>(new YtBody(list));
 	}
 
 }

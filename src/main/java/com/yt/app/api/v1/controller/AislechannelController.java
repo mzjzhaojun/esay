@@ -1,5 +1,7 @@
 package com.yt.app.api.v1.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,15 +35,15 @@ public class AislechannelController extends YtBaseEncipherControllerImpl<Aislech
 	private AislechannelService service;
 
 	@Override
-	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Aislechannel> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
-		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
-	}
-
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<AislechannelVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
+	}
+
+	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		List<Aislechannel> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 }

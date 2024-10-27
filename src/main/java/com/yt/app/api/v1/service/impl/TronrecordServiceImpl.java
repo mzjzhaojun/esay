@@ -35,12 +35,6 @@ public class TronrecordServiceImpl extends YtBaseServiceImpl<Tronrecord, Long> i
 		return i;
 	}
 
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Tronrecord> list(Map<String, Object> param) {
-		List<Tronrecord> list = mapper.list(param);
-		return new YtPageBean<Tronrecord>(list);
-	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)

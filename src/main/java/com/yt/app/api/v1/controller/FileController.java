@@ -30,9 +30,11 @@ import com.yt.app.api.v1.entity.YtFile;
 import com.yt.app.api.v1.service.FileService;
 import com.yt.app.common.base.impl.YtBaseControllerImpl;
 import com.yt.app.common.common.yt.YtBody;
+import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtRequestEntity;
 import com.yt.app.common.common.yt.YtResponseEntity;
 import com.yt.app.common.util.FileUtil;
+import com.yt.app.common.util.RequestUtil;
 
 /**
  * @author zj default test
@@ -296,37 +298,10 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 		out.close();
 	}
 
-	/**
-	 * 普通上传
-	 * 
-	 * @param request
-	 * @return
-	 * @throws IOException
-	 */
-	@RequestMapping(value = "/txt/dowload/{id}", method = RequestMethod.GET)
-	public void dowloadtxt(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@Override
+	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> page(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<YtFile> list = service.page(RequestUtil.requestEntityToParamMap(requestEntity));
+		return new YtResponseEntity<Object>(new YtBody(list));
 	}
-
-	/**
-	 * 普通上传
-	 * 
-	 * @param request
-	 * @return
-	 * @throws IOException
-	 */
-	@RequestMapping(value = "/customer/dowload/{id}", method = RequestMethod.GET)
-	public void dowloadcustomer(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
-	}
-
-	/**
-	 * 普通上传
-	 * 
-	 * @param request
-	 * @return
-	 * @throws IOException
-	 */
-	@RequestMapping(value = "/txt/dowloadmobile/{id}", method = RequestMethod.GET)
-	public void dowloadmobile(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
-	}
-
 }

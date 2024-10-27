@@ -55,12 +55,6 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 		return i;
 	}
 
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Incomemerchantaccount> list(Map<String, Object> param) {
-		List<Incomemerchantaccount> list = mapper.list(param);
-		return new YtPageBean<Incomemerchantaccount>(list);
-	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)

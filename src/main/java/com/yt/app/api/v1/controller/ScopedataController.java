@@ -37,4 +37,10 @@ public class ScopedataController extends YtBaseEncipherControllerImpl<Scopedata,
 		List<Scopedata> list = service.tree(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}
+
+	@Override
+	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

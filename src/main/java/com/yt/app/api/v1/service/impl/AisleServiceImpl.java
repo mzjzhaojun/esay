@@ -56,7 +56,7 @@ public class AisleServiceImpl extends YtBaseServiceImpl<Aisle, Long> implements 
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Aisle> list(Map<String, Object> param) {
+	public YtIPage<Aisle> page(Map<String, Object> param) {
 
 		if (param.get("merchantid") != null) {
 			List<Merchantaisle> listmqas = merchantaislemapper.getByMid(Long.valueOf(param.get("merchantid").toString()));

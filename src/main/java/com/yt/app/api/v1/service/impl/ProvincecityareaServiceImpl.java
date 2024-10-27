@@ -38,7 +38,7 @@ public class ProvincecityareaServiceImpl extends YtBaseServiceImpl<Provincecitya
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Provincecityarea> list(Map<String, Object> param) {
+	public YtIPage<Provincecityarea> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

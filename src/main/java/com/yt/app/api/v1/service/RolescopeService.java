@@ -1,11 +1,13 @@
 package com.yt.app.api.v1.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.yt.app.api.v1.bo.SysScopeDataBO;
 import com.yt.app.api.v1.dbo.SysRoleReScopeSaveDTO;
 import com.yt.app.api.v1.entity.Rolescope;
 import com.yt.app.common.base.YtIBaseService;
+import com.yt.app.common.common.yt.YtIPage;
 
 /**
  * @author zj default
@@ -14,6 +16,8 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface RolescopeService extends YtIBaseService<Rolescope, Long> {
+	
+	YtIPage<Rolescope> page(Map<String, Object> param);
 
 	/**
 	 * 根据角色id拿到关联的数据权限

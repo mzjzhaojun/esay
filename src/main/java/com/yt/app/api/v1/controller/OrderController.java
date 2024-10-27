@@ -19,14 +19,12 @@ import com.yt.app.api.v1.dbo.SysQueryDTO;
 import com.yt.app.api.v1.dbo.PaySubmitDTO;
 import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
 import com.yt.app.api.v1.entity.Income;
-import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.service.IncomeService;
 import com.yt.app.api.v1.service.PayoutService;
 import com.yt.app.api.v1.vo.PayResultVO;
 import com.yt.app.api.v1.vo.QrcodeResultVO;
 import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
-import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtRequestEntity;
 import com.yt.app.common.common.yt.YtResponseEntity;
@@ -41,7 +39,7 @@ import com.yt.app.common.util.RequestUtil;
 
 @RestController
 @RequestMapping("/rest/v1/order")
-public class OrderController extends YtBaseEncipherControllerImpl<Payout, Long> {
+public class OrderController{
 
 	@Autowired
 	private PayoutService service;

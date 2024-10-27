@@ -38,12 +38,6 @@ public class TgbotServiceImpl extends YtBaseServiceImpl<Tgbot, Long> implements 
 		return i;
 	}
 
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Tgbot> list(Map<String, Object> param) {
-		List<Tgbot> list = mapper.list(param);
-		return new YtPageBean<Tgbot>(list);
-	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)

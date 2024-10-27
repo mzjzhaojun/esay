@@ -38,7 +38,7 @@ public class ChannelaccountrecordServiceImpl extends YtBaseServiceImpl<Channelac
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Channelaccountrecord> list(Map<String, Object> param) {
+	public YtIPage<Channelaccountrecord> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

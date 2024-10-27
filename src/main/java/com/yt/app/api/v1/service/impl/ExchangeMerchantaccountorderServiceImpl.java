@@ -178,7 +178,7 @@ public class ExchangeMerchantaccountorderServiceImpl extends YtBaseServiceImpl<E
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<ExchangeMerchantaccountorder> list(Map<String, Object> param) {
+	public YtIPage<ExchangeMerchantaccountorder> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

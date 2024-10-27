@@ -6,6 +6,7 @@ import java.util.Map;
 import com.yt.app.api.v1.dbo.SysUserRoleSaveDTO;
 import com.yt.app.api.v1.entity.Userrole;
 import com.yt.app.common.base.YtIBaseService;
+import com.yt.app.common.common.yt.YtIPage;
 
 /**
  * @author zj default
@@ -14,6 +15,8 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface UserroleService extends YtIBaseService<Userrole, Long> {
+	
+	YtIPage<Userrole> page(Map<String, Object> param);
 
 	/**
 	 * 新增或更新

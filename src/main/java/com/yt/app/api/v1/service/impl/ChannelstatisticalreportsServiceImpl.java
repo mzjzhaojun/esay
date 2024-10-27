@@ -37,13 +37,6 @@ public class ChannelstatisticalreportsServiceImpl extends YtBaseServiceImpl<Chan
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Channelstatisticalreports> list(Map<String, Object> param) {
-		List<Channelstatisticalreports> list = mapper.list(param);
-		return new YtPageBean<Channelstatisticalreports>(list);
-	}
-
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Channelstatisticalreports get(Long id) {
 		Channelstatisticalreports t = mapper.get(id);
 		return t;

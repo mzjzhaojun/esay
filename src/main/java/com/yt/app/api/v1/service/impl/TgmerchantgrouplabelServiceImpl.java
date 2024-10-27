@@ -36,7 +36,7 @@ public class TgmerchantgrouplabelServiceImpl extends YtBaseServiceImpl<Tgmerchan
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Tgmerchantgrouplabel> list(Map<String, Object> param) {
+	public YtIPage<Tgmerchantgrouplabel> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

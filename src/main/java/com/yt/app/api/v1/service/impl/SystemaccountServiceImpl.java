@@ -49,7 +49,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Systemaccount> list(Map<String, Object> param) {
+	public YtIPage<Systemaccount> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

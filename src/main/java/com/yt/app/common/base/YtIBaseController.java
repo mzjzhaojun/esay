@@ -74,6 +74,13 @@ public interface YtIBaseController<T, ID extends Serializable> {
 	 * 
 	 * @return 查询结果列表
 	 */
+	public YtResponseEntity<Object> page(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response);
+
+	/**
+	 * 全部数据或有分页参数返回分页数据
+	 * 
+	 * @return 查询结果列表
+	 */
 	public YtResponseEntity<Object> list(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response);
 
 }

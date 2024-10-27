@@ -1,15 +1,12 @@
 package com.yt.app.common.base.impl;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yt.app.common.common.yt.YtIPage;
-import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
 
 import cn.hutool.core.lang.Assert;
@@ -72,21 +69,14 @@ public abstract class YtBaseServiceImpl<T, ID extends Serializable> implements Y
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<T> list(Map<String, Object> param) {
-		int count = 0;
-		if (YtPageBean.isPaging(param)) {
-			count = mapper.countlist(param);
-			if (count == 0) {
-				return new YtPageBean<T>(Collections.emptyList());
-			}
-		}
-		return new YtPageBean<T>(param, mapper.list(param), count);
+	public List<T> list() {
+		Map<String, Object> param = new HashMap<String, Object>();
+		return mapper.list(param);
 	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public List<T> list() {
-		Map<String, Object> param = new HashMap<String, Object>();
+	public List<T> list(Map<String, Object> param) {
 		return mapper.list(param);
 	}
 

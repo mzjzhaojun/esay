@@ -43,7 +43,7 @@ public class MerchantaisleServiceImpl extends YtBaseServiceImpl<Merchantaisle, L
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Merchantaisle> list(Map<String, Object> param) {
+	public YtIPage<Merchantaisle> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

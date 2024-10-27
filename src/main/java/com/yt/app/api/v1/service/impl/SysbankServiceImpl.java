@@ -36,7 +36,7 @@ public class SysbankServiceImpl extends YtBaseServiceImpl<Sysbank, Long> impleme
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Sysbank> list(Map<String, Object> param) {
+	public YtIPage<Sysbank> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

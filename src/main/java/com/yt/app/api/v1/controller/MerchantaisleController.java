@@ -31,9 +31,9 @@ public class MerchantaisleController extends YtBaseEncipherControllerImpl<Mercha
 	private MerchantaisleService service;
 
 	@Override
-	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Merchantaisle> pagebean = service.list(RequestUtil.requestDecryptEntityToParamMap(YtRequestDecryptEntity));
+	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
+		YtIPage<Merchantaisle> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(YtRequestDecryptEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 }

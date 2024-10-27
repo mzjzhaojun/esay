@@ -36,7 +36,7 @@ public class ConfigServiceImpl extends YtBaseServiceImpl<Config, Long> implement
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Config> list(Map<String, Object> param) {
+	public YtIPage<Config> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

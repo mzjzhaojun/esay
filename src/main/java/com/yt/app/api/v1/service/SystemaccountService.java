@@ -1,11 +1,14 @@
 package com.yt.app.api.v1.service;
 
+import java.util.Map;
+
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccountorder;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.common.base.YtIBaseService;
+import com.yt.app.common.common.yt.YtIPage;
 
 /**
  * @author zj default
@@ -14,6 +17,8 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface SystemaccountService extends YtIBaseService<Systemaccount, Long> {
+	
+	YtIPage<Systemaccount> page(Map<String, Object> param);
 
 	Systemaccount getData();
 

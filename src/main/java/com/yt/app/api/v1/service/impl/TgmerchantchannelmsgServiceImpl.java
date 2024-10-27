@@ -35,12 +35,6 @@ public class TgmerchantchannelmsgServiceImpl extends YtBaseServiceImpl<Tgmerchan
 		return i;
 	}
 
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Tgmerchantchannelmsg> list(Map<String, Object> param) {
-		List<Tgmerchantchannelmsg> list = mapper.list(param);
-		return new YtPageBean<Tgmerchantchannelmsg>(list);
-	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)

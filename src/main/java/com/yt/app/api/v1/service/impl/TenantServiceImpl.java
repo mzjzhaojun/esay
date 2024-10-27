@@ -130,7 +130,7 @@ public class TenantServiceImpl extends YtBaseServiceImpl<Tenant, Long> implement
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Tenant> list(Map<String, Object> param) {
+	public YtIPage<Tenant> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

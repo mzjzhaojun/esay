@@ -112,7 +112,7 @@ public class UserServiceImpl extends YtBaseServiceImpl<User, Long> implements Us
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<User> list(Map<String, Object> param) {
+	public YtIPage<User> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

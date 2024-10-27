@@ -49,7 +49,7 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Sysconfig> list(Map<String, Object> param) {
+	public YtIPage<Sysconfig> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

@@ -1,7 +1,10 @@
 package com.yt.app.api.v1.service;
 
+import java.util.Map;
+
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.common.base.YtIBaseService;
+import com.yt.app.common.common.yt.YtIPage;
 
 /**
  * @author zj default
@@ -10,6 +13,8 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface AgentaccountorderService extends YtIBaseService<Agentaccountorder, Long> {
+	
+	YtIPage<Agentaccountorder> page(Map<String, Object> param);
 
 	Integer save(Agentaccountorder t);
 

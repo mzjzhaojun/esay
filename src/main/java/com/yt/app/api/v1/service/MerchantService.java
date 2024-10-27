@@ -1,5 +1,7 @@
 package com.yt.app.api.v1.service;
 
+import java.util.Map;
+
 import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccount;
 import com.yt.app.api.v1.entity.Income;
@@ -8,6 +10,7 @@ import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.PayoutMerchantaccount;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.common.base.YtIBaseService;
+import com.yt.app.common.common.yt.YtIPage;
 
 /**
  * @author zj default
@@ -16,6 +19,8 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface MerchantService extends YtIBaseService<Merchant, Long> {
+	
+	YtIPage<Merchant> page(Map<String, Object> param);
 
 	Integer putagent(Merchant m);
 

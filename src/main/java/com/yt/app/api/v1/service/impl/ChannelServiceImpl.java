@@ -108,7 +108,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 
 	@Override
 
-	public YtIPage<Channel> list(Map<String, Object> param) {
+	public YtIPage<Channel> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

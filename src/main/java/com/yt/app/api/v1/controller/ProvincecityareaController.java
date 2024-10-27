@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.yt.app.common.common.yt.YtBody;
 
-import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.ProvincecityareaService;
 import com.yt.app.api.v1.dbo.SysProvinceCityAreaTreeDTO;
 import com.yt.app.api.v1.entity.Provincecityarea;
@@ -27,7 +26,7 @@ import com.yt.app.api.v1.entity.Provincecityarea;
 
 @RestController
 @RequestMapping("/rest/v1/sprovincecityarea")
-public class ProvincecityareaController extends YtBaseEncipherControllerImpl<Provincecityarea, Long> {
+public class ProvincecityareaController {
 
 	@Autowired
 	private ProvincecityareaService service;

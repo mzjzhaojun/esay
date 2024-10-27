@@ -35,12 +35,6 @@ public class TgbotgroupServiceImpl extends YtBaseServiceImpl<Tgbotgroup, Long> i
 		return i;
 	}
 
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Tgbotgroup> list(Map<String, Object> param) {
-		List<Tgbotgroup> list = mapper.list(param);
-		return new YtPageBean<Tgbotgroup>(list);
-	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)

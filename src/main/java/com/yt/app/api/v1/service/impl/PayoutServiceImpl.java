@@ -257,20 +257,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Payout> list(Map<String, Object> param) {
-		int count = 0;
-		if (YtPageBean.isPaging(param)) {
-			count = mapper.countlist(param);
-			if (count == 0) {
-				return new YtPageBean<Payout>(Collections.emptyList());
-			}
-		}
-		List<Payout> list = mapper.list(param);
-		return new YtPageBean<Payout>(param, list, count);
-	}
-
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Payout get(Long id) {
 		Payout t = mapper.get(id);
 		return t;

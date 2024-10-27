@@ -53,13 +53,6 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Tron> list(Map<String, Object> param) {
-		List<Tron> list = mapper.list(param);
-		return new YtPageBean<Tron>(list);
-	}
-
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tron get(Long id) {
 		Tron t = mapper.get(id);
 		return t;

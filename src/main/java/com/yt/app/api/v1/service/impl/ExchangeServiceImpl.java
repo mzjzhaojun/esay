@@ -267,20 +267,6 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Exchange> list(Map<String, Object> param) {
-		int count = 0;
-		if (YtPageBean.isPaging(param)) {
-			count = mapper.countlist(param);
-			if (count == 0) {
-				return new YtPageBean<Exchange>(Collections.emptyList());
-			}
-		}
-		List<Exchange> list = mapper.list(param);
-		return new YtPageBean<Exchange>(param, list, count);
-	}
-
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Exchange get(Long id) {
 		Exchange t = mapper.get(id);
 		return t;

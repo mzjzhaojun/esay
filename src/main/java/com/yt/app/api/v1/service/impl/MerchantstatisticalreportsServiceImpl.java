@@ -35,12 +35,6 @@ public class MerchantstatisticalreportsServiceImpl extends YtBaseServiceImpl<Mer
 		return i;
 	}
 
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Merchantstatisticalreports> list(Map<String, Object> param) {
-		List<Merchantstatisticalreports> list = mapper.list(param);
-		return new YtPageBean<Merchantstatisticalreports>(list);
-	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)

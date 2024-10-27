@@ -1,8 +1,12 @@
 package com.yt.app.api.v1.service;
 
 import com.yt.app.api.v1.entity.Channelaccountorder;
+
+import java.util.Map;
+
 import com.yt.app.api.v1.entity.Channelaccount;
 import com.yt.app.common.base.YtIBaseService;
+import com.yt.app.common.common.yt.YtIPage;
 
 /**
  * @author zj default
@@ -11,6 +15,9 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface ChannelaccountService extends YtIBaseService<Channelaccount, Long> {
+	
+	YtIPage<Channelaccount> page(Map<String, Object> param);
+	
 	// 充值
 	void totalincome(Channelaccountorder t);
 

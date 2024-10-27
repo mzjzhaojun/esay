@@ -36,13 +36,6 @@ public class TronController extends YtBaseEncipherControllerImpl<Tron, Long> {
 	@Autowired
 	private TronService service;
 
-	@Override
-	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<Tron> list = service.list(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
-		return new YtResponseEncryptEntity<Object>(new YtBody(list));
-	}
-
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<TronVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
@@ -54,14 +47,6 @@ public class TronController extends YtBaseEncipherControllerImpl<Tron, Long> {
 		service.getnodeinfo();
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
-
-	// TNeVJQ1kN8NmNosDeXwYEb3D4Nep6h3eXU
-	// TUrntwm5t9umKhC7jv89RXGo33qcTFAAAA
-	// static String owneraddress = "418b0F566C0a7940362979a634B0fBD79ce95273FF";
-	// TBeFnZXX6X3r12mkByQT5877PYKWz2L4jQ
-	// static String toaddress = "41cf33c59d7ce3699bfc3724977094fd7aced689d3";
-	// private static String privatekey =
-	// "2e396342743d788071a6a84201e455dc760bccad5457d352bd37ef73f0e001f3";
 
 	private static String privatekey = "63d99b74511082f06e3f5f4b6e02e663c9a43939525368060da19b704f2b9aa4";
 

@@ -2,12 +2,14 @@ package com.yt.app.api.v1.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.yt.app.api.v1.entity.YtFile;
 
 import com.yt.app.common.base.YtIBaseService;
+import com.yt.app.common.common.yt.YtIPage;
 
 /**
  * @author zj default
@@ -16,6 +18,9 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface FileService extends YtIBaseService<YtFile, Long> {
+	
+	YtIPage<YtFile> page(Map<String, Object> param);
+	
 	/**
 	 * 保存文件
 	 * 

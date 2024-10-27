@@ -1,7 +1,10 @@
 package com.yt.app.api.v1.service;
 
+import java.util.Map;
+
 import com.yt.app.api.v1.entity.Dicttype;
 import com.yt.app.common.base.YtIBaseService;
+import com.yt.app.common.common.yt.YtIPage;
 
 /**
  * @author zj default
@@ -10,4 +13,5 @@ import com.yt.app.common.base.YtIBaseService;
  */
 
 public interface DicttypeService extends YtIBaseService<Dicttype, Long> {
+	YtIPage<Dicttype> page(Map<String, Object> param);
 }

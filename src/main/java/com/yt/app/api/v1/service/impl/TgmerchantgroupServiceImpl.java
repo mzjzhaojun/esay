@@ -41,12 +41,6 @@ public class TgmerchantgroupServiceImpl extends YtBaseServiceImpl<Tgmerchantgrou
 		return i;
 	}
 
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Tgmerchantgroup> list(Map<String, Object> param) {
-		List<Tgmerchantgroup> list = mapper.list(param);
-		return new YtPageBean<Tgmerchantgroup>(list);
-	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)

@@ -164,13 +164,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Income> list(Map<String, Object> param) {
-		List<Income> list = mapper.list(param);
-		return new YtPageBean<Income>(list);
-	}
-
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Income get(Long id) {
 		Income t = mapper.get(id);
 		return t;

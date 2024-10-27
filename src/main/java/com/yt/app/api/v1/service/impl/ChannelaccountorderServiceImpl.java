@@ -87,7 +87,7 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Channelaccountorder> list(Map<String, Object> param) {
+	public YtIPage<Channelaccountorder> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

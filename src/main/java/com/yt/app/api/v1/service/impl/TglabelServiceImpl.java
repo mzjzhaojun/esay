@@ -35,12 +35,6 @@ public class TglabelServiceImpl extends YtBaseServiceImpl<Tgchannelgrouplabel, L
 		return i;
 	}
 
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Tgchannelgrouplabel> list(Map<String, Object> param) {
-		List<Tgchannelgrouplabel> list = mapper.list(param);
-		return new YtPageBean<Tgchannelgrouplabel>(list);
-	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)

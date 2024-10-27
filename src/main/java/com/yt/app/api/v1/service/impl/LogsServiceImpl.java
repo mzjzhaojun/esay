@@ -38,7 +38,7 @@ public class LogsServiceImpl extends YtBaseServiceImpl<Logs, Long> implements Lo
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<Logs> list(Map<String, Object> param) {
+	public YtIPage<Logs> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

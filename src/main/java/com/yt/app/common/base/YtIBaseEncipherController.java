@@ -57,4 +57,13 @@ public interface YtIBaseEncipherController<T, ID extends Serializable> {
 	 */
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response);
 
+	/**
+	 * 分页查询
+	 * @param YtRequestDecryptEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response);
+
 }

@@ -38,7 +38,7 @@ public class PayoutMerchantaccountrecordServiceImpl extends YtBaseServiceImpl<Pa
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<PayoutMerchantaccountrecord> list(Map<String, Object> param) {
+	public YtIPage<PayoutMerchantaccountrecord> page(Map<String, Object> param) {
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);

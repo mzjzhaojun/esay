@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import com.yt.app.common.common.yt.YtIPage;
-
 /**
  * 
  * Baseservice
@@ -48,12 +46,12 @@ public interface YtIBaseService<T, ID extends Serializable> {
 	public Integer delete(Long id);
 
 	/**
-	 * 获取满足查询参数条件的List数据，如果存在分页参数则返回分页数据
+	 * 查询满足条件的分页参数
 	 * 
 	 * @param param
 	 * @return
 	 */
-	public YtIPage<T> list(Map<String, Object> param);
+	public List<T> list(Map<String, Object> param);
 
 	/**
 	 * 获取满足查询参数条件的List数据
