@@ -112,8 +112,8 @@
 		from merchantstatisticalreports
 		<where>
 			1=1
-			<if test="name != null and name != ''">
-				and name LIKE CONCAT( '%', #{name} , '%' )
+			<if test="stime != null and etime != ''">
+				and dateval BETWEEN  #{stime} AND  #{etime}
 			</if>
 		</where>
 	</select>
