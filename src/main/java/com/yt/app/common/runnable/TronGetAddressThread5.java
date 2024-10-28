@@ -8,9 +8,9 @@ import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.util.TronUtil;
 
-public class TronGetAddressThread6 implements Runnable {
+public class TronGetAddressThread5 implements Runnable {
 
-	public TronGetAddressThread6() {
+	public TronGetAddressThread5() {
 	}
 
 	@Override
@@ -31,7 +31,8 @@ public class TronGetAddressThread6 implements Runnable {
 						t.setPrivatekey(listaddress.get(0));
 						t.setHexaddress(listaddress.get(1));
 						t.setMnemoniccode(liststringcode.toString());
-						t.setRemark(6 + "");
+						t.setRemark(5 + "");
+						System.out.println("===========================================================");
 						mapper.post(t);
 					}
 				}

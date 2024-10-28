@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -13,7 +12,6 @@ import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.common.bot.message.impl.ExchangeMessage;
 import com.yt.app.common.bot.message.impl.NotifyChannelMessage;
-import com.yt.app.common.bot.message.impl.PinMessage;
 import com.yt.app.common.bot.message.impl.StartMessage;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +29,6 @@ public class ChannelBot extends TelegramLongPollingBot {
 
 	@Autowired
 	private NotifyChannelMessage notifychannelmessage;
-
-	@Autowired
-	private PinMessage pinmessage;
 
 	@Autowired
 	private StartMessage startmessage;
@@ -91,8 +86,7 @@ public class ChannelBot extends TelegramLongPollingBot {
 		try {
 			SendMessage sm = notifychannelmessage.getNotifyUpdate(c);
 			if (sm != null) {
-				Message msg = execute(sm);
-				execute(pinmessage.getUpdate(msg));
+				execute(sm);
 			}
 		} catch (TelegramApiException e) {
 			e.printStackTrace();
