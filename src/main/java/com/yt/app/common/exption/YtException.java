@@ -17,13 +17,18 @@ public class YtException extends RuntimeException {
 
 	private YtCodeEnum code;
 
+	public YtException(Throwable t) {
+		super(t.getMessage(), t);
+		this.code = YtCodeEnum.YT400;
+	}
+
 	public YtException(String msg, Throwable t) {
 		super(msg, t);
 	}
 
 	public YtException(String msg) {
 		super(msg);
-		this.code = YtCodeEnum.YT888;
+		this.code = YtCodeEnum.YT400;
 	}
 
 	public YtException(String msg, YtCodeEnum code) {

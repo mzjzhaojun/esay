@@ -40,7 +40,7 @@ public enum YtCodeEnum {
 	/**
 	 * 
 	 */
-	YT888(888, "提示");
+	YT400(400, "提示消息");
 
 	@EnumValue
 	private final Integer code;
@@ -70,7 +70,7 @@ public enum YtCodeEnum {
 				return itemEnum;
 			}
 		}
-		return YT888;
+		return YT400;
 	}
 
 }

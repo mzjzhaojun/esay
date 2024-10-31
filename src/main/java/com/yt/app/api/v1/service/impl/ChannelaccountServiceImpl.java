@@ -76,8 +76,8 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Transactional
 	public synchronized void totalincome(Channelaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
+		lock.lock();
 		try {
-			lock.lock();
 			Channelaccount ma = mapper.getByUserId(t.getUserid());
 			// 资金记录
 			Channelaccountrecord aaaj = new Channelaccountrecord();
@@ -113,8 +113,8 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Transactional
 	public synchronized void updateTotalincome(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
+		lock.lock();
 		try {
-			lock.lock();
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 
 			//
@@ -155,8 +155,8 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Transactional
 	public synchronized void turndownTotalincome(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
+		lock.lock();
 		try {
-			lock.lock();
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			Channelaccountrecord aaaj = new Channelaccountrecord();
@@ -191,8 +191,8 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Transactional
 	public synchronized void cancleTotalincome(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
+		lock.lock();
 		try {
-			lock.lock();
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			Channelaccountrecord aaaj = new Channelaccountrecord();
@@ -233,8 +233,8 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Transactional
 	public synchronized void withdrawamount(Channelaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
+		lock.lock();
 		try {
-			lock.lock();
 			Channelaccount ma = mapper.getByUserId(t.getUserid());
 			Channelaccountrecord aaaj = new Channelaccountrecord();
 
@@ -268,8 +268,8 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Transactional
 	public synchronized void updateWithdrawamount(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
+		lock.lock();
 		try {
-			lock.lock();
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			Channelaccountrecord aaaj = new Channelaccountrecord();
@@ -307,8 +307,8 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Transactional
 	public synchronized void turndownWithdrawamount(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
+		lock.lock();
 		try {
-			lock.lock();
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			Channelaccountrecord aaaj = new Channelaccountrecord();
@@ -344,8 +344,8 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Transactional
 	public synchronized void cancleWithdrawamount(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
+		lock.lock();
 		try {
-			lock.lock();
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			//
@@ -386,8 +386,8 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Transactional
 	public synchronized void exchangeamount(Channelaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
+		lock.lock();
 		try {
-			lock.lock();
 			Channelaccount ma = mapper.getByUserId(t.getUserid());
 			Channelaccountrecord aaaj = new Channelaccountrecord();
 
@@ -421,8 +421,8 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Transactional
 	public synchronized void updateexchangeamount(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
+		lock.lock();
 		try {
-			lock.lock();
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			Channelaccountrecord aaaj = new Channelaccountrecord();
@@ -460,8 +460,8 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Transactional
 	public synchronized void turndownexchangeamount(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
+		lock.lock();
 		try {
-			lock.lock();
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			Channelaccountrecord aaaj = new Channelaccountrecord();
@@ -497,8 +497,8 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	@Transactional
 	public synchronized void cancleexchangeamount(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
+		lock.lock();
 		try {
-			lock.lock();
 			Channelaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			//

@@ -116,8 +116,8 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	@Transactional
 	public synchronized void totalincome(Agentaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getAgentid());
+		lock.lock();
 		try {
-			lock.lock();
 			Agentaccount ma = mapper.getByUserId(t.getUserid());
 			// 资金记录
 			Agentaccountrecord aaaj = new Agentaccountrecord();
@@ -152,8 +152,8 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	@Transactional
 	public synchronized void updateTotalincome(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
+		lock.lock();
 		try {
-			lock.lock();
 			Agentaccount t = mapper.getByUserId(mao.getUserid());
 
 			//
@@ -192,8 +192,8 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	@Transactional
 	public synchronized void turndownTotalincome(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
+		lock.lock();
 		try {
-			lock.lock();
 			Agentaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			Agentaccountrecord aaaj = new Agentaccountrecord();
@@ -229,8 +229,8 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	@Transactional
 	public synchronized void cancleTotalincome(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
+		lock.lock();
 		try {
-			lock.lock();
 			Agentaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			Agentaccountrecord aaaj = new Agentaccountrecord();
@@ -271,8 +271,8 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	@Transactional
 	public synchronized void withdrawamount(Agentaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getAgentid());
+		lock.lock();
 		try {
-			lock.lock();
 			Agentaccount ma = mapper.getByUserId(t.getUserid());
 			Agentaccountrecord aaaj = new Agentaccountrecord();
 
@@ -307,8 +307,8 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	@Transactional
 	public synchronized void updateWithdrawamount(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
+		lock.lock();
 		try {
-			lock.lock();
 			Agentaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			Agentaccountrecord aaaj = new Agentaccountrecord();
@@ -347,8 +347,8 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	@Transactional
 	public synchronized void turndownWithdrawamount(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
+		lock.lock();
 		try {
-			lock.lock();
 			Agentaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			Agentaccountrecord aaaj = new Agentaccountrecord();
@@ -382,8 +382,8 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	@Transactional
 	public synchronized void cancleWithdrawamount(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
+		lock.lock();
 		try {
-			lock.lock();
 			Agentaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			Agentaccountrecord aaaj = new Agentaccountrecord();

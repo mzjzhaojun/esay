@@ -141,7 +141,6 @@ public class HandlerInterceptorForToken implements HandlerInterceptor {
 		}
 
 		if (CollectionUtil.isNotEmpty(authorizedRoleList)) {
-
 			List<String> roleCodeList = jwtUserBO.getRoleCodeList();
 			for (String roleCodeItem : roleCodeList) {
 				if (authorizedRoleList.contains(roleCodeItem)) {

@@ -283,8 +283,8 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	@Transactional
 	public YtBody tycallbackpay(SysTyOrder so) {
 		RLock lock = RedissonUtil.getLock(so.getTypay_order_id());
+		lock.lock();
 		try {
-			lock.lock();
 			Exchange pt = mapper.getByChannelOrdernum(so.getTypay_order_id());
 			if (pt == null)
 				return new YtBody("失败", 100);
@@ -493,8 +493,8 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	@Transactional
 	public void paySuccess(Exchange pt) {
 		RLock lock = RedissonUtil.getLock(pt.getId());
+		lock.lock();
 		try {
-			lock.lock();
 			Exchange t = mapper.get(pt.getId());
 			// 计算商户订单/////////////////////////////////////////////////////
 			ExchangeMerchantaccountorder mao = exchangemerchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
@@ -557,8 +557,8 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	@Transactional
 	public void payFail(Exchange t) {
 		RLock lock = RedissonUtil.getLock(t.getId());
+		lock.lock();
 		try {
-			lock.lock();
 			// 计算商户订单/////////////////////////////////////////////////////
 			ExchangeMerchantaccountorder mao = exchangemerchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
 			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);

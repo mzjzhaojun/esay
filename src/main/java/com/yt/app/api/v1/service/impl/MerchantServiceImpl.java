@@ -204,8 +204,8 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	@Transactional
 	public synchronized void updateInCome(PayoutMerchantaccount ma) {
 		RLock lock = RedissonUtil.getLock(ma.getMerchantid());
+		lock.lock();
 		try {
-			lock.lock();
 			Merchant m = mapper.get(ma.getMerchantid());
 			m.setBalance(ma.getBalance());
 			mapper.put(m);
@@ -219,8 +219,8 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	@Transactional
 	public synchronized void updatePayout(Payout t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
+		lock.lock();
 		try {
-			lock.lock();
 			Merchant m = mapper.get(t.getMerchantid());
 			PayoutMerchantaccount ma = merchantaccountmapper.getByUserId(m.getUserid());
 			m.setCount(m.getCount() + t.getAmount());// 总量不包含手续费和交易费
@@ -245,8 +245,8 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	@Transactional
 	public synchronized void withdrawamount(PayoutMerchantaccount ma) {
 		RLock lock = RedissonUtil.getLock(ma.getMerchantid());
+		lock.lock();
 		try {
-			lock.lock();
 			Merchant m = mapper.get(ma.getMerchantid());
 			m.setBalance(ma.getBalance());
 			mapper.put(m);
@@ -260,8 +260,8 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	@Transactional
 	public synchronized void withdrawamount(Incomemerchantaccount ma) {
 		RLock lock = RedissonUtil.getLock(ma.getMerchantid());
+		lock.lock();
 		try {
-			lock.lock();
 			Merchant m = mapper.get(ma.getMerchantid());
 			m.setBalance(ma.getBalance());
 			mapper.put(m);
@@ -275,8 +275,8 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	@Transactional
 	public synchronized void updateExchange(Exchange t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
+		lock.lock();
 		try {
-			lock.lock();
 			Merchant m = mapper.get(t.getMerchantid());
 			ExchangeMerchantaccount ma = exchangemerchantaccountmapper.getByUserId(m.getUserid());
 			m.setUsdtbalance(ma.getBalance());
@@ -291,8 +291,8 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	@Transactional
 	public synchronized void updateInComeUsdt(ExchangeMerchantaccount t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
+		lock.lock();
 		try {
-			lock.lock();
 			Merchant m = mapper.get(t.getMerchantid());
 			m.setUsdtbalance(t.getBalance());
 			mapper.put(m);
@@ -307,8 +307,8 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	@Transactional
 	public synchronized void withdrawamountUsdt(ExchangeMerchantaccount t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
+		lock.lock();
 		try {
-			lock.lock();
 			Merchant m = mapper.get(t.getMerchantid());
 			m.setUsdtbalance(t.getBalance());
 			mapper.put(m);
@@ -322,8 +322,8 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	@Transactional
 	public synchronized void updateIncome(Income t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
+		lock.lock();
 		try {
-			lock.lock();
 			Merchant m = mapper.get(t.getMerchantid());
 			Incomemerchantaccount ma = incomemerchantaccountmapper.getByUserId(m.getUserid());
 			m.setCount(m.getCount() + t.getMerchantincomeamount());
@@ -340,8 +340,8 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	@Transactional
 	public void updateDayValue(Merchant m, String date) {
 		RLock lock = RedissonUtil.getLock(m.getId());
+		lock.lock();
 		try {
-			lock.lock();
 			TenantIdContext.setTenantId(m.getTenant_id());
 			// 插入报表数据
 			Merchantstatisticalreports msr = new Merchantstatisticalreports();

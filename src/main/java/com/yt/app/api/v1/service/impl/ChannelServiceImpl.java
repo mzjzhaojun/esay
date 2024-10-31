@@ -142,8 +142,8 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	@Transactional
 	public synchronized void updatePayout(Payout t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
+		lock.lock();
 		try {
-			lock.lock();
 			Channel c = mapper.get(t.getChannelid());
 			c.setBalance(c.getBalance() - t.getChannelpay());
 			mapper.put(c);
@@ -157,8 +157,8 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	@Transactional
 	public synchronized void updateIncome(Channelaccount t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
+		lock.lock();
 		try {
-			lock.lock();
 			Channel a = mapper.get(t.getChannelid());
 			a.setBalance(t.getBalance());
 			mapper.put(a);
@@ -172,8 +172,8 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	@Transactional
 	public synchronized void withdrawamount(Channelaccount t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
+		lock.lock();
 		try {
-			lock.lock();
 			Channel a = mapper.get(t.getChannelid());
 			a.setBalance(t.getBalance());
 			mapper.put(a);
@@ -186,8 +186,8 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	@Override
 	public synchronized void updateExchange(Exchange t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
+		lock.lock();
 		try {
-			lock.lock();
 			Channel c = mapper.get(t.getChannelid());
 			c.setBalance(c.getBalance() - t.getChannelpay());
 			mapper.put(c);
@@ -200,9 +200,8 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	@Override
 	public Integer getRemotebalance(Long id) {
 		RLock lock = RedissonUtil.getLock(id);
+		lock.lock();
 		Integer i = 0;
-		try {
-			lock.lock();
 			Channel cl = mapper.get(id);
 			String balance = null;
 			switch (cl.getName()) {
@@ -247,10 +246,6 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 				break;
 			}
 			i = mapper.put(cl);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
 		return i;
 	}
 
@@ -265,8 +260,8 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	@Transactional
 	public synchronized void updateIncome(Income t) {
 		RLock lock = RedissonUtil.getLock(t.getQrcodeid());
+		lock.lock();
 		try {
-			lock.lock();
 			Channel m = mapper.get(t.getQrcodeid());
 			Qrcodeaccount ma = qrcodeaccountmapper.getByUserId(m.getUserid());
 			m.setCount(m.getCount() + t.getChannelincomeamount());
@@ -285,8 +280,8 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	@Transactional
 	public void updateDayValue(Channel c, String date) {
 		RLock lock = RedissonUtil.getLock(c.getId());
+		lock.lock();
 		try {
-			lock.lock();
 			TenantIdContext.setTenantId(c.getTenant_id());
 			// 插入报表数据
 			Channelstatisticalreports csr = new Channelstatisticalreports();

@@ -20,22 +20,22 @@ public class ExptionAdvice {
 	@ExceptionHandler(RuntimeException.class)
 	public YtBody handleRuntimeException(RuntimeException e) {
 		if (e instanceof HttpMessageConversionException) {
-			log.error("HttpMessageConversionException:", e.getMessage(), e);
+			log.info("HttpMessageConversionException:", e.getMessage(), e);
 			return new YtBody(e.getMessage(), YtCodeEnum.YT500.getCode());
 		} else if (e instanceof NotLoginException) {
-			log.error("NotLoginException :", e.getMessage(), e);
+			log.info("NotLoginException :", e.getMessage(), e);
 			return new YtBody(e.getMessage(), YtCodeEnum.YT401.getCode());
 		} else if (e instanceof YtException) {
-			log.error("MyException :", e.getMessage(), e);
+			log.info("MyException :", e.getMessage(), e);
 			return new YtBody(e.getMessage(), ((YtException) e).getCode().getCode());
 		}
-		log.error("msg:", e.getMessage(), e);
-		return new YtBody(e.getMessage(), YtCodeEnum.YT888.getCode());
+		log.info("msg:", e.getMessage(), e);
+		return new YtBody(e.getMessage(), YtCodeEnum.YT400.getCode());
 	}
 
 	@ExceptionHandler(Exception.class)
 	public YtBody handleException(Exception e) {
-		log.error("Exception:" + e.getMessage(), e);
+		log.info("Exception:" + e.getMessage(), e);
 		return new YtBody("Exception:" + e.getMessage(), YtCodeEnum.YT500.getCode());
 	}
 }

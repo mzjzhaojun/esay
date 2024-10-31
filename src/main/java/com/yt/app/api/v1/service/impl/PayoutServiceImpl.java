@@ -282,8 +282,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Transactional
 	public YtBody tycallbackpay(SysTyOrder so) {
 		RLock lock = RedissonUtil.getLock(so.getTypay_order_id());
+		lock.lock();
 		try {
-			lock.lock();
 			Payout pt = mapper.getByOrdernum(so.getMerchant_order_id());
 			if (pt != null) {
 				SysUserContext.setUserId(pt.getUserid());
@@ -528,8 +528,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Transactional
 	public void paySuccess(Payout pt) {
 		RLock lock = RedissonUtil.getLock(pt.getId());
+		lock.lock();
 		try {
-			lock.lock();
 			Payout t = mapper.get(pt.getId());
 			if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51)) {
 				// 计算商户订单/////////////////////////////////////////////////////
@@ -601,8 +601,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Transactional
 	public void payFail(Payout pt) {
 		RLock lock = RedissonUtil.getLock(pt.getId());
+		lock.lock();
 		try {
-			lock.lock();
 			Payout t = mapper.get(pt.getId());
 			if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51)) {
 				// 计算商户订单/////////////////////////////////////////////////////

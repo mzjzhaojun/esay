@@ -478,11 +478,11 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setCollection(mqd.getCollection());
 		// 计算当前码可生成的订单
 		RLock lock = RedissonUtil.getLock(qd.getId());
+		lock.lock();
 		Integer i = 0;
 		income.setType(qd.getType());
 		income.setRemark("新增代收资金￥：" + income.getAmount());
 		try {
-			lock.lock();
 			if (qd.getDynamic()) {
 				income.setFewamount(0.00);
 				income.setRealamount(income.getAmount());
