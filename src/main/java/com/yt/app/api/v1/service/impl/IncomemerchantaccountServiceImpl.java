@@ -326,4 +326,43 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			lock.unlock();
 		}
 	}
+	
+	
+	// 提现失败
+		@Override
+		@Transactional
+		public synchronized void cancelWithdrawamount(PayoutMerchantaccountorder mao) {
+			RLock lock = RedissonUtil.getLock(mao.getMerchantid());
+			try {
+				lock.lock();
+				Incomemerchantaccount t = mapper.getByUserId(mao.getUserid());
+				//
+				PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
+				maaj.setUserid(t.getUserid());
+				maaj.setMerchantname(mao.getUsername());
+				maaj.setOrdernum(mao.getOrdernum());
+				maaj.setType(DictionaryResource.RECORDTYPE_37);
+
+				// 变更前
+				maaj.setPretotalincome(t.getTotalincome());// 总收入
+				maaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
+				maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
+				maaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
+				// 变更后
+				maaj.setPosttotalincome(t.getTotalincome());// 总收入
+				maaj.setPosttoincomeamount(0.00);// 确认收入
+				maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
+				maaj.setPosttowithdrawamount(0.00);// 确认支出
+				maaj.setRemark("取消提现￥：" + String.format("%.2f", mao.getAmountreceived()));
+				//
+				payoutmerchantaccountrecordmapper.post(maaj);
+
+				t.setTowithdrawamount(maaj.getPretowithdrawamount());
+				t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
+				mapper.put(t);
+			} catch (Exception e) {
+			} finally {
+				lock.unlock();
+			}
+		}
 }

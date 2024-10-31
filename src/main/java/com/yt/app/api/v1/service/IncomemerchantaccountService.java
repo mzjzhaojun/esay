@@ -39,8 +39,17 @@ public interface IncomemerchantaccountService extends YtIBaseService<Incomemerch
 	 */
 	void cancleTotalincome(Incomemerchantaccountorder mao);
 
+	/**
+	 * 
+	 * @return
+	 */
 	Incomemerchantaccount getData();
 
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	Incomemerchantaccount getDataBank(Long id);
 
 	/**
@@ -63,4 +72,12 @@ public interface IncomemerchantaccountService extends YtIBaseService<Incomemerch
 	 * @param t
 	 */
 	void turndownWithdrawamount(PayoutMerchantaccountorder mao);
+	
+	/**
+	 * 取消
+	 * 
+	 * @param t
+	 */
+	void cancelWithdrawamount(PayoutMerchantaccountorder mao);
+	
 }

@@ -66,7 +66,7 @@ public class PayoutMerchantaccountorderController extends YtBaseEncipherControll
 
 	/**
 	 * 
-	 * 代付提现
+	 * 提现
 	 * 
 	 * @version 1.1
 	 */
@@ -83,7 +83,7 @@ public class PayoutMerchantaccountorderController extends YtBaseEncipherControll
 	 */
 	@RequestMapping(value = "/canclewithdraw/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> canclewithdraw(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
-		Object t = service.cancleWithdraw(id);
+		Integer t = service.cancleWithdraw(id);
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}
 
@@ -125,6 +125,17 @@ public class PayoutMerchantaccountorderController extends YtBaseEncipherControll
 	public YtResponseEncryptEntity<Object> incomewithdraw(YtRequestDecryptEntity<PayoutMerchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.incomewithdraw(YtRequestDecryptEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
+	}
+
+	/**
+	 * 取消提现
+	 * 
+	 * @version 1.1
+	 */
+	@RequestMapping(value = "/incomecanclewithdraw/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> incomecanclewithdraw(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+		Integer t = service.incomecancleWithdraw(id);
+		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}
 
 	/**

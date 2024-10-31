@@ -334,8 +334,9 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 		t.setMerchantcode(m.getCode());
 		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
 		t.setExchange(t.getMerchantexchange());
+		t.setMerchantexchange(t.getMerchantexchange() + m.getIncomedownpoint());
 		t.setAmountreceived((t.getAmount()));
-		t.setUsdtval(t.getAmount() / t.getMerchantexchange());
+		t.setUsdtval(t.getAmount() / t.getExchange());
 		t.setType(DictionaryResource.ORDERTYPE_28);
 		t.setOrdernum("DS" + StringUtil.getOrderNum());
 		t.setRemark("商户代收提现￥：" + String.format("%.2f", t.getAmountreceived()));
@@ -345,6 +346,28 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 		incomemerchantaccountservice.withdrawamount(t);
 		//
 		return i;
+	}
+
+	/**
+	 * 提现取消
+	 */
+	@Override
+	@Transactional
+	public Integer incomecancleWithdraw(Long id) {
+		RLock lock = RedissonUtil.getLock(id);
+		try {
+			lock.lock();
+			PayoutMerchantaccountorder mao = mapper.get(id);
+			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_13);
+			Integer i = mapper.put(mao);
+			//
+			incomemerchantaccountservice.cancelWithdrawamount(mao);
+			return i;
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+		return 0;
 	}
 
 	@Override

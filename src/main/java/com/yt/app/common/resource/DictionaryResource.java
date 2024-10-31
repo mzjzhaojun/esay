@@ -54,13 +54,13 @@ public class DictionaryResource implements Serializable {
 	/**
 	 * 订单类型类型
 	 */
-	public static final Integer ORDERTYPE_20 = 20; // 代付充值
-	public static final Integer ORDERTYPE_21 = 21; // 代付提现
+	public static final Integer ORDERTYPE_20 = 20; // 充值
+	public static final Integer ORDERTYPE_21 = 21; // 提现
 	public static final Integer ORDERTYPE_22 = 22; // 换汇
 	public static final Integer ORDERTYPE_23 = 23; // 代付
-	public static final Integer ORDERTYPE_24 = 24; // 换汇充值
-	public static final Integer ORDERTYPE_25 = 25; // 换汇提现
-	public static final Integer ORDERTYPE_26 = 26; // 代理提现
+	public static final Integer ORDERTYPE_24 = 24; // 充值
+	public static final Integer ORDERTYPE_25 = 25; // 提现
+	public static final Integer ORDERTYPE_26 = 26; // 提现
 	public static final Integer ORDERTYPE_27 = 27; // 代收
 	public static final Integer ORDERTYPE_28 = 28; // 代收提现
 
