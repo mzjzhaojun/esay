@@ -56,7 +56,7 @@ public class AuthUtil {
 		// 将登录信息存储到redis
 		RedisUtil.setEx(JWT_USER_KEY + tokenValue, JSONUtil.toJsonStr(jwtUserBO), timeout, TimeUnit.SECONDS);
 
-		return AuthLoginVO.builder().tokenName(StpUtil.getTokenName()).userid(userId).tokenValue(tokenValue).tenantId(jwtUserBO.getTenantId()).build();
+		return AuthLoginVO.builder().tokenName(StpUtil.getTokenName()).userid(userId).tokenValue(tokenValue).tenantId(jwtUserBO.getTenantId()).accounttype(jwtUserBO.getAccounttype()).build();
 	}
 
 	/**

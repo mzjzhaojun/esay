@@ -280,7 +280,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(t.getUsername());
 			maaj.setOrdernum(t.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_90);
+			maaj.setType(DictionaryResource.RECORDTYPE_34);
 			// 变更前
 			maaj.setPretotalincome(ma.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
@@ -321,7 +321,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_91);
+			maaj.setType(DictionaryResource.RECORDTYPE_35);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -359,7 +359,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_92);
+			maaj.setType(DictionaryResource.RECORDTYPE_36);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -397,7 +397,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_93);
+			maaj.setType(DictionaryResource.RECORDTYPE_37);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -635,7 +635,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(t.getUsername());
 			maaj.setOrdernum(t.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_94);
+			maaj.setType(DictionaryResource.RECORDTYPE_34);
 			// 变更前
 			maaj.setPretotalincome(ma.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
@@ -672,7 +672,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_95);
+			maaj.setType(DictionaryResource.RECORDTYPE_35);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -711,7 +711,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_96);
+			maaj.setType(DictionaryResource.RECORDTYPE_36);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -751,7 +751,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_97);
+			maaj.setType(DictionaryResource.RECORDTYPE_37);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入

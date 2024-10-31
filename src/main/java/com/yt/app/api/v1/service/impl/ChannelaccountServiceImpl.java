@@ -394,7 +394,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			aaaj.setUserid(t.getUserid());
 			aaaj.setChannelname(t.getChannelname());
 			aaaj.setOrdernum(t.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_94);
+			aaaj.setType(DictionaryResource.RECORDTYPE_34);
 			// 变更前
 			aaaj.setPretotalincome(ma.getTotalincome());// 总收入
 			aaaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
@@ -430,7 +430,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			aaaj.setUserid(t.getUserid());
 			aaaj.setChannelname(mao.getChannelname());
 			aaaj.setOrdernum(mao.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_95);
+			aaaj.setType(DictionaryResource.RECORDTYPE_35);
 
 			// 变更前
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -468,7 +468,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			aaaj.setUserid(t.getUserid());
 			aaaj.setChannelname(mao.getChannelname());
 			aaaj.setOrdernum(mao.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_96);
+			aaaj.setType(DictionaryResource.RECORDTYPE_36);
 
 			// 变更前
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -506,7 +506,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			aaaj.setUserid(t.getUserid());
 			aaaj.setChannelname(mao.getChannelname());
 			aaaj.setOrdernum(mao.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_97);
+			aaaj.setType(DictionaryResource.RECORDTYPE_37);
 
 			// 变更前
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入

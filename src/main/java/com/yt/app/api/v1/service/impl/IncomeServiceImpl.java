@@ -710,7 +710,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setRealamount(income.getAmount());
 		income.setCollection(mc.getCollection());
 		income.setExchange(channel.getCollection());
-		income.setType(DictionaryResource.PROJECT_TYPE_512.toString());
+		income.setType(DictionaryResource.ORDERTYPE_27.toString());
 		income.setRemark("新增代收资金￥：" + income.getAmount());
 		int i = mapper.post(income);
 		if (i == 0) {

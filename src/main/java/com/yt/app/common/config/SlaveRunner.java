@@ -31,23 +31,7 @@ public class SlaveRunner implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		log.info("slave start...");
 		TronGetAddressThread5 t1 = new TronGetAddressThread5();
-		TronGetAddressThread5 t2 = new TronGetAddressThread5();
-		TronGetAddressThread5 t3 = new TronGetAddressThread5();
-		TronGetAddressThread5 t4 = new TronGetAddressThread5();
-		TronGetAddressThread5 t5 = new TronGetAddressThread5();
-		TronGetAddressThread5 t6 = new TronGetAddressThread5();
-		TronGetAddressThread5 t7 = new TronGetAddressThread5();
-		TronGetAddressThread5 t8 = new TronGetAddressThread5();
-		TronGetAddressThread5 t9 = new TronGetAddressThread5();
 		threadpooltaskexecutor.execute(t1);
-		threadpooltaskexecutor.execute(t2);
-		threadpooltaskexecutor.execute(t3);
-		threadpooltaskexecutor.execute(t4);
-		threadpooltaskexecutor.execute(t5);
-		threadpooltaskexecutor.execute(t6);
-		threadpooltaskexecutor.execute(t7);
-		threadpooltaskexecutor.execute(t8);
-		threadpooltaskexecutor.execute(t9);
 		log.info("slave end...");
 	}
 }

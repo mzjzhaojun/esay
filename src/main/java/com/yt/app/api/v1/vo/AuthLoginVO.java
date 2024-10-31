@@ -23,5 +23,7 @@ public class AuthLoginVO {
 	private Long tenantId;
 	
 	private Long userid;
+	
+	private Long accounttype;
 
 }

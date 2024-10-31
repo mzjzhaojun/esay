@@ -280,7 +280,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(t.getUsername());
 			maaj.setOrdernum(t.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_90);
+			maaj.setType(DictionaryResource.RECORDTYPE_34);
 			// 变更前
 			maaj.setPretotalincome(ma.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
@@ -321,7 +321,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_91);
+			maaj.setType(DictionaryResource.RECORDTYPE_35);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -359,7 +359,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_92);
+			maaj.setType(DictionaryResource.RECORDTYPE_36);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -397,7 +397,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getUsername());
 			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_93);
+			maaj.setType(DictionaryResource.RECORDTYPE_37);
 
 			// 变更前
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -618,161 +618,5 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 		}
 	}
 
-	/**
-	 * =============================================================换汇
-	 * 
-	 */
-	// 待确认代付
-	@Override
-	@Transactional
-	public synchronized void exchange(PayoutMerchantaccountorder t) {
-		RLock lock = RedissonUtil.getLock(t.getMerchantid());
-		try {
-			lock.lock();
-			PayoutMerchantaccount ma = mapper.getByUserId(t.getUserid());
-			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
-
-			maaj.setUserid(t.getUserid());
-			maaj.setMerchantname(t.getUsername());
-			maaj.setOrdernum(t.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_94);
-			// 变更前
-			maaj.setPretotalincome(ma.getTotalincome());// 总收入
-			maaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
-			maaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
-			maaj.setPretowithdrawamount(ma.getTowithdrawamount() + t.getAmountreceived());// 待确认支出
-			// 变更后
-			maaj.setPosttotalincome(ma.getTotalincome());// 总收入
-			maaj.setPosttoincomeamount(0.00);// 确认收入
-			maaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
-			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("换汇待确认￥：" + String.format("%.2f", t.getAmountreceived()));
-			//
-			merchantaccountapplyjournalmapper.post(maaj);
-			ma.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出金额
-			ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
-			mapper.put(ma);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	// 确认代付
-	@Override
-	@Transactional
-	public synchronized void updateExchange(PayoutMerchantaccountorder mao) {
-		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		try {
-			lock.lock();
-			PayoutMerchantaccount t = mapper.getByUserId(mao.getUserid());
-			//
-			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
-			//
-			maaj.setUserid(t.getUserid());
-			maaj.setMerchantname(mao.getUsername());
-			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_95);
-
-			// 变更前
-			maaj.setPretotalincome(t.getTotalincome());// 总收入
-			maaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
-			maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			maaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
-			// 变更后
-			maaj.setPosttotalincome(t.getTotalincome());// 总收入
-			maaj.setPosttoincomeamount(0.00);// 确认收入
-			maaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());// 总支出
-			maaj.setPosttowithdrawamount(mao.getAmountreceived());// 确认支出
-			maaj.setRemark("换汇成功￥：" + String.format("%.2f", mao.getAmountreceived()));
-			//
-			merchantaccountapplyjournalmapper.post(maaj);
-			//
-			t.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
-			t.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
-			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
-			mapper.put(t);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	// 拒绝代付
-	@Override
-	@Transactional
-	public synchronized void turndownExchange(PayoutMerchantaccountorder mao) {
-		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		try {
-			lock.lock();
-			PayoutMerchantaccount t = mapper.getByUserId(mao.getUserid());
-			//
-			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
-			maaj.setUserid(t.getUserid());
-			maaj.setMerchantname(mao.getUsername());
-			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_96);
-
-			// 变更前
-			maaj.setPretotalincome(t.getTotalincome());// 总收入
-			maaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
-			maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			maaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
-			// 变更后
-			maaj.setPosttotalincome(t.getTotalincome());// 总收入
-			maaj.setPosttoincomeamount(0.00);// 确认收入
-			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("换汇失败￥：" + String.format("%.2f", mao.getAmountreceived()));
-			//
-			merchantaccountapplyjournalmapper.post(maaj);
-			t.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
-			t.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
-			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
-			mapper.put(t);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	// 取消代付
-	@Override
-	@Transactional
-	public synchronized void cancleExchange(PayoutMerchantaccountorder mao) {
-		//
-		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		try {
-			lock.lock();
-			PayoutMerchantaccount t = mapper.getByUserId(mao.getUserid());
-			//
-			//
-			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
-			maaj.setUserid(t.getUserid());
-			maaj.setMerchantname(mao.getUsername());
-			maaj.setOrdernum(mao.getOrdernum());
-			maaj.setType(DictionaryResource.RECORDTYPE_97);
-
-			// 变更前
-			maaj.setPretotalincome(t.getTotalincome());// 总收入
-			maaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
-			maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			maaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
-			// 变更后
-			maaj.setPosttotalincome(t.getTotalincome());// 总收入
-			maaj.setPosttoincomeamount(0.00);// 确认收入
-			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("取消换汇￥：" + String.format("%.2f", mao.getAmountreceived()));
-			//
-			merchantaccountapplyjournalmapper.post(maaj);
-			t.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
-			t.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
-			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
-			mapper.put(t);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
+	
 }

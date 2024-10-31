@@ -80,21 +80,6 @@ public class DictionaryResource implements Serializable {
 	public static final Integer RECORDTYPE_37 = 37; // 支出取消
 
 	/**
-	 * 换汇资金明细类型
-	 */
-	public static final Integer RECORDTYPE_90 = 90; // 提现待确认
-	public static final Integer RECORDTYPE_91 = 91; // 提现成功
-
-	public static final Integer RECORDTYPE_92 = 92; // 提现失败
-	public static final Integer RECORDTYPE_93 = 93; // 提现取消
-
-	public static final Integer RECORDTYPE_94 = 94; // 换汇待确认
-	public static final Integer RECORDTYPE_95 = 95; // 换汇成功
-
-	public static final Integer RECORDTYPE_96 = 96; // 换汇失败
-	public static final Integer RECORDTYPE_97 = 97; // 换汇取消
-
-	/**
 	 * 银行卡类型
 	 */
 	public static final Integer BANKCARDTYPE_40 = 40; // 数字币usdt
@@ -162,6 +147,7 @@ public class DictionaryResource implements Serializable {
 	public static final Integer LOG_TYPE_201 = 201; // web
 	public static final Integer LOG_TYPE_202 = 202; // app
 
+	//项目类型
 	public static final Integer PROJECT_TYPE_501 = 501;
 	public static final Integer PROJECT_TYPE_502 = 502;
 	public static final Integer PROJECT_TYPE_503 = 503;
@@ -173,7 +159,6 @@ public class DictionaryResource implements Serializable {
 	public static final Integer PROJECT_TYPE_509 = 509;
 	public static final Integer PROJECT_TYPE_510 = 510;
 	public static final Integer PROJECT_TYPE_511 = 511;
-	public static final Integer PROJECT_TYPE_512 = 512;
 
 	// 兑换类型
 	public static final Integer EXCHANGE_TYPE_601 = 601;

@@ -279,7 +279,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(t.getUsername());
 			aaaj.setOrdernum(t.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_90);
+			aaaj.setType(DictionaryResource.RECORDTYPE_34);
 			// 变更前
 			aaaj.setPretotalincome(ma.getTotalincome());// 总收入
 			aaaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
@@ -316,7 +316,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(mao.getUsername());
 			aaaj.setOrdernum(mao.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_91);
+			aaaj.setType(DictionaryResource.RECORDTYPE_35);
 
 			// 变更前
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -355,7 +355,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(mao.getUsername());
 			aaaj.setOrdernum(mao.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_92);
+			aaaj.setType(DictionaryResource.RECORDTYPE_36);
 
 			// 变更前
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
@@ -390,7 +390,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setUserid(t.getUserid());
 			aaaj.setAgentname(mao.getUsername());
 			aaaj.setOrdernum(mao.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_93);
+			aaaj.setType(DictionaryResource.RECORDTYPE_37);
 
 			// 变更前
 			aaaj.setPretotalincome(t.getTotalincome());// 总收入
