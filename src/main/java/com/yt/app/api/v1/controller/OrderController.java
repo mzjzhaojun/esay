@@ -40,7 +40,7 @@ import com.yt.app.common.util.RequestUtil;
 
 @RestController
 @RequestMapping("/rest/v1/order")
-public class OrderController {
+public class OrderController{
 
 	@Autowired
 	private PayoutService service;
@@ -81,9 +81,9 @@ public class OrderController {
 	public YtResponseEntity<Object> submit(YtRequestEntity<PaySubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		PaySubmitDTO psdto = requestEntity.getBody();
 		RLock lock = RedissonUtil.getLock(psdto.getMerchantid());
-		lock.lock();
 		PayResultVO sr = null;
 		try {
+			lock.lock();
 			sr = service.submit(psdto);
 		} catch (Exception e) {
 			throw new YtException(e);
@@ -112,8 +112,8 @@ public class OrderController {
 		QrcodeSubmitDTO qsdto = requestEntity.getBody();
 		RLock lock = RedissonUtil.getLock(qsdto.getPay_memberid());
 		QrcodeResultVO yb = null;
-		lock.lock();
 		try {
+			lock.lock();
 			yb = incomeservice.submitQrcode(qsdto);
 		} catch (Exception e) {
 			throw new YtException(e);
@@ -136,8 +136,8 @@ public class OrderController {
 		QrcodeSubmitDTO qsdto = requestEntity.getBody();
 		RLock lock = RedissonUtil.getLock(qsdto.getPay_memberid());
 		QrcodeResultVO yb = null;
-		lock.lock();
 		try {
+			lock.lock();
 			yb = incomeservice.submitInCome(qsdto);
 		} catch (Exception e) {
 			throw new YtException(e);

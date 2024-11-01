@@ -127,8 +127,8 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 	@Transactional
 	public void updateWithdraw(Agentaccount t) {
 		RLock lock = RedissonUtil.getLock(t.getAgentid());
-		lock.lock();
 		try {
+			lock.lock();
 			Agent a = mapper.get(t.getAgentid());
 			a.setBalance(t.getBalance());
 			mapper.put(a);
@@ -142,8 +142,8 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 	@Transactional
 	public void updatePayout(Payout t) {
 		RLock lock = RedissonUtil.getLock(t.getAgentid());
-		lock.lock();
 		try {
+			lock.lock();
 			Agent a = mapper.get(t.getAgentid());
 			a.setBalance(a.getBalance() + t.getAgentincome());
 			mapper.put(a);
@@ -157,8 +157,8 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 	@Transactional
 	public void updateIncome(Income t) {
 		RLock lock = RedissonUtil.getLock(t.getAgentid());
-		lock.lock();
 		try {
+			lock.lock();
 			Agent a = mapper.get(t.getAgentid());
 			a.setBalance(a.getBalance() + t.getAgentincome());
 			mapper.put(a);
@@ -172,8 +172,8 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 	@Transactional
 	public void updateExchange(Exchange t) {
 		RLock lock = RedissonUtil.getLock(t.getAgentid());
-		lock.lock();
 		try {
+			lock.lock();
 			Agent a = mapper.get(t.getAgentid());
 			a.setBalance(a.getBalance() + t.getAgentincome());
 			mapper.put(a);

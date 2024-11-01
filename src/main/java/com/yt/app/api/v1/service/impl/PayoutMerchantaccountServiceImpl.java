@@ -114,8 +114,8 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	@Transactional
 	public synchronized void totalincome(PayoutMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			PayoutMerchantaccount ma = mapper.getByUserId(t.getUserid());
 			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
 
@@ -152,8 +152,8 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	@Transactional
 	public synchronized void updateTotalincome(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			PayoutMerchantaccount t = mapper.getByUserId(mao.getUserid());
 
 			//
@@ -193,8 +193,8 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	@Transactional
 	public synchronized void turndownTotalincome(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			PayoutMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
@@ -230,8 +230,8 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	@Transactional
 	public synchronized void cancleTotalincome(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			PayoutMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
@@ -272,8 +272,8 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	@Transactional
 	public synchronized void withdrawamount(PayoutMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			PayoutMerchantaccount ma = mapper.getByUserId(t.getUserid());
 			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
 
@@ -312,8 +312,8 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	@Transactional
 	public synchronized void updateWithdrawamount(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			PayoutMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
@@ -351,8 +351,8 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	@Transactional
 	public synchronized void turndownWithdrawamount(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			PayoutMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
@@ -388,8 +388,8 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	@Transactional
 	public synchronized void cancleWithdrawamount(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			PayoutMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			//
@@ -430,8 +430,8 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	@Transactional
 	public synchronized void payout(PayoutMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			PayoutMerchantaccount ma = mapper.getByUserId(t.getUserid());
 			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
 
@@ -466,8 +466,8 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	@Transactional
 	public synchronized void updatePayout(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			PayoutMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
@@ -506,8 +506,8 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	@Transactional
 	public synchronized void turndownPayout(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			PayoutMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
@@ -544,8 +544,8 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	@Transactional
 	public synchronized void failPayout(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			PayoutMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
@@ -584,8 +584,8 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	public synchronized void canclePayout(PayoutMerchantaccountorder mao) {
 		//
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			PayoutMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			//

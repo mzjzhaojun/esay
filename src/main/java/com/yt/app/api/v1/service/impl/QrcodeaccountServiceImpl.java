@@ -71,8 +71,8 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 	@Transactional
 	public synchronized void totalincome(Qrcodeaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
-		lock.lock();
 		try {
+			lock.lock();
 			Qrcodeaccount ma = mapper.getByUserId(t.getUserid());
 			Qrcodeaccountrecord maaj = new Qrcodeaccountrecord();
 
@@ -109,8 +109,8 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 	@Transactional
 	public synchronized void updateTotalincome(Qrcodeaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
-		lock.lock();
 		try {
+			lock.lock();
 			Qrcodeaccount t = mapper.getByUserId(mao.getUserid());
 
 			//
@@ -148,8 +148,8 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 	@Transactional
 	public synchronized void cancleTotalincome(Qrcodeaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
-		lock.lock();
 		try {
+			lock.lock();
 			Qrcodeaccount t = mapper.getByUserId(mao.getUserid());
 
 			//

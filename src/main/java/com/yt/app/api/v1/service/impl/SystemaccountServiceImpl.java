@@ -82,8 +82,8 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	@Transactional
 	public synchronized void updateTotalincome(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
-		lock.lock();
 		try {
+			lock.lock();
 			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
 			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
@@ -111,8 +111,8 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	@Transactional
 	public synchronized void updateWithdrawamount(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
-		lock.lock();
 		try {
+			lock.lock();
 			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
 			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
@@ -140,8 +140,8 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	@Transactional
 	public synchronized void updatePayout(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
-		lock.lock();
 		try {
+			lock.lock();
 			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
 			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
@@ -170,8 +170,8 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	@Transactional
 	public synchronized void updateWithdrawamount(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
-		lock.lock();
 		try {
+			lock.lock();
 			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
 			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
@@ -199,8 +199,8 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	@Transactional
 	public synchronized void updateExchange(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
-		lock.lock();
 		try {
+			lock.lock();
 			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
 			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
@@ -229,8 +229,8 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	@Transactional
 	public synchronized void updateUsdtTotalincome(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
-		lock.lock();
 		try {
+			lock.lock();
 			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
 
 			Systemaccountrecord scr = new Systemaccountrecord();
@@ -262,8 +262,8 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	@Transactional
 	public synchronized void updateUsdtWithdrawamount(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
-		lock.lock();
 		try {
+			lock.lock();
 			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
 			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
@@ -291,8 +291,8 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	@Transactional
 	public synchronized void updateIncome(Income mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
-		lock.lock();
 		try {
+			lock.lock();
 			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
 			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());

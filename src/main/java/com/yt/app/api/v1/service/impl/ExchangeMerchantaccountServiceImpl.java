@@ -114,8 +114,8 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	@Transactional
 	public synchronized void totalincome(ExchangeMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			ExchangeMerchantaccount ma = mapper.getByUserId(t.getUserid());
 			ExchangeMerchantaccountrecord maaj = new ExchangeMerchantaccountrecord();
 
@@ -152,8 +152,8 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	@Transactional
 	public synchronized void updateTotalincome(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 
 			//
@@ -193,8 +193,8 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	@Transactional
 	public synchronized void turndownTotalincome(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			ExchangeMerchantaccountrecord maaj = new ExchangeMerchantaccountrecord();
@@ -230,8 +230,8 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	@Transactional
 	public synchronized void cancleTotalincome(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			ExchangeMerchantaccountrecord maaj = new ExchangeMerchantaccountrecord();
@@ -272,8 +272,8 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	@Transactional
 	public synchronized void withdrawamount(ExchangeMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			ExchangeMerchantaccount ma = mapper.getByUserId(t.getUserid());
 			ExchangeMerchantaccountrecord maaj = new ExchangeMerchantaccountrecord();
 
@@ -312,8 +312,8 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	@Transactional
 	public synchronized void updateWithdrawamount(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			ExchangeMerchantaccountrecord maaj = new ExchangeMerchantaccountrecord();
@@ -351,8 +351,8 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	@Transactional
 	public synchronized void turndownWithdrawamount(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			ExchangeMerchantaccountrecord maaj = new ExchangeMerchantaccountrecord();
@@ -388,8 +388,8 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	@Transactional
 	public synchronized void cancleWithdrawamount(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			//
@@ -430,8 +430,8 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	@Transactional
 	public synchronized void payout(ExchangeMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			ExchangeMerchantaccount ma = mapper.getByUserId(t.getUserid());
 			ExchangeMerchantaccountrecord maaj = new ExchangeMerchantaccountrecord();
 
@@ -466,8 +466,8 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	@Transactional
 	public synchronized void updatePayout(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			ExchangeMerchantaccountrecord maaj = new ExchangeMerchantaccountrecord();
@@ -506,8 +506,8 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	@Transactional
 	public synchronized void turndownPayout(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			ExchangeMerchantaccountrecord maaj = new ExchangeMerchantaccountrecord();
@@ -544,8 +544,8 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	@Transactional
 	public synchronized void failPayout(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			ExchangeMerchantaccountrecord maaj = new ExchangeMerchantaccountrecord();
@@ -584,8 +584,8 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	public synchronized void canclePayout(ExchangeMerchantaccountorder mao) {
 		//
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			//
@@ -627,8 +627,8 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	@Transactional
 	public synchronized void exchange(ExchangeMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			ExchangeMerchantaccount ma = mapper.getByUserId(t.getUserid());
 			ExchangeMerchantaccountrecord maaj = new ExchangeMerchantaccountrecord();
 
@@ -663,8 +663,8 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	@Transactional
 	public synchronized void updateExchange(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			ExchangeMerchantaccountrecord maaj = new ExchangeMerchantaccountrecord();
@@ -703,8 +703,8 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	@Transactional
 	public synchronized void turndownExchange(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			ExchangeMerchantaccountrecord maaj = new ExchangeMerchantaccountrecord();
@@ -742,8 +742,8 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	public synchronized void cancleExchange(ExchangeMerchantaccountorder mao) {
 		//
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
-		lock.lock();
 		try {
+			lock.lock();
 			ExchangeMerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
 			//
