@@ -22,13 +22,10 @@ import com.yt.app.api.v1.mapper.QrcodeaisleMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper;
 import com.yt.app.api.v1.model.result.AlipayF2FPrecreateResult;
 import com.yt.app.api.v1.model.result.AlipayF2FQueryResult;
-import com.yt.app.api.v1.service.AgentService;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.AlipayTradeService;
-import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.IncomeService;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
-import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
@@ -141,15 +138,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	@Autowired
 	private QrcodeaccountService qrcodeaccountservice;
 	@Autowired
-	private MerchantService merchantservice;
-	@Autowired
-	private ChannelService channelservice;
-	@Autowired
 	private SystemaccountService systemaccountservice;
 	@Autowired
 	private AgentaccountService agentaccountservice;
-	@Autowired
-	private AgentService agentservice;
 	@Autowired
 	private AlipayTradeService tradeService;
 	@Autowired
@@ -1037,7 +1028,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qao.setExpireddate(income.getExpireddate());
 		qao.setIncomeamount(income.getChannelincomeamount());
 		qrcodeaccountordermapper.post(qao);
-		qrcodeaccountservice.totalincome(qao);
 		// 添加商戶订单
 		Incomemerchantaccountorder imao = new Incomemerchantaccountorder();
 		imao.setUserid(income.getMerchantuserid());
@@ -1085,8 +1075,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			agentaccountordermapper.put(aao);
 			// 代理账户
 			agentaccountservice.updateTotalincome(aao);
-			// 计算代理数据
-			agentservice.updateIncome(income);
 		}
 
 		// 渠道
@@ -1101,10 +1089,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		incomemerchantaccountordermapper.put(incomemerchantaccountorder);
 		// 计算商户收入
 		incomemerchantaccountservice.updateTotalincome(incomemerchantaccountorder);
-		// 计算商户主账号
-		merchantservice.updateIncome(income);
-		// 计算渠道主账号
-		channelservice.updateIncome(income);
+
 		// 计算系统收入
 		systemaccountservice.updateIncome(income);
 	}
@@ -1134,8 +1119,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				agentaccountordermapper.put(aao);
 				// 代理账户
 				agentaccountservice.updateTotalincome(aao);
-				// 计算代理数据
-				agentservice.updateIncome(income);
 			}
 			income.setRemark("成功代收资金￥：" + income.getAmount());
 			//
@@ -1148,10 +1131,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			incomemerchantaccountordermapper.put(incomemerchantaccountorder);
 			// 计算商户收入
 			incomemerchantaccountservice.updateTotalincome(incomemerchantaccountorder);
-			// 计算商户主账号
-			merchantservice.updateIncome(income);
-			// 计算渠道主账号
-			channelservice.updateIncome(income);
 			// 计算系统收入
 			systemaccountservice.updateIncome(income);
 			TenantIdContext.remove();

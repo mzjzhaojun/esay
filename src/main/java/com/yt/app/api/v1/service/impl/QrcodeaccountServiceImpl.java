@@ -4,12 +4,15 @@ import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+
+import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountrecordMapper;
 import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
+import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Qrcodeaccount;
 import com.yt.app.api.v1.entity.Qrcodeaccountorder;
 import com.yt.app.api.v1.entity.Qrcodeaccountrecord;
@@ -36,6 +39,9 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 	private QrcodeaccountMapper mapper;
 
 	@Autowired
+	private ChannelMapper channelmapper;
+
+	@Autowired
 	private QrcodeaccountrecordMapper qrcodeaccountrecordmapper;
 
 	@Override
@@ -44,7 +50,6 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 		Integer i = mapper.post(t);
 		return i;
 	}
-
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
@@ -64,11 +69,32 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 		return new YtPageBean<QrcodeaccountVO>(param, list, count);
 	}
 
+	@Transactional
+	private void setToincomeamount(Qrcodeaccount ma, Qrcodeaccountrecord maaj) {
+		ma.setToincomeamount(maaj.getPretoincomeamount());
+		mapper.put(ma);
+	}
+
+	@Transactional
+	private void setTotalincome(Qrcodeaccount t, Qrcodeaccountrecord maaj, Qrcodeaccountorder qo) {
+		t.setTotalincome(maaj.getPosttotalincome());// 收入增加金额
+		t.setToincomeamount(maaj.getPretoincomeamount());// 待收入减去金额.
+		t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
+		mapper.put(t);
+
+		Channel m = channelmapper.get(t.getChannelid());
+		m.setCount(m.getCount() + qo.getIncomeamount());
+		m.setTodaycount(m.getTodaycount() + qo.getIncomeamount());
+		m.setBalance(t.getBalance());
+		m.setTodayincomecount(m.getTodayincomecount() + qo.getAmount());
+		m.setIncomecount(m.getIncomecount() + qo.getAmount());
+		channelmapper.put(m);
+	}
+
 	/**
 	 * 代收新增
 	 */
 	@Override
-	@Transactional
 	public synchronized void totalincome(Qrcodeaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
@@ -94,8 +120,7 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			maaj.setRemark("码商代收人民币￥：" + String.format("%.2f", t.getIncomeamount()));
 			//
 			qrcodeaccountrecordmapper.post(maaj);
-			ma.setToincomeamount(maaj.getPretoincomeamount());
-			mapper.put(ma);
+			setToincomeamount(ma, maaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -106,7 +131,6 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 	 * 代收成功
 	 */
 	@Override
-	@Transactional
 	public synchronized void updateTotalincome(Qrcodeaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
@@ -132,11 +156,7 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			maaj.setRemark("码商代收成功￥：" + String.format("%.2f", mao.getIncomeamount()));
 			//
 			qrcodeaccountrecordmapper.post(maaj);
-
-			t.setTotalincome(maaj.getPosttotalincome());// 收入增加金额
-			t.setToincomeamount(maaj.getPretoincomeamount());// 待收入减去金额.
-			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
-			mapper.put(t);
+			setTotalincome(t, maaj, mao);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -145,7 +165,6 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 
 	// 超时取消
 	@Override
-	@Transactional
 	public synchronized void cancleTotalincome(Qrcodeaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
@@ -173,8 +192,7 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			//
 			qrcodeaccountrecordmapper.post(maaj);
 
-			t.setToincomeamount(maaj.getPretoincomeamount());
-			mapper.put(t);
+			setToincomeamount(t, maaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();

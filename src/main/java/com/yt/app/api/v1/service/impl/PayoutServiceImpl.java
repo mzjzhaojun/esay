@@ -17,11 +17,8 @@ import com.yt.app.api.v1.mapper.PayoutMerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantaisleMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
-import com.yt.app.api.v1.service.AgentService;
 import com.yt.app.api.v1.service.AgentaccountService;
-import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.ChannelaccountService;
-import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.PayoutMerchantaccountService;
 import com.yt.app.api.v1.service.MerchantcustomerbanksService;
 import com.yt.app.api.v1.service.PayoutService;
@@ -92,12 +89,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	private ChannelMapper channelmapper;
 	@Autowired
 	private AislechannelMapper aislechannelmapper;
-	@Autowired
-	private AgentService agentservice;
-	@Autowired
-	private ChannelService channelservice;
-	@Autowired
-	private MerchantService merchantservice;
 	@Autowired
 	private PayoutMerchantaccountorderMapper merchantaccountordermapper;
 	@Autowired
@@ -220,7 +211,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		mao.setOrdernum(t.getMerchantordernum());
 		mao.setRemark("代付资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费：" + m.getOnecost());
 		merchantaccountordermapper.post(mao);
-		merchantaccountservice.payout(mao);
+		merchantaccountservice.withdrawamount(mao);
 		///////////////////////////////////////////////////// 计算代理订单/////////////////////////////////////////////////////
 		if (m.getAgentid() != null) {
 			Agent ag = agentmapper.get(m.getAgentid());
@@ -465,7 +456,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		mao.setOrdernum(t.getMerchantordernum());
 		mao.setRemark("代付资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费：" + m.getOnecost());
 		merchantaccountordermapper.post(mao);
-		merchantaccountservice.payout(mao);
+		merchantaccountservice.withdrawamount(mao);
 
 		///////////////////////////////////////////////////// 计算代理订单
 		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
@@ -538,12 +529,12 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				// 商户订单
 				merchantaccountordermapper.put(mao);
 				// 商户账户
-				merchantaccountservice.updatePayout(mao);
+				merchantaccountservice.updateWithdrawamount(mao);
 				// 系统账户
 				systemaccountservice.updatePayout(mao);
 
 				// 计算商户数据
-				merchantservice.updatePayout(t);
+				// merchantservice.updatePayout(t);
 
 				// 计算代理
 				if (t.getAgentid() != null) {
@@ -553,8 +544,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 					agentaccountordermapper.put(aao);
 					// 代理账户
 					agentaccountservice.updateTotalincome(aao);
-					// 计算代理数据
-					agentservice.updatePayout(t);
 				}
 
 				// 计算渠道
@@ -565,7 +554,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				// 渠道账户
 				channelaccountservice.updateWithdrawamount(cao);
 				// 计算渠道数据
-				channelservice.updatePayout(t);
+				// channelservice.updatePayout(t);
 
 				// ------------------更新代付订单-----------------
 				t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
@@ -610,7 +599,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
 				merchantaccountordermapper.put(mao);
 				//
-				merchantaccountservice.turndownPayout(mao);
+				merchantaccountservice.turndownWithdrawamount(mao);
 
 				// 计算代理
 				if (t.getAgentid() != null) {

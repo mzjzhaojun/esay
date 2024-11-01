@@ -41,15 +41,4 @@ public interface PayoutMerchantaccountService extends YtIBaseService<PayoutMerch
 
 	void cancleWithdrawamount(PayoutMerchantaccountorder mao);
 
-	// 代付
-	void payout(PayoutMerchantaccountorder t);
-
-	void updatePayout(PayoutMerchantaccountorder mao);
-
-	void failPayout(PayoutMerchantaccountorder mao);
-
-	void turndownPayout(PayoutMerchantaccountorder mao);
-
-	void canclePayout(PayoutMerchantaccountorder mao);
-
 }

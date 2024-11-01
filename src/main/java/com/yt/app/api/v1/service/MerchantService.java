@@ -2,13 +2,10 @@ package com.yt.app.api.v1.service;
 
 import java.util.Map;
 
-import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccount;
-import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Incomemerchantaccount;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.PayoutMerchantaccount;
-import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.common.yt.YtIPage;
 
@@ -19,32 +16,22 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface MerchantService extends YtIBaseService<Merchant, Long> {
-	
+
 	YtIPage<Merchant> page(Map<String, Object> param);
 
 	Integer putagent(Merchant m);
 
-	// 代收
-	void updateIncome(Income t);
-
 	// 代付
-	void updatePayout(Payout t);
+	void updatePayoutBalance(PayoutMerchantaccount t);
 
-	// 换汇
-	void updateExchange(Exchange t);
+	// 換
+	void updateBalanceUsdt(ExchangeMerchantaccount t);
 
-	void updateInCome(PayoutMerchantaccount t);
-
-	void withdrawamount(PayoutMerchantaccount t);
-
-	void updateInComeUsdt(ExchangeMerchantaccount t);
-
-	void withdrawamountUsdt(ExchangeMerchantaccount t);
+	// 代收
+	void updateInComeBalance(Incomemerchantaccount ma);
 
 	Merchant getData();
 
 	void updateDayValue(Merchant c, String date);
 
-	// 代收
-	void withdrawamount(Incomemerchantaccount ma);
 }

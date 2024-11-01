@@ -61,7 +61,7 @@ public class PayoutGetChannelOrderNumThread implements Runnable {
 						mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
 						merchantaccountordermapper.put(mao);
 						//
-						merchantaccountservice.failPayout(mao);
+						merchantaccountservice.cancleWithdrawamount(mao);
 
 						// 计算代理
 						if (payout.getAgentid() != null) {

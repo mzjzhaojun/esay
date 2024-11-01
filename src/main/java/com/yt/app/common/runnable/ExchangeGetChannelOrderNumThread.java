@@ -71,7 +71,7 @@ public class ExchangeGetChannelOrderNumThread implements Runnable {
 					cat.setOrdernum(exchange.getChannelordernum());
 					cat.setRemark("换汇资金￥：" + cat.getAmount() + " 手续费：" + cat.getOnecost());
 					channelaccountordermapper.post(cat);
-					channelaccountservice.exchangeamount(cat);
+					channelaccountservice.cancleWithdrawamount(cat);
 					break;
 				}
 			} catch (Exception e1) {

@@ -1,6 +1,5 @@
 package com.yt.app.api.v1.service.impl;
 
-import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
@@ -14,9 +13,6 @@ import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccount;
-import com.yt.app.api.v1.entity.Exchange;
-import com.yt.app.api.v1.entity.Income;
-import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -24,7 +20,6 @@ import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PasswordUtil;
-import com.yt.app.common.util.RedissonUtil;
 
 import cn.hutool.core.lang.Assert;
 
@@ -124,62 +119,10 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 	}
 
 	@Override
-	@Transactional
-	public void updateWithdraw(Agentaccount t) {
-		RLock lock = RedissonUtil.getLock(t.getAgentid());
-		try {
-			lock.lock();
-			Agent a = mapper.get(t.getAgentid());
-			a.setBalance(t.getBalance());
-			mapper.put(a);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
+	public void updateBalance(Agentaccount t) {
+		Agent a = mapper.get(t.getAgentid());
+		a.setBalance(t.getBalance());
+		mapper.put(a);
 	}
 
-	@Override
-	@Transactional
-	public void updatePayout(Payout t) {
-		RLock lock = RedissonUtil.getLock(t.getAgentid());
-		try {
-			lock.lock();
-			Agent a = mapper.get(t.getAgentid());
-			a.setBalance(a.getBalance() + t.getAgentincome());
-			mapper.put(a);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	@Override
-	@Transactional
-	public void updateIncome(Income t) {
-		RLock lock = RedissonUtil.getLock(t.getAgentid());
-		try {
-			lock.lock();
-			Agent a = mapper.get(t.getAgentid());
-			a.setBalance(a.getBalance() + t.getAgentincome());
-			mapper.put(a);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	@Override
-	@Transactional
-	public void updateExchange(Exchange t) {
-		RLock lock = RedissonUtil.getLock(t.getAgentid());
-		try {
-			lock.lock();
-			Agent a = mapper.get(t.getAgentid());
-			a.setBalance(a.getBalance() + t.getAgentincome());
-			mapper.put(a);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
 }

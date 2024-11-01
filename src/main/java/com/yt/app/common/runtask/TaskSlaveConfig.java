@@ -1,7 +1,6 @@
 package com.yt.app.common.runtask;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +13,10 @@ import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.entity.Qrcodeaccountorder;
-import com.yt.app.api.v1.entity.Tgchannelgroup;
-import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.mapper.AgentaccountorderMapper;
 import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
-import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
-import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
 import com.yt.app.api.v1.service.QrcodeaccountService;
@@ -38,12 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 @Profile("slave")
 @Component
 public class TaskSlaveConfig {
-
-	@Autowired
-	private TgmerchantgroupMapper tgmerchantgroupmapper;
-
-	@Autowired
-	private TgchannelgroupMapper tgchannelgroupmapper;
 
 	@Autowired
 	private ThreadPoolTaskExecutor threadpooltaskexecutor;
@@ -81,17 +70,6 @@ public class TaskSlaveConfig {
 
 		StatisticsThread statisticsthread = new StatisticsThread(date);
 		threadpooltaskexecutor.execute(statisticsthread);
-
-		// 飞机商户
-		List<Tgmerchantgroup> listtmg = tgmerchantgroupmapper.list(new HashMap<String, Object>());
-		listtmg.forEach(mg -> {
-			tgmerchantgroupmapper.updatetodayvalue(mg.getId());
-		});
-		// 飞机渠道
-		List<Tgchannelgroup> listtcg = tgchannelgroupmapper.list(new HashMap<String, Object>());
-		listtcg.forEach(mg -> {
-			tgchannelgroupmapper.updatetodayvalue(mg.getId());
-		});
 	}
 
 	/**
@@ -103,27 +81,27 @@ public class TaskSlaveConfig {
 		List<Income> list = incomemapper.selectAddlist();
 		for (Income p : list) {
 			if (p.getExpireddate().getTime() < new Date().getTime()) {
+				
 				TenantIdContext.setTenantId(p.getTenant_id());
 				log.info("代收支付超时单号ID：" + p.getOrdernum() + " 状态：" + p.getStatus());
 				p.setStatus(DictionaryResource.PAYOUTSTATUS_53);
 				p.setRemark("取消代收资金￥：" + p.getAmount());
 				incomemapper.put(p);
-				//
+				//處理渠道
 				Qrcodeaccountorder qao = qrcodeaccountordermapper.getByOrderNum(p.getQrcodeordernum());
 				qao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
 				qrcodeaccountordermapper.put(qao);
-				//
+				qrcodeaccountservice.cancleTotalincome(qao);
+				//處理商戶
 				Incomemerchantaccountorder imqao = incomemerchantaccountordermapper.getByOrderNum(p.getMerchantorderid());
 				imqao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
 				incomemerchantaccountordermapper.put(imqao);
+				incomemerchantaccountservice.cancleTotalincome(imqao);
 
 				// 释放收款码数据
 				String key = SystemConstant.CACHE_SYS_QRCODE + p.getQrcodeid() + "" + p.getFewamount();
 				if (RedisUtil.hasKey(key))
 					RedisUtil.delete(key);
-				// 处理账户
-				qrcodeaccountservice.cancleTotalincome(qao);
-				incomemerchantaccountservice.cancleTotalincome(imqao);
 
 				// 计算代理
 				if (p.getAgentid() != null) {

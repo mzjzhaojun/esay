@@ -14,7 +14,7 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface ExchangeMerchantaccountService extends YtIBaseService<ExchangeMerchantaccount, Long> {
-	
+
 	YtIPage<ExchangeMerchantaccount> page(Map<String, Object> param);
 
 	ExchangeMerchantaccount getData();
@@ -41,23 +41,4 @@ public interface ExchangeMerchantaccountService extends YtIBaseService<ExchangeM
 
 	void cancleWithdrawamount(ExchangeMerchantaccountorder mao);
 
-	// 代付
-	void payout(ExchangeMerchantaccountorder t);
-
-	void updatePayout(ExchangeMerchantaccountorder mao);
-
-	void failPayout(ExchangeMerchantaccountorder mao);
-
-	void turndownPayout(ExchangeMerchantaccountorder mao);
-
-	void canclePayout(ExchangeMerchantaccountorder mao);
-
-	// 换汇
-	void exchange(ExchangeMerchantaccountorder t);
-
-	void updateExchange(ExchangeMerchantaccountorder mao);
-
-	void turndownExchange(ExchangeMerchantaccountorder mao);
-
-	void cancleExchange(ExchangeMerchantaccountorder mao);
 }

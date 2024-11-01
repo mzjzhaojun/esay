@@ -107,13 +107,26 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	}
 
 	/**
-	 * =============================================================充值
+	 * =============================================================收入
 	 * 
 	 */
+	@Transactional
+	private void setToincomeamount(Agentaccount ma, Agentaccountrecord aaaj) {
+		ma.setToincomeamount(aaaj.getPretoincomeamount());
+		mapper.put(ma);
+	}
+
+	@Transactional
+	private void setTotalincome(Agentaccount t, Agentaccountrecord aaaj) {
+		t.setTotalincome(aaaj.getPosttotalincome());// 收入增加金额
+		t.setToincomeamount(aaaj.getPretoincomeamount());// 待收入减去金额.
+		t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
+		mapper.put(t);
+		agentservice.updateBalance(t);
+	}
 
 	// 待确认收入
 	@Override
-	@Transactional
 	public synchronized void totalincome(Agentaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getAgentid());
 		try {
@@ -136,11 +149,10 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
 			aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
-			aaaj.setRemark("代理收入待确认￥:" + String.format("%.2f", t.getAmountreceived()));
+			aaaj.setRemark("收入待确认￥:" + String.format("%.2f", t.getAmountreceived()));
 			//
 			agentaccountapplyjournamapper.post(aaaj);
-			ma.setToincomeamount(aaaj.getPretoincomeamount());
-			mapper.put(ma);
+			setToincomeamount(ma, aaaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -149,7 +161,6 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 确认收入
 	@Override
-	@Transactional
 	public synchronized void updateTotalincome(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
@@ -173,14 +184,10 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttoincomeamount(mao.getAmountreceived());// 确认收入
 			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
-			aaaj.setRemark("代理收入￥：" + String.format("%.2f", mao.getAmountreceived()));
+			aaaj.setRemark("收入￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
 			agentaccountapplyjournamapper.post(aaaj);
-
-			t.setTotalincome(aaaj.getPosttotalincome());// 收入增加金额
-			t.setToincomeamount(aaaj.getPretoincomeamount());// 待收入减去金额.
-			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
-			mapper.put(t);
+			setTotalincome(t, aaaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -189,7 +196,6 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 拒绝收入
 	@Override
-	@Transactional
 	public synchronized void turndownTotalincome(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
@@ -212,12 +218,12 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
 			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
-			aaaj.setRemark("代理收入失败￥：" + String.format("%.2f", mao.getAmountreceived()));
+			aaaj.setRemark("收入失败￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
 			agentaccountapplyjournamapper.post(aaaj);
 
-			t.setToincomeamount(aaaj.getPretoincomeamount());
-			mapper.put(t);
+			setToincomeamount(t, aaaj);
+
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -226,7 +232,6 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 客户取消
 	@Override
-	@Transactional
 	public synchronized void cancleTotalincome(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
@@ -249,12 +254,11 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
 			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
-			aaaj.setRemark("代理收入取消￥：" + String.format("%.2f", mao.getAmountreceived()));
+			aaaj.setRemark("收入取消￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
 			agentaccountapplyjournamapper.post(aaaj);
 
-			t.setToincomeamount(aaaj.getPretoincomeamount());
-			mapper.put(t);
+			setToincomeamount(t, aaaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -265,10 +269,23 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	 * =============================================================提现
 	 * 
 	 */
+	@Transactional
+	private void setTowithdrawamount(Agentaccount ma, Agentaccountrecord aaaj) {
+		ma.setTowithdrawamount(aaaj.getPretowithdrawamount());
+		mapper.put(ma);
+	}
+
+	@Transactional
+	private void setWithdrawamount(Agentaccount t, Agentaccountrecord aaaj) {
+		t.setWithdrawamount(aaaj.getPostwithdrawamount());// 支出增加金额
+		t.setTowithdrawamount(aaaj.getPretowithdrawamount());// 待支出减去金额
+		t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
+		mapper.put(t);
+		agentservice.updateBalance(t);
+	}
 
 	// 待确认支出
 	@Override
-	@Transactional
 	public synchronized void withdrawamount(Agentaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getAgentid());
 		try {
@@ -290,12 +307,10 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
 			aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
-			aaaj.setRemark("冻结待提现￥：" + String.format("%.2f", t.getAmountreceived()));
+			aaaj.setRemark("支出￥：" + String.format("%.2f", t.getAmountreceived()));
 			//
 			agentaccountapplyjournamapper.post(aaaj);
-
-			ma.setTowithdrawamount(aaaj.getPretowithdrawamount());
-			mapper.put(ma);
+			setTowithdrawamount(ma, aaaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -304,7 +319,6 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 确认支出
 	@Override
-	@Transactional
 	public synchronized void updateWithdrawamount(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
@@ -328,14 +342,10 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
 			aaaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());// 总支出
 			aaaj.setPosttowithdrawamount(mao.getAmountreceived());// 确认支出
-			aaaj.setRemark("提现成功￥：" + String.format("%.2f", mao.getAmountreceived()));
+			aaaj.setRemark("支出成功￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
 			agentaccountapplyjournamapper.post(aaaj);
-			t.setWithdrawamount(aaaj.getPostwithdrawamount());// 支出增加金额
-			t.setTowithdrawamount(aaaj.getPretowithdrawamount());// 待支出减去金额
-			t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
-			mapper.put(t);
-			agentservice.updateWithdraw(t);
+			setWithdrawamount(t, aaaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -344,7 +354,6 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 拒絕支出
 	@Override
-	@Transactional
 	public synchronized void turndownWithdrawamount(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
@@ -367,10 +376,9 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
 			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
-			aaaj.setRemark("审核拒绝提现￥：" + String.format("%.2f", mao.getAmountreceived()));
+			aaaj.setRemark("拒绝支出￥：" + String.format("%.2f", mao.getAmountreceived()));
 			agentaccountapplyjournamapper.post(aaaj);
-			t.setTowithdrawamount(aaaj.getPretowithdrawamount());
-			mapper.put(t);
+			setTowithdrawamount(t, aaaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -379,7 +387,6 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 取消支出
 	@Override
-	@Transactional
 	public synchronized void cancleWithdrawamount(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
@@ -402,11 +409,9 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttoincomeamount(0.00);// 确认收入
 			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
-			aaaj.setRemark("代理取消提现￥：" + String.format("%.2f", mao.getAmountreceived()));
+			aaaj.setRemark("取消支出￥：" + String.format("%.2f", mao.getAmountreceived()));
 			agentaccountapplyjournamapper.post(aaaj);
-
-			t.setTowithdrawamount(aaaj.getPretowithdrawamount());
-			mapper.put(t);
+			setTowithdrawamount(t, aaaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();

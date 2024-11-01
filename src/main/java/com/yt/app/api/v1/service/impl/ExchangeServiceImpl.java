@@ -17,13 +17,9 @@ import com.yt.app.api.v1.mapper.ExchangeMerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.MerchantaisleMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
-import com.yt.app.api.v1.service.AgentService;
 import com.yt.app.api.v1.service.AgentaccountService;
-import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.ChannelaccountService;
-import com.yt.app.api.v1.service.ExchangeMerchantaccountService;
 import com.yt.app.api.v1.service.ExchangeService;
-import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.MerchantcustomerbanksService;
 import com.yt.app.api.v1.service.SysconfigService;
 import com.yt.app.api.v1.service.SystemaccountService;
@@ -94,12 +90,6 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	@Autowired
 	private AislechannelMapper aislechannelmapper;
 	@Autowired
-	private AgentService agentservice;
-	@Autowired
-	private ChannelService channelservice;
-	@Autowired
-	private MerchantService merchantservice;
-	@Autowired
 	private ExchangeMerchantaccountorderMapper exchangemerchantaccountordermapper;
 	@Autowired
 	private AgentMapper agentmapper;
@@ -107,8 +97,6 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	private AgentaccountorderMapper agentaccountordermapper;
 	@Autowired
 	private ChannelaccountorderMapper channelaccountordermapper;
-	@Autowired
-	private ExchangeMerchantaccountService exchangemerchantaccountservice;
 	@Autowired
 	private AgentaccountService agentaccountservice;
 	@Autowired
@@ -228,7 +216,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		mao.setUsdtval(t.getMerchantpay());
 		mao.setRemark("换汇操作资金：" + t.getAmount() + " usdt：" + String.format("%.2f", t.getMerchantpay()) + " 手续费：" + m.getExchangeonecost());
 		exchangemerchantaccountordermapper.post(mao);
-		exchangemerchantaccountservice.exchange(mao);
+		// exchangemerchantaccountservice.exchange(mao);
 
 		///////////////////////////////////////////////////// 計算代理訂單/////////////////////////////////////////////////////
 		if (m.getAgentid() != null) {
@@ -436,7 +424,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		mao.setOrdernum(t.getMerchantordernum());
 		mao.setRemark("群内换汇操作资金：" + t.getAmount() + " usdt：" + String.format("%.2f", t.getMerchantpay()) + " 手续费：" + m.getExchangeonecost());
 		exchangemerchantaccountordermapper.post(mao);
-		exchangemerchantaccountservice.exchange(mao);
+		// exchangemerchantaccountservice.exchange(mao);
 
 		///////////////////////////////////////////////////// 计算代理订单
 		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
@@ -502,12 +490,12 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			// 商户订单
 			exchangemerchantaccountordermapper.put(mao);
 			// 商户账户
-			exchangemerchantaccountservice.updateExchange(mao);
+			// exchangemerchantaccountservice.updateExchange(mao);
 			// 系统账户
 			systemaccountservice.updateExchange(mao);
 
 			// 计算商户数据
-			merchantservice.updateExchange(t);
+			// merchantservice.updateExchange(t);
 
 			// 计算代理
 			if (t.getAgentid() != null) {
@@ -517,8 +505,6 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 				agentaccountordermapper.put(aao);
 				// 代理账户
 				agentaccountservice.updateTotalincome(aao);
-				// 计算代理数据
-				agentservice.updateExchange(t);
 			}
 
 			// 计算渠道
@@ -527,9 +513,9 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			// 渠道订单
 			channelaccountordermapper.put(cao);
 			// 渠道账户
-			channelaccountservice.updateexchangeamount(cao);
+			channelaccountservice.updateWithdrawamount(cao);
 			// 计算渠道数据
-			channelservice.updateExchange(t);
+			// channelservice.updateExchange(t);
 
 			// ------------------更新代付订单-----------------
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
@@ -564,7 +550,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
 			exchangemerchantaccountordermapper.put(mao);
 			//
-			exchangemerchantaccountservice.turndownExchange(mao);
+			// exchangemerchantaccountservice.turndownExchange(mao);
 
 			// 计算代理
 			if (t.getAgentid() != null) {
@@ -580,7 +566,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			cao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
 			channelaccountordermapper.put(cao);
 			//
-			channelaccountservice.turndownexchangeamount(cao);
+			channelaccountservice.turndownWithdrawamount(cao);
 
 			//
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_53);

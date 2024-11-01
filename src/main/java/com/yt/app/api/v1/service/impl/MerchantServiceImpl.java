@@ -22,14 +22,11 @@ import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.common.bot.MerchantBot;
 import com.yt.app.api.v1.entity.Agent;
-import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccount;
-import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Incomemerchantaccount;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Merchantstatisticalreports;
 import com.yt.app.api.v1.entity.PayoutMerchantaccount;
-import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -201,40 +198,6 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	}
 
 	@Override
-	@Transactional
-	public synchronized void updateInCome(PayoutMerchantaccount ma) {
-		RLock lock = RedissonUtil.getLock(ma.getMerchantid());
-		try {
-			lock.lock();
-			Merchant m = mapper.get(ma.getMerchantid());
-			m.setBalance(ma.getBalance());
-			mapper.put(m);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	@Override
-	@Transactional
-	public synchronized void updatePayout(Payout t) {
-		RLock lock = RedissonUtil.getLock(t.getMerchantid());
-		try {
-			lock.lock();
-			Merchant m = mapper.get(t.getMerchantid());
-			PayoutMerchantaccount ma = merchantaccountmapper.getByUserId(m.getUserid());
-			m.setCount(m.getCount() + t.getAmount());// 总量不包含手续费和交易费
-			m.setTodaycount(m.getTodaycount() + t.getAmount());// 当日
-			m.setTodaycost(m.getTodaycost() + t.getMerchantcost());// 当日手续费
-			m.setBalance(ma.getBalance());
-			mapper.put(m);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Merchant getData() {
 		Merchant t = mapper.getByUserId(SysUserContext.getUserId());
@@ -243,97 +206,26 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 
 	@Override
 	@Transactional
-	public synchronized void withdrawamount(PayoutMerchantaccount ma) {
-		RLock lock = RedissonUtil.getLock(ma.getMerchantid());
-		try {
-			lock.lock();
-			Merchant m = mapper.get(ma.getMerchantid());
-			m.setBalance(ma.getBalance());
-			mapper.put(m);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
+	public synchronized void updatePayoutBalance(PayoutMerchantaccount ma) {
+		Merchant m = mapper.get(ma.getMerchantid());
+		m.setBalance(ma.getBalance());
+		mapper.put(m);
 	}
 
 	@Override
 	@Transactional
-	public synchronized void withdrawamount(Incomemerchantaccount ma) {
-		RLock lock = RedissonUtil.getLock(ma.getMerchantid());
-		try {
-			lock.lock();
-			Merchant m = mapper.get(ma.getMerchantid());
-			m.setBalance(ma.getBalance());
-			mapper.put(m);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
+	public synchronized void updateBalanceUsdt(ExchangeMerchantaccount t) {
+		Merchant m = mapper.get(t.getMerchantid());
+		m.setUsdtbalance(t.getBalance());
+		mapper.put(m);
 	}
 
 	@Override
 	@Transactional
-	public synchronized void updateExchange(Exchange t) {
-		RLock lock = RedissonUtil.getLock(t.getMerchantid());
-		try {
-			lock.lock();
-			Merchant m = mapper.get(t.getMerchantid());
-			ExchangeMerchantaccount ma = exchangemerchantaccountmapper.getByUserId(m.getUserid());
-			m.setUsdtbalance(ma.getBalance());
-			mapper.put(m);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	@Override
-	@Transactional
-	public synchronized void updateInComeUsdt(ExchangeMerchantaccount t) {
-		RLock lock = RedissonUtil.getLock(t.getMerchantid());
-		try {
-			lock.lock();
-			Merchant m = mapper.get(t.getMerchantid());
-			m.setUsdtbalance(t.getBalance());
-			mapper.put(m);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-
-	}
-
-	@Override
-	@Transactional
-	public synchronized void withdrawamountUsdt(ExchangeMerchantaccount t) {
-		RLock lock = RedissonUtil.getLock(t.getMerchantid());
-		try {
-			lock.lock();
-			Merchant m = mapper.get(t.getMerchantid());
-			m.setUsdtbalance(t.getBalance());
-			mapper.put(m);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	@Override
-	@Transactional
-	public synchronized void updateIncome(Income t) {
-		RLock lock = RedissonUtil.getLock(t.getMerchantid());
-		try {
-			lock.lock();
-			Merchant m = mapper.get(t.getMerchantid());
-			Incomemerchantaccount ma = incomemerchantaccountmapper.getByUserId(m.getUserid());
-			m.setCount(m.getCount() + t.getMerchantincomeamount());
-			m.setTodaycount(m.getTodaycount() + t.getMerchantincomeamount());
-			m.setBalance(ma.getBalance());
-			mapper.put(m);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
+	public synchronized void updateInComeBalance(Incomemerchantaccount ma) {
+		Merchant m = mapper.get(ma.getMerchantid());
+		m.setBalance(ma.getBalance());
+		mapper.put(m);
 	}
 
 	@Override
