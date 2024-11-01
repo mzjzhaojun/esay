@@ -43,7 +43,7 @@ public class MerchantBalanceMessage implements UpdateMerchantMessageService {
 			for (Long mid : tmg.getMerchantids()) {
 				Merchant m = merchantmapper.get(mid);
 				Incomemerchantaccount merchantaccount = IncomemerchantaccountMapper.getByMerchantId(mid);
-				msg.append("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n" + "商户:*" + m.getName() + "*\r\n\r\n可用余额：" + merchantaccount.getBalance() + " \r\n总支出金额：" + merchantaccount.getWithdrawamount() + "\r\n总收入金额：" + merchantaccount.getTotalincome()
+				msg.append("\r\n\r\n\r\n" + "商户:*" + m.getName() + "*\r\n\r\n可用余额：" + merchantaccount.getBalance() + " \r\n总支出金额：" + merchantaccount.getWithdrawamount() + "\r\n总收入金额：" + merchantaccount.getTotalincome()
 						+ "\r\n \r\n*" + DateTimeUtil.getDateTime() + "*");
 			}
 			sendMessage.setText(msg.toString());
