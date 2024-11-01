@@ -45,13 +45,15 @@ public class StatisticsThread implements Runnable {
 		List<Merchant> listm = merchantmapper.list(new HashMap<String, Object>());
 		listm.forEach(m -> {
 			// 单日数据
-			merchantservice.updateDayValue(m, dateval);
+			if (m.getTodaycount() > 1)
+				merchantservice.updateDayValue(m, dateval);
 		});
 		// 渠道
 		List<Channel> listc = channelmapper.list(new HashMap<String, Object>());
 		listc.forEach(c -> {
 			// 单日数据
-			channelservice.updateDayValue(c, dateval);
+			if (c.getTodaycount() > 1)
+				channelservice.updateDayValue(c, dateval);
 		});
 	}
 
