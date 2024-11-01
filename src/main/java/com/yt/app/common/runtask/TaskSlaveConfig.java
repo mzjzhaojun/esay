@@ -35,7 +35,7 @@ import com.yt.app.common.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Profile("slave")
+@Profile("dev")
 @Component
 public class TaskSlaveConfig {
 
@@ -74,7 +74,7 @@ public class TaskSlaveConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "50 59 23 * * ?")
+	@Scheduled(cron = "30 59 23 * * ?")
 	public void updateTodayValue() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		String date = DateTimeUtil.getDateTime(new Date(), DateTimeUtil.DEFAULT_DATE_FORMAT);

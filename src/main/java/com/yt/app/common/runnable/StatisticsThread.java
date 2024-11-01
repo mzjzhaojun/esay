@@ -29,7 +29,7 @@ public class StatisticsThread implements Runnable {
 
 		try {
 			log.info("start Statistics");
-			Thread.sleep(60000 * 5);
+			Thread.sleep(60000 * 2);
 		} catch (InterruptedException e) {
 		}
 
