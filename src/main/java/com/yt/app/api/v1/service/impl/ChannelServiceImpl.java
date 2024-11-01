@@ -4,6 +4,8 @@ import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+
+import com.yt.app.api.v1.mapper.AislechannelMapper;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ChannelaccountMapper;
 import com.yt.app.api.v1.mapper.ChannelstatisticalreportsMapper;
@@ -19,6 +21,7 @@ import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
+import com.yt.app.api.v1.entity.Aislechannel;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccount;
 import com.yt.app.api.v1.entity.Channelstatisticalreports;
@@ -54,6 +57,9 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 
 	@Autowired
 	private UserMapper usermapper;
+
+	@Autowired
+	private AislechannelMapper aislechannelmapper;
 
 	@Autowired
 	private ChannelaccountMapper channelaccountmapper;
@@ -109,6 +115,15 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	@Override
 
 	public YtIPage<Channel> page(Map<String, Object> param) {
+
+		if (param.get("aisleid") != null) {
+			List<Aislechannel> listmqas = aislechannelmapper.getByAisleId(Long.valueOf(param.get("aisleid").toString()));
+			if (listmqas.size() > 0) {
+				long[] qraids = listmqas.stream().mapToLong(acl -> acl.getChannelid()).distinct().toArray();
+				param.put("existids", qraids);
+			}
+		}
+
 		int count = 0;
 		if (YtPageBean.isPaging(param)) {
 			count = mapper.countlist(param);
