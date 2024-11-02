@@ -113,7 +113,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	@Override
 	@Transactional
-	public Integer post(Payout t) {
+	public Integer submitOrder(Payout t) {
 		PayoutMerchantaccount maccount = merchantaccountmapper.getByUserId(SysUserContext.getUserId());
 
 		if (t.getAmount() <= 0 || t.getAmount() > maccount.getBalance()) {
@@ -190,7 +190,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		}
 
-		// 远程当面付
+		// 获取渠道单号
 		boolean flage = true;
 		switch (cl.getName()) {
 		case DictionaryResource.DFSNAISLE:
@@ -236,9 +236,9 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		cat.setNkname(cll.getNkname());
 		cat.setChannelcode(cll.getCode());
 		cat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
-		cat.setAmount(t.getAmount());// 鎿嶄綔璧勯噾
-		cat.setDeal(t.getChanneldeal());// 浜ゆ槗璐�
-		cat.setOnecost(t.getChannelcost());// 鎵嬬画璐�
+		cat.setAmount(t.getAmount());
+		cat.setDeal(t.getChanneldeal());
+		cat.setOnecost(t.getChannelcost());
 		cat.setAccname(t.getAccname());
 		cat.setAccnumber(t.getAccnumer());
 		cat.setExchange(cll.getExchange());

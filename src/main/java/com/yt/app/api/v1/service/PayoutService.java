@@ -27,8 +27,11 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 
 	YtIPage<PayoutVO> page(Map<String, Object> param);
 
-	//老李回調
+	Integer submitOrder(Payout pt);
+
+	// 老李回調
 	void tycallbackpay(SysTyOrder so);
+
 	// 十年回调
 	void sncallback(Map<String, Object> params);
 }
