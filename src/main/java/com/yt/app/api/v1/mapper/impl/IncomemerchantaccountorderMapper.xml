@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,merchantname,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,dynamic,fewamount,expireddate,amount,collection,incomeamount,realamount,resulturl,qrocde,status,remark,merchantid,create_by,create_time,update_by,update_time,version
+		id,tenant_id,userid,merchantname,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,dynamic,fewamount,expireddate,amount,collection,incomeamount,realamount,resulturl,qrocde,imgurl,accnumber,amountreceived,merchantexchange,usdtval,status,remark,merchantid,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -18,9 +18,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Incomemerchantaccountorder">
 		insert into
-		incomemerchantaccountorder(id,userid,merchantname,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,dynamic,fewamount,expireddate,amount,collection,incomeamount,realamount,resulturl,qrocde,status,remark,merchantid,create_by,create_time,update_by,update_time)
+		incomemerchantaccountorder(id,userid,merchantname,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,dynamic,fewamount,expireddate,amount,collection,incomeamount,realamount,resulturl,qrocde,imgurl,accnumber,amountreceived,merchantexchange,usdtval,status,remark,merchantid,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{userid},#{merchantname},#{qrcodeaislecode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{dynamic},#{fewamount},#{expireddate},#{amount},#{collection},#{incomeamount},#{realamount},#{resulturl},#{qrocde},#{status},#{remark},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{userid},#{merchantname},#{qrcodeaislecode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{dynamic},#{fewamount},#{expireddate},#{amount},#{collection},#{incomeamount},#{realamount},#{resulturl},#{qrocde},#{imgurl},#{accnumber},#{amountreceived},#{merchantexchange},#{usdtval},#{status},#{remark},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -94,6 +94,9 @@
 			<if test="qrocde != null">
 				qrocde= #{qrocde},
 			</if>
+			<if test="imgurl != null">
+				imgurl= #{imgurl},
+			</if>
 			<if test="status != null">
 				status= #{status},
 			</if>
@@ -158,6 +161,9 @@
 			<if test="status != null and status != ''">
 				and status = #{status}
 			</if>
+			<if test="type != null">
+				and type= #{type}
+			</if>
 			<if test="qrcodeaislename != null and qrcodeaislename != ''">
 				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename}
 				, '%' )
@@ -190,6 +196,9 @@
 			</if>
 			<if test="status != null and status != ''">
 				and status = #{status}
+			</if>
+			<if test="type != null">
+				and type= #{type}
 			</if>
 			<if test="dateval != null and dateval != ''">
 				and create_time LIKE CONCAT(#{dateval} , '%')
@@ -226,6 +235,9 @@
 			</if>
 			<if test="amount != null and amount != ''">
 				and amount = #{amount}
+			</if>
+			<if test="type != null">
+				and type= #{type}
 			</if>
 			<if test="status != null and status != ''">
 				and status = #{status}
@@ -272,14 +284,17 @@
 		WHERE
 		userid = #{userid}
 		AND create_time
-		>= CONCAT(#{dateval}, ' 00:00:00')
+		>=
+		CONCAT(#{dateval}, ' 00:00:00')
 		AND create_time &lt;
-		CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
+		CONCAT(#{dateval} +
+		INTERVAL 1 DAY,' 00:00:00')
 	</select>
 
 	<select id="countSuccessOrder" resultMap="ResultMapVO">
 		SELECT
-		count(*) as ordercount,
+		count(*) as
+		ordercount,
 		sum(amount) as amount,
 		sum(incomeamount) as
 		incomeamount
@@ -289,8 +304,10 @@
 		userid = #{userid}
 		AND
 		status = 52
-		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
 		AND
-		create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
+		create_time >= CONCAT(#{dateval}, ' 00:00:00')
+		AND
+		create_time &lt;
+		CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
 	</select>
 </mapper>

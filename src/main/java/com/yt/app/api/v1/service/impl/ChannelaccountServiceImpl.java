@@ -4,12 +4,15 @@ import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+
+import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ChannelaccountMapper;
 import com.yt.app.api.v1.mapper.ChannelaccountrecordMapper;
 import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
+import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccount;
 import com.yt.app.api.v1.entity.Channelaccountrecord;
 import com.yt.app.api.v1.entity.Channelaccountorder;
@@ -37,6 +40,8 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	private ChannelService channelservice;
 	@Autowired
 	private ChannelaccountrecordMapper channelaccountapplyjournamapper;
+	@Autowired
+	private ChannelMapper channelmapper;
 
 	@Override
 	@Transactional
@@ -242,7 +247,14 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 		t.setTowithdrawamount(aaaj.getPretowithdrawamount());// 待支出减去金额
 		t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 		mapper.put(t);
-		channelservice.updateBalance(t);
+
+		Channel m = channelmapper.get(t.getChannelid());
+		m.setCount(m.getCount() + aaaj.getPosttowithdrawamount());
+		m.setTodaycount(m.getTodaycount() + aaaj.getPosttowithdrawamount());
+		m.setBalance(t.getBalance());
+		m.setTodayincomecount(m.getTodayincomecount() + aaaj.getPosttowithdrawamount());
+		m.setIncomecount(m.getIncomecount() + aaaj.getPosttowithdrawamount());
+		channelmapper.put(m);
 	}
 
 	// 待确认支出
@@ -271,7 +283,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			aaaj.setRemark("待确认￥：" + String.format("%.2f", t.getAmountreceived()));
 			//
 			channelaccountapplyjournamapper.post(aaaj);
-			setToincomeamount(ma, aaaj);
+			setTowithdrawamount(ma, aaaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -306,7 +318,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			aaaj.setRemark("成功￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
 			channelaccountapplyjournamapper.post(aaaj);
-			setTotalincome(t, aaaj);
+			setWithdrawamount(t, aaaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -341,7 +353,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			//
 			channelaccountapplyjournamapper.post(aaaj);
 
-			setToincomeamount(t, aaaj);
+			setTowithdrawamount(t, aaaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -376,7 +388,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 			aaaj.setRemark("取消￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
 			channelaccountapplyjournamapper.post(aaaj);
-			setToincomeamount(t, aaaj);
+			setTowithdrawamount(t, aaaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();

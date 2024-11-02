@@ -4,7 +4,6 @@ import java.util.Map;
 
 import com.yt.app.api.v1.entity.Incomemerchantaccount;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
-import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.api.v1.vo.IncomemerchantaccountVO;
 import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.common.yt.YtIPage;
@@ -57,27 +56,27 @@ public interface IncomemerchantaccountService extends YtIBaseService<Incomemerch
 	 * 
 	 * @param t
 	 */
-	void withdrawamount(PayoutMerchantaccountorder t);
+	void withdrawamount(Incomemerchantaccountorder t);
 
 	/**
 	 * 代收提现成功
 	 * 
 	 * @param t
 	 */
-	void updateWithdrawamount(PayoutMerchantaccountorder mao);
+	void updateWithdrawamount(Incomemerchantaccountorder mao);
 
 	/**
 	 * 代收提现失败
 	 * 
 	 * @param t
 	 */
-	void turndownWithdrawamount(PayoutMerchantaccountorder mao);
-	
+	void turndownWithdrawamount(Incomemerchantaccountorder mao);
+
 	/**
 	 * 取消
 	 * 
 	 * @param t
 	 */
-	void cancelWithdrawamount(PayoutMerchantaccountorder mao);
-	
+	void cancelWithdrawamount(Incomemerchantaccountorder mao);
+
 }

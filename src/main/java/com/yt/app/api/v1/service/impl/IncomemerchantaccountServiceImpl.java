@@ -17,7 +17,6 @@ import com.yt.app.api.v1.entity.Incomemerchantaccount;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.entity.Incomemerchantaccountrecord;
 import com.yt.app.api.v1.entity.Merchant;
-import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.api.v1.entity.PayoutMerchantaccountrecord;
 import com.yt.app.api.v1.vo.IncomemerchantaccountVO;
 import com.yt.app.common.common.yt.YtIPage;
@@ -234,7 +233,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 
 	// 待确认支出
 	@Override
-	public synchronized void withdrawamount(PayoutMerchantaccountorder t) {
+	public synchronized void withdrawamount(Incomemerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
@@ -242,20 +241,20 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
 
 			maaj.setUserid(t.getUserid());
-			maaj.setMerchantname(t.getUsername());
+			maaj.setMerchantname(t.getMerchantname());
 			maaj.setOrdernum(t.getOrdernum());
 			maaj.setType(DictionaryResource.RECORDTYPE_34);
 			// 变更前
 			maaj.setPretotalincome(ma.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
 			maaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
-			maaj.setPretowithdrawamount(ma.getTowithdrawamount() + t.getAmountreceived());// 待确认支出
+			maaj.setPretowithdrawamount(ma.getTowithdrawamount() + t.getAmount());// 待确认支出
 			// 变更后
 			maaj.setPosttotalincome(ma.getTotalincome());// 总收入
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("支出￥：" + String.format("%.2f", t.getAmountreceived()));
+			maaj.setRemark("支出￥：" + String.format("%.2f", t.getAmount()));
 			//
 			payoutmerchantaccountrecordmapper.post(maaj);
 			setWithdrawamount(ma, maaj);
@@ -268,7 +267,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 
 	// 提现成功
 	@Override
-	public synchronized void updateWithdrawamount(PayoutMerchantaccountorder mao) {
+	public synchronized void updateWithdrawamount(Incomemerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -277,7 +276,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
 			//
 			maaj.setUserid(t.getUserid());
-			maaj.setMerchantname(mao.getUsername());
+			maaj.setMerchantname(mao.getMerchantname());
 			maaj.setOrdernum(mao.getOrdernum());
 			maaj.setType(DictionaryResource.RECORDTYPE_35);
 
@@ -285,13 +284,13 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
 			maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			maaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
+			maaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmount());// 待确认支出
 			// 变更后
 			maaj.setPosttotalincome(t.getTotalincome());// 总收入
 			maaj.setPosttoincomeamount(0.00);// 确认收入
-			maaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());// 总支出
-			maaj.setPosttowithdrawamount(mao.getAmountreceived());// 确认支出
-			maaj.setRemark("支出成功￥：" + String.format("%.2f", mao.getAmountreceived()));
+			maaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmount());// 总支出
+			maaj.setPosttowithdrawamount(mao.getAmount());// 确认支出
+			maaj.setRemark("支出成功￥：" + String.format("%.2f", mao.getAmount()));
 			//
 			payoutmerchantaccountrecordmapper.post(maaj);
 			setWithdrawamount(t, maaj);
@@ -303,7 +302,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 
 	// 提现失败
 	@Override
-	public synchronized void turndownWithdrawamount(PayoutMerchantaccountorder mao) {
+	public synchronized void turndownWithdrawamount(Incomemerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -311,7 +310,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			//
 			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
 			maaj.setUserid(t.getUserid());
-			maaj.setMerchantname(mao.getUsername());
+			maaj.setMerchantname(mao.getMerchantname());
 			maaj.setOrdernum(mao.getOrdernum());
 			maaj.setType(DictionaryResource.RECORDTYPE_36);
 
@@ -319,13 +318,13 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
 			maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			maaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
+			maaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmount());// 待确认支出
 			// 变更后
 			maaj.setPosttotalincome(t.getTotalincome());// 总收入
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("拒绝支出￥：" + String.format("%.2f", mao.getAmountreceived()));
+			maaj.setRemark("拒绝支出￥：" + String.format("%.2f", mao.getAmount()));
 			//
 			payoutmerchantaccountrecordmapper.post(maaj);
 
@@ -338,7 +337,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 
 	// 提现失败
 	@Override
-	public synchronized void cancelWithdrawamount(PayoutMerchantaccountorder mao) {
+	public synchronized void cancelWithdrawamount(Incomemerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -346,7 +345,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			//
 			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
 			maaj.setUserid(t.getUserid());
-			maaj.setMerchantname(mao.getUsername());
+			maaj.setMerchantname(mao.getMerchantname());
 			maaj.setOrdernum(mao.getOrdernum());
 			maaj.setType(DictionaryResource.RECORDTYPE_37);
 
@@ -354,13 +353,13 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
 			maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			maaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmountreceived());// 待确认支出
+			maaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmount());// 待确认支出
 			// 变更后
 			maaj.setPosttotalincome(t.getTotalincome());// 总收入
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("取消支出￥：" + String.format("%.2f", mao.getAmountreceived()));
+			maaj.setRemark("取消支出￥：" + String.format("%.2f", mao.getAmount()));
 			//
 			payoutmerchantaccountrecordmapper.post(maaj);
 

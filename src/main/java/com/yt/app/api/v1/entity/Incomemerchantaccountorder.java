@@ -39,9 +39,14 @@ public class Incomemerchantaccountorder extends YtBaseEntity<Incomemerchantaccou
 	java.util.Date expireddate;
 	Double amount;
 	Double collection;
+	String accnumber;
+	Double merchantexchange;
+	Double amountreceived;
+	Double usdtval;
 	Double realamount;
 	String resulturl;
 	String qrocde;
+	String imgurl;
 	Integer status;
 	String remark;
 	Long merchantid;

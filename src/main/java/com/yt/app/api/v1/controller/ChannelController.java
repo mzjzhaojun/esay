@@ -44,9 +44,8 @@ public class ChannelController extends YtBaseEncipherControllerImpl<Channel, Lon
 	 * 
 	 * @version 1.1
 	 */
-	@Override
 	@RequestMapping(value = "/remotebalance/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> get(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+	public YtResponseEncryptEntity<Object> remotebalance(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 		Integer t = service.getRemotebalance(id);
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
 	}

@@ -9,7 +9,6 @@ import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.MerchantaccountbankMapper;
 import com.yt.app.api.v1.mapper.PayoutMerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
-import com.yt.app.api.v1.service.IncomemerchantaccountService;
 import com.yt.app.api.v1.service.PayoutMerchantaccountService;
 import com.yt.app.api.v1.service.PayoutMerchantaccountorderService;
 import com.yt.app.api.v1.service.SystemaccountService;
@@ -62,9 +61,6 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 
 	@Autowired
 	private SystemaccountService systemaccountservice;
-
-	@Autowired
-	private IncomemerchantaccountService incomemerchantaccountservice;
 
 	/**
 	 * 充值
@@ -204,37 +200,6 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 		return t;
 	}
 
-	////////////////////////////////////////////////////////////// 充值处理
-	@Override
-	@Transactional
-	public void incomemanual(PayoutMerchantaccountorder mco) {
-		RLock lock = RedissonUtil.getLock(mco.getId());
-		User u = usermapper.get(SysUserContext.getUserId());
-		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
-		Assert.isTrue(isValid, "验证码错误！");
-		try {
-			lock.lock();
-			PayoutMerchantaccountorder mao = mapper.get(mco.getId());
-			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_10)) {
-				mao.setStatus(mco.getStatus());
-				Integer i = mapper.put(mao);
-				if (i > 0) {
-					if (mco.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
-						//
-						merchantaccountservice.updateTotalincome(mao);
-						//
-						systemaccountservice.updateTotalincome(mao);
-					} else {
-						merchantaccountservice.turndownTotalincome(mao);
-					}
-				}
-			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
 	/**
 	 * 充值取消
 	 */
@@ -248,7 +213,7 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_13);
 			Integer i = mapper.put(mao);
 			//
-			merchantaccountservice.cancleWithdrawamount(mao);
+			merchantaccountservice.cancleTotalincome(mao);
 			return i;
 		} catch (Exception e) {
 		} finally {
@@ -312,90 +277,4 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 		return 0;
 	}
 
-	// 代收提现
-	@Override
-	@Transactional
-	public Integer incomewithdraw(PayoutMerchantaccountorder t) {
-		if (t.getAmount() <= 0) {
-			throw new YtException("金额不能小于1");
-		}
-		Merchant m = null;
-		if (t.getMerchantid() == null) {
-			m = merchantmapper.getByUserId(SysUserContext.getUserId());
-			t.setUserid(SysUserContext.getUserId());
-		} else {
-			m = merchantmapper.get(t.getMerchantid());
-			t.setUserid(m.getUserid());
-		}
-		// 支出订单
-		t.setMerchantid(m.getId());
-		t.setUsername(m.getName());
-		t.setNkname(m.getNikname());
-		t.setMerchantcode(m.getCode());
-		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
-		t.setExchange(t.getMerchantexchange());
-		t.setMerchantexchange(t.getMerchantexchange() + m.getIncomedownpoint());
-		t.setAmountreceived((t.getAmount()));
-		t.setUsdtval(t.getAmount() / t.getExchange());
-		t.setType(DictionaryResource.ORDERTYPE_28);
-		t.setOrdernum("DS" + StringUtil.getOrderNum());
-		t.setRemark("商户代收提现￥：" + String.format("%.2f", t.getAmountreceived()));
-		Integer i = mapper.post(t);
-
-		// 支出账户和记录
-		incomemerchantaccountservice.withdrawamount(t);
-		//
-		return i;
-	}
-
-	/**
-	 * 提现取消
-	 */
-	@Override
-	@Transactional
-	public Integer incomecancleWithdraw(Long id) {
-		RLock lock = RedissonUtil.getLock(id);
-		try {
-			lock.lock();
-			PayoutMerchantaccountorder mao = mapper.get(id);
-			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_13);
-			Integer i = mapper.put(mao);
-			//
-			incomemerchantaccountservice.cancelWithdrawamount(mao);
-			return i;
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-		return 0;
-	}
-
-	@Override
-	@Transactional
-	public void incomewithdrawmanual(PayoutMerchantaccountorder mco) {
-		RLock lock = RedissonUtil.getLock(mco.getId());
-		User u = usermapper.get(SysUserContext.getUserId());
-		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
-		Assert.isTrue(isValid, "验证码错误！");
-		try {
-			lock.lock();
-			PayoutMerchantaccountorder mao = mapper.get(mco.getId());
-			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_10)) {
-				mao.setStatus(mco.getStatus());
-				mao.setImgurl(mco.getImgurl());
-				Integer i = mapper.put(mao);
-				if (i > 0) {
-					if (mco.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
-						incomemerchantaccountservice.updateWithdrawamount(mao);
-					} else {
-						incomemerchantaccountservice.turndownWithdrawamount(mao);
-					}
-				}
-			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-
-	}
 }

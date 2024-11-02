@@ -47,6 +47,10 @@ public class IncomemerchantaccountorderVO extends BaseVO {
 	String statusname;
 	String remark;
 	String imgurl;
+	String accnumber;
+	Double merchantexchange;
+	Double amountreceived;
+	Double usdtval;
 	Long create_by;
 	java.util.Date create_time;
 	Long update_by;

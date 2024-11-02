@@ -267,15 +267,29 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	}
 
 	/**
-	 * =============================================================提现
+	 * ============================================================支出
 	 * 
 	 */
+	@Transactional
+	private void setPretowithdrawamount(PayoutMerchantaccount ma, PayoutMerchantaccountrecord maaj) {
+		ma.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
+		ma.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
+		ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
+		mapper.put(ma);
+	}
 
+	@Transactional
 	private void setWithdrawamount(PayoutMerchantaccount ma, PayoutMerchantaccountrecord maaj) {
 		ma.setWithdrawamount(maaj.getPostwithdrawamount());// 支出增加金额
 		ma.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
 		ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
 		mapper.put(ma);
+
+		Merchant m = merchantmapper.get(ma.getMerchantid());
+		m.setCount(m.getCount() + maaj.getPostwithdrawamount());
+		m.setTodaycount(m.getTodaycount() + maaj.getPostwithdrawamount());
+		m.setBalance(ma.getBalance());
+		merchantmapper.put(m);
 	}
 
 	// 待确认支出
@@ -304,8 +318,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 			maaj.setRemark("待支出￥：" + String.format("%.2f", t.getAmountreceived()));
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
-			setWithdrawamount(ma, maaj);
-			merchantservice.updatePayoutBalance(ma);
+			setPretowithdrawamount(ma, maaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -374,7 +387,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 			maaj.setRemark("拒绝支出￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
-			setWithdrawamount(t, maaj);
+			setPretowithdrawamount(t, maaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -409,7 +422,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 			maaj.setRemark("取消支出￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
 			merchantaccountapplyjournalmapper.post(maaj);
-			setWithdrawamount(t, maaj);
+			setPretowithdrawamount(t, maaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();

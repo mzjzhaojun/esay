@@ -12,7 +12,7 @@ import com.yt.app.common.base.context.JwtUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccountorder;
-import com.yt.app.api.v1.entity.Income;
+import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.api.v1.entity.Systemaccountrecord;
@@ -289,7 +289,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 
 	@Override
 	@Transactional
-	public synchronized void updateIncome(Income mao) {
+	public synchronized void updateIncome(Incomemerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();

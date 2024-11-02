@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccountorder;
-import com.yt.app.api.v1.entity.Income;
+import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.common.base.YtIBaseService;
@@ -17,7 +17,7 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface SystemaccountService extends YtIBaseService<Systemaccount, Long> {
-	
+
 	YtIPage<Systemaccount> page(Map<String, Object> param);
 
 	Systemaccount getData();
@@ -38,7 +38,7 @@ public interface SystemaccountService extends YtIBaseService<Systemaccount, Long
 	void updateExchange(ExchangeMerchantaccountorder mao);
 
 	// 代收
-	void updateIncome(Income mao);
+	void updateIncome(Incomemerchantaccountorder mao);
 
 	// 商户充值
 	void updateUsdtTotalincome(ExchangeMerchantaccountorder mao);
