@@ -81,18 +81,18 @@ public class TaskSlaveConfig {
 		List<Income> list = incomemapper.selectAddlist();
 		for (Income p : list) {
 			if (p.getExpireddate().getTime() < new Date().getTime()) {
-				
+
 				TenantIdContext.setTenantId(p.getTenant_id());
 				log.info("代收支付超时单号ID：" + p.getOrdernum() + " 状态：" + p.getStatus());
 				p.setStatus(DictionaryResource.PAYOUTSTATUS_53);
-				p.setRemark("取消代收资金￥：" + p.getAmount());
+				p.setRemark("超時取消代收资金￥：" + p.getAmount());
 				incomemapper.put(p);
-				//處理渠道
+				// 處理渠道
 				Qrcodeaccountorder qao = qrcodeaccountordermapper.getByOrderNum(p.getQrcodeordernum());
 				qao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
 				qrcodeaccountordermapper.put(qao);
 				qrcodeaccountservice.cancleTotalincome(qao);
-				//處理商戶
+				// 處理商戶
 				Incomemerchantaccountorder imqao = incomemerchantaccountordermapper.getByOrderNum(p.getMerchantorderid());
 				imqao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
 				incomemerchantaccountordermapper.put(imqao);

@@ -35,12 +35,12 @@ public class TronBot extends TelegramLongPollingBot {
 
 	@Override
 	public String getBotUsername() {
-		return "Trx闪兑";
+		return "飞兔兑换";
 	}
 
 	@Override
 	public String getBotToken() {
-		return "7993396689:AAH13SF-0Cej3m9LxBnbv1OkZXsDtKlYUIM";
+		return "7726126730:AAHV97DxD3yU5jmS02EOVpWwndyUOEHAIQo";
 	}
 
 	@Override

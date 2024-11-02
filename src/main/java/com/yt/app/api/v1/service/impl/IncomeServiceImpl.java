@@ -352,6 +352,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 	}
 
+
 	/**
 	 * 自营渠道下单
 	 */
@@ -1166,12 +1167,4 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return mapper.put(income);
 	}
 
-	@Override
-	@Transactional
-	public Integer addip() {
-		Merchant mt = merchantmapper.getByCode("SH00001");
-		mt.setIpaddress(mt.getIpaddress() + "," + AuthContext.getIp());
-		merchantmapper.put(mt);
-		return null;
-	}
 }

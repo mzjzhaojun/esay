@@ -9,18 +9,14 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.yt.app.api.v1.entity.Channel;
-import com.yt.app.api.v1.entity.Exchange;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.mapper.ChannelMapper;
-import com.yt.app.api.v1.mapper.ExchangeMapper;
 import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.service.SysconfigService;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.resource.DictionaryResource;
-import com.yt.app.common.runnable.ExchangeGetChannelOrderNumThread;
-import com.yt.app.common.runnable.PayoutGetChannelOrderNumThread;
 import com.yt.app.common.runnable.InComeNotifyThread;
 import com.yt.app.common.runnable.PayoutNotifyThread;
 import com.yt.app.common.runnable.SynChannelBalanceThread;
@@ -40,9 +36,6 @@ public class TaskMasterConfig {
 
 	@Autowired
 	private PayoutMapper payoutmapper;
-
-	@Autowired
-	private ExchangeMapper exchangemapper;
 
 	@Autowired
 	private ThreadPoolTaskExecutor threadpooltaskexecutor;
@@ -65,7 +58,7 @@ public class TaskMasterConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	// @Scheduled(cron = "0/15 * * * * ?")
+	@Scheduled(cron = "0/11 * * * * ?")
 	public void notifyPayout() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Payout> list = payoutmapper.selectNotifylist();
@@ -93,44 +86,6 @@ public class TaskMasterConfig {
 			p.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_65);
 			if (incomemapper.put(p) > 0) {
 				InComeNotifyThread nf = new InComeNotifyThread(p.getId());
-				threadpooltaskexecutor.execute(nf);
-			}
-		}
-	}
-
-	/**
-	 * 代付线上下单
-	 * 
-	 * @throws InterruptedException
-	 */
-	// @Scheduled(cron = "0/15 * * * * ?")
-	public void payout() throws InterruptedException {
-		TenantIdContext.removeFlag();
-		List<Payout> list = payoutmapper.selectAddlist();
-		for (Payout p : list) {
-			log.info("代付获取渠道单号ID：" + p.getId() + " 状态：" + p.getStatus());
-			p.setStatus(DictionaryResource.PAYOUTSTATUS_55);
-			if (payoutmapper.put(p) > 0) {
-				PayoutGetChannelOrderNumThread nf = new PayoutGetChannelOrderNumThread(p.getId());
-				threadpooltaskexecutor.execute(nf);
-			}
-		}
-	}
-
-	/**
-	 * 换汇线上下单
-	 * 
-	 * @throws InterruptedException
-	 */
-	// @Scheduled(cron = "0/15 * * * * ?")
-	public void exchange() throws InterruptedException {
-		TenantIdContext.removeFlag();
-		List<Exchange> list = exchangemapper.selectAddlist();
-		for (Exchange p : list) {
-			log.info("换汇渠道单号ID：" + p.getId() + " 状态：" + p.getStatus());
-			p.setStatus(DictionaryResource.PAYOUTSTATUS_55);
-			if (exchangemapper.put(p) > 0) {
-				ExchangeGetChannelOrderNumThread nf = new ExchangeGetChannelOrderNumThread(p.getId());
 				threadpooltaskexecutor.execute(nf);
 			}
 		}

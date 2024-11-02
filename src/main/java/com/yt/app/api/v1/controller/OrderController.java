@@ -40,10 +40,10 @@ import com.yt.app.common.util.RequestUtil;
 
 @RestController
 @RequestMapping("/rest/v1/order")
-public class OrderController{
+public class OrderController {
 
 	@Autowired
-	private PayoutService service;
+	private PayoutService payoutservice;
 
 	@Autowired
 	private IncomeService incomeservice;
@@ -64,27 +64,31 @@ public class OrderController{
 
 	// 菲律宾代付回调
 	@RequestMapping(value = "/tycallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		YtBody yb = service.tycallbackpay(requestEntity.getBody());
-		return new YtResponseEntity<Object>(yb);
+	public void tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		payoutservice.tycallbackpay(requestEntity.getBody());
+		try {
+			response.getWriter().print("ok");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// 代付盘口查单
 	@RequestMapping(value = "/query", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tyquery(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		PayResultVO pt = service.query(requestEntity.getBody().getMerchantorderid());
+		PayResultVO pt = payoutservice.query(requestEntity.getBody().getMerchantorderid());
 		return new YtResponseEntity<Object>(new YtBody(pt));
 	}
 
 	// 代付盘口下单
-	@RequestMapping(value = "/submit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/payoutsubmit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submit(YtRequestEntity<PaySubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		PaySubmitDTO psdto = requestEntity.getBody();
 		RLock lock = RedissonUtil.getLock(psdto.getMerchantid());
 		PayResultVO sr = null;
 		try {
 			lock.lock();
-			sr = service.submit(psdto);
+			sr = payoutservice.submit(psdto);
 		} catch (Exception e) {
 			throw new YtException(e);
 		} finally {
@@ -300,6 +304,24 @@ public class OrderController{
 		incomeservice.aklcallback(RequestUtil.requestEntityToParamMap(requestEntity));
 		try {
 			response.getWriter().print("success");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 十年代付回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/sncallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void sncallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		payoutservice.sncallback(RequestUtil.requestEntityToParamMap(requestEntity));
+		try {
+			response.getWriter().print("ok");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

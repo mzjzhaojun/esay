@@ -63,8 +63,4 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	// 通知
 	Integer notify(Income income);
-
-	//
-	Integer addip();
-
 }

@@ -31,6 +31,7 @@ import com.yt.app.api.v1.vo.SysHsOrder;
 import com.yt.app.api.v1.vo.SysHsQuery;
 import com.yt.app.api.v1.vo.SysRblOrder;
 import com.yt.app.api.v1.vo.SysRblQuery;
+import com.yt.app.api.v1.vo.SysSnOrder;
 import com.yt.app.api.v1.vo.SysTyBalance;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.api.v1.vo.SysWdOrder;
@@ -39,6 +40,9 @@ import com.yt.app.api.v1.vo.SysWjOrder;
 import com.yt.app.api.v1.vo.SysWjQuery;
 import com.yt.app.api.v1.vo.SysYJJQuery;
 import com.yt.app.api.v1.vo.SysYjjOrder;
+
+import cn.hutool.json.JSONUtil;
+
 import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -175,6 +179,86 @@ public class PayUtil {
 		ResponseEntity<SysTyBalance> sov = resttemplate.exchange(cl.getApiip() + "/api/query/withdraw/amount?sign=" + MD5Utils.md5(signParams), HttpMethod.POST, httpEntity, SysTyBalance.class);
 		SysTyBalance data = sov.getBody();
 		return data;
+	}
+
+	// 十年支付宝代付
+	public static String SendSnSubmit(Payout pt, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Long time = System.currentTimeMillis() / 1000;
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("AccessKey", cl.getCode());
+		map.put("OrderNo", pt.getOrdernum());
+		map.put("PayChannelId", cl.getAislecode());
+		map.put("Amount", String.format("%.2f", pt.getAmount()));
+		map.put("CallbackUrl", cl.getApireusultip());
+		map.put("PayeeNo", pt.getAccnumer());
+		map.put("Payee", pt.getAccname());
+		map.put("PayeeAddress", pt.getBankname());
+		map.put("Timestamp", time.toString());
+
+		TreeMap<String, String> sortedMap = new TreeMap<>(map);
+		String signContent = "";
+		for (String key : sortedMap.keySet()) {
+			signContent = signContent + key + "=" + map.get(key) + "&";
+		}
+		signContent = signContent.substring(0, signContent.length() - 1);
+		signContent = signContent + "&SecretKey=" + cl.getApikey();
+		String sign = MD5Utils.md5(signContent);
+		map.put("Sign", sign);
+		log.info("十年代付下单签名：" + sign + "===" + signContent);
+
+		HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<String> sov = resttemplate.postForEntity(cl.getApiip() + "/api/WithdrawalV2/submit", httpEntity, String.class);
+		String data = sov.getBody();
+		SysSnOrder sso = JSONUtil.toBean(data, SysSnOrder.class);
+		log.info("十年代付成功返回订单号：" + data);
+		if (sso.getCode() == 0) {
+			return sso.getData().getOrderNo();
+		}
+		return null;
+	}
+
+	// 公子代收查单
+	public static Integer SendSnSelectOrder(String orderid, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			Map<String, String> map = new HashMap<String, String>();
+			Long time = System.currentTimeMillis() / 1000;
+			map.put("AccessKey", cl.getCode());
+			map.put("OrderNo", orderid);
+			map.put("Timestamp", time.toString());
+			TreeMap<String, String> sortedMap = new TreeMap<>(map);
+			String signContent = "";
+			for (String key : sortedMap.keySet()) {
+				signContent = signContent + key + "=" + map.get(key) + "&";
+			}
+			signContent = signContent.substring(0, signContent.length() - 1);
+			signContent = signContent + "&SecretKey=" + cl.getApikey();
+			String sign = MD5Utils.md5(signContent);
+			map.put("Sign", sign);
+			log.info("十年查单签名：" + sign + "===" + signContent);
+
+			HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<String> sov = resttemplate.postForEntity(cl.getApiip() + "/api/WithdrawalV2/queryorder", httpEntity, String.class);
+			String data = sov.getBody();
+			log.info("十年代付查单返回消息：" + data);
+			SysSnOrder sso = JSONUtil.toBean(data, SysSnOrder.class);
+			log.info("十年代付成功返回订单号：" + data);
+			if (sso.getCode() == 0) {
+				return sso.getData().getStatus();
+			}
+		} catch (RestClientException e) {
+			log.info("十年代付查单返回消息：" + e.getMessage());
+		}
+		return null;
 	}
 
 	// 代付盘口通知

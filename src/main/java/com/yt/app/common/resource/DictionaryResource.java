@@ -24,6 +24,8 @@ public class DictionaryResource implements Serializable {
 	public static final String WJAISLE = "玩家"; // WJAISLE
 	public static final String FCAISLE = "翡翠"; // FCAISLE
 	public static final String AKLAISLE = "奥克兰"; // AKLAISLE
+
+	public static final String DFSNAISLE = "十年"; //
 	/**
 	 * 
 	 */
@@ -147,7 +149,7 @@ public class DictionaryResource implements Serializable {
 	public static final Integer LOG_TYPE_201 = 201; // web
 	public static final Integer LOG_TYPE_202 = 202; // app
 
-	//项目类型
+	// 项目类型
 	public static final Integer PROJECT_TYPE_501 = 501;
 	public static final Integer PROJECT_TYPE_502 = 502;
 	public static final Integer PROJECT_TYPE_503 = 503;

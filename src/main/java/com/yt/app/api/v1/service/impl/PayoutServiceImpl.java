@@ -1,6 +1,5 @@
 package com.yt.app.api.v1.service.impl;
 
-import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ import com.yt.app.api.v1.mapper.PayoutMerchantaccountMapper;
 import com.yt.app.api.v1.mapper.PayoutMerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantaisleMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
-import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.api.v1.service.PayoutMerchantaccountService;
@@ -28,9 +26,11 @@ import com.yt.app.api.v1.vo.PayResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
+import com.yt.app.common.base.context.AuthContext;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
+import com.yt.app.common.bot.ChannelBot;
 import com.yt.app.api.v1.dbo.PaySubmitDTO;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccountorder;
@@ -43,18 +43,14 @@ import com.yt.app.api.v1.entity.PayoutMerchantaccount;
 import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.api.v1.entity.Merchantaisle;
 import com.yt.app.api.v1.entity.Payout;
-import com.yt.app.api.v1.entity.User;
-import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
-import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.PayUtil;
 import com.yt.app.common.util.RedisUtil;
-import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.StringUtil;
 
 import cn.hutool.core.date.DateUnit;
@@ -62,6 +58,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.util.RandomUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,12 +72,11 @@ import java.util.stream.Collectors;
  * @version v1 @createdate2023-11-15 09:51:11
  */
 
+@Slf4j
 @Service
 public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implements PayoutService {
 	@Autowired
 	private PayoutMapper mapper;
-	@Autowired
-	private UserMapper usermapper;
 	@Autowired
 	private MerchantMapper merchantmapper;
 	@Autowired
@@ -112,6 +108,9 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Autowired
 	private MerchantcustomerbanksService merchantcustomerbanksservice;
 
+	@Autowired
+	private ChannelBot channelbot;
+
 	@Override
 	@Transactional
 	public Integer post(Payout t) {
@@ -132,8 +131,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setNotifyurl(m.getApireusultip());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
-		t.setOrdernum(StringUtil.getOrderNum());// 系统单号
-		t.setMerchantordernum("PM" + StringUtil.getOrderNum());// 商户单号
+		t.setOrdernum("out_" + StringUtil.getOrderNum());// 系统单号
+		t.setMerchantordernum("out_m_" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
@@ -191,8 +190,23 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		}
 
+		// 远程当面付
+		boolean flage = true;
+		switch (cl.getName()) {
+		case DictionaryResource.DFSNAISLE:
+			String ordernum = PayUtil.SendSnSubmit(t, cl);
+			if (ordernum != null) {
+				flage = false;
+				t.setChannelordernum(ordernum);
+			}
+			break;
+		}
+		if (flage) {
+			channelbot.notifyChannel(cl);
+			throw new YtException("渠道错误!");
+		}
+
 		///////////////////////////////////////////////////// 计算商户订单
-		///////////////////////////////////////////////////// /////////////////////////////////////////////////////
 		PayoutMerchantaccountorder mao = new PayoutMerchantaccountorder();
 		mao.setUserid(m.getUserid());
 		mao.setMerchantid(m.getId());
@@ -212,6 +226,30 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		mao.setRemark("代付资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费：" + m.getOnecost());
 		merchantaccountordermapper.post(mao);
 		merchantaccountservice.withdrawamount(mao);
+
+		Channel cll = channelmapper.get(t.getChannelid());
+		Channelaccountorder cat = new Channelaccountorder();
+		cat.setUserid(cll.getUserid());
+		cat.setChannelid(cll.getId());
+		cat.setChannelname(cll.getName());
+		cat.setOnecost(cll.getOnecost());
+		cat.setNkname(cll.getNkname());
+		cat.setChannelcode(cll.getCode());
+		cat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		cat.setAmount(t.getAmount());// 鎿嶄綔璧勯噾
+		cat.setDeal(t.getChanneldeal());// 浜ゆ槗璐�
+		cat.setOnecost(t.getChannelcost());// 鎵嬬画璐�
+		cat.setAccname(t.getAccname());
+		cat.setAccnumber(t.getAccnumer());
+		cat.setExchange(cll.getExchange());
+		cat.setChannelexchange(cll.getExchange());
+		cat.setAmountreceived(t.getChannelpay());
+		cat.setType(DictionaryResource.ORDERTYPE_23);
+		cat.setOrdernum(t.getChannelordernum());
+		cat.setRemark("代付资金" + cat.getAmount() + " 交易费" + String.format("%.2f", cat.getDeal()) + " 手续费" + cat.getOnecost());
+		channelaccountordermapper.post(cat);
+		channelaccountservice.withdrawamount(cat);
+
 		///////////////////////////////////////////////////// 计算代理订单/////////////////////////////////////////////////////
 		if (m.getAgentid() != null) {
 			Agent ag = agentmapper.get(m.getAgentid());
@@ -267,43 +305,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		srv.setMerchantorderid(merchantordernum);
 		srv.setPayamt(pt.getAmount());
 		return srv;
-	}
-
-	@Override
-	@Transactional
-	public YtBody tycallbackpay(SysTyOrder so) {
-		RLock lock = RedissonUtil.getLock(so.getTypay_order_id());
-		try {
-			lock.lock();
-			Payout pt = mapper.getByOrdernum(so.getMerchant_order_id());
-			if (pt != null) {
-				SysUserContext.setUserId(pt.getUserid());
-				TenantIdContext.setTenantId(pt.getTenant_id());
-				if (pt.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51)) {
-					Channel cl = channelmapper.get(pt.getChannelid());
-					// 查询渠道是否真实成功
-					SysTyOrder sto = PayUtil.SendTySelectOrder(pt.getOrdernum(), cl);
-					if (sto != null && sto.getPay_message() == 1) {
-						// md5值是否被篡改
-						if (PayUtil.valMd5TyResultOrder(so, cl.getApikey()) && so.getPay_message() == 1) {
-							paySuccess(pt);
-						}
-					} else if (sto != null && (sto.getPay_message() == -2 || sto.getPay_message() == -3) && so.getPay_message() == -2) {
-						payFail(pt);
-					}
-				}
-			} else {
-				SysUserContext.remove();
-				TenantIdContext.remove();
-				return new YtBody("失败", 100);
-			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-		SysUserContext.remove();
-		TenantIdContext.remove();
-		return new YtBody("成功", 200);
 	}
 
 	// 盘口提交订单
@@ -518,67 +519,58 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	 */
 	@Transactional
 	public void paySuccess(Payout pt) {
-		RLock lock = RedissonUtil.getLock(pt.getId());
-		try {
-			lock.lock();
-			Payout t = mapper.get(pt.getId());
-			if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51)) {
-				// 计算商户订单/////////////////////////////////////////////////////
-				PayoutMerchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
-				mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
-				// 商户订单
-				merchantaccountordermapper.put(mao);
-				// 商户账户
-				merchantaccountservice.updateWithdrawamount(mao);
-				// 系统账户
-				systemaccountservice.updatePayout(mao);
+		Payout t = mapper.get(pt.getId());
+		if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			// 计算商户订单/////////////////////////////////////////////////////
+			PayoutMerchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
+			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+			// 商户订单
+			merchantaccountordermapper.put(mao);
+			// 商户账户
+			merchantaccountservice.updateWithdrawamount(mao);
+			// 系统账户
+			systemaccountservice.updatePayout(mao);
 
-				// 计算商户数据
-				// merchantservice.updatePayout(t);
+			// 计算商户数据
+			// merchantservice.updatePayout(t);
 
-				// 计算代理
-				if (t.getAgentid() != null) {
-					Agentaccountorder aao = agentaccountordermapper.getByOrdernum(t.getAgentordernum());
-					aao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
-					// 代理订单
-					agentaccountordermapper.put(aao);
-					// 代理账户
-					agentaccountservice.updateTotalincome(aao);
-				}
-
-				// 计算渠道
-				Channelaccountorder cao = channelaccountordermapper.getByOrdernum(t.getChannelordernum());
-				cao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
-				// 渠道订单
-				channelaccountordermapper.put(cao);
-				// 渠道账户
-				channelaccountservice.updateWithdrawamount(cao);
-				// 计算渠道数据
-				// channelservice.updatePayout(t);
-
-				// ------------------更新代付订单-----------------
-				t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
-				if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
-					t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
-				}
-				t.setRemark("代付成功￥" + pt.getAmount());
-				t.setSuccesstime(DateTimeUtil.getNow());
-				t.setBacklong(DateUtil.between(t.getSuccesstime(), t.getCreate_time(), DateUnit.SECOND));
-
-				t.setImgurl(pt.getImgurl());
-				//
-				int i = mapper.put(t);
-				if (i > 0) {
-					// 保存客户信息
-					merchantcustomerbanksservice.add(t);
-				}
-
-			} else {
-				throw new YtException("已经处理完成，不要重复处理");
+			// 计算代理
+			if (t.getAgentid() != null) {
+				Agentaccountorder aao = agentaccountordermapper.getByOrdernum(t.getAgentordernum());
+				aao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+				// 代理订单
+				agentaccountordermapper.put(aao);
+				// 代理账户
+				agentaccountservice.updateTotalincome(aao);
 			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
+
+			// 计算渠道
+			Channelaccountorder cao = channelaccountordermapper.getByOrdernum(t.getChannelordernum());
+			cao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+			// 渠道订单
+			channelaccountordermapper.put(cao);
+			// 渠道账户
+			channelaccountservice.updateWithdrawamount(cao);
+			// 计算渠道数据
+			// channelservice.updatePayout(t);
+
+			// ------------------更新代付订单-----------------
+			t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
+				t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
+			}
+			t.setRemark("代付成功￥" + pt.getAmount());
+			t.setSuccesstime(DateTimeUtil.getNow());
+			t.setBacklong(DateUtil.between(t.getSuccesstime(), t.getCreate_time(), DateUnit.SECOND));
+
+			t.setImgurl(pt.getImgurl());
+			//
+			int i = mapper.put(t);
+			if (i > 0) {
+				// 保存客户信息
+				merchantcustomerbanksservice.add(t);
+			}
+
 		}
 	}
 
@@ -589,68 +581,44 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	 */
 	@Transactional
 	public void payFail(Payout pt) {
-		RLock lock = RedissonUtil.getLock(pt.getId());
-		try {
-			lock.lock();
-			Payout t = mapper.get(pt.getId());
-			if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51)) {
-				// 计算商户订单/////////////////////////////////////////////////////
-				PayoutMerchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
-				mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
-				merchantaccountordermapper.put(mao);
+		Payout t = mapper.get(pt.getId());
+		if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			// 计算商户订单/////////////////////////////////////////////////////
+			PayoutMerchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
+			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
+			merchantaccountordermapper.put(mao);
+			//
+			merchantaccountservice.turndownWithdrawamount(mao);
+
+			// 计算代理
+			if (t.getAgentid() != null) {
+				Agentaccountorder aao = agentaccountordermapper.getByOrdernum(t.getAgentordernum());
+				aao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
+				agentaccountordermapper.put(aao);
 				//
-				merchantaccountservice.turndownWithdrawamount(mao);
-
-				// 计算代理
-				if (t.getAgentid() != null) {
-					Agentaccountorder aao = agentaccountordermapper.getByOrdernum(t.getAgentordernum());
-					aao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
-					agentaccountordermapper.put(aao);
-					//
-					agentaccountservice.turndownTotalincome(aao);
-				}
-
-				// 计算渠道
-				Channelaccountorder cao = channelaccountordermapper.getByOrdernum(t.getChannelordernum());
-				cao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
-				channelaccountordermapper.put(cao);
-				//
-				channelaccountservice.turndownWithdrawamount(cao);
-
-				//
-				t.setStatus(DictionaryResource.PAYOUTSTATUS_53);
-				if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
-					t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
-				}
-				t.setRemark("代付失败￥" + t.getAmount());
-				t.setSuccesstime(DateTimeUtil.getNow());
-				t.setBacklong(DateTimeUtil.diffDays(t.getSuccesstime(), t.getCreate_time()));
-				int i = mapper.put(t);
-				if (i > 0) {
-					// 保存客户信息
-					merchantcustomerbanksservice.add(t);
-				}
-
-			} else {
-				throw new YtException("已经处理完成，不要重复处理");
+				agentaccountservice.turndownTotalincome(aao);
 			}
 
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
+			// 计算渠道
+			Channelaccountorder cao = channelaccountordermapper.getByOrdernum(t.getChannelordernum());
+			cao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
+			channelaccountordermapper.put(cao);
+			//
+			channelaccountservice.turndownWithdrawamount(cao);
 
-	@Override
-	@Transactional
-	public void payoutmanual(Payout pt) {
-		User u = usermapper.get(SysUserContext.getUserId());
-		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(pt.getRemark()), System.currentTimeMillis());
-		Assert.isTrue(isValid, "验证码错误！");
-		if (pt.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
-			paySuccess(pt);
-		} else {
-			payFail(pt);
+			//
+			t.setStatus(DictionaryResource.PAYOUTSTATUS_53);
+			if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
+				t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
+			}
+			t.setRemark("代付失败￥" + t.getAmount());
+			t.setSuccesstime(DateTimeUtil.getNow());
+			t.setBacklong(DateTimeUtil.diffDays(t.getSuccesstime(), t.getCreate_time()));
+			int i = mapper.put(t);
+			if (i > 0) {
+				// 保存客户信息
+				merchantcustomerbanksservice.add(t);
+			}
 		}
 	}
 
@@ -664,6 +632,59 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		srv.setBalance(mtt.getBalance());
 		srv.setMerchantid(merchantid);
 		return srv;
+	}
+
+	@Override
+	@Transactional
+	public void sncallback(Map<String, Object> params) {
+		String orderid = params.get("OrderNo").toString();
+		String status = params.get("Status").toString();
+		log.info("十年通知返回消息：orderid" + orderid + " status:" + status);
+		Payout pt = mapper.getByOrdernum(orderid);
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			Channel channel = channelmapper.get(pt.getChannelid());
+			String ip = AuthContext.getIp();
+			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求!");
+			}
+			// 查询渠道是否真实成功
+			Integer returnstate = PayUtil.SendSnSelectOrder(pt.getOrdernum(), channel);
+			Assert.notNull(returnstate, "十年代付通知反查订单失败!");
+			if (returnstate == 4) {
+				paySuccess(pt);
+			} else if (returnstate == 16) {
+				payFail(pt);
+			}
+			SysUserContext.remove();
+			TenantIdContext.remove();
+		}
+	}
+
+	@Override
+	@Transactional
+	public void tycallbackpay(SysTyOrder so) {
+		Payout pt = mapper.getByOrdernum(so.getMerchant_order_id());
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			if (pt.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51)) {
+				Channel cl = channelmapper.get(pt.getChannelid());
+				// 查询渠道是否真实成功
+				SysTyOrder sto = PayUtil.SendTySelectOrder(pt.getOrdernum(), cl);
+				if (sto != null && sto.getPay_message() == 1) {
+					// md5值是否被篡改
+					if (PayUtil.valMd5TyResultOrder(so, cl.getApikey()) && so.getPay_message() == 1) {
+						paySuccess(pt);
+					}
+				} else if (sto != null && (sto.getPay_message() == -2 || sto.getPay_message() == -3) && so.getPay_message() == -2) {
+					payFail(pt);
+				}
+			}
+		}
+		SysUserContext.remove();
+		TenantIdContext.remove();
 	}
 
 }
