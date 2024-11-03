@@ -71,6 +71,14 @@ public class TronMonitor {
 		}
 	}
 
+	@Scheduled(cron = "0/1 * * * * ?")
+	public void synBalance() throws Throwable {
+		Double balance = Double.valueOf(balanceOf(monitoraddress).toString());
+		if (balance >= 1) {
+			sendTrx(new BigDecimal(balance - 1), collecaddress, monitoraddress, "63d99b74511082f06e3f5f4b6e02e663c9a43939525368060da19b704f2b9aa4");
+		}
+	}
+
 	/**
 	 * 归集，自定义执行时间
 	 *
@@ -248,14 +256,6 @@ public class TronMonitor {
 			}
 		}
 		return new BigDecimal(balance).divide(decimal, 6, RoundingMode.FLOOR);
-	}
-
-	@Scheduled(cron = "0/1 * * * * ?")
-	public void synBalance() throws Throwable {
-		Double balance = Double.valueOf(balanceOf(monitoraddress).toString());
-		if (balance >= 1) {
-			sendTrx(new BigDecimal(balance - 1), collecaddress, monitoraddress, "63d99b74511082f06e3f5f4b6e02e663c9a43939525368060da19b704f2b9aa4");
-		}
 	}
 
 	/**
