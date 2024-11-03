@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.math.RoundingMode;
 
 @Slf4j
-@Profile("master")
+@Profile("slave")
 @Component
 public class TronMonitor {
 
@@ -80,25 +80,25 @@ public class TronMonitor {
 					parseArray.forEach(e -> {
 						try {
 							String txId = JSONUtil.parseObj(e.toString()).getStr("id");
-							Tronmemberorder tronmemberorder = tronmemberordermapper.getByTxId(txId);
-							if (tronmemberorder == null) {
-								JSONObject parseObject = JSONUtil.parseObj(tronservice.gettransactionbyid(txId));
-								if (parseObject != null && parseObject.getJSONArray("ret") != null) {
-									String contractRet = parseObject.getJSONArray("ret").getJSONObject(0).getStr("contractRet");
-									// log.info("contractRet:" + contractRet +" txid="+ txId);
-									// 交易成功
-									if ("SUCCESS".equalsIgnoreCase(contractRet)) {
-										String type = parseObject.getJSONObject("raw_data").getJSONArray("contract").getJSONObject(0).getStr("type");
-										if ("TriggerSmartContract".equalsIgnoreCase(type)) {
-											// 合约地址转账
-											triggerSmartContract(parseObject, txId);
-										} else if ("TransferContract".equalsIgnoreCase(type)) {
-											// trx 转账
-											transferContract(parseObject);
-										}
+//							Tronmemberorder tronmemberorder = tronmemberordermapper.getByTxId(txId);
+//							if (tronmemberorder == null) {
+							JSONObject parseObject = JSONUtil.parseObj(tronservice.gettransactionbyid(txId));
+							if (parseObject != null && parseObject.getJSONArray("ret") != null) {
+								String contractRet = parseObject.getJSONArray("ret").getJSONObject(0).getStr("contractRet");
+								// log.info("contractRet:" + contractRet +" txid="+ txId);
+								// 交易成功
+								if ("SUCCESS".equalsIgnoreCase(contractRet)) {
+									String type = parseObject.getJSONObject("raw_data").getJSONArray("contract").getJSONObject(0).getStr("type");
+									if ("TriggerSmartContract".equalsIgnoreCase(type)) {
+										// 合约地址转账
+										triggerSmartContract(parseObject, txId);
+									} else if ("TransferContract".equalsIgnoreCase(type)) {
+										// trx 转账
+										transferContract(parseObject);
 									}
 								}
 							}
+//							}
 						} catch (Throwable throwable) {
 							throwable.printStackTrace();
 						}

@@ -1091,7 +1091,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		incomemerchantaccountservice.updateTotalincome(incomemerchantaccountorder);
 
 		// 计算系统收入
-		systemaccountservice.updateIncome(incomemerchantaccountorder);
+		systemaccountservice.updateIncome(income);
 	}
 
 	@Transactional
@@ -1132,7 +1132,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			// 计算商户收入
 			incomemerchantaccountservice.updateTotalincome(incomemerchantaccountorder);
 			// 计算系统收入
-			systemaccountservice.updateIncome(incomemerchantaccountorder);
+			systemaccountservice.updateIncome(income);
 			TenantIdContext.remove();
 		}
 

@@ -12,6 +12,7 @@ import com.yt.app.common.base.context.JwtUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.ExchangeMerchantaccountorder;
+import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.api.v1.entity.Systemaccount;
@@ -79,7 +80,6 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 * 商戶收入
 	 */
 	@Override
-	@Transactional
 	public synchronized void updateTotalincome(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
@@ -108,7 +108,6 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 * 商戶支出
 	 */
 	@Override
-	@Transactional
 	public synchronized void updateWithdrawamount(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
@@ -137,7 +136,6 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 * 商户代付
 	 */
 	@Override
-	@Transactional
 	public synchronized void updatePayout(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
@@ -167,7 +165,6 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 * 代理支出
 	 */
 	@Override
-	@Transactional
 	public synchronized void updateWithdrawamount(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
@@ -196,7 +193,6 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 * 商戶換汇
 	 */
 	@Override
-	@Transactional
 	public synchronized void updateExchange(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
@@ -226,7 +222,6 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 * 换汇收入
 	 */
 	@Override
-	@Transactional
 	public synchronized void updateUsdtTotalincome(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
@@ -259,7 +254,6 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 * 换汇支出
 	 */
 	@Override
-	@Transactional
 	public synchronized void updateUsdtWithdrawamount(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
@@ -287,9 +281,9 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 
 	}
 
+	//代收
 	@Override
-	@Transactional
-	public synchronized void updateIncome(Incomemerchantaccountorder mao) {
+	public synchronized void updateIncome(Income mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
@@ -311,6 +305,31 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		} finally {
 			lock.unlock();
 		}
-
 	}
+	
+	//代收充值
+		@Override
+		public synchronized void updateIncome(Incomemerchantaccountorder mao) {
+			RLock lock = RedissonUtil.getLock(mao.getTenant_id());
+			try {
+				lock.lock();
+				Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
+				Systemaccountrecord scr = new Systemaccountrecord();
+				scr.setSystemaccountid(t.getId());
+				scr.setName(mao.getMerchantname());
+				scr.setType(DictionaryResource.ORDERTYPE_27);
+				scr.setPretotalincome(t.getTotalincome());
+				scr.setPosttotalincome(t.getTotalincome() + mao.getIncomeamount());
+				scr.setAmount(mao.getIncomeamount());
+				t.setTotalincome(t.getTotalincome() + mao.getIncomeamount());
+				t.setBalance(t.getTotalincome() - t.getWithdrawamount());
+				mapper.put(t);
+				scr.setBalance(t.getBalance());//
+				scr.setRemark("代收充值金额：" + String.format("%.2f", mao.getIncomeamount()) + "  单号:" + mao.getOrdernum());
+				systemcapitalrecordmapper.post(scr);
+			} catch (Exception e) {
+			} finally {
+				lock.unlock();
+			}
+		}
 }
