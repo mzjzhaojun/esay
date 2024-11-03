@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.UserMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,username,nickname,twofactorcode,twostatus,sex,phone,email,avatar_url,dept_id,post_id_list,is_fixed,accounttype,create_by,create_time,update_by,update_time,is_deleted,version
+		id,tenant_id,username,nickname,password,twofactorcode,twostatus,sex,phone,email,avatar_url,dept_id,post_id_list,is_fixed,accounttype,create_by,create_time,update_by,update_time,is_deleted,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -98,7 +98,7 @@
 				version= #{version}+1
 			</if>
 		</set>
-		where id = #{id} 
+		where id = #{id}
 	</update>
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"
@@ -242,9 +242,11 @@
 		sr.id roleId,
 		sr.code roleCode
 		FROM t_sys_user su
-		JOIN t_sys_user_role
+		JOIN
+		t_sys_user_role
 		sur ON sur.user_id = su.id
-		JOIN t_sys_role sr ON sr.id = sur.role_id
+		JOIN t_sys_role sr ON sr.id =
+		sur.role_id
 		WHERE
 		su.is_deleted = 0
 		<if test="userId != null">

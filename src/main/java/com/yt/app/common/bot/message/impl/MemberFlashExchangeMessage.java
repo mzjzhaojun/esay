@@ -15,13 +15,13 @@ public class MemberFlashExchangeMessage implements UpdateMessageService {
 
 	@Override
 	public SendMessage getUpdate(Update update) {
-		Double price = Double.valueOf(RedisUtil.get(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTOTEXCHANGE));
+		Double price = 7.123;// Double.valueOf(RedisUtil.get(SystemConstant.CACHE_SYS_EXCHANGE +
+								// ServiceConstant.SYSTEM_PAYCONFIG_USDTEXCHANGE));
 		SendMessage sendMessage = new SendMessage();
 		sendMessage.setChatId(update.getMessage().getChatId().toString());
-		sendMessage.setText("*实时汇率*\r\n" + "1 USDT = " + (price - 0.65) + " TRX  \r\n" + "100 TRX = " + 100 / (price + 0.65) + " USDT   \r\n" + "\r\n" + "自动兑换地址:\r\n" + "`TUrntwm5t9umKhC7jv89RXGo33qcTFAAAA` (点击地址自动复制)\r\n" + "\r\n"
-				+ "请不要使用交易所转账‼️\r\n" + "切记切记，否则丢失自负‼️\r\n" + "\r\n" + "转账即兑，全自动返，等值 1u 起换\r\n" + "\r\n" + "输入兑换数量\r\n" + "例如: “10U” 可实时计算10U可兑换的TRX数量; \r\n" + "例如: “100TRX” 可实时计算100TRX可兑换的U数量;");
+		sendMessage.setText("*实时汇率*\r\n" + "1 USDT = " + (price) + " 人民币  \r\n" + "\r\n" + "自动兑换地址:\r\n" + "`TWXQjegKptQkfaGXA3m7V5A2AnMGT88888` (点击地址自动复制)\r\n" + "\r\n" + "\r\n" + "转账即兑，全自动返，等值 20u 起换\r\n" + "\r\n");
 		sendMessage.enableMarkdown(true);
-		sendMessage.setReplyMarkup(InlineKeyboard.getInlineKeyboardMarkup());
+		sendMessage.setReplyMarkup(InlineKeyboard.getUpInlineKeyboardMarkup(update.getMessage().getChatId()));
 		return sendMessage;
 	}
 

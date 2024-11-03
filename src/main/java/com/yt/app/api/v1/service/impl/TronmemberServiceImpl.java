@@ -4,14 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.TronmemberMapper;
+import com.yt.app.api.v1.mapper.UserMapper;
+import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.TronmemberService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
+import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Tronmember;
+import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.vo.TronmemberVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
+import com.yt.app.common.util.PasswordUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +33,12 @@ public class TronmemberServiceImpl extends YtBaseServiceImpl<Tronmember, Long> i
 	@Autowired
 	private TronmemberMapper mapper;
 
+	@Autowired
+	private UserMapper usermapper;
+
+	@Autowired
+	private MerchantService merchantservice;
+
 	@Override
 	@Transactional
 	public Integer post(Tronmember t) {
@@ -35,11 +46,25 @@ public class TronmemberServiceImpl extends YtBaseServiceImpl<Tronmember, Long> i
 		return i;
 	}
 
-
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tronmember get(Long id) {
-		Tronmember t = mapper.get(id);
+		Tronmember t = mapper.getByTgId(id);
+		if (t.getUserid() == null) {
+			Merchant m = new Merchant();
+			m.setUsername(t.getName());
+			m.setName(t.getName());
+			m.setCode(t.getTgid().toString());
+			m.setStatus(true);
+			m.setPassword("123456");
+			Merchant mm = merchantservice.postMerchant(m);
+			t.setUserid(mm.getUserid());
+			t.setTenant_id(m.getTenant_id());
+			mapper.put(t);
+		}
+		User u = usermapper.get(t.getUserid());
+		t.setUserid(u.getId());
+		t.setPassword(PasswordUtil.decrypt(u.getPassword()));
 		return t;
 	}
 

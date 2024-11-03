@@ -18,7 +18,7 @@ public class KeyboardMarkup {
 		KeyboardButton kbb = new KeyboardButton();
 		kbb.setText("⚡购买TRX");
 		KeyboardButton kbb1 = new KeyboardButton();
-		kbb1.setText("✈购买飞机会员");
+		kbb1.setText("✈白资兑换");
 		KeyboardButton kbb3 = new KeyboardButton();
 		kbb3.setText("🧑‍🚀联系客服");
 		KeyboardRow kbr = new KeyboardRow();

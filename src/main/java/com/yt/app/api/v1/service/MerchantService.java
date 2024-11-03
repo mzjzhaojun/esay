@@ -34,4 +34,6 @@ public interface MerchantService extends YtIBaseService<Merchant, Long> {
 
 	void updateDayValue(Merchant c, String date);
 
+	Merchant postMerchant(Merchant m);
+
 }

@@ -16,6 +16,7 @@ import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.vo.IncomemerchantaccountorderVO;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
+import com.yt.app.common.base.constant.BaseConstant;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
@@ -128,6 +129,59 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		incomemerchantaccountmapper.post(ima);
 
 		return i;
+	}
+
+	@Override
+	@Transactional
+	public Merchant postMerchant(Merchant t) {
+		TenantIdContext.setTenantId(BaseConstant.FEITU_TENANT_ID);
+		// user
+		User u = new User();
+		u.setUsername(t.getUsername());
+		u.setNickname(t.getName());
+		u.setPassword(PasswordUtil.encodePassword(t.getPassword()));
+		u.setAccounttype(DictionaryResource.SYSTEM_ADMINTYPE_4);
+		u.setTwofactorcode(GoogleAuthenticatorUtil.getSecretKey());
+		usermapper.post(u);
+
+		//
+		t.setTenant_id(u.getTenant_id());
+		t.setUserid(u.getId());
+		t.setAppkey(StringUtil.getUUID());
+		mapper.post(t);
+
+		//
+		PayoutMerchantaccount sm = new PayoutMerchantaccount();
+		sm.setTotalincome(0.00);
+		sm.setWithdrawamount(0.00);
+		sm.setTowithdrawamount(0.00);
+		sm.setToincomeamount(0.00);
+		sm.setUserid(u.getId());
+		sm.setMerchantid(t.getId());
+		sm.setBalance(0.00);
+		merchantaccountmapper.post(sm);
+
+		ExchangeMerchantaccount emc = new ExchangeMerchantaccount();
+		emc.setTotalincome(0.00);
+		emc.setWithdrawamount(0.00);
+		emc.setTowithdrawamount(0.00);
+		emc.setToincomeamount(0.00);
+		emc.setUserid(u.getId());
+		emc.setMerchantid(t.getId());
+		emc.setBalance(0.00);
+		exchangemerchantaccountmapper.post(emc);
+
+		Incomemerchantaccount ima = new Incomemerchantaccount();
+		ima.setTotalincome(0.00);
+		ima.setWithdrawamount(0.00);
+		ima.setTowithdrawamount(0.00);
+		ima.setToincomeamount(0.00);
+		ima.setUserid(u.getId());
+		ima.setMerchantid(t.getId());
+		ima.setBalance(0.00);
+		incomemerchantaccountmapper.post(ima);
+		TenantIdContext.remove();
+		return t;
 	}
 
 	@Override

@@ -42,7 +42,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 	private TronMapper mapper;
 
 	// final static String URL = "https://nile.trongrid.io";
-	final static String URL = "https://api.trongrid.io";
+	final static String URL = "http://192.168.18.22:8090";
 
 	@Override
 	@Transactional

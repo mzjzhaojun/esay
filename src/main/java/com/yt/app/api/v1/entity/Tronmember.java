@@ -25,6 +25,8 @@ public class Tronmember extends YtBaseEntity<Tronmember> {
 	Long id;
 	Long tenant_id;
 	Long tgid;
+	Long userid;
+	String password;
 	String name;
 	Object usdtbalance;
 	Object trxbalance;

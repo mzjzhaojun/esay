@@ -180,6 +180,17 @@ public class UserServiceImpl extends YtBaseServiceImpl<User, Long> implements Us
 	}
 
 	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+	public User getUserByNmae(String name) {
+		// 1.
+		User userPerm = mapper.getByUserName(name);
+
+		Assert.notNull(userPerm, "用户不存在或无权限！");
+
+		return userPerm;
+	}
+
+	@Override
 	@Transactional
 	public Integer resetpassword(User t) {
 		if (t.getPassword() != null && t.getPassword().length() < 30) {

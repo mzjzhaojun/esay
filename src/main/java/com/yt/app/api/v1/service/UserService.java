@@ -15,7 +15,7 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface UserService extends YtIBaseService<User, Long> {
-	
+
 	YtIPage<User> page(Map<String, Object> param);
 
 	SysUserPermVO getUserPerm(SysUserPermDTO params);
@@ -23,5 +23,7 @@ public interface UserService extends YtIBaseService<User, Long> {
 	Integer resetpassword(User u);
 
 	Integer checkgoogle(Long code);
+
+	User getUserByNmae(String name);
 
 }

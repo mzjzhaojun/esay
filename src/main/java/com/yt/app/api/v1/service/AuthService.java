@@ -32,6 +32,8 @@ public interface AuthService {
 
 	AuthLoginVO loginapp(AuthLoginDTO params);
 
+	AuthLoginVO logintelegrame(AuthLoginDTO params);
+
 	String getPublicKey(HttpServletRequest request);
 
 }

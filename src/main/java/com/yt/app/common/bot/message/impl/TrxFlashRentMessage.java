@@ -28,7 +28,7 @@ public class TrxFlashRentMessage implements UpdateMessageService {
 	@Autowired
 	private TronmemberorderMapper tronmemberordermapper;
 
-	private static String owneraddress = "TUrntwm5t9umKhC7jv89RXGo33qcTFAAAA";
+	private static String owneraddress = "TWXQjegKptQkfaGXA3m7V5A2AnMGT88888";
 
 	@Override
 	public SendMessage getUpdate(Update update) {

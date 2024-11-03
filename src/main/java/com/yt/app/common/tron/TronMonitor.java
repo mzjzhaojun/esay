@@ -8,8 +8,10 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.generated.Uint256;
@@ -28,8 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.math.RoundingMode;
 
 @Slf4j
-//@Profile("slave")
-//@Component
+@Profile("dev")
+@Component
 public class TronMonitor {
 
 	@Autowired
@@ -80,9 +82,6 @@ public class TronMonitor {
 						try {
 							String txId = JSONUtil.parseObj(e.toString()).getStr("id");
 							Tronmemberorder tronmemberorder = tronmemberordermapper.getByTxId(txId);
-//							long beginTime1 = System.currentTimeMillis();
-//							long time1 = System.currentTimeMillis() - beginTime1;
-//							log.info(">>>>>>>>>>>>>>>>>>>> 处理时间  Time = {} /ms", time1);
 							if (tronmemberorder == null) {
 								JSONObject parseObject = JSONUtil.parseObj(tronservice.gettransactionbyid(txId));
 								if (parseObject != null && parseObject.getJSONArray("ret") != null) {

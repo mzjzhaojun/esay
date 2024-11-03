@@ -184,4 +184,20 @@ public class AuthServiceImpl implements AuthService {
 		return RsaUtil.getPublicKey();
 	}
 
+	@Override
+	public AuthLoginVO logintelegrame(AuthLoginDTO params) {
+		String username = params.getUsername();
+		String password = params.getPassword();
+		User userPerm = isysuserservice.getUserByNmae(username);
+		boolean isValid = PasswordUtil.isValidPassword(password, userPerm.getPassword());
+
+		// 校验原始密码是否正确
+		Assert.isTrue(isValid, "密码错误！");
+
+		// 写入登录日志
+		logsservice.post(Logs.builder().method("POST").optname(username).optdate(new Date()).requestip(AuthContext.getIp()).type(DictionaryResource.LOG_TYPE_201).build());
+		// 登录
+		return AuthUtil.login(JwtUserBO.builder().authSourceEnum(AuthSourceEnum.B).userId(Long.valueOf(userPerm.getId())).username(userPerm.getUsername()).tenantId(userPerm.getTenant_id()).accounttype(userPerm.getAccounttype()).build());
+	}
+
 }

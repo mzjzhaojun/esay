@@ -64,17 +64,15 @@ public class InlineKeyboard {
 		return markupKeyboard;
 	}
 
-	public static InlineKeyboardMarkup getUpInlineKeyboardMarkup() {
+	public static InlineKeyboardMarkup getUpInlineKeyboardMarkup(Long id) {
 		List<List<InlineKeyboardButton>> listinlinekeyboardbuttons = new ArrayList<>();
 		List<InlineKeyboardButton> inlinekeyboardbuttons = new ArrayList<>();
 
 		InlineKeyboardButton inlinekeyboardbutton = new InlineKeyboardButton();
-		inlinekeyboardbutton.setText(ButtonResource.FLASH_EXCHANGE_BACK.getName());
-		inlinekeyboardbutton.setCallbackData(ButtonResource.FLASH_EXCHANGE_BACK.getCallBackData());
+		inlinekeyboardbutton.setText(ButtonResource.FLASH_EXCHANGE_EXCHANGE.getName());
+		inlinekeyboardbutton.setUrl("http://116.212.152.243:18000/esay/static/index.html?tgid=" + id);
 		inlinekeyboardbuttons.add(inlinekeyboardbutton);
-
 		listinlinekeyboardbuttons.add(inlinekeyboardbuttons);
-
 		InlineKeyboardMarkup markupKeyboard = new InlineKeyboardMarkup();
 		markupKeyboard.setKeyboard(listinlinekeyboardbuttons);
 		return markupKeyboard;

@@ -40,22 +40,22 @@ public class TronBot extends TelegramLongPollingBot {
 
 	@Override
 	public String getBotToken() {
-		return "7726126730:AAHV97DxD3yU5jmS02EOVpWwndyUOEHAIQo";
+		return "7979731495:AAGzEE-takjODIuePb5NepWmd9iNlN1uhT8";
 	}
 
 	@Override
 	public void onUpdateReceived(Update update) {
 
-		Long userId = update.hasMessage() ? update.getMessage().getFrom().getId() : update.hasCallbackQuery() ? update.getCallbackQuery().getFrom().getId() : null;
-		log.info("userid: {}", userId);
-		if (userId == null) {
+		Long chartId = update.hasMessage() ? update.getMessage().getFrom().getId() : update.hasCallbackQuery() ? update.getCallbackQuery().getFrom().getId() : null;
+		log.info("userid: {}", chartId);
+		if (chartId == null) {
 			log.info("There isn't object Message or CallbackQuery! Update: {}", update);
 			return;
 		}
-		Tronmember tronmember = tronmemberservice.getByTgId(userId);
+		Tronmember tronmember = tronmemberservice.getByTgId(chartId);
 		if (tronmember == null) {
 			tronmember = new Tronmember();
-			tronmember.setTgid(userId);
+			tronmember.setTgid(chartId);
 			tronmember.setName(update.hasMessage() ? update.getMessage().getFrom().getFirstName() : update.hasCallbackQuery() ? update.getCallbackQuery().getFrom().getFirstName() : null);
 			tronmemberservice.post(tronmember);
 		}
@@ -67,7 +67,7 @@ public class TronBot extends TelegramLongPollingBot {
 					execute(startmessage.getUpdate(update));
 				} else if (("⚡购买TRX").equals(update.getMessage().getText())) {
 					execute(trxflashrentmessage.getUpdate(update));
-				} else if (("✈购买飞机会员").equals(update.getMessage().getText())) {
+				} else if (("✈白资兑换").equals(update.getMessage().getText())) {
 					execute(usdtflashexchangemessage.getUpdate(update));
 				} else if (("🧑‍🚀联系客服").equals(update.getMessage().getText())) {
 					execute(contactcustomerservicemessage.getUpdate(update));

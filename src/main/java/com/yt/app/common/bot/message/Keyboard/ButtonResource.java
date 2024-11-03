@@ -2,7 +2,7 @@ package com.yt.app.common.bot.message.Keyboard;
 
 public class ButtonResource {
 
-	public final static String EXCHANGE = "兑换";
+	public final static String EXCHANGE = "白资兑换";
 
 	public final static String UPSTEP = "撤销重选";
 
@@ -33,5 +33,6 @@ public class ButtonResource {
 	public final static Button FLASH_EXCHANGE_500 = new Button("兑换500U", "500兑换");
 	public final static Button FLASH_EXCHANGE_1000 = new Button("兑换1000U", "1000兑换");
 
+	public final static Button FLASH_EXCHANGE_EXCHANGE = new Button(EXCHANGE, EXCHANGE);
 	public final static Button FLASH_EXCHANGE_BACK = new Button(UPSTEP, UPSTEP);
 }

@@ -25,6 +25,7 @@ public class TronmemberVO extends BaseVO {
 	Long id;
 	Long tenant_id;
 	Long tgid;
+	Long userid;
 	String name;
 	Object usdtbalance;
 	Object trxbalance;
