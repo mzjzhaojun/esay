@@ -1,0 +1,1 @@
+import{s as e}from"./index.5ac32ff6.js";const r="/rest/v1/sysbank";var d={page(t,s){return e({url:r+"/list",method:"post",data:t,headers:s})},list(t){return e({url:r+"/list",method:"post",data:t})},add(t){return e({url:r,method:"post",data:t})},update(t){return e({url:r,method:"put",data:t})},delete(t){return e({url:r+"/"+t,method:"delete"})}};export{d as s};

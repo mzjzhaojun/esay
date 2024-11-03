@@ -47,7 +47,7 @@ public class TronmemberServiceImpl extends YtBaseServiceImpl<Tronmember, Long> i
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+	@Transactional
 	public Tronmember get(Long id) {
 		Tronmember t = mapper.getByTgId(id);
 		if (t.getUserid() == null) {
