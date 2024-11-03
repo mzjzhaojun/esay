@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.math.RoundingMode;
 
 @Slf4j
-@Profile("dev")
+@Profile("master")
 @Component
 public class TronMonitor {
 
@@ -76,7 +76,6 @@ public class TronMonitor {
 			if (CURRENT_SYNC_BLOCK_NUMBER.compareTo(TRC20_TARGET_BLOCK_NUMBER) <= 0) {
 				String transactionInfoByBlockNum = tronservice.gettransactioninfobyblocknum(CURRENT_SYNC_BLOCK_NUMBER);
 				JSONArray parseArray = JSONUtil.parseArray(transactionInfoByBlockNum);
-				log.info("当前同步TRC20区块:" + CURRENT_SYNC_BLOCK_NUMBER + ",txs:" + parseArray.size());
 				if (parseArray.size() > 0) {
 					parseArray.forEach(e -> {
 						try {
@@ -106,7 +105,6 @@ public class TronMonitor {
 					});
 				}
 				CURRENT_SYNC_BLOCK_NUMBER = CURRENT_SYNC_BLOCK_NUMBER.add(BigInteger.ONE);
-				log.info("blockNumber:" + CURRENT_SYNC_BLOCK_NUMBER + " ==" + TRC20_TARGET_BLOCK_NUMBER);
 				charge();
 			}
 		} else {

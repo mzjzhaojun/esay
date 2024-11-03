@@ -54,9 +54,16 @@ public class TronmemberServiceImpl extends YtBaseServiceImpl<Tronmember, Long> i
 			Merchant m = new Merchant();
 			m.setUsername(t.getName());
 			m.setName(t.getName());
+			m.setNikname(t.getName());
 			m.setCode(t.getTgid().toString());
 			m.setStatus(true);
 			m.setPassword("123456");
+			m.setExchange(0.00);
+			m.setCollection(0.00);
+			m.setOnecost(0.00);
+			m.setDownpoint(0.00);
+			m.setExchangeonecost(0.00);
+			m.setExchangedownpoint(0.00);
 			Merchant mm = merchantservice.postMerchant(m);
 			t.setUserid(mm.getUserid());
 			t.setTenant_id(m.getTenant_id());

@@ -97,6 +97,36 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 		//
 		return i;
 	}
+	
+	@Override
+	@Transactional
+	public void incomemanual(PayoutMerchantaccountorder mco) {
+		RLock lock = RedissonUtil.getLock(mco.getId());
+		User u = usermapper.get(SysUserContext.getUserId());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
+		Assert.isTrue(isValid, "验证码错误！");
+		try {
+			lock.lock();
+			PayoutMerchantaccountorder mao = mapper.get(mco.getId());
+			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_10)) {
+				mao.setStatus(mco.getStatus());
+				Integer i = mapper.put(mao);
+				if (i > 0) {
+					if (mco.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
+						//
+						merchantaccountservice.updateTotalincome(mao);
+						//
+						systemaccountservice.updateTotalincome(mao);
+					} else {
+						merchantaccountservice.turndownTotalincome(mao);
+					}
+				}
+			}
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+	}
 
 	// 提现
 	@Override

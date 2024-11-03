@@ -23,7 +23,7 @@ import com.yt.app.common.bot.TronBot;
  * @date 2020/5/22 19:29
  */
 @Slf4j
-@Profile("dev")
+@Profile("slave")
 @Component
 public class BotRunner implements CommandLineRunner {
 
@@ -46,8 +46,8 @@ public class BotRunner implements CommandLineRunner {
 		log.info("服务初始化之后，注册机器人 start...");
 
 		// 注册机器人
-//		botsApi.registerBot(merchantbot);
-//		botsApi.registerBot(channelbot);
+		botsApi.registerBot(merchantbot);
+		botsApi.registerBot(channelbot);
 		botsApi.registerBot(tronbot);
 
 		log.info("服务初始化之后，注册机器人 end...");

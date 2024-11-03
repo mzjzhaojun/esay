@@ -101,4 +101,18 @@ public class PayoutMerchantaccountorderController extends YtBaseEncipherControll
 		return new YtResponseEntity<Object>(new YtBody(1));
 	}
 
+	/**
+	 * 处理充值
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/incomemanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> incomemanual(YtRequestDecryptEntity<PayoutMerchantaccountorder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		service.incomemanual(requestEntity.getBody());
+		return new YtResponseEntity<Object>(new YtBody(1));
+	}
+
 }

@@ -13,19 +13,20 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface PayoutMerchantaccountorderService extends YtIBaseService<PayoutMerchantaccountorder, Long> {
-	
+
 	YtIPage<PayoutMerchantaccountorder> page(Map<String, Object> param);
 
 	Integer save(PayoutMerchantaccountorder t);
 
 	Integer appsave(PayoutMerchantaccountorder t);
 
-
+	void incomemanual(PayoutMerchantaccountorder mco);
 
 	Integer cancle(Long id);
+
 	// 提现
 	void withdrawmanual(PayoutMerchantaccountorder mco);
 
 	Integer cancleWithdraw(Long id);
-	
+
 }
