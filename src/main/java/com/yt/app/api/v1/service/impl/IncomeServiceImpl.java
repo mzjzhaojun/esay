@@ -352,7 +352,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 	}
 
-
 	/**
 	 * 自营渠道下单
 	 */
@@ -660,7 +659,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			qr.setPay_orderid(qs.getPay_orderid());
 			qr.setPay_amount(qs.getPay_amount());
 			qr.setPay_aislecode(qs.getPay_aislecode());
-			qr.setPay_viewurl(appConfig.getErrorurl());
+			qr.setPay_viewurl(appConfig.getApirest() + "/esay/rest/v1/view/income/error");
 			String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
 			qr.setPay_md5sign(signresult);
 			return qr;

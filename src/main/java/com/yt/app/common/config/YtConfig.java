@@ -39,7 +39,7 @@ public class YtConfig {
 
 	private boolean cache;
 	
-	private String errorurl;
+	private String apirest;
 
 	public void setOrigin(String origin) {
 		this.origins = Arrays.asList(origin.split(","));

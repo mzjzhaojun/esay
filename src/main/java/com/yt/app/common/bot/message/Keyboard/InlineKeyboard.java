@@ -64,13 +64,13 @@ public class InlineKeyboard {
 		return markupKeyboard;
 	}
 
-	public static InlineKeyboardMarkup getUpInlineKeyboardMarkup(Long id) {
+	public static InlineKeyboardMarkup getUpInlineKeyboardMarkup(Long id, String apirest) {
 		List<List<InlineKeyboardButton>> listinlinekeyboardbuttons = new ArrayList<>();
 		List<InlineKeyboardButton> inlinekeyboardbuttons = new ArrayList<>();
 
 		InlineKeyboardButton inlinekeyboardbutton = new InlineKeyboardButton();
 		inlinekeyboardbutton.setText(ButtonResource.FLASH_EXCHANGE_EXCHANGE.getName());
-		inlinekeyboardbutton.setUrl("http://116.212.152.243:18000/esay/static/index.html?tgid=" + id);
+		inlinekeyboardbutton.setUrl(apirest + "/esay/static/index.html?tgid=" + id);
 		inlinekeyboardbuttons.add(inlinekeyboardbutton);
 		listinlinekeyboardbuttons.add(inlinekeyboardbuttons);
 		InlineKeyboardMarkup markupKeyboard = new InlineKeyboardMarkup();
