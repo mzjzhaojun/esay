@@ -13,18 +13,22 @@ import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.entity.Qrcodeaccountorder;
+import com.yt.app.api.v1.entity.Tronmemberorder;
 import com.yt.app.api.v1.mapper.AgentaccountorderMapper;
 import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
+import com.yt.app.api.v1.mapper.TronmemberorderMapper;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
 import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.TenantIdContext;
+import com.yt.app.common.bot.TronBot;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.runnable.StatisticsThread;
 import com.yt.app.common.util.DateTimeUtil;
+import com.yt.app.common.util.NumberUtil;
 import com.yt.app.common.util.RedisUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -57,6 +61,12 @@ public class TaskSlaveConfig {
 
 	@Autowired
 	private IncomeMapper incomemapper;
+
+	@Autowired
+	private TronmemberorderMapper tronmemberordermapper;
+
+	@Autowired
+	private TronBot tronbot;
 
 	/**
 	 * 更新每日新数据
@@ -113,6 +123,28 @@ public class TaskSlaveConfig {
 					agentaccountservice.cancleTotalincome(aao);
 				}
 
+				TenantIdContext.remove();
+			}
+		}
+	}
+
+	/**
+	 * 代收超时分钟未支付订单处理
+	 */
+	@Scheduled(cron = "0/30 * * * * ?")
+	public void tronorder() throws InterruptedException {
+		TenantIdContext.removeFlag();
+		List<Tronmemberorder> list = tronmemberordermapper.selectAddlist();
+		for (Tronmemberorder p : list) {
+			if (p.getExpireddate().getTime() < new Date().getTime()) {
+
+				TenantIdContext.setTenantId(p.getTenant_id());
+				log.info("充值兑换超时单号ID：" + p.getOrdernum() + " 状态：" + p.getStatus());
+				p.setStatus(DictionaryResource.PAYOUTSTATUS_53);
+				p.setRemark("超时充值兑换￥：" + p.getAmount());
+				tronmemberordermapper.put(p);
+				NumberUtil.removeExchangeFewAmount(p.getFewamount());
+				tronbot.notifyMermberCancel(p.getTgid(), p.getOrdernum(), p.getAmount());
 				TenantIdContext.remove();
 			}
 		}

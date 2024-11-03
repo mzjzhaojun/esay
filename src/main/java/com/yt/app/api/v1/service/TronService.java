@@ -16,6 +16,9 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface TronService extends YtIBaseService<Tron, Long> {
+
+	Tron get();
+
 	YtIPage<TronVO> page(Map<String, Object> param);
 
 	// 验证地址

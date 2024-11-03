@@ -95,4 +95,8 @@ public interface TronMapper extends YtIBaseMapper<Tron> {
 	 */
 	@YtRedisCacheAnnotation(classs = Tron.class)
 	public List<Tron> listByArrayId(long[] id);
+
+	@YtRedisCacheAnnotation(classs = Tron.class)
+	public Tron getTopOne();
+
 }

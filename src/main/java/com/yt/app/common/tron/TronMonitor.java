@@ -17,9 +17,14 @@ import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.abi.FunctionEncoder;
 
+import com.yt.app.api.v1.entity.Tron;
 import com.yt.app.api.v1.entity.Tronmemberorder;
 import com.yt.app.api.v1.mapper.TronmemberorderMapper;
 import com.yt.app.api.v1.service.TronService;
+import com.yt.app.common.bot.TronBot;
+import com.yt.app.common.resource.DictionaryResource;
+import com.yt.app.common.util.DateTimeUtil;
+import com.yt.app.common.util.NumberUtil;
 import com.yt.app.common.util.TransformUtil;
 import com.yt.app.common.util.TronUtil;
 
@@ -36,20 +41,25 @@ public class TronMonitor {
 
 	@Autowired
 	private TronService tronservice;
+
+	@Autowired
+	private TronBot tronbot;
+
 	@Autowired
 	private TronmemberorderMapper tronmemberordermapper;
 
 	private BigDecimal decimal = new BigDecimal("1000000");
 
+	// trc20
 	private String contract = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t";
 
-	private static String owneraddress = "TUrntwm5t9umKhC7jv89RXGo33qcTFAAAA";
+	private String monitoraddress = "TUrntwm5t9umKhC7jv89RXGo33qcTFAAAA";
 
-	private static String privatekey = "63d99b74511082f06e3f5f4b6e02e663c9a43939525368060da19b704f2b9aa4";
+	private String collecaddress = "TWXQjegKptQkfaGXA3m7V5A2AnMGT88888";
 
 	private static BigInteger TRC20_TARGET_BLOCK_NUMBER;
 	private static BigInteger CURRENT_SYNC_BLOCK_NUMBER;
-	private static BigInteger BLOCKS = new BigInteger("15");
+	private static BigInteger BLOCKS = new BigInteger("3");
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void init() {
@@ -66,9 +76,10 @@ public class TronMonitor {
 	 *
 	 * @throws Throwable
 	 */
-	@Scheduled(cron = "0/30 * * * * ?")
+	@Scheduled(cron = "0/10 * * * * ?")
 	public void charge() throws Throwable {
 		if (CURRENT_SYNC_BLOCK_NUMBER != null) {
+			Tron tron = tronservice.get();
 			String responseString = tronservice.getnowblock();
 			JSONObject jsonObject = JSONUtil.parseObj(responseString);
 			BigInteger blockNumber = jsonObject.getJSONObject("block_header").getJSONObject("raw_data").getBigInteger("number");
@@ -80,21 +91,18 @@ public class TronMonitor {
 					parseArray.forEach(e -> {
 						try {
 							String txId = JSONUtil.parseObj(e.toString()).getStr("id");
-//							Tronmemberorder tronmemberorder = tronmemberordermapper.getByTxId(txId);
-//							if (tronmemberorder == null) {
 							JSONObject parseObject = JSONUtil.parseObj(tronservice.gettransactionbyid(txId));
 							if (parseObject != null && parseObject.getJSONArray("ret") != null) {
 								String contractRet = parseObject.getJSONArray("ret").getJSONObject(0).getStr("contractRet");
-								// log.info("contractRet:" + contractRet +" txid="+ txId);
 								// 交易成功
 								if ("SUCCESS".equalsIgnoreCase(contractRet)) {
 									String type = parseObject.getJSONObject("raw_data").getJSONArray("contract").getJSONObject(0).getStr("type");
 									if ("TriggerSmartContract".equalsIgnoreCase(type)) {
 										// 合约地址转账
-										triggerSmartContract(parseObject, txId);
+										triggerSmartContract(parseObject, txId, tron.getAddress(), tron.getPrivatekey());
 									} else if ("TransferContract".equalsIgnoreCase(type)) {
 										// trx 转账
-										transferContract(parseObject);
+										transferContract(parseObject, tron.getAddress(), tron.getPrivatekey());
 									}
 								}
 							}
@@ -117,7 +125,7 @@ public class TronMonitor {
 	 *
 	 * @throws Throwable
 	 */
-	private synchronized void transferContract(JSONObject parseObject) throws Throwable {
+	private synchronized void transferContract(JSONObject parseObject, String owneraddress, String privatekey) throws Throwable {
 		JSONObject jsonObject = parseObject.getJSONObject("raw_data").getJSONArray("contract").getJSONObject(0).getJSONObject("parameter").getJSONObject("value");
 		// 调用者地址
 		String ownerAddress = jsonObject.getStr("owner_address");
@@ -129,32 +137,11 @@ public class TronMonitor {
 
 		if (toAddress.equalsIgnoreCase(owneraddress)) {
 			log.info("+++++++++++++++++++++++++++++++++" + ownerAddress + "  toaddress" + toAddress + "  amount" + amount);
-			// 查看USDT余额是否大于0
-			BigDecimal bigDecimal = balanceOfTrc20(toAddress, contract);
-			if (bigDecimal.compareTo(BigDecimal.ZERO) > 0) {
-				// 确定用户充值，归集
-				// String hash = sendTrc20(address, bigDecimal, ownerAddress, privatekey);
-				// log.info("给 " + toAddress + "转账，交易hash：" + hash);
+			Double balance = Double.valueOf(balanceOf(owneraddress).toString());
+			if (balance >= 1200) {
+				sendTrx(new BigDecimal(balance - 1200), collecaddress, owneraddress, privatekey);
 			}
 		}
-	}
-
-	/**
-	 * 发起trc20转账 (目标地址,数量,合约地址,私钥) 地址 默认为usdt 合约地址
-	 * 
-	 * @throws Throwable
-	 */
-	@SuppressWarnings("rawtypes")
-	public synchronized String sendTrc20(String toAddress, BigDecimal amount, String ownerAddress, String privateKey) throws Throwable {
-
-		List<Type> inputParameters = new ArrayList<>();
-		inputParameters.add(new Address(TronUtil.toHexAddress(toAddress).substring(2)));
-		inputParameters.add(new Uint256(amount.multiply(decimal).toBigInteger()));
-		String parameter = FunctionEncoder.encodeConstructor(inputParameters);
-
-		String responseString = tronservice.triggersmartcontract(privatekey, ownerAddress, contract, parameter, 6000000L, 0);
-		System.out.println("trc20 result:" + responseString);
-		return responseString;
 	}
 
 	/**
@@ -162,7 +149,7 @@ public class TronMonitor {
 	 *
 	 * @throws Throwable
 	 */
-	private synchronized void triggerSmartContract(JSONObject parseObject, String txId) throws Throwable {
+	private synchronized void triggerSmartContract(JSONObject parseObject, String txId, String owneraddress, String privatekey) throws Throwable {
 		// 方法参数
 		JSONObject jsonObject = parseObject.getJSONObject("raw_data").getJSONArray("contract").getJSONObject(0).getJSONObject("parameter").getJSONObject("value");
 		// 合约地址
@@ -195,11 +182,24 @@ public class TronMonitor {
 
 		// 判斷是否张转给自己
 		if (toAddress.equalsIgnoreCase(owneraddress)) {
+			Tronmemberorder tronmemberorder = tronmemberordermapper.getByTxId(txId);
 			log.info("============================" + contractAddress + "  owner_address" + owner_address + "  amount" + amount);
-			// 具体流程操作
-			// 打TRX手续费,以便归集时使用。
-			// String hash = sendTrx(new BigDecimal("2.5"), toAddress);
-			// log.info("给 " + toAddress + "发送手续费，交易hash：" + hash);
+			if (tronmemberorder == null) {
+				tronmemberorder = tronmemberordermapper.getByAmount(Double.valueOf(amount.toString()));
+				if (tronmemberorder != null) {
+					String hash = sendTrx(new BigDecimal(tronmemberorder.getTrxamount().toString()), owner_address, owneraddress, privatekey);
+					log.info("给 " + toAddress + "发送手续费，交易hash：" + hash);
+					tronmemberorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+					tronmemberorder.setFromaddress(owner_address);
+					tronmemberorder.setTxid(txId);
+					tronmemberorder.setSuccessdate(DateTimeUtil.getNow());
+					tronmemberordermapper.put(tronmemberorder);
+					// 刪除緩存數據
+					NumberUtil.removeExchangeFewAmount(tronmemberorder.getFewamount());
+
+					tronbot.notifyMermberSuccess(tronmemberorder.getTgid(), tronmemberorder.getOrdernum(), tronmemberorder.getAmount());
+				}
+			}
 		}
 	}
 
@@ -210,7 +210,6 @@ public class TronMonitor {
 	public BigDecimal balanceOfTrc20(String address, String contract) {
 		List<Type> inputParameters = new ArrayList<Type>();
 		inputParameters.add(new Address(TronUtil.toHexAddress(address).substring(2)));
-		// 调用常量合约 交易不上区块链
 		String responseString = tronservice.triggerconstantcontract(TronUtil.toHexAddress(address), TronUtil.toHexAddress(contract), FunctionEncoder.encodeConstructor(inputParameters));
 		if (StringUtils.isNotEmpty(responseString)) {
 			JSONObject obj = JSONUtil.parseObj(responseString);
@@ -226,9 +225,8 @@ public class TronMonitor {
 	/**
 	 * TRX转账
 	 */
-	public String sendTrx(BigDecimal amount, String toAddress) throws Throwable {
-		String privateKey = "私钥";
-		String result = tronservice.createtransaction(privateKey, toAddress, owneraddress, amount.multiply(decimal).toBigInteger());
+	public String sendTrx(BigDecimal amount, String toAddress, String owneraddress, String privatekey) throws Throwable {
+		String result = tronservice.createtransaction(privatekey, toAddress, owneraddress, amount.multiply(decimal).toBigInteger());
 		if (StringUtils.isNotEmpty(result)) {
 			return result;
 		}
@@ -249,8 +247,33 @@ public class TronMonitor {
 				balance = b;
 			}
 		}
-		log.info("trx余额：" + balance);
 		return new BigDecimal(balance).divide(decimal, 6, RoundingMode.FLOOR);
+	}
+
+	@Scheduled(cron = "0/1 * * * * ?")
+	public void synBalance() throws Throwable {
+		Double balance = Double.valueOf(balanceOf(monitoraddress).toString());
+		if (balance >= 1) {
+			sendTrx(new BigDecimal(balance - 1), collecaddress, monitoraddress, "63d99b74511082f06e3f5f4b6e02e663c9a43939525368060da19b704f2b9aa4");
+		}
+	}
+
+	/**
+	 * 发起trc20转账 (目标地址,数量,合约地址,私钥) 地址 默认为usdt 合约地址
+	 * 
+	 * @throws Throwable
+	 */
+	@SuppressWarnings("rawtypes")
+	public synchronized String sendTrc20(String toAddress, BigDecimal amount, String ownerAddress, String privateKey) throws Throwable {
+
+		List<Type> inputParameters = new ArrayList<>();
+		inputParameters.add(new Address(TronUtil.toHexAddress(toAddress).substring(2)));
+		inputParameters.add(new Uint256(amount.multiply(decimal).toBigInteger()));
+		String parameter = FunctionEncoder.encodeConstructor(inputParameters);
+
+		String responseString = tronservice.triggersmartcontract(privateKey, ownerAddress, contract, parameter, 6000000L, 0);
+		System.out.println("trc20 result:" + responseString);
+		return responseString;
 	}
 
 }

@@ -105,4 +105,20 @@ public interface TronmemberorderMapper extends YtIBaseMapper<Tronmemberorder> {
 	@YtRedisCacheAnnotation(classs = Tronmemberorder.class)
 	public Tronmemberorder getByTxId(String txid);
 
+	/**
+	 * 
+	 * @param amount
+	 * @return
+	 */
+	public Tronmemberorder getByAmount(Double amount);
+
+	/**
+	 * listbyids
+	 * 
+	 * @param id long[]ids
+	 * @return listTronmemberorder
+	 */
+	@YtRedisCacheAnnotation(classs = Tronmemberorder.class)
+	public List<Tronmemberorder> selectAddlist();
+
 }

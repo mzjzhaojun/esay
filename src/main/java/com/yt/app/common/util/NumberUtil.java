@@ -143,10 +143,10 @@ public class NumberUtil {
 		return String.valueOf(Long.parseLong(code.substring(code.length() - 8)) + 10000000); // 流水编号
 	}
 
-	public static Double getIncomeFewAmount(Long qid) {
+	public static Double getIncomeFewAmount(Long id) {
 		Double min = 0.01;
 		for (int i = 1; i <= 30; i++) {
-			String key = SystemConstant.CACHE_SYS_QRCODE + qid + "" + min;
+			String key = SystemConstant.CACHE_SYS_QRCODE + id + "" + min;
 			if (!RedisUtil.hasKey(key)) {
 				RedisUtil.set(key, min.toString());
 				return min;
@@ -158,10 +158,10 @@ public class NumberUtil {
 		return min;
 	}
 
-	public static Double getExchangeFewAmount(String qid) {
+	public static Double getExchangeFewAmount() {
 		Double min = 0.001;
 		for (int i = 1; i <= 100; i++) {
-			String key = SystemConstant.CACHE_SYS_EXCHANGETRX + qid + "" + min;
+			String key = SystemConstant.CACHE_SYS_EXCHANGETRX + min;
 			if (!RedisUtil.hasKey(key)) {
 				RedisUtil.set(key, min.toString());
 				return min;
@@ -171,6 +171,13 @@ public class NumberUtil {
 		}
 		min = 10.00;
 		return min;
+	}
+
+	public static void removeExchangeFewAmount(Double min) {
+		String key = SystemConstant.CACHE_SYS_EXCHANGETRX + min;
+		if (RedisUtil.hasKey(key)) {
+			RedisUtil.delete(key);
+		}
 	}
 
 }

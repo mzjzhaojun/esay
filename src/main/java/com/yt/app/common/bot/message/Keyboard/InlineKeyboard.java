@@ -43,21 +43,9 @@ public class InlineKeyboard {
 		inlinekeyboardbutton200.setCallbackData(ButtonResource.FLASH_EXCHANGE_200.getCallBackData());
 		inlinekeyboardbuttons5.add(inlinekeyboardbutton200);
 
-		List<InlineKeyboardButton> inlinekeyboardbuttons7 = new ArrayList<>();
-		InlineKeyboardButton inlinekeyboardbutton500 = new InlineKeyboardButton();
-		inlinekeyboardbutton500.setText(ButtonResource.FLASH_EXCHANGE_500.getName());
-		inlinekeyboardbutton500.setCallbackData(ButtonResource.FLASH_EXCHANGE_500.getCallBackData());
-		inlinekeyboardbuttons7.add(inlinekeyboardbutton500);
-
-		InlineKeyboardButton inlinekeyboardbutton1000 = new InlineKeyboardButton();
-		inlinekeyboardbutton1000.setText(ButtonResource.FLASH_EXCHANGE_1000.getName());
-		inlinekeyboardbutton1000.setCallbackData(ButtonResource.FLASH_EXCHANGE_1000.getCallBackData());
-		inlinekeyboardbuttons7.add(inlinekeyboardbutton1000);
-
 		listinlinekeyboardbuttons.add(inlinekeyboardbuttons);
 		listinlinekeyboardbuttons.add(inlinekeyboardbuttons3);
 		listinlinekeyboardbuttons.add(inlinekeyboardbuttons5);
-		listinlinekeyboardbuttons.add(inlinekeyboardbuttons7);
 
 		InlineKeyboardMarkup markupKeyboard = new InlineKeyboardMarkup();
 		markupKeyboard.setKeyboard(listinlinekeyboardbuttons);

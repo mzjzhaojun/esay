@@ -28,7 +28,7 @@ public class TrxFlashRentMessage implements UpdateMessageService {
 	@Autowired
 	private TronmemberorderMapper tronmemberordermapper;
 
-	private static String owneraddress = "TWXQjegKptQkfaGXA3m7V5A2AnMGT88888";
+	private static String owneraddress = "TPP1KaeDnFBs5ATXadVVc8PhaBXqzJJJJJ";
 
 	@Override
 	public SendMessage getUpdate(Update update) {
@@ -47,7 +47,7 @@ public class TrxFlashRentMessage implements UpdateMessageService {
 		Double amount = Double.valueOf(callbackdata.replace(ButtonResource.EXCHANGE, ""));
 		User sender = update.getCallbackQuery().getFrom();
 		MaybeInaccessibleMessage originalMessage = update.getCallbackQuery().getMessage();
-		Double fewamount = NumberUtil.getExchangeFewAmount(callbackdata);
+		Double fewamount = NumberUtil.getExchangeFewAmount();
 		Integer i = 0;
 		Tronmemberorder tronmemberorder = new Tronmemberorder();
 		if (fewamount < 3) {

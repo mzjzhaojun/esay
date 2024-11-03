@@ -23,7 +23,7 @@ public class MemberFlashExchangeMessage implements UpdateMessageService {
 		Double price = Double.valueOf(RedisUtil.get(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTEXCHANGE));
 		SendMessage sendMessage = new SendMessage();
 		sendMessage.setChatId(update.getMessage().getChatId().toString());
-		sendMessage.setText("*实时汇率*\r\n" + "1 USDT = " + (price) + " 人民币  \r\n" + "\r\n" + "自动兑换地址:\r\n" + "`TWXQjegKptQkfaGXA3m7V5A2AnMGT88888` (点击地址自动复制)\r\n" + "\r\n" + "\r\n" + "转账即兑，全自动返，等值 20u 起换\r\n" + "\r\n");
+		sendMessage.setText("*实时汇率*\r\n" + "1 USDT = " + (price) + " 人民币  \r\n" + "\r\n" + "自动兑换地址:\r\n" + "`TPP1KaeDnFBs5ATXadVVc8PhaBXqzJJJJJ` (点击地址自动复制)\r\n" + "\r\n" + "\r\n" + "转账即兑，全自动返，等值 20u 起换\r\n" + "\r\n");
 		sendMessage.enableMarkdown(true);
 		sendMessage.setReplyMarkup(InlineKeyboard.getUpInlineKeyboardMarkup(update.getMessage().getChatId(), appConfig.getApirest()));
 		return sendMessage;

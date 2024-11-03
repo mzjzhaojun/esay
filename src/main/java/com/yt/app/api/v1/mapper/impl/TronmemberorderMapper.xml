@@ -125,7 +125,16 @@
 		from tronmemberorder
 		where id = #{id}
 	</select>
-	
+
+	<!--getByAmount -->
+	<select id="getByAmount" parameterType="java.lang.Double"
+		resultMap="ResultMap ">
+		select
+		<include refid="Base_Column_List" />
+		from tronmemberorder
+		where status = 50 and realamount= #{realamount}
+	</select>
+
 	<!--getById -->
 	<select id="getByTxId" parameterType="java.lang.String"
 		resultMap="ResultMap">
@@ -192,6 +201,17 @@
 					#{item}
 				</foreach>
 			</if>
+		</where>
+	</select>
+
+	<!-- selectAddlist -->
+	<select id="selectAddlist" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tronmemberorder
+		<where>
+			status = 50
 		</where>
 	</select>
 </mapper>

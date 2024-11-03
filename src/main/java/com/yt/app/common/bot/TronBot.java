@@ -3,6 +3,7 @@ package com.yt.app.common.bot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.yt.app.common.bot.message.impl.TronStartMessage;
 import com.yt.app.common.bot.message.impl.MemberFlashExchangeMessage;
+import com.yt.app.common.bot.message.impl.NotifyMermberMessage;
 
 @SuppressWarnings("deprecation")
 @Slf4j
@@ -29,9 +31,10 @@ public class TronBot extends TelegramLongPollingBot {
 	private MemberFlashExchangeMessage usdtflashexchangemessage;
 	@Autowired
 	private ContactCustomerServiceMessage contactcustomerservicemessage;
-
 	@Autowired
 	private TronmemberService tronmemberservice;
+	@Autowired
+	private NotifyMermberMessage notifymermbermessage;
 
 	@Override
 	public String getBotUsername() {
@@ -89,6 +92,28 @@ public class TronBot extends TelegramLongPollingBot {
 			}
 		} catch (TelegramApiException e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	public void notifyMermberCancel(Long chatid, String ordernum, Double amnout) {
+		try {
+			SendMessage sm = notifymermbermessage.getNotifyUpdate(chatid, ordernum, amnout);
+			if (sm != null) {
+				execute(sm);
+			}
+		} catch (TelegramApiException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void notifyMermberSuccess(Long chatid, String ordernum, Double amnout) {
+		try {
+			SendMessage sm = notifymermbermessage.getNotifyUpdateSuccess(chatid, ordernum, amnout);
+			if (sm != null) {
+				execute(sm);
+			}
+		} catch (TelegramApiException e) {
+			e.printStackTrace();
 		}
 	}
 }

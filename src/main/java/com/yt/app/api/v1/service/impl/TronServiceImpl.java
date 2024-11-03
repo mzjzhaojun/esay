@@ -60,6 +60,13 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+	public Tron get() {
+		Tron t = mapper.getTopOne();
+		return t;
+	}
+
+	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public YtIPage<TronVO> page(Map<String, Object> param) {
 		int count = mapper.countlist(param);
 		if (count == 0) {
@@ -102,7 +109,6 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 
 		String sub_url = URL + "/wallet/getaccount ";
 		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
-		log.info("获取账户信息响应的消息:" + body);
 		return body;
 	}
 
