@@ -55,4 +55,9 @@ public interface SystemConstant {
 	 * 兑换trx
 	 */
 	String CACHE_SYS_EXCHANGETRX = "payboot:system:exchangetrx:";
+
+	/**
+	 * 存在订单
+	 */
+	String CACHE_SYS_PAYOUT_EXIST = "payboot:system:payoutexist:";
 }

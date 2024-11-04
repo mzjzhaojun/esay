@@ -120,13 +120,13 @@ public class PayUtil {
 		map.add("bank_address", pt.getBankaddress());
 		map.add("user_ip", "127.0.0.1");
 		map.add("member_account", pt.getAccname());
-		map.add("remark", "payout");
 		map.add("query_url", cl.getPrivatersa());
+		map.add("remark", "payout");
 
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		//
-		ResponseEntity<SysTyOrder> sov = resttemplate.postForEntity(cl.getApiip() + "/withdraw/create?sign=" + MD5Utils.md5(signParams), httpEntity, SysTyOrder.class);
+		ResponseEntity<SysTyOrder> sov = resttemplate.exchange(cl.getApiip() + "/withdraw/create?sign=" + MD5Utils.md5(signParams),  HttpMethod.POST, httpEntity, SysTyOrder.class);
 		SysTyOrder data = sov.getBody();
 		log.info(" 天下代付成功返回订单号：" + data.getTypay_order_id() + "返回消息：" + data.getPay_message());
 		if (data.getPay_message() == 1) {

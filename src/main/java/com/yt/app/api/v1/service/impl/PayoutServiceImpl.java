@@ -65,6 +65,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -190,7 +191,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		}
-
+		RedisUtil.setEx(SystemConstant.CACHE_SYS_PAYOUT_EXIST + t.getOrdernum(), t.getOrdernum(), 60, TimeUnit.SECONDS);
 		// 获取渠道单号
 		boolean flage = true;
 		switch (cl.getName()) {
@@ -704,8 +705,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	@Override
 	public YtBody exist(SysTyOrder so) {
-		Payout pt = mapper.getByOrdernum(so.getMerchant_order_id());
-		if (pt != null) {
+		if (RedisUtil.hasKey(SystemConstant.CACHE_SYS_PAYOUT_EXIST + so.getMerchant_order_id())) {
 			return new YtBody("成功", 200);
 		}
 		return new YtBody("成功", 400);
