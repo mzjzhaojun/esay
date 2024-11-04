@@ -273,7 +273,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			Exchange pt = mapper.getByChannelOrdernum(so.getTypay_order_id());
 			if (pt == null)
 				return new YtBody("失败", 100);
-			if (pt.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51)) {
+			if (pt.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 				Channel cl = channelmapper.get(pt.getChannelid());
 				// md5值是否被篡改
 				if (PayUtil.valMd5TyResultOrder(so, cl.getApikey())) {
@@ -597,7 +597,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	@Transactional
 	public Exchange submit(String ordernum) {
 		Exchange ex = mapper.getByOrdernum(ordernum);
-		if (ex.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51))
+		if (ex.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50))
 			paySuccess(ex);
 		return ex;
 	}

@@ -28,10 +28,10 @@ public class Tronmember extends YtBaseEntity<Tronmember> {
 	Long userid;
 	String password;
 	String name;
-	Object usdtbalance;
-	Object trxbalance;
-	Object sunbalance;
-	Object netbalance;
+	Double usdtbalance;
+	Double trxbalance;
+	Double sunbalance;
+	Double netbalance;
 	Integer integral;
 	String address;
 	String remark;

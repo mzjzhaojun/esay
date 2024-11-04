@@ -43,6 +43,7 @@ import com.yt.app.api.v1.entity.PayoutMerchantaccount;
 import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.api.v1.entity.Merchantaisle;
 import com.yt.app.api.v1.entity.Payout;
+import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
@@ -198,6 +199,13 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (ordernum != null) {
 				flage = false;
 				t.setChannelordernum(ordernum);
+			}
+			break;
+		case DictionaryResource.DFTXAISLE:
+			String txordernum = PayUtil.SendTxSubmit(t, cl);
+			if (txordernum != null) {
+				flage = false;
+				t.setChannelordernum(txordernum);
 			}
 			break;
 		}
@@ -524,6 +532,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			// 计算商户订单/////////////////////////////////////////////////////
 			PayoutMerchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
 			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+			mao.setImgurl(pt.getImgurl());
 			// 商户订单
 			merchantaccountordermapper.put(mao);
 			// 商户账户
@@ -664,18 +673,23 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	@Override
 	@Transactional
-	public void tycallbackpay(SysTyOrder so) {
+	public YtBody txcallbackpay(SysTyOrder so) {
 		Payout pt = mapper.getByOrdernum(so.getMerchant_order_id());
 		if (pt != null) {
 			SysUserContext.setUserId(pt.getUserid());
 			TenantIdContext.setTenantId(pt.getTenant_id());
-			if (pt.getStatus().equals(DictionaryResource.PAYOUTSTATUS_51)) {
+			if (pt.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 				Channel cl = channelmapper.get(pt.getChannelid());
+				String ip = AuthContext.getIp();
+				if (cl.getIpaddress() == null || cl.getIpaddress().indexOf(ip) == -1) {
+					throw new YtException("非法请求!");
+				}
 				// 查询渠道是否真实成功
-				SysTyOrder sto = PayUtil.SendTySelectOrder(pt.getOrdernum(), cl);
+				SysTyOrder sto = PayUtil.SendTxSelectOrder(pt.getOrdernum(), cl);
 				if (sto != null && sto.getPay_message() == 1) {
 					// md5值是否被篡改
 					if (PayUtil.valMd5TyResultOrder(so, cl.getApikey()) && so.getPay_message() == 1) {
+						pt.setImgurl(so.getImage_address());
 						paySuccess(pt);
 					}
 				} else if (sto != null && (sto.getPay_message() == -2 || sto.getPay_message() == -3) && so.getPay_message() == -2) {
@@ -685,6 +699,16 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		}
 		SysUserContext.remove();
 		TenantIdContext.remove();
+		return new YtBody("成功", 200);
+	}
+
+	@Override
+	public YtBody exist(SysTyOrder so) {
+		Payout pt = mapper.getByOrdernum(so.getMerchant_order_id());
+		if (pt != null) {
+			return new YtBody("成功", 200);
+		}
+		return new YtBody("成功", 400);
 	}
 
 }

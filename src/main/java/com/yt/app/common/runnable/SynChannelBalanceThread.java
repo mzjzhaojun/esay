@@ -29,8 +29,8 @@ public class SynChannelBalanceThread implements Runnable {
 			lock.lock();
 			String balance = null;
 			switch (cl.getName()) {
-			case DictionaryResource.LLAISLE:
-				SysTyBalance stb = PayUtil.SendTySelectBalance(cl);
+			case DictionaryResource.DFTXAISLE:
+				SysTyBalance stb = PayUtil.SendTxSelectBalance(cl);
 				cl.setRemotebalance(stb.getAvailableBalance());
 				break;
 			case DictionaryResource.HSAISLE:

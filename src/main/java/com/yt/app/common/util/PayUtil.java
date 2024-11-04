@@ -52,22 +52,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PayUtil {
 
-	// 老李代付通知回调签名
+	// 天下代付通知回调签名
 	public static boolean valMd5TyResultOrder(SysTyOrder so, String key) {
 		String signParams = "merchant_id=" + so.getMerchant_id() + "&merchant_order_id=" + so.getMerchant_order_id() + "&typay_order_id=" + so.getTypay_order_id() + "&pay_type=" + so.getPay_type() + "&pay_amt="
 				+ String.format("%.2f", so.getPay_amt()) + "&pay_message=" + so.getPay_message() + "&remark=" + so.getRemark() + "&key=" + key;
-		log.info("老李代付通知回调签名:" + signParams);
+		log.info(" 天下代付通知回调签名:" + signParams);
 		if (so.getSign().equals(MD5Utils.md5(signParams))) {
 			return true;
 		}
 		return false;
 	}
 
-	// 老李代付查单返回签名
+	// 天下代付查单返回签名
 	public static boolean valMd5TySelectOrder(SysTyOrder so, String key) {
 		String signParams = "merchant_id=" + so.getMerchant_id() + "&merchant_order_id=" + so.getMerchant_order_id() + "&typay_order_id=" + so.getTypay_order_id() + "&pay_amt=" + String.format("%.2f", so.getPay_amt()) + "&pay_message="
 				+ so.getPay_message() + "&remark=SelectOrder&key=" + key;
-		log.info("老李代付查单回调签名:" + signParams);
+		log.info(" 天下代付查单回调签名:" + signParams);
 		String sign = MD5Utils.md5(signParams);
 		log.info("我方签名:" + signParams + "结果:" + sign + "对方签名:" + so.getSign());
 		if (so.getSign().equals(sign)) {
@@ -96,46 +96,47 @@ public class PayUtil {
 		return MD5Utils.md5(signParams);
 	}
 
-	// 老李代付下单
-	public static String SendTySubmit(Payout pt, Channel cl) {
+	// 天下代付下单
+	public static String SendTxSubmit(Payout pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		String signParams = "merchant_id=" + cl.getCode() + "&merchant_order_id=" + pt.getOrdernum() + "&pay_type=912&pay_amt=" + String.format("%.2f", pt.getAmount()) + "&notify_url=" + cl.getApireusultip() + "&return_url=127.0.0.1&bank_code="
-				+ pt.getBankcode() + "&bank_num=" + pt.getAccnumer() + "&bank_owner=" + pt.getAccname() + "&bank_address=" + pt.getBankaddress() + "&remark=" + pt.getRemark() + "&key=" + cl.getApikey();
-		log.info("老李代付下单签名：" + signParams);
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		String signParams = "merchant_id=" + cl.getCode() + "&merchant_order_id=" + pt.getOrdernum() + "&pay_type=912&pay_amt=" + String.format("%.2f", pt.getAmount()) + "&notify_url=" + cl.getApireusultip() + "&return_url=" + cl.getApireusultip()
+				+ "&bank_code=" + pt.getBankcode() + "&bank_num=" + pt.getAccnumer() + "&bank_owner=" + pt.getAccname() + "&bank_address=" + pt.getBankaddress() + "&remark=payout&key=" + cl.getApikey();
+		log.info(" 天下代付下单签名：" + signParams);
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add("merchant_id", cl.getCode());
 		map.add("merchant_order_id", pt.getOrdernum());
-		map.add("user_id", pt.getId());
-		map.add("user_credit_level", "-9_9");
+		map.add("user_id", pt.getUserid().toString());
+		map.add("user_credit_level", "-" + cl.getAislecode());
 		map.add("pay_amt", String.format("%.2f", pt.getAmount()));
-		map.add("user_level", 0);
-		map.add("pay_type", 912);
+		map.add("user_level", "0");
+		map.add("pay_type", "912");
 		map.add("notify_url", cl.getApireusultip());
-		map.add("return_url", "127.0.0.1");
+		map.add("return_url", cl.getApireusultip());
 		map.add("bank_code", pt.getBankcode());
 		map.add("bank_num", pt.getAccnumer());
 		map.add("bank_owner", pt.getAccname());
 		map.add("bank_address", pt.getBankaddress());
-		map.add("user_ip", "103.151.116.163");
+		map.add("user_ip", "127.0.0.1");
 		map.add("member_account", pt.getAccname());
-		map.add("remark", pt.getRemark());
+		map.add("remark", "payout");
+		map.add("query_url", cl.getPrivatersa());
 
-		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		//
-		ResponseEntity<SysTyOrder> sov = resttemplate.exchange(cl.getApiip() + "/withdraw/create?sign=" + MD5Utils.md5(signParams), HttpMethod.POST, httpEntity, SysTyOrder.class);
+		ResponseEntity<SysTyOrder> sov = resttemplate.postForEntity(cl.getApiip() + "/withdraw/create?sign=" + MD5Utils.md5(signParams), httpEntity, SysTyOrder.class);
 		SysTyOrder data = sov.getBody();
-		log.info("老李代付成功返回订单号：" + data.getTypay_order_id() + "返回消息：" + data.getPay_message());
+		log.info(" 天下代付成功返回订单号：" + data.getTypay_order_id() + "返回消息：" + data.getPay_message());
 		if (data.getPay_message() == 1) {
 			return data.getTypay_order_id();
 		}
 		return null;
 	}
 
-	// 老李代付查单
-	public static SysTyOrder SendTySelectOrder(String ordernum, Channel cl) {
+	// 天下代付查单
+	public static SysTyOrder SendTxSelectOrder(String ordernum, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
@@ -146,7 +147,7 @@ public class PayUtil {
 		map.add("merchant_id", cl.getCode());
 		map.add("merchant_order_id", ordernum);
 		map.add("remark", "SelectOrder");
-		log.info("老李代付查单签名：" + signParams);
+		log.info(" 天下代付查单签名：" + signParams);
 
 		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
@@ -160,8 +161,8 @@ public class PayUtil {
 		}
 	}
 
-	// 老李代付查余额
-	public static SysTyBalance SendTySelectBalance(Channel cl) {
+	// 天下代付查余额
+	public static SysTyBalance SendTxSelectBalance(Channel cl) {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -172,7 +173,7 @@ public class PayUtil {
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		map.add("MerchantID", cl.getCode());
 		map.add("MerchantType", 0);
-		log.info("老李代付查余额签名：" + signParams);
+		log.info(" 天下代付查余额签名：" + signParams);
 
 		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();

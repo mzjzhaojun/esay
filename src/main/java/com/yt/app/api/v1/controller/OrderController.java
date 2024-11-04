@@ -62,15 +62,18 @@ public class OrderController {
 		return new YtResponseEntity<Object>(new YtBody(income.getStatus()));
 	}
 
-	// 菲律宾代付回调
-	@RequestMapping(value = "/tycallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		payoutservice.tycallbackpay(requestEntity.getBody());
-		try {
-			response.getWriter().print("ok");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	// 天下代付回调
+	@RequestMapping(value = "/txcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		YtBody yb = payoutservice.txcallbackpay(requestEntity.getBody());
+		return new YtResponseEntity<Object>(yb);
+	}
+
+	// 天下代付反查
+	@RequestMapping(value = "/exist", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> exist(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		YtBody yb = payoutservice.exist(requestEntity.getBody());
+		return new YtResponseEntity<Object>(yb);
 	}
 
 	// 代付盘口查单

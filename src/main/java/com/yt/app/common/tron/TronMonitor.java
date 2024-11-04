@@ -18,7 +18,9 @@ import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.abi.FunctionEncoder;
 
 import com.yt.app.api.v1.entity.Tron;
+import com.yt.app.api.v1.entity.Tronmember;
 import com.yt.app.api.v1.entity.Tronmemberorder;
+import com.yt.app.api.v1.mapper.TronmemberMapper;
 import com.yt.app.api.v1.mapper.TronmemberorderMapper;
 import com.yt.app.api.v1.service.TronService;
 import com.yt.app.common.bot.TronBot;
@@ -44,6 +46,9 @@ public class TronMonitor {
 
 	@Autowired
 	private TronBot tronbot;
+
+	@Autowired
+	private TronmemberMapper tronmembermapper;
 
 	@Autowired
 	private TronmemberorderMapper tronmemberordermapper;
@@ -195,8 +200,17 @@ public class TronMonitor {
 			if (tronmemberorder == null) {
 				tronmemberorder = tronmemberordermapper.getByAmount(Double.valueOf(amount.toString()));
 				if (tronmemberorder != null) {
-					String hash = sendTrx(new BigDecimal(tronmemberorder.getTrxamount().toString()), owner_address, owneraddress, privatekey);
-					log.info("给 " + toAddress + "发送手续费，交易hash：" + hash);
+					if (tronmemberorder.getType().equals(DictionaryResource.EXCHANGE_TYPE_601)) {
+						String hash = sendTrx(new BigDecimal(tronmemberorder.getTrxamount().toString()), owner_address, owneraddress, privatekey);
+						log.info("给 " + toAddress + "发送手续费，交易hash：" + hash);
+						tronbot.notifyMermberSuccess(tronmemberorder.getTgid(), tronmemberorder.getOrdernum(), tronmemberorder.getAmount());
+					} else if (tronmemberorder.getType().equals(DictionaryResource.EXCHANGE_TYPE_602)) {
+						// 處理充值
+						Tronmember tronmember = tronmembermapper.getByTgId(tronmemberorder.getTgid());
+						tronmember.setUsdtbalance(tronmember.getUsdtbalance() + Double.valueOf(amount.toString()));
+						tronmembermapper.put(tronmember);
+						tronbot.notifyMermberIncomeSuccess(tronmemberorder.getTgid(), tronmemberorder.getOrdernum(), tronmemberorder.getAmount());
+					}
 					tronmemberorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 					tronmemberorder.setFromaddress(owner_address);
 					tronmemberorder.setTxid(txId);
@@ -204,8 +218,6 @@ public class TronMonitor {
 					tronmemberordermapper.put(tronmemberorder);
 					// 刪除緩存數據
 					NumberUtil.removeExchangeFewAmount(tronmemberorder.getFewamount());
-
-					tronbot.notifyMermberSuccess(tronmemberorder.getTgid(), tronmemberorder.getOrdernum(), tronmemberorder.getAmount());
 				}
 			}
 		}

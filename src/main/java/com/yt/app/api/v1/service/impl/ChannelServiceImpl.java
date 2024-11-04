@@ -167,8 +167,8 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 			Channel cl = mapper.get(id);
 			String balance = null;
 			switch (cl.getName()) {
-			case DictionaryResource.LLAISLE:
-				SysTyBalance stb = PayUtil.SendTySelectBalance(cl);
+			case DictionaryResource.DFTXAISLE:
+				SysTyBalance stb = PayUtil.SendTxSelectBalance(cl);
 				cl.setRemotebalance(stb.getAvailableBalance());
 				break;
 			case DictionaryResource.HSAISLE:

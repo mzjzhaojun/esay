@@ -116,4 +116,15 @@ public class TronBot extends TelegramLongPollingBot {
 			e.printStackTrace();
 		}
 	}
+
+	public void notifyMermberIncomeSuccess(Long chatid, String ordernum, Double amnout) {
+		try {
+			SendMessage sm = notifymermbermessage.getNotifyIncomeSuccess(chatid, ordernum, amnout);
+			if (sm != null) {
+				execute(sm);
+			}
+		} catch (TelegramApiException e) {
+			e.printStackTrace();
+		}
+	}
 }

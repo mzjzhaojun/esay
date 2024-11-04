@@ -8,6 +8,7 @@ import com.yt.app.api.v1.vo.PayoutVO;
 import com.yt.app.api.v1.vo.PayResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.base.YtIBaseService;
+import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtIPage;
 
 /**
@@ -29,8 +30,11 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 
 	Integer submitOrder(Payout pt);
 
-	// 老李回調
-	void tycallbackpay(SysTyOrder so);
+	// 天下回調
+	YtBody txcallbackpay(SysTyOrder so);
+
+	// 天下回調
+	YtBody exist(SysTyOrder so);
 
 	// 十年回调
 	void sncallback(Map<String, Object> params);

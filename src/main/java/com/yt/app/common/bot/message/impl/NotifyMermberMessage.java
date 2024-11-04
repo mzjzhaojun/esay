@@ -35,7 +35,15 @@ public class NotifyMermberMessage implements UpdateMessageService {
 	public SendMessage getNotifyUpdateSuccess(Long chatid, String ordernum, Double amount) {
 		SendMessage sendMessage = new SendMessage();
 		sendMessage.setChatId(chatid);
-		sendMessage.setText("订单:*" + ordernum + "*\r\n\r\n: (*" + amount + "*) 兑换成功。\r\n \r\n ==============\r\n \r\n*" + DateTimeUtil.getDateTime() + "*");
+		sendMessage.setText("订单:*" + ordernum + "*\r\n\r\n: (*" + amount + "U*) 兑换成功。\r\n \r\n ==============\r\n \r\n*" + DateTimeUtil.getDateTime() + "*");
+		sendMessage.enableMarkdown(true);
+		return sendMessage;
+	}
+
+	public SendMessage getNotifyIncomeSuccess(Long chatid, String ordernum, Double amount) {
+		SendMessage sendMessage = new SendMessage();
+		sendMessage.setChatId(chatid);
+		sendMessage.setText("订单:*" + ordernum + "*\r\n\r\n: (*" + amount + "U*) 充值成功。\r\n \r\n ==============\r\n \r\n*" + DateTimeUtil.getDateTime() + "*");
 		sendMessage.enableMarkdown(true);
 		return sendMessage;
 	}
