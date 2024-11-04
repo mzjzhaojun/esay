@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.MerchantMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,name,nikname,code,remark,balance,usdtbalance,status,todaycost,todaycount,count,exchange,collection,onecost,downpoint,exchangeonecost,exchangedownpoint,incomedownpoint,agentid,agentname,create_by,create_time,update_by,update_time,backpay,clearingtype,ipaddress,tenant_id,userid,appkey,apireusultip,version
+		id,name,nikname,code,remark,balance,usdtbalance,status,todaycost,todaycount,type,count,exchange,collection,onecost,downpoint,exchangeonecost,exchangedownpoint,incomedownpoint,agentid,agentname,create_by,create_time,update_by,update_time,backpay,clearingtype,ipaddress,tenant_id,userid,appkey,apireusultip,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -13,9 +13,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Merchant">
 		insert into
-		merchant(id,name,nikname,code,remark,status,exchange,collection,onecost,downpoint,exchangeonecost,exchangedownpoint,incomedownpoint,agentid,agentname,create_by,create_time,update_by,update_time,backpay,clearingtype,ipaddress,userid,appkey,apireusultip)
+		merchant(id,name,nikname,code,remark,status,exchange,collection,type,onecost,downpoint,exchangeonecost,exchangedownpoint,incomedownpoint,agentid,agentname,create_by,create_time,update_by,update_time,backpay,clearingtype,ipaddress,userid,appkey,apireusultip)
 		values
-		(#{id},#{name},#{nikname},#{code},#{remark},#{status},#{exchange},#{collection},#{onecost},#{downpoint},#{exchangeonecost},#{exchangedownpoint},#{incomedownpoint},#{agentid},#{agentname},#{create_by},#{create_time},#{update_by},#{update_time},#{backpay},#{clearingtype},#{ipaddress},#{userid},#{appkey},#{apireusultip})
+		(#{id},#{name},#{nikname},#{code},#{remark},#{status},#{exchange},#{collection},#{type},#{onecost},#{downpoint},#{exchangeonecost},#{exchangedownpoint},#{incomedownpoint},#{agentid},#{agentname},#{create_by},#{create_time},#{update_by},#{update_time},#{backpay},#{clearingtype},#{ipaddress},#{userid},#{appkey},#{apireusultip})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -67,6 +67,9 @@
 			</if>
 			<if test="count != null">
 				count= #{count},
+			</if>
+			<if test="type != null">
+				type= #{type},
 			</if>
 			<if test="exchange != null">
 				exchange= #{exchange},
@@ -120,11 +123,12 @@
 				version= #{version}+1
 			</if>
 		</set>
-		where id = #{id} 
+		where id = #{id}
 	</update>
-	<update id="updatetodayvalue"  parameterType="java.lang.Long">
+	<update id="updatetodayvalue" parameterType="java.lang.Long">
 		update merchant
-		set todaycost = 0,todaycount = 0
+		set
+		todaycost = 0,todaycount = 0
 		where id = #{id}
 	</update>
 
@@ -153,7 +157,7 @@
 				version= #{version}+1
 			</if>
 		</set>
-		where id = #{id} 
+		where id = #{id}
 	</update>
 
 	<!--getById -->
@@ -206,6 +210,9 @@
 			</if>
 			<if test="status != null">
 				AND status = #{status}
+			</if>
+			<if test="type != null">
+				AND type = #{type}
 			</if>
 			<if test="agentid != null">
 				AND agentid= #{agentid}
@@ -269,6 +276,9 @@
 			</if>
 			<if test="status != null">
 				AND status = #{status}
+			</if>
+			<if test="type != null">
+				AND type = #{type}
 			</if>
 			<if test="agentid != null">
 				AND agentid= #{agentid}

@@ -24,16 +24,10 @@ import com.yt.app.common.bot.TronBot;
 @Profile("dev")
 @Component
 public class SlaveRunner implements CommandLineRunner {
-	private TelegramBotsApi botsApi;
-
-	@Autowired
-	private TronBot tronbot;
 
 	@Override
 	public void run(String... args) throws Exception {
-		botsApi = new TelegramBotsApi(DefaultBotSession.class);
 		log.info("slave start...");
-		botsApi.registerBot(tronbot);
 		log.info("slave end...");
 	}
 }

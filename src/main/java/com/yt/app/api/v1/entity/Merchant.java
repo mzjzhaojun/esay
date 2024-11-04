@@ -29,6 +29,7 @@ public class Merchant extends YtBaseEntity<Merchant> {
 	String nikname;
 	String code;
 	String remark;
+	String type;
 	Double balance;
 	Double usdtbalance;
 	Boolean status;

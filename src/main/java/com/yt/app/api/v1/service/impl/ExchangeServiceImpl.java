@@ -22,7 +22,6 @@ import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.api.v1.service.ExchangeService;
 import com.yt.app.api.v1.service.MerchantcustomerbanksService;
 import com.yt.app.api.v1.service.SysconfigService;
-import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
@@ -101,8 +100,6 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 	private AgentaccountService agentaccountservice;
 	@Autowired
 	private ChannelaccountService channelaccountservice;
-	@Autowired
-	private SystemaccountService systemaccountservice;
 	@Autowired
 	private ExchangeMerchantaccountMapper exchangemerchantaccountmapper;
 	@Autowired
@@ -492,7 +489,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			// 商户账户
 			// exchangemerchantaccountservice.updateExchange(mao);
 			// 系统账户
-			systemaccountservice.updateExchange(mao);
+//			systemaccountservice.updateExchange(mao);
 
 			// 计算商户数据
 			// merchantservice.updateExchange(t);

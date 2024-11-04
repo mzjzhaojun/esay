@@ -98,6 +98,7 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 		return i;
 	}
 	
+	//代付充值成功
 	@Override
 	@Transactional
 	public void incomemanual(PayoutMerchantaccountorder mco) {

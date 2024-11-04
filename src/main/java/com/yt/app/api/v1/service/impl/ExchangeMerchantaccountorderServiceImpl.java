@@ -11,7 +11,6 @@ import com.yt.app.api.v1.mapper.ExchangeMerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.ExchangeMerchantaccountService;
 import com.yt.app.api.v1.service.ExchangeMerchantaccountorderService;
-import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
@@ -58,9 +57,6 @@ public class ExchangeMerchantaccountorderServiceImpl extends YtBaseServiceImpl<E
 
 	@Autowired
 	private ExchangeMerchantaccountService exchangemerchantaccountservice;
-
-	@Autowired
-	private SystemaccountService systemaccountservice;
 
 	/**
 	 * 充值
@@ -219,7 +215,7 @@ public class ExchangeMerchantaccountorderServiceImpl extends YtBaseServiceImpl<E
 						//
 						exchangemerchantaccountservice.updateTotalincome(mao);
 						//
-						systemaccountservice.updateUsdtTotalincome(mao);
+//						systemaccountservice.updateUsdtTotalincome(mao);
 					} else {
 						exchangemerchantaccountservice.turndownTotalincome(mao);
 					}
@@ -276,7 +272,7 @@ public class ExchangeMerchantaccountorderServiceImpl extends YtBaseServiceImpl<E
 						//
 						exchangemerchantaccountservice.updateWithdrawamount(mao);
 						//
-						systemaccountservice.updateUsdtWithdrawamount(mao);
+//						systemaccountservice.updateUsdtWithdrawamount(mao);
 					} else {
 						exchangemerchantaccountservice.turndownWithdrawamount(mao);
 					}

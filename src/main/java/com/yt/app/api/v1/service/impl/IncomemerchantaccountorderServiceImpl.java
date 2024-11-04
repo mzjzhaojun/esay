@@ -213,7 +213,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		return outputStream;
 	}
 
-//////////////////////////////////////////////////////////////充值处理
+//////////////////////////////////////////////////////////////提现处理
 	@Override
 	@Transactional
 	public void incomemanual(Incomemerchantaccountorder mco) {

@@ -27,6 +27,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.resource.VersionResourceResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
@@ -111,7 +112,7 @@ public class YtWebMvcConfigurationSupport extends WebMvcConfigurationSupport {
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry paramResourceHandlerRegistry) {
-		paramResourceHandlerRegistry.addResourceHandler(new String[] { "/**" }).addResourceLocations(new String[] { "classpath:/template/" });
+		paramResourceHandlerRegistry.addResourceHandler("/static/**").addResourceLocations("classpath:/template/static/").setCachePeriod(3600).resourceChain(true).addResolver(new VersionResourceResolver().addContentVersionStrategy("/**"));
 		paramResourceHandlerRegistry.addResourceHandler("/").addResourceLocations("classpath:/index.html");
 		super.addResourceHandlers(paramResourceHandlerRegistry);
 	}

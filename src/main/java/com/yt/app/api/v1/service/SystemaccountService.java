@@ -3,7 +3,6 @@ package com.yt.app.api.v1.service;
 import java.util.Map;
 
 import com.yt.app.api.v1.entity.Agentaccountorder;
-import com.yt.app.api.v1.entity.ExchangeMerchantaccountorder;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
@@ -32,22 +31,15 @@ public interface SystemaccountService extends YtIBaseService<Systemaccount, Long
 	// 代理提现
 	void updateWithdrawamount(Agentaccountorder mao);
 
-	// 代付
+	// 代付成功
 	void updatePayout(PayoutMerchantaccountorder mao);
 
-	// 换汇
-	void updateExchange(ExchangeMerchantaccountorder mao);
 
-	// 代收
+	// 代收提现
 	void updateIncome(Income mao);
 	
-	// 代收
+	// 代收充值
 	void updateIncome(Incomemerchantaccountorder mao);
 
-	// 商户充值
-	void updateUsdtTotalincome(ExchangeMerchantaccountorder mao);
-
-	// 商户提现
-	void updateUsdtWithdrawamount(ExchangeMerchantaccountorder mao);
 
 }

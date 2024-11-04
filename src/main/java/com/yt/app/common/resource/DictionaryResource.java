@@ -40,7 +40,7 @@ public class DictionaryResource implements Serializable {
 	public static final long SYSTEM_ADMINTYPE_1 = 1;// 超级管理员
 	public static final long SYSTEM_ADMINTYPE_2 = 2;// 系统管理员
 	public static final long SYSTEM_ADMINTYPE_3 = 3;// 基础管理员
-	public static final long SYSTEM_ADMINTYPE_4 = 4;// 商户
+	public static final long SYSTEM_ADMINTYPE_4 = 4;// 代付商户
 	public static final long SYSTEM_ADMINTYPE_5 = 5; // 代理
 	public static final long SYSTEM_ADMINTYPE_6 = 6; // 渠道
 	public static final long SYSTEM_ADMINTYPE_7 = 7; // 代收商户
@@ -115,7 +115,7 @@ public class DictionaryResource implements Serializable {
 	 */
 	public static final Integer AISLE_TYPE_PAYOUT_70 = 70;// 代付
 	public static final Integer AISLE_TYPE_EXCHANGE_71 = 71;// 换汇
-	public static final Integer AISLE_TYPE_EXCHANGE_72 = 72;// 代收
+	public static final Integer AISLE_TYPE_INCOME_72 = 72;// 代收
 
 	/**
 	 * 换汇资金明细类型

@@ -88,13 +88,14 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		u.setUsername(t.getUsername());
 		u.setNickname(t.getName());
 		u.setPassword(PasswordUtil.encodePassword(t.getPassword()));
-		u.setAccounttype(DictionaryResource.SYSTEM_ADMINTYPE_4);
+		u.setAccounttype(DictionaryResource.SYSTEM_ADMINTYPE_7);
 		u.setTwofactorcode(GoogleAuthenticatorUtil.getSecretKey());
 		usermapper.postAndTanantId(u);
 
 		//
 		t.setUserid(u.getId());
 		t.setAppkey(StringUtil.getUUID());
+		t.setType(DictionaryResource.AISLE_TYPE_INCOME_72.toString());
 		Integer i = mapper.post(t);
 
 		//
@@ -148,6 +149,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		t.setTenant_id(u.getTenant_id());
 		t.setUserid(u.getId());
 		t.setAppkey(StringUtil.getUUID());
+		t.setType(DictionaryResource.AISLE_TYPE_PAYOUT_70.toString());
 		mapper.post(t);
 
 		//
