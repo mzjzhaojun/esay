@@ -3,7 +3,6 @@ package com.yt.app.api.v1.service;
 import java.util.Map;
 
 import com.yt.app.api.v1.entity.Channel;
-import com.yt.app.api.v1.entity.Channelaccount;
 import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.common.yt.YtIPage;
 
@@ -16,8 +15,6 @@ import com.yt.app.common.common.yt.YtIPage;
 public interface ChannelService extends YtIBaseService<Channel, Long> {
 
 	YtIPage<Channel> page(Map<String, Object> param);
-
-	void updateBalance(Channelaccount t);
 
 	//
 	Integer getRemotebalance(Long id);

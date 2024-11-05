@@ -150,13 +150,6 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 		return mapper.delete(id);
 	}
 
-	@Override
-	@Transactional
-	public synchronized void updateBalance(Channelaccount t) {
-		Channel a = mapper.get(t.getChannelid());
-		a.setBalance(t.getBalance());
-		mapper.put(a);
-	}
 
 	@Override
 	public Integer getRemotebalance(Long id) {

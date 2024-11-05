@@ -9,7 +9,6 @@ import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.ExchangeMerchantaccountMapper;
 import com.yt.app.api.v1.mapper.ExchangeMerchantaccountrecordMapper;
 import com.yt.app.api.v1.mapper.MerchantaccountbankMapper;
-import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.ExchangeMerchantaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.context.SysUserContext;
@@ -40,9 +39,6 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 
 	@Autowired
 	private MerchantMapper merchantmapper;
-
-	@Autowired
-	private MerchantService merchantservice;
 
 	@Autowired
 	private ExchangeMerchantaccountMapper mapper;
@@ -125,7 +121,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 		t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 		mapper.put(t);
 		// 更新余额
-		merchantservice.updateBalanceUsdt(t);
+		// merchantservice.updateBalanceUsdt(t);
 	}
 
 	@Override
@@ -278,7 +274,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 		ma.setTowithdrawamount(maaj.getPretowithdrawamount());// 待支出减去金额
 		ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
 		mapper.put(ma);
-		merchantservice.updateBalanceUsdt(ma);
+		// merchantservice.updateBalanceUsdt(ma);
 	}
 
 	@Transactional

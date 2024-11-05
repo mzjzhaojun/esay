@@ -118,11 +118,4 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 		return mapper.delete(id);
 	}
 
-	@Override
-	public void updateBalance(Agentaccount t) {
-		Agent a = mapper.get(t.getAgentid());
-		a.setBalance(t.getBalance());
-		mapper.put(a);
-	}
-
 }

@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.math.RoundingMode;
 
 @Slf4j
-@Profile("slave")
+@Profile("dev")
 @Component
 public class TronMonitor {
 
@@ -58,6 +58,9 @@ public class TronMonitor {
 	// trc20
 	private String contract = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t";
 
+	// usdttotrx
+	private String contracttrx = "TJ4NNy8xZEqsowCBhLvZ45LCqPdGjkET5j";
+
 	private String monitoraddress = "TUrntwm5t9umKhC7jv89RXGo33qcTFAAAA";
 
 	private String collecaddress = "TWXQjegKptQkfaGXA3m7V5A2AnMGT88888";
@@ -76,11 +79,26 @@ public class TronMonitor {
 		}
 	}
 
-	@Scheduled(cron = "0/1 * * * * ?")
-	public void synBalance() throws Throwable {
+	// @Scheduled(cron = "0/1 * * * * ?")
+	public void synTrxBalance() throws Throwable {
 		Double balance = Double.valueOf(balanceOf(monitoraddress).toString());
 		if (balance >= 1) {
 			sendTrx(new BigDecimal(balance - 1), collecaddress, monitoraddress, "63d99b74511082f06e3f5f4b6e02e663c9a43939525368060da19b704f2b9aa4");
+		}
+	}
+
+	// @Scheduled(cron = "0/55 * * * * ?")
+	public void getcontract() throws Throwable {
+		tronservice.getcontract(TronUtil.toHexAddress(contract));
+	}
+
+	@Scheduled(cron = "0/5 * * * * ?")
+	public void synTrcBalance() throws Throwable {
+		Tron tron = tronservice.get();
+		Double balance = Double.valueOf(balanceOfTrc20(tron.getAddress(), contract).toString());
+		log.info("Trc20余额：" + balance);
+		if (balance >= 10) {
+			//sendTrc20("TWXQjegKptQkfaGXA3m7V5A2AnMGT88888", new BigDecimal(2), tron.getAddress(), tron.getPrivatekey());
 		}
 	}
 
@@ -89,7 +107,7 @@ public class TronMonitor {
 	 *
 	 * @throws Throwable
 	 */
-	@Scheduled(cron = "0/10 * * * * ?")
+	// @Scheduled(cron = "0/10 * * * * ?")
 	public void charge() throws Throwable {
 		if (CURRENT_SYNC_BLOCK_NUMBER != null) {
 			Tron tron = tronservice.get();
@@ -119,7 +137,6 @@ public class TronMonitor {
 									}
 								}
 							}
-//							}
 						} catch (Throwable throwable) {
 							throwable.printStackTrace();
 						}
@@ -283,7 +300,7 @@ public class TronMonitor {
 		inputParameters.add(new Uint256(amount.multiply(decimal).toBigInteger()));
 		String parameter = FunctionEncoder.encodeConstructor(inputParameters);
 
-		String responseString = tronservice.triggersmartcontract(privateKey, ownerAddress, contract, parameter, 6000000L, 0);
+		String responseString = tronservice.triggersmartcontract(privateKey, TronUtil.toHexAddress(ownerAddress), TronUtil.toHexAddress(contract), parameter, 6000000L, 10);
 		System.out.println("trc20 result:" + responseString);
 		return responseString;
 	}

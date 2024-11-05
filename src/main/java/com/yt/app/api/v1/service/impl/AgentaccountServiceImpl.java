@@ -9,7 +9,6 @@ import com.yt.app.api.v1.mapper.AgentMapper;
 import com.yt.app.api.v1.mapper.AgentaccountMapper;
 import com.yt.app.api.v1.mapper.AgentaccountrecordMapper;
 import com.yt.app.api.v1.mapper.AgentaccountbankMapper;
-import com.yt.app.api.v1.service.AgentService;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.context.SysUserContext;
@@ -49,8 +48,6 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	@Autowired
 	private AgentaccountrecordMapper agentaccountapplyjournamapper;
 
-	@Autowired
-	private AgentService agentservice;
 
 	@Override
 	@Transactional
@@ -114,6 +111,8 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	private void setToincomeamount(Agentaccount ma, Agentaccountrecord aaaj) {
 		ma.setToincomeamount(aaaj.getPretoincomeamount());
 		mapper.put(ma);
+		
+		agentaccountapplyjournamapper.post(aaaj);
 	}
 
 	@Transactional
@@ -122,7 +121,12 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 		t.setToincomeamount(aaaj.getPretoincomeamount());// 待收入减去金额.
 		t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 		mapper.put(t);
-		agentservice.updateBalance(t);
+
+		Agent a = agentmapper.get(t.getAgentid());
+		a.setBalance(t.getBalance());
+		agentmapper.put(a);
+		
+		agentaccountapplyjournamapper.post(aaaj);
 	}
 
 	// 待确认收入
@@ -151,7 +155,6 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
 			aaaj.setRemark("收入待确认￥:" + String.format("%.2f", t.getAmountreceived()));
 			//
-			agentaccountapplyjournamapper.post(aaaj);
 			setToincomeamount(ma, aaaj);
 		} catch (Exception e) {
 		} finally {
@@ -186,7 +189,6 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
 			aaaj.setRemark("收入￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
-			agentaccountapplyjournamapper.post(aaaj);
 			setTotalincome(t, aaaj);
 		} catch (Exception e) {
 		} finally {
@@ -220,8 +222,6 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
 			aaaj.setRemark("收入失败￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
-			agentaccountapplyjournamapper.post(aaaj);
-
 			setToincomeamount(t, aaaj);
 
 		} catch (Exception e) {
@@ -256,8 +256,6 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
 			aaaj.setRemark("收入取消￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
-			agentaccountapplyjournamapper.post(aaaj);
-
 			setToincomeamount(t, aaaj);
 		} catch (Exception e) {
 		} finally {
@@ -269,19 +267,21 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	 * =============================================================提现
 	 * 
 	 */
-	@Transactional
-	private void setTowithdrawamount(Agentaccount ma, Agentaccountrecord aaaj) {
-		ma.setTowithdrawamount(aaaj.getPretowithdrawamount());
-		mapper.put(ma);
-	}
 
 	@Transactional
 	private void setWithdrawamount(Agentaccount t, Agentaccountrecord aaaj) {
-		t.setWithdrawamount(aaaj.getPostwithdrawamount());// 支出增加金额
-		t.setTowithdrawamount(aaaj.getPretowithdrawamount());// 待支出减去金额
+		// 支出总金额
+		t.setWithdrawamount(aaaj.getPostwithdrawamount());
+		// 待支出金额
+		t.setTowithdrawamount(aaaj.getPretowithdrawamount());
 		t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 		mapper.put(t);
-		agentservice.updateBalance(t);
+
+		Agent a = agentmapper.get(t.getAgentid());
+		a.setBalance(t.getBalance());
+		agentmapper.put(a);
+		
+		agentaccountapplyjournamapper.post(aaaj);
 	}
 
 	// 待确认支出
@@ -309,8 +309,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
 			aaaj.setRemark("支出￥：" + String.format("%.2f", t.getAmountreceived()));
 			//
-			agentaccountapplyjournamapper.post(aaaj);
-			setTowithdrawamount(ma, aaaj);
+			setWithdrawamount(ma, aaaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -344,7 +343,6 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPosttowithdrawamount(mao.getAmountreceived());// 确认支出
 			aaaj.setRemark("支出成功￥：" + String.format("%.2f", mao.getAmountreceived()));
 			//
-			agentaccountapplyjournamapper.post(aaaj);
 			setWithdrawamount(t, aaaj);
 		} catch (Exception e) {
 		} finally {
@@ -377,8 +375,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
 			aaaj.setRemark("拒绝支出￥：" + String.format("%.2f", mao.getAmountreceived()));
-			agentaccountapplyjournamapper.post(aaaj);
-			setTowithdrawamount(t, aaaj);
+			setWithdrawamount(t, aaaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -410,8 +407,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 确认支出
 			aaaj.setRemark("取消支出￥：" + String.format("%.2f", mao.getAmountreceived()));
-			agentaccountapplyjournamapper.post(aaaj);
-			setTowithdrawamount(t, aaaj);
+			setWithdrawamount(t, aaaj);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();

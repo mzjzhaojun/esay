@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import com.yt.app.common.common.yt.YtResponseEncryptEntity;
+import com.yt.app.common.common.yt.YtResponseEntity;
 
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,7 +54,7 @@ public class TronController extends YtBaseEncipherControllerImpl<Tron, Long> {
 	// # 手续费 1trx = 1000000 sun
 	private static BigDecimal decimal = new BigDecimal("1000000");
 
-	String owner_address = "TUrntwm5t9umKhC7jv89RXGo33qcTFAAAA";
+	String owner_address = "TPP1KaeDnFBs5ATXadVVc8PhaBXqzJJJJJ";
 
 	String to_address = "TNeVJQ1kN8NmNosDeXwYEb3D4Nep6h3eXU";
 
@@ -78,9 +79,8 @@ public class TronController extends YtBaseEncipherControllerImpl<Tron, Long> {
 	 * @return
 	 */
 	@RequestMapping(value = "/wallet/getaccount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> getaccount(HttpServletRequest request, HttpServletResponse response) {
-		service.getaccount(owner_address);
-		return new YtResponseEncryptEntity<Object>(new YtBody(1));
+	public YtResponseEntity<Object> getaccount(HttpServletRequest request, HttpServletResponse response) {
+		return new YtResponseEntity<Object>(new YtBody(service.getaccount(owner_address)));
 	}
 
 	/**

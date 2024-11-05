@@ -262,30 +262,6 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 
 	@Override
 	@Transactional
-	public synchronized void updatePayoutBalance(PayoutMerchantaccount ma) {
-		Merchant m = mapper.get(ma.getMerchantid());
-		m.setBalance(ma.getBalance());
-		mapper.put(m);
-	}
-
-	@Override
-	@Transactional
-	public synchronized void updateBalanceUsdt(ExchangeMerchantaccount t) {
-		Merchant m = mapper.get(t.getMerchantid());
-		m.setUsdtbalance(t.getBalance());
-		mapper.put(m);
-	}
-
-	@Override
-	@Transactional
-	public synchronized void updateInComeBalance(Incomemerchantaccount ma) {
-		Merchant m = mapper.get(ma.getMerchantid());
-		m.setBalance(ma.getBalance());
-		mapper.put(m);
-	}
-
-	@Override
-	@Transactional
 	public void updateDayValue(Merchant m, String date) {
 		RLock lock = RedissonUtil.getLock(m.getId());
 		try {

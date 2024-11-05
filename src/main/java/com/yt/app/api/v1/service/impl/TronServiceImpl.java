@@ -42,7 +42,8 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 	private TronMapper mapper;
 
 	// final static String URL = "https://nile.trongrid.io";
-	final static String URL = "http://192.168.18.22:8090";
+	// final static String URL = "http://192.168.18.22:8090";
+	final static String URL = "https://api.trongrid.io";
 
 	@Override
 	@Transactional
@@ -501,8 +502,19 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 	}
 
 	@Override
+	public String getcontract(String address) {
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("value", address);
+		String sub_url = URL + "/wallet/getcontract";
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
+		log.info("获取合约响应的消息:" + body);
+		return body;
+	}
+
+	@Override
 	public String triggerconstantcontract(String owner_address, String contract_address, String parameter) {
 		HashMap<String, Object> map = new HashMap<>();
+		log.info(owner_address + "===" + contract_address + "==" + parameter);
 		map.put("owner_address", owner_address);
 		map.put("contract_address", contract_address);
 		map.put("function_selector", "balanceOf(address)");
@@ -528,15 +540,16 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
 		log.info("调用TRC20合约响应的消息:" + body);
 
-		JSONObject obj = JSONUtil.parseObj(body);
+		JSONObject jsonobj = JSONUtil.parseObj(body);
 
-		String error = obj.getStr("Error");
+		String error = jsonobj.getStr("Error");
 		if (!isEmpty(error) && error.contains("balance is not sufficient")) {
 			// 抛自己的异常(余额不足)
 			System.out.println("balance is not sufficient");
 			throw new YtException("balance is not sufficient");
 		} else {
 			// 签名交易
+			JSONObject obj = jsonobj.getJSONObject("transaction");
 			String txId = obj.getStr("txID");
 			byte[] decode = Hex.decode(txId);
 			byte[] bytes = KeyPair.signTransaction(decode, keyPair);

@@ -110,8 +110,11 @@ public interface TronService extends YtIBaseService<Tron, Long> {
 
 	// 查询当前节点信息
 	String getnodeinfo();
-
-	// 调用合约
+	
+	//获取合约
+	 String getcontract(String address);
+	
+	 // 调用合约
 	String triggersmartcontract(String privatekey, String owner_address, String contract_address, String parameter, long fee_limit, Integer call_value);
 
 	// 调用常量合约，产生的交易不上链
