@@ -43,7 +43,7 @@ public class TronBot extends TelegramLongPollingBot {
 
 	@Override
 	public String getBotToken() {
-		return "7979731495:AAGzEE-takjODIuePb5NepWmd9iNlN1uhT8";
+		return "7726126730:AAHV97DxD3yU5jmS02EOVpWwndyUOEHAIQo";
 	}
 
 	@Override

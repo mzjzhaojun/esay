@@ -9,7 +9,8 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-import com.yt.app.common.bot.TronBot;
+import com.yt.app.common.bot.ChannelBot;
+import com.yt.app.common.bot.MerchantBot;
 
 /**
  * <p>
@@ -25,9 +26,22 @@ import com.yt.app.common.bot.TronBot;
 @Component
 public class SlaveRunner implements CommandLineRunner {
 
+	private TelegramBotsApi botsApi;
+
+	@Autowired
+	private ChannelBot channelbot;
+	@Autowired
+	private MerchantBot merchantbot;
+
 	@Override
 	public void run(String... args) throws Exception {
 		log.info("slave start...");
+
+		botsApi = new TelegramBotsApi(DefaultBotSession.class);
+
+		// 注册机器人
+		botsApi.registerBot(merchantbot);
+		botsApi.registerBot(channelbot);
 		log.info("slave end...");
 	}
 }

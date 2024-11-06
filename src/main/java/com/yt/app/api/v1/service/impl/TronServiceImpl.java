@@ -42,8 +42,8 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 	private TronMapper mapper;
 
 	// final static String URL = "https://nile.trongrid.io";
-	// final static String URL = "http://192.168.18.22:8090";
-	final static String URL = "https://api.trongrid.io";
+	final static String URL = "http://192.168.18.22:8090";
+	// final static String URL = "https://api.trongrid.io";
 
 	@Override
 	@Transactional
@@ -183,7 +183,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 			parame.put("raw_data", obj.getJSONObject("raw_data"));
 			parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
 
-			log.info("trx交易广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(map));
+			log.info("trx交易广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(parame));
 
 			return broadcasttransaction(parame);
 		}
@@ -206,6 +206,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 
 	@Override
 	public String broadcasthex(String address) {
+
 		return null;
 	}
 
@@ -267,7 +268,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		parame.put("raw_data", obj.getJSONObject("raw_data"));
 		parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
 
-		log.info("质押广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(map));
+		log.info("质押广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(parame));
 
 		return broadcasttransaction(parame);
 	}
@@ -298,7 +299,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		parame.put("raw_data", obj.getJSONObject("raw_data"));
 		parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
 
-		log.info("解锁质押广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(map));
+		log.info("解锁质押广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(parame));
 
 		return broadcasttransaction(parame);
 	}
@@ -327,7 +328,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		parame.put("raw_data", obj.getJSONObject("raw_data"));
 		parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
 
-		log.info("取消质押广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(map));
+		log.info("取消质押广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(parame));
 
 		return broadcasttransaction(parame);
 	}
@@ -362,7 +363,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		parame.put("raw_data", obj.getJSONObject("raw_data"));
 		parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
 
-		log.info("广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(map));
+		log.info("广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(parame));
 
 		return broadcasttransaction(parame);
 	}
@@ -395,7 +396,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		parame.put("raw_data", obj.getJSONObject("raw_data"));
 		parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
 
-		log.info("广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(map));
+		log.info("广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(parame));
 
 		return broadcasttransaction(parame);
 	}
@@ -514,14 +515,12 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 	@Override
 	public String triggerconstantcontract(String owner_address, String contract_address, String parameter) {
 		HashMap<String, Object> map = new HashMap<>();
-		log.info(owner_address + "===" + contract_address + "==" + parameter);
 		map.put("owner_address", owner_address);
 		map.put("contract_address", contract_address);
 		map.put("function_selector", "balanceOf(address)");
 		map.put("parameter", parameter);
 		String sub_url = URL + "/wallet/triggerconstantcontract";
 		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
-		log.info("调用常量合约响应的消息:" + body);
 		return body;
 	}
 
@@ -562,26 +561,9 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 			parame.put("raw_data", obj.getJSONObject("raw_data"));
 			parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
 
-			log.info("trx交易广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(map));
+			log.info("trc20交易广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(parame));
 
 			return broadcasttransaction(parame);
 		}
 	}
-
-	@Override
-	public String getTest() {
-//		HashMap<String, Object> map = new HashMap<>();
-//		String sub_url = "http://192.168.18.4:8080/esay/rest/v1/order/income/1845491796000641024";
-//		String body = HttpRequest.get(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
-//		log.info("getTest:" + body);
-//		return body;
-		Tron t = new Tron();
-		t.setAddress("1231231");
-		t.setBalance(111.11);
-		mapper.post(t);
-		Tron tron = mapper.get(t.getId());
-		System.out.println(tron);
-		return "";
-	}
-
 }
