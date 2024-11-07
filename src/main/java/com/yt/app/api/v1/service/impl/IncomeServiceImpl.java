@@ -584,6 +584,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
 		income.setNotifyurl(qs.getPay_notifyurl());
 		income.setBackforwardurl(qs.getPay_callbackurl());
+		income.setInipaddress(AuthContext.getIp());
 		// 远程当面付
 		boolean flage = true;
 		switch (channel.getName()) {

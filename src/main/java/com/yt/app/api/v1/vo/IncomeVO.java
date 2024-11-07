@@ -67,6 +67,7 @@ public class IncomeVO extends BaseVO {
 	Integer notifystatus;
 	String notifystatusname;
 	String remark;
+	String inipaddress;
 	Double incomeamount;
 	Double merchantincomeamount;
 	Double channelincomeamount;
