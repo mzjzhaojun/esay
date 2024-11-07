@@ -169,7 +169,6 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 
 		String sub_url = URL + "/wallet/createtransaction";
 		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
-		log.info("创建交易,响应的消息:" + body);
 
 		JSONObject obj = JSONUtil.parseObj(body);
 
@@ -192,8 +191,6 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 			parame.put("raw_data", obj.getJSONObject("raw_data"));
 			parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
 
-			log.info("trx交易广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(parame));
-
 			return broadcasttransaction(parame);
 		}
 	}
@@ -209,7 +206,6 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 	public String broadcasttransaction(HashMap<String, Object> map) {
 		String sub_url = URL + "/wallet/broadcasttransaction";
 		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
-		log.info("trx交易广播响应的消息:" + body);
 		return body;
 	}
 
@@ -217,7 +213,6 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 	public String broadcasthex(HashMap<String, Object> map) {
 		String sub_url = URL + "/wallet/broadcasthex";
 		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
-		log.info("trx交易广播响应的消息:" + body);
 		return body;
 	}
 
@@ -392,7 +387,6 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("visible", true);
 		String sub_url = URL + "/wallet/undelegateresource";
 		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
-		log.info("响应的消息:" + body);
 
 		JSONObject obj = JSONUtil.parseObj(body);
 		String txId = obj.getStr("txID");
@@ -406,8 +400,6 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		parame.put("visible", true);
 		parame.put("raw_data", obj.getJSONObject("raw_data"));
 		parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
-
-		log.info("广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(parame));
 
 		return broadcasttransaction(parame);
 	}
@@ -519,7 +511,6 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("value", address);
 		String sub_url = URL + "/wallet/getcontract";
 		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
-		log.info("获取合约响应的消息:" + body);
 		return body;
 	}
 
@@ -532,7 +523,6 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("parameter", parameter);
 		String sub_url = URL + "/wallet/triggerconstantcontract";
 		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
-		log.info("调用常量TRC20合约响应的消息:" + body);
 		return body;
 	}
 
@@ -548,7 +538,6 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("fee_limit", fee_limit);
 		String sub_url = URL + "/wallet/triggersmartcontract";
 		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
-		log.info("调用TRC20合约响应的消息:" + body);
 
 		JSONObject jsonobj = JSONUtil.parseObj(body);
 
@@ -567,20 +556,6 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-//			String txId = obj.getStr("txID");
-//			byte[] decode = Hex.decode(txId);
-//			byte[] bytes = KeyPair.signTransaction(decode, keyPair);
-//			String signatureHex = TronUtil.bytesToHex(bytes);
-
-//			parame.put("signature", signatureHex);
-//			parame.put("txID", txId);
-//			parame.put("visible", true);
-//			parame.put("raw_data", obj.getJSONObject("raw_data"));
-//			parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
-
-			log.info("trc20交易广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(parame));
-
-			// return broadcasttransaction(map);
 			return broadcasthex(parame);
 		}
 	}

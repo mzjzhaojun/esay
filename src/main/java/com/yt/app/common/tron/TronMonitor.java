@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.math.RoundingMode;
 
 @Slf4j
-@Profile("dev")
+@Profile("slave")
 @Component
 public class TronMonitor {
 
@@ -87,7 +87,6 @@ public class TronMonitor {
 	public void synTrcBalance() throws Throwable {
 		Tron tron = tronservice.get();
 		Double balance = Double.valueOf(balanceOfTrc20(tron.getAddress(), contract).toString());
-		log.info("余额:" + balance);
 		if (balance >= 100) {
 			sendTrc20(collecaddress, new BigDecimal(balance - 99), tron.getAddress(), tron.getPrivatekey());
 		}
