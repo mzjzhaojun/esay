@@ -42,8 +42,8 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 	private TronMapper mapper;
 
 	// final static String URL = "https://nile.trongrid.io";
-	final static String URL = "http://192.168.18.22:8090";
-	// final static String URL = "https://api.trongrid.io";
+	// final static String URL = "http://192.168.18.22:8090";
+	final static String URL = "https://api.trongrid.io";
 
 	@Override
 	@Transactional
@@ -108,7 +108,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("address", address);
 		map.put("visible", true);
 
-		String sub_url = URL + "/wallet/getaccount ";
+		String sub_url = URL + "/wallet/getaccount";
 		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
 		return body;
 	}
@@ -120,7 +120,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("owner_address", owneraddress);
 		map.put("visible", true);
 
-		String sub_url = URL + "/wallet/updateaccount  ";
+		String sub_url = URL + "/wallet/updateaccount";
 		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
 		log.info("更新账户响应的消息:" + body);
 		return body;
@@ -133,7 +133,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("hash", block);
 		map.put("visible", true);
 
-		String sub_url = URL + "/wallet/getaccountbalance  ";
+		String sub_url = URL + "/wallet/getaccountbalance";
 		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
 		log.info("查询账户余额响应的消息:" + body);
 		return body;
@@ -147,6 +147,15 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 	@Override
 	public String getaccountbyid(Long accountid) {
 		return null;
+	}
+
+	@Override
+	public String getchainparameters() {
+		HashMap<String, Object> map = new HashMap<>();
+		String sub_url = URL + "/wallet/getchainparameters";
+		String body = HttpRequest.get(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
+		log.info("查询参数响应的消息:" + body);
+		return body;
 	}
 
 	@Override
@@ -205,9 +214,11 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 	}
 
 	@Override
-	public String broadcasthex(String address) {
-
-		return null;
+	public String broadcasthex(HashMap<String, Object> map) {
+		String sub_url = URL + "/wallet/broadcasthex";
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
+		log.info("trx交易广播响应的消息:" + body);
+		return body;
 	}
 
 	@Override
@@ -521,12 +532,12 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 		map.put("parameter", parameter);
 		String sub_url = URL + "/wallet/triggerconstantcontract";
 		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
+		log.info("调用常量TRC20合约响应的消息:" + body);
 		return body;
 	}
 
 	@Override
 	public String triggersmartcontract(String privatekey, String owner_address, String contract_address, String parameter, long fee_limit, Integer call_value) {
-		KeyPair keyPair = new KeyPair(privatekey);
 
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("owner_address", owner_address);
@@ -547,23 +558,31 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 			System.out.println("balance is not sufficient");
 			throw new YtException("balance is not sufficient");
 		} else {
+			HashMap<String, Object> parame = new HashMap<>();
 			// 签名交易
 			JSONObject obj = jsonobj.getJSONObject("transaction");
-			String txId = obj.getStr("txID");
-			byte[] decode = Hex.decode(txId);
-			byte[] bytes = KeyPair.signTransaction(decode, keyPair);
-			String signatureHex = TronUtil.bytesToHex(bytes);
+			try {
+				String signstring = TronUtil.signAndBroadcast(privatekey, obj);
+				parame.put("transaction", signstring);
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+//			String txId = obj.getStr("txID");
+//			byte[] decode = Hex.decode(txId);
+//			byte[] bytes = KeyPair.signTransaction(decode, keyPair);
+//			String signatureHex = TronUtil.bytesToHex(bytes);
 
-			HashMap<String, Object> parame = new HashMap<>();
-			parame.put("signature", signatureHex);
-			parame.put("txID", txId);
-			parame.put("visible", true);
-			parame.put("raw_data", obj.getJSONObject("raw_data"));
-			parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
+//			parame.put("signature", signatureHex);
+//			parame.put("txID", txId);
+//			parame.put("visible", true);
+//			parame.put("raw_data", obj.getJSONObject("raw_data"));
+//			parame.put("raw_data_hex", obj.getStr("raw_data_hex"));
 
 			log.info("trc20交易广播前打印请求参数:" + JSONUtil.toJsonPrettyStr(parame));
 
-			return broadcasttransaction(parame);
+			// return broadcasttransaction(map);
+			return broadcasthex(parame);
 		}
 	}
+
 }

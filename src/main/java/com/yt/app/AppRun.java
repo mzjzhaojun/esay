@@ -1,7 +1,5 @@
 package com.yt.app;
 
-import java.util.Arrays;
-
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -11,8 +9,6 @@ import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import com.yt.app.common.common.YtAutoCode;
 
 /**
  * by jz

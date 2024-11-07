@@ -332,6 +332,12 @@
 			<version>0.9.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.tron.trident</groupId>
+			<artifactId>wallet</artifactId>
+			<version>3.7.0</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.bitcoinj</groupId>
