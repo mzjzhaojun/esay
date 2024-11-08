@@ -55,7 +55,6 @@ public class TronMonitor {
 
 	private BigDecimal decimal = new BigDecimal("1000000");
 
-	// trc20
 	private String contract = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t";
 
 	private String collecaddress = "TWXQjegKptQkfaGXA3m7V5A2AnMGT88888";
@@ -74,7 +73,7 @@ public class TronMonitor {
 		}
 	}
 
-	@Scheduled(cron = "0/5 * * * * ?")
+	@Scheduled(cron = "0/2 * * * * ?")
 	public void synTrxBalance() throws Throwable {
 		Tron tron = tronservice.get();
 		Double balance = Double.valueOf(balanceOf(tron.getAddress()).toString());
@@ -97,7 +96,7 @@ public class TronMonitor {
 	 *
 	 * @throws Throwable
 	 */
-	@Scheduled(cron = "0/30 * * * * ?")
+	@Scheduled(cron = "0/15 * * * * ?")
 	public void charge() throws Throwable {
 		if (CURRENT_SYNC_BLOCK_NUMBER != null) {
 			Tron tron = tronservice.get();
