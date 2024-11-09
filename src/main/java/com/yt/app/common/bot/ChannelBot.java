@@ -64,8 +64,10 @@ public class ChannelBot extends TelegramLongPollingBot {
 			}
 
 			if (update.hasMessage() && update.getMessage().hasText()) {
-				if (update.getMessage().getText().equals("z0")) {
+				if (update.getMessage().getText().equals("uj")) {
 					execute(exchangemessage.getUpdate(update));
+				} else if (update.getMessage().getText().equals("ua")) {
+					execute(exchangemessage.getAliUpdate(update));
 				}
 			} else if (update.hasCallbackQuery()) {
 			} else if (update.hasMessage() && update.getMessage().hasPhoto()) {

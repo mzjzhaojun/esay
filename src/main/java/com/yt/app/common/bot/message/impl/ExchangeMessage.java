@@ -13,6 +13,7 @@ import com.yt.app.common.bot.message.UpdateMessageService;
 
 /**
  * 实时汇率
+ * 
  * @author zj
  *
  */
@@ -33,7 +34,22 @@ public class ExchangeMessage implements UpdateMessageService {
 			sb.append(i + "" + pc.getName() + "，价格:" + pc.getExchange() + "\n");
 			i++;
 		}
-		sendMessage.setText(sb.toString());
+		sendMessage.setText("*全部*  \r\n" + sb.toString());
+		return sendMessage;
+	}
+
+	public SendMessage getAliUpdate(Update update) {
+		SendMessage sendMessage = new SendMessage();
+		sendMessage.setChatId(update.getMessage().getChatId().toString());
+		List<Sysconfig> list = sysconfigservice.getAliPayDataTop();
+		StringBuffer sb = new StringBuffer();
+		Integer i = 1;
+		for (Sysconfig pc : list) {
+			sb.append(i + "" + pc.getName() + "，价格:" + pc.getExchange() + "\n");
+			i++;
+		}
+		sendMessage.setText("*支付宝*  \r\n" + sb.toString());
+		sendMessage.enableMarkdown(true);
 		return sendMessage;
 	}
 }

@@ -75,8 +75,10 @@ public class MerchantBot extends TelegramLongPollingBot {
 				execute(startmessage.getUpdate(update));
 			}
 			if (update.hasMessage() && update.getMessage().hasText()) {
-				if (update.getMessage().getText().equals("z0")) {
+				if (update.getMessage().getText().equals("uj")) {
 					execute(exchangemessage.getUpdate(update));
+				} else if (update.getMessage().getText().equals("ua")) {
+					execute(exchangemessage.getAliUpdate(update));
 				} else if (update.getMessage().getText().equals("查询余额")) {
 					execute(merchantbalancemessage.getUpdate(update, tmg));
 				} else if (update.getMessage().hasText() && update.getMessage().getReplyToMessage() != null && update.getMessage().getReplyToMessage().hasPhoto()) {

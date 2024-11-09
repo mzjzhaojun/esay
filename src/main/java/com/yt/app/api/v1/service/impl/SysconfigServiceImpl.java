@@ -122,7 +122,7 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 		SysOxxVo data = sov.getBody();
 		List<Object> list = data.getData().getSell();
 		List<Sysconfig> listpc = new ArrayList<Sysconfig>();
-		for (Integer i = 0; i < 5; i++) {
+		for (Integer i = 0; i < 10; i++) {
 			Sysconfig e = new Sysconfig();
 			e.setName(BeanUtil.beanToMap(list.get(i)).get("nickName").toString());
 			e.setExchange(Double.valueOf(BeanUtil.beanToMap(list.get(i)).get("price").toString()));
@@ -141,7 +141,7 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 		SysOxxVo data = sov.getBody();
 		List<Object> list = data.getData().getSell();
 		List<Sysconfig> listpc = new ArrayList<Sysconfig>();
-		for (Integer i = 0; i < 5; i++) {
+		for (Integer i = 0; i < 10; i++) {
 			Sysconfig e = new Sysconfig();
 			e.setName(BeanUtil.beanToMap(list.get(i)).get("nickName").toString());
 			e.setExchange(Double.valueOf(BeanUtil.beanToMap(list.get(i)).get("price").toString()));
