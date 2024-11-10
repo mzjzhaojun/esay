@@ -18,6 +18,7 @@ import com.yt.app.api.v1.entity.Tgbotgrouprecord;
 import com.yt.app.api.v1.mapper.TgbotgroupMapper;
 import com.yt.app.api.v1.mapper.TgbotgrouprecordMapper;
 import com.yt.app.common.base.context.TenantIdContext;
+import com.yt.app.common.bot.message.impl.ExchangeMessage;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
 
@@ -29,155 +30,167 @@ public class BookAccountBot extends TelegramLongPollingBot {
 	private TgbotgroupMapper tgbotgroupmapper;
 	@Autowired
 	private TgbotgrouprecordMapper tgbotgrouprecordmapper;
+	@Autowired
+	private ExchangeMessage exchangemessage;
 
 	@Override
 	public String getBotUsername() {
-		return "飞兔运营";
+		return "飞兔记账";
 	}
 
 	@Override
 	public String getBotToken() {
-		return "7126079871:AAFQOkrsh2s3ytDrP4ERtMwpWryV3Zs8jc8";
+		return "7669769378:AAHuq1hNImYQQT6oxQCB5edTOx-YKmxBYKY";
 	}
 
 	@Override
 	public void onUpdateReceived(Update update) {
 		if (update != null) {
 			Long chatid = update.getMessage().getChat().getId();
-			if (update.getMessage() != null) {
-				TenantIdContext.removeFlag();
-				String msg = update.getMessage().getText();
-				String from = update.getMessage().getFrom().getFirstName();
-				String replyname = from;
-				Tgbotgroup tmg = tgbotgroupmapper.getByTgGroupId(chatid);
-				if (tmg == null) {
-					Tgbotgroup t = new Tgbotgroup();
-					t.setTgid(chatid);
-					t.setStatus(false);
-					t.setTgname(update.getMessage().getChat().getTitle());
-					tgbotgroupmapper.post(t);
-					sendText(chatid, "飞兔机器人当前群Tgid:" + update.getMessage().getChatId() + "请給我管理员权限。");
-				}
-				// 回复的消息体
-				Message replymsg = update.getMessage().getReplyToMessage();
-				if (replymsg != null) {
-					replyname = replymsg.getFrom().getFirstName();
-				}
-				if (tmg.getStatus()) {
-					if (msg.startsWith("+")) {
-						String str = msg.substring(1);
-						if (str.matches("-?\\d+(\\.\\d+)?")) {
-							Double amount = Double.parseDouble(str);
-							income(tmg, amount, from, replyname);
-							sendText(chatid, getOrder(tmg));
-						} else if (str.indexOf("/") != -1) {
-							Double amount = Double.parseDouble(str.substring(0, str.indexOf("/")));
-							income(tmg, amount, from, replyname);
-							sendText(chatid, getOrder(tmg));
-						}
-					} else if (msg.startsWith("-")) {
-						String str = msg.substring(1);
-						if (str.matches("-?\\d+(\\.\\d+)?")) {
-							Double amount = Double.parseDouble(str);
-							withdraw(tmg, amount, from, replyname);
-							sendText(chatid, getOrder(tmg));
-						} else if (str.indexOf("/") != -1) {
-							Double amount = Double.parseDouble(str.substring(0, str.indexOf("/")));
-							withdraw(tmg, amount, from, replyname);
-							sendText(chatid, getOrder(tmg));
-						}
-					} else if (msg.startsWith("回")) {
-						String str = msg.substring(1);
-						if (str.matches("-?\\d+(\\.\\d+)?")) {
-							Double amount = Double.parseDouble(str);
-							outusdt(tmg, amount, from, replyname);
-							sendText(chatid, getOrder(tmg));
-						}
-					} else if (msg.startsWith("下发")) {
-						String str = msg.substring(2);
-						if (str.matches("-?\\d+(\\.\\d+)?")) {
-							Double amount = Double.parseDouble(str);
-							outusdt(tmg, amount, from, replyname);
-							sendText(chatid, getOrder(tmg));
+			if (update.getMessage().hasText()) {
+				try {
+					TenantIdContext.removeFlag();
+					String msg = update.getMessage().getText();
+					String from = update.getMessage().getFrom().getFirstName();
+					String replyname = from;
+					Tgbotgroup tmg = tgbotgroupmapper.getByTgGroupId(chatid);
+					if (tmg == null) {
+						Tgbotgroup t = new Tgbotgroup();
+						t.setTgid(chatid);
+						t.setStatus(false);
+						t.setTgname(update.getMessage().getChat().getTitle());
+						tgbotgroupmapper.post(t);
+						sendText(chatid, "飞兔机器人当前群Tgid:" + update.getMessage().getChatId() + "请給我管理员权限。");
+					}
+					// 回复的消息体
+					Message replymsg = update.getMessage().getReplyToMessage();
+					if (replymsg != null) {
+						replyname = replymsg.getFrom().getFirstName();
+					}
+					if (tmg.getStatus()) {
+						if (msg.startsWith("+")) {
+							String str = msg.substring(1);
+							if (str.matches("-?\\d+(\\.\\d+)?")) {
+								Double amount = Double.parseDouble(str);
+								income(tmg, amount, from, replyname);
+								sendText(chatid, getOrder(tmg));
+							} else if (str.indexOf("/") != -1) {
+								Double amount = Double.parseDouble(str.substring(0, str.indexOf("/")));
+								income(tmg, amount, from, replyname);
+								sendText(chatid, getOrder(tmg));
+							}
+						} else if (msg.startsWith("-")) {
+							String str = msg.substring(1);
+							if (str.matches("-?\\d+(\\.\\d+)?")) {
+								Double amount = Double.parseDouble(str);
+								withdraw(tmg, amount, from, replyname);
+								sendText(chatid, getOrder(tmg));
+							} else if (str.indexOf("/") != -1) {
+								Double amount = Double.parseDouble(str.substring(0, str.indexOf("/")));
+								withdraw(tmg, amount, from, replyname);
+								sendText(chatid, getOrder(tmg));
+							}
+						} else if (msg.startsWith("回")) {
+							String str = msg.substring(1);
+							if (str.matches("-?\\d+(\\.\\d+)?")) {
+								Double amount = Double.parseDouble(str);
+								outusdt(tmg, amount, from, replyname);
+								sendText(chatid, getOrder(tmg));
+							}
+						} else if (msg.startsWith("下发")) {
+							String str = msg.substring(2);
+							if (str.matches("-?\\d+(\\.\\d+)?")) {
+								Double amount = Double.parseDouble(str);
+								outusdt(tmg, amount, from, replyname);
+								sendText(chatid, getOrder(tmg));
+							}
 						}
 					}
-				}
-				if (msg.equals("上课")) {
-					tmg.setStatus(true);
-					if (tgbotgroupmapper.put(tmg) > 0)
-						sendText(chatid, "上课开始。记账开始。");
-				} else if (msg.equals("下课")) {
-					tmg.setStatus(false);
-					if (tgbotgroupmapper.put(tmg) > 0)
-						sendText(chatid, "本群已经下课");
-				} else if (msg.equals("账单")) {
-					sendText(chatid, getOrder(tmg));
-				} else if (msg.equals("我的账单")) {
-					sendText(chatid, "仅显示我的账单");
-				} else if (msg.equals("他的账单")) {
-					sendText(chatid, "仅显示他的账单");
-				} else if (msg.equals("统计")) {
-					sendText(chatid, "显示统计账单 ");
-				} else if (msg.equals("按用戶统计")) {
-					sendText(chatid, "显示用戶统计账单 ");
-				} else if (msg.equals("按汇率统计")) {
-					sendText(chatid, "显示汇率统计账单 ");
-				} else if (msg.startsWith("设置汇率")) {
-					String str = msg.substring(msg.indexOf("率") + 1);
-					if (str.matches("-?\\d+(\\.\\d+)?")) {
-						Double exchange = Double.parseDouble(str);
-						tmg.setExchange(exchange);
-						tmg.setTmexchange(false);
+					if (msg.equals("uj")) {
+						execute(exchangemessage.getUpdate(update));
+					} else if (msg.equals("ua")) {
+						execute(exchangemessage.getAliUpdate(update));
+					} else if (msg.equals("上课")) {
+						tmg.setStatus(true);
 						if (tgbotgroupmapper.put(tmg) > 0)
-							sendText(chatid, "汇率：" + exchange + ",设置成功。");
-					}
-				} else if (msg.equals("设置实时汇率")) {
-					tmg.setTmexchange(true);
-					if (tgbotgroupmapper.put(tmg) > 0)
-						sendText(chatid, "实时汇率设置成功。");
-				} else if (msg.startsWith("设置操作人")) {
-					String str = msg.substring(msg.indexOf("人") + 2);
-					if (str.indexOf("@") == 0) {
-						tmg.setGmanger(str);
+							sendText(chatid, "上课开始。记账开始。");
+					} else if (msg.equals("下课")) {
+						tmg.setStatus(false);
 						if (tgbotgroupmapper.put(tmg) > 0)
-							sendText(chatid, "操作人：" + str + ",设置成功。");
-					}
-				} else if (msg.startsWith("删除操作人")) {
-					String str = msg.substring(msg.indexOf("人") + 2);
-					if (str.indexOf("@") == 0) {
+							sendText(chatid, "本群已经下课");
+					} else if (msg.equals("账单")) {
+						sendText(chatid, getOrder(tmg));
+					} else if (msg.equals("我的账单")) {
+						sendText(chatid, "仅显示我的账单");
+					} else if (msg.equals("他的账单")) {
+						sendText(chatid, "仅显示他的账单");
+					} else if (msg.equals("统计")) {
+						sendText(chatid, "显示统计账单 ");
+					} else if (msg.equals("按用戶统计")) {
+						sendText(chatid, "显示用戶统计账单 ");
+					} else if (msg.equals("按汇率统计")) {
+						sendText(chatid, "显示汇率统计账单 ");
+					} else if (msg.startsWith("设置汇率")) {
+						String str = msg.substring(msg.indexOf("率") + 1);
+						if (str.matches("-?\\d+(\\.\\d+)?")) {
+							Double exchange = Double.parseDouble(str);
+							tmg.setExchange(exchange);
+							tmg.setTmexchange(false);
+							if (tgbotgroupmapper.put(tmg) > 0)
+								sendText(chatid, "汇率：" + exchange + ",设置成功。");
+						}
+					} else if (msg.equals("设置实时汇率")) {
+						tmg.setTmexchange(true);
+						if (tgbotgroupmapper.put(tmg) > 0)
+							sendText(chatid, "实时汇率设置成功。");
+					} else if (msg.startsWith("设置操作人")) {
+						String str = msg.substring(msg.indexOf("人") + 2);
+						if (str.indexOf("@") == 0) {
+							tmg.setGmanger(str);
+							if (tgbotgroupmapper.put(tmg) > 0)
+								sendText(chatid, "操作人：" + str + ",设置成功。");
+						}
+					} else if (msg.startsWith("删除操作人")) {
+						String str = msg.substring(msg.indexOf("人") + 2);
+						if (str.indexOf("@") == 0) {
+							tmg.setGmanger("");
+							if (tgbotgroupmapper.put(tmg) > 0)
+								sendText(chatid, "操作人：" + str + ",刪除成功。");
+						}
+					} else if (msg.equals("清空操作人")) {
 						tmg.setGmanger("");
 						if (tgbotgroupmapper.put(tmg) > 0)
-							sendText(chatid, "操作人：" + str + ",刪除成功。");
-					}
-				} else if (msg.equals("清空操作人")) {
-					tmg.setGmanger("");
-					if (tgbotgroupmapper.put(tmg) > 0)
-						sendText(chatid, "清空操作人成功。");
-				} else if (msg.equals("显示操作人")) {
-					sendText(chatid, "显示操作人：" + tmg.getGmanger());
+							sendText(chatid, "清空操作人成功。");
+					} else if (msg.equals("显示操作人")) {
+						sendText(chatid, "显示操作人：" + tmg.getGmanger());
 
-				} else if (msg.startsWith("设置全局操作人")) {
-					String str = msg.substring(msg.indexOf("人") + 2);
-					if (str.indexOf("@") == 0) {
-						tmg.setXmanger(str);
+					} else if (msg.startsWith("设置全局操作人")) {
+						String str = msg.substring(msg.indexOf("人") + 2);
+						if (str.indexOf("@") == 0) {
+							tmg.setXmanger(str);
+							if (tgbotgroupmapper.put(tmg) > 0)
+								sendText(chatid, "全局操作人：" + str + ",设置成功。");
+						}
+					} else if (msg.startsWith("删除全局操作人")) {
+						String str = msg.substring(msg.indexOf("人") + 2);
+						if (str.indexOf("@") == 0) {
+							tmg.setXmanger("");
+							if (tgbotgroupmapper.put(tmg) > 0)
+								sendText(chatid, "全局操作人：" + str + ",刪除成功。");
+						}
+					} else if (msg.equals("清空全局操作人")) {
+						tmg.setGmanger("");
 						if (tgbotgroupmapper.put(tmg) > 0)
-							sendText(chatid, "全局操作人：" + str + ",设置成功。");
-					}
-				} else if (msg.startsWith("删除全局操作人")) {
-					String str = msg.substring(msg.indexOf("人") + 2);
-					if (str.indexOf("@") == 0) {
-						tmg.setXmanger("");
-						if (tgbotgroupmapper.put(tmg) > 0)
-							sendText(chatid, "全局操作人：" + str + ",刪除成功。");
-					}
-				} else if (msg.equals("清空全局操作人")) {
-					tmg.setGmanger("");
-					if (tgbotgroupmapper.put(tmg) > 0)
-						sendText(chatid, "清空全局操作人成功。");
+							sendText(chatid, "清空全局操作人成功。");
 
-				} else if (msg.equals("显示全局操作人")) {
-					sendText(chatid, "显示全局操作人：" + tmg.getXmanger());
+					} else if (msg.equals("显示全局操作人")) {
+						sendText(chatid, "显示全局操作人：" + tmg.getXmanger());
 
+					}
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				} catch (TelegramApiException e) {
+					e.printStackTrace();
 				}
 				TenantIdContext.remove();
 			}
@@ -238,7 +251,7 @@ public class BookAccountBot extends TelegramLongPollingBot {
 		Integer i = 1;
 		double countincome = 0.00;
 		double countusdt = 0.00;
-		sb.append("入款:" + listincome.size() + " 笔\n");
+		sb.append("*入款*:" + listincome.size() + " 笔\n");
 		for (Tgbotgrouprecord tbgr : listincome) {
 			sb.append(i + "：" + DateTimeUtil.getDateTime(tbgr.getCreate_time(), DateTimeUtil.DEFAULT_TIME_FORMAT) + "   " + tbgr.getAmount() + "/" + tbgr.getExchange() + "=" + tbgr.getWithdrawusdt() + " " + "\n");
 			countincome = countincome + tbgr.getAmount();
@@ -250,7 +263,7 @@ public class BookAccountBot extends TelegramLongPollingBot {
 		i = 1;
 		double counwithdeaw = 0.00;
 		double outusdt = 0.00;
-		sb.append("减款:" + liswithdraw.size() + " 笔\n");
+		sb.append("*减款*:" + liswithdraw.size() + " 笔\n");
 		for (Tgbotgrouprecord tbgr : liswithdraw) {
 			sb.append(i + "：" + DateTimeUtil.getDateTime(tbgr.getCreate_time(), DateTimeUtil.DEFAULT_TIME_FORMAT) + "   " + tbgr.getAmount() + "/" + tbgr.getExchange() + "=" + tbgr.getWithdrawusdt() + " " + "\n");
 			counwithdeaw = counwithdeaw + tbgr.getAmount();
@@ -261,28 +274,28 @@ public class BookAccountBot extends TelegramLongPollingBot {
 		List<Tgbotgrouprecord> listusdt = tgbotgrouprecordmapper.listByType(tbg.getTgid(), DictionaryResource.TGBOTGROUPRECORD_TYPE_USDT);
 		i = 1;
 		double usdt = 0.00;
-		sb.append("下发:" + listusdt.size() + " 笔\n");
+		sb.append("*下发*:" + listusdt.size() + " 笔\n");
 		for (Tgbotgrouprecord tbgr : listusdt) {
 			sb.append(i + "：" + DateTimeUtil.getDateTime(tbgr.getCreate_time(), DateTimeUtil.DEFAULT_TIME_FORMAT) + "    " + tbgr.getWithdrawusdt() + " U" + "\n");
 			usdt = usdt + tbgr.getWithdrawusdt();
 			i++;
 		}
 		sb.append("\n");
-		sb.append("费率：" + tbg.getCost() + "%\n");
-		sb.append("汇率：" + tbg.getExchange() + "\n");
+		sb.append("*汇率*：" + tbg.getExchange() + "\n");
 		sb.append("\n");
-		sb.append("总入款：" + countincome + "\n");
-		sb.append("总减款：" + counwithdeaw + "\n");
+		sb.append("*总入款*：" + countincome + "\n");
+		sb.append("*总减款*：" + counwithdeaw + "\n");
 		sb.append("\n");
-		sb.append("应下发：" + (countusdt - outusdt) + "\n");
-		sb.append("已下发：" + usdt + "\n");
-		sb.append("未下发：" + (countusdt - outusdt - usdt) + "\n");
+		sb.append("*应下发*：" + (countusdt - outusdt) + "\n");
+		sb.append("*已下发*：" + usdt + "\n");
+		sb.append("*未下发*：" + (countusdt - outusdt - usdt) + "\n");
 		return sb.toString();
 	}
 
 	// 发送消息
 	public Message sendText(Long who, String what) {
 		SendMessage sm = SendMessage.builder().chatId(who.toString()).text(what).build();
+		sm.enableMarkdown(true);
 		try {
 			Message msg = execute(sm);
 			return msg;

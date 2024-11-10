@@ -184,7 +184,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	@Override
 	@Transactional
-	public void hscallback(@RequestParam Map<String, String> params) {
+	public void kfcallback(@RequestParam Map<String, String> params) {
 		String orderid = params.get("orderid").toString();
 		String status = params.get("status").toString();
 		log.info("宏盛通知返回消息：orderid" + orderid + " status:" + status);
@@ -195,7 +195,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
 			throw new YtException("非法请求!");
 		}
-		String returnstate = PayUtil.SendHSQuerySubmit(orderid, channel);
+		String returnstate = PayUtil.SendKFQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "宏盛通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
@@ -596,8 +596,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				income.setQrcodeordernum(syo.getData().getOrder_id());
 			}
 			break;
-		case DictionaryResource.HSAISLE:
-			SysHsOrder sho = PayUtil.SendHSSubmit(income, channel);
+		case DictionaryResource.KFAISLE:
+			SysHsOrder sho = PayUtil.SendKFSubmit(income, channel);
 			if (sho != null) {
 				flage = false;
 				income.setResulturl(sho.getPay_url());
@@ -879,6 +879,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	// 上游渠道下单
+	@Transactional
 	private QrcodeResultVO addOtherOrder(Income income, Channel channel, Aisle qas, Merchant mc, QrcodeSubmitDTO qs) {
 		// 添加qrcode订单
 		Qrcodeaccountorder qao = new Qrcodeaccountorder();
@@ -942,6 +943,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return qr;
 	}
 
+	@Transactional
 	private QrcodeResultVO addOtherOrderMqd(Income income, Channel channel, Qrcodeaisle qas, Merchant mc, QrcodeSubmitDTO qs) {
 		// 添加qrcode订单
 		Qrcodeaccountorder qao = new Qrcodeaccountorder();
@@ -1004,6 +1006,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	// 补单
+	@Transactional
 	private void addMakeupOrder(Income income) {
 		// 添加qrcode订单
 		Qrcodeaccountorder qao = new Qrcodeaccountorder();
@@ -1154,9 +1157,14 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Integer i = mapper.post(newincome);
 		// 补单（不通知）
 		addMakeupOrder(newincome);
-		//
-		success(newincome);
 
+		//
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		success(newincome);
 		return i;
 	}
 

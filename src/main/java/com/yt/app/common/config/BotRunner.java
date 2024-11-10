@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
+import com.yt.app.common.bot.BookAccountBot;
 import com.yt.app.common.bot.ChannelBot;
 import com.yt.app.common.bot.MerchantBot;
 import com.yt.app.common.bot.TronBot;
@@ -36,6 +37,9 @@ public class BotRunner implements CommandLineRunner {
 	private ChannelBot channelbot;
 
 	@Autowired
+	private BookAccountBot bookaccountbot;
+
+	@Autowired
 	private TronBot tronbot;
 
 	@Override
@@ -46,10 +50,10 @@ public class BotRunner implements CommandLineRunner {
 		log.info("服务初始化之后，注册机器人 start...");
 
 		// 注册机器人
+		botsApi.registerBot(bookaccountbot);
 		botsApi.registerBot(merchantbot);
 		botsApi.registerBot(channelbot);
 		botsApi.registerBot(tronbot);
-
 		log.info("服务初始化之后，注册机器人 end...");
 	}
 

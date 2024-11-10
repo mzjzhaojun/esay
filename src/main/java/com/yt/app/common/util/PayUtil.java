@@ -126,7 +126,7 @@ public class PayUtil {
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		//
-		ResponseEntity<SysTyOrder> sov = resttemplate.exchange(cl.getApiip() + "/withdraw/create?sign=" + MD5Utils.md5(signParams),  HttpMethod.POST, httpEntity, SysTyOrder.class);
+		ResponseEntity<SysTyOrder> sov = resttemplate.exchange(cl.getApiip() + "/withdraw/create?sign=" + MD5Utils.md5(signParams), HttpMethod.POST, httpEntity, SysTyOrder.class);
 		SysTyOrder data = sov.getBody();
 		log.info(" 天下代付成功返回订单号：" + data.getTypay_order_id() + "返回消息：" + data.getPay_message());
 		if (data.getPay_message() == 1) {
@@ -350,8 +350,8 @@ public class PayUtil {
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// 宏盛代收下单
-	public static SysHsOrder SendHSSubmit(Income pt, Channel cl) {
+	// KF代收下单
+	public static SysHsOrder SendKFSubmit(Income pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
@@ -376,22 +376,22 @@ public class PayUtil {
 			e.printStackTrace();
 		}
 		map.add("sign", sign);
-		log.info("宏盛下单签名：" + sign);
+		log.info("KF下单签名：" + sign);
 
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		//
 		ResponseEntity<SysHsOrder> sov = resttemplate.exchange(cl.getApiip() + "/pay/order/cashier.do", HttpMethod.POST, httpEntity, SysHsOrder.class);
 		SysHsOrder data = sov.getBody();
-		log.info("宏盛返回消息：" + data.getMsg());
+		log.info("KF返回消息：" + data.getMsg());
 		if (data.getStatus().equals("ok")) {
 			return data;
 		}
 		return null;
 	}
 
-	// 宏盛代收查单
-	public static String SendHSQuerySubmit(String orderid, Channel cl) {
+	// KF代收查单
+	public static String SendKFQuerySubmit(String orderid, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
@@ -409,22 +409,22 @@ public class PayUtil {
 			e.printStackTrace();
 		}
 		map.add("sign", sign);
-		log.info("宏盛查单签名：" + sign);
+		log.info("KF查单签名：" + sign);
 
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		//
 		ResponseEntity<SysHsQuery> sov = resttemplate.exchange(cl.getApiip() + "/pay/trade/query.do", HttpMethod.POST, httpEntity, SysHsQuery.class);
 		SysHsQuery data = sov.getBody();
-		log.info("宏盛查单返回消息：" + data.getTrade_state());
+		log.info("KF查单返回消息：" + data.getTrade_state());
 		if (data.getTrade_state().equals("SUCCESS")) {
 			return data.getTrade_state();
 		}
 		return null;
 	}
 
-	// 宏盛代收查余额
-	public static String SendHsGetBalance(Channel cl) {
+	// KF代收查余额
+	public static String SendKFGetBalance(Channel cl) {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -441,14 +441,14 @@ public class PayUtil {
 			e.printStackTrace();
 		}
 		map.add("sign", sign);
-		log.info("宏盛余额签名：" + sign);
+		log.info("KF余额签名：" + sign);
 
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		//
 		ResponseEntity<SysHsQuery> sov = resttemplate.exchange(cl.getApiip() + "/Payment/Dfpay/balance.do", HttpMethod.POST, httpEntity, SysHsQuery.class);
 		SysHsQuery data = sov.getBody();
-		log.info("宏盛余额返回消息：" + data.getTrade_state());
+		log.info("KF余额返回消息：" + data.getTrade_state());
 		if (data.getStatus().equals("success")) {
 			return data.getBalance();
 		}

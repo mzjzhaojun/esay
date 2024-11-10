@@ -176,9 +176,9 @@ public class OrderController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/hscallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public void hscallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
-		incomeservice.hscallback(params);
+	@RequestMapping(value = "/kfcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void kfcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		incomeservice.kfcallback(params);
 		try {
 			response.getWriter().print("success");
 		} catch (IOException e) {

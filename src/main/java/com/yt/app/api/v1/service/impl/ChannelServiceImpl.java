@@ -150,7 +150,6 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 		return mapper.delete(id);
 	}
 
-
 	@Override
 	public Integer getRemotebalance(Long id) {
 		RLock lock = RedissonUtil.getLock(id);
@@ -164,8 +163,8 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 				SysTyBalance stb = PayUtil.SendTxSelectBalance(cl);
 				cl.setRemotebalance(stb.getAvailableBalance());
 				break;
-			case DictionaryResource.HSAISLE:
-				balance = PayUtil.SendHsGetBalance(cl);
+			case DictionaryResource.KFAISLE:
+				balance = PayUtil.SendKFGetBalance(cl);
 				if (balance != null)
 					cl.setRemotebalance(Double.valueOf(balance));
 				break;

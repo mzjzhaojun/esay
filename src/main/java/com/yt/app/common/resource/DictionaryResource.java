@@ -15,7 +15,7 @@ public class DictionaryResource implements Serializable {
 	public static final String FAILED = "40004"; // 失败
 	public static final String ERROR = "20000"; // 系统异常
 
-	public static final String HSAISLE = "宏盛"; // 宏盛
+	public static final String KFAISLE = "KF"; // 宏盛
 	public static final String YJJAISLE = "雨将军"; // YJJ
 	public static final String WDAISLE = "豌豆"; // WDAISLE
 	public static final String RBLAISLE = "日不落"; // WDAISLE
@@ -164,7 +164,7 @@ public class DictionaryResource implements Serializable {
 	public static final Integer PROJECT_TYPE_511 = 511;
 
 	// 兑换类型
-	public static final Integer EXCHANGE_TYPE_601 = 601;//trx兑换
-	public static final Integer EXCHANGE_TYPE_602 = 602;//充值
+	public static final Integer EXCHANGE_TYPE_601 = 601;// trx兑换
+	public static final Integer EXCHANGE_TYPE_602 = 602;// 充值
 
 }
