@@ -38,8 +38,8 @@ import com.yt.app.api.v1.vo.SysWdOrder;
 import com.yt.app.api.v1.vo.SysWdQuery;
 import com.yt.app.api.v1.vo.SysWjOrder;
 import com.yt.app.api.v1.vo.SysWjQuery;
-import com.yt.app.api.v1.vo.SysYJJQuery;
-import com.yt.app.api.v1.vo.SysYjjOrder;
+import com.yt.app.api.v1.vo.SysTdQuery;
+import com.yt.app.api.v1.vo.SysTdOrder;
 
 import cn.hutool.json.JSONUtil;
 
@@ -497,69 +497,72 @@ public class PayUtil {
 
 	}
 
-	// 雨将军代收对接
-	public static SysYjjOrder SendYJJSubmit(Income pt, Channel cl) {
+	// 铁蛋代收对接
+	public static SysTdOrder SendTDSubmit(Income pt, Channel cl) {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-			map.add("merchant_id", cl.getCode());
-			map.add("code", pt.getQrcodecode());
-			map.add("order_no", pt.getOrdernum());
+			String datetime = DateTimeUtil.getDateTime();
+			map.add("pay_memberid", cl.getCode());
+			map.add("pay_bankcode", pt.getQrcodecode());
+			map.add("pay_applydate", datetime);
+			map.add("pay_orderid", pt.getOrdernum());
 			map.add("type", "1");
-			map.add("amount", pt.getAmount().toString());
-			map.add("notice_url", cl.getApireusultip());
-			map.add("return_url", pt.getBackforwardurl());
+			map.add("pay_amount", pt.getAmount().toString());
+			map.add("pay_notifyurl", cl.getApireusultip());
+			map.add("pay_callbackurl", pt.getBackforwardurl());
 
-			String signContent = "amount=" + pt.getAmount() + "&code=" + pt.getQrcodecode() + "&merchant_id=" + cl.getCode() + "&notice_url=" + cl.getApireusultip() + "&order_no=" + pt.getOrdernum() + "&return_url=" + pt.getBackforwardurl()
-					+ "&type=1&sign=" + cl.getApikey();
+			String signContent = "pay_amount=" + pt.getAmount() + "&pay_applydate=" + datetime + "&pay_bankcode=" + pt.getQrcodecode() + "&pay_callbackurl=" + pt.getBackforwardurl() + "&pay_memberid=" + cl.getCode() + "&pay_notifyurl="
+					+ cl.getApireusultip() + "&pay_orderid=" + pt.getOrdernum() + "&key=" + cl.getApikey() + "";
+
 			String sign = MD5Utils.md5(signContent);
-			map.add("sign", sign.toUpperCase());
-			log.info("YJJ下单签名：" + sign + "===" + signContent);
+			map.add("pay_md5sign", sign.toUpperCase());
+			log.info("铁蛋下单签名：" + sign + "===" + signContent);
 
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
 			//
-			ResponseEntity<SysYjjOrder> sov = resttemplate.exchange(cl.getApiip() + "/index/order", HttpMethod.POST, httpEntity, SysYjjOrder.class);
-			SysYjjOrder data = sov.getBody();
-			log.info("YJJ返回消息：" + data);
-			if (data.getCode().equals("0")) {
+			ResponseEntity<SysTdOrder> sov = resttemplate.exchange(cl.getApiip() + "/Pay_IndexLink.html", HttpMethod.POST, httpEntity, SysTdOrder.class);
+			SysTdOrder data = sov.getBody();
+			log.info("铁蛋返回消息：" + data);
+			if (data.getStatus().equals("success")) {
 				return data;
 			}
 		} catch (RestClientException e) {
-			log.info("YJJ返回消息：" + e.getMessage());
+			log.info("铁蛋返回消息：" + e.getMessage());
 		}
 		return null;
 	}
 
-	// YJJ代收查单
-	public static String SendYJJQuerySubmit(String orderid, Double amount, Channel cl) {
+	// 铁蛋代收查单
+	public static String SendTDQuerySubmit(String orderid, Double amount, Channel cl) {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-			map.add("merchant_id", cl.getCode());
-			map.add("amount", amount.toString());
-			map.add("order_id", orderid);
+			map.add("pay_memberid", cl.getCode());
+			map.add("pay_orderid", orderid);
 
-			String signContent = "amount=" + amount + "&merchant_id=" + cl.getCode() + "&order_id=" + orderid + "&sign=" + cl.getApikey();
+			String signContent = "pay_memberid=" + cl.getCode() + "&pay_orderid=" + orderid + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
-			map.add("sign", sign.toUpperCase());
-			log.info("YJJ查单签名：" + sign.toUpperCase());
+			map.add("pay_md5sign", sign.toUpperCase());
+			log.info("铁蛋查单签名：" + sign.toUpperCase());
 
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
 			//
-			ResponseEntity<SysYJJQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/index/query", HttpMethod.POST, httpEntity, SysYJJQuery.class);
-			SysYJJQuery data = sov.getBody();
-			log.info("YJJ查单返回消息：" + data);
-			if (data.getMsg().equals("ok")) {
-				return data.getData().getStatus();
+			ResponseEntity<String> sov = resttemplate.exchange(cl.getApiip() + "/Pay_Trade_query.html", HttpMethod.POST, httpEntity, String.class);
+			String data = sov.getBody();
+			log.info("铁蛋查单返回消息：" + data);
+			SysTdQuery sso = JSONUtil.toBean(data, SysTdQuery.class);
+			if (sso.getTrade_state().equals("SUCCESS")) {
+				return sso.getTrade_state();
 			}
 		} catch (RestClientException e) {
-			log.info("YJJ查单返回消息：" + e.getMessage());
+			log.info("铁蛋查单返回消息：" + e.getMessage());
 		}
 		return null;
 	}

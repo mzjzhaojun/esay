@@ -34,8 +34,8 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 	// KF回调
 	void kfcallback(Map<String, String> params);
 
-	// yjj回调
-	void yjjcallback(Map<String, String> params);
+	// td回调
+	void tdcallback(Map<String, String> params);
 
 	// 豌豆回调
 	void wdcallback(Map<String, String> params);

@@ -169,7 +169,7 @@ public class OrderController {
 	}
 
 	/**
-	 * 宏盛代收回调
+	 * kf代收回调
 	 * 
 	 * @param requestEntity
 	 * @param request
@@ -187,18 +187,18 @@ public class OrderController {
 	}
 
 	/**
-	 * YJJ代收回调
+	 * td代收回调
 	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/yjjcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public void yjjcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
-		incomeservice.yjjcallback(params);
+	@RequestMapping(value = "/tdcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void tdcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		incomeservice.tdcallback(params);
 		try {
-			response.getWriter().print("success");
+			response.getWriter().print("OK");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

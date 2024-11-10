@@ -66,7 +66,7 @@ import com.yt.app.api.v1.vo.SysHsOrder;
 import com.yt.app.api.v1.vo.SysRblOrder;
 import com.yt.app.api.v1.vo.SysWdOrder;
 import com.yt.app.api.v1.vo.SysWjOrder;
-import com.yt.app.api.v1.vo.SysYjjOrder;
+import com.yt.app.api.v1.vo.SysTdOrder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.config.YtConfig;
@@ -187,7 +187,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	public void kfcallback(@RequestParam Map<String, String> params) {
 		String orderid = params.get("orderid").toString();
 		String status = params.get("status").toString();
-		log.info("宏盛通知返回消息：orderid" + orderid + " status:" + status);
+		log.info("kf通知返回消息：orderid" + orderid + " status:" + status);
 		Income income = mapper.getByOrderNum(orderid);
 		TenantIdContext.setTenantId(income.getTenant_id());
 		Channel channel = channelmapper.get(income.getQrcodeid());
@@ -196,7 +196,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			throw new YtException("非法请求!");
 		}
 		String returnstate = PayUtil.SendKFQuerySubmit(orderid, channel);
-		Assert.notNull(returnstate, "宏盛通知反查订单失败!");
+		Assert.notNull(returnstate, "kf通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
 			TenantIdContext.remove();
@@ -206,10 +206,10 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	@Override
 	@Transactional
-	public void yjjcallback(Map<String, String> params) {
-		String orderid = params.get("order_id").toString();
-		String status = params.get("status").toString();
-		log.info("YJJ通知返回消息：orderid" + orderid + " status:" + status);
+	public void tdcallback(Map<String, String> params) {
+		String orderid = params.get("orderid").toString();
+		String status = params.get("returncode").toString();
+		log.info("铁蛋通知返回消息：orderid" + orderid + " status:" + status);
 		Income income = mapper.getByOrderNum(orderid);
 		TenantIdContext.setTenantId(income.getTenant_id());
 		Channel channel = channelmapper.get(income.getQrcodeid());
@@ -217,8 +217,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
 			throw new YtException("非法请求!");
 		}
-		String returnstate = PayUtil.SendYJJQuerySubmit(orderid, income.getAmount(), channel);
-		Assert.notNull(returnstate, "YJJ通知反查订单失败!");
+		String returnstate = PayUtil.SendTDQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "铁蛋通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
 			TenantIdContext.remove();
@@ -585,15 +585,15 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setNotifyurl(qs.getPay_notifyurl());
 		income.setBackforwardurl(qs.getPay_callbackurl());
 		income.setInipaddress(AuthContext.getIp());
-		// 远程当面付
+		//
 		boolean flage = true;
 		switch (channel.getName()) {
-		case DictionaryResource.YJJAISLE:
-			SysYjjOrder syo = PayUtil.SendYJJSubmit(income, channel);
+		case DictionaryResource.TDAISLE:
+			SysTdOrder syo = PayUtil.SendTDSubmit(income, channel);
 			if (syo != null) {
 				flage = false;
 				income.setResulturl(syo.getData().getPay_url());
-				income.setQrcodeordernum(syo.getData().getOrder_id());
+				income.setQrcodeordernum(income.getMerchantordernum());
 			}
 			break;
 		case DictionaryResource.KFAISLE:
