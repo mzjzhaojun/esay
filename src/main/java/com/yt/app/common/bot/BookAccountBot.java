@@ -50,7 +50,7 @@ public class BookAccountBot extends TelegramLongPollingBot {
 			if (update.getMessage().hasText()) {
 				try {
 					TenantIdContext.removeFlag();
-					String msg = update.getMessage().getText();
+					String msg = update.getMessage().getText().replaceAll(" ", "");
 					String from = update.getMessage().getFrom().getFirstName();
 					String replyname = from;
 					Tgbotgroup tmg = tgbotgroupmapper.getByTgGroupId(chatid);
@@ -130,6 +130,14 @@ public class BookAccountBot extends TelegramLongPollingBot {
 						sendText(chatid, "显示用戶统计账单 ");
 					} else if (msg.equals("按汇率统计")) {
 						sendText(chatid, "显示汇率统计账单 ");
+					} else if (msg.indexOf("设置费率") == 0) {
+						String str = msg.substring(msg.indexOf("率") + 1, msg.indexOf("%"));
+						if (str.matches("-?\\d+(\\.\\d+)?")) {
+							Integer cost = Integer.parseInt(str);
+							tmg.setCost(cost);
+							if (tgbotgroupmapper.put(tmg) > 0)
+								sendText(chatid, "费率：" + cost + "%,设置成功。");
+						}
 					} else if (msg.startsWith("设置汇率")) {
 						String str = msg.substring(msg.indexOf("率") + 1);
 						if (str.matches("-?\\d+(\\.\\d+)?")) {
@@ -204,7 +212,10 @@ public class BookAccountBot extends TelegramLongPollingBot {
 		tgr.setExchange(tbg.getExchange());
 		tgr.setCost(tbg.getCost());
 		tgr.setType(DictionaryResource.TGBOTGROUPRECORD_TYPE_INCOME);
-		tgr.setWithdrawusdt(amount / tgr.getExchange());
+		Double cost = 0.00;
+		if (tbg.getCost() > 0)
+			cost = amount * (tgr.getCost() / 100);
+		tgr.setWithdrawusdt((amount - cost) / tgr.getExchange());
 		tgr.setRemark("入款：" + amount + ",usdt:" + tgr.getWithdrawusdt());
 		tgr.setXmanger(xmanger);
 		tgr.setGmanger(gmanger);
@@ -220,7 +231,10 @@ public class BookAccountBot extends TelegramLongPollingBot {
 		tgr.setExchange(tbg.getExchange());
 		tgr.setCost(tbg.getCost());
 		tgr.setType(DictionaryResource.TGBOTGROUPRECORD_TYPE_WITHDRAW);
-		tgr.setWithdrawusdt(amount / tgr.getExchange());
+		Double cost = 0.00;
+		if (tbg.getCost() > 0)
+			cost = amount * (tgr.getCost() / 100);
+		tgr.setWithdrawusdt((amount - cost) / tgr.getExchange());
 		tgr.setRemark("减款：" + amount + ",usdt:" + tgr.getWithdrawusdt());
 		tgr.setXmanger(xmanger);
 		tgr.setGmanger(gmanger);
@@ -253,7 +267,10 @@ public class BookAccountBot extends TelegramLongPollingBot {
 		double countusdt = 0.00;
 		sb.append("*入款*:" + listincome.size() + " 笔\n");
 		for (Tgbotgrouprecord tbgr : listincome) {
-			sb.append(i + "：" + DateTimeUtil.getDateTime(tbgr.getCreate_time(), DateTimeUtil.DEFAULT_TIME_FORMAT) + "   " + tbgr.getAmount() + "/" + tbgr.getExchange() + "=" + tbgr.getWithdrawusdt() + " " + "\n");
+			Double cost = 0.00;
+			if (tbgr.getCost() > 0)
+				cost = tbgr.getAmount() * (tbgr.getCost() / 100);
+			sb.append(DateTimeUtil.getDateTime(tbgr.getCreate_time(), DateTimeUtil.DEFAULT_TIME_FORMAT) + " " + tbgr.getAmount() + "-" + cost + "/" + tbgr.getExchange() + "=" + tbgr.getWithdrawusdt() + " " + "\n");
 			countincome = countincome + tbgr.getAmount();
 			countusdt = countusdt + tbgr.getWithdrawusdt();
 			i++;
@@ -265,7 +282,10 @@ public class BookAccountBot extends TelegramLongPollingBot {
 		double outusdt = 0.00;
 		sb.append("*减款*:" + liswithdraw.size() + " 笔\n");
 		for (Tgbotgrouprecord tbgr : liswithdraw) {
-			sb.append(i + "：" + DateTimeUtil.getDateTime(tbgr.getCreate_time(), DateTimeUtil.DEFAULT_TIME_FORMAT) + "   " + tbgr.getAmount() + "/" + tbgr.getExchange() + "=" + tbgr.getWithdrawusdt() + " " + "\n");
+			Double cost = 0.00;
+			if (tbgr.getCost() > 0)
+				cost = tbgr.getAmount() * (tbgr.getCost() / 100);
+			sb.append(DateTimeUtil.getDateTime(tbgr.getCreate_time(), DateTimeUtil.DEFAULT_TIME_FORMAT) + " " + tbgr.getAmount() + "-" + cost + "/" + tbgr.getExchange() + "=" + tbgr.getWithdrawusdt() + " " + "\n");
 			counwithdeaw = counwithdeaw + tbgr.getAmount();
 			outusdt = outusdt + tbgr.getWithdrawusdt();
 			i++;
@@ -281,14 +301,15 @@ public class BookAccountBot extends TelegramLongPollingBot {
 			i++;
 		}
 		sb.append("\n");
+		sb.append("*费率*：" + tbg.getCost() + "\n");
 		sb.append("*汇率*：" + tbg.getExchange() + "\n");
 		sb.append("\n");
 		sb.append("*总入款*：" + countincome + "\n");
 		sb.append("*总减款*：" + counwithdeaw + "\n");
 		sb.append("\n");
-		sb.append("*应下发*：" + (countusdt - outusdt) + "\n");
-		sb.append("*已下发*：" + usdt + "\n");
-		sb.append("*未下发*：" + (countusdt - outusdt - usdt) + "\n");
+		sb.append("*应下发*：" + String.format("%.2f", (countusdt - outusdt)) + "\n");
+		sb.append("*已下发*：" + String.format("%.2f", usdt) + "\n");
+		sb.append("*未下发*：" + String.format("%.2f", (countusdt - outusdt - usdt)) + "\n");
 		return sb.toString();
 	}
 

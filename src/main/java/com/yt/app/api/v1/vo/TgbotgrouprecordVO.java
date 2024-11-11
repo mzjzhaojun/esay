@@ -37,5 +37,8 @@ public class TgbotgrouprecordVO extends BaseVO {
 	Integer type;
 	String remark;
 	Integer version;
-
+	Long create_by;
+	java.util.Date create_time;
+	Long update_by;
+	java.util.Date update_time;
 }

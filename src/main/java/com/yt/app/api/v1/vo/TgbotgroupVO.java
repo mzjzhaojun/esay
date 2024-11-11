@@ -26,6 +26,7 @@ public class TgbotgroupVO extends BaseVO {
 	Long tenant_id;
 	Long tgid;
 	String tgname;
+	String mangers;
 	String gmanger;
 	String xmanger;
 	Boolean tmexchange;
@@ -41,5 +42,9 @@ public class TgbotgroupVO extends BaseVO {
 	String customersvccode;
 	String remark;
 	Integer version;
+	Long create_by;
+	java.util.Date create_time;
+	Long update_by;
+	java.util.Date update_time;
 
 }

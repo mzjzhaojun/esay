@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.TgbotgroupMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,tgid,tgname,gmanger,xmanger,tmexchange,exchange,cost,status,welcomemsg,checkmsg,startmsg,endmsg,type,customersvc,customersvccode,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,tgid,tgname,mangers,gmanger,xmanger,tmexchange,exchange,cost,status,welcomemsg,checkmsg,startmsg,endmsg,type,customersvc,customersvccode,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
