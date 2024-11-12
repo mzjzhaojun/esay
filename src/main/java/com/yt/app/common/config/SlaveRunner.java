@@ -21,7 +21,7 @@ import com.yt.app.common.bot.MessageBot;
  * @date 2020/5/22 19:29
  */
 @Slf4j
-@Profile("dev")
+@Profile("slave")
 @Component
 public class SlaveRunner implements CommandLineRunner {
 

@@ -34,7 +34,8 @@ public class ExchangeMessage implements UpdateMessageService {
 			sb.append(i + "" + pc.getName() + "，价格:" + pc.getExchange() + "\n");
 			i++;
 		}
-		sendMessage.setText("*全部*  \r\n" + sb.toString());
+		sendMessage.setText("*欧易C2C*  \r\n" + sb.toString());
+		sendMessage.enableMarkdown(true);
 		return sendMessage;
 	}
 
@@ -48,7 +49,7 @@ public class ExchangeMessage implements UpdateMessageService {
 			sb.append(i + "" + pc.getName() + "，价格:" + pc.getExchange() + "\n");
 			i++;
 		}
-		sendMessage.setText("*支付宝*  \r\n" + sb.toString());
+		sendMessage.setText("*欧易支付宝*  \r\n" + sb.toString());
 		sendMessage.enableMarkdown(true);
 		return sendMessage;
 	}

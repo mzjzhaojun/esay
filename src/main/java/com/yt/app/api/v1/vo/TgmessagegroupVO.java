@@ -29,10 +29,11 @@ public class TgmessagegroupVO extends BaseVO {
 	Long channelid;
 	String channelname;
 	List<Long> merchantids;
+	List<Long> channelids;
+	Long tgcid;
+	Long tgmid;
 	String merchantname;
-	String merchantcode;
 	Boolean status;
-	Long tgid;
 	String tggroupname;
 	String adminmangers;
 	String mangers;

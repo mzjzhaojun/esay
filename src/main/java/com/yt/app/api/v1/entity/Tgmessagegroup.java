@@ -27,10 +27,12 @@ public class Tgmessagegroup extends YtBaseEntity<Tgmessagegroup> {
 	Long id;
 	Long tenant_id;
 	List<Long> merchantids;
+	List<Long> channelids;
+	Long tgcid;
+	Long tgmid;
 	String merchantname;
-	String merchantcode;
+	String channelname;
 	Boolean status;
-	Long tgid;
 	String tggroupname;
 	String adminmangers;
 	String mangers;

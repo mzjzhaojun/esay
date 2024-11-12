@@ -4,19 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import com.yt.app.api.v1.entity.Merchant;
-import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.entity.Tgmessagegroup;
-import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.api.v1.mapper.TgmessagegroupMapper;
 import com.yt.app.common.bot.message.impl.ExchangeMessage;
-import com.yt.app.common.bot.message.impl.MerchantBalanceMessage;
-import com.yt.app.common.bot.message.impl.MerchantOrderMessage;
-import com.yt.app.common.bot.message.impl.PinMessage;
+import com.yt.app.common.bot.message.impl.M2CMessage;
 import com.yt.app.common.bot.message.impl.StartMessage;
 
 import lombok.extern.slf4j.Slf4j;
@@ -33,19 +27,10 @@ public class MessageBot extends TelegramLongPollingBot {
 	private ExchangeMessage exchangemessage;
 
 	@Autowired
-	private MerchantBalanceMessage merchantbalancemessage;
-
-	@Autowired
-	private PinMessage pinmessage;
+	private M2CMessage m2cmessage;
 
 	@Autowired
 	private StartMessage startmessage;
-
-	@Autowired
-	private ChannelBot channelbot;
-
-	@Autowired
-	private MerchantOrderMessage merchantordermessage;
 
 	@Override
 	public String getBotUsername() {
@@ -54,7 +39,7 @@ public class MessageBot extends TelegramLongPollingBot {
 
 	@Override
 	public String getBotToken() {
-		return "7814787015:AAF-pYScG26jcsYulKt5_f158THw3nDi0JU";
+		return "7896578980:AAEhDiJk11-kfyQELElassFuIMD-PLXkNAw";
 	}
 
 	@Override
@@ -67,29 +52,29 @@ public class MessageBot extends TelegramLongPollingBot {
 			return;
 		}
 		try {
-			Tgmessagegroup tmg = tgmessagegroupmapper.getByTgGroupId(chatid);
+			Tgmessagegroup tmg = tgmessagegroupmapper.getByTgcGroupId(chatid);
 			if (tmg == null) {
-				tmg = new Tgmessagegroup();
-				tmg.setTgid(chatid);
-				tmg.setStatus(true);
-				tmg.setTggroupname(update.getMessage().getChat().getTitle());
-				tgmessagegroupmapper.post(tmg);
-				execute(startmessage.getUpdate(update));
+				tmg = tgmessagegroupmapper.getByTgmGroupId(chatid);
+				if (tmg == null) {
+					tmg = new Tgmessagegroup();
+					tmg.setTgmid(chatid);
+					tmg.setStatus(true);
+					tmg.setTggroupname(update.getMessage().getChat().getTitle());
+					tgmessagegroupmapper.post(tmg);
+					execute(startmessage.getUpdate(update));
+				}
 			}
 			if (update.hasMessage() && update.getMessage().hasText()) {
 				if (update.getMessage().getText().equals("uj")) {
 					execute(exchangemessage.getUpdate(update));
 				} else if (update.getMessage().getText().equals("ua")) {
 					execute(exchangemessage.getAliUpdate(update));
-				} else if (update.getMessage().hasText() && update.getMessage().getReplyToMessage() != null && update.getMessage().getReplyToMessage().hasPhoto()) {
-//					SendMessage smg = merchantordermessage.getUpdate(update, tmg);
-//					if (smg.getChatId() != null) {
-//						channelbot.execute(merchantordermessage.getUpdateSendPhoto(update, smg.getChatId()));
-//						channelbot.execute(smg);
-//						execute(merchantordermessage.getUpdateHandler(update));
-//					} else {
-//						execute(merchantordermessage.getUpdateNotFind(update));
-//					}
+				} else if (update.getMessage().getText().equals("p") && update.getMessage().getReplyToMessage() != null) {
+					SendMessage smg = m2cmessage.getReplyUpdate(update, tmg);
+					if (update.getMessage().getReplyToMessage().hasPhoto()) {
+						execute(m2cmessage.getUpdateSendPhoto(update, smg.getChatId()));
+					}
+					execute(smg);
 				}
 			} else if (update.hasCallbackQuery()) {
 			} else if (update.hasMessage() && update.getMessage().hasPhoto()) {
@@ -106,15 +91,4 @@ public class MessageBot extends TelegramLongPollingBot {
 		}
 	}
 
-	public void statisticsMerchant(Merchant m) {
-		try {
-			SendMessage sm = merchantbalancemessage.getUpdate(m);
-			if (sm != null) {
-				Message msg = execute(sm);
-				execute(pinmessage.getUpdate(msg));
-			}
-		} catch (TelegramApiException e) {
-			e.printStackTrace();
-		}
-	}
 }

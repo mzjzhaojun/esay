@@ -107,22 +107,40 @@ public interface TgmessagegroupMapper extends YtIBaseMapper<Tgmessagegroup> {
 	public Tgmessagegroup getByTgGroupName(String groupname);
 
 	/**
-	 * getByTgId
+	 * getByTgcGroupId
 	 *
 	 * @param id id
 	 * @return Tgmessagegroup
 	 */
 	@YtRedisCacheAnnotation(classs = Tgmessagegroup.class)
-	public Tgmessagegroup getByTgGroupId(Long tgid);
+	public Tgmessagegroup getByTgcGroupId(Long tgid);
 
 	/**
-	 * getByTgId
+	 * getByTgmGroupId
+	 *
+	 * @param id id
+	 * @return Tgmessagegroup
+	 */
+	@YtRedisCacheAnnotation(classs = Tgmessagegroup.class)
+	public Tgmessagegroup getByTgmGroupId(Long tgid);
+
+	/**
+	 * getByMerchantId
 	 *
 	 * @param id id
 	 * @return Tgmessagegroup
 	 */
 	@YtRedisCacheAnnotation(classs = Tgmessagegroup.class)
 	public Tgmessagegroup getByMerchantId(Long Id);
+
+	/**
+	 * getByChannelId
+	 *
+	 * @param id id
+	 * @return Tgmessagegroup
+	 */
+	@YtRedisCacheAnnotation(classs = Tgmessagegroup.class)
+	public Tgmessagegroup getByChannelId(Long Id);
 
 	/**
 	 * update

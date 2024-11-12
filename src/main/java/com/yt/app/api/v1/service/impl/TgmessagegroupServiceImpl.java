@@ -4,12 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
-import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.TgmessagegroupMapper;
 import com.yt.app.api.v1.service.TgmessagegroupService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
-import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Tgmessagegroup;
 import com.yt.app.api.v1.vo.TgmessagegroupVO;
 import com.yt.app.common.common.yt.YtIPage;
@@ -30,9 +28,6 @@ import java.util.Map;
 public class TgmessagegroupServiceImpl extends YtBaseServiceImpl<Tgmessagegroup, Long> implements TgmessagegroupService {
 	@Autowired
 	private TgmessagegroupMapper mapper;
-
-	@Autowired
-	private MerchantMapper merchantmapper;
 
 	@Override
 	@Transactional
@@ -56,17 +51,6 @@ public class TgmessagegroupServiceImpl extends YtBaseServiceImpl<Tgmessagegroup,
 			return new YtPageBean<TgmessagegroupVO>(Collections.emptyList());
 		}
 		List<TgmessagegroupVO> list = mapper.page(param);
-		list.forEach(e -> {
-			List<Long> ids = e.getMerchantids();
-			if (ids != null) {
-				StringBuffer sb = new StringBuffer();
-				ids.forEach(id -> {
-					Merchant merchant = merchantmapper.get(id);
-					sb.append(merchant.getName() + " ");
-				});
-				e.setMerchantname(sb.toString());
-			}
-		});
 		return new YtPageBean<TgmessagegroupVO>(param, list, count);
 	}
 

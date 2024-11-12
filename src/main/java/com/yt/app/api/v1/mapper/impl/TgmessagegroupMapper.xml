@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper
-	namespace="com.yt.app.api.v1.mapper.TgmessagegroupMapper">
+<mapper namespace="com.yt.app.api.v1.mapper.TgmessagegroupMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,cost,realtimeexchange,costcount,usdcount,todayusdcount,todaycountorder,countorder,todaycount,count,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,merchantid,channelid,merchantname,channelname,status,tgmid,tgcid,tggroupname,adminmangers,mangers,customermangers,cost,realtimeexchange,costcount,usdcount,todayusdcount,todaycountorder,countorder,todaycount,count,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
 		type="com.yt.app.api.v1.entity.Tgmessagegroup">
 		<result property="merchantids" column="merchantid"
+			typeHandler="com.yt.app.common.mybatis.handler.ListJsonLongTypeHandler" />
+		<result property="channelids" column="channelid"
 			typeHandler="com.yt.app.common.mybatis.handler.ListJsonLongTypeHandler" />
 	</resultMap>
 	<!-- ResultMap -->
@@ -17,23 +18,25 @@
 		type="com.yt.app.api.v1.vo.TgmessagegroupVO">
 		<result property="merchantids" column="merchantid"
 			typeHandler="com.yt.app.common.mybatis.handler.ListJsonLongTypeHandler" />
+		<result property="channelids" column="channelid"
+			typeHandler="com.yt.app.common.mybatis.handler.ListJsonLongTypeHandler" />
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Tgmessagegroup">
 		insert into
-		tgmessagegroup(id,merchantname,merchantcode,status,tgid,tggroupname,create_by,create_time,update_by,update_time,remark)
+		tgmessagegroup(id,merchantname,channelname,status,tgmid,tgcid,tggroupname,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{merchantname},#{channelname},#{status},#{tgmid},#{tgcid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		tgmessagegroup(id,tenant_id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,cost,realtimeexchange,costcount,usdcount,todaycountorder,countorder,todaycount,count,create_by,create_time,update_by,update_time,remark)
+		tgmessagegroup(id,tenant_id,merchantid,merchantname,channelname,status,tgid,tggroupname,adminmangers,mangers,customermangers,cost,realtimeexchange,costcount,usdcount,todaycountorder,countorder,todaycount,count,create_by,create_time,update_by,update_time,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{merchantid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{adminmangers},#{mangers},#{customermangers},#{cost},#{realtimeexchange},#{costcount},#{usdcount},#{todaycountorder},#{countorder},#{todaycount},#{count},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+			(#{id},#{tenant_id},#{merchantid},#{merchantname},#{channelname},#{status},#{tgid},#{tggroupname},#{adminmangers},#{mangers},#{customermangers},#{cost},#{realtimeexchange},#{costcount},#{usdcount},#{todaycountorder},#{countorder},#{todaycount},#{count},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -49,6 +52,10 @@
 			<if test="tenant_id != null">
 				tenant_id= #{tenant_id},
 			</if>
+			<if test="channelids != null">
+				channelid =
+				#{channelids,jdbcType=OTHER,typeHandler=com.yt.app.common.mybatis.handler.ListJsonLongTypeHandler},
+			</if>
 			<if test="merchantids != null">
 				merchantid =
 				#{merchantids,jdbcType=OTHER,typeHandler=com.yt.app.common.mybatis.handler.ListJsonLongTypeHandler},
@@ -56,14 +63,17 @@
 			<if test="merchantname != null">
 				merchantname= #{merchantname},
 			</if>
-			<if test="merchantcode != null">
-				merchantcode= #{merchantcode},
+			<if test="channelname != null">
+				channelname= #{channelname},
 			</if>
 			<if test="status != null">
 				status= #{status},
 			</if>
-			<if test="tgid != null">
-				tgid= #{tgid},
+			<if test="tgcid != null">
+				tgcid= #{tgcid},
+			</if>
+			<if test="tgmid != null">
+				tgmid= #{tgmid},
 			</if>
 			<if test="tggroupname != null">
 				tggroupname= #{tggroupname},
@@ -210,7 +220,7 @@
 		</where>
 	</select>
 
-	<!--getById -->
+	<!--getByTgGroupName -->
 	<select id="getByTgGroupName" parameterType="java.lang.String"
 		resultMap="ResultMap">
 		select
@@ -218,19 +228,36 @@
 		from tgmessagegroup
 		where tggroupname= #{tggroupname}
 	</select>
-	<!--getById -->
-	<select id="getByTgGroupId" parameterType="java.lang.Long"
+	<!--getByTgmGroupId -->
+	<select id="getByTgmGroupId" parameterType="java.lang.Long"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from tgmessagegroup
-		where tgid= #{tgid}
+		where tgmid= #{tgid}
+	</select>
+	<!--getByTgcGroupId -->
+	<select id="getByTgcGroupId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmessagegroup
+		where tgcid= #{tgid}
 	</select>
 	<select id="getByMerchantId" parameterType="java.lang.Long"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from tgmessagegroup
-		where merchantid LIKE CONCAT( '%', #{merchantid} , '%' )
+		where merchantid LIKE CONCAT( '%', #{merchantid} ,
+		'%' )
+	</select>
+	<select id="getByChannelId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmessagegroup
+		where channelid LIKE CONCAT( '%', #{merchantid} ,
+		'%' )
 	</select>
 </mapper>

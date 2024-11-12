@@ -81,7 +81,7 @@ public class MerchantBot extends TelegramLongPollingBot {
 					execute(exchangemessage.getAliUpdate(update));
 				} else if (update.getMessage().getText().equals("查询余额")) {
 					execute(merchantbalancemessage.getUpdate(update, tmg));
-				} else if (update.getMessage().hasText() && update.getMessage().getReplyToMessage() != null && update.getMessage().getReplyToMessage().hasPhoto()) {
+				} else if (update.getMessage().getReplyToMessage() != null && update.getMessage().getReplyToMessage().hasPhoto()) {
 					SendMessage smg = merchantordermessage.getUpdate(update, tmg);
 					if (smg.getChatId() != null) {
 						channelbot.execute(merchantordermessage.getUpdateSendPhoto(update, smg.getChatId()));
