@@ -87,6 +87,9 @@
 		from agentaccountbank
 		<where>
 			1=1
+			<if test="userid != null and userid != ''">
+				and userid = #{userid}
+			</if>
 			<if test="name != null and name != ''">
 				and name LIKE CONCAT( '%', #{name} , '%' )
 			</if>
@@ -123,6 +126,9 @@
 		select count(*) from agentaccountbank
 		<where>
 			1=1
+			<if test="userid != null and userid != ''">
+				and userid = #{userid}
+			</if>
 			<if test="name != null and name != ''">
 				and name LIKE CONCAT( '%', #{name} , '%' )
 			</if>

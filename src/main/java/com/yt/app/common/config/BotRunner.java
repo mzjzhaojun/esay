@@ -24,7 +24,7 @@ import com.yt.app.common.bot.TronBot;
  * @date 2020/5/22 19:29
  */
 @Slf4j
-@Profile("dev")
+@Profile("slave")
 @Component
 public class BotRunner implements CommandLineRunner {
 

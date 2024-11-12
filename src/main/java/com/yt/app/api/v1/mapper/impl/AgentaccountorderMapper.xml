@@ -124,6 +124,9 @@
 		from agentaccountorder
 		<where>
 			1=1
+			<if test="userid != null and userid != ''">
+				and userid = #{userid}
+			</if>
 			<if test="type != null and type != ''">
 				and type= #{type}
 			</if>
@@ -160,6 +163,9 @@
 		select count(*) from agentaccountorder
 		<where>
 			1=1
+			<if test="userid != null and userid != ''">
+				and userid = #{userid}
+			</if>
 			<if test="type != null and type != ''">
 				and type= #{type}
 			</if>

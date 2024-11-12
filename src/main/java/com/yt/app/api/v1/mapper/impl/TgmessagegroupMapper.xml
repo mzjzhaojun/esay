@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.yt.app.api.v1.mapper.TgmessagegroupMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,tenant_id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,cost,realtimeexchange,costcount,usdcount,todayusdcount,todaycountorder,countorder,todaycount,count,create_by,create_time,update_by,update_time,remark,version
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Tgmessagegroup">
+		<result property="merchantids" column="merchantid"
+			typeHandler="com.yt.app.common.mybatis.handler.ListJsonLongTypeHandler" />
+	</resultMap>
+	<!-- ResultMap -->
+	<resultMap id="ResultMapVO"
+		type="com.yt.app.api.v1.vo.TgmessagegroupVO">
+		<result property="merchantids" column="merchantid"
+			typeHandler="com.yt.app.common.mybatis.handler.ListJsonLongTypeHandler" />
+	</resultMap>
+	<!-- add -->
+	<insert id="post"
+		parameterType="com.yt.app.api.v1.entity.Tgmessagegroup">
+		insert into
+		tgmessagegroup(id,merchantname,merchantcode,status,tgid,tggroupname,create_by,create_time,update_by,update_time,remark)
+		values
+		(#{id},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		tgmessagegroup(id,tenant_id,merchantid,merchantname,merchantcode,status,tgid,tggroupname,adminmangers,mangers,customermangers,cost,realtimeexchange,costcount,usdcount,todaycountorder,countorder,todaycount,count,create_by,create_time,update_by,update_time,remark)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{tenant_id},#{merchantid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{adminmangers},#{mangers},#{customermangers},#{cost},#{realtimeexchange},#{costcount},#{usdcount},#{todaycountorder},#{countorder},#{todaycount},#{count},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from tgmessagegroup
+		where id = #{id}
+	</delete>
+	<!-- update -->
+	<update id="put"
+		parameterType="com.yt.app.api.v1.entity.Tgmessagegroup">
+		update tgmessagegroup
+		<set>
+			<if test="tenant_id != null">
+				tenant_id= #{tenant_id},
+			</if>
+			<if test="merchantids != null">
+				merchantid =
+				#{merchantids,jdbcType=OTHER,typeHandler=com.yt.app.common.mybatis.handler.ListJsonLongTypeHandler},
+			</if>
+			<if test="merchantname != null">
+				merchantname= #{merchantname},
+			</if>
+			<if test="merchantcode != null">
+				merchantcode= #{merchantcode},
+			</if>
+			<if test="status != null">
+				status= #{status},
+			</if>
+			<if test="tgid != null">
+				tgid= #{tgid},
+			</if>
+			<if test="tggroupname != null">
+				tggroupname= #{tggroupname},
+			</if>
+			<if test="adminmangers != null">
+				adminmangers= #{adminmangers},
+			</if>
+			<if test="mangers != null">
+				mangers= #{mangers},
+			</if>
+			<if test="customermangers != null">
+				customermangers= #{customermangers},
+			</if>
+			<if test="cost != null">
+				cost= #{cost},
+			</if>
+			<if test="realtimeexchange != null">
+				realtimeexchange= #{realtimeexchange},
+			</if>
+			<if test="costcount != null">
+				costcount= #{costcount},
+			</if>
+			<if test="usdcount != null">
+				usdcount= #{usdcount},
+			</if>
+			<if test="todaycountorder != null">
+				todaycountorder= #{todaycountorder},
+			</if>
+			<if test="todayusdcount != null">
+				todayusdcount= #{todayusdcount},
+			</if>
+			<if test="countorder != null">
+				countorder= #{countorder},
+			</if>
+			<if test="todaycount != null">
+				todaycount= #{todaycount},
+			</if>
+			<if test="count != null">
+				count= #{count},
+			</if>
+			<if test="create_by != null">
+				create_by= #{create_by},
+			</if>
+			<if test="create_time != null">
+				create_time= #{create_time},
+			</if>
+			<if test="update_by != null">
+				update_by= #{update_by},
+			</if>
+			<if test="update_time != null">
+				update_time= #{update_time},
+			</if>
+			<if test="remark != null">
+				remark= #{remark},
+			</if>
+			<if test="version != null">
+				version= #{version}+1
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<update id="updatetodayvalue" parameterType="java.lang.Long">
+		update
+		tgmessagegroup
+		set todaycountorder = 0,todayusdcount = 0,todaycount =0
+		where id = #{id}
+	</update>
+
+	<update id="updatemerchantid" parameterType="java.lang.Long">
+		update
+		tgmessagegroup
+		set merchantid = null,merchantname = null
+		where
+		merchantid = #{id}
+	</update>
+
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmessagegroup
+		where id = #{id}
+	</select>
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmessagegroup
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name LIKE CONCAT( '%', #{name} , '%' )
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="page" parameterType="java.util.HashMap"
+		resultMap="ResultMapVO">
+		select
+		<include refid="Base_Column_List" />
+		from tgmessagegroup
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name LIKE CONCAT( '%', #{name} , '%' )
+			</if>
+			<if test="orderBy != null and dir!= null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		select count(*) from tgmessagegroup
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name LIKE CONCAT( '%', #{name} , '%' )
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmessagegroup
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<!--getById -->
+	<select id="getByTgGroupName" parameterType="java.lang.String"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmessagegroup
+		where tggroupname= #{tggroupname}
+	</select>
+	<!--getById -->
+	<select id="getByTgGroupId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmessagegroup
+		where tgid= #{tgid}
+	</select>
+	<select id="getByMerchantId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmessagegroup
+		where merchantid LIKE CONCAT( '%', #{merchantid} , '%' )
+	</select>
+</mapper>
