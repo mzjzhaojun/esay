@@ -7,8 +7,7 @@
 	<appender name="Console"
 		class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%d{MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}
-				-%msg%n</pattern>
+			<pattern>%d{MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%msg%n</pattern>
 		</encoder>
 	</appender>
 
@@ -27,8 +26,7 @@
 			<maxFileSize>20MB</maxFileSize>
 		</triggeringPolicy>
 		<encoder>
-			<pattern>%-4relative %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread]
-				%-5level%logger{35} - %msg%n</pattern>
+			<pattern>%-4relative %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level%logger{35} - %msg%n</pattern>
 		</encoder>
 	</appender>
 
@@ -47,8 +45,7 @@
 			<maxFileSize>20MB</maxFileSize>
 		</triggeringPolicy>
 		<encoder>
-			<pattern>%-4relative %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread]
-				%-5level%logger{35} - %msg%n</pattern>
+			<pattern>%-4relative %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level%logger{35} - %msg%n</pattern>
 		</encoder>
 	</appender>
 

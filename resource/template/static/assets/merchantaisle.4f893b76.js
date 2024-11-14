@@ -1,1 +1,0 @@
-import{s as t}from"./index.5ac32ff6.js";const r="/rest/v1/merchantaisle";var d={page(e,a){return t({url:r+"/page",method:"post",data:e,headers:a})},list(e){return t({url:r+"/list",method:"post",data:e})},add(e){return t({url:r,method:"post",data:e})},update(e){return t({url:r,method:"put",data:e})},delete(e){return t({url:r+"/"+e,method:"delete"})}};export{d as m};
