@@ -21,6 +21,7 @@ import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
+import com.yt.app.common.bot.ChannelBot;
 import com.yt.app.api.v1.entity.Aislechannel;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccount;
@@ -51,6 +52,9 @@ import java.util.Map;
 public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> implements ChannelService {
 	@Autowired
 	private ChannelMapper mapper;
+
+	@Autowired
+	private ChannelBot channelbot;
 
 	@Autowired
 	private UserMapper usermapper;
@@ -252,6 +256,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 
 			channelstatisticalreportsmapper.post(csr);
 
+			channelbot.statisticsChannel(c);
 			// 清空每日数据
 			mapper.updatetodayvalue(c.getId());
 			TenantIdContext.remove();
