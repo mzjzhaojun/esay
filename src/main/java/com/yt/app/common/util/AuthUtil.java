@@ -1,6 +1,5 @@
 package com.yt.app.common.util;
 
-import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
@@ -11,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import com.yt.app.api.v1.bo.JwtUserBO;
 import com.yt.app.api.v1.vo.AuthLoginVO;
+import com.yt.app.common.enums.YtCodeEnum;
+import com.yt.app.common.exption.YtException;
 
 import java.util.concurrent.TimeUnit;
 
@@ -83,7 +84,7 @@ public class AuthUtil {
 	public static JwtUserBO getLoginUser(String tokenValue) {
 		String userObj = RedisUtil.get(JWT_USER_KEY + tokenValue);
 		if (StrUtil.isBlank(userObj)) {
-			throw NotLoginException.newInstance(StpUtil.getLoginType(), "用户未登录");
+			throw new YtException(YtCodeEnum.YT401.getDesc(), YtCodeEnum.YT401);
 		}
 		RedisUtil.setEx(JWT_USER_KEY + tokenValue, userObj, timeout, TimeUnit.SECONDS);
 		return JSONUtil.toBean(userObj, JwtUserBO.class);
