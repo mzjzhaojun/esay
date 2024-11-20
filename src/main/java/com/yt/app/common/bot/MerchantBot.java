@@ -57,9 +57,7 @@ public class MerchantBot extends TelegramLongPollingBot {
 
 	@Override
 	public void onUpdateReceived(Update update) {
-		log.info(update.toString());
 		Long chatid = update.hasMessage() ? update.getMessage().getChat().getId() : null;
-		log.info("chatid: {}", chatid);
 		if (chatid == null) {
 			log.info("There isn't object Message or CallbackQuery! Update: {}", update);
 			return;
