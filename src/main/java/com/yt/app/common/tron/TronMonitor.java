@@ -37,8 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.math.RoundingMode;
 
 @Slf4j
-//@Profile("master")
-//@Component
+@Profile("slave")
+@Component
 public class TronMonitor {
 
 	@Autowired

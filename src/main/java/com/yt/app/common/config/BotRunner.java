@@ -12,6 +12,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import com.yt.app.common.bot.BookAccountBot;
 import com.yt.app.common.bot.ChannelBot;
 import com.yt.app.common.bot.MerchantBot;
+import com.yt.app.common.bot.MessageBot;
 import com.yt.app.common.bot.TronBot;
 
 /**
@@ -24,7 +25,7 @@ import com.yt.app.common.bot.TronBot;
  * @date 2020/5/22 19:29
  */
 @Slf4j
-@Profile("master")
+@Profile("slave")
 @Component
 public class BotRunner implements CommandLineRunner {
 
@@ -41,6 +42,9 @@ public class BotRunner implements CommandLineRunner {
 
 	@Autowired
 	private TronBot tronbot;
+	
+	@Autowired
+	private MessageBot messagebot;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -54,6 +58,7 @@ public class BotRunner implements CommandLineRunner {
 		botsApi.registerBot(merchantbot);
 		botsApi.registerBot(channelbot);
 		botsApi.registerBot(tronbot);
+		botsApi.registerBot(messagebot);
 		log.info("服务初始化之后，注册机器人 end...");
 	}
 
