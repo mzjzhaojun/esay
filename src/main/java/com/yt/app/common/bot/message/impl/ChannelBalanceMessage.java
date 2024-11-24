@@ -37,7 +37,7 @@ public class ChannelBalanceMessage implements UpdateMerchantMessageService {
 		Tgchannelgroup tmg = tgchannelgroupmapper.getByChannelId(c.getId());
 		if (tmg != null) {
 			sendMessage.setChatId(tmg.getTgid());
-			sendMessage.setText("渠道:*" + c.getName() + "*\r\n\r\n今日支付：" + c.getTodayincomecount() + " \r\n渠道收入：" + c.getTodaycount() + "\r\n总支付金额：" + c.getIncomecount() + "\r\n==============\r\n*" + DateTimeUtil.getDateTime() + "*");
+			sendMessage.setText("渠道:*" + c.getName() + "*\r\n\r\n今日支付：" + c.getTodayincomecount() + " \r\n今日收入：" + c.getTodaycount()+ " \r\n今日结算：" + (c.getTodayincomecount()-c.getTodaycount()) + "\r\n总共支付：" + c.getIncomecount() + "\r\n\r\n*" + DateTimeUtil.getDateTime() + "*");
 			sendMessage.enableMarkdown(true);
 		} else {
 			return null;
