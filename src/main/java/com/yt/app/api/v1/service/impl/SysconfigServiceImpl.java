@@ -77,10 +77,21 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 
 	private void getUsdtExchange() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		headers.add("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36");
+		headers.add("sec-ch-ua", "Google Chrome\";v=\"131\", \"Chromium\";v=\"131\", \"Not_A Brand\";v=\"24");
+		headers.add("sec-ch-ua-platform", "macOS");
+		headers.add("service-worker-navigation-preload", "true");
+		headers.add("sec-ch-ua-mobile", "?0");
+		headers.add("sec-fetch-dest", "document");
+		headers.add("sec-fetch-mode", "navigate");
+		headers.add("sec-fetch-site", "none");
+		headers.add("sec-fetch-user", "?1");
+		headers.add("upgrade-insecure-requests", "1");
+		headers.add("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
 		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
 		RestTemplate resttemplate = new RestTemplate();
-		ResponseEntity<SysOxxVo> sov = resttemplate.exchange("https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=all&userType=all", HttpMethod.GET, httpEntity, SysOxxVo.class);
+		ResponseEntity<SysOxxVo> sov = resttemplate.exchange("https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=all&userType=all&receivingAds=false", HttpMethod.GET, httpEntity,
+				SysOxxVo.class);
 		SysOxxVo data = sov.getBody();
 		List<Object> list = data.getData().getSell();
 		Double exchange = Double.valueOf(BeanUtil.beanToMap(list.get(0)).get("price").toString());
@@ -90,7 +101,7 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 
 	private void getUsdtToTrx() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		headers.add("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36");
 		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
 		RestTemplate resttemplate = new RestTemplate();
 		ResponseEntity<JSONObject> sov = resttemplate.exchange("https://c.tronlink.org/v1/cryptocurrency/getprice?symbol=USDT&convert=TRX", HttpMethod.GET, httpEntity, JSONObject.class);
@@ -115,10 +126,11 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 	@Override
 	public List<Sysconfig> getDataTop() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		headers.add("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36");
 		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
 		RestTemplate resttemplate = new RestTemplate();
-		ResponseEntity<SysOxxVo> sov = resttemplate.exchange("https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=all&userType=all", HttpMethod.GET, httpEntity, SysOxxVo.class);
+		ResponseEntity<SysOxxVo> sov = resttemplate.exchange("https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=all&userType=all&receivingAds=false", HttpMethod.GET, httpEntity,
+				SysOxxVo.class);
 		SysOxxVo data = sov.getBody();
 		List<Object> list = data.getData().getSell();
 		List<Sysconfig> listpc = new ArrayList<Sysconfig>();
@@ -134,10 +146,11 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 	@Override
 	public List<Sysconfig> getAliPayDataTop() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		headers.add("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36");
 		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
 		RestTemplate resttemplate = new RestTemplate();
-		ResponseEntity<SysOxxVo> sov = resttemplate.exchange("https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=aliPay&userType=all", HttpMethod.GET, httpEntity, SysOxxVo.class);
+		ResponseEntity<SysOxxVo> sov = resttemplate.exchange("https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=aliPay&userType=all&receivingAds=false", HttpMethod.GET, httpEntity,
+				SysOxxVo.class);
 		SysOxxVo data = sov.getBody();
 		List<Object> list = data.getData().getSell();
 		List<Sysconfig> listpc = new ArrayList<Sysconfig>();

@@ -48,7 +48,7 @@ public class TaskMasterConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	// @Scheduled(cron = "0/20 * * * * ?")
+	//@Scheduled(cron = "0 0/2 * * * ?")
 	public void getOKXExchange() throws InterruptedException {
 		payconfigservice.initSystemData();
 	}
