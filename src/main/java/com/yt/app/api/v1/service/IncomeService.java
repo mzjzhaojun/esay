@@ -36,6 +36,9 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	// td回调
 	void tdcallback(Map<String, String> params);
+	
+	//二狗
+	void egcallback(Map<String, String> params);
 
 	// 豌豆回调
 	void wdcallback(Map<String, String> params);

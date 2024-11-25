@@ -567,6 +567,77 @@ public class PayUtil {
 		return null;
 	}
 
+	// 二狗代收对接
+	public static SysTdOrder SendEgSubmit(Income pt, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+			String datetime = DateTimeUtil.getDateTime();
+			map.add("pay_memberid", cl.getCode());
+			map.add("pay_bankcode", pt.getQrcodecode());
+			map.add("pay_applydate", datetime);
+			map.add("pay_orderid", pt.getOrdernum());
+			map.add("pay_ordertype", "middle_page_type");
+			map.add("type", "1");
+			map.add("pay_amount", pt.getAmount().toString());
+			map.add("pay_notifyurl", cl.getApireusultip());
+			map.add("pay_callbackurl", pt.getBackforwardurl());
+
+			String signContent = "pay_amount=" + pt.getAmount() + "&pay_applydate=" + datetime + "&pay_bankcode=" + pt.getQrcodecode() + "&pay_callbackurl=" + pt.getBackforwardurl() + "&pay_memberid=" + cl.getCode() + "&pay_notifyurl="
+					+ cl.getApireusultip() + "&pay_orderid=" + pt.getOrdernum() + "&key=" + cl.getApikey() + "";
+
+			String sign = MD5Utils.md5(signContent);
+			map.add("pay_md5sign", sign.toUpperCase());
+			log.info("二狗下单签名：" + sign + "===" + signContent);
+
+			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<SysTdOrder> sov = resttemplate.exchange(cl.getApiip() + "/Pay_IndexLink.html", HttpMethod.POST, httpEntity, SysTdOrder.class);
+			SysTdOrder data = sov.getBody();
+			log.info("二狗返回消息：" + data);
+			if (data.getStatus().equals("success")) {
+				return data;
+			}
+		} catch (RestClientException e) {
+			log.info("二狗返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// 二狗代收查单
+	public static String SendEgQuerySubmit(String orderid, Double amount, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+			map.add("pay_memberid", cl.getCode());
+			map.add("pay_orderid", orderid);
+
+			String signContent = "pay_memberid=" + cl.getCode() + "&pay_orderid=" + orderid + "&key=" + cl.getApikey();
+			String sign = MD5Utils.md5(signContent);
+			map.add("pay_md5sign", sign.toUpperCase());
+			log.info("二狗查单签名：" + sign.toUpperCase());
+
+			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<String> sov = resttemplate.exchange(cl.getApiip() + "/Pay_Trade_query.html", HttpMethod.POST, httpEntity, String.class);
+			String data = sov.getBody();
+			log.info("二狗查单返回消息：" + data);
+			SysTdQuery sso = JSONUtil.toBean(data, SysTdQuery.class);
+			if (sso.getTrade_state().equals("SUCCESS")) {
+				return sso.getTrade_state();
+			}
+		} catch (RestClientException e) {
+			log.info("二狗查单返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
 	// 豌豆代收对接
 	public static SysWdOrder SendWdSubmit(Income pt, Channel cl) {
 		try {

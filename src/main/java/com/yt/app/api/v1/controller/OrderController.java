@@ -205,6 +205,24 @@ public class OrderController {
 	}
 
 	/**
+	 * eg代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/egcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void egcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		incomeservice.egcallback(params);
+		try {
+			response.getWriter().print("OK");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * 豌豆代收回调
 	 * 
 	 * @param requestEntity

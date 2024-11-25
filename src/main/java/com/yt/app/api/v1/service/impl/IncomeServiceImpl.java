@@ -223,7 +223,27 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			success(income);
 			TenantIdContext.remove();
 		}
+	}
 
+	@Override
+	@Transactional
+	public void egcallback(Map<String, String> params) {
+		String orderid = params.get("orderid").toString();
+		String status = params.get("returncode").toString();
+		log.info("二狗通知返回消息：orderid" + orderid + " status:" + status);
+		Income income = mapper.getByOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendEgQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "二狗通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
+			TenantIdContext.remove();
+		}
 	}
 
 	@Override
@@ -593,6 +613,14 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			if (syo != null) {
 				flage = false;
 				income.setResulturl(syo.getData().getPay_url());
+				income.setQrcodeordernum(income.getMerchantordernum());
+			}
+			break;
+		case DictionaryResource.EGAISLE:
+			SysTdOrder seg = PayUtil.SendEgSubmit(income, channel);
+			if (seg != null) {
+				flage = false;
+				income.setResulturl(seg.getData().getPay_url());
 				income.setQrcodeordernum(income.getMerchantordernum());
 			}
 			break;
