@@ -125,7 +125,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from tgbotgrouprecord
-		where tgid = #{tgid} and type = #{type}  and DATEDIFF(create_time,NOW())=0
+		where tgid = #{tgid} and type = #{type}  and DATEDIFF(create_time,NOW())=0 order by create_time desc LIMIT 1,5
 	</select>
 	<!-- getMap -->
 	<select id="page" parameterType="java.util.HashMap"

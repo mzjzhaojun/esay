@@ -130,10 +130,10 @@ public class BookAccountBot extends TelegramLongPollingBot {
 						sendText(chatid, "显示用戶统计账单 ");
 					} else if (msg.equals("按汇率统计")) {
 						sendText(chatid, "显示汇率统计账单 ");
-					} else if (msg.indexOf("设置费率") == 0) {
+					} else if (msg.startsWith("设置费率")) {
 						String str = msg.substring(msg.indexOf("率") + 1, msg.indexOf("%"));
 						if (str.matches("-?\\d+(\\.\\d+)?")) {
-							Integer cost = Integer.parseInt(str);
+							Double cost = Double.valueOf(str);
 							tmg.setCost(cost);
 							if (tgbotgroupmapper.put(tmg) > 0)
 								sendText(chatid, "费率：" + cost + "%,设置成功。");
