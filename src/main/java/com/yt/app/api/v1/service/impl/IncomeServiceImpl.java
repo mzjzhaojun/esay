@@ -61,6 +61,7 @@ import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.api.v1.vo.QrcodeResultVO;
 import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
 import com.yt.app.api.v1.vo.SysFcOrder;
+import com.yt.app.api.v1.vo.SysFhOrder;
 import com.yt.app.api.v1.vo.SysGzOrder;
 import com.yt.app.api.v1.vo.SysHsOrder;
 import com.yt.app.api.v1.vo.SysRblOrder;
@@ -353,6 +354,27 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	@Override
 	@Transactional
+	public void fhcallback(Map<String, String> params) {
+		String orderid = params.get("mchOrderNo").toString();
+		String status = params.get("status").toString();
+		log.info("飞黄运通通知返回消息：payOrderId" + orderid + " status:" + status);
+		Income income = mapper.getByOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendFhQuerySubmit(orderid, channel);
+		Assert.notNull(returnstate, "飞黄运通通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
+			TenantIdContext.remove();
+		}
+	}
+
+	@Override
+	@Transactional
 	public void wjcallback(Map<String, String> params) {
 		String orderid = params.get("payOrderId").toString();
 		String status = params.get("state").toString();
@@ -614,6 +636,14 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				flage = false;
 				income.setResulturl(syo.getData().getPay_url());
 				income.setQrcodeordernum(income.getMerchantordernum());
+			}
+			break;
+		case DictionaryResource.FHLAISLE:
+			SysFhOrder sfh = PayUtil.SendFhSubmit(income, channel);
+			if (sfh != null) {
+				flage = false;
+				income.setResulturl(sfh.getPayParams().getPayJumpUrl());
+				income.setQrcodeordernum(sfh.getPayOrderId());
 			}
 			break;
 		case DictionaryResource.EGAISLE:

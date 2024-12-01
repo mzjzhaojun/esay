@@ -24,6 +24,7 @@ public class DictionaryResource implements Serializable {
 	public static final String WJAISLE = "玩家"; // WJAISLE
 	public static final String FCAISLE = "翡翠"; // FCAISLE
 	public static final String AKLAISLE = "奥克兰"; // AKLAISLE
+	public static final String FHLAISLE = "飞黄运通"; // 飞黄运通
 
 	public static final String DFSNAISLE = "十年"; //
 	public static final String DFTXAISLE = "天下"; // 天下代付

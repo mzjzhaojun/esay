@@ -259,7 +259,7 @@
 				and merchantorderid = #{merchantorderid}
 			</if>
 			<if test="qrcodeordernum != null and qrcodeordernum != ''">
-				and qrcodeordernum = #{qrcodeordernum}
+				and qrcodeordernum = #{qrcodeordernum} or ordernum = #{qrcodeordernum}
 			</if>
 			<if test="qrcodeaislecode != null and qrcodeaislecode != ''">
 				and qrcodeaislecode = #{qrcodeaislecode}

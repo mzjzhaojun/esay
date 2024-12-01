@@ -349,6 +349,24 @@ public class OrderController {
 	}
 
 	/**
+	 * 十年代付回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/fhcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void fhcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		incomeservice.fhcallback(params);
+		try {
+			response.getWriter().print("ok");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * 支付宝当面付回调
 	 * 
 	 * @param requestEntity
