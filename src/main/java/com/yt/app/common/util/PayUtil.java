@@ -581,7 +581,6 @@ public class PayUtil {
 			map.add("pay_bankcode", pt.getQrcodecode());
 			map.add("pay_applydate", datetime);
 			map.add("pay_orderid", pt.getOrdernum());
-			map.add("pay_ordertype", "middle_page_type");
 			map.add("type", "1");
 			map.add("pay_amount", pt.getAmount().toString());
 			map.add("pay_notifyurl", cl.getApireusultip());
