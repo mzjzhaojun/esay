@@ -97,7 +97,7 @@ public class AuthUtil {
 	 * @return
 	 */
 	public static boolean isMobileDevice(String requestHeader) {
-		String[] deviceArray = new String[] { "android", "iphone" };
+		String[] deviceArray = new String[] { "android", "iphone", "ipad" };
 		if (requestHeader == null)
 			return false;
 		requestHeader = requestHeader.toLowerCase();
