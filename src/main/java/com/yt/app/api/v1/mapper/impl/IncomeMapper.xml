@@ -212,7 +212,10 @@
 				and ordernum = #{ordernum}
 			</if>
 			<if test="merchantorderid != null and merchantorderid != ''">
-				and merchantorderid = #{merchantorderid}
+				and merchantorderid = #{merchantorderid}  or ordernum = #{merchantorderid}
+			</if>
+			<if test="qrcodeordernum != null and qrcodeordernum != ''">
+				and qrcodeordernum = #{qrcodeordernum}
 			</if>
 			<if test="qrcodeordernum != null and qrcodeordernum != ''">
 				and qrcodeordernum = #{qrcodeordernum}
@@ -256,10 +259,10 @@
 				and ordernum = #{ordernum}
 			</if>
 			<if test="merchantorderid != null and merchantorderid != ''">
-				and merchantorderid = #{merchantorderid}
+				and merchantorderid = #{merchantorderid}  or ordernum = #{merchantorderid}
 			</if>
 			<if test="qrcodeordernum != null and qrcodeordernum != ''">
-				and qrcodeordernum = #{qrcodeordernum} or ordernum = #{qrcodeordernum}
+				and qrcodeordernum = #{qrcodeordernum}
 			</if>
 			<if test="qrcodeaislecode != null and qrcodeaislecode != ''">
 				and qrcodeaislecode = #{qrcodeaislecode}

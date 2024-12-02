@@ -276,6 +276,56 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		return i;
 	}
 
+	@Override
+	@Transactional
+	public Integer incomewithdrawapp(Incomemerchantaccountorder t) {
+		if (t.getAmount() <= 0) {
+			throw new YtException("金额不能小于1");
+		}
+		Merchant m = null;
+		if (t.getMerchantid() == null) {
+			m = merchantmapper.getByUserId(SysUserContext.getUserId());
+			t.setUserid(SysUserContext.getUserId());
+		} else {
+			m = merchantmapper.get(t.getMerchantid());
+			t.setUserid(m.getUserid());
+		}
+		// 支出订单
+		t.setMerchantid(m.getId());
+		t.setMerchantname(m.getName());
+		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		t.setCollection(t.getCollection());
+		t.setMerchantexchange(t.getCollection() + m.getIncomedownpoint());
+		t.setAmountreceived((t.getAmount()));
+		t.setUsdtval(t.getAmount() / t.getCollection());
+		t.setType("" + DictionaryResource.ORDERTYPE_28);
+		t.setOrdernum("DS" + StringUtil.getOrderNum());
+		t.setRemark("商户代收提现￥：" + String.format("%.2f", t.getAmount()));
+		Integer i = mapper.post(t);
+
+		// 支出账户和记录
+		incomemerchantaccountservice.withdrawamount(t);
+
+		try {
+			Thread.sleep(300);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		Incomemerchantaccountorder mao = mapper.get(t.getId());
+		if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_10)) {
+			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+			Integer j = mapper.put(mao);
+			if (j > 0) {
+				if (t.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
+					incomemerchantaccountservice.updateWithdrawamount(mao);
+				} else {
+					incomemerchantaccountservice.turndownWithdrawamount(mao);
+				}
+			}
+		}
+		return i;
+	}
+
 	/**
 	 * 提现取消
 	 */
@@ -298,6 +348,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		return 0;
 	}
 
+	// 通过提现
 	@Override
 	@Transactional
 	public void incomewithdrawmanual(Incomemerchantaccountorder mco) {
