@@ -120,4 +120,12 @@ public interface SystemaccountMapper extends YtIBaseMapper<Systemaccount> {
 	 */
 	@YtRedisCacheAnnotation(classs = Systemaccount.class)
 	public Systemaccount getByUserId(Long userid);
+	
+	/**
+	 * 清空每日数据
+	 * @param id
+	 * @return
+	 */
+	@YtRedisCacheEvictAnnotation(classs = { Systemaccount.class })
+	public Integer updatetodayvalue(Long id);
 }

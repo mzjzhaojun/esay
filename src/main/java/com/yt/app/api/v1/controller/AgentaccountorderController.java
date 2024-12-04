@@ -40,7 +40,7 @@ public class AgentaccountorderController extends YtBaseEncipherControllerImpl<Ag
 		YtIPage<Agentaccountorder> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
-	
+
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
@@ -82,5 +82,23 @@ public class AgentaccountorderController extends YtBaseEncipherControllerImpl<Ag
 	public YtResponseEncryptEntity<Object> canclewithdraw(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 		Object t = service.cancleWithdraw(id);
 		return new YtResponseEncryptEntity<Object>(new YtBody(t));
+	}
+
+	/**
+	 * 
+	 * 代理app提现
+	 * 
+	 * @version 1.1
+	 */
+	@RequestMapping(value = "/incomewithdrawapp", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> incomewithdrawapp(YtRequestDecryptEntity<Agentaccountorder> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
+		Long id = service.incomewithdrawapp(YtRequestDecryptEntity.getBody());
+		try {
+			Thread.sleep(300);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		Integer i = service.success(id);
+		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 }

@@ -87,8 +87,7 @@ public class IncomemerchantaccountorderController extends YtBaseEncipherControll
 		Integer i = service.incomewithdraw(YtRequestDecryptEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
-	
-	
+
 	/**
 	 * 
 	 * 商户代收提现
@@ -97,7 +96,13 @@ public class IncomemerchantaccountorderController extends YtBaseEncipherControll
 	 */
 	@RequestMapping(value = "/incomewithdrawapp", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> incomewithdrawapp(YtRequestDecryptEntity<Incomemerchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
-		Integer i = service.incomewithdrawapp(YtRequestDecryptEntity.getBody());
+		Long id = service.incomewithdrawapp(YtRequestDecryptEntity.getBody());
+		try {
+			Thread.sleep(300);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		Integer i = service.success(id);
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 

@@ -278,7 +278,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 
 	@Override
 	@Transactional
-	public Integer incomewithdrawapp(Incomemerchantaccountorder t) {
+	public Long incomewithdrawapp(Incomemerchantaccountorder t) {
 		if (t.getAmount() <= 0) {
 			throw new YtException("金额不能小于1");
 		}
@@ -301,29 +301,23 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		t.setType("" + DictionaryResource.ORDERTYPE_28);
 		t.setOrdernum("DS" + StringUtil.getOrderNum());
 		t.setRemark("商户代收提现￥：" + String.format("%.2f", t.getAmount()));
-		Integer i = mapper.post(t);
+		mapper.post(t);
 
 		// 支出账户和记录
 		incomemerchantaccountservice.withdrawamount(t);
+		return t.getId();
+	}
 
-		try {
-			Thread.sleep(300);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+	@Override
+	@Transactional
+	public Integer success(Long id) {
+		Incomemerchantaccountorder mao = mapper.get(id);
+		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+		Integer j = mapper.put(mao);
+		if (j > 0) {
+			incomemerchantaccountservice.updateWithdrawamount(mao);
 		}
-		Incomemerchantaccountorder mao = mapper.get(t.getId());
-		if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_10)) {
-			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
-			Integer j = mapper.put(mao);
-			if (j > 0) {
-				if (t.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
-					incomemerchantaccountservice.updateWithdrawamount(mao);
-				} else {
-					incomemerchantaccountservice.turndownWithdrawamount(mao);
-				}
-			}
-		}
-		return i;
+		return j;
 	}
 
 	/**

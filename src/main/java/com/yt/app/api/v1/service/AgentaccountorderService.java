@@ -22,4 +22,9 @@ public interface AgentaccountorderService extends YtIBaseService<Agentaccountord
 	void withdrawmanual(Agentaccountorder aco);
 
 	Integer cancleWithdraw(Long id);
+	
+	//app提现
+	Long incomewithdrawapp(Agentaccountorder mco);
+
+	Integer success(Long id);
 }

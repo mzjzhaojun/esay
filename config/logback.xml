@@ -57,7 +57,7 @@
 		<includeCallerData>true</includeCallerData>
 	</appender>
 
-	<logger name="com.yt.app" level="info"></logger>
+	<logger name="com.yt.app" level="debug"></logger>
 
 	<logger name="org.bitcoinj.crypto.MnemonicCode" level="error"></logger>
 

@@ -29,7 +29,9 @@ public interface IncomemerchantaccountorderService extends YtIBaseService<Income
 	// 代收提现
 	Integer incomewithdraw(Incomemerchantaccountorder mco);
 
-	Integer incomewithdrawapp(Incomemerchantaccountorder mco);
+	Long incomewithdrawapp(Incomemerchantaccountorder mco);
+
+	Integer success(Long id);
 
 	Integer incomecancleWithdraw(Long id);
 

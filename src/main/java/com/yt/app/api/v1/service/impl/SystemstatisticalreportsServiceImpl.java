@@ -47,7 +47,6 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 		return i;
 	}
 
-
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Systemstatisticalreports get(Long id) {
@@ -95,5 +94,8 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 		}
 
 		mapper.post(t);
+
+		// 清空每日数据
+		systemaccountmapper.updatetodayvalue(t.getId());
 	}
 }

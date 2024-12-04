@@ -1233,4 +1233,11 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return mapper.put(income);
 	}
 
+	@Override
+	@Transactional
+	public Integer successstatus(Income income) {
+		income.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+		return mapper.put(income);
+	}
+
 }

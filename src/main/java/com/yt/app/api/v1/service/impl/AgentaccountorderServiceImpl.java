@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.yt.app.api.v1.mapper.AgentMapper;
-import com.yt.app.api.v1.mapper.AgentaccountMapper;
 import com.yt.app.api.v1.mapper.AgentaccountbankMapper;
 import com.yt.app.api.v1.mapper.AgentaccountorderMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
@@ -19,7 +18,6 @@ import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.entity.Agent;
-import com.yt.app.api.v1.entity.Agentaccount;
 import com.yt.app.api.v1.entity.Agentaccountbank;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -63,9 +61,6 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 	@Autowired
 	private SystemaccountService systemaccountservice;
 
-	@Autowired
-	private AgentaccountMapper aamapper;
-
 	@Override
 	@Transactional
 	public Integer post(Agentaccountorder t) {
@@ -100,8 +95,7 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 	@Override
 	@Transactional
 	public Integer save(Agentaccountorder t) {
-		Agentaccount aac = aamapper.getByUserId(t.getUserid());
-		if (t.getAmount() <= 0 || t.getAmount() > aac.getBalance()) {
+		if (t.getAmount() <= 0) {
 			throw new YtException("金额不能小于1，大于余额");
 		}
 		Agent m = null;
@@ -163,6 +157,52 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_13);
 		Integer i = mapper.put(mao);
 		agentaccountservice.cancleWithdrawamount(mao);
+		return i;
+	}
+
+	@Override
+	@Transactional
+	public Long incomewithdrawapp(Agentaccountorder t) {
+		if (t.getAmount() <= 0) {
+			throw new YtException("金额不能小于1，大于余额");
+		}
+		Agent m = null;
+		if (t.getAgentid() == null) {
+			m = agentmapper.getByUserId(SysUserContext.getUserId());
+			t.setUserid(SysUserContext.getUserId());
+		} else {
+			m = agentmapper.get(t.getAgentid());
+			t.setUserid(m.getUserid());
+		}
+		// 插入提现记录
+		t.setAgentid(m.getId());
+		t.setUsername(m.getName());
+		t.setNkname(m.getNkname());
+		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		t.setExchange(t.getAgentexchange());
+		t.setAmountreceived((t.getAmount()));
+		t.setUsdtval(t.getAmount() / t.getAgentexchange());
+		t.setType(DictionaryResource.ORDERTYPE_21.toString());
+		t.setOrdernum("AW" + StringUtil.getOrderNum());
+		t.setRemark("提现￥:" + String.format("%.2f", t.getAmountreceived()));
+		mapper.post(t);
+
+		// 支出账户和记录
+		agentaccountservice.withdrawamount(t);
+		//
+		return t.getId();
+	}
+
+	@Override
+	@Transactional
+	public Integer success(Long id) {
+		Agentaccountorder mao = mapper.get(id);
+		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+		Integer i = mapper.put(mao);
+		if (i > 0) {
+			agentaccountservice.updateWithdrawamount(mao);
+			systemaccountservice.updateWithdrawamount(mao);
+		}
 		return i;
 	}
 }

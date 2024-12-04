@@ -58,7 +58,7 @@ public class TaskMasterConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0/11 * * * * ?")
+	@Scheduled(cron = "0/6 * * * * ?")
 	public void notifyPayout() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Payout> list = payoutmapper.selectNotifylist();
@@ -77,7 +77,7 @@ public class TaskMasterConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0/10 * * * * ?")
+	@Scheduled(cron = "0/5 * * * * ?")
 	public void notifyIncome() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Income> list = incomemapper.selectNotifylist();

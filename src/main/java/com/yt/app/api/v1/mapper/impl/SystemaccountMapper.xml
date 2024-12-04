@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.SystemaccountMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,totalincome,withdrawamount,balance,usdttotalincome,usdtwithdrawamount,usdtbalance,create_by,create_time,update_by,update_time,remark,userid,version
+		id,tenant_id,totalincome,withdrawamount,todayincome,balance,usdttotalincome,usdtwithdrawamount,usdtbalance,create_by,create_time,update_by,update_time,remark,userid,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -59,6 +59,9 @@
 			<if test="usdtbalance != null">
 				usdtbalance= #{usdtbalance},
 			</if>
+			<if test="todayincome != null">
+				todayincome= #{todayincome},
+			</if>
 			<if test="balance != null">
 				balance= #{balance},
 			</if>
@@ -104,7 +107,12 @@
 		from systemaccount
 		where userid = #{userid}
 	</select>
-	
+	<update id="updatetodayvalue" parameterType="java.lang.Long">
+		update systemaccount
+		set
+		todayincome = 0
+		where id = #{id}
+	</update>
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
