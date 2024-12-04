@@ -96,6 +96,6 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 		mapper.post(t);
 
 		// 清空每日数据
-		systemaccountmapper.updatetodayvalue(t.getId());
+		systemaccountmapper.updatetodayvalue(sa.getId());
 	}
 }
