@@ -200,9 +200,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Assert.notNull(returnstate, "kf通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
-			TenantIdContext.remove();
 		}
-
+		TenantIdContext.remove();
 	}
 
 	@Override
@@ -222,8 +221,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Assert.notNull(returnstate, "铁蛋通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
-			TenantIdContext.remove();
 		}
+		TenantIdContext.remove();
 	}
 
 	@Override
@@ -243,8 +242,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Assert.notNull(returnstate, "二狗通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
-			TenantIdContext.remove();
 		}
+		TenantIdContext.remove();
 	}
 
 	@Override
@@ -264,8 +263,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Assert.notNull(returnstate, "豌豆通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
-			TenantIdContext.remove();
 		}
+		TenantIdContext.remove();
 	}
 
 	@Override
@@ -285,8 +284,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Assert.notNull(returnstate, "日不落通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
-			TenantIdContext.remove();
 		}
+		TenantIdContext.remove();
 	}
 
 	@Override
@@ -306,8 +305,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Assert.notNull(returnstate, "翡翠通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
-			TenantIdContext.remove();
 		}
+		TenantIdContext.remove();
 	}
 
 	@Override
@@ -327,8 +326,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Assert.notNull(returnstate, "奥克兰通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
-			TenantIdContext.remove();
 		}
+		TenantIdContext.remove();
 	}
 
 	@Override
@@ -348,8 +347,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Assert.notNull(returnstate, "公子通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
-			TenantIdContext.remove();
 		}
+		TenantIdContext.remove();
 	}
 
 	@Override
@@ -369,8 +368,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Assert.notNull(returnstate, "飞黄运通通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
-			TenantIdContext.remove();
 		}
+		TenantIdContext.remove();
 	}
 
 	@Override
@@ -390,8 +389,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Assert.notNull(returnstate, "玩家通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
-			TenantIdContext.remove();
 		}
+		TenantIdContext.remove();
 	}
 
 	/**
