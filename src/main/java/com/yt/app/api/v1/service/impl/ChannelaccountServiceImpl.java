@@ -100,7 +100,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 
 	// 待确认收入
 	@Override
-	public synchronized void totalincome(Channelaccountorder t) {
+	public  void totalincome(Channelaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
 			lock.lock();
@@ -133,7 +133,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 
 	// 确认收入
 	@Override
-	public synchronized void updateTotalincome(Channelaccountorder mao) {
+	public  void updateTotalincome(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
@@ -167,7 +167,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 
 	// 拒绝收入
 	@Override
-	public synchronized void turndownTotalincome(Channelaccountorder mao) {
+	public  void turndownTotalincome(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
@@ -200,7 +200,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 
 	// 客户取消
 	@Override
-	public synchronized void cancleTotalincome(Channelaccountorder mao) {
+	public  void cancleTotalincome(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
@@ -257,7 +257,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 
 	// 待确认支出
 	@Override
-	public synchronized void withdrawamount(Channelaccountorder t) {
+	public  void withdrawamount(Channelaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
 			lock.lock();
@@ -289,7 +289,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 
 	// 确认支出
 	@Override
-	public synchronized void updateWithdrawamount(Channelaccountorder mao) {
+	public  void updateWithdrawamount(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
@@ -324,7 +324,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 
 	// 拒絕支出
 	@Override
-	public synchronized void turndownWithdrawamount(Channelaccountorder mao) {
+	public  void turndownWithdrawamount(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
@@ -357,7 +357,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 
 	// 取消支出
 	@Override
-	public synchronized void cancleWithdrawamount(Channelaccountorder mao) {
+	public  void cancleWithdrawamount(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();

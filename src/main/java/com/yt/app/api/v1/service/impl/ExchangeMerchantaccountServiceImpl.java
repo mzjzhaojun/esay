@@ -125,7 +125,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	}
 
 	@Override
-	public synchronized void totalincome(ExchangeMerchantaccountorder t) {
+	public  void totalincome(ExchangeMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
@@ -161,7 +161,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 	 * ============================================================= 确认充值成功
 	 */
 	@Override
-	public synchronized void updateTotalincome(ExchangeMerchantaccountorder mao) {
+	public  void updateTotalincome(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -195,7 +195,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 
 	// 拒绝换汇
 	@Override
-	public synchronized void turndownTotalincome(ExchangeMerchantaccountorder mao) {
+	public  void turndownTotalincome(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -230,7 +230,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 
 	// 客户取消
 	@Override
-	public synchronized void cancleTotalincome(ExchangeMerchantaccountorder mao) {
+	public  void cancleTotalincome(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -286,7 +286,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 
 	// 待确认支出
 	@Override
-	public synchronized void withdrawamount(ExchangeMerchantaccountorder t) {
+	public  void withdrawamount(ExchangeMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
@@ -319,7 +319,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 
 	// 换汇成功
 	@Override
-	public synchronized void updateWithdrawamount(ExchangeMerchantaccountorder mao) {
+	public  void updateWithdrawamount(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -354,7 +354,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 
 	// 提现换汇
 	@Override
-	public synchronized void turndownWithdrawamount(ExchangeMerchantaccountorder mao) {
+	public  void turndownWithdrawamount(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -388,7 +388,7 @@ public class ExchangeMerchantaccountServiceImpl extends YtBaseServiceImpl<Exchan
 
 	// 取消换汇
 	@Override
-	public synchronized void cancleWithdrawamount(ExchangeMerchantaccountorder mao) {
+	public  void cancleWithdrawamount(ExchangeMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();

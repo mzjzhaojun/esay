@@ -131,7 +131,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 待确认收入
 	@Override
-	public synchronized void totalincome(Agentaccountorder t) {
+	public  void totalincome(Agentaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getAgentid());
 		try {
 			lock.lock();
@@ -164,7 +164,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 确认收入
 	@Override
-	public synchronized void updateTotalincome(Agentaccountorder mao) {
+	public  void updateTotalincome(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();
@@ -198,7 +198,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 拒绝收入
 	@Override
-	public synchronized void turndownTotalincome(Agentaccountorder mao) {
+	public  void turndownTotalincome(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();
@@ -232,7 +232,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 客户取消
 	@Override
-	public synchronized void cancleTotalincome(Agentaccountorder mao) {
+	public  void cancleTotalincome(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();
@@ -286,7 +286,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 待确认支出
 	@Override
-	public synchronized void withdrawamount(Agentaccountorder t) {
+	public  void withdrawamount(Agentaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getAgentid());
 		try {
 			lock.lock();
@@ -318,7 +318,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 确认支出
 	@Override
-	public synchronized void updateWithdrawamount(Agentaccountorder mao) {
+	public  void updateWithdrawamount(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();
@@ -352,7 +352,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 拒絕支出
 	@Override
-	public synchronized void turndownWithdrawamount(Agentaccountorder mao) {
+	public  void turndownWithdrawamount(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();
@@ -384,7 +384,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 取消支出
 	@Override
-	public synchronized void cancleWithdrawamount(Agentaccountorder mao) {
+	public  void cancleWithdrawamount(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();

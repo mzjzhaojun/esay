@@ -79,7 +79,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 * 代付充值成功
 	 */
 	@Override
-	public synchronized void updateTotalincome(PayoutMerchantaccountorder mao) {
+	public  void updateTotalincome(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
@@ -107,7 +107,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 * 商戶代付支出
 	 */
 	@Override
-	public synchronized void updateWithdrawamount(PayoutMerchantaccountorder mao) {
+	public  void updateWithdrawamount(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
@@ -135,7 +135,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 * 商户代付成功
 	 */
 	@Override
-	public synchronized void updatePayout(PayoutMerchantaccountorder mao) {
+	public  void updatePayout(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
@@ -164,7 +164,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	 * 代付代理支出
 	 */
 	@Override
-	public synchronized void updateWithdrawamount(Agentaccountorder mao) {
+	public  void updateWithdrawamount(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
@@ -190,7 +190,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 
 	// 代收成功收款
 	@Override
-	public synchronized void updateIncome(Income mao) {
+	public  void updateIncome(Income mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
@@ -217,7 +217,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 
 	// 代收充值
 	@Override
-	public synchronized void updateIncome(Incomemerchantaccountorder mao) {
+	public  void updateIncome(Incomemerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
