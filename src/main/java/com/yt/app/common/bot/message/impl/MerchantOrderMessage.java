@@ -46,7 +46,7 @@ public class MerchantOrderMessage implements UpdateMerchantMessageService {
 		SendMessage sendmessage = new SendMessage();
 		String ordernum = update.getMessage().getText();
 		String username = update.getMessage().getFrom().getUserName();
-		if (username.equals(tmg.getAdminmangers()) || username.equals(tmg.getMangers())) {
+		if (ordernum.matches(".*\\d+.*") && username.equals(tmg.getAdminmangers()) || username.equals(tmg.getMangers())) {
 			TenantIdContext.removeFlag();
 			Income income = incomemapper.getByMerchantOrderNum(ordernum);
 			if (income != null) {
