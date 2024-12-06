@@ -2,6 +2,7 @@ package com.yt.app.api.v1.service.impl;
 
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -73,7 +74,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	 * 
 	 */
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void setToincomeamount(Channelaccount ma, Channelaccountrecord aaaj) {
 		// 更新待收入
 		ma.setToincomeamount(aaaj.getPretoincomeamount());
@@ -82,7 +83,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 		channelaccountapplyjournamapper.post(aaaj);
 	}
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void setTotalincome(Channelaccount t, Channelaccountrecord aaaj) {
 		// 收入增加金额
 		t.setTotalincome(aaaj.getPosttotalincome());
@@ -100,7 +101,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 
 	// 待确认收入
 	@Override
-	public  void totalincome(Channelaccountorder t) {
+	public void totalincome(Channelaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
 			lock.lock();
@@ -133,7 +134,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 
 	// 确认收入
 	@Override
-	public  void updateTotalincome(Channelaccountorder mao) {
+	public void updateTotalincome(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
@@ -167,7 +168,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 
 	// 拒绝收入
 	@Override
-	public  void turndownTotalincome(Channelaccountorder mao) {
+	public void turndownTotalincome(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
@@ -200,7 +201,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 
 	// 客户取消
 	@Override
-	public  void cancleTotalincome(Channelaccountorder mao) {
+	public void cancleTotalincome(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
@@ -235,7 +236,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 	 * =============================================================支出
 	 * 
 	 */
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void setWithdrawamount(Channelaccount t, Channelaccountrecord aaaj) {
 		// 支出总金额
 		t.setWithdrawamount(aaaj.getPostwithdrawamount());
@@ -257,7 +258,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 
 	// 待确认支出
 	@Override
-	public  void withdrawamount(Channelaccountorder t) {
+	public void withdrawamount(Channelaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
 			lock.lock();
@@ -289,7 +290,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 
 	// 确认支出
 	@Override
-	public  void updateWithdrawamount(Channelaccountorder mao) {
+	public void updateWithdrawamount(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
@@ -324,7 +325,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 
 	// 拒絕支出
 	@Override
-	public  void turndownWithdrawamount(Channelaccountorder mao) {
+	public void turndownWithdrawamount(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
@@ -357,7 +358,7 @@ public class ChannelaccountServiceImpl extends YtBaseServiceImpl<Channelaccount,
 
 	// 取消支出
 	@Override
-	public  void cancleWithdrawamount(Channelaccountorder mao) {
+	public void cancleWithdrawamount(Channelaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();

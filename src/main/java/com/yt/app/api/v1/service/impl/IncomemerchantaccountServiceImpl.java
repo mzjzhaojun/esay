@@ -2,6 +2,7 @@ package com.yt.app.api.v1.service.impl;
 
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountMapper;
@@ -82,7 +83,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 		incomemerchantaccountrecordmapper.post(maaj);
 	}
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void setTotalincome(Incomemerchantaccount t, Incomemerchantaccountrecord maaj, Incomemerchantaccountorder mao) {
 		// 收入增加金额
 		t.setTotalincome(maaj.getPosttotalincome());
@@ -104,7 +105,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 	 * 新增代收
 	 */
 	@Override
-	public  void totalincome(Incomemerchantaccountorder t) {
+	public void totalincome(Incomemerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
@@ -139,7 +140,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 	 * 代收 成功
 	 */
 	@Override
-	public  void updateTotalincome(Incomemerchantaccountorder mao) {
+	public void updateTotalincome(Incomemerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -172,7 +173,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 
 	// 超时取消
 	@Override
-	public  void cancleTotalincome(Incomemerchantaccountorder mao) {
+	public void cancleTotalincome(Incomemerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -222,7 +223,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 	 * 
 	 */
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void setWithdrawamount(Incomemerchantaccount ma, PayoutMerchantaccountrecord maaj) {
 		// 待支出减去金额
 		ma.setTowithdrawamount(maaj.getPretowithdrawamount());
@@ -241,7 +242,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 
 	// 待确认支出
 	@Override
-	public  void withdrawamount(Incomemerchantaccountorder t) {
+	public void withdrawamount(Incomemerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
@@ -273,7 +274,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 
 	// 提现成功
 	@Override
-	public  void updateWithdrawamount(Incomemerchantaccountorder mao) {
+	public void updateWithdrawamount(Incomemerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -307,7 +308,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 
 	// 提现失败
 	@Override
-	public  void turndownWithdrawamount(Incomemerchantaccountorder mao) {
+	public void turndownWithdrawamount(Incomemerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -340,7 +341,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 
 	// 提现失败
 	@Override
-	public  void cancelWithdrawamount(Incomemerchantaccountorder mao) {
+	public void cancelWithdrawamount(Incomemerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();

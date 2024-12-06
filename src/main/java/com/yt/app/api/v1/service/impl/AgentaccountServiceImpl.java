@@ -2,6 +2,7 @@ package com.yt.app.api.v1.service.impl;
 
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +48,6 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	@Autowired
 	private AgentaccountrecordMapper agentaccountapplyjournamapper;
-
 
 	@Override
 	@Transactional
@@ -107,15 +107,15 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	 * =============================================================收入
 	 * 
 	 */
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void setToincomeamount(Agentaccount ma, Agentaccountrecord aaaj) {
 		ma.setToincomeamount(aaaj.getPretoincomeamount());
 		mapper.put(ma);
-		
+
 		agentaccountapplyjournamapper.post(aaaj);
 	}
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void setTotalincome(Agentaccount t, Agentaccountrecord aaaj) {
 		t.setTotalincome(aaaj.getPosttotalincome());// 收入增加金额
 		t.setToincomeamount(aaaj.getPretoincomeamount());// 待收入减去金额.
@@ -125,13 +125,13 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 		Agent a = agentmapper.get(t.getAgentid());
 		a.setBalance(t.getBalance());
 		agentmapper.put(a);
-		
+
 		agentaccountapplyjournamapper.post(aaaj);
 	}
 
 	// 待确认收入
 	@Override
-	public  void totalincome(Agentaccountorder t) {
+	public void totalincome(Agentaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getAgentid());
 		try {
 			lock.lock();
@@ -164,7 +164,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 确认收入
 	@Override
-	public  void updateTotalincome(Agentaccountorder mao) {
+	public void updateTotalincome(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();
@@ -198,7 +198,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 拒绝收入
 	@Override
-	public  void turndownTotalincome(Agentaccountorder mao) {
+	public void turndownTotalincome(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();
@@ -232,7 +232,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 客户取消
 	@Override
-	public  void cancleTotalincome(Agentaccountorder mao) {
+	public void cancleTotalincome(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();
@@ -268,7 +268,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 	 * 
 	 */
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void setWithdrawamount(Agentaccount t, Agentaccountrecord aaaj) {
 		// 支出总金额
 		t.setWithdrawamount(aaaj.getPostwithdrawamount());
@@ -280,13 +280,13 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 		Agent a = agentmapper.get(t.getAgentid());
 		a.setBalance(t.getBalance());
 		agentmapper.put(a);
-		
+
 		agentaccountapplyjournamapper.post(aaaj);
 	}
 
 	// 待确认支出
 	@Override
-	public  void withdrawamount(Agentaccountorder t) {
+	public void withdrawamount(Agentaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getAgentid());
 		try {
 			lock.lock();
@@ -318,7 +318,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 确认支出
 	@Override
-	public  void updateWithdrawamount(Agentaccountorder mao) {
+	public void updateWithdrawamount(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();
@@ -352,7 +352,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 拒絕支出
 	@Override
-	public  void turndownWithdrawamount(Agentaccountorder mao) {
+	public void turndownWithdrawamount(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();
@@ -384,7 +384,7 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 
 	// 取消支出
 	@Override
-	public  void cancleWithdrawamount(Agentaccountorder mao) {
+	public void cancleWithdrawamount(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getAgentid());
 		try {
 			lock.lock();

@@ -2,6 +2,7 @@ package com.yt.app.api.v1.service.impl;
 
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -69,19 +70,19 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 		return new YtPageBean<QrcodeaccountVO>(param, list, count);
 	}
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void setToincomeamount(Qrcodeaccount ma, Qrcodeaccountrecord maaj) {
-		//更新帶收入金額
+		// 更新帶收入金額
 		ma.setToincomeamount(maaj.getPretoincomeamount());
 		mapper.put(ma);
 		qrcodeaccountrecordmapper.post(maaj);
 	}
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void setTotalincome(Qrcodeaccount t, Qrcodeaccountrecord maaj, Qrcodeaccountorder qo) {
-		//收入金额增加
+		// 收入金额增加
 		t.setTotalincome(maaj.getPosttotalincome());
-		//代收金额更新
+		// 代收金额更新
 		t.setToincomeamount(maaj.getPretoincomeamount());
 		t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 		mapper.put(t);
@@ -93,7 +94,7 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 		m.setTodayincomecount(m.getTodayincomecount() + qo.getAmount());
 		m.setIncomecount(m.getIncomecount() + qo.getAmount());
 		channelmapper.put(m);
-		
+
 		qrcodeaccountrecordmapper.post(maaj);
 	}
 
@@ -101,7 +102,7 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 	 * 代收新增
 	 */
 	@Override
-	public  void totalincome(Qrcodeaccountorder t) {
+	public void totalincome(Qrcodeaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
 			lock.lock();

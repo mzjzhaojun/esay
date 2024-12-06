@@ -2,6 +2,7 @@ package com.yt.app.api.v1.service.impl;
 
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -107,7 +108,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	 * ============================================================= 待确认充值
 	 */
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void setToincomeamount(PayoutMerchantaccount ma, PayoutMerchantaccountrecord maaj) {
 		// 更新待确认金额
 		ma.setToincomeamount(maaj.getPretoincomeamount());
@@ -116,7 +117,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 		merchantaccountapplyjournalmapper.post(maaj);
 	}
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void setTotalincome(PayoutMerchantaccount t, PayoutMerchantaccountrecord maaj) {
 		// 收入增加金额
 		t.setTotalincome(maaj.getPosttotalincome());
@@ -133,7 +134,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	}
 
 	@Override
-	public  void totalincome(PayoutMerchantaccountorder t) {
+	public void totalincome(PayoutMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
@@ -168,7 +169,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	 * ============================================================= 确认充值成功
 	 */
 	@Override
-	public  void updateTotalincome(PayoutMerchantaccountorder mao) {
+	public void updateTotalincome(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -201,7 +202,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 
 	// 拒绝充值
 	@Override
-	public  void turndownTotalincome(PayoutMerchantaccountorder mao) {
+	public void turndownTotalincome(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -234,7 +235,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 
 	// 客户取消
 	@Override
-	public  void cancleTotalincome(PayoutMerchantaccountorder mao) {
+	public void cancleTotalincome(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -269,7 +270,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	 * ============================================================支出
 	 * 
 	 */
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void setPretowithdrawamount(PayoutMerchantaccount ma, PayoutMerchantaccountrecord maaj) {
 		// 待支出金额
 		ma.setTowithdrawamount(maaj.getPretowithdrawamount());
@@ -279,7 +280,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 		merchantaccountapplyjournalmapper.post(maaj);
 	}
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void setWithdrawamount(PayoutMerchantaccount ma, PayoutMerchantaccountrecord maaj) {
 		// 总支出金额更新
 		ma.setWithdrawamount(maaj.getPostwithdrawamount());
@@ -299,7 +300,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 
 	// 待确认支出
 	@Override
-	public  void withdrawamount(PayoutMerchantaccountorder t) {
+	public void withdrawamount(PayoutMerchantaccountorder t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
 		try {
 			lock.lock();
@@ -331,7 +332,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 
 	// 提现成功
 	@Override
-	public  void updateWithdrawamount(PayoutMerchantaccountorder mao) {
+	public void updateWithdrawamount(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -365,7 +366,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 
 	// 提现失败
 	@Override
-	public  void turndownWithdrawamount(PayoutMerchantaccountorder mao) {
+	public void turndownWithdrawamount(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
@@ -398,7 +399,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 
 	// 取消提现
 	@Override
-	public  void cancleWithdrawamount(PayoutMerchantaccountorder mao) {
+	public void cancleWithdrawamount(PayoutMerchantaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
 		try {
 			lock.lock();
