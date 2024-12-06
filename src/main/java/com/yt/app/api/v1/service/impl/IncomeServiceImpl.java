@@ -189,23 +189,16 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		String status = params.get("status").toString();
 		log.info("kf通知返回消息：orderid" + orderid + " status:" + status);
 		Income income = mapper.getByOrderNum(orderid);
-		RLock lock = RedissonUtil.getLock(income.getTenant_id());
-		try {
-			lock.lock();
-			TenantIdContext.setTenantId(income.getTenant_id());
-			Channel channel = channelmapper.get(income.getQrcodeid());
-			String ip = AuthContext.getIp();
-			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-				throw new YtException("非法请求!");
-			}
-			String returnstate = PayUtil.SendKFQuerySubmit(orderid, channel);
-			Assert.notNull(returnstate, "kf通知反查订单失败!");
-			if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-				success(income);
-			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendKFQuerySubmit(orderid, channel);
+		Assert.notNull(returnstate, "kf通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
 		}
 		TenantIdContext.remove();
 	}
@@ -216,23 +209,16 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		String status = params.get("returncode").toString();
 		log.info("铁蛋通知返回消息：orderid" + orderid + " status:" + status);
 		Income income = mapper.getByOrderNum(orderid);
-		RLock lock = RedissonUtil.getLock(income.getTenant_id());
-		try {
-			lock.lock();
-			TenantIdContext.setTenantId(income.getTenant_id());
-			Channel channel = channelmapper.get(income.getQrcodeid());
-			String ip = AuthContext.getIp();
-			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-				throw new YtException("非法请求!");
-			}
-			String returnstate = PayUtil.SendTDQuerySubmit(orderid, income.getAmount(), channel);
-			Assert.notNull(returnstate, "铁蛋通知反查订单失败!");
-			if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-				success(income);
-			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendTDQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "铁蛋通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
 		}
 		TenantIdContext.remove();
 	}
@@ -243,23 +229,16 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		String status = params.get("returncode").toString();
 		log.info("二狗通知返回消息：orderid" + orderid + " status:" + status);
 		Income income = mapper.getByOrderNum(orderid);
-		RLock lock = RedissonUtil.getLock(income.getTenant_id());
-		try {
-			lock.lock();
-			TenantIdContext.setTenantId(income.getTenant_id());
-			Channel channel = channelmapper.get(income.getQrcodeid());
-			String ip = AuthContext.getIp();
-			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-				throw new YtException("非法请求!");
-			}
-			String returnstate = PayUtil.SendEgQuerySubmit(orderid, income.getAmount(), channel);
-			Assert.notNull(returnstate, "二狗通知反查订单失败!");
-			if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-				success(income);
-			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendEgQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "二狗通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
 		}
 		TenantIdContext.remove();
 	}
@@ -270,23 +249,16 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		String status = params.get("state").toString();
 		log.info("豌豆通知返回消息：orderid" + orderid + " status:" + status);
 		Income income = mapper.getByQrcodeOrderNum(orderid);
-		RLock lock = RedissonUtil.getLock(income.getTenant_id());
-		try {
-			lock.lock();
-			TenantIdContext.setTenantId(income.getTenant_id());
-			Channel channel = channelmapper.get(income.getQrcodeid());
-			String ip = AuthContext.getIp();
-			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-				throw new YtException("非法请求!");
-			}
-			String returnstate = PayUtil.SendWdQuerySubmit(orderid, income.getAmount(), channel);
-			Assert.notNull(returnstate, "豌豆通知反查订单失败!");
-			if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-				success(income);
-			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendWdQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "豌豆通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
 		}
 		TenantIdContext.remove();
 	}
@@ -297,23 +269,16 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		String status = params.get("state").toString();
 		log.info("日不落通知返回消息：orderid" + orderid + " status:" + status);
 		Income income = mapper.getByOrderNum(orderid);
-		RLock lock = RedissonUtil.getLock(income.getTenant_id());
-		try {
-			lock.lock();
-			TenantIdContext.setTenantId(income.getTenant_id());
-			Channel channel = channelmapper.get(income.getQrcodeid());
-			String ip = AuthContext.getIp();
-			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-				throw new YtException("非法请求!");
-			}
-			String returnstate = PayUtil.SendRblQuerySubmit(orderid, income.getAmount(), channel);
-			Assert.notNull(returnstate, "日不落通知反查订单失败!");
-			if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-				success(income);
-			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendRblQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "日不落通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
 		}
 		TenantIdContext.remove();
 	}
@@ -324,23 +289,16 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		String status = params.get("state").toString();
 		log.info("翡翠通知返回消息：orderid" + orderid + " status:" + status);
 		Income income = mapper.getByOrderNum(orderid);
-		RLock lock = RedissonUtil.getLock(income.getTenant_id());
-		try {
-			lock.lock();
-			TenantIdContext.setTenantId(income.getTenant_id());
-			Channel channel = channelmapper.get(income.getQrcodeid());
-			String ip = AuthContext.getIp();
-			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-				throw new YtException("非法请求!");
-			}
-			String returnstate = PayUtil.SendFcQuerySubmit(orderid, income.getAmount(), channel);
-			Assert.notNull(returnstate, "翡翠通知反查订单失败!");
-			if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-				success(income);
-			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendFcQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "翡翠通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
 		}
 		TenantIdContext.remove();
 	}
@@ -351,23 +309,16 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		String status = params.get("state").toString();
 		log.info("奥克兰通知返回消息：orderid" + orderid + " status:" + status);
 		Income income = mapper.getByOrderNum(orderid);
-		RLock lock = RedissonUtil.getLock(income.getTenant_id());
-		try {
-			lock.lock();
-			TenantIdContext.setTenantId(income.getTenant_id());
-			Channel channel = channelmapper.get(income.getQrcodeid());
-			String ip = AuthContext.getIp();
-			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-				throw new YtException("非法请求!");
-			}
-			String returnstate = PayUtil.SendAklQuerySubmit(orderid, income.getAmount(), channel);
-			Assert.notNull(returnstate, "奥克兰通知反查订单失败!");
-			if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-				success(income);
-			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendAklQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "奥克兰通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
 		}
 		TenantIdContext.remove();
 	}
@@ -378,23 +329,16 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		String status = params.get("status").toString();
 		log.info("公子通知返回消息：orderid" + orderid + " status:" + status);
 		Income income = mapper.getByOrderNum(orderid);
-		RLock lock = RedissonUtil.getLock(income.getTenant_id());
-		try {
-			lock.lock();
-			TenantIdContext.setTenantId(income.getTenant_id());
-			Channel channel = channelmapper.get(income.getQrcodeid());
-			String ip = AuthContext.getIp();
-			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-				throw new YtException("非法请求!");
-			}
-			String returnstate = PayUtil.SendGzQuerySubmit(orderid, channel);
-			Assert.notNull(returnstate, "公子通知反查订单失败!");
-			if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-				success(income);
-			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendGzQuerySubmit(orderid, channel);
+		Assert.notNull(returnstate, "公子通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
 		}
 		TenantIdContext.remove();
 	}
@@ -405,23 +349,16 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		String status = params.get("status").toString();
 		log.info("飞黄运通通知返回消息：payOrderId" + orderid + " status:" + status);
 		Income income = mapper.getByOrderNum(orderid);
-		RLock lock = RedissonUtil.getLock(income.getTenant_id());
-		try {
-			lock.lock();
-			TenantIdContext.setTenantId(income.getTenant_id());
-			Channel channel = channelmapper.get(income.getQrcodeid());
-			String ip = AuthContext.getIp();
-			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-				throw new YtException("非法请求!");
-			}
-			String returnstate = PayUtil.SendFhQuerySubmit(orderid, channel);
-			Assert.notNull(returnstate, "飞黄运通通知反查订单失败!");
-			if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-				success(income);
-			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendFhQuerySubmit(orderid, channel);
+		Assert.notNull(returnstate, "飞黄运通通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
 		}
 		TenantIdContext.remove();
 	}
@@ -432,23 +369,16 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		String status = params.get("state").toString();
 		log.info("玩家通知返回消息：orderid" + orderid + " status:" + status);
 		Income income = mapper.getByQrcodeOrderNum(orderid);
-		RLock lock = RedissonUtil.getLock(income.getTenant_id());
-		try {
-			lock.lock();
-			TenantIdContext.setTenantId(income.getTenant_id());
-			Channel channel = channelmapper.get(income.getQrcodeid());
-			String ip = AuthContext.getIp();
-			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-				throw new YtException("非法请求!");
-			}
-			String returnstate = PayUtil.SendWjQuerySubmit(orderid, income.getAmount(), channel);
-			Assert.notNull(returnstate, "玩家通知反查订单失败!");
-			if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-				success(income);
-			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendWjQuerySubmit(orderid, income.getAmount(), channel);
+		Assert.notNull(returnstate, "玩家通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
 		}
 		TenantIdContext.remove();
 	}

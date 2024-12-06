@@ -1,6 +1,5 @@
 package com.yt.app.api.v1.controller;
 
-import java.io.IOException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,6 +47,8 @@ public class OrderController {
 	@Autowired
 	private IncomeService incomeservice;
 
+	private static String key = "syskeys";
+
 	/**
 	 * html查询代收支付状态
 	 * 
@@ -58,36 +59,68 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/income/{id}", method = RequestMethod.GET)
 	public YtResponseEntity<Object> queryIncomeOrder(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
-		Income income = incomeservice.get(id);
-		return new YtResponseEntity<Object>(new YtBody(income.getStatus()));
+		RLock lock = RedissonUtil.getLock(key);
+		try {
+			lock.lock();
+			Income income = incomeservice.get(id);
+			return new YtResponseEntity<Object>(new YtBody(income.getStatus()));
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	// 天下代付回调
 	@RequestMapping(value = "/txcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		YtBody yb = payoutservice.txcallbackpay(requestEntity.getBody());
-		return new YtResponseEntity<Object>(yb);
+		RLock lock = RedissonUtil.getLock(key);
+		try {
+			lock.lock();
+			YtBody yb = payoutservice.txcallbackpay(requestEntity.getBody());
+			return new YtResponseEntity<Object>(yb);
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	// 天下代付反查
 	@RequestMapping(value = "/exist", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> exist(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		YtBody yb = payoutservice.exist(requestEntity.getBody());
-		return new YtResponseEntity<Object>(yb);
+		RLock lock = RedissonUtil.getLock(key);
+		try {
+			lock.lock();
+			YtBody yb = payoutservice.exist(requestEntity.getBody());
+			return new YtResponseEntity<Object>(yb);
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	// 代付盘口查单
 	@RequestMapping(value = "/query", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tyquery(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		PayResultVO pt = payoutservice.query(requestEntity.getBody().getMerchantorderid());
-		return new YtResponseEntity<Object>(new YtBody(pt));
+		RLock lock = RedissonUtil.getLock(key);
+		try {
+			lock.lock();
+			PayResultVO pt = payoutservice.query(requestEntity.getBody().getMerchantorderid());
+			return new YtResponseEntity<Object>(new YtBody(pt));
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	// 代付盘口下单
 	@RequestMapping(value = "/payoutsubmit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submit(YtRequestEntity<PaySubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		PaySubmitDTO psdto = requestEntity.getBody();
-		RLock lock = RedissonUtil.getLock(psdto.getMerchantid());
+		RLock lock = RedissonUtil.getLock(key);
 		PayResultVO sr = null;
 		try {
 			lock.lock();
@@ -117,7 +150,7 @@ public class OrderController {
 	@RequestMapping(value = "/submitqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submitqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		QrcodeSubmitDTO qsdto = requestEntity.getBody();
-		RLock lock = RedissonUtil.getLock(qsdto.getPay_memberid());
+		RLock lock = RedissonUtil.getLock(key);
 		QrcodeResultVO yb = null;
 		try {
 			lock.lock();
@@ -141,7 +174,7 @@ public class OrderController {
 	@RequestMapping(value = "/submitincome", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submitincome(YtRequestEntity<QrcodeSubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		QrcodeSubmitDTO qsdto = requestEntity.getBody();
-		RLock lock = RedissonUtil.getLock(qsdto.getPay_memberid());
+		RLock lock = RedissonUtil.getLock(key);
 		QrcodeResultVO yb = null;
 		try {
 			lock.lock();
@@ -164,8 +197,16 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/queryincome", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> queryincome(YtRequestEntity<QrcodeSubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		QueryQrcodeResultVO yb = incomeservice.queryInCome(requestEntity.getBody());
-		return new YtResponseEntity<Object>(new YtBody(yb));
+		RLock lock = RedissonUtil.getLock(key);
+		try {
+			lock.lock();
+			QueryQrcodeResultVO yb = incomeservice.queryInCome(requestEntity.getBody());
+			return new YtResponseEntity<Object>(new YtBody(yb));
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	/**
@@ -178,11 +219,15 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/kfcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public void kfcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
-		incomeservice.kfcallback(params);
+		RLock lock = RedissonUtil.getLock(key);
 		try {
+			lock.lock();
+			incomeservice.kfcallback(params);
 			response.getWriter().print("success");
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -196,11 +241,15 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/tdcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public void tdcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
-		incomeservice.tdcallback(params);
+		RLock lock = RedissonUtil.getLock(key);
 		try {
+			lock.lock();
+			incomeservice.tdcallback(params);
 			response.getWriter().print("OK");
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -214,11 +263,15 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/egcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public void egcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
-		incomeservice.egcallback(params);
+		RLock lock = RedissonUtil.getLock(key);
 		try {
+			lock.lock();
+			incomeservice.egcallback(params);
 			response.getWriter().print("OK");
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -232,11 +285,15 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/wdcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public void wdcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
-		incomeservice.wdcallback(params);
+		RLock lock = RedissonUtil.getLock(key);
 		try {
+			lock.lock();
+			incomeservice.wdcallback(params);
 			response.getWriter().print("success");
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -250,11 +307,15 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/rblcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void rblcallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		incomeservice.rblcallback(RequestUtil.requestEntityToParamMap(requestEntity));
+		RLock lock = RedissonUtil.getLock(key);
 		try {
+			lock.lock();
+			incomeservice.rblcallback(RequestUtil.requestEntityToParamMap(requestEntity));
 			response.getWriter().print("success");
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -268,11 +329,15 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/gzcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public void gzcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
-		incomeservice.gzcallback(params);
+		RLock lock = RedissonUtil.getLock(key);
 		try {
+			lock.lock();
+			incomeservice.gzcallback(params);
 			response.getWriter().print("success");
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -286,11 +351,15 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/wjcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void wjcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
-		incomeservice.wjcallback(params);
+		RLock lock = RedissonUtil.getLock(key);
 		try {
+			lock.lock();
+			incomeservice.wjcallback(params);
 			response.getWriter().print("success");
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -304,11 +373,15 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/fccallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void fccallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		incomeservice.fccallback(RequestUtil.requestEntityToParamMap(requestEntity));
+		RLock lock = RedissonUtil.getLock(key);
 		try {
+			lock.lock();
+			incomeservice.fccallback(RequestUtil.requestEntityToParamMap(requestEntity));
 			response.getWriter().print("success");
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -322,11 +395,15 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/aklcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void aklcallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		incomeservice.aklcallback(RequestUtil.requestEntityToParamMap(requestEntity));
+		RLock lock = RedissonUtil.getLock(key);
 		try {
+			lock.lock();
+			incomeservice.aklcallback(RequestUtil.requestEntityToParamMap(requestEntity));
 			response.getWriter().print("success");
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -340,11 +417,15 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/sncallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void sncallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		payoutservice.sncallback(RequestUtil.requestEntityToParamMap(requestEntity));
+		RLock lock = RedissonUtil.getLock(key);
 		try {
+			lock.lock();
+			payoutservice.sncallback(RequestUtil.requestEntityToParamMap(requestEntity));
 			response.getWriter().print("ok");
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -358,11 +439,15 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/fhcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void fhcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
-		incomeservice.fhcallback(params);
+		RLock lock = RedissonUtil.getLock(key);
 		try {
+			lock.lock();
+			incomeservice.fhcallback(params);
 			response.getWriter().print("ok");
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -376,11 +461,15 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/alipayftfcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public void alipayftfcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock(key);
 		try {
+			lock.lock();
 			incomeservice.alipayftfcallback(params);
 			response.getWriter().print("success");
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
 		}
 	}
 }
