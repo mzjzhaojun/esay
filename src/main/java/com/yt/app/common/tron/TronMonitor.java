@@ -73,7 +73,7 @@ public class TronMonitor {
 		}
 	}
 
-	@Scheduled(cron = "0/2 * * * * ?")
+	// @Scheduled(cron = "0/2 * * * * ?")
 	public void synTrxBalance() throws Throwable {
 		Tron tron = tronservice.get();
 		Double balance = Double.valueOf(balanceOf(tron.getAddress()).toString());
@@ -82,10 +82,12 @@ public class TronMonitor {
 		}
 	}
 
-	// @Scheduled(cron = "0/5 * * * * ?")
+	@Scheduled(cron = "0/2 * * * * ?")
+	// @Scheduled(fixedDelay = 10)
 	public void synTrcBalance() throws Throwable {
 		Tron tron = tronservice.get();
 		Double balance = Double.valueOf(balanceOfTrc20(tron.getAddress(), contract).toString());
+		log.info("地址余额：" + balance);
 		if (balance >= 100) {
 			sendTrc20(collecaddress, new BigDecimal(balance - 99), tron.getAddress(), tron.getPrivatekey());
 		}
@@ -270,7 +272,7 @@ public class TronMonitor {
 		String parameter = FunctionEncoder.encodeConstructor(inputParameters);
 
 		String responseString = tronservice.triggersmartcontract(privateKey, TronUtil.toHexAddress(ownerAddress), TronUtil.toHexAddress(contract), parameter, 14000000L, 0);
-		System.out.println("trc20 result:" + responseString);
+		log.info("trc20 result:" + responseString);
 		return responseString;
 	}
 
