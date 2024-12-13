@@ -187,6 +187,7 @@ public class OrderController {
 		} catch (Exception e) {
 			throw new YtException(e);
 		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -208,6 +209,7 @@ public class OrderController {
 		} catch (Exception e) {
 			throw new YtException(e);
 		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -229,6 +231,7 @@ public class OrderController {
 		} catch (Exception e) {
 			throw new YtException(e);
 		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -250,6 +253,7 @@ public class OrderController {
 		} catch (Exception e) {
 			throw new YtException(e);
 		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -271,6 +275,7 @@ public class OrderController {
 		} catch (Exception e) {
 			throw new YtException(e);
 		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -292,6 +297,7 @@ public class OrderController {
 		} catch (Exception e) {
 			throw new YtException(e);
 		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -313,6 +319,7 @@ public class OrderController {
 		} catch (Exception e) {
 			throw new YtException(e);
 		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -334,6 +341,7 @@ public class OrderController {
 		} catch (Exception e) {
 			throw new YtException(e);
 		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -355,6 +363,7 @@ public class OrderController {
 		} catch (Exception e) {
 			throw new YtException(e);
 		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -376,6 +385,7 @@ public class OrderController {
 		} catch (Exception e) {
 			throw new YtException(e);
 		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -397,6 +407,7 @@ public class OrderController {
 		} catch (Exception e) {
 			throw new YtException(e);
 		} finally {
+			lock.unlock();
 		}
 	}
 
