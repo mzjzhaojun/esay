@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountMapper;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountrecordMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
-import com.yt.app.api.v1.mapper.PayoutMerchantaccountrecordMapper;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.context.SysUserContext;
@@ -17,7 +16,6 @@ import com.yt.app.api.v1.entity.Incomemerchantaccount;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.entity.Incomemerchantaccountrecord;
 import com.yt.app.api.v1.entity.Merchant;
-import com.yt.app.api.v1.entity.PayoutMerchantaccountrecord;
 import com.yt.app.api.v1.vo.IncomemerchantaccountVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -46,9 +44,6 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 	@Autowired
 	private IncomemerchantaccountrecordMapper incomemerchantaccountrecordmapper;
 
-	@Autowired
-	private PayoutMerchantaccountrecordMapper payoutmerchantaccountrecordmapper;
-
 	@Override
 	@Transactional
 	public Integer post(Incomemerchantaccount t) {
@@ -74,21 +69,26 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 		return new YtPageBean<IncomemerchantaccountVO>(param, list, count);
 	}
 
-	@Transactional
-	private void setToincomeamount(Incomemerchantaccount ma, Incomemerchantaccountrecord maaj) {
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	private void setToincomeamount(Incomemerchantaccount ma, Incomemerchantaccountorder mao) {
 		// 更新待收入金额
-		ma.setToincomeamount(maaj.getPretoincomeamount());
+		ma.setToincomeamount(ma.getToincomeamount() + mao.getIncomeamount());
 		mapper.put(ma);
+	}
 
-		incomemerchantaccountrecordmapper.post(maaj);
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	private void cancelToincomeamount(Incomemerchantaccount ma, Incomemerchantaccountorder mao) {
+		// 更新待收入金额
+		ma.setToincomeamount(ma.getToincomeamount() - mao.getIncomeamount());
+		mapper.put(ma);
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void setTotalincome(Incomemerchantaccount t, Incomemerchantaccountrecord maaj, Incomemerchantaccountorder mao) {
 		// 收入增加金额
-		t.setTotalincome(maaj.getPosttotalincome());
+		t.setTotalincome(t.getTotalincome() + mao.getIncomeamount());
 		// 待收入减去金额.
-		t.setToincomeamount(maaj.getPretoincomeamount());
+		t.setToincomeamount(t.getToincomeamount() - mao.getIncomeamount());
 		t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 		mapper.put(t);
 
@@ -97,8 +97,6 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 		m.setTodaycount(m.getTodaycount() + mao.getIncomeamount());
 		m.setBalance(t.getBalance());
 		merchantmapper.put(m);
-
-		incomemerchantaccountrecordmapper.post(maaj);
 	}
 
 	/**
@@ -128,8 +126,10 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			maaj.setPosttowithdrawamount(0.00);// 确认支出金额
 
 			maaj.setRemark("新增代收￥：" + String.format("%.2f", t.getIncomeamount()));
+
+			incomemerchantaccountrecordmapper.post(maaj);
 			//
-			setToincomeamount(ma, maaj);
+			setToincomeamount(ma, t);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -163,6 +163,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
 			maaj.setRemark("代收成功￥：" + String.format("%.2f", mao.getIncomeamount()));
+			incomemerchantaccountrecordmapper.post(maaj);
 			//
 			setTotalincome(t, maaj, mao);
 		} catch (Exception e) {
@@ -197,8 +198,9 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
 			maaj.setRemark("取消订单：" + String.format("%.2f", mao.getIncomeamount()));
+			incomemerchantaccountrecordmapper.post(maaj);
 			//
-			setToincomeamount(t, maaj);
+			cancelToincomeamount(t, mao);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -224,11 +226,25 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 	 */
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	private void setWithdrawamount(Incomemerchantaccount ma, PayoutMerchantaccountrecord maaj) {
+	private void setWithdrawamount(Incomemerchantaccount ma, Incomemerchantaccountorder mao) {
+		// 待支出加金额
+		ma.setTowithdrawamount(ma.getTowithdrawamount() + mao.getAmount());
+		mapper.put(ma);
+	}
+
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	private void cancelWithdrawamount(Incomemerchantaccount ma, Incomemerchantaccountorder mao) {
 		// 待支出减去金额
-		ma.setTowithdrawamount(maaj.getPretowithdrawamount());
+		ma.setTowithdrawamount(ma.getTowithdrawamount() - mao.getAmount());
+		mapper.put(ma);
+	}
+
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	private void successWithdrawamount(Incomemerchantaccount ma, Incomemerchantaccountorder mao) {
+		// 待支出减去金额
+		ma.setTowithdrawamount(ma.getTowithdrawamount() - mao.getAmount());
 		// 支出总金额更新
-		ma.setWithdrawamount(maaj.getPostwithdrawamount());
+		ma.setWithdrawamount(ma.getWithdrawamount() + mao.getAmount());
 		ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
 		mapper.put(ma);
 
@@ -236,8 +252,6 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 		Merchant m = merchantmapper.get(ma.getMerchantid());
 		m.setBalance(ma.getBalance());
 		merchantmapper.put(m);
-
-		payoutmerchantaccountrecordmapper.post(maaj);
 	}
 
 	// 待确认支出
@@ -247,7 +261,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 		try {
 			lock.lock();
 			Incomemerchantaccount ma = mapper.getByUserId(t.getUserid());
-			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
+			Incomemerchantaccountrecord maaj = new Incomemerchantaccountrecord();
 
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(t.getMerchantname());
@@ -264,8 +278,9 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			maaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
 			maaj.setRemark("新增支出￥：" + String.format("%.2f", t.getAmount()));
+			incomemerchantaccountrecordmapper.post(maaj);
 			//
-			setWithdrawamount(ma, maaj);
+			setWithdrawamount(ma, t);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -280,7 +295,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			lock.lock();
 			Incomemerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
+			Incomemerchantaccountrecord maaj = new Incomemerchantaccountrecord();
 			//
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getMerchantname());
@@ -298,8 +313,9 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			maaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmount());// 总支出
 			maaj.setPosttowithdrawamount(mao.getAmount());// 确认支出
 			maaj.setRemark("支出成功￥：" + String.format("%.2f", mao.getAmount()));
+			incomemerchantaccountrecordmapper.post(maaj);
 			//
-			setWithdrawamount(t, maaj);
+			successWithdrawamount(t, mao);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -314,7 +330,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			lock.lock();
 			Incomemerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
+			Incomemerchantaccountrecord maaj = new Incomemerchantaccountrecord();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getMerchantname());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -331,8 +347,9 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
 			maaj.setRemark("拒绝支出￥：" + String.format("%.2f", mao.getAmount()));
+			incomemerchantaccountrecordmapper.post(maaj);
 			//
-			setWithdrawamount(t, maaj);
+			cancelWithdrawamount(t, mao);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -347,7 +364,7 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			lock.lock();
 			Incomemerchantaccount t = mapper.getByUserId(mao.getUserid());
 			//
-			PayoutMerchantaccountrecord maaj = new PayoutMerchantaccountrecord();
+			Incomemerchantaccountrecord maaj = new Incomemerchantaccountrecord();
 			maaj.setUserid(t.getUserid());
 			maaj.setMerchantname(mao.getMerchantname());
 			maaj.setOrdernum(mao.getOrdernum());
@@ -364,8 +381,9 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
 			maaj.setRemark("取消支出￥：" + String.format("%.2f", mao.getAmount()));
+			incomemerchantaccountrecordmapper.post(maaj);
 			//
-			setWithdrawamount(t, maaj);
+			cancelWithdrawamount(t, mao);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();

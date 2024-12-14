@@ -71,19 +71,25 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	private void setToincomeamount(Qrcodeaccount ma, Qrcodeaccountrecord maaj) {
+	private void setToincomeamount(Qrcodeaccount ma, Qrcodeaccountorder mao) {
 		// 更新帶收入金額
-		ma.setToincomeamount(maaj.getPretoincomeamount());
+		ma.setToincomeamount(ma.getToincomeamount() + mao.getIncomeamount());
 		mapper.put(ma);
-		qrcodeaccountrecordmapper.post(maaj);
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	private void setTotalincome(Qrcodeaccount t, Qrcodeaccountrecord maaj, Qrcodeaccountorder qo) {
+	private void cancelToincomeamount(Qrcodeaccount ma, Qrcodeaccountorder mao) {
+		// 更新帶收入金額
+		ma.setToincomeamount(ma.getToincomeamount() - mao.getIncomeamount());
+		mapper.put(ma);
+	}
+
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	private void scuccessTotalincome(Qrcodeaccount t, Qrcodeaccountorder qo) {
 		// 收入金额增加
-		t.setTotalincome(maaj.getPosttotalincome());
+		t.setTotalincome(t.getTotalincome() + qo.getIncomeamount());
 		// 代收金额更新
-		t.setToincomeamount(maaj.getPretoincomeamount());
+		t.setToincomeamount(t.getToincomeamount() - qo.getIncomeamount());
 		t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
 		mapper.put(t);
 
@@ -94,8 +100,6 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 		m.setTodayincomecount(m.getTodayincomecount() + qo.getAmount());
 		m.setIncomecount(m.getIncomecount() + qo.getAmount());
 		channelmapper.put(m);
-
-		qrcodeaccountrecordmapper.post(maaj);
 	}
 
 	/**
@@ -125,8 +129,9 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			maaj.setPosttowithdrawamount(0.00);// 确认支出金额
 
 			maaj.setRemark("码商代收人民币￥：" + String.format("%.2f", t.getIncomeamount()));
+			qrcodeaccountrecordmapper.post(maaj);
 			//
-			setToincomeamount(ma, maaj);
+			setToincomeamount(ma, t);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -159,8 +164,9 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
 			maaj.setRemark("码商代收成功￥：" + String.format("%.2f", mao.getIncomeamount()));
+			qrcodeaccountrecordmapper.post(maaj);
 			//
-			setTotalincome(t, maaj, mao);
+			scuccessTotalincome(t, mao);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -193,8 +199,9 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
 			maaj.setRemark("超时支付,取消订单：" + String.format("%.2f", mao.getIncomeamount()));
+			qrcodeaccountrecordmapper.post(maaj);
 			//
-			setToincomeamount(t, maaj);
+			cancelToincomeamount(t, mao);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
