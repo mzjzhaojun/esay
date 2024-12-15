@@ -36,6 +36,9 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 	// 天下回調
 	YtBody exist(SysTyOrder so);
 
+	// 盛世回调
+	void sscallback(Map<String, Object> params);
+
 	// 十年回调
 	void sncallback(Map<String, Object> params);
 }

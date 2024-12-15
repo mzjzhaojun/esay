@@ -54,6 +54,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PayUtil {
 
+	/**
+	 * ========================================================================代付
+	 * 
+	 * @param so
+	 * @param key
+	 * @return
+	 */
+
 	// 天下代付通知回调签名
 	public static boolean valMd5TyResultOrder(SysTyOrder so, String key) {
 		String signParams = "merchant_id=" + so.getMerchant_id() + "&merchant_order_id=" + so.getMerchant_order_id() + "&typay_order_id=" + so.getTypay_order_id() + "&pay_type=" + so.getPay_type() + "&pay_amt="
@@ -225,7 +233,7 @@ public class PayUtil {
 		return null;
 	}
 
-	// 公子代收查单
+	// 十年代付查单
 	public static Integer SendSnSelectOrder(String orderid, Channel cl) {
 		try {
 			HttpHeaders headers = new HttpHeaders();
@@ -264,6 +272,86 @@ public class PayUtil {
 		return null;
 	}
 
+	// 盛世支付宝代付
+	public static String SendSSSubmit(Payout pt, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Long time = System.currentTimeMillis() / 1000;
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("AccessKey", cl.getCode());
+		map.put("OrderNo", pt.getOrdernum());
+		map.put("PayChannelId", cl.getAislecode());
+		map.put("Amount", String.format("%.2f", pt.getAmount()));
+		map.put("CallbackUrl", cl.getApireusultip());
+		map.put("PayeeNo", pt.getAccnumer());
+		map.put("Payee", pt.getAccname());
+		map.put("PayeeAddress", pt.getBankname());
+		map.put("Timestamp", time.toString());
+
+		TreeMap<String, String> sortedMap = new TreeMap<>(map);
+		String signContent = "";
+		for (String key : sortedMap.keySet()) {
+			signContent = signContent + key + "=" + map.get(key) + "&";
+		}
+		signContent = signContent.substring(0, signContent.length() - 1);
+		signContent = signContent + "&SecretKey=" + cl.getApikey();
+		String sign = MD5Utils.md5(signContent);
+		map.put("Sign", sign);
+		log.info("盛世代付下单签名：" + sign + "===" + signContent);
+
+		HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<String> sov = resttemplate.postForEntity(cl.getApiip() + "/api/WithdrawalV2/submit", httpEntity, String.class);
+		String data = sov.getBody();
+		SysSnOrder sso = JSONUtil.toBean(data, SysSnOrder.class);
+		log.info("盛世代付成功返回订单号：" + data);
+		if (sso.getCode() == 0) {
+			return sso.getData().getOrderNo();
+		}
+		return null;
+	}
+
+	// 盛世代付查单
+	public static Integer SendSSSelectOrder(String orderid, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			Map<String, String> map = new HashMap<String, String>();
+			Long time = System.currentTimeMillis() / 1000;
+			map.put("AccessKey", cl.getCode());
+			map.put("OrderNo", orderid);
+			map.put("Timestamp", time.toString());
+			TreeMap<String, String> sortedMap = new TreeMap<>(map);
+			String signContent = "";
+			for (String key : sortedMap.keySet()) {
+				signContent = signContent + key + "=" + map.get(key) + "&";
+			}
+			signContent = signContent.substring(0, signContent.length() - 1);
+			signContent = signContent + "&SecretKey=" + cl.getApikey();
+			String sign = MD5Utils.md5(signContent);
+			map.put("Sign", sign);
+			log.info("盛世查单签名：" + sign + "===" + signContent);
+
+			HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<String> sov = resttemplate.postForEntity(cl.getApiip() + "/api/WithdrawalV2/queryorder", httpEntity, String.class);
+			String data = sov.getBody();
+			log.info("盛世代付查单返回消息：" + data);
+			SysSnOrder sso = JSONUtil.toBean(data, SysSnOrder.class);
+			log.info("盛世代付成功返回订单号：" + data);
+			if (sso.getCode() == 0) {
+				return sso.getData().getStatus();
+			}
+		} catch (RestClientException e) {
+			log.info("盛世代付查单返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
 	// 代付盘口通知
 	public static String SendPayoutNotify(String url, PayResultVO ss, String key) {
 
@@ -294,6 +382,16 @@ public class PayUtil {
 		return null;
 	}
 
+	/**
+	 * 
+	 * ================================================================================代收
+	 * 
+	 * 
+	 * @param url
+	 * @param ss
+	 * @param key
+	 * @return
+	 */
 	// 代收盘口通知
 	public static String SendIncomeNotify(String url, QueryQrcodeResultVO ss, String key) {
 		try {

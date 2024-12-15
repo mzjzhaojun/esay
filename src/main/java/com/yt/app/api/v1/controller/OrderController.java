@@ -397,6 +397,28 @@ public class OrderController {
 	 * @param response
 	 * @return
 	 */
+	@RequestMapping(value = "/sscallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void sscallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock(key);
+		try {
+			lock.lock();
+			payoutservice.sscallback(RequestUtil.requestEntityToParamMap(requestEntity));
+			response.getWriter().print("ok");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * 十年代付回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/fhcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void fhcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
 		RLock lock = RedissonUtil.getLock(key);

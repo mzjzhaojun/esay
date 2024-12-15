@@ -85,7 +85,7 @@ public class TaskSlaveConfig {
 	/**
 	 * 代收超时分钟未支付订单处理
 	 */
-	@Scheduled(cron = "0/30 * * * * ?")
+	@Scheduled(cron = "0/50 * * * * ?")
 	public void income() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Income> list = incomemapper.selectAddlist();

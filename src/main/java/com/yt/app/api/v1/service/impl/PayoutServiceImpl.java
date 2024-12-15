@@ -202,6 +202,13 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				t.setChannelordernum(ordernum);
 			}
 			break;
+		case DictionaryResource.DFSSAISLE:
+			String ssordernum = PayUtil.SendSSSubmit(t, cl);
+			if (ssordernum != null) {
+				flage = false;
+				t.setChannelordernum(ssordernum);
+			}
+			break;
 		case DictionaryResource.DFTXAISLE:
 			String txordernum = PayUtil.SendTxSubmit(t, cl);
 			if (txordernum != null) {
@@ -446,6 +453,35 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		}
+		
+		boolean flage = true;
+		switch (cl.getName()) {
+		case DictionaryResource.DFSNAISLE:
+			String ordernum = PayUtil.SendSnSubmit(t, cl);
+			if (ordernum != null) {
+				flage = false;
+				t.setChannelordernum(ordernum);
+			}
+			break;
+		case DictionaryResource.DFSSAISLE:
+			String ssordernum = PayUtil.SendSSSubmit(t, cl);
+			if (ssordernum != null) {
+				flage = false;
+				t.setChannelordernum(ssordernum);
+			}
+			break;
+		case DictionaryResource.DFTXAISLE:
+			String txordernum = PayUtil.SendTxSubmit(t, cl);
+			if (txordernum != null) {
+				flage = false;
+				t.setChannelordernum(txordernum);
+			}
+			break;
+		}
+		if (flage) {
+			channelbot.notifyChannel(cl);
+			throw new YtException("渠道错误!");
+		}
 
 		///////////////////////////////////////////////////// 计算商户订单/////////////////////////////////////////////////////
 		PayoutMerchantaccountorder mao = new PayoutMerchantaccountorder();
@@ -541,9 +577,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			// 系统账户
 			systemaccountservice.updatePayout(mao);
 
-			// 计算商户数据
-			// merchantservice.updatePayout(t);
-
 			// 计算代理
 			if (t.getAgentid() != null) {
 				Agentaccountorder aao = agentaccountordermapper.getByOrdernum(t.getAgentordernum());
@@ -561,8 +594,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			channelaccountordermapper.put(cao);
 			// 渠道账户
 			channelaccountservice.updateWithdrawamount(cao);
-			// 计算渠道数据
-			// channelservice.updatePayout(t);
 
 			// ------------------更新代付订单-----------------
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
@@ -662,6 +693,34 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			// 查询渠道是否真实成功
 			Integer returnstate = PayUtil.SendSnSelectOrder(pt.getOrdernum(), channel);
 			Assert.notNull(returnstate, "十年代付通知反查订单失败!");
+			if (returnstate == 4) {
+				paySuccess(pt);
+			} else if (returnstate == 16) {
+				payFail(pt);
+			}
+			SysUserContext.remove();
+			TenantIdContext.remove();
+		}
+	}
+
+	@Override
+	@Transactional
+	public void sscallback(Map<String, Object> params) {
+		String orderid = params.get("OrderNo").toString();
+		String status = params.get("Status").toString();
+		log.info("盛世通知返回消息：orderid" + orderid + " status:" + status);
+		Payout pt = mapper.getByOrdernum(orderid);
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			Channel channel = channelmapper.get(pt.getChannelid());
+			String ip = AuthContext.getIp();
+			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求!");
+			}
+			// 查询渠道是否真实成功
+			Integer returnstate = PayUtil.SendSSSelectOrder(pt.getOrdernum(), channel);
+			Assert.notNull(returnstate, "盛世代付通知反查订单失败!");
 			if (returnstate == 4) {
 				paySuccess(pt);
 			} else if (returnstate == 16) {
