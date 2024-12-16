@@ -1,6 +1,9 @@
 package com.yt.app.api.v1.service;
 
+import java.io.IOException;
 import java.util.Map;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yt.app.api.v1.dbo.PaySubmitDTO;
 import com.yt.app.api.v1.entity.Payout;
@@ -41,4 +44,7 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 
 	// 十年回调
 	void sncallback(Map<String, Object> params);
+
+	// 导入上传
+	String upFile(MultipartFile file,String aisleid) throws IOException;
 }
