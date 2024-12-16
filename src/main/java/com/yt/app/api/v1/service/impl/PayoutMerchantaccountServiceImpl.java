@@ -281,6 +281,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	private void setPretowithdrawamount(PayoutMerchantaccount ma, PayoutMerchantaccountorder maaj) {
 		// 待支出金额
 		ma.setTowithdrawamount(ma.getTowithdrawamount() + maaj.getAmountreceived());
+		ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
 		mapper.put(ma);
 	}
 
@@ -288,6 +289,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	private void cancelPretowithdrawamount(PayoutMerchantaccount ma, PayoutMerchantaccountorder maaj) {
 		// 待支出金额
 		ma.setTowithdrawamount(ma.getTowithdrawamount() - maaj.getAmountreceived());
+		ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
 		mapper.put(ma);
 	}
 
