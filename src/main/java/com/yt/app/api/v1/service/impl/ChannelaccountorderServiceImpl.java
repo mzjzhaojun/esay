@@ -1,7 +1,6 @@
 package com.yt.app.api.v1.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.yt.app.api.v1.mapper.ChannelMapper;
@@ -52,7 +51,6 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 	private ChannelaccountService channelaccountservice;
 
 	@Override
-	@Transactional
 	public Integer post(Channelaccountorder t) {
 		if (t.getAmount() <= 0) {
 			throw new YtException("金额不能小于1");
@@ -110,7 +108,6 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 
 //////////////////////////////////////////////////////////////充值到渠道
 	@Override
-	@Transactional
 	public void incomemanual(Channelaccountorder cco) {
 		User u = usermapper.get(SysUserContext.getUserId());
 		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(cco.getRemark()), System.currentTimeMillis());

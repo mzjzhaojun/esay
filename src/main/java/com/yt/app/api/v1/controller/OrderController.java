@@ -390,7 +390,7 @@ public class OrderController {
 	}
 
 	/**
-	 * 十年代付回调
+	 * 盛世代付回调
 	 * 
 	 * @param requestEntity
 	 * @param request
@@ -451,4 +451,5 @@ public class OrderController {
 		} finally {
 		}
 	}
+
 }

@@ -387,7 +387,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	 * 自营渠道下单
 	 */
 	@Override
-	@Transactional
 	public QrcodeResultVO submitQrcode(QrcodeSubmitDTO qs) {
 		// 验证
 		Merchant mc = checkparam(qs);
@@ -533,7 +532,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	 * 上游渠道下单
 	 */
 	@Override
-	@Transactional
 	public QrcodeResultVO submitInCome(QrcodeSubmitDTO qs) {
 		// 验证
 		Merchant mc = checkparam(qs);
@@ -761,7 +759,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
-	@Transactional
 	public QueryQrcodeResultVO queryInCome(QrcodeSubmitDTO qs) {
 		// 验证
 		if (qs.getPay_memberid().length() > 10) {
@@ -789,8 +786,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qrv.setPay_md5sign(PayUtil.SignMd5QueryResultQrocde(qrv, mc.getAppkey()));
 		return qrv;
 	}
-
-	@Transactional
+	
 	public AlipayTradePrecreateResponse alif2f(Qrcode qrcode, String ordernum, Double amount, Integer exp) {
 		try {
 			AlipayClient client = AliPayUtil.initAliPay(qrcode.getAppid(), qrcode.getAppprivatekey(), qrcode.getApppublickey(), qrcode.getAlipaypublickey(), qrcode.getAlipayprovatekey());
@@ -827,7 +823,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
-	@Transactional
 	public void alipayftfcallback(Map<String, String> params) {
 		String trade_no = params.get("trade_no").toString();
 		String out_trade_no = params.get("out_trade_no").toString();
@@ -892,7 +887,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return mc;
 	}
 
-	@Transactional
 	private Income addIncome(Channel channel, Qrcodeaisle qas, Merchant mc, QrcodeSubmitDTO qs, Qrcode qd) {
 		Income income = new Income();
 		// 商戶
@@ -926,7 +920,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	// 上游渠道下单
-	@Transactional
 	private QrcodeResultVO addOtherOrder(Income income, Channel channel, Aisle qas, Merchant mc, QrcodeSubmitDTO qs) {
 		// 添加qrcode订单
 		Qrcodeaccountorder qao = new Qrcodeaccountorder();
@@ -990,7 +983,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return qr;
 	}
 
-	@Transactional
 	private QrcodeResultVO addOtherOrderMqd(Income income, Channel channel, Qrcodeaisle qas, Merchant mc, QrcodeSubmitDTO qs) {
 		// 添加qrcode订单
 		Qrcodeaccountorder qao = new Qrcodeaccountorder();
@@ -1053,7 +1045,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	// 补单
-	@Transactional
 	private void addMakeupOrder(Income income) {
 		// 添加qrcode订单
 		Qrcodeaccountorder qao = new Qrcodeaccountorder();
@@ -1106,7 +1097,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		incomemerchantaccountservice.totalincome(imao);
 	}
 
-	@Transactional
 	private void success(Income income) {
 		// 計算代收
 		income.setStatus(DictionaryResource.PAYOUTSTATUS_52);
@@ -1145,7 +1135,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		systemaccountservice.updateIncome(income);
 	}
 
-	@Transactional
 	private void success(Income income, String trade_no) {
 		TenantIdContext.setTenantId(income.getTenant_id());
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
@@ -1190,7 +1179,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
-	@Transactional
 	public Integer makeuporder(Income inc) {
 		Income newincome = mapper.get(inc.getId());
 
@@ -1227,6 +1215,33 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	public Integer successstatus(Income income) {
 		income.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 		return mapper.put(income);
+	}
+
+	
+	
+	
+	
+	//测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试
+	@Override
+	public Integer canceladd(Map<String, String> params) {
+		int i = 1;
+		Incomemerchantaccountorder t = new Incomemerchantaccountorder();
+		t.setUserid(1810628129622986752L);
+		t.setMerchantid(1810628129631375360L);
+		t.setAmount(100.00);
+		incomemerchantaccountservice.canlWithdrawamount(t);
+		return i;
+	}
+
+	@Override
+	public Integer setadd(Map<String, String> params) {
+		int i = 1;
+		Incomemerchantaccountorder t = new Incomemerchantaccountorder();
+		t.setUserid(1810628129622986752L);
+		t.setMerchantid(1810628129631375360L);
+		t.setAmount(100.00);
+		incomemerchantaccountservice.setWithdrawamount(t);
+		return i;
 	}
 
 }

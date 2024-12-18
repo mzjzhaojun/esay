@@ -93,7 +93,6 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 	}
 
 	@Override
-	@Transactional
 	public Integer save(Agentaccountorder t) {
 		if (t.getAmount() <= 0) {
 			throw new YtException("金额不能小于1，大于余额");
@@ -130,7 +129,6 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 
 ////////////////////////////////////////////////// 提现 /////////////////////////
 	@Override
-	@Transactional
 	public void withdrawmanual(Agentaccountorder aco) {
 		User u = usermapper.get(SysUserContext.getUserId());
 		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(aco.getRemark()), System.currentTimeMillis());
@@ -151,7 +149,6 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 	}
 
 	@Override
-	@Transactional
 	public Integer cancleWithdraw(Long id) {
 		Agentaccountorder mao = mapper.get(id);
 		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_13);
@@ -161,7 +158,6 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 	}
 
 	@Override
-	@Transactional
 	public Long incomewithdrawapp(Agentaccountorder t) {
 		if (t.getAmount() <= 0) {
 			throw new YtException("金额不能小于1，大于余额");
@@ -194,7 +190,6 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 	}
 
 	@Override
-	@Transactional
 	public Integer success(Long id) {
 		Agentaccountorder mao = mapper.get(id);
 		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);

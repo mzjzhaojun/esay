@@ -5,7 +5,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Service;
 
@@ -120,7 +119,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	private ChannelBot channelbot;
 
 	@Override
-	@Transactional
 	public Integer submitOrder(Payout t) {
 		PayoutMerchantaccount maccount = merchantaccountmapper.getByUserId(SysUserContext.getUserId());
 
@@ -331,7 +329,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	// 盘口提交订单
 	@Override
-	@Transactional
 	public PayResultVO submit(PaySubmitDTO ss) {
 
 		if (ss.getMerchantid().length() > 10) {
@@ -393,7 +390,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		return sr;
 	}
 
-	@Transactional
 	public void addPayout(Payout t, Merchant m) {
 		TenantIdContext.setTenantId(m.getTenant_id());
 		///////////////////////////////////////////////////// 盘口录入代付订单/////////////////////////////////////////////////////
@@ -568,7 +564,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	/***
 	 * 手动成功
 	 */
-	@Transactional
 	public void paySuccess(Payout pt) {
 		Payout t = mapper.get(pt.getId());
 		if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
@@ -626,7 +621,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	 * 手动回调失败
 	 * 
 	 */
-	@Transactional
 	public void payFail(Payout pt) {
 		Payout t = mapper.get(pt.getId());
 		if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
@@ -682,7 +676,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
-	@Transactional
 	public void sncallback(Map<String, Object> params) {
 		String orderid = params.get("OrderNo").toString();
 		String status = params.get("Status").toString();
@@ -710,7 +703,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
-	@Transactional
 	public void sscallback(Map<String, Object> params) {
 		String orderid = params.get("OrderNo").toString();
 		String status = params.get("Status").toString();
@@ -738,7 +730,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
-	@Transactional
 	public YtBody txcallbackpay(SysTyOrder so) {
 		Payout pt = mapper.getByOrdernum(so.getMerchant_order_id());
 		if (pt != null) {
@@ -823,7 +814,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		return file.getOriginalFilename();
 	}
 
-	@Transactional
 	public Integer importOrder(Aisle al, String name, String cardno, String bankname, Double amount, PayoutMerchantaccount maccount, Merchant m, Channel cl) {
 
 		Payout t = new Payout();

@@ -2,7 +2,6 @@ package com.yt.app.api.v1.service.impl;
 
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.yt.app.api.v1.mapper.MerchantMapper;
@@ -66,7 +65,6 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 	 * 充值
 	 */
 	@Override
-	@Transactional
 	public Integer post(PayoutMerchantaccountorder t) {
 		if (t.getAmount() <= 0) {
 			throw new YtException("金额不能小于1");
@@ -100,7 +98,6 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 	
 	//代付充值成功
 	@Override
-	@Transactional
 	public void incomemanual(PayoutMerchantaccountorder mco) {
 		RLock lock = RedissonUtil.getLock(mco.getId());
 		User u = usermapper.get(SysUserContext.getUserId());
@@ -131,7 +128,6 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 
 	// 提现
 	@Override
-	@Transactional
 	public Integer save(PayoutMerchantaccountorder t) {
 		if (t.getAmount() <= 0) {
 			throw new YtException("金额不能小于1");
@@ -171,7 +167,6 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 	 * app提现
 	 */
 	@Override
-	@Transactional
 	public Integer appsave(PayoutMerchantaccountorder t) {
 		if (t.getAmount() <= 0) {
 			throw new YtException("金额不能小于1");
@@ -235,7 +230,6 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 	 * 充值取消
 	 */
 	@Override
-	@Transactional
 	public Integer cancle(Long id) {
 		RLock lock = RedissonUtil.getLock(id);
 		try {
@@ -256,7 +250,6 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 //////////////////////////////////////////////////////////////提现处理
 
 	@Override
-	@Transactional
 	public void withdrawmanual(PayoutMerchantaccountorder mco) {
 		RLock lock = RedissonUtil.getLock(mco.getId());
 		User u = usermapper.get(SysUserContext.getUserId());
@@ -290,7 +283,6 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 	 * 提现取消
 	 */
 	@Override
-	@Transactional
 	public Integer cancleWithdraw(Long id) {
 		RLock lock = RedissonUtil.getLock(id);
 		try {

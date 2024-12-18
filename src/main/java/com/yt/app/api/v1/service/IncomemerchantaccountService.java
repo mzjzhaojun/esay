@@ -79,4 +79,8 @@ public interface IncomemerchantaccountService extends YtIBaseService<Incomemerch
 	 */
 	void cancelWithdrawamount(Incomemerchantaccountorder mao);
 
+	void canlWithdrawamount(Incomemerchantaccountorder mao);
+
+	void setWithdrawamount(Incomemerchantaccountorder mao);
+
 }

@@ -215,7 +215,6 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 
 //////////////////////////////////////////////////////////////提现处理
 	@Override
-	@Transactional
 	public void incomemanual(Incomemerchantaccountorder mco) {
 		RLock lock = RedissonUtil.getLock(mco.getId());
 		User u = usermapper.get(SysUserContext.getUserId());
@@ -244,7 +243,6 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 
 //代收提现
 	@Override
-	@Transactional
 	public Integer incomewithdraw(Incomemerchantaccountorder t) {
 		if (t.getAmount() <= 0) {
 			throw new YtException("金额不能小于1");
@@ -276,8 +274,8 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		return i;
 	}
 
+	//代收提现app
 	@Override
-	@Transactional
 	public Long incomewithdrawapp(Incomemerchantaccountorder t) {
 		if (t.getAmount() <= 0) {
 			throw new YtException("金额不能小于1");
@@ -308,8 +306,9 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		return t.getId();
 	}
 
+	
+	//提现成功
 	@Override
-	@Transactional
 	public Integer success(Long id) {
 		Incomemerchantaccountorder mao = mapper.get(id);
 		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
@@ -324,7 +323,6 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 	 * 提现取消
 	 */
 	@Override
-	@Transactional
 	public Integer incomecancleWithdraw(Long id) {
 		RLock lock = RedissonUtil.getLock(id);
 		try {
@@ -344,7 +342,6 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 
 	// 通过提现
 	@Override
-	@Transactional
 	public void incomewithdrawmanual(Incomemerchantaccountorder mco) {
 		RLock lock = RedissonUtil.getLock(mco.getId());
 		User u = usermapper.get(SysUserContext.getUserId());

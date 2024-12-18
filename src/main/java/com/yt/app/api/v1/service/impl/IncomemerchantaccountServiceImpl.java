@@ -389,4 +389,57 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 			lock.unlock();
 		}
 	}
+
+	public void setWithdrawamount(Incomemerchantaccountorder mao) {
+		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
+		try {
+			lock.lock();
+			Incomemerchantaccount t = mapper.getByUserId(mao.getUserid());
+			//
+			Incomemerchantaccountrecord maaj = new Incomemerchantaccountrecord();
+			maaj.setUserid(t.getUserid());
+
+			maaj.setRemark("成功￥：" + String.format("%.2f", mao.getAmount()));
+			incomemerchantaccountrecordmapper.post(maaj);
+			//
+			successWithdrawamount(t, mao);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	public void canlWithdrawamount(Incomemerchantaccountorder mao) {
+		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
+		try {
+			lock.lock();
+			Incomemerchantaccount t = mapper.getByUserId(mao.getUserid());
+			//
+			Incomemerchantaccountrecord maaj = new Incomemerchantaccountrecord();
+			maaj.setUserid(t.getUserid());
+
+			maaj.setRemark("失败￥：" + String.format("%.2f", mao.getAmount()));
+			incomemerchantaccountrecordmapper.post(maaj);
+			//
+			errorWithdrawamount(t, mao);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	private void errorWithdrawamount(Incomemerchantaccount ma, Incomemerchantaccountorder mao) {
+		// 待支出减去金额
+		ma.setTowithdrawamount(ma.getTowithdrawamount() + mao.getAmount());
+		// 支出总金额更新
+		ma.setWithdrawamount(ma.getWithdrawamount() - mao.getAmount());
+		ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
+		mapper.put(ma);
+
+		// 更新账户余额
+		Merchant m = merchantmapper.get(ma.getMerchantid());
+		m.setBalance(ma.getBalance());
+		merchantmapper.put(m);
+	}
 }
