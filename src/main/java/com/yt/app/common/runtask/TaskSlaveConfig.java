@@ -34,7 +34,7 @@ import com.yt.app.common.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Profile("slave")
+@Profile("master")
 @Component
 public class TaskSlaveConfig {
 

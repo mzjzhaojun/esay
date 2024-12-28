@@ -769,7 +769,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	@Override
 	public String upFile(MultipartFile file, String aisleid) throws IOException {
-		Aisle a = aislemapper.get(Long.valueOf(aisleid));
+		Aisle aisle = aislemapper.get(Long.valueOf(aisleid));
 		PayoutMerchantaccount maccount = merchantaccountmapper.getByUserId(SysUserContext.getUserId());
 		Merchant m = merchantmapper.getByUserId(SysUserContext.getUserId());
 		Workbook wb = WorkbookFactory.create(file.getInputStream());
@@ -787,7 +787,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		}
 
 		////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
-		List<Aislechannel> listac = aislechannelmapper.getByAisleId(a.getId());
+		List<Aislechannel> listac = aislechannelmapper.getByAisleId(aisle.getId());
 		Assert.notEmpty(listac, "没有可用通道!");
 		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
 		List<Channel> listc = channelmapper.listByArrayId(cids);
@@ -808,7 +808,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		for (int i = 1; i <= maxRow; i++) {
 			Row row = sheet.getRow(i);
 			if (row.getCell(0) != null) {
-				importOrder(a, row.getCell(0).toString(), row.getCell(1).toString(), row.getCell(2).toString(), Double.valueOf(row.getCell(3).toString()), maccount, m, cl);
+				importOrder(aisle, row.getCell(0).toString(), row.getCell(1).toString(), row.getCell(2).toString(), Double.valueOf(row.getCell(3).toString()), maccount, m, cl);
 			}
 		}
 		return file.getOriginalFilename();
