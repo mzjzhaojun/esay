@@ -197,30 +197,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		}
 		RedisUtil.setEx(SystemConstant.CACHE_SYS_PAYOUT_EXIST + t.getOrdernum(), t.getOrdernum(), 60, TimeUnit.SECONDS);
 		// 获取渠道单号
-		boolean flage = true;
-		switch (cl.getName()) {
-		case DictionaryResource.DFSNAISLE:
-			String ordernum = PayUtil.SendSnSubmit(t, cl);
-			if (ordernum != null) {
-				flage = false;
-				t.setChannelordernum(ordernum);
-			}
-			break;
-		case DictionaryResource.DFSSAISLE:
-			String ssordernum = PayUtil.SendSSSubmit(t, cl);
-			if (ssordernum != null) {
-				flage = false;
-				t.setChannelordernum(ssordernum);
-			}
-			break;
-		case DictionaryResource.DFTXAISLE:
-			String txordernum = PayUtil.SendTxSubmit(t, cl);
-			if (txordernum != null) {
-				flage = false;
-				t.setChannelordernum(txordernum);
-			}
-			break;
-		}
+		boolean flage = getChannelOrderNo(t, cl);
 		if (flage) {
 			channelbot.notifyChannel(cl);
 			throw new YtException("渠道错误!");
@@ -298,7 +275,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setAgentincome(0.00);
 		}
 		// 渠道余额
-		t.setChannelbalance(cl.getBalance());
+		t.setChannelbalance(cl.getBalance() - t.getChannelpay());
 		// 小计
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 		return mapper.post(t);
@@ -456,30 +433,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		}
 
-		boolean flage = true;
-		switch (cl.getName()) {
-		case DictionaryResource.DFSNAISLE:
-			String ordernum = PayUtil.SendSnSubmit(t, cl);
-			if (ordernum != null) {
-				flage = false;
-				t.setChannelordernum(ordernum);
-			}
-			break;
-		case DictionaryResource.DFSSAISLE:
-			String ssordernum = PayUtil.SendSSSubmit(t, cl);
-			if (ssordernum != null) {
-				flage = false;
-				t.setChannelordernum(ssordernum);
-			}
-			break;
-		case DictionaryResource.DFTXAISLE:
-			String txordernum = PayUtil.SendTxSubmit(t, cl);
-			if (txordernum != null) {
-				flage = false;
-				t.setChannelordernum(txordernum);
-			}
-			break;
-		}
+		boolean flage = getChannelOrderNo(t, cl);
+
 		if (flage) {
 			channelbot.notifyChannel(cl);
 			throw new YtException("渠道错误!");
@@ -535,7 +490,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setAgentincome(0.00);
 		}
 		// 渠道余额
-		t.setChannelbalance(cl.getBalance());
+		t.setChannelbalance(cl.getBalance() - t.getChannelpay());
 		// 小计
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 		//
@@ -730,6 +685,33 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
+	public void ysdfcallback(Map<String, String> params) {
+		String orderid = params.get("mchOrderNo").toString();
+		String status = params.get("status").toString();
+		log.info("易生通知返回消息：orderid" + orderid + " status:" + status);
+		Payout pt = mapper.getByOrdernum(orderid);
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			Channel channel = channelmapper.get(pt.getChannelid());
+			String ip = AuthContext.getIp();
+			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求!");
+			}
+			// 查询渠道是否真实成功
+			Integer returnstate = PayUtil.SendYSSelectOrder(pt.getOrdernum(), channel);
+			Assert.notNull(returnstate, "易生代付通知反查订单失败!");
+			if (returnstate == 2) {
+				paySuccess(pt);
+			} else if (returnstate == 3) {
+				payFail(pt);
+			}
+			SysUserContext.remove();
+			TenantIdContext.remove();
+		}
+	}
+
+	@Override
 	public YtBody txcallbackpay(SysTyOrder so) {
 		Payout pt = mapper.getByOrdernum(so.getMerchant_order_id());
 		if (pt != null) {
@@ -848,31 +830,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setAislename(al.getName());
 
 		RedisUtil.setEx(SystemConstant.CACHE_SYS_PAYOUT_EXIST + t.getOrdernum(), t.getOrdernum(), 60, TimeUnit.SECONDS);
-		// 获取渠道单号
-		boolean flage = true;
-		switch (cl.getName()) {
-		case DictionaryResource.DFSNAISLE:
-			String ordernum = PayUtil.SendSnSubmit(t, cl);
-			if (ordernum != null) {
-				flage = false;
-				t.setChannelordernum(ordernum);
-			}
-			break;
-		case DictionaryResource.DFSSAISLE:
-			String ssordernum = PayUtil.SendSSSubmit(t, cl);
-			if (ssordernum != null) {
-				flage = false;
-				t.setChannelordernum(ssordernum);
-			}
-			break;
-		case DictionaryResource.DFTXAISLE:
-			String txordernum = PayUtil.SendTxSubmit(t, cl);
-			if (txordernum != null) {
-				flage = false;
-				t.setChannelordernum(txordernum);
-			}
-			break;
-		}
+
+		boolean flage = getChannelOrderNo(t, cl);
 		if (flage) {
 			channelbot.notifyChannel(cl);
 			throw new YtException("渠道错误!");
@@ -950,10 +909,47 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setAgentincome(0.00);
 		}
 		// 渠道余额
-		t.setChannelbalance(cl.getBalance());
+		t.setChannelbalance(cl.getBalance() - t.getChannelpay());
+		cl.setBalance(cl.getBalance() - t.getChannelpay());
 		// 小计
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 		return mapper.post(t);
+	}
+
+	boolean getChannelOrderNo(Payout t, Channel cl) {
+		// 获取渠道单号
+		boolean flage = true;
+		switch (cl.getName()) {
+		case DictionaryResource.DFYSAISLE:
+			String ysordernum = PayUtil.SendYSSubmit(t, cl);
+			if (ysordernum != null) {
+				flage = false;
+				t.setChannelordernum(ysordernum);
+			}
+			break;
+		case DictionaryResource.DFSNAISLE:
+			String ordernum = PayUtil.SendSnSubmit(t, cl);
+			if (ordernum != null) {
+				flage = false;
+				t.setChannelordernum(ordernum);
+			}
+			break;
+		case DictionaryResource.DFSSAISLE:
+			String ssordernum = PayUtil.SendSSSubmit(t, cl);
+			if (ssordernum != null) {
+				flage = false;
+				t.setChannelordernum(ssordernum);
+			}
+			break;
+		case DictionaryResource.DFTXAISLE:
+			String txordernum = PayUtil.SendTxSubmit(t, cl);
+			if (txordernum != null) {
+				flage = false;
+				t.setChannelordernum(txordernum);
+			}
+			break;
+		}
+		return flage;
 	}
 
 }

@@ -26,12 +26,11 @@ public class DictionaryResource implements Serializable {
 	public static final String AKLAISLE = "奥克兰"; // AKLAISLE
 	public static final String FHLAISLE = "飞黄运通"; // 飞黄运通
 	public static final String YSAISLE = "易生"; // 铁蛋
-	
-	
 
 	public static final String DFSNAISLE = "十年"; //
 	public static final String DFSSAISLE = "盛世"; //
-	public static final String DFTXAISLE = "天下"; // 天下代付
+	public static final String DFTXAISLE = "天下"; //
+	public static final String DFYSAISLE = "易生"; //
 	/**
 	 * 
 	 */

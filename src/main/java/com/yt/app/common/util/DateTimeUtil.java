@@ -34,6 +34,10 @@ public class DateTimeUtil {
 		return getDateTime("yyyy-MM-dd HH:mm:ss");
 	}
 
+	public static String getDateTimeN() {
+		return getDateTime("yyyyMMddHHmmss");
+	}
+
 	public static String getDateTime(String pattern) {
 		Date datetime = Calendar.getInstance().getTime();
 		return getDateTime(datetime, pattern);

@@ -41,6 +41,9 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 
 	// 盛世回调
 	void sscallback(Map<String, Object> params);
+	
+	//易生回调
+	public void ysdfcallback(Map<String, String> params);
 
 	// 十年回调
 	void sncallback(Map<String, Object> params);

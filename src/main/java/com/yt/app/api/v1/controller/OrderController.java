@@ -63,13 +63,6 @@ public class OrderController {
 		return new YtResponseEntity<Object>(new YtBody(income.getStatus()));
 	}
 
-	// 天下代付回调
-	@RequestMapping(value = "/txcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		YtBody yb = payoutservice.txcallbackpay(requestEntity.getBody());
-		return new YtResponseEntity<Object>(yb);
-	}
-
 	// 天下代付反查
 	@RequestMapping(value = "/exist", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> exist(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
@@ -341,6 +334,20 @@ public class OrderController {
 	}
 
 	/**
+	 * 天下代付回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/txcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> tycallback(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		YtBody yb = payoutservice.txcallbackpay(requestEntity.getBody());
+		return new YtResponseEntity<Object>(yb);
+	}
+
+	/**
 	 * 十年代付回调
 	 * 
 	 * @param requestEntity
@@ -379,6 +386,25 @@ public class OrderController {
 	}
 
 	/**
+	 * 易生代付回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/ysdfcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void ysdfcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			payoutservice.ysdfcallback(params);
+			response.getWriter().print("success");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+		}
+	}
+
+	/**
 	 * 飞黄运通回调
 	 * 
 	 * @param requestEntity
@@ -398,7 +424,7 @@ public class OrderController {
 	}
 
 	/**
-	 * 飞黄运通回调
+	 * 易生代收回调
 	 * 
 	 * @param requestEntity
 	 * @param request

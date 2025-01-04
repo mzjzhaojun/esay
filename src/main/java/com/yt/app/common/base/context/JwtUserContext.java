@@ -56,6 +56,8 @@ public class JwtUserContext {
 			return false;
 		}
 		List<String> loginUserReRoleCodeList = jwtUserBO.getRoleCodeList();
+		if (loginUserReRoleCodeList == null)
+			return false;
 		return loginUserReRoleCodeList.contains(SysRoleCodeEnum.超级管理员.getCode());
 	}
 
@@ -68,6 +70,8 @@ public class JwtUserContext {
 			return false;
 		}
 		List<String> loginUserReRoleCodeList = jwtUserBO.getRoleCodeList();
+		if (loginUserReRoleCodeList == null)
+			return false;
 		return loginUserReRoleCodeList.contains(SysRoleCodeEnum.系统管理员.getCode());
 	}
 
