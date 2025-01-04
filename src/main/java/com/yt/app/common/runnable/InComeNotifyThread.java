@@ -52,7 +52,7 @@ public class InComeNotifyThread implements Runnable {
 			} finally {
 				i++;
 				if (i > 3) {
-					log.info("代收通知失败XXXXXX商户单号：" + income.getOrdernum());
+					log.info("代收通知失败商户单号：" + income.getOrdernum());
 					income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_64);
 					mapper.put(income);
 					break;

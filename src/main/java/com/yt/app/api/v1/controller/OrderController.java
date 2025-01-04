@@ -379,7 +379,7 @@ public class OrderController {
 	}
 
 	/**
-	 * 十年代付回调
+	 * 飞黄运通回调
 	 * 
 	 * @param requestEntity
 	 * @param request
@@ -391,6 +391,25 @@ public class OrderController {
 		try {
 			incomeservice.fhcallback(params);
 			response.getWriter().print("ok");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+		}
+	}
+
+	/**
+	 * 飞黄运通回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/yscallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void yscallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			incomeservice.yscallback(params);
+			response.getWriter().print("success");
 		} catch (Exception e) {
 			throw new YtException(e);
 		} finally {

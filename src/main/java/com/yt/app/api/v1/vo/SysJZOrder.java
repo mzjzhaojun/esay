@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class SysFhQuery extends BaseVO {
+public class SysJZOrder extends BaseVO {
 
 	/**
 	 * 
@@ -21,5 +21,6 @@ public class SysFhQuery extends BaseVO {
 	private static final long serialVersionUID = 1L;
 	String retCode;
 	String retMsg;
-	String status;
+	String sign;
+	String payUrl;
 }

@@ -64,6 +64,7 @@ import com.yt.app.api.v1.vo.SysFcOrder;
 import com.yt.app.api.v1.vo.SysFhOrder;
 import com.yt.app.api.v1.vo.SysGzOrder;
 import com.yt.app.api.v1.vo.SysHsOrder;
+import com.yt.app.api.v1.vo.SysJZOrder;
 import com.yt.app.api.v1.vo.SysRblOrder;
 import com.yt.app.api.v1.vo.SysWdOrder;
 import com.yt.app.api.v1.vo.SysWjOrder;
@@ -364,6 +365,26 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
+	public void yscallback(Map<String, String> params) {
+		String orderid = params.get("mchOrderNo").toString();
+		String status = params.get("status").toString();
+		log.info("易生通知返回消息：payOrderId" + orderid + " status:" + status);
+		Income income = mapper.getByOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendYSQuerySubmit(orderid, channel);
+		Assert.notNull(returnstate, "易生通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
+		}
+		TenantIdContext.remove();
+	}
+
+	@Override
 	public void wjcallback(Map<String, String> params) {
 		String orderid = params.get("payOrderId").toString();
 		String status = params.get("state").toString();
@@ -617,6 +638,14 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		//
 		boolean flage = true;
 		switch (channel.getName()) {
+		case DictionaryResource.YSAISLE:
+			SysJZOrder syjz = PayUtil.SendYSSubmit(income, channel);
+			if (syjz != null) {
+				flage = false;
+				income.setResulturl(syjz.getPayUrl());
+				income.setQrcodeordernum(income.getMerchantordernum());
+			}
+			break;
 		case DictionaryResource.TDAISLE:
 			SysTdOrder syo = PayUtil.SendTDSubmit(income, channel);
 			if (syo != null) {
@@ -786,7 +815,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qrv.setPay_md5sign(PayUtil.SignMd5QueryResultQrocde(qrv, mc.getAppkey()));
 		return qrv;
 	}
-	
+
 	public AlipayTradePrecreateResponse alif2f(Qrcode qrcode, String ordernum, Double amount, Integer exp) {
 		try {
 			AlipayClient client = AliPayUtil.initAliPay(qrcode.getAppid(), qrcode.getAppprivatekey(), qrcode.getApppublickey(), qrcode.getAlipaypublickey(), qrcode.getAlipayprovatekey());
@@ -1217,11 +1246,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return mapper.put(income);
 	}
 
-	
-	
-	
-	
-	//测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试
+	// 测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试
 	@Override
 	public Integer canceladd(Map<String, String> params) {
 		int i = 1;

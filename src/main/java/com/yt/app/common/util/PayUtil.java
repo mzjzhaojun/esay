@@ -26,11 +26,12 @@ import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
 import com.yt.app.api.v1.vo.SysFcOrder;
 import com.yt.app.api.v1.vo.SysFcQuery;
 import com.yt.app.api.v1.vo.SysFhOrder;
-import com.yt.app.api.v1.vo.SysFhQuery;
+import com.yt.app.api.v1.vo.SysJZQuery;
 import com.yt.app.api.v1.vo.SysGzOrder;
 import com.yt.app.api.v1.vo.SysGzQuery;
 import com.yt.app.api.v1.vo.SysHsOrder;
 import com.yt.app.api.v1.vo.SysHsQuery;
+import com.yt.app.api.v1.vo.SysJZOrder;
 import com.yt.app.api.v1.vo.SysRblOrder;
 import com.yt.app.api.v1.vo.SysRblQuery;
 import com.yt.app.api.v1.vo.SysSnOrder;
@@ -400,7 +401,6 @@ public class PayUtil {
 			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 			// 签名
 			String signParams = SignMd5QueryResultQrocde(ss, key);
-			log.info("商户代收盘口通知签名" + signParams);
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("pay_memberid", ss.getPay_memberid());
 			map.add("pay_orderid", ss.getPay_orderid());
@@ -437,14 +437,12 @@ public class PayUtil {
 	// 代收下单返回签名
 	public static String SignMd5ResultQrocde(QrcodeResultVO qr, String key) {
 		String stringSignTemp = "pay_memberid=" + qr.getPay_memberid() + "&pay_amount=" + qr.getPay_amount() + "&pay_aislecode=" + qr.getPay_aislecode() + "&pay_orderid=" + qr.getPay_orderid() + "&pay_viewurl=" + qr.getPay_viewurl() + "&key=" + key;
-		log.info("商户代收下单返回签名:" + stringSignTemp);
 		return MD5Utils.md5(stringSignTemp).toUpperCase();
 	}
 
 	// 代收通知返回签名
 	public static String SignMd5QueryResultQrocde(QueryQrcodeResultVO qr, String key) {
 		String stringSignTemp = "pay_memberid=" + qr.getPay_memberid() + "&pay_amount=" + qr.getPay_amount() + "&pay_code=" + qr.getPay_code() + "&pay_orderid=" + qr.getPay_orderid() + "&key=" + key;
-		log.info("商户代收通知返回签名:" + stringSignTemp);
 		return MD5Utils.md5(stringSignTemp).toUpperCase();
 	}
 
@@ -619,7 +617,6 @@ public class PayUtil {
 
 			String sign = MD5Utils.md5(signContent);
 			map.add("pay_md5sign", sign.toUpperCase());
-			log.info("铁蛋下单签名：" + sign + "===" + signContent);
 
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -649,7 +646,6 @@ public class PayUtil {
 			String signContent = "pay_memberid=" + cl.getCode() + "&pay_orderid=" + orderid + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
 			map.add("pay_md5sign", sign.toUpperCase());
-			log.info("铁蛋查单签名：" + sign.toUpperCase());
 
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -689,7 +685,6 @@ public class PayUtil {
 
 			String sign = MD5Utils.md5(signContent);
 			map.add("pay_md5sign", sign.toUpperCase());
-			log.info("二狗下单签名：" + sign + "===" + signContent);
 
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -719,7 +714,6 @@ public class PayUtil {
 			String signContent = "pay_memberid=" + cl.getCode() + "&pay_orderid=" + orderid + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
 			map.add("pay_md5sign", sign.toUpperCase());
-			log.info("二狗查单签名：" + sign.toUpperCase());
 
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -758,7 +752,6 @@ public class PayUtil {
 
 			String sign = MD5Utils.md5(signContent);
 			map.add("sign", sign.toUpperCase());
-			log.info("豌豆下单签名：" + sign.toUpperCase() + "===" + signContent);
 
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -791,7 +784,6 @@ public class PayUtil {
 			String signContent = "amount=" + String.format("%.2f", amount).replace(".", "") + "&mchNo=" + cl.getCode() + "&payOrderId=" + orderid + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
 			map.add("sign", sign.toUpperCase());
-			log.info("豌豆查单签名：" + sign.toUpperCase() + "===" + signContent);
 
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -822,7 +814,6 @@ public class PayUtil {
 			String signContent = "mchNo=" + cl.getCode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
 			map.add("sign", sign.toUpperCase());
-			log.info("豌豆余额签名：" + sign);
 
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -862,7 +853,6 @@ public class PayUtil {
 
 			String sign = MD5Utils.md5(signContent);
 			map.put("sign", sign);
-			log.info("日不落下单签名：" + sign + "===" + signContent);
 
 			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -894,7 +884,6 @@ public class PayUtil {
 			String signContent = "mchId=" + cl.getCode() + "&outTradeNo=" + orderid + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
 			map.put("sign", sign);
-			log.info("日不落查单签名：" + sign + "===" + signContent);
 
 			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -925,7 +914,6 @@ public class PayUtil {
 			String signContent = "mchId=" + cl.getCode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
 			map.put("sign", sign);
-			log.info("日不落查单签名：" + sign + "===" + signContent);
 
 			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -964,7 +952,6 @@ public class PayUtil {
 			signContent = signContent + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
 			map.put("sign", sign);
-			log.info("公子下单签名：" + sign + "===" + signContent);
 
 			HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -999,7 +986,6 @@ public class PayUtil {
 			signContent = signContent + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
 			map.put("sign", sign);
-			log.info("公子查单签名：" + sign + "===" + signContent);
 
 			HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -1034,7 +1020,6 @@ public class PayUtil {
 			signContent = signContent + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
 			map.put("sign", sign);
-			log.info("公子查单签名：" + sign + "===" + signContent);
 
 			HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -1072,7 +1057,6 @@ public class PayUtil {
 
 			String sign = MD5Utils.md5(signContent);
 			map.add("sign", sign.toUpperCase());
-			log.info("玩家下单签名：" + sign.toUpperCase() + "===" + signContent);
 
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -1105,7 +1089,6 @@ public class PayUtil {
 			String signContent = "amount=" + String.format("%.2f", amount).replace(".", "") + "&mchNo=" + cl.getCode() + "&payOrderId=" + orderid + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
 			map.add("sign", sign.toUpperCase());
-			log.info("玩家查单签名：" + sign.toUpperCase() + "===" + signContent);
 
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -1136,7 +1119,6 @@ public class PayUtil {
 			String signContent = "mchNo=" + cl.getCode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
 			map.add("sign", sign.toUpperCase());
-			log.info("玩家余额签名：" + sign);
 
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -1176,7 +1158,6 @@ public class PayUtil {
 
 			String sign = MD5Utils.md5(signContent);
 			map.put("sign", sign);
-			log.info("翡翠下单签名：" + sign + "===" + signContent);
 
 			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -1208,7 +1189,6 @@ public class PayUtil {
 			String signContent = "mchId=" + cl.getCode() + "&outTradeNo=" + orderid + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
 			map.put("sign", sign);
-			log.info("翡翠查单签名：" + sign + "===" + signContent);
 
 			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -1239,7 +1219,6 @@ public class PayUtil {
 			String signContent = "mchId=" + cl.getCode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
 			map.put("sign", sign);
-			log.info("翡翠查单签名：" + sign + "===" + signContent);
 
 			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -1279,7 +1258,6 @@ public class PayUtil {
 
 			String sign = MD5Utils.md5(signContent);
 			map.put("sign", sign);
-			log.info("奥克兰下单签名：" + sign + "===" + signContent);
 
 			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -1311,7 +1289,6 @@ public class PayUtil {
 			String signContent = "mchId=" + cl.getCode() + "&outTradeNo=" + orderid + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
 			map.put("sign", sign);
-			log.info("奥克兰查单签名：" + sign + "===" + signContent);
 
 			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -1342,7 +1319,6 @@ public class PayUtil {
 			String signContent = "mchId=" + cl.getCode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
 			map.put("sign", sign);
-			log.info("奥克兰查单签名：" + sign + "===" + signContent);
 
 			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -1388,7 +1364,6 @@ public class PayUtil {
 			String sign = MD5Utils.md5(signContent);
 
 			map.add("sign", sign.toUpperCase());
-			log.info("飞黄运通下单签名：" + sign + "===" + signContent);
 
 			HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
@@ -1426,19 +1401,99 @@ public class PayUtil {
 			String sign = MD5Utils.md5(signContent);
 
 			map.add("sign", sign.toUpperCase());
-			log.info("飞黄运通查单签名：" + sign + "===" + signContent);
 
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
 			//
-			ResponseEntity<SysFhQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/query_order", HttpMethod.POST, httpEntity, SysFhQuery.class);
-			SysFhQuery data = sov.getBody();
+			ResponseEntity<SysJZQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/query_order", HttpMethod.POST, httpEntity, SysJZQuery.class);
+			SysJZQuery data = sov.getBody();
 			log.info("飞黄运通查单返回消息：" + data);
 			if (data.getRetCode().equals("SUCCESS") && data.getStatus().equals("2")) {
 				return data.getStatus();
 			}
 		} catch (RestClientException e) {
 			log.info("飞黄运通查单返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// 九州代收对接
+	public static SysJZOrder SendYSSubmit(Income pt, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			Long time = DateTimeUtil.getNow().getTime();
+			map.add("mchId", cl.getCode());
+			map.add("appId", cl.getPrivatersa());
+			map.add("productId", pt.getQrcodecode());
+			map.add("mchOrderNo", pt.getOrdernum());
+			map.add("currency", "cny");
+			map.add("subject", time.toString());
+			map.add("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
+			map.add("notifyUrl", cl.getApireusultip());
+			map.add("body", time.toString());
+
+			TreeMap<String, Object> sortedMap = new TreeMap<>(map);
+			String signContent = "";
+			for (String key : sortedMap.keySet()) {
+				signContent = signContent + key + "=" + map.getFirst(key) + "&";
+			}
+			signContent = signContent.substring(0, signContent.length() - 1);
+			signContent = signContent + "&key=" + cl.getApikey();
+			String sign = MD5Utils.md5(signContent);
+
+			map.add("sign", sign.toUpperCase());
+
+			HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<SysJZOrder> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/create_order", HttpMethod.POST, httpEntity, SysJZOrder.class);
+			SysJZOrder data = sov.getBody();
+			log.info("九州返回消息：" + data);
+			if (data.getRetCode().equals("SUCCESS")) {
+				return data;
+			}
+		} catch (RestClientException e) {
+			log.info("九州返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// 九州代收查单
+	public static String SendYSQuerySubmit(String orderid, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+			map.add("mchId", cl.getCode());
+			map.add("appId", cl.getPrivatersa());
+			map.add("mchOrderNo", orderid);
+
+			TreeMap<String, Object> sortedMap = new TreeMap<>(map);
+			String signContent = "";
+			for (String key : sortedMap.keySet()) {
+				signContent = signContent + key + "=" + map.getFirst(key) + "&";
+			}
+			signContent = signContent.substring(0, signContent.length() - 1);
+			signContent = signContent + "&key=" + cl.getApikey();
+			String sign = MD5Utils.md5(signContent);
+
+			map.add("sign", sign.toUpperCase());
+
+			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<SysJZQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/query_order", HttpMethod.POST, httpEntity, SysJZQuery.class);
+			SysJZQuery data = sov.getBody();
+			log.info("九州查单返回消息：" + data);
+			if (data.getRetCode().equals("SUCCESS") && data.getStatus().equals("2")) {
+				return data.getStatus();
+			}
+		} catch (RestClientException e) {
+			log.info("九州查单返回消息：" + e.getMessage());
 		}
 		return null;
 	}

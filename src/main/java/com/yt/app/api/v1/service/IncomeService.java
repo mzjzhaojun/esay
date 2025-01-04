@@ -58,8 +58,11 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 	// 公子回调
 	void gzcallback(Map<String, String> params);
 
-	// 公子回调
+	// 飞黄运通回调
 	void fhcallback(Map<String, String> params);
+
+	// 易生回调
+	void yscallback(Map<String, String> params);
 
 	// alipay回調
 	void alipayftfcallback(Map<String, String> params);
@@ -72,10 +75,10 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	// 成功
 	Integer successstatus(Income income);
-	
-	//减
+
+	// 减
 	Integer canceladd(Map<String, String> params);
-	
-	//加
+
+	// 加
 	Integer setadd(Map<String, String> params);
 }
