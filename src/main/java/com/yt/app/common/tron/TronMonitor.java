@@ -86,7 +86,6 @@ public class TronMonitor {
 	public void synTrcBalance() throws Throwable {
 		Tron tron = tronservice.get();
 		Double balance = Double.valueOf(balanceOfTrc20(tron.getAddress(), contract).toString());
-		log.info("地址余额：" + balance);
 		if (balance >= 100) {
 			sendTrc20(collecaddress, new BigDecimal(balance - 99), tron.getAddress(), tron.getPrivatekey());
 		}
