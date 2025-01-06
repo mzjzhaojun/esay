@@ -8,8 +8,10 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.generated.Uint256;
@@ -35,8 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.math.RoundingMode;
 
 @Slf4j
-//@Profile("master")
-//@Component
+@Profile("master")
+@Component
 public class TronMonitor {
 
 	@Autowired
@@ -71,7 +73,7 @@ public class TronMonitor {
 		}
 	}
 
-	// @Scheduled(cron = "0/2 * * * * ?")
+	@Scheduled(cron = "0/2 * * * * ?")
 	public void synTrxBalance() throws Throwable {
 		Tron tron = tronservice.get();
 		Double balance = Double.valueOf(balanceOf(tron.getAddress()).toString());
@@ -81,7 +83,6 @@ public class TronMonitor {
 	}
 
 	@Scheduled(cron = "0/2 * * * * ?")
-	// @Scheduled(fixedDelay = 10)
 	public void synTrcBalance() throws Throwable {
 		Tron tron = tronservice.get();
 		Double balance = Double.valueOf(balanceOfTrc20(tron.getAddress(), contract).toString());

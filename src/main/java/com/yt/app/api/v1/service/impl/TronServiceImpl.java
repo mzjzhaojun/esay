@@ -41,7 +41,7 @@ public class TronServiceImpl extends YtBaseServiceImpl<Tron, Long> implements Tr
 	@Autowired
 	private TronMapper mapper;
 
-	final static String URL = "http://192.168.18.3:8090";
+	final static String URL = "http://192.168.18.4:8090";
 
 	@Override
 	@Transactional

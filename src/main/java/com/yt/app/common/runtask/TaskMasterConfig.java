@@ -24,7 +24,7 @@ import com.yt.app.common.runnable.SynChannelBalanceThread;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Profile("slave")
+@Profile("master")
 @Component
 public class TaskMasterConfig {
 
