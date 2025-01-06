@@ -20,6 +20,7 @@ import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.MerchantBot;
 import com.yt.app.common.bot.message.UpdateMerchantMessageService;
+import com.yt.app.common.resource.DictionaryResource;
 
 import cn.hutool.http.HttpRequest;
 
@@ -48,7 +49,7 @@ public class MerchantOrderMessage implements UpdateMerchantMessageService {
 		if (ordernum.matches(".*\\d+.*")) {
 			TenantIdContext.removeFlag();
 			Income income = incomemapper.getByMerchantOrderNum(ordernum);
-			if (income != null) {
+			if (income != null && income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 				Tgchannelgroup tgchannelgroup = tgchannelgroupmapper.getByChannelId(income.getQrcodeid());
 				if (tgchannelgroup != null) {
 					sendmessage.setChatId(tgchannelgroup.getTgid());
@@ -81,7 +82,7 @@ public class MerchantOrderMessage implements UpdateMerchantMessageService {
 		SendMessage sendmessage = new SendMessage();
 		String ordernum = update.getMessage().getText();
 		sendmessage.setChatId(update.getMessage().getChatId());
-		sendmessage.setText("订单: " + ordernum + " \r\n没找到，请你重新处理!");
+		sendmessage.setText("订单: " + ordernum + " \r\n没找到,或者已经正常处理，请你重新查看!");
 		return sendmessage;
 	}
 
