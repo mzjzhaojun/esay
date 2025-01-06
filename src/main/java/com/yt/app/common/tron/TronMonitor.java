@@ -73,7 +73,7 @@ public class TronMonitor {
 		}
 	}
 
-	@Scheduled(cron = "0/2 * * * * ?")
+	@Scheduled(cron = "0/10 * * * * ?")
 	public void synTrxBalance() throws Throwable {
 		Tron tron = tronservice.get();
 		Double balance = Double.valueOf(balanceOf(tron.getAddress()).toString());
@@ -82,7 +82,7 @@ public class TronMonitor {
 		}
 	}
 
-	@Scheduled(cron = "0/2 * * * * ?")
+	@Scheduled(cron = "0/10 * * * * ?")
 	public void synTrcBalance() throws Throwable {
 		Tron tron = tronservice.get();
 		Double balance = Double.valueOf(balanceOfTrc20(tron.getAddress(), contract).toString());
