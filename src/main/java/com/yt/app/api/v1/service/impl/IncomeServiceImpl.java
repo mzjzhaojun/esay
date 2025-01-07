@@ -642,8 +642,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			SysJZOrder syjz = PayUtil.SendYSSubmit(income, channel);
 			if (syjz != null) {
 				flage = false;
-				income.setResulturl(syjz.getPayUrl());
-				income.setQrcodeordernum(income.getMerchantordernum());
+				income.setResulturl(syjz.getPayParams().getPayUrl());
+				income.setQrcodeordernum(syjz.getPayOrderId());
 			}
 			break;
 		case DictionaryResource.TDAISLE:

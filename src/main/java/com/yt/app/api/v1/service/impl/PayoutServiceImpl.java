@@ -630,86 +630,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		return srv;
 	}
 
-	@Override
-	public void sncallback(Map<String, Object> params) {
-		String orderid = params.get("OrderNo").toString();
-		String status = params.get("Status").toString();
-		log.info("十年通知返回消息：orderid" + orderid + " status:" + status);
-		Payout pt = mapper.getByOrdernum(orderid);
-		if (pt != null) {
-			SysUserContext.setUserId(pt.getUserid());
-			TenantIdContext.setTenantId(pt.getTenant_id());
-			Channel channel = channelmapper.get(pt.getChannelid());
-			String ip = AuthContext.getIp();
-			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-				throw new YtException("非法请求!");
-			}
-			// 查询渠道是否真实成功
-			Integer returnstate = PayUtil.SendSnSelectOrder(pt.getOrdernum(), channel);
-			Assert.notNull(returnstate, "十年代付通知反查订单失败!");
-			if (returnstate == 4) {
-				paySuccess(pt);
-			} else if (returnstate == 16) {
-				payFail(pt);
-			}
-			SysUserContext.remove();
-			TenantIdContext.remove();
-		}
-	}
-
-	@Override
-	public void sscallback(Map<String, Object> params) {
-		String orderid = params.get("OrderNo").toString();
-		String status = params.get("Status").toString();
-		log.info("盛世通知返回消息：orderid" + orderid + " status:" + status);
-		Payout pt = mapper.getByOrdernum(orderid);
-		if (pt != null) {
-			SysUserContext.setUserId(pt.getUserid());
-			TenantIdContext.setTenantId(pt.getTenant_id());
-			Channel channel = channelmapper.get(pt.getChannelid());
-			String ip = AuthContext.getIp();
-			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-				throw new YtException("非法请求!");
-			}
-			// 查询渠道是否真实成功
-			Integer returnstate = PayUtil.SendSSSelectOrder(pt.getOrdernum(), channel);
-			Assert.notNull(returnstate, "盛世代付通知反查订单失败!");
-			if (returnstate == 4) {
-				paySuccess(pt);
-			} else if (returnstate == 16) {
-				payFail(pt);
-			}
-			SysUserContext.remove();
-			TenantIdContext.remove();
-		}
-	}
-
-	@Override
-	public void ysdfcallback(Map<String, String> params) {
-		String orderid = params.get("mchOrderNo").toString();
-		String status = params.get("status").toString();
-		log.info("易生通知返回消息：orderid" + orderid + " status:" + status);
-		Payout pt = mapper.getByOrdernum(orderid);
-		if (pt != null) {
-			SysUserContext.setUserId(pt.getUserid());
-			TenantIdContext.setTenantId(pt.getTenant_id());
-			Channel channel = channelmapper.get(pt.getChannelid());
-			String ip = AuthContext.getIp();
-			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-				throw new YtException("非法请求!");
-			}
-			// 查询渠道是否真实成功
-			Integer returnstate = PayUtil.SendYSSelectOrder(pt.getOrdernum(), channel);
-			Assert.notNull(returnstate, "易生代付通知反查订单失败!");
-			if (returnstate == 2) {
-				paySuccess(pt);
-			} else if (returnstate == 3) {
-				payFail(pt);
-			}
-			SysUserContext.remove();
-			TenantIdContext.remove();
-		}
-	}
+	
 
 	@Override
 	public YtBody txcallbackpay(SysTyOrder so) {
@@ -952,4 +873,86 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		return flage;
 	}
 
+	
+	
+	@Override
+	public void sncallback(Map<String, Object> params) {
+		String orderid = params.get("OrderNo").toString();
+		String status = params.get("Status").toString();
+		log.info("十年通知返回消息：orderid" + orderid + " status:" + status);
+		Payout pt = mapper.getByOrdernum(orderid);
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			Channel channel = channelmapper.get(pt.getChannelid());
+			String ip = AuthContext.getIp();
+			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求!");
+			}
+			// 查询渠道是否真实成功
+			Integer returnstate = PayUtil.SendSnSelectOrder(pt.getOrdernum(), channel);
+			Assert.notNull(returnstate, "十年代付通知反查订单失败!");
+			if (returnstate == 4) {
+				paySuccess(pt);
+			} else if (returnstate == 16) {
+				payFail(pt);
+			}
+			SysUserContext.remove();
+			TenantIdContext.remove();
+		}
+	}
+
+	@Override
+	public void sscallback(Map<String, Object> params) {
+		String orderid = params.get("OrderNo").toString();
+		String status = params.get("Status").toString();
+		log.info("盛世通知返回消息：orderid" + orderid + " status:" + status);
+		Payout pt = mapper.getByOrdernum(orderid);
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			Channel channel = channelmapper.get(pt.getChannelid());
+			String ip = AuthContext.getIp();
+			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求!");
+			}
+			// 查询渠道是否真实成功
+			Integer returnstate = PayUtil.SendSSSelectOrder(pt.getOrdernum(), channel);
+			Assert.notNull(returnstate, "盛世代付通知反查订单失败!");
+			if (returnstate == 4) {
+				paySuccess(pt);
+			} else if (returnstate == 16) {
+				payFail(pt);
+			}
+			SysUserContext.remove();
+			TenantIdContext.remove();
+		}
+	}
+
+	@Override
+	public void ysdfcallback(Map<String, String> params) {
+		String orderid = params.get("mchOrderNo").toString();
+		String status = params.get("status").toString();
+		log.info("易生通知返回消息：orderid" + orderid + " status:" + status);
+		Payout pt = mapper.getByOrdernum(orderid);
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			Channel channel = channelmapper.get(pt.getChannelid());
+			String ip = AuthContext.getIp();
+			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求!");
+			}
+			// 查询渠道是否真实成功
+			Integer returnstate = PayUtil.SendYSSelectOrder(pt.getOrdernum(), channel);
+			Assert.notNull(returnstate, "易生代付通知反查订单失败!");
+			if (returnstate == 2) {
+				paySuccess(pt);
+			} else if (returnstate == 3) {
+				payFail(pt);
+			}
+			SysUserContext.remove();
+			TenantIdContext.remove();
+		}
+	}
 }

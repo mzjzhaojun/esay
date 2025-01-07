@@ -22,5 +22,13 @@ public class SysJZOrder extends BaseVO {
 	String retCode;
 	String retMsg;
 	String sign;
-	String payUrl;
+	String payOrderId;
+	data payParams;
+	
+	
+	@Data
+	public class data {
+		String payMethod;
+		String payUrl;
+	}
 }
