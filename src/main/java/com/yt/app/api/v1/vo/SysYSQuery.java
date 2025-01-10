@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class SysJZQuery extends BaseVO {
+public class SysYSQuery extends BaseVO {
 
 	/**
 	 * 

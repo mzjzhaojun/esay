@@ -13,22 +13,19 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class SysJZOrder extends BaseVO {
+public class SysXSOrder extends BaseVO {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	String retCode;
-	String retMsg;
-	String sign;
-	String payOrderId;
-	data payParams;
-	
-	
+	String code;
+	data result;
+
 	@Data
 	public class data {
-		String payMethod;
-		String payUrl;
+		String orderCode;
+		String status;
+		String qrCode;
 	}
 }

@@ -27,12 +27,12 @@ import com.yt.app.api.v1.vo.SyYsOrder;
 import com.yt.app.api.v1.vo.SysFcOrder;
 import com.yt.app.api.v1.vo.SysFcQuery;
 import com.yt.app.api.v1.vo.SysFhOrder;
-import com.yt.app.api.v1.vo.SysJZQuery;
+import com.yt.app.api.v1.vo.SysYSQuery;
 import com.yt.app.api.v1.vo.SysGzOrder;
 import com.yt.app.api.v1.vo.SysGzQuery;
 import com.yt.app.api.v1.vo.SysHsOrder;
 import com.yt.app.api.v1.vo.SysHsQuery;
-import com.yt.app.api.v1.vo.SysJZOrder;
+import com.yt.app.api.v1.vo.SysYSOrder;
 import com.yt.app.api.v1.vo.SysRblOrder;
 import com.yt.app.api.v1.vo.SysRblQuery;
 import com.yt.app.api.v1.vo.SysSnOrder;
@@ -42,6 +42,7 @@ import com.yt.app.api.v1.vo.SysWdOrder;
 import com.yt.app.api.v1.vo.SysWdQuery;
 import com.yt.app.api.v1.vo.SysWjOrder;
 import com.yt.app.api.v1.vo.SysWjQuery;
+import com.yt.app.api.v1.vo.SysXSOrder;
 import com.yt.app.api.v1.vo.SysTdQuery;
 import com.yt.app.api.v1.vo.SysTdOrder;
 
@@ -1474,8 +1475,8 @@ public class PayUtil {
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
 			//
-			ResponseEntity<SysJZQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/query_order", HttpMethod.POST, httpEntity, SysJZQuery.class);
-			SysJZQuery data = sov.getBody();
+			ResponseEntity<SysYSQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/query_order", HttpMethod.POST, httpEntity, SysYSQuery.class);
+			SysYSQuery data = sov.getBody();
 			log.info("飞黄运通查单返回消息：" + data);
 			if (data.getRetCode().equals("SUCCESS") && data.getStatus().equals("2")) {
 				return data.getStatus();
@@ -1487,7 +1488,7 @@ public class PayUtil {
 	}
 
 	// 易生代收对接
-	public static SysJZOrder SendYSSubmit(Income pt, Channel cl) {
+	public static SysYSOrder SendYSSubmit(Income pt, Channel cl) {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -1518,8 +1519,8 @@ public class PayUtil {
 			HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
 			//
-			ResponseEntity<SysJZOrder> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/create_order", HttpMethod.POST, httpEntity, SysJZOrder.class);
-			SysJZOrder data = sov.getBody();
+			ResponseEntity<SysYSOrder> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/create_order", HttpMethod.POST, httpEntity, SysYSOrder.class);
+			SysYSOrder data = sov.getBody();
 			log.info("易生返回消息：" + data);
 			if (data.getRetCode().equals("SUCCESS")) {
 				return data;
@@ -1555,14 +1556,85 @@ public class PayUtil {
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
 			//
-			ResponseEntity<SysJZQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/query_order", HttpMethod.POST, httpEntity, SysJZQuery.class);
-			SysJZQuery data = sov.getBody();
+			ResponseEntity<SysYSQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/query_order", HttpMethod.POST, httpEntity, SysYSQuery.class);
+			SysYSQuery data = sov.getBody();
 			log.info("易生查单返回消息：" + data);
 			if (data.getRetCode().equals("SUCCESS") && data.getStatus().equals("2")) {
 				return data.getStatus();
 			}
 		} catch (RestClientException e) {
 			log.info("易生查单返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// 新生代收对接
+	public static SysXSOrder SendXSSubmit(Income pt, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			Long time = DateTimeUtil.getNow().getTime();
+			map.add("customerCode", cl.getCode());
+			map.add("orderCode", pt.getOrdernum());
+			map.add("ip", "127.0.0.1");
+			map.add("goodsName", time.toString());
+			map.add("orderMoney", String.format("%.2f", pt.getAmount()));
+			map.add("uid", pt.getMerchantid());
+			map.add("version", "3.0");
+
+			String signContent = "version=3.0&customerCode=" + cl.getCode() + "&orderCode=" + pt.getOrdernum() + "&ip=127.0.0.1&uid=" + pt.getMerchantid() + "&goodsName=" + time + "&orderMoney=" + pt.getAmount() + "&secret_key=" + cl.getApikey()
+					+ "";
+
+			String sign = MD5Utils.md5(signContent.toLowerCase());
+			log.info("新生签名：" + signContent + "==" + sign);
+			map.add("sign", sign);
+
+			HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<SysXSOrder> sov = resttemplate.exchange(cl.getApiip() + "/payrf/api/createOrder", HttpMethod.POST, httpEntity, SysXSOrder.class);
+			SysXSOrder data = sov.getBody();
+			log.info("新生返回消息：" + data);
+			if (data.getCode().equals("200")) {
+				return data;
+			}
+		} catch (RestClientException e) {
+			log.info("新生返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// 新生代收查单
+	public static String SendXSQuerySubmit(String orderid, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+			map.add("customerCode", cl.getCode());
+			map.add("version", "3.0");
+			map.add("orderCode", orderid);
+
+			String signContent = "version=3.0&customerCode=" + cl.getCode() + "&orderCode=" + orderid + "&secret_key=" + cl.getApikey() + "";
+
+			String sign = MD5Utils.md5(signContent.toLowerCase());
+
+			map.add("sign", sign);
+			log.info("新生签名：" + signContent + "==" + sign);
+			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<SysXSOrder> sov = resttemplate.exchange(cl.getApiip() + "/payrf/api/queryOrder", HttpMethod.POST, httpEntity, SysXSOrder.class);
+			SysXSOrder data = sov.getBody();
+			log.info("新生查单返回消息：" + data);
+			if (data.getCode().equals("200")) {
+				if (data.getResult().getStatus().equals("2") || data.getResult().getStatus().equals("0"))
+					return data.getResult().getStatus();
+			}
+		} catch (RestClientException e) {
+			log.info("新生查单返回消息：" + e.getMessage());
 		}
 		return null;
 	}

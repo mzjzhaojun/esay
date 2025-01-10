@@ -64,10 +64,11 @@ import com.yt.app.api.v1.vo.SysFcOrder;
 import com.yt.app.api.v1.vo.SysFhOrder;
 import com.yt.app.api.v1.vo.SysGzOrder;
 import com.yt.app.api.v1.vo.SysHsOrder;
-import com.yt.app.api.v1.vo.SysJZOrder;
+import com.yt.app.api.v1.vo.SysYSOrder;
 import com.yt.app.api.v1.vo.SysRblOrder;
 import com.yt.app.api.v1.vo.SysWdOrder;
 import com.yt.app.api.v1.vo.SysWjOrder;
+import com.yt.app.api.v1.vo.SysXSOrder;
 import com.yt.app.api.v1.vo.SysTdOrder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -404,6 +405,26 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		TenantIdContext.remove();
 	}
 
+	@Override
+	public void xscallback(Map<String, String> params) {
+		String orderid = params.get("orderCode").toString();
+		String status = params.get("status").toString();
+		log.info("新生通知返回消息：orderid" + orderid + " status:" + status);
+		Income income = mapper.getByQrcodeOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendXSQuerySubmit(orderid, channel);
+		Assert.notNull(returnstate, "新生通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
+		}
+		TenantIdContext.remove();
+	}
+
 	/**
 	 * 自营渠道下单
 	 */
@@ -638,8 +659,16 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		//
 		boolean flage = true;
 		switch (channel.getName()) {
+		case DictionaryResource.XSAISLE:
+			SysXSOrder xsjz = PayUtil.SendXSSubmit(income, channel);
+			if (xsjz != null) {
+				flage = false;
+				income.setResulturl(xsjz.getResult().getQrCode());
+				income.setQrcodeordernum(xsjz.getResult().getOrderCode());
+			}
+			break;
 		case DictionaryResource.YSAISLE:
-			SysJZOrder syjz = PayUtil.SendYSSubmit(income, channel);
+			SysYSOrder syjz = PayUtil.SendYSSubmit(income, channel);
 			if (syjz != null) {
 				flage = false;
 				income.setResulturl(syjz.getPayParams().getPayUrl());

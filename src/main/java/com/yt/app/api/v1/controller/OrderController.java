@@ -405,6 +405,25 @@ public class OrderController {
 	}
 
 	/**
+	 * 易生代付回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/xscallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void xscallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			incomeservice.xscallback(params);
+			response.getWriter().print("success");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+		}
+	}
+
+	/**
 	 * 飞黄运通回调
 	 * 
 	 * @param requestEntity
