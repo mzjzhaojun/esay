@@ -66,6 +66,9 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 	
 	//新生回调
 	void xscallback(Map<String, String> params);
+	
+	//张三
+	void zscallback(Map<String, Object> params);
 
 	// alipay回調
 	void alipayftfcallback(Map<String, String> params);

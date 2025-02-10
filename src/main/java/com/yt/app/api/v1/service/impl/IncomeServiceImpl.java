@@ -65,6 +65,7 @@ import com.yt.app.api.v1.vo.SysFhOrder;
 import com.yt.app.api.v1.vo.SysGzOrder;
 import com.yt.app.api.v1.vo.SysHsOrder;
 import com.yt.app.api.v1.vo.SysYSOrder;
+import com.yt.app.api.v1.vo.SysZsOrder;
 import com.yt.app.api.v1.vo.SysRblOrder;
 import com.yt.app.api.v1.vo.SysWdOrder;
 import com.yt.app.api.v1.vo.SysWjOrder;
@@ -424,6 +425,26 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		TenantIdContext.remove();
 	}
+	
+	
+	@Override
+	public void zscallback(Map<String, Object> params) {
+		String orderid = params.get("order_no").toString();
+		log.info(" 张三通知返回消息：orderid" + orderid);
+		Income income = mapper.getByQrcodeOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		String returnstate = PayUtil.SendZSQuerySubmit(orderid, channel);
+		Assert.notNull(returnstate, "张三通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
+		}
+		TenantIdContext.remove();
+	}
 
 	/**
 	 * 自营渠道下单
@@ -659,6 +680,14 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		//
 		boolean flage = true;
 		switch (channel.getName()) {
+		case DictionaryResource.ZSAISLE:
+			SysZsOrder zsjz = PayUtil.SendZSSubmit(income, channel);
+			if (zsjz != null) {
+				flage = false;
+				income.setResulturl(zsjz.getData().getQr_code());
+				income.setQrcodeordernum(zsjz.getData().getOrder_no());
+			}
+			break;
 		case DictionaryResource.XSAISLE:
 			SysXSOrder xsjz = PayUtil.SendXSSubmit(income, channel);
 			if (xsjz != null) {

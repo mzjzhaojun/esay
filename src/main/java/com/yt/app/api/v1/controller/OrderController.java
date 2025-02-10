@@ -460,6 +460,26 @@ public class OrderController {
 		} finally {
 		}
 	}
+	
+	
+	/**
+	 * 易生代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/zscallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void zscallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			incomeservice.zscallback(RequestUtil.requestEntityToParamMap(requestEntity));
+			response.getWriter().print("success");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+		}
+	}
 
 	/**
 	 * 支付宝当面付回调

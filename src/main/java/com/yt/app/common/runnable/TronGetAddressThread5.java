@@ -24,14 +24,14 @@ public class TronGetAddressThread5 implements Runnable {
 				if (listaddress != null) {
 					String address = listaddress.get(2);
 					char endchar = address.charAt(address.length() - 1);
-					String sixchar = "" + endchar + endchar + endchar + endchar + endchar;
+					String sixchar = "" + endchar + endchar + endchar + endchar + endchar+ endchar;
 					if (address.endsWith(sixchar)) {
 						Tronaddress t = new Tronaddress();
 						t.setAddress(address);
 						t.setPrivatekey(listaddress.get(0));
 						t.setHexaddress(listaddress.get(1));
 						t.setMnemoniccode(liststringcode.toString());
-						t.setRemark(5 + "");
+						t.setRemark(6 + "");
 						System.out.println("===========================================================");
 						mapper.post(t);
 					}
