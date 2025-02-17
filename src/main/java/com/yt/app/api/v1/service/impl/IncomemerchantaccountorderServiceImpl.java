@@ -323,7 +323,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		t.setType("" + DictionaryResource.ORDERTYPE_28);
 		t.setOrdernum("DS" + StringUtil.getOrderNum());
 		t.setRemark("商户飞机提现￥：" + String.format("%.2f", amount));
-		mapper.post(t);
+		mapper.add(t);
 
 		// 支出账户和记录
 		incomemerchantaccountservice.withdrawamount(t);

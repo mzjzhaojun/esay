@@ -22,6 +22,15 @@
 		values
 		(#{id},#{userid},#{merchantname},#{qrcodeaislecode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{dynamic},#{fewamount},#{expireddate},#{amount},#{collection},#{incomeamount},#{realamount},#{resulturl},#{qrocde},#{imgurl},#{accnumber},#{amountreceived},#{merchantexchange},#{usdtval},#{status},#{remark},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
+	
+	<insert id="add"
+		parameterType="com.yt.app.api.v1.entity.Incomemerchantaccountorder">
+		insert into
+		incomemerchantaccountorder(id,tenant_id,userid,merchantname,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,dynamic,fewamount,expireddate,amount,collection,incomeamount,realamount,resulturl,qrocde,imgurl,accnumber,amountreceived,merchantexchange,usdtval,status,remark,merchantid,create_by,create_time,update_by,update_time)
+		values
+		(#{id},#{tenant_id},#{userid},#{merchantname},#{qrcodeaislecode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{dynamic},#{fewamount},#{expireddate},#{amount},#{collection},#{incomeamount},#{realamount},#{resulturl},#{qrocde},#{imgurl},#{accnumber},#{amountreceived},#{merchantexchange},#{usdtval},#{status},#{remark},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
+	</insert>
+	
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into

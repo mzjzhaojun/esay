@@ -26,6 +26,15 @@ public interface IncomemerchantaccountorderMapper extends YtIBaseMapper<Incomeme
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Incomemerchantaccountorder.class })
 	public Integer post(Object t);
+	
+	/**
+	 * add
+	 * 
+	 * @param o Incomemerchantaccountorder
+	 * @return count
+	 */
+	@YtRedisCacheEvictAnnotation(classs = { Incomemerchantaccountorder.class })
+	public Integer add(Object t);
 
 	/**
 	 * sava batch
