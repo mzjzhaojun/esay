@@ -69,7 +69,7 @@ public class OrderController {
 	}
 
 	// 代付盘口查单
-	@RequestMapping(value = "/query", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/querypayout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tyquery(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		PayResultVO pt = payoutservice.query(requestEntity.getBody().getMerchantorderid());
 		return new YtResponseEntity<Object>(new YtBody(pt));
