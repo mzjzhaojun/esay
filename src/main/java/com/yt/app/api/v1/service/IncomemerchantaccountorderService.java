@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
+import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.vo.IncomemerchantaccountorderVO;
 import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.common.yt.YtIPage;
@@ -36,4 +37,6 @@ public interface IncomemerchantaccountorderService extends YtIBaseService<Income
 	Integer incomecancleWithdraw(Long id);
 
 	void incomewithdrawmanual(Incomemerchantaccountorder mco);
+
+	void incomewithdrawTelegram(Merchant m, double amount);
 }

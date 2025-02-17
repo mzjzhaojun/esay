@@ -39,11 +39,6 @@ public class SlaveRunner implements CommandLineRunner {
 		log.info("slave start...");
 		threadpooltaskexecutor.execute(tt1);
 		threadpooltaskexecutor.execute(tt2);
-		threadpooltaskexecutor.execute(tt3);
-		threadpooltaskexecutor.execute(tt4);
-		threadpooltaskexecutor.execute(tt5);
-		threadpooltaskexecutor.execute(tt6);
-		threadpooltaskexecutor.execute(tt7);
 		log.info("slave end...");
 	}
 }

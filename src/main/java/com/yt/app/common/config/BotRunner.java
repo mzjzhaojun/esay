@@ -51,7 +51,7 @@ public class BotRunner implements CommandLineRunner {
 
 		botsApi = new TelegramBotsApi(DefaultBotSession.class);
 
-		log.info("服务初始化之后，注册机器人 start...");
+		log.info("bot start...");
 
 		// 注册机器人
 		botsApi.registerBot(bookaccountbot);
@@ -59,7 +59,7 @@ public class BotRunner implements CommandLineRunner {
 		botsApi.registerBot(channelbot);
 		botsApi.registerBot(tronbot);
 		botsApi.registerBot(messagebot);
-		log.info("服务初始化之后，注册机器人 end...");
+		log.info("bot end...");
 	}
 
 }

@@ -38,7 +38,7 @@ public class TronBot extends TelegramLongPollingBot {
 
 	@Override
 	public String getBotUsername() {
-		return "飞兔兑换";
+		return "@flytubot";
 	}
 
 	@Override

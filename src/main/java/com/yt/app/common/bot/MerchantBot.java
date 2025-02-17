@@ -13,6 +13,7 @@ import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.common.bot.message.impl.ExchangeMessage;
 import com.yt.app.common.bot.message.impl.MerchantBalanceMessage;
+import com.yt.app.common.bot.message.impl.MerchantIssueMessage;
 import com.yt.app.common.bot.message.impl.MerchantOrderMessage;
 import com.yt.app.common.bot.message.impl.PinMessage;
 import com.yt.app.common.bot.message.impl.StartMessage;
@@ -32,6 +33,9 @@ public class MerchantBot extends TelegramLongPollingBot {
 
 	@Autowired
 	private MerchantBalanceMessage merchantbalancemessage;
+	
+	@Autowired
+	private MerchantIssueMessage merchantissuemessage;
 
 	@Autowired
 	private PinMessage pinmessage;
@@ -47,7 +51,7 @@ public class MerchantBot extends TelegramLongPollingBot {
 
 	@Override
 	public String getBotUsername() {
-		return "飞兔商户";
+		return "@FlyRabbitMBot";
 	}
 
 	@Override
@@ -77,8 +81,10 @@ public class MerchantBot extends TelegramLongPollingBot {
 					execute(exchangemessage.getUpdate(update));
 				} else if (update.getMessage().getText().equals("ua")) {
 					execute(exchangemessage.getAliUpdate(update));
-				} else if (update.getMessage().getText().equals("查询余额")) {
+				} else if (update.getMessage().getText().equals("查询")) {
 					execute(merchantbalancemessage.getUpdate(update, tmg));
+				} else if (update.getMessage().getText().startsWith("下发")) {
+					execute(merchantissuemessage.getUpdate(update, tmg));
 				} else if (update.getMessage().getReplyToMessage() != null && update.getMessage().getReplyToMessage().hasPhoto()) {
 					SendMessage smg = merchantordermessage.getUpdate(update, tmg);
 					if (smg.getChatId() != null) {

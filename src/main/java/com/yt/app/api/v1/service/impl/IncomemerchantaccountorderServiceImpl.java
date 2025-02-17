@@ -274,7 +274,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		return i;
 	}
 
-	//代收提现app
+	// 代收提现app
 	@Override
 	public Long incomewithdrawapp(Incomemerchantaccountorder t) {
 		if (t.getAmount() <= 0) {
@@ -306,8 +306,32 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		return t.getId();
 	}
 
-	
-	//提现成功
+	@Override
+	public void incomewithdrawTelegram(Merchant m, double amount) {
+		Incomemerchantaccountorder t = new Incomemerchantaccountorder();
+		t.setUserid(m.getUserid());
+		// 支出订单
+		t.setMerchantid(m.getId());
+		t.setTenant_id(m.getTenant_id());
+		t.setMerchantname(m.getName());
+		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+		t.setCollection(0.00);
+		t.setAmount(amount);
+		t.setMerchantexchange(0.00);
+		t.setAmountreceived(amount);
+		t.setUsdtval(amount);
+		t.setType("" + DictionaryResource.ORDERTYPE_28);
+		t.setOrdernum("DS" + StringUtil.getOrderNum());
+		t.setRemark("商户飞机提现￥：" + String.format("%.2f", amount));
+		mapper.post(t);
+
+		// 支出账户和记录
+		incomemerchantaccountservice.withdrawamount(t);
+
+		incomemerchantaccountservice.updateWithdrawamount(t);
+	}
+
+	// 提现成功
 	@Override
 	public Integer success(Long id) {
 		Incomemerchantaccountorder mao = mapper.get(id);

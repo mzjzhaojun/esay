@@ -47,8 +47,6 @@ public class OrderController {
 	@Autowired
 	private IncomeService incomeservice;
 
-	private static String key = "syskeys";
-
 	/**
 	 * html查询代收支付状态
 	 * 
@@ -81,7 +79,7 @@ public class OrderController {
 	@RequestMapping(value = "/payoutsubmit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submit(YtRequestEntity<PaySubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		PaySubmitDTO psdto = requestEntity.getBody();
-		RLock lock = RedissonUtil.getLock(key);
+		RLock lock = RedissonUtil.getLock(psdto.getMerchantid());
 		PayResultVO sr = null;
 		try {
 			lock.lock();
@@ -111,7 +109,7 @@ public class OrderController {
 	@RequestMapping(value = "/submitqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submitqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		QrcodeSubmitDTO qsdto = requestEntity.getBody();
-		RLock lock = RedissonUtil.getLock(key);
+		RLock lock = RedissonUtil.getLock(qsdto.getPay_memberid());
 		QrcodeResultVO yb = null;
 		try {
 			lock.lock();
@@ -135,7 +133,7 @@ public class OrderController {
 	@RequestMapping(value = "/submitincome", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submitincome(YtRequestEntity<QrcodeSubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		QrcodeSubmitDTO qsdto = requestEntity.getBody();
-		RLock lock = RedissonUtil.getLock(key);
+		RLock lock = RedissonUtil.getLock(qsdto.getPay_memberid());
 		QrcodeResultVO yb = null;
 		try {
 			lock.lock();
@@ -460,8 +458,7 @@ public class OrderController {
 		} finally {
 		}
 	}
-	
-	
+
 	/**
 	 * 易生代收回调
 	 * 

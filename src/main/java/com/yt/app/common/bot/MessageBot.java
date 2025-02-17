@@ -34,7 +34,7 @@ public class MessageBot extends TelegramLongPollingBot {
 
 	@Override
 	public String getBotUsername() {
-		return "飞兔消息";
+		return " @feitumsgbot";
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class ChannelBot extends TelegramLongPollingBot {
 
 	@Override
 	public String getBotUsername() {
-		return "飞兔通道";
+		return "@FlyRabbitCBot";
 	}
 
 	@Override

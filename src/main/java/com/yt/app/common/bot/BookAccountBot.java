@@ -35,7 +35,7 @@ public class BookAccountBot extends TelegramLongPollingBot {
 
 	@Override
 	public String getBotUsername() {
-		return "飞兔记账";
+		return " @feitujzbot";
 	}
 
 	@Override
