@@ -39,7 +39,6 @@ public class MerchantIssueMessage implements UpdateMerchantMessageService {
 		sendMessage.setChatId(update.getMessage().getChatId().toString());
 		if (tmg.getMerchantids() != null) {
 			String username = update.getMessage().getFrom().getUserName();
-			System.out.println(username);
 			if (username.equals(tmg.getMangers())) {
 				TenantIdContext.removeFlag();
 				StringBuffer msg = new StringBuffer();
@@ -52,7 +51,7 @@ public class MerchantIssueMessage implements UpdateMerchantMessageService {
 							incomemerchantaccountorderservice.incomewithdrawTelegram(m, Double.valueOf(text[2]));
 						}
 						Incomemerchantaccount merchantaccount = IncomemerchantaccountMapper.getByMerchantId(mid);
-						msg.append("\r\n商户：*" + m.getName() + "*\r\n\r\n今收入：" + m.getTodaycount() + " \r\n总下发：" + merchantaccount.getWithdrawamount() + "\r\n总收入：" + merchantaccount.getTotalincome() + " \r\n预付：" + merchantaccount.getBalance()
+						msg.append("\r\n商户：*" + m.getName() + "*\r\n\r\n今日收入：" + m.getTodaycount() + " \r\n总共下发：" + merchantaccount.getWithdrawamount() + "\r\n总共收入：" + merchantaccount.getTotalincome() + " \r\n可用余额：" + merchantaccount.getBalance()
 								+ "\r\n  \r\n*" + DateTimeUtil.getDateTime() + "*");
 					}
 					sendMessage.setText(msg.toString());

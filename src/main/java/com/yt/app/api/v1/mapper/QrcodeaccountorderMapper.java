@@ -28,6 +28,15 @@ public interface QrcodeaccountorderMapper extends YtIBaseMapper<Qrcodeaccountord
 	public Integer post(Object t);
 
 	/**
+	 * add
+	 * 
+	 * @param o Qrcodeaccountorder
+	 * @return count
+	 */
+	@YtRedisCacheEvictAnnotation(classs = { Qrcodeaccountorder.class })
+	public Integer add(Object t);
+
+	/**
 	 * sava batch
 	 * 
 	 * @param o Qrcodeaccountorderlist

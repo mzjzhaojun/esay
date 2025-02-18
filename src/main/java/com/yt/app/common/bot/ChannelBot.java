@@ -12,6 +12,7 @@ import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.common.bot.message.impl.ChannelBalanceMessage;
+import com.yt.app.common.bot.message.impl.ChannelIssueMessage;
 import com.yt.app.common.bot.message.impl.ExchangeMessage;
 import com.yt.app.common.bot.message.impl.NotifyChannelMessage;
 import com.yt.app.common.bot.message.impl.PinMessage;
@@ -41,6 +42,9 @@ public class ChannelBot extends TelegramLongPollingBot {
 
 	@Autowired
 	private ChannelBalanceMessage channelbalancemessage;
+
+	@Autowired
+	private ChannelIssueMessage channelissuemessage;
 
 	@Override
 	public String getBotUsername() {
@@ -75,6 +79,10 @@ public class ChannelBot extends TelegramLongPollingBot {
 					execute(exchangemessage.getUpdate(update));
 				} else if (update.getMessage().getText().equals("ua")) {
 					execute(exchangemessage.getAliUpdate(update));
+				} else if (update.getMessage().getText().equals("查询")) {
+					execute(channelbalancemessage.getUpdate(update, tmg));
+				} else if (update.getMessage().getText().startsWith("下发")) {
+					execute(channelissuemessage.getUpdate(update, tmg));
 				}
 			} else if (update.hasCallbackQuery()) {
 			} else if (update.hasMessage() && update.getMessage().hasPhoto()) {

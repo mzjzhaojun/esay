@@ -22,6 +22,15 @@
 		values
 		(#{id},#{userid},#{qrcodeaislecode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{dynamic},#{fewamount},#{expireddate},#{amount},#{collection},#{incomeamount},#{realamount},#{resulturl},#{merchantname},#{qrocde},#{status},#{remark},#{channelid},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
+	
+	<insert id="add"
+		parameterType="com.yt.app.api.v1.entity.Qrcodeaccountorder">
+		insert into
+		qrcodeaccountorder(id,tenant_id,userid,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,dynamic,fewamount,expireddate,amount,collection,incomeamount,realamount,resulturl,merchantname,qrocde,status,remark,channelid,create_by,create_time,update_by,update_time)
+		values
+		(#{id},#{tenant_id},#{userid},#{qrcodeaislecode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{dynamic},#{fewamount},#{expireddate},#{amount},#{collection},#{incomeamount},#{realamount},#{resulturl},#{merchantname},#{qrocde},#{status},#{remark},#{channelid},#{create_by},#{create_time},#{update_by},#{update_time})
+	</insert>
+	
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into

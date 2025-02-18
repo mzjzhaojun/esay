@@ -264,7 +264,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		t.setAmountreceived((t.getAmount()));
 		t.setUsdtval(t.getAmount() / t.getCollection());
 		t.setType("" + DictionaryResource.ORDERTYPE_28);
-		t.setOrdernum("DS" + StringUtil.getOrderNum());
+		t.setOrdernum("SHTX" + StringUtil.getOrderNum());
 		t.setRemark("商户代收提现￥：" + String.format("%.2f", t.getAmount()));
 		Integer i = mapper.post(t);
 
@@ -297,7 +297,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		t.setAmountreceived((t.getAmount()));
 		t.setUsdtval(t.getAmount() / t.getCollection());
 		t.setType("" + DictionaryResource.ORDERTYPE_28);
-		t.setOrdernum("DS" + StringUtil.getOrderNum());
+		t.setOrdernum("SHTX" + StringUtil.getOrderNum());
 		t.setRemark("商户代收提现￥：" + String.format("%.2f", t.getAmount()));
 		mapper.post(t);
 
@@ -306,6 +306,9 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		return t.getId();
 	}
 
+	/**
+	 * 飞机下发
+	 */
 	@Override
 	public void incomewithdrawTelegram(Merchant m, double amount) {
 		Incomemerchantaccountorder t = new Incomemerchantaccountorder();
@@ -321,7 +324,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		t.setAmountreceived(amount);
 		t.setUsdtval(amount);
 		t.setType("" + DictionaryResource.ORDERTYPE_28);
-		t.setOrdernum("DS" + StringUtil.getOrderNum());
+		t.setOrdernum("SHTX" + StringUtil.getOrderNum());
 		t.setRemark("商户飞机提现￥：" + String.format("%.2f", amount));
 		mapper.add(t);
 

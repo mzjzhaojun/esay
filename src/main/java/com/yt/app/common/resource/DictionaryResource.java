@@ -100,7 +100,7 @@ public class DictionaryResource implements Serializable {
 	 * 代付状态
 	 */
 	public static final Integer PAYOUTSTATUS_50 = 50; // 新增
-	public static final Integer PAYOUTSTATUS_51 = 51; // 代付ing
+	public static final Integer PAYOUTSTATUS_51 = 51; // 处理中
 	public static final Integer PAYOUTSTATUS_52 = 52; // 成功
 	public static final Integer PAYOUTSTATUS_53 = 53; // 失败或异常
 	public static final Integer PAYOUTSTATUS_54 = 54; // 审核失败

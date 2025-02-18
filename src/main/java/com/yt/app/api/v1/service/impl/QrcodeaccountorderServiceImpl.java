@@ -14,6 +14,7 @@ import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
+import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.entity.Qrcodeaccountorder;
@@ -23,6 +24,7 @@ import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.RedisUtil;
+import com.yt.app.common.util.StringUtil;
 
 import cn.hutool.core.lang.Assert;
 
@@ -89,7 +91,6 @@ public class QrcodeaccountorderServiceImpl extends YtBaseServiceImpl<Qrcodeaccou
 		return i;
 	}
 
-
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Qrcodeaccountorder get(Long id) {
@@ -110,5 +111,26 @@ public class QrcodeaccountorderServiceImpl extends YtBaseServiceImpl<Qrcodeaccou
 			mco.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getType()));
 		});
 		return new YtPageBean<QrcodeaccountorderVO>(param, list, count);
+	}
+
+	@Override
+	public void incomewithdrawTelegram(Channel c, double amount) {
+		Qrcodeaccountorder t = new Qrcodeaccountorder();
+		t.setUserid(c.getUserid());
+		// 支出订单
+		t.setChannelid(c.getId());
+		t.setTenant_id(c.getTenant_id());
+		t.setMerchantname(c.getName());
+		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+		t.setCollection(0.00);
+		t.setAmount(amount);
+		t.setType("" + DictionaryResource.ORDERTYPE_28);
+		t.setOrdernum("QDTX" + StringUtil.getOrderNum());
+		t.setRemark("渠道飞机提现￥：" + String.format("%.2f", amount));
+		mapper.add(t);
+
+		qrcodeaccountservice.withdrawamount(t);
+
+		qrcodeaccountservice.updateWithdrawamount(t);
 	}
 }

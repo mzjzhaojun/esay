@@ -208,6 +208,103 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 		}
 	}
 
+	/**
+	 * =============================================================支出
+	 * 
+	 */
+
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	private void setWithdrawamount(Qrcodeaccount ma, Qrcodeaccountorder mao) {
+		// 待支出加金额
+		ma.setTowithdrawamount(ma.getTowithdrawamount() + mao.getAmount());
+		mapper.put(ma);
+	}
+
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	private void successWithdrawamount(Qrcodeaccount t, Qrcodeaccountorder aaaj) {
+		// 待支出减去金额
+		t.setTowithdrawamount(t.getTowithdrawamount() - aaaj.getAmount());
+		// 支出总金额更新
+		t.setWithdrawamount(t.getWithdrawamount() + aaaj.getAmount());
+
+		t.setBalance(t.getTotalincome() - t.getWithdrawamount() - t.getTowithdrawamount());
+		mapper.put(t);
+
+		Channel m = channelmapper.get(t.getChannelid());
+		m.setBalance(t.getBalance());
+		channelmapper.put(m);
+
+		qrcodeaccountrecordmapper.post(aaaj);
+	}
+
+	// 待确认支出
+	@Override
+	public void withdrawamount(Qrcodeaccountorder t) {
+		RLock lock = RedissonUtil.getLock(t.getChannelid());
+		try {
+			lock.lock();
+			Qrcodeaccount ma = mapper.getByUserId(t.getUserid());
+			Qrcodeaccountrecord aaaj = new Qrcodeaccountrecord();
+
+			aaaj.setUserid(t.getUserid());
+			aaaj.setChannelname(t.getQrcodename());
+			aaaj.setOrdernum(t.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_34);
+			// 变更前
+			aaaj.setPretotalincome(ma.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
+			aaaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(ma.getTowithdrawamount() + t.getAmount());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(ma.getTotalincome());// 总收入
+			aaaj.setPosttoincomeamount(0.00);// 待确认收入
+			aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
+			aaaj.setPosttowithdrawamount(0.00);// 待确认支出
+			aaaj.setRemark("待确认支出￥：" + String.format("%.2f", t.getAmount()));
+			//
+			qrcodeaccountrecordmapper.post(aaaj);
+
+			setWithdrawamount(ma, t);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	// 确认支出
+	@Override
+	public void updateWithdrawamount(Qrcodeaccountorder mao) {
+		RLock lock = RedissonUtil.getLock(mao.getChannelid());
+		try {
+			lock.lock();
+			Qrcodeaccount t = mapper.getByUserId(mao.getUserid());
+			//
+			Qrcodeaccountrecord aaaj = new Qrcodeaccountrecord();
+			//
+			aaaj.setUserid(t.getUserid());
+			aaaj.setChannelname(mao.getQrcodename());
+			aaaj.setOrdernum(mao.getOrdernum());
+			aaaj.setType(DictionaryResource.RECORDTYPE_35);
+
+			// 变更前
+			aaaj.setPretotalincome(t.getTotalincome());// 总收入
+			aaaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
+			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
+			aaaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmount());// 待确认支出
+			// 变更后
+			aaaj.setPosttotalincome(t.getTotalincome());// 总收入
+			aaaj.setPosttoincomeamount(0.00);// 待确认收入
+			aaaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmount());// 总支出
+			aaaj.setPosttowithdrawamount(mao.getAmount());// 待确认支出
+			aaaj.setRemark("成功支出￥：" + String.format("%.2f", mao.getAmount()));
+			//
+			successWithdrawamount(t, mao);
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+	}
+
 	@Override
 	public Qrcodeaccount getData() {
 		Qrcodeaccount t = mapper.getByUserId(SysUserContext.getUserId());
