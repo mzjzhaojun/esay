@@ -425,8 +425,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		TenantIdContext.remove();
 	}
-	
-	
+
 	@Override
 	public void zscallback(Map<String, Object> params) {
 		String orderid = params.get("order_no").toString();
@@ -1299,32 +1298,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	@Override
 	@Transactional
-	public Integer successstatus(Income income) {
-		income.setStatus(DictionaryResource.PAYOUTSTATUS_52);
-		return mapper.put(income);
-	}
-
-	// 测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试
-	@Override
-	public Integer canceladd(Map<String, String> params) {
-		int i = 1;
-		Incomemerchantaccountorder t = new Incomemerchantaccountorder();
-		t.setUserid(1810628129622986752L);
-		t.setMerchantid(1810628129631375360L);
-		t.setAmount(100.00);
-		incomemerchantaccountservice.canlWithdrawamount(t);
-		return i;
-	}
-
-	@Override
-	public Integer setadd(Map<String, String> params) {
-		int i = 1;
-		Incomemerchantaccountorder t = new Incomemerchantaccountorder();
-		t.setUserid(1810628129622986752L);
-		t.setMerchantid(1810628129631375360L);
-		t.setAmount(100.00);
-		incomemerchantaccountservice.setWithdrawamount(t);
-		return i;
+	public void successstatus(Income income) {
+		Income newincome = mapper.get(income.getId());
+		success(newincome);
 	}
 
 }

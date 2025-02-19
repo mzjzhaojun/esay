@@ -65,8 +65,7 @@ public class IncomeController extends YtBaseEncipherControllerImpl<Income, Long>
 
 	@RequestMapping(value = "/success", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> success(YtRequestDecryptEntity<Income> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		Integer i = service.successstatus(requestEntity.getBody());
-		Assert.notEquals(i, 0, "更新失败！");
-		return new YtResponseEncryptEntity<Object>(new YtBody(i));
+		service.successstatus(requestEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
 }

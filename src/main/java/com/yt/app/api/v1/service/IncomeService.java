@@ -80,11 +80,5 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 	Integer notify(Income income);
 
 	// 成功
-	Integer successstatus(Income income);
-
-	// 减
-	Integer canceladd(Map<String, String> params);
-
-	// 加
-	Integer setadd(Map<String, String> params);
+	void successstatus(Income income);
 }
