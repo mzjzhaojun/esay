@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import com.yt.app.common.runnable.TronGetAddressThread5;
@@ -18,8 +19,9 @@ import com.yt.app.common.runnable.TronGetAddressThread5;
  * @date 2020/5/22 19:29
  */
 @Slf4j
+@Profile("dev")
 @Component
-public class SlaveRunner implements CommandLineRunner {
+public class DevRunner implements CommandLineRunner {
 	
 	
 	TronGetAddressThread5 tt1 = new TronGetAddressThread5();
@@ -39,6 +41,11 @@ public class SlaveRunner implements CommandLineRunner {
 		log.info("slave start...");
 		threadpooltaskexecutor.execute(tt1);
 		threadpooltaskexecutor.execute(tt2);
+		threadpooltaskexecutor.execute(tt3);
+		threadpooltaskexecutor.execute(tt4);
+		threadpooltaskexecutor.execute(tt5);
+		threadpooltaskexecutor.execute(tt6);
+		threadpooltaskexecutor.execute(tt7);
 		log.info("slave end...");
 	}
 }

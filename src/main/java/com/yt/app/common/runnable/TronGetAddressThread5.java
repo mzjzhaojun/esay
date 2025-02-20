@@ -8,6 +8,9 @@ import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.util.TronUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class TronGetAddressThread5 implements Runnable {
 
 	public TronGetAddressThread5() {
@@ -24,7 +27,7 @@ public class TronGetAddressThread5 implements Runnable {
 				if (listaddress != null) {
 					String address = listaddress.get(2);
 					char endchar = address.charAt(address.length() - 1);
-					String sixchar = "" + endchar + endchar + endchar + endchar + endchar+ endchar;
+					String sixchar = "" + endchar + endchar + endchar + endchar + endchar;
 					if (address.endsWith(sixchar)) {
 						Tronaddress t = new Tronaddress();
 						t.setAddress(address);
@@ -32,7 +35,7 @@ public class TronGetAddressThread5 implements Runnable {
 						t.setHexaddress(listaddress.get(1));
 						t.setMnemoniccode(liststringcode.toString());
 						t.setRemark(6 + "");
-						System.out.println("===========================================================");
+						log.info(address);
 						mapper.post(t);
 					}
 				}
