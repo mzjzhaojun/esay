@@ -90,6 +90,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -360,6 +361,26 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		String returnstate = PayUtil.SendFhQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "飞黄运通通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
+		}
+		TenantIdContext.remove();
+	}
+
+	@Override
+	public void tongyuancallback(Map<String, String> params) {
+		String orderid = params.get("mchOrderNo").toString();
+		String status = params.get("state").toString();
+		log.info("通源通知返回消息：payOrderId" + orderid + " status:" + status);
+		Income income = mapper.getByOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求!");
+		}
+		JSONObject returnstate = PayUtil.SendTongYuanQuerySubmit(orderid, channel);
+		Assert.notNull(returnstate, "通源通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
 		}
@@ -679,6 +700,14 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		//
 		boolean flage = true;
 		switch (channel.getName()) {
+		case DictionaryResource.TONGYUSNAISLE:
+			JSONObject data = PayUtil.SendTongYuanSubmit(income, channel);
+			if (data != null) {
+				flage = false;
+				income.setResulturl(data.getStr("payData"));
+				income.setQrcodeordernum(data.getStr("payOrderId"));
+			}
+			break;
 		case DictionaryResource.ZSAISLE:
 			SysZsOrder zsjz = PayUtil.SendZSSubmit(income, channel);
 			if (zsjz != null) {

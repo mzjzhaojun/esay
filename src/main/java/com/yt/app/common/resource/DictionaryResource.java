@@ -15,6 +15,7 @@ public class DictionaryResource implements Serializable {
 	public static final String FAILED = "40004"; // 失败
 	public static final String ERROR = "20000"; // 系统异常
 
+	//代收
 	public static final String KFAISLE = "KF"; // KF
 	public static final String TDAISLE = "铁蛋"; // 铁蛋
 	public static final String EGAISLE = "二狗"; // 二狗
@@ -27,8 +28,11 @@ public class DictionaryResource implements Serializable {
 	public static final String FHLAISLE = "飞黄运通"; // 飞黄运通
 	public static final String YSAISLE = "易生"; // 易生
 	public static final String XSAISLE = "新生"; // 新生
-	public static final String ZSAISLE = "张三"; // 新生
+	public static final String ZSAISLE = "张三";// 张三
+	public static final String TONGYUSNAISLE = "通源";// 通源
 
+	
+	//代付
 	public static final String DFSNAISLE = "十年"; //
 	public static final String DFSSAISLE = "盛世"; //
 	public static final String DFTXAISLE = "天下"; //

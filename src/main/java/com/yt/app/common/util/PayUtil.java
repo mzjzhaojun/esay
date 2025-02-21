@@ -1721,26 +1721,66 @@ public class PayUtil {
 	}
 
 	// 通源代收对接
-	public static SysFhOrder SendTongYuanSubmit(Income pt, Channel cl) {
+	public static JSONObject SendTongYuanSubmit(Income pt, Channel cl) {
 		try {
 			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-			Long time = DateTimeUtil.getNow().getTime();
 			map.add("mchNo", cl.getCode());
 			map.add("appId", cl.getPrivatersa());
 			map.add("wayCode", pt.getQrcodecode());
 			map.add("mchOrderNo", pt.getOrdernum());
 			map.add("currency", "cny");
-			map.add("subject", time.toString());
-			map.add("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
+			map.add("subject", DateTimeUtil.getNow().getTime());
+			map.add("amount", Integer.parseInt(String.format("%.2f", pt.getAmount()).replace(".", "")));
 			map.add("notifyUrl", cl.getApireusultip());
 			map.add("clientIp", "127.0.0.1");
 			map.add("signType", "MD5");
 			map.add("divisionMode", 1);
 			map.add("version", "1.0");
-			map.add("body", time.toString());
+			map.add("body", DateTimeUtil.getNow().getTime());
+			map.add("reqTime", DateTimeUtil.getNow().getTime());
+
+			TreeMap<String, Object> sortedMap = new TreeMap<>(map);
+			String signContent = "";
+			for (String key : sortedMap.keySet()) {
+				signContent = signContent + key + "=" + map.getFirst(key) + "&";
+			}
+
+			signContent = signContent.substring(0, signContent.length() - 1);
+			signContent = signContent + "&key=" + cl.getApikey();
+			String sign = MD5Utils.md5(signContent);
+
+			map.add("sign", sign.toUpperCase());
+			log.info(signContent + "==" + sign.toUpperCase());
+			HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<JSONObject> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/unifiedOrder", HttpMethod.POST, httpEntity, JSONObject.class);
+			JSONObject data = sov.getBody().getJSONObject("data");
+			log.info("通源返回消息：" + data);
+			if (data.getInt("orderState") == 1) {
+				return data;
+			}
+		} catch (RestClientException e) {
+			log.info("通源返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// 通源代收查单
+	public static JSONObject SendTongYuanQuerySubmit(String orderid, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("mchNo", cl.getCode());
+			map.add("appId", cl.getPrivatersa());
+			map.add("mchOrderNo", orderid);
+			map.add("signType", "MD5");
+			map.add("version", "1.0");
 			map.add("reqTime", DateTimeUtil.getNow().getTime());
 
 			TreeMap<String, Object> sortedMap = new TreeMap<>(map);
@@ -1757,45 +1797,11 @@ public class PayUtil {
 			HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
 			//
-			ResponseEntity<JSONObject> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/create_order", HttpMethod.POST, httpEntity, JSONObject.class);
-			JSONObject data = sov.getBody();
-			log.info("通源返回消息：" + data);
-		} catch (RestClientException e) {
-			log.info("通源返回消息：" + e.getMessage());
-		}
-		return null;
-	}
-
-	// 飞黄运通代收查单
-	public static String SendTongYuanQuerySubmit(String orderid, Channel cl) {
-		try {
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-			map.add("mchId", cl.getCode());
-			map.add("appId", cl.getPrivatersa());
-			map.add("mchOrderNo", orderid);
-
-			TreeMap<String, Object> sortedMap = new TreeMap<>(map);
-			String signContent = "";
-			for (String key : sortedMap.keySet()) {
-				signContent = signContent + key + "=" + map.getFirst(key) + "&";
-			}
-			signContent = signContent.substring(0, signContent.length() - 1);
-			signContent = signContent + "&key=" + cl.getApikey();
-			String sign = MD5Utils.md5(signContent);
-
-			map.add("sign", sign.toUpperCase());
-
-			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
-			RestTemplate resttemplate = new RestTemplate();
-			//
-			ResponseEntity<SysYSQuery> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/query_order", HttpMethod.POST, httpEntity, SysYSQuery.class);
-			SysYSQuery data = sov.getBody();
+			ResponseEntity<JSONObject> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/query", HttpMethod.POST, httpEntity, JSONObject.class);
+			JSONObject data = sov.getBody().getJSONObject("data");
 			log.info("通源查单返回消息：" + data);
-			if (data.getRetCode().equals("SUCCESS") && data.getStatus().equals("2")) {
-				return data.getStatus();
+			if (data.getInt("state") == 2) {
+				return data;
 			}
 		} catch (RestClientException e) {
 			log.info("通源查单返回消息：" + e.getMessage());

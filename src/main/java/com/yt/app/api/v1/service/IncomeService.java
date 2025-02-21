@@ -72,6 +72,9 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	// alipay回調
 	void alipayftfcallback(Map<String, String> params);
+	
+	// 通源回調
+	void tongyuancallback(Map<String, String> params);
 
 	// 补单
 	Integer makeuporder(Income income);

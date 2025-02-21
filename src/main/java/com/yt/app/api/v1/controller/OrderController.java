@@ -460,7 +460,7 @@ public class OrderController {
 	}
 
 	/**
-	 * 易生代收回调
+	 * 张三代收回调
 	 * 
 	 * @param requestEntity
 	 * @param request
@@ -477,7 +477,7 @@ public class OrderController {
 		} finally {
 		}
 	}
-
+	
 	/**
 	 * 支付宝当面付回调
 	 * 
@@ -497,4 +497,23 @@ public class OrderController {
 		}
 	}
 
+	
+	/**
+	 * 支付宝当面付回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/tongyuancallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void tongyuancallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			incomeservice.tongyuancallback(params);
+			response.getWriter().print("success");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+		}
+	}
 }
