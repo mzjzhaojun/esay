@@ -35,12 +35,12 @@ public class Systemaccountrecord extends YtBaseEntity<Systemaccountrecord> {
 	Double amount;
 	Double balance;
 
-	Double usdtpretotalincome;
-	Double usdtprewithdrawamount;
-	Double usdtposttotalincome;
-	Double usdtpostwithdrawamount;
-	Double usdtamount;
-	Double usdtbalance;
+	Double popretotalincome;
+	Double poprewithdrawamount;
+	Double poposttotalincome;
+	Double popostwithdrawamount;
+	Double poamount;
+	Double pobalance;
 
 	String remark;
 	Integer version;

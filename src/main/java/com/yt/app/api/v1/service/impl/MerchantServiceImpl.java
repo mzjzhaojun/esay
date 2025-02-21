@@ -16,7 +16,6 @@ import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.vo.IncomemerchantaccountorderVO;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
-import com.yt.app.common.base.constant.BaseConstant;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
@@ -135,7 +134,6 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	@Override
 	@Transactional
 	public Merchant postMerchant(Merchant t) {
-		TenantIdContext.setTenantId(BaseConstant.FEITU_TENANT_ID);
 		// user
 		User u = new User();
 		u.setUsername(t.getUsername());

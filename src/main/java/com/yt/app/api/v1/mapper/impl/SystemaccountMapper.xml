@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.SystemaccountMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,totalincome,withdrawamount,todayincome,balance,usdttotalincome,usdtwithdrawamount,usdtbalance,create_by,create_time,update_by,update_time,remark,userid,version
+		id,tenant_id,totalincome,withdrawamount,todayincome,balance,pototalincome,powithdrawamount,pobalance,todaypayout,create_by,create_time,update_by,update_time,remark,userid,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -50,17 +50,20 @@
 			<if test="withdrawamount != null">
 				withdrawamount= #{withdrawamount},
 			</if>
-			<if test="usdttotalincome != null">
-				usdttotalincome= #{usdttotalincome},
+			<if test="pototalincome != null">
+				pototalincome= #{pototalincome},
 			</if>
-			<if test="usdtwithdrawamount != null">
-				usdtwithdrawamount= #{usdtwithdrawamount},
+			<if test="powithdrawamount != null">
+				powithdrawamount= #{powithdrawamount},
 			</if>
-			<if test="usdtbalance != null">
-				usdtbalance= #{usdtbalance},
+			<if test="pobalance != null">
+				pobalance= #{pobalance},
 			</if>
 			<if test="todayincome != null">
 				todayincome= #{todayincome},
+			</if>
+			<if test="todaypayout != null">
+				todaypayout= #{todaypayout},
 			</if>
 			<if test="balance != null">
 				balance= #{balance},
@@ -120,7 +123,7 @@
 		<include refid="Base_Column_List" />
 		from systemaccount
 		<where>
-			1=1
+			userid != 1
 			<if test="name != null and name != ''">
 				and name LIKE CONCAT( '%', #{name} , '%' )
 			</if>
@@ -139,7 +142,7 @@
 		<include refid="Base_Column_List" />
 		from systemaccount
 		<where>
-			1=1
+			userid != 1
 			<if test="name != null and name != ''">
 				and name LIKE CONCAT( '%', #{name} , '%' )
 			</if>
@@ -156,7 +159,7 @@
 		resultType="int">
 		select count(*) from systemaccount
 		<where>
-			1=1
+			userid != 1
 			<if test="name != null and name != ''">
 				and name LIKE CONCAT( '%', #{name} , '%' )
 			</if>
@@ -169,7 +172,7 @@
 		<include refid="Base_Column_List" />
 		from systemaccount
 		<where>
-			1=1
+			userid != 1
 			<if test="array != null and array.length > 0">
 				and id in
 				<foreach item="item" index="index" collection="array"

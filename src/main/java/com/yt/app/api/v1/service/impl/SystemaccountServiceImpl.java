@@ -77,9 +77,10 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void updateusdtincome(Systemaccount t, PayoutMerchantaccountorder mao) {
-		t.setUsdttotalincome(t.getUsdttotalincome() + mao.getAmountreceived());
-		t.setUsdtbalance(t.getUsdttotalincome() - t.getUsdtwithdrawamount());
+	public void updatePayout(Systemaccount t, PayoutMerchantaccountorder mao) {
+		t.setPototalincome(t.getPototalincome() + mao.getAmountreceived());
+		t.setPobalance(t.getPototalincome() - t.getPowithdrawamount());
+		t.setTodaypayout(t.getTodaypayout() + mao.getAmountreceived());
 		mapper.put(t);
 	}
 
@@ -96,14 +97,14 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getUsername());
 			scr.setType(DictionaryResource.ORDERTYPE_20);
-			scr.setUsdtpretotalincome(t.getUsdttotalincome());// 总收入
-			scr.setUsdtposttotalincome(t.getUsdttotalincome() + mao.getAmountreceived());// 待确认收入
-			scr.setUsdtamount(mao.getAmountreceived());// 操作金额
-			scr.setUsdtbalance(t.getUsdtbalance());//
+			scr.setPopretotalincome(t.getPototalincome());// 总收入
+			scr.setPoposttotalincome(t.getPototalincome() + mao.getAmountreceived());// 待确认收入
+			scr.setPoamount(mao.getAmountreceived());// 操作金额
+			scr.setPobalance(t.getPobalance());//
 			scr.setRemark("系统代付收入金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 
-			updateusdtincome(t, mao);
+			updatePayout(t, mao);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -112,15 +113,15 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void updateusdtwithdraw(Systemaccount t, PayoutMerchantaccountorder mao) {
-		t.setUsdtwithdrawamount(t.getUsdtwithdrawamount() + mao.getAmountreceived());
-		t.setUsdtbalance(t.getUsdttotalincome() - t.getUsdtwithdrawamount());
+		t.setPowithdrawamount(t.getPowithdrawamount() + mao.getAmountreceived());
+		t.setPobalance(t.getPototalincome() - t.getPowithdrawamount());
 		mapper.put(t);
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void updateusdtwithdraw(Systemaccount t, Agentaccountorder mao) {
-		t.setUsdtwithdrawamount(t.getUsdtwithdrawamount() + mao.getAmountreceived());
-		t.setUsdtbalance(t.getUsdttotalincome() - t.getUsdtwithdrawamount());
+		t.setPowithdrawamount(t.getPowithdrawamount() + mao.getAmountreceived());
+		t.setPobalance(t.getPototalincome() - t.getPowithdrawamount());
 		mapper.put(t);
 	}
 
@@ -137,10 +138,10 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getUsername());
 			scr.setType(DictionaryResource.ORDERTYPE_21);
-			scr.setUsdtprewithdrawamount(t.getUsdtwithdrawamount());
-			scr.setUsdtpostwithdrawamount(t.getUsdtwithdrawamount() + mao.getAmountreceived());
-			scr.setUsdtamount(mao.getAmountreceived());
-			scr.setUsdtbalance(t.getUsdtbalance());//
+			scr.setPoprewithdrawamount(t.getPowithdrawamount());
+			scr.setPopostwithdrawamount(t.getPowithdrawamount() + mao.getAmountreceived());
+			scr.setPoamount(mao.getAmountreceived());
+			scr.setPobalance(t.getPobalance());//
 			scr.setRemark("系统代付提现金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 
@@ -164,10 +165,10 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getUsername());
 			scr.setType(DictionaryResource.ORDERTYPE_22);
-			scr.setUsdtprewithdrawamount(t.getUsdtwithdrawamount());
-			scr.setUsdtpostwithdrawamount(t.getUsdtwithdrawamount() + mao.getAmountreceived());
-			scr.setUsdtamount(mao.getAmountreceived());
-			scr.setUsdtbalance(t.getUsdtbalance());//
+			scr.setPoprewithdrawamount(t.getPowithdrawamount());
+			scr.setPopostwithdrawamount(t.getPowithdrawamount() + mao.getAmountreceived());
+			scr.setPoamount(mao.getAmountreceived());
+			scr.setPobalance(t.getPobalance());//
 			scr.setRemark("系统代付金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 
@@ -191,10 +192,10 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getUsername());
 			scr.setType(DictionaryResource.ORDERTYPE_26);
-			scr.setUsdtprewithdrawamount(t.getWithdrawamount());
-			scr.setUsdtpostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
-			scr.setUsdtamount(mao.getAmountreceived());
-			scr.setUsdtbalance(t.getBalance());//
+			scr.setPoprewithdrawamount(t.getWithdrawamount());
+			scr.setPopostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
+			scr.setPoamount(mao.getAmountreceived());
+			scr.setPobalance(t.getBalance());//
 			scr.setRemark("代理提现金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 

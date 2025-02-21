@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.SystemaccountrecordMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,systemaccountid,name,type,pretotalincome,prewithdrawamount,posttotalincome,postwithdrawamount,amount,balance,usdtpretotalincome,usdtprewithdrawamount,usdtposttotalincome,usdtpostwithdrawamount,usdtamount,usdtbalance,update_time,update_by,create_time,create_by,remark,version
+		id,tenant_id,systemaccountid,name,type,pretotalincome,prewithdrawamount,posttotalincome,postwithdrawamount,amount,balance,popretotalincome,poprewithdrawamount,poposttotalincome,popostwithdrawamount,poamount,pobalance,update_time,update_by,create_time,create_by,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -14,9 +14,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Systemaccountrecord">
 		insert into
-		systemaccountrecord(id,systemaccountid,name,type,pretotalincome,prewithdrawamount,posttotalincome,postwithdrawamount,amount,balance,usdtpretotalincome,usdtprewithdrawamount,usdtposttotalincome,usdtpostwithdrawamount,usdtamount,usdtbalance,update_time,update_by,create_time,create_by,remark)
+		systemaccountrecord(id,systemaccountid,name,type,pretotalincome,prewithdrawamount,posttotalincome,postwithdrawamount,amount,balance,popretotalincome,poprewithdrawamount,poposttotalincome,popostwithdrawamount,poamount,pobalance,update_time,update_by,create_time,create_by,remark)
 		values
-		(#{id},#{systemaccountid},#{name},#{type},#{pretotalincome},#{prewithdrawamount},#{posttotalincome},#{postwithdrawamount},#{amount},#{balance},#{usdtpretotalincome},#{usdtprewithdrawamount},#{usdtposttotalincome},#{usdtpostwithdrawamount},#{usdtamount},#{usdtbalance},#{update_time},#{update_by},#{create_time},#{create_by},#{remark})
+		(#{id},#{systemaccountid},#{name},#{type},#{pretotalincome},#{prewithdrawamount},#{posttotalincome},#{postwithdrawamount},#{amount},#{balance},#{popretotalincome},#{poprewithdrawamount},#{poposttotalincome},#{popostwithdrawamount},#{poamount},#{pobalance},#{update_time},#{update_by},#{create_time},#{create_by},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">

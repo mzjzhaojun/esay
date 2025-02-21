@@ -39,7 +39,6 @@ public interface BaseConstant {
 	Long SYSTEM_TENANT_ID = 1L;
 	Long SYSTEM_TENANT_ID_PACKAGE_ID = 1L;
 
-	Long FEITU_TENANT_ID = 1807269973098369024L;
 
 	/**
 	 * 获取项目根目录

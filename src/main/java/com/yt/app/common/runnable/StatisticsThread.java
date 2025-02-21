@@ -5,8 +5,10 @@ import java.util.List;
 
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Merchant;
+import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
+import com.yt.app.api.v1.mapper.SystemaccountMapper;
 import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.service.SystemstatisticalreportsService;
@@ -37,10 +39,17 @@ public class StatisticsThread implements Runnable {
 		SystemstatisticalreportsService systemstatisticalreportsservice = BeanContext.getApplicationContext().getBean(SystemstatisticalreportsService.class);
 		MerchantService merchantservice = BeanContext.getApplicationContext().getBean(MerchantService.class);
 		MerchantMapper merchantmapper = BeanContext.getApplicationContext().getBean(MerchantMapper.class);
+		SystemaccountMapper systemaccountmapper = BeanContext.getApplicationContext().getBean(SystemaccountMapper.class);
 		ChannelMapper channelmapper = BeanContext.getApplicationContext().getBean(ChannelMapper.class);
 		ChannelService channelservice = BeanContext.getApplicationContext().getBean(ChannelService.class);
 		// 系统
-		systemstatisticalreportsservice.updateDayValue(dateval);
+		// 商户
+		List<Systemaccount> listsa = systemaccountmapper.list(new HashMap<String, Object>());
+		listsa.forEach(sa -> {
+			// 单日数据
+			systemstatisticalreportsservice.updateDayValue(dateval, sa);
+		});
+
 		// 商户
 		List<Merchant> listm = merchantmapper.list(new HashMap<String, Object>());
 		listm.forEach(m -> {

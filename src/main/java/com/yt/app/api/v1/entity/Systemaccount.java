@@ -28,9 +28,10 @@ public class Systemaccount extends YtBaseEntity<Systemaccount> {
 	Double withdrawamount;
 	Double balance;
 	Double todayincome;
-	Double usdttotalincome;
-	Double usdtwithdrawamount;
-	Double usdtbalance;
+	Double pototalincome;
+	Double powithdrawamount;
+	Double pobalance;
+	Double todaypayout;
 	String remark;
 	Long userid;
 	Integer version;

@@ -9,7 +9,6 @@ import com.yt.app.api.v1.mapper.SystemaccountMapper;
 import com.yt.app.api.v1.mapper.SystemstatisticalreportsMapper;
 import com.yt.app.api.v1.service.SystemstatisticalreportsService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
-import com.yt.app.common.base.constant.BaseConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.api.v1.entity.Systemstatisticalreports;
@@ -67,8 +66,7 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 
 	@Override
 	@Transactional
-	public void updateDayValue(String date) {
-		Systemaccount sa = systemaccountmapper.getByTenantId(BaseConstant.FEITU_TENANT_ID);
+	public void updateDayValue(String date, Systemaccount sa) {
 		Systemstatisticalreports t = new Systemstatisticalreports();
 		t.setDateval(date);
 
