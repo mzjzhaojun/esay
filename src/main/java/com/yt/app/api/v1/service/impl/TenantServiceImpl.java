@@ -100,6 +100,9 @@ public class TenantServiceImpl extends YtBaseServiceImpl<Tenant, Long> implement
 		r.setParent_id(BaseConstant.PARENT_ID);
 		r.setName(SysRoleCodeEnum.超级管理员.getName());
 		r.setCode(SysRoleCodeEnum.超级管理员.getCode());
+		r.setIs_fixed(true);
+		r.setStatus(1);
+		r.setIs_refresh_all_tenant(true);
 		rolemapper.postAndTanantId(r);
 
 		// Userrole

@@ -9,6 +9,7 @@ import com.yt.app.api.v1.mapper.SystemaccountMapper;
 import com.yt.app.api.v1.mapper.SystemstatisticalreportsMapper;
 import com.yt.app.api.v1.service.SystemstatisticalreportsService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
+import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.api.v1.entity.Systemstatisticalreports;
@@ -67,9 +68,9 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 	@Override
 	@Transactional
 	public void updateDayValue(String date, Systemaccount sa) {
+		TenantIdContext.setTenantId(sa.getTenant_id());
 		Systemstatisticalreports t = new Systemstatisticalreports();
 		t.setDateval(date);
-
 		t.setIncomecount(sa.getTotalincome());
 		// 查询每日统计数据
 		IncomeVO imaov = incomemapper.countOrder(date);
@@ -90,10 +91,9 @@ public class SystemstatisticalreportsServiceImpl extends YtBaseServiceImpl<Syste
 		} catch (Exception e) {
 			t.setPayoutrate(0.0);
 		}
-
 		mapper.post(t);
-
 		// 清空每日数据
 		systemaccountmapper.updatetodayvalue(sa.getId());
+		TenantIdContext.remove();
 	}
 }

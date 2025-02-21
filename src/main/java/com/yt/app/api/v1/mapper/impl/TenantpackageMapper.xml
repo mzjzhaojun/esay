@@ -14,9 +14,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Tenantpackage">
 		insert into
-		t_sys_tenant_package(id,name,status,menu_id_list,remark,sort,create_by,create_time,update_by,update_time,is_deleted)
+		t_sys_tenant_package(id,name,status,menu_id_list,remark,sort,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{name},#{status},#{menu_id_list},#{remark},#{sort},#{create_by},#{create_time},#{update_by},#{update_time},#{is_deleted})
+		(#{id},#{name},#{status},#{menu_id_list},#{remark},#{sort},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">

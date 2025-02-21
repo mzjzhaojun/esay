@@ -24,10 +24,10 @@ public class Tenantpackage extends YtBaseEntity<Tenantpackage> {
 
 	Long id;
 	String name;
-	Boolean status;
+	Integer status;
 	Object menu_id_list;
 	String remark;
 	Integer sort;
-	Boolean is_deleted;
+	Integer is_deleted;
 
 }

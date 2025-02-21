@@ -56,7 +56,7 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("agentaccountorder");
 
 		MybatisPlusConfig.TENANT_ID_TABLE.add("systemaccount");
-		MybatisPlusConfig.TENANT_ID_TABLE.add("systemcapitalrecord");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("systemaccountrecord");
 
 		MybatisPlusConfig.TENANT_ID_TABLE.add("exchange");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("exchangemerchantaccount");
@@ -78,6 +78,7 @@ public class SystemMybatisPlusConfig {
 		// 报表
 		MybatisPlusConfig.TENANT_ID_TABLE.add("channelstatisticalreports");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantstatisticalreports");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("systemstatisticalreports");
 
 		// tron
 		// MybatisPlusConfig.TENANT_ID_TABLE.add("tron");

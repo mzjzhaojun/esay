@@ -43,7 +43,6 @@ public class StatisticsThread implements Runnable {
 		ChannelMapper channelmapper = BeanContext.getApplicationContext().getBean(ChannelMapper.class);
 		ChannelService channelservice = BeanContext.getApplicationContext().getBean(ChannelService.class);
 		// 系统
-		// 商户
 		List<Systemaccount> listsa = systemaccountmapper.list(new HashMap<String, Object>());
 		listsa.forEach(sa -> {
 			// 单日数据
