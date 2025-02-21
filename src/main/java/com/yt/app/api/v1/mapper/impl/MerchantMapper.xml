@@ -134,7 +134,7 @@
 	<update id="updatetodayvalue" parameterType="java.lang.Long">
 		update merchant
 		set
-		todaycost = 0,todaycount = 0
+		todaycost = 0,todaycount = 0,todayincomecount = 0
 		where id = #{id}
 	</update>
 
