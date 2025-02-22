@@ -24,7 +24,7 @@ public class Tgmerchantgrouplabel extends YtBaseEntity<Tgmerchantgrouplabel> {
 
 	Long id;
 	Long tenant_id;
-	Long groupid;
-	Long labelid;
+	String name;
+	String remark;
 	Integer version;
 }

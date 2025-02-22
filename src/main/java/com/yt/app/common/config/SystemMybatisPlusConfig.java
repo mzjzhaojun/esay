@@ -27,6 +27,7 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("t_sys_user_role");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("t_sys_config");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("t_sys_file");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("t_sys_logs");
 		//
 
 		MybatisPlusConfig.TENANT_ID_TABLE.add("aisle");
@@ -80,9 +81,19 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantstatisticalreports");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("systemstatisticalreports");
 
+		
+		//tgrame
+		MybatisPlusConfig.TENANT_ID_TABLE.add("tgbotgroup");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("tgbotgrouprecord");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("tgchannelgroup");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("tgchannelgrouplabel");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("tgmerchantchannelmsg");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("tgmerchantgroup");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("tgmerchantgrouplabel");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("tgmessagegroup");
 		// tron
-		// MybatisPlusConfig.TENANT_ID_TABLE.add("tron");
-		// MybatisPlusConfig.TENANT_ID_TABLE.add("tronaddress");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("tron");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("tronaddress");
 
 	}
 

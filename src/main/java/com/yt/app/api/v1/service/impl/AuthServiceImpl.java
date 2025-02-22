@@ -114,7 +114,7 @@ public class AuthServiceImpl implements AuthService {
 		Systemaccount sca = systemaccountmapper.getByTenantId(userPerm.getTenantId());
 
 		// 写入登录日志
-		logsservice.post(Logs.builder().method("POST").optname(username).optdate(new Date()).requestip(AuthContext.getIp()).type(DictionaryResource.LOG_TYPE_201).build());
+		logsservice.post(Logs.builder().tenant_id(userPerm.getTenantId()).method("POST").optname(username).optdate(new Date()).requestip(AuthContext.getIp()).type(DictionaryResource.LOG_TYPE_201).build());
 		// 登录
 		return AuthUtil.login(JwtUserBO.builder().authSourceEnum(AuthSourceEnum.B).userId(Long.valueOf(userPerm.getId())).username(userPerm.getUsername()).allRoleIdList(allRoleIdListFinal).roleCodeList(roleCodeList).deptId(userPerm.getDept_id())
 				.scopeDataList(scopeDataList).tenantId(userPerm.getTenantId()).systemaccountId(sca.getId()).accounttype(userPerm.getAccounttype()).build());
@@ -158,7 +158,7 @@ public class AuthServiceImpl implements AuthService {
 		}
 
 		// 写入登录日志
-		logsservice.post(Logs.builder().optname(username).optdate(new Date()).requestip(AuthContext.getIp()).type(DictionaryResource.LOG_TYPE_202).build());
+		logsservice.post(Logs.builder().tenant_id(userPerm.getTenantId()).optname(username).optdate(new Date()).requestip(AuthContext.getIp()).type(DictionaryResource.LOG_TYPE_202).build());
 
 		return AuthUtil.login(JwtUserBO.builder().authSourceEnum(AuthSourceEnum.B).userId(Long.valueOf(userPerm.getId())).username(userPerm.getUsername()).deptId(userPerm.getDept_id()).tenantId(userPerm.getTenantId())
 				.accounttype(userPerm.getAccounttype()).build());

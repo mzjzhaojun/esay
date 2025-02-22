@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.TgmerchantgrouplabelMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,groupid,labelid,create_by,create_time,update_by,update_time,version
+		id,tenant_id,name,remark,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -14,18 +14,18 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Tgmerchantgrouplabel">
 		insert into
-		tgmerchantgrouplabel(id,groupid,labelid,create_by,create_time,update_by,update_time)
+		tgmerchantgrouplabel(id,name,remark,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{groupid},#{labelid},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{name},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		tgmerchantgrouplabel(id,tenant_id,groupid,labelid,create_by,create_time,update_by,update_time)
+		tgmerchantgrouplabel(id,tenant_id,name,remark,create_by,create_time,update_by,update_time)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{groupid},#{labelid},#{create_by},#{create_time},#{update_by},#{update_time})
+			(#{id},#{tenant_id},#{name},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -38,11 +38,11 @@
 		parameterType="com.yt.app.api.v1.entity.Tgmerchantgrouplabel">
 		update tgmerchantgrouplabel
 		<set>
-			<if test="groupid != null">
-				groupid= #{groupid},
+			<if test="name != null">
+				name= #{name},
 			</if>
-			<if test="labelid != null">
-				labelid= #{labelid},
+			<if test="remark != null">
+				remark= #{remark},
 			</if>
 			<if test="update_by != null">
 				update_by= #{update_by},

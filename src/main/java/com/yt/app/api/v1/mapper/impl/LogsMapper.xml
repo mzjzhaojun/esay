@@ -13,9 +13,9 @@
 	<!-- add -->
 	<insert id="post" parameterType="com.yt.app.api.v1.entity.Logs">
 		insert into
-		t_sys_logs(id,optname,optdate,type,method,requesturl,requestparams,requestip,time)
+		t_sys_logs(id,tenant_id,optname,optdate,type,method,requesturl,requestparams,requestip,time)
 		values
-		(#{id},#{optname},#{optdate},#{type},#{method},#{requesturl},#{requestparams},#{requestip},#{time})
+		(#{id},#{tenant_id},#{optname},#{optdate},#{type},#{method},#{requesturl},#{requestparams},#{requestip},#{time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">

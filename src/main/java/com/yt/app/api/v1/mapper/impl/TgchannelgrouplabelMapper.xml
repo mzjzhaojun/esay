@@ -18,14 +18,14 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Tgchannelgrouplabel">
 		insert into
-		Tgchannelgrouplabel(id,name,create_by,create_time,update_by,update_time,remark)
+		tgchannelgrouplabel(id,name,create_by,create_time,update_by,update_time,remark)
 		values
 		(#{id},#{name},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		Tgchannelgrouplabel(id,tenant_id,name,create_by,create_time,update_by,update_time,remark)
+		tgchannelgrouplabel(id,tenant_id,name,create_by,create_time,update_by,update_time,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
@@ -35,13 +35,13 @@
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
 		delete from
-		Tgchannelgrouplabel
+		tgchannelgrouplabel
 		where id = #{id}
 	</delete>
 	<!-- update -->
 	<update id="put"
 		parameterType="com.yt.app.api.v1.entity.Tgchannelgrouplabel">
-		update Tgchannelgrouplabel
+		update tgchannelgrouplabel
 		<set>
 			<if test="tenant_id != null">
 				tenant_id= #{tenant_id},
@@ -75,7 +75,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from Tgchannelgrouplabel
+		from tgchannelgrouplabel
 		where id = #{id}
 	</select>
 	<!-- getList -->
@@ -83,7 +83,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from Tgchannelgrouplabel
+		from tgchannelgrouplabel
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -96,7 +96,7 @@
 		resultMap="ResultMapVO">
 		select
 		<include refid="Base_Column_List" />
-		from Tgchannelgrouplabel
+		from tgchannelgrouplabel
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -113,7 +113,7 @@
 	<!-- getCount -->
 	<select id="countlist" parameterType="java.util.HashMap"
 		resultType="int">
-		select count(*) from Tgchannelgrouplabel
+		select count(*) from tgchannelgrouplabel
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -126,7 +126,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from Tgchannelgrouplabel
+		from tgchannelgrouplabel
 		<where>
 			1=1
 			<if test="array != null and array.length > 0">
