@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
+import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.message.impl.ChannelBalanceMessage;
 import com.yt.app.common.bot.message.impl.ChannelIssueMessage;
 import com.yt.app.common.bot.message.impl.ExchangeMessage;
@@ -64,6 +65,7 @@ public class ChannelBot extends TelegramLongPollingBot {
 			return;
 		}
 		try {
+			TenantIdContext.removeFlag();
 			Tgchannelgroup tmg = tgchannelgroupmapper.getByTgGroupId(chatid);
 			if (tmg == null) {
 				tmg = new Tgchannelgroup();

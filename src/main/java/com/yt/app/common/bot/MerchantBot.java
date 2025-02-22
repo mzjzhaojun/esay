@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
+import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.message.impl.ExchangeMessage;
 import com.yt.app.common.bot.message.impl.MerchantBalanceMessage;
 import com.yt.app.common.bot.message.impl.MerchantIssueMessage;
@@ -67,6 +68,7 @@ public class MerchantBot extends TelegramLongPollingBot {
 			return;
 		}
 		try {
+			TenantIdContext.removeFlag();
 			Tgmerchantgroup tmg = tgmerchantgroupmapper.getByTgGroupId(chatid);
 			if (tmg == null) {
 				tmg = new Tgmerchantgroup();

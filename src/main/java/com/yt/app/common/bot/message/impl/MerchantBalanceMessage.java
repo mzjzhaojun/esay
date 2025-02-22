@@ -11,7 +11,6 @@ import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
-import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.message.UpdateMerchantMessageService;
 import com.yt.app.common.util.DateTimeUtil;
 
@@ -38,7 +37,6 @@ public class MerchantBalanceMessage implements UpdateMerchantMessageService {
 		SendMessage sendMessage = new SendMessage();
 		sendMessage.setChatId(update.getMessage().getChatId().toString());
 		if (tmg.getMerchantids() != null) {
-			TenantIdContext.removeFlag();
 			StringBuffer msg = new StringBuffer();
 			for (Long mid : tmg.getMerchantids()) {
 				Merchant m = merchantmapper.get(mid);
@@ -56,7 +54,6 @@ public class MerchantBalanceMessage implements UpdateMerchantMessageService {
 
 	public SendMessage getUpdate(Merchant m) {
 		SendMessage sendMessage = new SendMessage();
-		TenantIdContext.removeFlag();
 		Tgmerchantgroup tmg = tgmerchantgroupmapper.getByMerchantId(m.getId());
 		if (tmg != null) {
 			sendMessage.setChatId(tmg.getTgid());

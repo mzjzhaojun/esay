@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.yt.app.api.v1.entity.Tgmessagegroup;
 import com.yt.app.api.v1.mapper.TgmessagegroupMapper;
+import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.message.impl.ExchangeMessage;
 import com.yt.app.common.bot.message.impl.M2CMessage;
 import com.yt.app.common.bot.message.impl.StartMessage;
@@ -50,6 +51,7 @@ public class MessageBot extends TelegramLongPollingBot {
 			return;
 		}
 		try {
+			TenantIdContext.removeFlag();
 			Tgmessagegroup tmg = tgmessagegroupmapper.getByTgcGroupId(chatid);
 			if (tmg == null) {
 				tmg = tgmessagegroupmapper.getByTgmGroupId(chatid);

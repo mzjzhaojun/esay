@@ -11,7 +11,6 @@ import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountMapper;
 import com.yt.app.api.v1.service.QrcodeaccountorderService;
-import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.message.UpdateChannelMessageService;
 import com.yt.app.common.util.DateTimeUtil;
 
@@ -40,7 +39,6 @@ public class ChannelIssueMessage implements UpdateChannelMessageService {
 		if (tcg.getChannelids() != null) {
 			String username = update.getMessage().getFrom().getUserName();
 			if (username.equals(tcg.getMangers())) {
-				TenantIdContext.removeFlag();
 				StringBuffer msg = new StringBuffer();
 				String[] text = update.getMessage().getText().split(" ");
 				if (text.length == 3) {

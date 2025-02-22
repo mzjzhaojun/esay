@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.yt.app.api.v1.entity.Tronmember;
 import com.yt.app.api.v1.service.TronmemberService;
+import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.message.Keyboard.ButtonResource;
 import com.yt.app.common.bot.message.impl.ContactCustomerServiceMessage;
 import com.yt.app.common.bot.message.impl.TrxFlashRentMessage;
@@ -53,6 +54,7 @@ public class TronBot extends TelegramLongPollingBot {
 			log.info("There isn't object Message or CallbackQuery! Update: {}", update);
 			return;
 		}
+		TenantIdContext.removeFlag();
 		Tronmember tronmember = tronmemberservice.getByTgId(chartId);
 		if (tronmember == null) {
 			tronmember = new Tronmember();

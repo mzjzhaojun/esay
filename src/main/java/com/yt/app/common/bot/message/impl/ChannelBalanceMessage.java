@@ -11,7 +11,6 @@ import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountMapper;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
-import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.message.UpdateChannelMessageService;
 import com.yt.app.common.util.DateTimeUtil;
 
@@ -38,7 +37,6 @@ public class ChannelBalanceMessage implements UpdateChannelMessageService {
 		SendMessage sendMessage = new SendMessage();
 		sendMessage.setChatId(update.getMessage().getChatId().toString());
 		if (tcg.getChannelids() != null) {
-			TenantIdContext.removeFlag();
 			StringBuffer msg = new StringBuffer();
 			for (Long mid : tcg.getChannelids()) {
 				Channel c = channelmapper.get(mid);
@@ -56,7 +54,6 @@ public class ChannelBalanceMessage implements UpdateChannelMessageService {
 
 	public SendMessage getUpdate(Channel c) {
 		SendMessage sendMessage = new SendMessage();
-		TenantIdContext.removeFlag();
 		Tgchannelgroup tmg = tgchannelgroupmapper.getByChannelId(c.getId());
 		if (tmg != null) {
 			sendMessage.setChatId(tmg.getTgid());

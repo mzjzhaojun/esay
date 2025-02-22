@@ -11,7 +11,6 @@ import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.service.IncomemerchantaccountorderService;
-import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.message.UpdateMerchantMessageService;
 import com.yt.app.common.util.DateTimeUtil;
 
@@ -40,7 +39,6 @@ public class MerchantIssueMessage implements UpdateMerchantMessageService {
 		if (tmg.getMerchantids() != null) {
 			String username = update.getMessage().getFrom().getUserName();
 			if (username.equals(tmg.getMangers())) {
-				TenantIdContext.removeFlag();
 				StringBuffer msg = new StringBuffer();
 				String[] text = update.getMessage().getText().split(" ");
 				if (text.length == 3) {

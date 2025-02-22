@@ -27,13 +27,11 @@ public class NotifyChannelMessage implements UpdateMessageService {
 	public SendMessage getUpdate(Update update) {
 		SendMessage sendMessage = new SendMessage();
 		sendMessage.setChatId(update.getMessage().getChatId().toString());
-
 		return sendMessage;
 	}
 
 	public SendMessage getNotifyUpdate(Channel cl) {
 		SendMessage sendMessage = new SendMessage();
-
 		Tgchannelgroup tcg = tgchannelgroupmapper.getByChannelId(cl.getId());
 		if (tcg != null) {
 			sendMessage.setChatId(tcg.getTgid());

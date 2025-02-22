@@ -17,7 +17,6 @@ import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
-import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.MerchantBot;
 import com.yt.app.common.bot.message.UpdateMerchantMessageService;
 import com.yt.app.common.resource.DictionaryResource;
@@ -47,7 +46,6 @@ public class MerchantOrderMessage implements UpdateMerchantMessageService {
 		SendMessage sendmessage = new SendMessage();
 		String ordernum = update.getMessage().getText();
 		if (ordernum.matches(".*\\d+.*")) {
-			TenantIdContext.removeFlag();
 			Income income = incomemapper.getByMerchantOrderNum(ordernum);
 			if (income != null && income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 				Tgchannelgroup tgchannelgroup = tgchannelgroupmapper.getByChannelId(income.getQrcodeid());
