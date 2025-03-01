@@ -689,11 +689,12 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setQrcodecode(channel.getAislecode());
 		income.setQrcodename(channel.getName());
 		income.setQrcodeuserid(channel.getUserid());
-		// 收款码
+		// 随机数
+		income.setAmount(Double.valueOf(qs.getPay_amount()));
 		if (mc.getClearingtype())
-			income.setAmount(Double.valueOf(StringUtil.getDouble(qs.getPay_amount())));
+			income.setRealamount(Double.valueOf(StringUtil.getDouble(qs.getPay_amount())));
 		else
-			income.setAmount(Double.valueOf(qs.getPay_amount()));
+			income.setRealamount(income.getAmount());
 
 		income.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
@@ -862,7 +863,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setMerchantincomeamount(Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount()))));
 		// 计算当前码可生成的订单
 		income.setFewamount(0.00);
-		income.setRealamount(income.getAmount());
 		income.setCollection(mc.getCollection());
 		income.setExchange(channel.getCollection());
 		income.setType(DictionaryResource.ORDERTYPE_27.toString());

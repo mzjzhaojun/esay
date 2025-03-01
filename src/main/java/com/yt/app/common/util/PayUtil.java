@@ -532,13 +532,13 @@ public class PayUtil {
 		map.add("bankcode", pt.getQrcodecode());
 		map.add("orderid", pt.getOrdernum());
 		map.add("applydate", DateTimeUtil.getDateTime());
-		map.add("amount", pt.getAmount().toString());
+		map.add("amount", pt.getRealamount().toString());
 		map.add("notify_url", cl.getApireusultip());
 		map.add("return_url", pt.getBackforwardurl());
 		map.add("attach", "goods");
 		map.add("sign_type", "RSA2");
 
-		String signContent = "amount=" + pt.getAmount() + "&appid=" + cl.getApikey() + "&applydate=" + DateTimeUtil.getDateTime() + "&bankcode=" + pt.getQrcodecode() + "&memberid=" + cl.getCode() + "&notify_url=" + cl.getApireusultip() + "&orderid="
+		String signContent = "amount=" + pt.getRealamount() + "&appid=" + cl.getApikey() + "&applydate=" + DateTimeUtil.getDateTime() + "&bankcode=" + pt.getQrcodecode() + "&memberid=" + cl.getCode() + "&notify_url=" + cl.getApireusultip() + "&orderid="
 				+ pt.getOrdernum() + "&return_url=" + pt.getBackforwardurl();
 		String sign = "";
 		try {
@@ -681,11 +681,11 @@ public class PayUtil {
 			map.add("pay_applydate", datetime);
 			map.add("pay_orderid", pt.getOrdernum());
 			map.add("type", "1");
-			map.add("pay_amount", pt.getAmount().toString());
+			map.add("pay_amount", pt.getRealamount().toString());
 			map.add("pay_notifyurl", cl.getApireusultip());
 			map.add("pay_callbackurl", pt.getBackforwardurl());
 
-			String signContent = "pay_amount=" + pt.getAmount() + "&pay_applydate=" + datetime + "&pay_bankcode=" + pt.getQrcodecode() + "&pay_callbackurl=" + pt.getBackforwardurl() + "&pay_memberid=" + cl.getCode() + "&pay_notifyurl="
+			String signContent = "pay_amount=" + pt.getRealamount() + "&pay_applydate=" + datetime + "&pay_bankcode=" + pt.getQrcodecode() + "&pay_callbackurl=" + pt.getBackforwardurl() + "&pay_memberid=" + cl.getCode() + "&pay_notifyurl="
 					+ cl.getApireusultip() + "&pay_orderid=" + pt.getOrdernum() + "&key=" + cl.getApikey() + "";
 
 			String sign = MD5Utils.md5(signContent);
@@ -749,11 +749,11 @@ public class PayUtil {
 			map.add("pay_applydate", datetime);
 			map.add("pay_orderid", pt.getOrdernum());
 			map.add("type", "1");
-			map.add("pay_amount", pt.getAmount().toString());
+			map.add("pay_amount", pt.getRealamount().toString());
 			map.add("pay_notifyurl", cl.getApireusultip());
 			map.add("pay_callbackurl", pt.getBackforwardurl());
 
-			String signContent = "pay_amount=" + pt.getAmount() + "&pay_applydate=" + datetime + "&pay_bankcode=" + pt.getQrcodecode() + "&pay_callbackurl=" + pt.getBackforwardurl() + "&pay_memberid=" + cl.getCode() + "&pay_notifyurl="
+			String signContent = "pay_amount=" + pt.getRealamount() + "&pay_applydate=" + datetime + "&pay_bankcode=" + pt.getQrcodecode() + "&pay_callbackurl=" + pt.getBackforwardurl() + "&pay_memberid=" + cl.getCode() + "&pay_notifyurl="
 					+ cl.getApireusultip() + "&pay_orderid=" + pt.getOrdernum() + "&key=" + cl.getApikey() + "";
 
 			String sign = MD5Utils.md5(signContent);
@@ -816,11 +816,11 @@ public class PayUtil {
 			map.add("productId", pt.getQrcodecode());
 			map.add("mchOrderNo", pt.getOrdernum());
 			map.add("reqTime", time.toString());
-			map.add("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
+			map.add("amount", String.format("%.2f", pt.getRealamount()).replace(".", ""));
 			map.add("notifyUrl", cl.getApireusultip());
 			map.add("clientIp", "127.0.0.1");
 
-			String signContent = "amount=" + String.format("%.2f", pt.getAmount()).replace(".", "") + "&clientIp=127.0.0.1&mchNo=" + cl.getCode() + "&mchOrderNo=" + pt.getOrdernum() + "&notifyUrl=" + cl.getApireusultip() + "&productId="
+			String signContent = "amount=" + String.format("%.2f", pt.getRealamount()).replace(".", "") + "&clientIp=127.0.0.1&mchNo=" + cl.getCode() + "&mchOrderNo=" + pt.getOrdernum() + "&notifyUrl=" + cl.getApireusultip() + "&productId="
 					+ pt.getQrcodecode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
 
 			String sign = MD5Utils.md5(signContent);
@@ -915,13 +915,13 @@ public class PayUtil {
 			map.put("wayCode", pt.getQrcodecode());
 			map.put("outTradeNo", pt.getOrdernum());
 			map.put("subject", time.toString());
-			map.put("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
+			map.put("amount", String.format("%.2f", pt.getRealamount()).replace(".", ""));
 			map.put("notifyUrl", cl.getApireusultip());
 			map.put("returnUrl", pt.getBackforwardurl());
 			map.put("clientIp", "127.0.0.1");
 			map.put("reqTime", time.toString());
 
-			String signContent = "amount=" + String.format("%.2f", pt.getAmount()).replace(".", "") + "&clientIp=127.0.0.1&mchId=" + cl.getCode() + "&notifyUrl=" + cl.getApireusultip() + "&outTradeNo=" + pt.getOrdernum() + "&reqTime="
+			String signContent = "amount=" + String.format("%.2f", pt.getRealamount()).replace(".", "") + "&clientIp=127.0.0.1&mchId=" + cl.getCode() + "&notifyUrl=" + cl.getApireusultip() + "&outTradeNo=" + pt.getOrdernum() + "&reqTime="
 					+ time.toString() + "&returnUrl=" + pt.getBackforwardurl() + "&subject=" + time.toString() + "&wayCode=" + pt.getQrcodecode() + "&key=" + cl.getApikey();
 
 			String sign = MD5Utils.md5(signContent);
@@ -1012,7 +1012,7 @@ public class PayUtil {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("merchantId", cl.getCode());
 			map.put("orderId", pt.getOrdernum());
-			map.put("orderAmount", pt.getAmount().toString());
+			map.put("orderAmount", pt.getRealamount().toString());
 			map.put("channelType", pt.getQrcodecode());
 			map.put("notifyUrl", cl.getApireusultip());
 			map.put("returnUrl", pt.getBackforwardurl());
@@ -1121,11 +1121,11 @@ public class PayUtil {
 			map.add("productId", pt.getQrcodecode());
 			map.add("mchOrderNo", pt.getOrdernum());
 			map.add("reqTime", time.toString());
-			map.add("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
+			map.add("amount", String.format("%.2f", pt.getRealamount()).replace(".", ""));
 			map.add("notifyUrl", cl.getApireusultip());
 			map.add("clientIp", "127.0.0.1");
 
-			String signContent = "amount=" + String.format("%.2f", pt.getAmount()).replace(".", "") + "&clientIp=127.0.0.1&mchNo=" + cl.getCode() + "&mchOrderNo=" + pt.getOrdernum() + "&notifyUrl=" + cl.getApireusultip() + "&productId="
+			String signContent = "amount=" + String.format("%.2f", pt.getRealamount()).replace(".", "") + "&clientIp=127.0.0.1&mchNo=" + cl.getCode() + "&mchOrderNo=" + pt.getOrdernum() + "&notifyUrl=" + cl.getApireusultip() + "&productId="
 					+ pt.getQrcodecode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
 
 			String sign = MD5Utils.md5(signContent);
@@ -1220,13 +1220,13 @@ public class PayUtil {
 			map.put("wayCode", pt.getQrcodecode());
 			map.put("outTradeNo", pt.getOrdernum());
 			map.put("subject", time.toString());
-			map.put("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
+			map.put("amount", String.format("%.2f", pt.getRealamount()).replace(".", ""));
 			map.put("notifyUrl", cl.getApireusultip());
 			map.put("returnUrl", pt.getBackforwardurl());
 			map.put("clientIp", "127.0.0.1");
 			map.put("reqTime", time.toString());
 
-			String signContent = "amount=" + String.format("%.2f", pt.getAmount()).replace(".", "") + "&clientIp=127.0.0.1&mchId=" + cl.getCode() + "&notifyUrl=" + cl.getApireusultip() + "&outTradeNo=" + pt.getOrdernum() + "&reqTime="
+			String signContent = "amount=" + String.format("%.2f", pt.getRealamount()).replace(".", "") + "&clientIp=127.0.0.1&mchId=" + cl.getCode() + "&notifyUrl=" + cl.getApireusultip() + "&outTradeNo=" + pt.getOrdernum() + "&reqTime="
 					+ time.toString() + "&returnUrl=" + pt.getBackforwardurl() + "&subject=" + time.toString() + "&wayCode=" + pt.getQrcodecode() + "&key=" + cl.getApikey();
 
 			String sign = MD5Utils.md5(signContent);
@@ -1320,13 +1320,13 @@ public class PayUtil {
 			map.put("wayCode", pt.getQrcodecode());
 			map.put("outTradeNo", pt.getOrdernum());
 			map.put("subject", time.toString());
-			map.put("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
+			map.put("amount", String.format("%.2f", pt.getRealamount()).replace(".", ""));
 			map.put("notifyUrl", cl.getApireusultip());
 			map.put("returnUrl", pt.getBackforwardurl());
 			map.put("clientIp", "127.0.0.1");
 			map.put("reqTime", time.toString());
 
-			String signContent = "amount=" + String.format("%.2f", pt.getAmount()).replace(".", "") + "&clientIp=127.0.0.1&mchId=" + cl.getCode() + "&notifyUrl=" + cl.getApireusultip() + "&outTradeNo=" + pt.getOrdernum() + "&reqTime="
+			String signContent = "amount=" + String.format("%.2f", pt.getRealamount()).replace(".", "") + "&clientIp=127.0.0.1&mchId=" + cl.getCode() + "&notifyUrl=" + cl.getApireusultip() + "&outTradeNo=" + pt.getOrdernum() + "&reqTime="
 					+ time.toString() + "&returnUrl=" + pt.getBackforwardurl() + "&subject=" + time.toString() + "&wayCode=" + pt.getQrcodecode() + "&key=" + cl.getApikey();
 
 			String sign = MD5Utils.md5(signContent);
@@ -1422,7 +1422,7 @@ public class PayUtil {
 			map.add("mchOrderNo", pt.getOrdernum());
 			map.add("currency", "cny");
 			map.add("subject", time.toString());
-			map.add("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
+			map.add("amount", String.format("%.2f", pt.getRealamount()).replace(".", ""));
 			map.add("notifyUrl", cl.getApireusultip());
 			map.add("clientIp", "127.0.0.1");
 			map.add("body", time.toString());
@@ -1504,7 +1504,7 @@ public class PayUtil {
 			map.add("mchOrderNo", pt.getOrdernum());
 			map.add("currency", "cny");
 			map.add("subject", time.toString());
-			map.add("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
+			map.add("amount", String.format("%.2f", pt.getRealamount()).replace(".", ""));
 			map.add("notifyUrl", cl.getApireusultip());
 			map.add("body", time.toString());
 
@@ -1583,11 +1583,11 @@ public class PayUtil {
 			map.add("orderCode", pt.getOrdernum());
 			map.add("ip", "127.0.0.1");
 			map.add("goodsName", time.toString());
-			map.add("orderMoney", String.format("%.2f", pt.getAmount()));
+			map.add("orderMoney", String.format("%.2f", pt.getRealamount()));
 			map.add("uid", pt.getMerchantid());
 			map.add("version", "3.0");
 
-			String signContent = "version=3.0&customerCode=" + cl.getCode() + "&orderCode=" + pt.getOrdernum() + "&ip=127.0.0.1&uid=" + pt.getMerchantid() + "&goodsName=" + time + "&orderMoney=" + pt.getAmount() + "&secret_key=" + cl.getApikey()
+			String signContent = "version=3.0&customerCode=" + cl.getCode() + "&orderCode=" + pt.getOrdernum() + "&ip=127.0.0.1&uid=" + pt.getMerchantid() + "&goodsName=" + time + "&orderMoney=" + pt.getRealamount() + "&secret_key=" + cl.getApikey()
 					+ "";
 
 			String sign = MD5Utils.md5(signContent.toLowerCase());
@@ -1653,7 +1653,7 @@ public class PayUtil {
 			Long time = DateTimeUtil.getNow().getTime();
 			map.put("key", cl.getCode() + cl.getApikey());
 			map.put("pay_code", cl.getAislecode());
-			map.put("order_amount", String.format("%.2f", pt.getAmount()));
+			map.put("order_amount", String.format("%.2f", pt.getRealamount()));
 			map.put("order_no", pt.getOrdernum());
 
 			map.put("ts", time.toString());
@@ -1733,7 +1733,7 @@ public class PayUtil {
 			map.add("mchOrderNo", pt.getOrdernum());
 			map.add("currency", "cny");
 			map.add("subject", DateTimeUtil.getNow().getTime());
-			map.add("amount", Integer.parseInt(String.format("%.2f", pt.getAmount()).replace(".", "")));
+			map.add("amount", Integer.parseInt(String.format("%.2f", pt.getRealamount()).replace(".", "")));
 			map.add("notifyUrl", cl.getApireusultip());
 			map.add("clientIp", "127.0.0.1");
 			map.add("signType", "MD5");
