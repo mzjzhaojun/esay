@@ -197,7 +197,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
 		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
+			throw new YtException("非法请求,IP加白名单后重试!");
 		}
 		String returnstate = PayUtil.SendKFQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "kf通知反查订单失败!");
@@ -217,7 +217,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
 		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
+			throw new YtException("非法请求,IP加白名单后重试!");
 		}
 		String returnstate = PayUtil.SendTDQuerySubmit(orderid, income.getAmount(), channel);
 		Assert.notNull(returnstate, "铁蛋通知反查订单失败!");
@@ -237,7 +237,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
 		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
+			throw new YtException("非法请求,IP加白名单后重试!");
 		}
 		String returnstate = PayUtil.SendEgQuerySubmit(orderid, income.getAmount(), channel);
 		Assert.notNull(returnstate, "二狗通知反查订单失败!");
@@ -257,7 +257,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
 		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
+			throw new YtException("非法请求,IP加白名单后重试!");
 		}
 		String returnstate = PayUtil.SendWdQuerySubmit(orderid, income.getAmount(), channel);
 		Assert.notNull(returnstate, "豌豆通知反查订单失败!");
@@ -277,7 +277,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
 		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
+			throw new YtException("非法请求,IP加白名单后重试!");
 		}
 		String returnstate = PayUtil.SendRblQuerySubmit(orderid, income.getAmount(), channel);
 		Assert.notNull(returnstate, "日不落通知反查订单失败!");
@@ -297,7 +297,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
 		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
+			throw new YtException("非法请求,IP加白名单后重试!");
 		}
 		String returnstate = PayUtil.SendFcQuerySubmit(orderid, income.getAmount(), channel);
 		Assert.notNull(returnstate, "翡翠通知反查订单失败!");
@@ -317,7 +317,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
 		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
+			throw new YtException("非法请求,IP加白名单后重试!");
 		}
 		String returnstate = PayUtil.SendAklQuerySubmit(orderid, income.getAmount(), channel);
 		Assert.notNull(returnstate, "奥克兰通知反查订单失败!");
@@ -337,7 +337,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
 		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
+			throw new YtException("非法请求,IP加白名单后重试!");
 		}
 		String returnstate = PayUtil.SendGzQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "公子通知反查订单失败!");
@@ -357,7 +357,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
 		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
+			throw new YtException("非法请求,IP加白名单后重试!");
 		}
 		String returnstate = PayUtil.SendFhQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "飞黄运通通知反查订单失败!");
@@ -377,7 +377,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
 		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
+			throw new YtException("非法请求,IP加白名单后重试!");
 		}
 		JSONObject returnstate = PayUtil.SendTongYuanQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "通源通知反查订单失败!");
@@ -397,7 +397,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
 		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
+			throw new YtException("非法请求,IP加白名单后重试!");
 		}
 		String returnstate = PayUtil.SendYSQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "易生通知反查订单失败!");
@@ -417,7 +417,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
 		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
+			throw new YtException("非法请求,IP加白名单后重试!");
 		}
 		String returnstate = PayUtil.SendWjQuerySubmit(orderid, income.getAmount(), channel);
 		Assert.notNull(returnstate, "玩家通知反查订单失败!");
@@ -437,7 +437,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
 		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
+			throw new YtException("非法请求,IP加白名单后重试!");
 		}
 		String returnstate = PayUtil.SendXSQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "新生通知反查订单失败!");
@@ -456,7 +456,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
 		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
+			throw new YtException("非法请求,IP加白名单后重试!");
 		}
 		String returnstate = PayUtil.SendZSQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "张三通知反查订单失败!");
@@ -690,7 +690,10 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setQrcodename(channel.getName());
 		income.setQrcodeuserid(channel.getUserid());
 		// 收款码
-		income.setAmount(Double.valueOf(qs.getPay_amount()));
+		if (mc.getClearingtype())
+			income.setAmount(Double.valueOf(StringUtil.getDouble(qs.getPay_amount())));
+		else
+			income.setAmount(Double.valueOf(qs.getPay_amount()));
 
 		income.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
@@ -886,7 +889,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		String ip = AuthContext.getIp();
 		if (mc.getIpaddress() == null || mc.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
+			throw new YtException("非法请求,IP加白名单后重试!");
 		}
 		String sign = PayUtil.SignMd5QueryQrocde(qs, mc.getAppkey());
 		if (!sign.equals(qs.getPay_md5sign())) {
@@ -984,10 +987,10 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Assert.notNull(mc, "商户不存在!");
 		String ip = AuthContext.getIp();
 		if (ip == null || ip.equals("")) {
-			throw new YtException("非法请求!");
+			throw new YtException("非法请求,IP加白名单后重试!");
 		}
 		if (mc.getIpaddress() == null || mc.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求!");
+			throw new YtException("非法请求,IP加白名单后重试!");
 		}
 		if (!mc.getStatus()) {
 			throw new YtException("商户被冻结!");

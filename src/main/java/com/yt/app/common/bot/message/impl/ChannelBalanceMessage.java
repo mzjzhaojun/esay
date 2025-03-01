@@ -41,8 +41,8 @@ public class ChannelBalanceMessage implements UpdateChannelMessageService {
 			for (Long mid : tcg.getChannelids()) {
 				Channel c = channelmapper.get(mid);
 				Qrcodeaccount qrcodeaccount = qrcodeaccountmapper.getByUserId(c.getUserid());
-				msg.append("\r\n渠道：*" + c.getName() + "*\r\n\r\n今日利润：" + c.getTodaycount() + " \r\n今日收入：" + c.getTodayincomecount()+ " \r\n总共下发：" + qrcodeaccount.getWithdrawamount() + "\r\n总共收入：" + qrcodeaccount.getTotalincome() + " \r\n可用余额：" + qrcodeaccount.getBalance() + "\r\n  \r\n*"
-						+ DateTimeUtil.getDateTime() + "*");
+				msg.append("\r\n渠道：*" + c.getName() + "*\r\n\r\n今日入款：" + c.getTodayincomecount() + " \r\n今日利润：" + c.getTodaycount() + " \r\n总共下发：" + qrcodeaccount.getWithdrawamount() + "\r\n总共入款：" + qrcodeaccount.getTotalincome() + " \r\n可用余额："
+						+ qrcodeaccount.getBalance() + "\r\n  \r\n*" + DateTimeUtil.getDateTime() + "*");
 			}
 			sendMessage.setText(msg.toString());
 			sendMessage.enableMarkdown(true);
@@ -57,7 +57,7 @@ public class ChannelBalanceMessage implements UpdateChannelMessageService {
 		Tgchannelgroup tmg = tgchannelgroupmapper.getByChannelId(c.getId());
 		if (tmg != null) {
 			sendMessage.setChatId(tmg.getTgid());
-			sendMessage.setText("渠道:*" + c.getName() + "标签:" + c.getNkname() + "*\r\n\r\n今日收入：" + c.getTodayincomecount() + " \r\n今日利润：" + c.getTodaycount() + " \r\n今日结算：" + (c.getTodayincomecount() - c.getTodaycount()) + "\r\n总共支付："
+			sendMessage.setText("渠道:*" + c.getName() + "标签:" + c.getNkname() + "*\r\n\r\n今日入款：" + c.getTodayincomecount() + " \r\n今日利润：" + c.getTodaycount() + " \r\n今日结算：" + (c.getTodayincomecount() - c.getTodaycount()) + "\r\n总共入款："
 					+ c.getIncomecount() + "\r\n\r\n*" + DateTimeUtil.getDateTime() + "*");
 			sendMessage.enableMarkdown(true);
 		} else {

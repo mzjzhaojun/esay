@@ -18,6 +18,7 @@ import com.yt.app.common.bot.message.impl.MerchantIssueMessage;
 import com.yt.app.common.bot.message.impl.MerchantOrderMessage;
 import com.yt.app.common.bot.message.impl.PinMessage;
 import com.yt.app.common.bot.message.impl.StartMessage;
+import com.yt.app.common.util.StringUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,7 +35,7 @@ public class MerchantBot extends TelegramLongPollingBot {
 
 	@Autowired
 	private MerchantBalanceMessage merchantbalancemessage;
-	
+
 	@Autowired
 	private MerchantIssueMessage merchantissuemessage;
 
@@ -94,7 +95,8 @@ public class MerchantBot extends TelegramLongPollingBot {
 						channelbot.execute(smg);
 						execute(merchantordermessage.getUpdateHandler(update));
 					} else {
-						execute(merchantordermessage.getUpdateNotFind(update));
+						if (!StringUtil.isChinese(update.getMessage().getText()))
+							execute(merchantordermessage.getUpdateNotFind(update));
 					}
 				}
 			} else if (update.hasCallbackQuery()) {

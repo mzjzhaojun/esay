@@ -89,6 +89,13 @@ public class StringUtil {
 		return UUID.randomUUID().toString().replace("-", "");
 	}
 
+	// 增加随机小数
+	public static String getDouble(String str) {
+		Random random = new Random();
+		double randomnum = random.nextDouble() * (0.3 - 0.01) + 0.01;
+		return String.format("%.2f", Double.valueOf(str) + randomnum);
+	}
+
 	/**
 	 * 获取count位随机十六进制字符串
 	 * 
@@ -493,6 +500,14 @@ public class StringUtil {
 			int familyTwoNameIndex = randomInt(FAMILY_TWO_NAME.length());
 			familyTwoNameIndex = familyTwoNameIndex % 2 == 0 ? familyTwoNameIndex : familyTwoNameIndex - 1;
 			return FAMILY_TWO_NAME.substring(familyTwoNameIndex, familyTwoNameIndex + 2) + boyName.substring(bodNameIndexOne, bodNameIndexOne + 1) + boyName.substring(bodNameIndexTwo, bodNameIndexTwo + 1);
+		}
+	}
+
+	public static void main(String[] args) {
+		int i = 0;
+		while (i < 1000) {
+			System.out.println(getDouble("199"));
+			i++;
 		}
 	}
 }
