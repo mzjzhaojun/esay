@@ -249,9 +249,9 @@
 		sum(amount) as amount,
 		sum(incomeamount) as incomeamount
 		FROM
-		qrcodeaccountorder
+		income
 		WHERE
-		userid = #{userid}
+		qrcodeid = #{userid}
 		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
 		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
 	</select>
@@ -262,9 +262,9 @@
 		sum(amount) as amount,
 		sum(incomeamount) as incomeamount
 		FROM
-		qrcodeaccountorder
+		income
 		WHERE
-		userid = #{userid}
+		qrcodeid = #{userid}
 		AND status = 52
 		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
 		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
