@@ -247,7 +247,7 @@
 		SELECT
 		count(*)  as ordercount,
 		sum(amount) as amount,
-		sum(incomeamount) as incomeamount
+		sum(channelincomeamount) as incomeamount
 		FROM
 		income
 		WHERE
@@ -260,7 +260,7 @@
 		SELECT
 		count(*) as ordercount,
 		sum(amount) as amount,
-		sum(incomeamount) as incomeamount
+		sum(channelincomeamount) as incomeamount
 		FROM
 		income
 		WHERE

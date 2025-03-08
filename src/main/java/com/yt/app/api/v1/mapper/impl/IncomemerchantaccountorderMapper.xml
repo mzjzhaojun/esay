@@ -284,10 +284,9 @@
 
 	<select id="countOrder" resultMap="ResultMapVO">
 		SELECT
-		count(*)
-		as ordercount,
+		count(*) as ordercount,
 		sum(amount) as amount,
-		sum(incomeamount) as incomeamount
+		sum(merchantincomeamount) as incomeamount
 		FROM
 		income
 		WHERE
@@ -298,11 +297,9 @@
 
 	<select id="countSuccessOrder" resultMap="ResultMapVO">
 		SELECT
-		count(*) as
-		ordercount,
+		count(*) as ordercount,
 		sum(amount) as amount,
-		sum(incomeamount) as
-		incomeamount
+		sum(merchantincomeamount) as incomeamount
 		FROM
 		income
 		WHERE
