@@ -41,7 +41,7 @@ public class MerchantBalanceMessage implements UpdateMerchantMessageService {
 			for (Long mid : tmg.getMerchantids()) {
 				Merchant m = merchantmapper.get(mid);
 				Incomemerchantaccount merchantaccount = IncomemerchantaccountMapper.getByMerchantId(mid);
-				msg.append("\r\n商户：*" + m.getName() + "*\r\n\r\n今日入款：" + m.getTodaycount()+ " \r\n可用余额：" + merchantaccount.getBalance()  + " \r\n总共下发：" + merchantaccount.getWithdrawamount() + "\r\n总共入款：" + merchantaccount.getTotalincome() + "\r\n\r\n*"
+				msg.append("\r\n商户：*" + m.getName() + "*\r\n\r\n今日入款：" + m.getTodaycount()+ " \r\n用户支付：" + m.getTodayincomecount()+ " \r\n可用余额：" + merchantaccount.getBalance()  + " \r\n总共下发：" + merchantaccount.getWithdrawamount() + "\r\n总共入款：" + merchantaccount.getTotalincome() + "\r\n\r\n*"
 						+ DateTimeUtil.getDateTime() + "*");
 			}
 			sendMessage.setText(msg.toString());
@@ -58,7 +58,7 @@ public class MerchantBalanceMessage implements UpdateMerchantMessageService {
 		if (tmg != null) {
 			sendMessage.setChatId(tmg.getTgid());
 			Incomemerchantaccount merchantaccount = IncomemerchantaccountMapper.getByMerchantId(m.getId());
-			sendMessage.setText("商户：*" + m.getName()  + "\r\n\r\n今日入款：" + m.getTodaycount()+ "*\r\n可用余额：" + merchantaccount.getBalance() + " \r\n总共下发：" + merchantaccount.getWithdrawamount() + "\r\n总共入款：" + merchantaccount.getTotalincome()
+			sendMessage.setText("商户：*" + m.getName()  + "\r\n\r\n今日入款：" + m.getTodaycount()+ " \r\n用户支付：" + m.getTodayincomecount()+ "\r\n可用余额：" + merchantaccount.getBalance() + " \r\n总共下发：" + merchantaccount.getWithdrawamount() + "\r\n总共入款：" + merchantaccount.getTotalincome()
 					+ "\r\n\r\n*" + DateTimeUtil.getDateTime() + "*");
 			sendMessage.enableMarkdown(true);
 		} else {
