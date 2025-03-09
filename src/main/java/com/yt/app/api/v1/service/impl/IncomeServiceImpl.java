@@ -673,7 +673,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setMerchantuserid(mc.getUserid());
 		income.setOrdernum("in_" + StringUtil.getOrderNum());
 		income.setMerchantorderid(qs.getPay_orderid());
-		income.setMerchantordernum("in_m_" + StringUtil.getOrderNum());
+		income.setMerchantordernum("in_m_" + qs.getPay_orderid());
 		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());
@@ -1011,7 +1011,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setMerchantuserid(mc.getUserid());
 		income.setOrdernum("in_" + StringUtil.getOrderNum());
 		income.setMerchantorderid(qs.getPay_orderid());
-		income.setMerchantordernum("in_m_" + StringUtil.getOrderNum());
+		income.setMerchantordernum("in_m_" + qs.getPay_orderid());
 		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());
