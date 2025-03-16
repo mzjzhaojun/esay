@@ -4,8 +4,7 @@ import java.util.Map;
 
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Income;
-import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
-import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
+import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.common.yt.YtIPage;
@@ -22,24 +21,13 @@ public interface SystemaccountService extends YtIBaseService<Systemaccount, Long
 
 	Systemaccount getData();
 
-	// 商户充值
-	void updateTotalincome(PayoutMerchantaccountorder mao);
-
-	// 商户提现
-	void updateWithdrawamount(PayoutMerchantaccountorder mao);
-
 	// 代理提现
-	void updateWithdrawamount(Agentaccountorder mao);
+	void updateAgentWithdrawamount(Agentaccountorder mao);
 
 	// 代付成功
-	void updatePayout(PayoutMerchantaccountorder mao);
+	void updatePayout(Payout mao);
 
-
-	// 代收提现
+	// 代收成功收款
 	void updateIncome(Income mao);
-	
-	// 代收充值
-	void updateIncome(Incomemerchantaccountorder mao);
-
 
 }

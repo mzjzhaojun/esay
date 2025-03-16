@@ -540,7 +540,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			AlipayTradePrecreateResponse atp = alif2f(qd, income.getOrdernum(), income.getAmount(), qd.getExpireminute());
 			Assert.notNull(atp, "获取支付宝单号错误!");
 			income.setQrcode(atp.getQrCode());
-			income.setQrcodeordernum("in_qd_" + StringUtil.getOrderNum());
+			income.setQrcodeordernum("inqd" + StringUtil.getOrderNum());
 			income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
 		} else {
 			income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
@@ -562,7 +562,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			aat.setAmountreceived(aat.getDeal() + ag.getOnecost());// 总费用
 			aat.setOnecost(ag.getOnecost());// 手续费
 			aat.setType(DictionaryResource.ORDERTYPE_20.toString());
-			aat.setOrdernum("in_a_" + StringUtil.getOrderNum());
+			aat.setOrdernum("ina" + StringUtil.getOrderNum());
 			aat.setRemark("代收资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
 			income.setAgentincome(aat.getAmountreceived());
 			income.setAgentordernum(aat.getOrdernum());
@@ -671,9 +671,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Income income = new Income();
 		// 商戶
 		income.setMerchantuserid(mc.getUserid());
-		income.setOrdernum("in_" + StringUtil.getOrderNum());
+		income.setOrdernum("in" + StringUtil.getOrderNum());
 		income.setMerchantorderid(qs.getPay_orderid());
-		income.setMerchantordernum("in_m_" + qs.getPay_orderid());
+		income.setMerchantordernum("inm" + qs.getPay_orderid());
 		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());
@@ -844,7 +844,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			aat.setAmountreceived(aat.getDeal() + ag.getOnecost());// 总费用
 			aat.setOnecost(ag.getOnecost());// 手续费
 			aat.setType(DictionaryResource.ORDERTYPE_20.toString());
-			aat.setOrdernum("in_a_" + StringUtil.getOrderNum());
+			aat.setOrdernum("ina" + StringUtil.getOrderNum());
 			aat.setRemark("代收资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
 			income.setAgentincome(aat.getAmountreceived());
 			income.setAgentordernum(aat.getOrdernum());
@@ -1009,9 +1009,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Income income = new Income();
 		// 商戶
 		income.setMerchantuserid(mc.getUserid());
-		income.setOrdernum("in_" + StringUtil.getOrderNum());
+		income.setOrdernum("in" + StringUtil.getOrderNum());
 		income.setMerchantorderid(qs.getPay_orderid());
-		income.setMerchantordernum("in_m_" + qs.getPay_orderid());
+		income.setMerchantordernum("inm" + qs.getPay_orderid());
 		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());

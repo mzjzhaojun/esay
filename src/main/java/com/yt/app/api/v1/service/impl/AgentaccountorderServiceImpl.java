@@ -141,7 +141,7 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
 				agentaccountservice.updateWithdrawamount(mao);
 				//
-				systemaccountservice.updateWithdrawamount(mao);
+				systemaccountservice.updateAgentWithdrawamount(mao);
 			} else {
 				agentaccountservice.turndownWithdrawamount(mao);
 			}
@@ -196,7 +196,7 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 		Integer i = mapper.put(mao);
 		if (i > 0) {
 			agentaccountservice.updateWithdrawamount(mao);
-			systemaccountservice.updateWithdrawamount(mao);
+			systemaccountservice.updateAgentWithdrawamount(mao);
 		}
 		return i;
 	}

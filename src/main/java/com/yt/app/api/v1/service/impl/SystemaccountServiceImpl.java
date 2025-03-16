@@ -14,7 +14,7 @@ import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
-import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
+import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.api.v1.entity.Systemaccountrecord;
 import com.yt.app.common.common.yt.YtIPage;
@@ -77,129 +77,34 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void updatePayout(Systemaccount t, PayoutMerchantaccountorder mao) {
-		t.setPototalincome(t.getPototalincome() + mao.getAmountreceived());
+	public void updatePayout(Systemaccount t, Payout mao) {
+		t.setPototalincome(t.getPototalincome() + mao.getIncome());
 		t.setPobalance(t.getPototalincome() - t.getPowithdrawamount());
-		t.setTodaypayout(t.getTodaypayout() + mao.getAmountreceived());
+		t.setTodaypayout(t.getTodaypayout() + mao.getIncome());
 		mapper.put(t);
 	}
 
 	/**
-	 * 代付充值成功
+	 * 商户代付成功收入
 	 */
 	@Override
-	public void updateTotalincome(PayoutMerchantaccountorder mao) {
+	public void updatePayout(Payout mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
 			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
 			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
-			scr.setName(mao.getUsername());
-			scr.setType(DictionaryResource.ORDERTYPE_20);
-			scr.setPopretotalincome(t.getPototalincome());// 总收入
-			scr.setPoposttotalincome(t.getPototalincome() + mao.getAmountreceived());// 待确认收入
-			scr.setPoamount(mao.getAmountreceived());// 操作金额
+			scr.setName(mao.getMerchantname());
+			scr.setType(DictionaryResource.ORDERTYPE_23);
+			scr.setPoprewithdrawamount(t.getPowithdrawamount());
+			scr.setPopostwithdrawamount(t.getPowithdrawamount() + mao.getIncome());
+			scr.setPoamount(mao.getIncome());
 			scr.setPobalance(t.getPobalance());//
-			scr.setRemark("系统代付收入金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
+			scr.setRemark("代付金额：" + String.format("%.2f", mao.getAmount()) + "  单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 
 			updatePayout(t, mao);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void updateusdtwithdraw(Systemaccount t, PayoutMerchantaccountorder mao) {
-		t.setPowithdrawamount(t.getPowithdrawamount() + mao.getAmountreceived());
-		t.setPobalance(t.getPototalincome() - t.getPowithdrawamount());
-		mapper.put(t);
-	}
-
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void updateusdtwithdraw(Systemaccount t, Agentaccountorder mao) {
-		t.setPowithdrawamount(t.getPowithdrawamount() + mao.getAmountreceived());
-		t.setPobalance(t.getPototalincome() - t.getPowithdrawamount());
-		mapper.put(t);
-	}
-
-	/**
-	 * 商戶代付支出
-	 */
-	@Override
-	public void updateWithdrawamount(PayoutMerchantaccountorder mao) {
-		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
-		try {
-			lock.lock();
-			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
-			Systemaccountrecord scr = new Systemaccountrecord();
-			scr.setSystemaccountid(t.getId());
-			scr.setName(mao.getUsername());
-			scr.setType(DictionaryResource.ORDERTYPE_21);
-			scr.setPoprewithdrawamount(t.getPowithdrawamount());
-			scr.setPopostwithdrawamount(t.getPowithdrawamount() + mao.getAmountreceived());
-			scr.setPoamount(mao.getAmountreceived());
-			scr.setPobalance(t.getPobalance());//
-			scr.setRemark("系统代付提现金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
-			systemcapitalrecordmapper.post(scr);
-
-			updateusdtwithdraw(t, mao);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	/**
-	 * 商户代付成功
-	 */
-	@Override
-	public void updatePayout(PayoutMerchantaccountorder mao) {
-		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
-		try {
-			lock.lock();
-			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
-			Systemaccountrecord scr = new Systemaccountrecord();
-			scr.setSystemaccountid(t.getId());
-			scr.setName(mao.getUsername());
-			scr.setType(DictionaryResource.ORDERTYPE_22);
-			scr.setPoprewithdrawamount(t.getPowithdrawamount());
-			scr.setPopostwithdrawamount(t.getPowithdrawamount() + mao.getAmountreceived());
-			scr.setPoamount(mao.getAmountreceived());
-			scr.setPobalance(t.getPobalance());//
-			scr.setRemark("系统代付金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
-			systemcapitalrecordmapper.post(scr);
-
-			updateusdtwithdraw(t, mao);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	/**
-	 * 代付代理支出
-	 */
-	@Override
-	public void updateWithdrawamount(Agentaccountorder mao) {
-		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
-		try {
-			lock.lock();
-			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
-			Systemaccountrecord scr = new Systemaccountrecord();
-			scr.setSystemaccountid(t.getId());
-			scr.setName(mao.getUsername());
-			scr.setType(DictionaryResource.ORDERTYPE_26);
-			scr.setPoprewithdrawamount(t.getWithdrawamount());
-			scr.setPopostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
-			scr.setPoamount(mao.getAmountreceived());
-			scr.setPobalance(t.getBalance());//
-			scr.setRemark("代理提现金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
-			systemcapitalrecordmapper.post(scr);
-
-			updateusdtwithdraw(t, mao);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
@@ -246,28 +151,35 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		mapper.put(t);
 	}
 
-	// 代收充值
 	@Override
-	public void updateIncome(Incomemerchantaccountorder mao) {
+	public void updateAgentWithdrawamount(Agentaccountorder mao) {
 		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
 		try {
 			lock.lock();
 			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
 			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
-			scr.setName(mao.getMerchantname());
-			scr.setType(DictionaryResource.ORDERTYPE_27);
-			scr.setPretotalincome(t.getTotalincome());
-			scr.setPosttotalincome(t.getTotalincome() + mao.getIncomeamount());
-			scr.setAmount(mao.getIncomeamount());
-			scr.setBalance(t.getBalance());//
-			scr.setRemark("代收充值金额：" + String.format("%.2f", mao.getIncomeamount()) + "  单号:" + mao.getOrdernum());
+			scr.setName(mao.getUsername());
+			scr.setType(DictionaryResource.ORDERTYPE_26);
+			scr.setPoprewithdrawamount(t.getWithdrawamount());
+			scr.setPopostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
+			scr.setPoamount(mao.getAmountreceived());
+			scr.setPobalance(t.getBalance());//
+			scr.setRemark("代理提现金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 
-			updateBalance(t, mao);
+			updateAgentwithdraw(t, mao);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
 		}
 	}
+
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void updateAgentwithdraw(Systemaccount t, Agentaccountorder mao) {
+		t.setPowithdrawamount(t.getPowithdrawamount() + mao.getAmountreceived());
+		t.setPobalance(t.getPototalincome() - t.getPowithdrawamount());
+		mapper.put(t);
+	}
+
 }

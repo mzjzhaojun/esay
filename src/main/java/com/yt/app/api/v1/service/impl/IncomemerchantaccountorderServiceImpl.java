@@ -13,7 +13,6 @@ import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
 import com.yt.app.api.v1.service.IncomemerchantaccountorderService;
-import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
@@ -55,8 +54,6 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 	private IncomemerchantaccountService incomemerchantaccountservice;
 	@Autowired
 	private UserMapper usermapper;
-	@Autowired
-	private SystemaccountService systemaccountservice;
 	@Autowired
 	private MerchantMapper merchantmapper;
 
@@ -229,7 +226,6 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 				if (i > 0) {
 					if (mco.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
 						incomemerchantaccountservice.updateTotalincome(mao);
-						systemaccountservice.updateIncome(mao);
 					} else {
 						incomemerchantaccountservice.turndownWithdrawamount(mao);
 					}

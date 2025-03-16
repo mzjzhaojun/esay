@@ -10,7 +10,6 @@ import com.yt.app.api.v1.mapper.PayoutMerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.PayoutMerchantaccountService;
 import com.yt.app.api.v1.service.PayoutMerchantaccountorderService;
-import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
@@ -58,9 +57,6 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 	@Autowired
 	private PayoutMerchantaccountService merchantaccountservice;
 
-	@Autowired
-	private SystemaccountService systemaccountservice;
-
 	/**
 	 * 充值
 	 */
@@ -95,8 +91,8 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 		//
 		return i;
 	}
-	
-	//代付充值成功
+
+	// 代付充值成功
 	@Override
 	public void incomemanual(PayoutMerchantaccountorder mco) {
 		RLock lock = RedissonUtil.getLock(mco.getId());
@@ -114,7 +110,6 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 						//
 						merchantaccountservice.updateTotalincome(mao);
 						//
-						systemaccountservice.updateTotalincome(mao);
 					} else {
 						merchantaccountservice.turndownTotalincome(mao);
 					}
@@ -267,7 +262,6 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 						//
 						merchantaccountservice.updateWithdrawamount(mao);
 						//
-						systemaccountservice.updateWithdrawamount(mao);
 					} else {
 						merchantaccountservice.turndownWithdrawamount(mao);
 					}

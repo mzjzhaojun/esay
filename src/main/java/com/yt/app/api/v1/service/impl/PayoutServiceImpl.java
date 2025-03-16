@@ -137,8 +137,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setNotifyurl(m.getApireusultip());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
-		t.setOrdernum("out_" + StringUtil.getOrderNum());// 系统单号
-		t.setMerchantordernum("out_m_" + StringUtil.getOrderNum());// 商户单号
+		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
+		t.setMerchantordernum("outm" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
@@ -480,7 +480,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			aat.setAmountreceived(aat.getDeal() + ag.getOnecost());// 总费用
 			aat.setOnecost(ag.getOnecost());// 手续费
 			aat.setType(DictionaryResource.ORDERTYPE_23.toString());
-			aat.setOrdernum("PA" + StringUtil.getOrderNum());
+			aat.setOrdernum("outa" + StringUtil.getOrderNum());
 			aat.setRemark("代付资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
 			t.setAgentordernum(aat.getOrdernum());
@@ -531,7 +531,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			// 商户账户
 			merchantaccountservice.updateWithdrawamount(mao);
 			// 系统账户
-			systemaccountservice.updatePayout(mao);
+			systemaccountservice.updatePayout(t);
 
 			// 计算代理
 			if (t.getAgentid() != null) {
@@ -629,8 +629,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		srv.setMerchantid(merchantid);
 		return srv;
 	}
-
-	
 
 	@Override
 	public YtBody txcallbackpay(SysTyOrder so) {
@@ -740,8 +738,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setNotifyurl(m.getApireusultip());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
-		t.setOrdernum("out_" + StringUtil.getOrderNum());// 系统单号
-		t.setMerchantordernum("out_m_" + StringUtil.getOrderNum());// 商户单号
+		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
+		t.setMerchantordernum("outm" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
@@ -820,7 +818,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			aat.setAmountreceived(aat.getDeal() + ag.getOnecost());// 总费用
 			aat.setOnecost(ag.getOnecost());// 手续费
 			aat.setType(DictionaryResource.ORDERTYPE_23.toString());
-			aat.setOrdernum("PA" + StringUtil.getOrderNum());
+			aat.setOrdernum("outa" + StringUtil.getOrderNum());
 			aat.setRemark("代付资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
 			t.setAgentordernum(aat.getOrdernum());
@@ -873,8 +871,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		return flage;
 	}
 
-	
-	
 	@Override
 	public void sncallback(Map<String, Object> params) {
 		String orderid = params.get("OrderNo").toString();
