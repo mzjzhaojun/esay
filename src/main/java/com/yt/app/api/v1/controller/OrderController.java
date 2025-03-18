@@ -98,29 +98,6 @@ public class OrderController {
 		return new YtResponseEntity<Object>(new YtBody(100));
 	}
 
-	/**
-	 * 代收本地原生支付
-	 * 
-	 * @param requestEntity
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "/submitqrcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> submitqrcode(YtRequestEntity<QrcodeSubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		QrcodeSubmitDTO qsdto = requestEntity.getBody();
-		RLock lock = RedissonUtil.getLock(qsdto.getPay_memberid());
-		QrcodeResultVO yb = null;
-		try {
-			lock.lock();
-			yb = incomeservice.submitQrcode(qsdto);
-		} catch (Exception e) {
-			throw new YtException(e);
-		} finally {
-			lock.unlock();
-		}
-		return new YtResponseEntity<Object>(new YtBody(yb));
-	}
 
 	/**
 	 * 代收远程系统下单

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.service.IncomeService;
-import com.yt.app.common.resource.DictionaryResource;
 
 /**
  * @author yyds
@@ -30,24 +29,9 @@ public class ViewController {
 	@RequestMapping(value = "/income/{orderid}", method = RequestMethod.GET)
 	public String income(@PathVariable String orderid, Model model, HttpServletRequest request, HttpServletResponse response) {
 		Income income = service.getByOrderNum(orderid);
-		model.addAttribute("incomeid", income.getId());
-		model.addAttribute("expiredminute", income.getExpiredminute());
-		model.addAttribute("qrcode", income.getQrcode());
-		model.addAttribute("amount", income.getRealamount());
-		model.addAttribute("backforwardurl", income.getBackforwardurl());
+		model.addAttribute("resulturl", income.getResulturl());
 		model.addAttribute("status", income.getStatus());
-		if (income.getType().equals(DictionaryResource.BANK_TYPE_122.toString()))
-			return "static/wxview";
-		else if (income.getType().equals(DictionaryResource.BANK_TYPE_123.toString()))
-			return "static/aliview";
-		else if (income.getType().equals(DictionaryResource.PROJECT_TYPE_505.toString()))
-			return "static/h5aliview";
-		return "static/othview";
-	}
-
-	@RequestMapping(value = "/income/error", method = RequestMethod.GET)
-	public String income(Model model, HttpServletRequest request, HttpServletResponse response) {
-		return "static/error";
+		return "static/zfbwapview";
 	}
 
 }

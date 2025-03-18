@@ -1,6 +1,5 @@
 package com.yt.app.api.v1.service.impl;
 
-import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,10 +19,7 @@ import com.yt.app.api.v1.mapper.QrcodeMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper;
-import com.yt.app.api.v1.model.result.AlipayF2FPrecreateResult;
-import com.yt.app.api.v1.model.result.AlipayF2FQueryResult;
 import com.yt.app.api.v1.service.AgentaccountService;
-import com.yt.app.api.v1.service.AlipayTradeService;
 import com.yt.app.api.v1.service.IncomeService;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
 import com.yt.app.api.v1.service.QrcodeaccountService;
@@ -34,14 +30,8 @@ import com.yt.app.common.base.context.AuthContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.common.bot.ChannelBot;
-import com.alipay.api.AlipayApiException;
-import com.alipay.api.AlipayClient;
-import com.alipay.api.domain.AlipayTradePrecreateModel;
-import com.alipay.api.domain.AlipayTradeQueryModel;
-import com.alipay.api.request.AlipayTradePrecreateRequest;
-import com.alipay.api.request.AlipayTradeQueryRequest;
-import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
+import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccountorder;
@@ -77,12 +67,10 @@ import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
-import com.yt.app.common.util.AliPayUtil;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.NumberUtil;
 import com.yt.app.common.util.PayUtil;
 import com.yt.app.common.util.RedisUtil;
-import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.StringUtil;
 
 import cn.hutool.core.date.DateUnit;
@@ -146,8 +134,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	private SystemaccountService systemaccountservice;
 	@Autowired
 	private AgentaccountService agentaccountservice;
-	@Autowired
-	private AlipayTradeService tradeService;
 	@Autowired
 	private ChannelBot channelbot;
 
@@ -467,151 +453,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	/**
-	 * 自营渠道下单
-	 */
-	@Override
-	public QrcodeResultVO submitQrcode(QrcodeSubmitDTO qs) {
-		// 验证
-		Merchant mc = checkparam(qs);
-
-		TenantIdContext.setTenantId(mc.getTenant_id());
-
-		List<Merchantqrcodeaisle> listmc = merchantqrcodeaislemapper.getByMid(mc.getId());
-		if (listmc == null || listmc.size() == 0) {
-			throw new YtException("商戶还沒有配置通道!");
-		}
-		long[] qraids = listmc.stream().mapToLong(qa -> qa.getQrcodeaisleid()).distinct().toArray();
-		List<Qrcodeaisle> listqa = qrcodeaislemapper.listByArrayId(qraids);
-		Qrcodeaisle qas;
-		try {
-			qas = listqa.stream().filter(qa -> qa.getCode().equals(qs.getPay_aislecode())).findFirst().get();
-		} catch (Exception e1) {
-			throw new YtException(qs.getPay_aislecode() + "通道没有权限");
-		}
-		Merchantqrcodeaisle mqd = listmc.stream().filter(mqds -> mqds.getQrcodeaisleid().equals(qas.getId())).findFirst().get();
-		Assert.notNull(mqd, "通道没有权限!");
-		List<Qrcodeaisleqrcode> listqaq = qrcodeaisleqrcodemapper.getByQrcodeAisleId(qas.getId());
-		long[] qaqids = listqaq.stream().mapToLong(qaq -> qaq.getQrcodelid()).distinct().toArray();
-		List<Qrcode> listqrcode = qrcodemapper.listByArrayId(qaqids);
-		Double amount = Double.valueOf(qs.getPay_amount());
-		List<Qrcode> listcmm = listqrcode.stream().filter(c -> c.getMax() >= amount && c.getMin() <= amount).collect(Collectors.toList());
-		Assert.notEmpty(listcmm, "代收金额超出限额");
-		List<Qrcode> listcf = listcmm.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
-		Qrcode qd = null;
-		if (listcf.size() > 0) {
-			for (int j = 0; j < listcf.size(); j++) {
-				Qrcode qc = listcf.get(j);
-				String[] match = qc.getFirstmatchmoney().split(",");
-				for (int i = 0; i < match.length; i++) {
-					String number = match[i];
-					if (number.indexOf("-") == -1 && amount == Integer.parseInt(number)) {
-						qd = qc;
-					} else {
-						String[] matchs = number.split("-");
-						Integer min = Integer.parseInt(matchs[0]);
-						Integer max = Integer.parseInt(matchs[1]);
-						if (amount >= min && amount <= max) {
-							qd = qc;
-						}
-					}
-				}
-			}
-		} else {
-			// 根据权重选择码
-			List<WeightRandom.WeightObj<String>> weightList = new ArrayList<>(); //
-			double count = 0;
-			for (Qrcode cml : listcmm) {
-				count = count + cml.getWeight();
-			}
-			for (Qrcode cmm : listcmm) {
-				weightList.add(new WeightRandom.WeightObj<String>(cmm.getCode(), (cmm.getWeight() / count) * 100));
-			}
-			WeightRandom<String> wr = RandomUtil.weightRandom(weightList);
-			String code = wr.next();
-			qd = listqrcode.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
-			Assert.notNull(qd, "没有可用的渠道!");
-		}
-		// 开始业务
-		Channel channel = channelmapper.getByUserId(qd.getUserid());
-		Income income = addIncome(channel, qas, mc, qs, qd);
-		// 动态码直接去线上拿连接
-		if (qd.getDynamic()) {
-			// 阿里当面付和订单码
-			AlipayTradePrecreateResponse atp = alif2f(qd, income.getOrdernum(), income.getAmount(), qd.getExpireminute());
-			Assert.notNull(atp, "获取支付宝单号错误!");
-			income.setQrcode(atp.getQrCode());
-			income.setQrcodeordernum("inqd" + StringUtil.getOrderNum());
-			income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
-		} else {
-			income.setResulturl(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
-		}
-		Assert.notNull(mqd.getCollection(), "渠道点位未配置!");
-		///////////////////////////////////////////////////// 计算代理订单/////////////////////////////////////////////////////
-		if (mc.getAgentid() != null) {
-			Agent ag = agentmapper.get(mc.getAgentid());
-			income.setAgentid(ag.getId());
-			Agentaccountorder aat = new Agentaccountorder();
-			aat.setAgentid(ag.getId());
-			aat.setUserid(ag.getUserid());
-			aat.setUsername(ag.getName());
-			aat.setNkname(ag.getNkname());
-			aat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
-			aat.setExchange(ag.getExchange());
-			aat.setAmount(income.getAmount());// 金额
-			aat.setDeal(income.getAmount() * (ag.getExchange() / 100));// 交易费
-			aat.setAmountreceived(aat.getDeal() + ag.getOnecost());// 总费用
-			aat.setOnecost(ag.getOnecost());// 手续费
-			aat.setType(DictionaryResource.ORDERTYPE_20.toString());
-			aat.setOrdernum("ina" + StringUtil.getOrderNum());
-			aat.setRemark("代收资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
-			income.setAgentincome(aat.getAmountreceived());
-			income.setAgentordernum(aat.getOrdernum());
-			agentaccountordermapper.post(aat);
-			agentaccountservice.totalincome(aat);
-		} else {
-			income.setAgentincome(0.00);
-		}
-		// 渠道收入
-		income.setChannelincomeamount(NumberUtil.multiply(income.getAmount().toString(), (channel.getCollection() / 100) + "", 2).doubleValue());
-		// 商户
-		income.setMerchantincomeamount(NumberUtil.multiply(income.getAmount().toString(), (mqd.getCollection() / 100) + "", 2).doubleValue());
-		// 系统收入
-		income.setIncomeamount(Double.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount() - income.getAgentincome()))));
-		// 商户收入
-		income.setMerchantincomeamount(Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount()))));
-		income.setCollection(mqd.getCollection());
-		// 计算当前码可生成的订单
-		RLock lock = RedissonUtil.getLock(qd.getId());
-		Integer i = 0;
-		income.setType(qd.getType());
-		income.setRemark("新增代收资金￥：" + income.getAmount());
-		try {
-			lock.lock();
-			if (qd.getDynamic()) {
-				income.setFewamount(0.00);
-				income.setRealamount(income.getAmount());
-				i = mapper.post(income);
-			} else {
-				Double fewamount = NumberUtil.getIncomeFewAmount(qd.getId());
-				if (fewamount < 3) {
-					income.setFewamount(fewamount);
-					income.setRealamount(income.getAmount() - fewamount);
-					i = mapper.post(income);
-				}
-			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-		if (i == 0) {
-			throw new YtException("当前通道码繁忙");
-		}
-		QrcodeResultVO result = addOtherOrderMqd(income, channel, qas, mc, qs);
-		TenantIdContext.remove();
-		return result;
-	}
-
-	/**
 	 * 上游渠道下单
 	 */
 	@Override
@@ -619,261 +460,376 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		// 验证
 		Merchant mc = checkparam(qs);
 		TenantIdContext.setTenantId(mc.getTenant_id());
-		////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
-		Aisle aisle = aislemapper.getByCode(qs.getPay_aislecode());
-		Assert.notNull(aisle, "没有可用通道!");
-		Merchantaisle opt = merchantaislemapper.getByMidAid(aisle.getId(), mc.getId());
-		Assert.notNull(opt, "没有可用通道!");
-		List<Aislechannel> listac = aislechannelmapper.getByAisleId(aisle.getId());
-		Assert.notEmpty(listac, "没有可用通道!");
-		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
-		List<Channel> listc = channelmapper.listByArrayId(cids);
-		Assert.notEmpty(listc, "没有可用渠道!");
-		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= Double.valueOf(qs.getPay_amount()) && c.getMin() <= Double.valueOf(qs.getPay_amount())).collect(Collectors.toList());
-		Assert.notEmpty(listcmm, "金额超出限额!");
-		// 有限匹配
-		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
-		Channel channel = null;
-		if (listcf.size() > 0) {
-			for (int j = 0; j < listcf.size(); j++) {
-				Channel cc = listcf.get(j);
-				String[] match = cc.getFirstmatchmoney().split(",");
-				for (int i = 0; i < match.length; i++) {
-					String number = match[i];
-					if (number.indexOf("-") == -1 && Double.valueOf(qs.getPay_amount()) == Double.valueOf(number)) {
-						channel = cc;
-					} else {
-						String[] matchs = number.split("-");
-						Integer min = Integer.parseInt(matchs[0]);
-						Integer max = Integer.parseInt(matchs[1]);
-						if (Double.valueOf(qs.getPay_amount()) >= min && Double.valueOf(qs.getPay_amount()) <= max) {
+
+		List<Merchantqrcodeaisle> listmc = merchantqrcodeaislemapper.getByMid(mc.getId());
+		if (listmc == null || listmc.size() == 0) {
+			////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
+			Aisle aisle = aislemapper.getByCode(qs.getPay_aislecode());
+			Assert.notNull(aisle, "没有可用通道!");
+			Merchantaisle opt = merchantaislemapper.getByMidAid(aisle.getId(), mc.getId());
+			Assert.notNull(opt, "没有可用通道!");
+			List<Aislechannel> listac = aislechannelmapper.getByAisleId(aisle.getId());
+			Assert.notEmpty(listac, "没有可用通道!");
+			long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
+			List<Channel> listc = channelmapper.listByArrayId(cids);
+			Assert.notEmpty(listc, "没有可用渠道!");
+			List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= Double.valueOf(qs.getPay_amount()) && c.getMin() <= Double.valueOf(qs.getPay_amount())).collect(Collectors.toList());
+			Assert.notEmpty(listcmm, "金额超出限额!");
+			// 有限匹配
+			List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
+			Channel channel = null;
+			if (listcf.size() > 0) {
+				for (int j = 0; j < listcf.size(); j++) {
+					Channel cc = listcf.get(j);
+					String[] match = cc.getFirstmatchmoney().split(",");
+					for (int i = 0; i < match.length; i++) {
+						String number = match[i];
+						if (number.indexOf("-") == -1 && (Integer.valueOf(qs.getPay_amount()) == Integer.valueOf(number))) {
 							channel = cc;
+						} else {
+							String[] matchs = number.split("-");
+							Integer min = Integer.parseInt(matchs[0]);
+							Integer max = Integer.parseInt(matchs[1]);
+							if (Double.valueOf(qs.getPay_amount()) >= min && Double.valueOf(qs.getPay_amount()) <= max) {
+								channel = cc;
+							}
 						}
 					}
 				}
+			} else {
+				// 随机权重
+				List<WeightRandom.WeightObj<String>> weightList = new ArrayList<>(); //
+				double count = 0;
+				for (Channel cml : listcmm) {
+					count = count + cml.getWeight();
+				}
+				for (Channel cmm : listcmm) {
+					weightList.add(new WeightRandom.WeightObj<String>(cmm.getCode(), (cmm.getWeight() / count) * 100));
+				}
+				WeightRandom<String> wr = RandomUtil.weightRandom(weightList);
+				String code = wr.next();
+				channel = listc.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
+				Assert.notNull(channel, "没有可用的渠道!");
 			}
-		} else {
-			// 随机权重
-			List<WeightRandom.WeightObj<String>> weightList = new ArrayList<>(); //
-			double count = 0;
-			for (Channel cml : listcmm) {
-				count = count + cml.getWeight();
-			}
-			for (Channel cmm : listcmm) {
-				weightList.add(new WeightRandom.WeightObj<String>(cmm.getCode(), (cmm.getWeight() / count) * 100));
-			}
-			WeightRandom<String> wr = RandomUtil.weightRandom(weightList);
-			String code = wr.next();
-			channel = listc.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
-			Assert.notNull(channel, "没有可用的渠道!");
-		}
 
-		Income income = new Income();
-		// 商戶
-		income.setMerchantuserid(mc.getUserid());
-		income.setOrdernum("in" + StringUtil.getOrderNum());
-		income.setMerchantorderid(qs.getPay_orderid());
-		income.setMerchantordernum("inm" + qs.getPay_orderid());
-		income.setMerchantcode(mc.getCode());
-		income.setMerchantname(mc.getName());
-		income.setMerchantid(mc.getId());
-		income.setExpireddate(DateTimeUtil.addMinute(channel.getMtorder()));// 默认30分钟
-		// 通道
-		income.setExpiredminute(channel.getMtorder());
-		income.setDynamic(aisle.getDynamic());
-		income.setQrcodeaisleid(aisle.getId());
-		income.setQrcodeaislename(aisle.getName());
-		income.setQrcodeaislecode(aisle.getCode());
-		// 渠道产品
-		income.setQrcodeid(channel.getId());
-		income.setQrcodecode(channel.getAislecode());
-		income.setQrcodename(channel.getName());
-		income.setQrcodeuserid(channel.getUserid());
-		// 随机数
-		income.setAmount(Double.valueOf(qs.getPay_amount()));
-		if (mc.getClearingtype())
-			income.setRealamount(Double.valueOf(StringUtil.getDouble(qs.getPay_amount())));
-		else
-			income.setRealamount(income.getAmount());
+			Income income = new Income();
+			// 商戶
+			income.setMerchantuserid(mc.getUserid());
+			income.setOrdernum("in" + StringUtil.getOrderNum());
+			income.setMerchantorderid(qs.getPay_orderid());
+			income.setMerchantordernum("inm" + qs.getPay_orderid());
+			income.setMerchantcode(mc.getCode());
+			income.setMerchantname(mc.getName());
+			income.setMerchantid(mc.getId());
+			income.setExpireddate(DateTimeUtil.addMinute(channel.getMtorder()));// 默认30分钟
+			// 通道
+			income.setExpiredminute(channel.getMtorder());
+			income.setDynamic(aisle.getDynamic());
+			income.setQrcodeaisleid(aisle.getId());
+			income.setQrcodeaislename(aisle.getName());
+			income.setQrcodeaislecode(aisle.getCode());
+			// 渠道产品
+			income.setQrcodeid(channel.getId());
+			income.setQrcodecode(channel.getAislecode());
+			income.setQrcodename(channel.getName());
+			income.setQrcodeuserid(channel.getUserid());
+			// 随机数
+			income.setAmount(Double.valueOf(qs.getPay_amount()));
+			if (mc.getClearingtype())
+				income.setRealamount(Double.valueOf(StringUtil.getDouble(qs.getPay_amount())));
+			else
+				income.setRealamount(income.getAmount());
 
-		income.setStatus(DictionaryResource.PAYOUTSTATUS_50);
-		income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
-		income.setNotifyurl(qs.getPay_notifyurl());
-		income.setBackforwardurl(qs.getPay_callbackurl());
-		income.setInipaddress(AuthContext.getIp());
-		//
-		boolean flage = true;
-		switch (channel.getName()) {
-		case DictionaryResource.TONGYUSNAISLE:
-			JSONObject data = PayUtil.SendTongYuanSubmit(income, channel);
-			if (data != null) {
-				flage = false;
-				income.setResulturl(data.getStr("payData"));
-				income.setQrcodeordernum(data.getStr("payOrderId"));
+			income.setStatus(DictionaryResource.PAYOUTSTATUS_50);
+			income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
+			income.setNotifyurl(qs.getPay_notifyurl());
+			income.setBackforwardurl(qs.getPay_callbackurl());
+			income.setInipaddress(AuthContext.getIp());
+			//
+			boolean flage = true;
+			switch (channel.getName()) {
+			case DictionaryResource.TONGYUSNAISLE:
+				JSONObject data = PayUtil.SendTongYuanSubmit(income, channel);
+				if (data != null) {
+					flage = false;
+					income.setResulturl(data.getStr("payData"));
+					income.setQrcodeordernum(data.getStr("payOrderId"));
+				}
+				break;
+			case DictionaryResource.ZSAISLE:
+				SysZsOrder zsjz = PayUtil.SendZSSubmit(income, channel);
+				if (zsjz != null) {
+					flage = false;
+					income.setResulturl(zsjz.getData().getQr_code());
+					income.setQrcodeordernum(zsjz.getData().getOrder_no());
+				}
+				break;
+			case DictionaryResource.XSAISLE:
+				SysXSOrder xsjz = PayUtil.SendXSSubmit(income, channel);
+				if (xsjz != null) {
+					flage = false;
+					income.setResulturl(xsjz.getResult().getQrCode());
+					income.setQrcodeordernum(xsjz.getResult().getOrderCode());
+				}
+				break;
+			case DictionaryResource.YSAISLE:
+				SysYSOrder syjz = PayUtil.SendYSSubmit(income, channel);
+				if (syjz != null) {
+					flage = false;
+					income.setResulturl(syjz.getPayParams().getPayUrl());
+					income.setQrcodeordernum(syjz.getPayOrderId());
+				}
+				break;
+			case DictionaryResource.TDAISLE:
+				SysTdOrder syo = PayUtil.SendTDSubmit(income, channel);
+				if (syo != null) {
+					flage = false;
+					income.setResulturl(syo.getData().getPay_url());
+					income.setQrcodeordernum(income.getMerchantordernum());
+				}
+				break;
+			case DictionaryResource.FHLAISLE:
+				SysFhOrder sfh = PayUtil.SendFhSubmit(income, channel);
+				if (sfh != null) {
+					flage = false;
+					income.setResulturl(sfh.getPayParams().getPayJumpUrl());
+					income.setQrcodeordernum(sfh.getPayOrderId());
+				}
+				break;
+			case DictionaryResource.EGAISLE:
+				SysTdOrder seg = PayUtil.SendEgSubmit(income, channel);
+				if (seg != null) {
+					flage = false;
+					income.setResulturl(seg.getData().getPay_url());
+					income.setQrcodeordernum(income.getMerchantordernum());
+				}
+				break;
+			case DictionaryResource.KFAISLE:
+				SysHsOrder sho = PayUtil.SendKFSubmit(income, channel);
+				if (sho != null) {
+					flage = false;
+					income.setResulturl(sho.getPay_url());
+					income.setQrcodeordernum(sho.getSys_order_no());
+				}
+				break;
+			case DictionaryResource.WDAISLE:
+				SysWdOrder wd = PayUtil.SendWdSubmit(income, channel);
+				if (wd != null) {
+					flage = false;
+					income.setResulturl(wd.getData().getPayData());
+					income.setQrcodeordernum(wd.getData().getPayOrderId());
+				}
+				break;
+			case DictionaryResource.RBLAISLE:
+				SysRblOrder rbl = PayUtil.SendRblSubmit(income, channel);
+				if (rbl != null) {
+					flage = false;
+					income.setResulturl(rbl.getData().getPayUrl());
+					income.setQrcodeordernum(rbl.getData().getTradeNo());
+				}
+				break;
+			case DictionaryResource.GZAISLE:
+				SysGzOrder gz = PayUtil.SendGzSubmit(income, channel);
+				if (gz != null) {
+					flage = false;
+					income.setResulturl(gz.getData().getPayUrl());
+					income.setQrcodeordernum(income.getMerchantordernum());
+				}
+				break;
+			case DictionaryResource.WJAISLE:
+				SysWjOrder wj = PayUtil.SendWjSubmit(income, channel);
+				if (wj != null) {
+					flage = false;
+					income.setResulturl(wj.getData().getPayData());
+					income.setQrcodeordernum(wj.getData().getPayOrderId());
+				}
+				break;
+			case DictionaryResource.FCAISLE:
+				SysFcOrder fc = PayUtil.SendFcSubmit(income, channel);
+				if (fc != null) {
+					flage = false;
+					income.setResulturl(fc.getData().getPayUrl());
+					income.setQrcodeordernum(fc.getData().getTradeNo());
+				}
+				break;
+			case DictionaryResource.AKLAISLE:
+				SysFcOrder akl = PayUtil.SendAklSubmit(income, channel);
+				if (akl != null) {
+					flage = false;
+					income.setResulturl(akl.getData().getPayUrl());
+					income.setQrcodeordernum(akl.getData().getTradeNo());
+				}
+				break;
 			}
-			break;
-		case DictionaryResource.ZSAISLE:
-			SysZsOrder zsjz = PayUtil.SendZSSubmit(income, channel);
-			if (zsjz != null) {
-				flage = false;
-				income.setResulturl(zsjz.getData().getQr_code());
-				income.setQrcodeordernum(zsjz.getData().getOrder_no());
+			if (flage) {
+				channelbot.notifyChannel(channel);
+				QrcodeResultVO qr = new QrcodeResultVO();
+				qr.setPay_memberid(mc.getCode());
+				qr.setPay_orderid(qs.getPay_orderid());
+				qr.setPay_amount(qs.getPay_amount());
+				qr.setPay_aislecode(qs.getPay_aislecode());
+				qr.setPay_viewurl(appConfig.getApirest() + "/esay/rest/v1/view/income/error");
+				String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
+				qr.setPay_md5sign(signresult);
+				return qr;
 			}
-			break;
-		case DictionaryResource.XSAISLE:
-			SysXSOrder xsjz = PayUtil.SendXSSubmit(income, channel);
-			if (xsjz != null) {
-				flage = false;
-				income.setResulturl(xsjz.getResult().getQrCode());
-				income.setQrcodeordernum(xsjz.getResult().getOrderCode());
+			if (mc.getAgentid() != null) {
+				Agent ag = agentmapper.get(mc.getAgentid());
+				income.setAgentid(ag.getId());
+				Agentaccountorder aat = new Agentaccountorder();
+				aat.setAgentid(ag.getId());
+				aat.setUserid(ag.getUserid());
+				aat.setUsername(ag.getName());
+				aat.setNkname(ag.getNkname());
+				aat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+				aat.setExchange(ag.getExchange());
+				aat.setAmount(income.getAmount());// 金额
+				aat.setDeal(income.getAmount() * (ag.getExchange() / 100));// 交易费
+				aat.setAmountreceived(aat.getDeal() + ag.getOnecost());// 总费用
+				aat.setOnecost(ag.getOnecost());// 手续费
+				aat.setType(DictionaryResource.ORDERTYPE_20.toString());
+				aat.setOrdernum("ina" + StringUtil.getOrderNum());
+				aat.setRemark("代收资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
+				income.setAgentincome(aat.getAmountreceived());
+				income.setAgentordernum(aat.getOrdernum());
+				agentaccountordermapper.post(aat);
+				agentaccountservice.totalincome(aat);
+			} else {
+				income.setAgentincome(0.00);
 			}
-			break;
-		case DictionaryResource.YSAISLE:
-			SysYSOrder syjz = PayUtil.SendYSSubmit(income, channel);
-			if (syjz != null) {
-				flage = false;
-				income.setResulturl(syjz.getPayParams().getPayUrl());
-				income.setQrcodeordernum(syjz.getPayOrderId());
+			// 渠道收入
+			income.setChannelincomeamount(NumberUtil.multiply(income.getAmount().toString(), (channel.getCollection() / 100) + "", 2).doubleValue());
+			// 商户收入
+			income.setMerchantincomeamount(NumberUtil.multiply(income.getAmount().toString(), (mc.getCollection() / 100) + "", 2).doubleValue());
+			// 系统收入
+			income.setIncomeamount(Double.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount() - income.getAgentincome()))));
+			// 商户收入
+			income.setMerchantincomeamount(Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount()))));
+			// 计算当前码可生成的订单
+			income.setFewamount(0.00);
+			income.setCollection(mc.getCollection());
+			income.setExchange(channel.getCollection());
+			income.setType(DictionaryResource.ORDERTYPE_27.toString());
+			income.setRemark("新增代收资金￥：" + income.getAmount());
+			int i = mapper.post(income);
+			if (i == 0) {
+				throw new YtException("当前系統繁忙");
 			}
-			break;
-		case DictionaryResource.TDAISLE:
-			SysTdOrder syo = PayUtil.SendTDSubmit(income, channel);
-			if (syo != null) {
-				flage = false;
-				income.setResulturl(syo.getData().getPay_url());
-				income.setQrcodeordernum(income.getMerchantordernum());
-			}
-			break;
-		case DictionaryResource.FHLAISLE:
-			SysFhOrder sfh = PayUtil.SendFhSubmit(income, channel);
-			if (sfh != null) {
-				flage = false;
-				income.setResulturl(sfh.getPayParams().getPayJumpUrl());
-				income.setQrcodeordernum(sfh.getPayOrderId());
-			}
-			break;
-		case DictionaryResource.EGAISLE:
-			SysTdOrder seg = PayUtil.SendEgSubmit(income, channel);
-			if (seg != null) {
-				flage = false;
-				income.setResulturl(seg.getData().getPay_url());
-				income.setQrcodeordernum(income.getMerchantordernum());
-			}
-			break;
-		case DictionaryResource.KFAISLE:
-			SysHsOrder sho = PayUtil.SendKFSubmit(income, channel);
-			if (sho != null) {
-				flage = false;
-				income.setResulturl(sho.getPay_url());
-				income.setQrcodeordernum(sho.getSys_order_no());
-			}
-			break;
-		case DictionaryResource.WDAISLE:
-			SysWdOrder wd = PayUtil.SendWdSubmit(income, channel);
-			if (wd != null) {
-				flage = false;
-				income.setResulturl(wd.getData().getPayData());
-				income.setQrcodeordernum(wd.getData().getPayOrderId());
-			}
-			break;
-		case DictionaryResource.RBLAISLE:
-			SysRblOrder rbl = PayUtil.SendRblSubmit(income, channel);
-			if (rbl != null) {
-				flage = false;
-				income.setResulturl(rbl.getData().getPayUrl());
-				income.setQrcodeordernum(rbl.getData().getTradeNo());
-			}
-			break;
-		case DictionaryResource.GZAISLE:
-			SysGzOrder gz = PayUtil.SendGzSubmit(income, channel);
-			if (gz != null) {
-				flage = false;
-				income.setResulturl(gz.getData().getPayUrl());
-				income.setQrcodeordernum(income.getMerchantordernum());
-			}
-			break;
-		case DictionaryResource.WJAISLE:
-			SysWjOrder wj = PayUtil.SendWjSubmit(income, channel);
-			if (wj != null) {
-				flage = false;
-				income.setResulturl(wj.getData().getPayData());
-				income.setQrcodeordernum(wj.getData().getPayOrderId());
-			}
-			break;
-		case DictionaryResource.FCAISLE:
-			SysFcOrder fc = PayUtil.SendFcSubmit(income, channel);
-			if (fc != null) {
-				flage = false;
-				income.setResulturl(fc.getData().getPayUrl());
-				income.setQrcodeordernum(fc.getData().getTradeNo());
-			}
-			break;
-		case DictionaryResource.AKLAISLE:
-			SysFcOrder akl = PayUtil.SendAklSubmit(income, channel);
-			if (akl != null) {
-				flage = false;
-				income.setResulturl(akl.getData().getPayUrl());
-				income.setQrcodeordernum(akl.getData().getTradeNo());
-			}
-			break;
-		}
-		if (flage) {
-			channelbot.notifyChannel(channel);
-			QrcodeResultVO qr = new QrcodeResultVO();
-			qr.setPay_memberid(mc.getCode());
-			qr.setPay_orderid(qs.getPay_orderid());
-			qr.setPay_amount(qs.getPay_amount());
-			qr.setPay_aislecode(qs.getPay_aislecode());
-			qr.setPay_viewurl(appConfig.getApirest() + "/esay/rest/v1/view/income/error");
-			String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
-			qr.setPay_md5sign(signresult);
-			return qr;
-		}
-		if (mc.getAgentid() != null) {
-			Agent ag = agentmapper.get(mc.getAgentid());
-			income.setAgentid(ag.getId());
-			Agentaccountorder aat = new Agentaccountorder();
-			aat.setAgentid(ag.getId());
-			aat.setUserid(ag.getUserid());
-			aat.setUsername(ag.getName());
-			aat.setNkname(ag.getNkname());
-			aat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
-			aat.setExchange(ag.getExchange());
-			aat.setAmount(income.getAmount());// 金额
-			aat.setDeal(income.getAmount() * (ag.getExchange() / 100));// 交易费
-			aat.setAmountreceived(aat.getDeal() + ag.getOnecost());// 总费用
-			aat.setOnecost(ag.getOnecost());// 手续费
-			aat.setType(DictionaryResource.ORDERTYPE_20.toString());
-			aat.setOrdernum("ina" + StringUtil.getOrderNum());
-			aat.setRemark("代收资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
-			income.setAgentincome(aat.getAmountreceived());
-			income.setAgentordernum(aat.getOrdernum());
-			agentaccountordermapper.post(aat);
-			agentaccountservice.totalincome(aat);
+			QrcodeResultVO result = addOtherOrder(income, channel, aisle, mc, qs);
+			TenantIdContext.remove();
+			return result;
 		} else {
-			income.setAgentincome(0.00);
+			long[] qraids = listmc.stream().mapToLong(qa -> qa.getQrcodeaisleid()).distinct().toArray();
+			List<Qrcodeaisle> listqa = qrcodeaislemapper.listByArrayId(qraids);
+			Qrcodeaisle qas;
+			try {
+				qas = listqa.stream().filter(qa -> qa.getCode().equals(qs.getPay_aislecode())).findFirst().get();
+			} catch (Exception e1) {
+				throw new YtException(qs.getPay_aislecode() + "通道没有权限");
+			}
+			Merchantqrcodeaisle mqd = listmc.stream().filter(mqds -> mqds.getQrcodeaisleid().equals(qas.getId())).findFirst().get();
+			Assert.notNull(mqd, "通道没有权限!");
+			List<Qrcodeaisleqrcode> listqaq = qrcodeaisleqrcodemapper.getByQrcodeAisleId(qas.getId());
+			long[] qaqids = listqaq.stream().mapToLong(qaq -> qaq.getQrcodelid()).distinct().toArray();
+			List<Qrcode> listqrcode = qrcodemapper.listByArrayId(qaqids);
+			Double amount = Double.valueOf(qs.getPay_amount());
+			List<Qrcode> listcmm = listqrcode.stream().filter(c -> c.getMax() >= amount && c.getMin() <= amount).collect(Collectors.toList());
+			Assert.notEmpty(listcmm, "代收金额超出限额");
+			List<Qrcode> listcf = listcmm.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
+			Qrcode qd = null;
+			if (listcf.size() > 0) {
+				for (int j = 0; j < listcf.size(); j++) {
+					Qrcode qc = listcf.get(j);
+					String[] match = qc.getFirstmatchmoney().split(",");
+					for (int i = 0; i < match.length; i++) {
+						String number = match[i];
+						if (number.indexOf("-") == -1 && (Integer.valueOf(amount.toString()) == Integer.valueOf(number))) {
+							qd = qc;
+						} else {
+							String[] matchs = number.split("-");
+							Integer min = Integer.parseInt(matchs[0]);
+							Integer max = Integer.parseInt(matchs[1]);
+							if (amount >= min && amount <= max) {
+								qd = qc;
+							}
+						}
+					}
+				}
+			} else {
+				// 根据权重选择码
+				List<WeightRandom.WeightObj<String>> weightList = new ArrayList<>(); //
+				double count = 0;
+				for (Qrcode cml : listcmm) {
+					count = count + cml.getWeight();
+				}
+				for (Qrcode cmm : listcmm) {
+					weightList.add(new WeightRandom.WeightObj<String>(cmm.getCode(), (cmm.getWeight() / count) * 100));
+				}
+				WeightRandom<String> wr = RandomUtil.weightRandom(weightList);
+				String code = wr.next();
+				qd = listqrcode.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
+				Assert.notNull(qd, "没有可用的渠道!");
+			}
+			// 开始业务
+			Channel channel = channelmapper.getByUserId(qd.getUserid());
+			Income income = addIncome(channel, qas, mc, qs, qd);
+			// 支付通手机H5
+			if (qd.getCode().equals("ZFTWAP")) {
+				AlipayTradeWapPayResponse response = PayUtil.AlipayTradeWapPay(qd, income.getOrdernum(), income.getAmount());
+				Assert.notNull(response, "获取支付宝单号错误!");
+				String pageRedirectionData = response.getBody();
+				income.setQrcode(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
+				income.setQrcodeordernum("inqd" + StringUtil.getOrderNum());
+				income.setResulturl(pageRedirectionData);
+			} else {
+			}
+			///////////////////////////////////////////////////// 计算代理订单/////////////////////////////////////////////////////
+			if (mc.getAgentid() != null) {
+				Agent ag = agentmapper.get(mc.getAgentid());
+				income.setAgentid(ag.getId());
+				Agentaccountorder aat = new Agentaccountorder();
+				aat.setAgentid(ag.getId());
+				aat.setUserid(ag.getUserid());
+				aat.setUsername(ag.getName());
+				aat.setNkname(ag.getNkname());
+				aat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+				aat.setExchange(ag.getExchange());
+				aat.setAmount(income.getAmount());// 金额
+				aat.setDeal(income.getAmount() * (ag.getExchange() / 100));// 交易费
+				aat.setAmountreceived(aat.getDeal() + ag.getOnecost());// 总费用
+				aat.setOnecost(ag.getOnecost());// 手续费
+				aat.setType(DictionaryResource.ORDERTYPE_20.toString());
+				aat.setOrdernum("ina" + StringUtil.getOrderNum());
+				aat.setRemark("代收资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
+				income.setAgentincome(aat.getAmountreceived());
+				income.setAgentordernum(aat.getOrdernum());
+				agentaccountordermapper.post(aat);
+				agentaccountservice.totalincome(aat);
+			} else {
+				income.setAgentincome(0.00);
+			}
+			// 渠道收入
+			income.setChannelincomeamount(NumberUtil.multiply(income.getAmount().toString(), (qd.getCollection() / 100) + "", 2).doubleValue());
+			// 商户收入
+			income.setMerchantincomeamount(NumberUtil.multiply(income.getAmount().toString(), (mc.getCollection() / 100) + "", 2).doubleValue());
+			// 系统收入
+			income.setIncomeamount(Double.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount() - income.getAgentincome()))));
+			// 商户收入
+			income.setMerchantincomeamount(Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount()))));
+			// 计算当前码可生成的订单
+			income.setFewamount(0.00);
+			income.setCollection(mc.getCollection());
+			income.setExchange(channel.getCollection());
+			income.setType(DictionaryResource.ORDERTYPE_27.toString());
+			income.setRemark("新增代收资金￥：" + income.getAmount());
+			int i = mapper.post(income);
+			if (i == 0) {
+				throw new YtException("当前系統繁忙");
+			}
+			QrcodeResultVO result = addOtherOrderMqd(income, channel, qas, mc, qs);
+			TenantIdContext.remove();
+			return result;
 		}
-		// 渠道收入
-		income.setChannelincomeamount(NumberUtil.multiply(income.getAmount().toString(), (channel.getCollection() / 100) + "", 2).doubleValue());
-		// 商户收入
-		income.setMerchantincomeamount(NumberUtil.multiply(income.getAmount().toString(), (mc.getCollection() / 100) + "", 2).doubleValue());
-		// 系统收入
-		income.setIncomeamount(Double.valueOf(String.format("%.2f", (income.getMerchantincomeamount() - income.getChannelincomeamount() - income.getAgentincome()))));
-		// 商户收入
-		income.setMerchantincomeamount(Double.valueOf(String.format("%.2f", (income.getAmount() - income.getMerchantincomeamount()))));
-		// 计算当前码可生成的订单
-		income.setFewamount(0.00);
-		income.setCollection(mc.getCollection());
-		income.setExchange(channel.getCollection());
-		income.setType(DictionaryResource.ORDERTYPE_27.toString());
-		income.setRemark("新增代收资金￥：" + income.getAmount());
-		int i = mapper.post(income);
-		if (i == 0) {
-			throw new YtException("当前通道码繁忙");
-		}
-		QrcodeResultVO result = addOtherOrder(income, channel, aisle, mc, qs);
-		TenantIdContext.remove();
-		return result;
 	}
 
 	@Override
@@ -905,74 +861,17 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return qrv;
 	}
 
-	public AlipayTradePrecreateResponse alif2f(Qrcode qrcode, String ordernum, Double amount, Integer exp) {
-		try {
-			AlipayClient client = AliPayUtil.initAliPay(qrcode.getAppid(), qrcode.getAppprivatekey(), qrcode.getApppublickey(), qrcode.getAlipaypublickey(), qrcode.getAlipayprovatekey());
-			AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
-			AlipayTradePrecreateModel model = new AlipayTradePrecreateModel();
-			model.setOutTradeNo(ordernum);
-			model.setTotalAmount(amount.toString());
-			model.setSubject(qrcode.getName() + StringUtil.getUUID());
-			model.setTimeoutExpress(exp + "m");
-			request.setBizModel(model);
-			request.setNotifyUrl(qrcode.getNotifyurl());
-			AlipayF2FPrecreateResult result = tradeService.tradePrecreate(request, client);
-			switch (result.getTradeStatus()) {
-			case SUCCESS:
-				log.info("支付宝预下单成功: )");
-				AlipayTradePrecreateResponse response = result.getResponse();
-				log.info(String.format("code:%s, msg:%s", response.getCode(), response.getMsg()));
-				log.info(response.getBody());
-				return response;
-			case FAILED:
-				log.error("支付宝预下单失败!!!");
-				break;
-			case UNKNOWN:
-				log.error("系统异常，预下单状态未知!!!");
-				break;
-			default:
-				log.error("不支持的交易状态，交易返回异常!!!");
-				break;
-			}
-		} catch (AlipayApiException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	@Override
 	public void alipayftfcallback(Map<String, String> params) {
 		String trade_no = params.get("trade_no").toString();
 		String out_trade_no = params.get("out_trade_no").toString();
 		Income income = mapper.getByOrderNum(out_trade_no);
 		Qrcode qrcode = qrcodemapper.get(income.getQrcodeid());
-		try {
-			AlipayClient client = AliPayUtil.initAliPay(qrcode.getAppid(), qrcode.getAppprivatekey(), qrcode.getApppublickey(), qrcode.getAlipaypublickey(), qrcode.getAlipayprovatekey());
-			AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
-			AlipayTradeQueryModel model = new AlipayTradeQueryModel();
-			model.setTradeNo(trade_no);
-			request.setBizModel(model);
-			AlipayF2FQueryResult result = tradeService.queryTradeResult(request, client);
-			switch (result.getTradeStatus()) {
-			case SUCCESS:
-				log.info("支付宝查单成功: )");
-				AlipayTradeQueryResponse response = result.getResponse();
-				if (response.getCode().equals(DictionaryResource.SUCCESS)) {
-					success(income, trade_no);
-				}
-				break;
-			case FAILED:
-				log.error("支付宝预下单失败!!!");
-				break;
-			case UNKNOWN:
-				log.error("系统异常，预下单状态未知!!!");
-				break;
-			default:
-				log.error("不支持的交易状态，交易返回异常!!!");
-				break;
-			}
-		} catch (AlipayApiException e) {
-			e.printStackTrace();
+		log.info("支付宝查单成功: " + trade_no + "===" + out_trade_no);
+		AlipayTradeQueryResponse atqr = PayUtil.AlipayTradeWapQuery(qrcode, out_trade_no, trade_no);
+		if (atqr.getTradeStatus().equals("TRADE_SUCCESS")) {
+			log.info("支付宝查单成功: )");
+			success(income, trade_no);
 		}
 	}
 
@@ -1027,8 +926,14 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setQrcodename(qd.getName());
 		income.setQrcodecode(qd.getCode());
 
-		income.setAmount(Double.valueOf(qs.getPay_amount()));
 		income.setDynamic(qas.getDynamic());
+
+		// 随机数
+		income.setAmount(Double.valueOf(qs.getPay_amount()));
+		if (mc.getClearingtype())
+			income.setRealamount(Double.valueOf(StringUtil.getDouble(qs.getPay_amount())));
+		else
+			income.setRealamount(income.getAmount());
 
 		income.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
@@ -1156,7 +1061,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qr.setPay_orderid(qs.getPay_orderid());
 		qr.setPay_amount(qs.getPay_amount());
 		qr.setPay_aislecode(qs.getPay_aislecode());
-		qr.setPay_viewurl(income.getResulturl());
+		qr.setPay_viewurl(income.getQrcode());
 		String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
 		qr.setPay_md5sign(signresult);
 		return qr;

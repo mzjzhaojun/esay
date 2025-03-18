@@ -85,12 +85,7 @@ div {
 			<div
 				style="width: 100%; height: 20%; display: flex; justify-content: center; align-items: center;">
 				<div>
-					<label>二维码:</label>
-					<div>
-						<span class="fileinput-button"> <span>+</span> <input
-							type="file" class="avatar-input" onchange="gome(this)" id="front">
-						</span>
-					</div>
+					
 				</div>
 			</div>
 		</div>
@@ -98,7 +93,12 @@ div {
 </body>
 <script type="text/javascript">
 	function initdata() {
-
+		var imgsrc = "[[${qrcode}]]";
+		var incomeid = "[[${incomeid}]]";
+		var amount = "[[${amount}]]";
+		var status = "[[${status}]]";
+		var backforwardurl = "[[${backforwardurl}]]";
+		var expiredminute = "[[${expiredminute}]]";
 	}
 
 	//建立一可存取到file的url

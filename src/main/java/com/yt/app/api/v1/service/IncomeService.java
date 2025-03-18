@@ -28,9 +28,6 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 	// h5上家查单
 	QueryQrcodeResultVO queryInCome(QrcodeSubmitDTO qs);
 
-	// 拉码下单查单
-	QrcodeResultVO submitQrcode(QrcodeSubmitDTO qs);
-
 	// KF回调
 	void kfcallback(Map<String, String> params);
 
@@ -63,16 +60,16 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	// 易生回调
 	void yscallback(Map<String, String> params);
-	
-	//新生回调
+
+	// 新生回调
 	void xscallback(Map<String, String> params);
-	
-	//张三
+
+	// 张三
 	void zscallback(Map<String, Object> params);
 
 	// alipay回調
 	void alipayftfcallback(Map<String, String> params);
-	
+
 	// 通源回調
 	void tongyuancallback(Map<String, String> params);
 

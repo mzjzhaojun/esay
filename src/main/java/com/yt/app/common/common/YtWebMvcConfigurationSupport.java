@@ -28,7 +28,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.resource.VersionResourceResolver;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
@@ -115,14 +114,6 @@ public class YtWebMvcConfigurationSupport extends WebMvcConfigurationSupport {
 		paramResourceHandlerRegistry.addResourceHandler("/static/**").addResourceLocations("classpath:/template/static/").setCachePeriod(3600).resourceChain(true).addResolver(new VersionResourceResolver().addContentVersionStrategy("/**"));
 		paramResourceHandlerRegistry.addResourceHandler("/").addResourceLocations("classpath:/index.html");
 		super.addResourceHandlers(paramResourceHandlerRegistry);
-	}
-
-	@Bean
-	public InternalResourceViewResolver l() {
-		InternalResourceViewResolver localInternalResourceViewResolver = new InternalResourceViewResolver();
-		localInternalResourceViewResolver.setPrefix("/");
-		localInternalResourceViewResolver.setSuffix(".html");
-		return localInternalResourceViewResolver;
 	}
 
 	@Bean

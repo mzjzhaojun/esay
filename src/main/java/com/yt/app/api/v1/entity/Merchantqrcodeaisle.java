@@ -26,6 +26,5 @@ public class Merchantqrcodeaisle extends YtBaseEntity<Merchantqrcodeaisle> {
 	Long tenant_id;
 	Long merchantid;
 	Long qrcodeaisleid;
-	Double collection;
 	Integer version;
 }

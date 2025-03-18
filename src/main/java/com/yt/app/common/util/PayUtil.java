@@ -1,7 +1,9 @@
 package com.yt.app.common.util;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -15,11 +17,22 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.diagnosis.DiagnosisUtils;
+import com.alipay.api.domain.AlipayTradeQueryModel;
+import com.alipay.api.domain.AlipayTradeWapPayModel;
+import com.alipay.api.request.AlipayTradeQueryRequest;
+import com.alipay.api.request.AlipayTradeWapPayRequest;
+import com.alipay.api.response.AlipayTradeQueryResponse;
+import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.yt.app.api.v1.dbo.PaySubmitDTO;
 import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Payout;
+import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.vo.PayResultVO;
 import com.yt.app.api.v1.vo.QrcodeResultVO;
 import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
@@ -59,6 +72,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PayUtil {
+
+	final static String alipayurl = "https://openapi.alipay.com/gateway.do";
 
 	/**
 	 * ========================================================================代付
@@ -538,8 +553,8 @@ public class PayUtil {
 		map.add("attach", "goods");
 		map.add("sign_type", "RSA2");
 
-		String signContent = "amount=" + pt.getRealamount() + "&appid=" + cl.getApikey() + "&applydate=" + DateTimeUtil.getDateTime() + "&bankcode=" + pt.getQrcodecode() + "&memberid=" + cl.getCode() + "&notify_url=" + cl.getApireusultip() + "&orderid="
-				+ pt.getOrdernum() + "&return_url=" + pt.getBackforwardurl();
+		String signContent = "amount=" + pt.getRealamount() + "&appid=" + cl.getApikey() + "&applydate=" + DateTimeUtil.getDateTime() + "&bankcode=" + pt.getQrcodecode() + "&memberid=" + cl.getCode() + "&notify_url=" + cl.getApireusultip()
+				+ "&orderid=" + pt.getOrdernum() + "&return_url=" + pt.getBackforwardurl();
 		String sign = "";
 		try {
 			sign = sign(signContent, cl.getPrivatersa());
@@ -1809,4 +1824,87 @@ public class PayUtil {
 		return null;
 	}
 
+	// ===========================alipay============
+
+	public static AlipayTradeWapPayResponse AlipayTradeWapPay(Qrcode qrcode, String ordernum, Double amount) {
+
+		try {
+			// 初始化SDK
+			AlipayClient client = new DefaultAlipayClient(alipayurl, qrcode.getAppid(), qrcode.getAppprivatekey(), "json", "UTF-8", qrcode.getAlipaypublickey(), "RSA2");
+
+			// 构造请求参数以调用接口
+			AlipayTradeWapPayRequest request = new AlipayTradeWapPayRequest();
+			AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();
+
+			request.setNotifyUrl(qrcode.getNotifyurl());
+			// 设置商户订单号
+			model.setOutTradeNo(ordernum);
+
+			// 设置订单总金额
+			model.setTotalAmount(amount.toString());
+
+			// 设置订单标题
+			model.setSubject("会员支付");
+
+			// 设置产品码
+			model.setProductCode("QUICK_WAP_WAY");
+
+			request.setBizModel(model);
+
+			// AlipayTradeWapPayResponse response = client.pageExecute(request, "POST");
+			// 如果需要返回GET请求，请使用
+			AlipayTradeWapPayResponse response = client.pageExecute(request, "GET");
+			String pageRedirectionData = response.getBody();
+			System.out.println(pageRedirectionData);
+
+			if (response.isSuccess()) {
+				System.out.println("调用成功");
+			} else {
+				System.out.println("调用失败");
+				String diagnosisUrl = DiagnosisUtils.getDiagnosisUrl(response);
+				System.out.println(diagnosisUrl);
+			}
+			return response;
+		} catch (AlipayApiException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static AlipayTradeQueryResponse AlipayTradeWapQuery(Qrcode qrcode, String outno, String ordernum) {
+		try {
+			// 初始化SDK
+			AlipayClient client = new DefaultAlipayClient(alipayurl, qrcode.getAppid(), qrcode.getAppprivatekey(), "json", "UTF-8", qrcode.getAlipaypublickey(), "RSA2");
+
+			AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
+			AlipayTradeQueryModel model = new AlipayTradeQueryModel();
+
+			// 设置订单支付时传入的商户订单号
+			model.setOutTradeNo(outno);
+
+			// 设置支付宝交易号
+			model.setTradeNo(ordernum);
+
+			// 设置查询选项
+			List<String> queryOptions = new ArrayList<String>();
+			queryOptions.add("trade_settle_info");
+			model.setQueryOptions(queryOptions);
+
+			request.setBizModel(model);
+
+			AlipayTradeQueryResponse response = client.execute(request);
+			System.out.println(response.getBody());
+
+			if (response.isSuccess()) {
+				System.out.println("调用成功");
+				return response;
+			} else {
+				System.out.println("调用失败");
+				return null;
+			}
+		} catch (AlipayApiException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
