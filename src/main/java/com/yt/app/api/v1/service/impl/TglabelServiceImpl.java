@@ -35,7 +35,6 @@ public class TglabelServiceImpl extends YtBaseServiceImpl<Tgchannelgrouplabel, L
 		return i;
 	}
 
-
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tgchannelgrouplabel get(Long id) {

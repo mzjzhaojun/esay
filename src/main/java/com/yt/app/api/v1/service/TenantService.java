@@ -13,6 +13,6 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface TenantService extends YtIBaseService<Tenant, Long> {
-	
+
 	YtIPage<Tenant> page(Map<String, Object> param);
 }

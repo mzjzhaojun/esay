@@ -13,7 +13,7 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface ExchangeMerchantaccountorderService extends YtIBaseService<ExchangeMerchantaccountorder, Long> {
-	
+
 	YtIPage<ExchangeMerchantaccountorder> page(Map<String, Object> param);
 
 	Integer save(ExchangeMerchantaccountorder t);

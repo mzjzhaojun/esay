@@ -32,7 +32,6 @@ public class TgmerchantgroupController extends YtBaseEncipherControllerImpl<Tgme
 	@Autowired
 	private TgmerchantgroupService service;
 
-
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<TgmerchantgroupVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));

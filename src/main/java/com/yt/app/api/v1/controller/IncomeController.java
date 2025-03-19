@@ -49,10 +49,10 @@ public class IncomeController extends YtBaseEncipherControllerImpl<Income, Long>
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
-	@RequestMapping(value = "/makeuporder", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/addblock", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> makeuporder(YtRequestDecryptEntity<Income> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		Integer i = service.makeuporder(requestEntity.getBody());
-		Assert.notEquals(i, 0, "新增失败！");
+		Integer i = service.addblock(requestEntity.getBody());
+		Assert.notEquals(i, 0, "失败！");
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 

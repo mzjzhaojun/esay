@@ -32,7 +32,6 @@ public class QrcodeaisleqrcodeController extends YtBaseEncipherControllerImpl<Qr
 	@Autowired
 	private QrcodeaisleqrcodeService service;
 
-
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<QrcodeaisleqrcodeVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));

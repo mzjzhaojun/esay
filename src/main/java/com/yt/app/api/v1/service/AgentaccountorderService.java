@@ -13,7 +13,7 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface AgentaccountorderService extends YtIBaseService<Agentaccountorder, Long> {
-	
+
 	YtIPage<Agentaccountorder> page(Map<String, Object> param);
 
 	Integer save(Agentaccountorder t);
@@ -22,8 +22,8 @@ public interface AgentaccountorderService extends YtIBaseService<Agentaccountord
 	void withdrawmanual(Agentaccountorder aco);
 
 	Integer cancleWithdraw(Long id);
-	
-	//app提现
+
+	// app提现
 	Long incomewithdrawapp(Agentaccountorder mco);
 
 	Integer success(Long id);

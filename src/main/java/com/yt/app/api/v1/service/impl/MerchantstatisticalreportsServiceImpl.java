@@ -35,7 +35,6 @@ public class MerchantstatisticalreportsServiceImpl extends YtBaseServiceImpl<Mer
 		return i;
 	}
 
-
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Merchantstatisticalreports get(Long id) {

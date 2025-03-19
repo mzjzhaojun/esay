@@ -96,8 +96,8 @@ public class IncomemerchantaccountServiceImpl extends YtBaseServiceImpl<Incomeme
 		m.setCount(m.getCount() + mao.getIncomeamount());
 		m.setTodaycount(m.getTodaycount() + mao.getIncomeamount());
 		m.setBalance(t.getBalance());
-		m.setTodayincomecount(m.getTodayincomecount() + mao.getAmount());//当日支付
-		m.setIncomecount(m.getIncomecount() + mao.getAmount());//总支付
+		m.setTodayincomecount(m.getTodayincomecount() + mao.getAmount());// 当日支付
+		m.setIncomecount(m.getIncomecount() + mao.getAmount());// 总支付
 		merchantmapper.put(m);
 	}
 

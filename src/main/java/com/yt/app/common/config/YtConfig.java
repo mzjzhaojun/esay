@@ -38,7 +38,7 @@ public class YtConfig {
 	private boolean build;
 
 	private boolean cache;
-	
+
 	private String apirest;
 
 	public void setOrigin(String origin) {

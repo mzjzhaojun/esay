@@ -98,7 +98,6 @@ public interface MerchantaisleMapper extends YtIBaseMapper<Merchantaisle> {
 	@YtRedisCacheAnnotation(classs = Merchantaisle.class)
 	public List<Merchantaisle> listByArrayId(long[] id);
 
-	
 	/**
 	 * 
 	 * @param aisleid

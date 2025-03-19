@@ -58,7 +58,6 @@ public class QrcodeaisleqrcodeServiceImpl extends YtBaseServiceImpl<Qrcodeaisleq
 		return mapper.delete(id);
 	}
 
-
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Qrcodeaisleqrcode get(Long id) {

@@ -15,7 +15,7 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface UserroleService extends YtIBaseService<Userrole, Long> {
-	
+
 	YtIPage<Userrole> page(Map<String, Object> param);
 
 	/**

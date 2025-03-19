@@ -22,9 +22,9 @@ import com.yt.app.common.enums.SysRoleCodeEnum;
  */
 
 public interface RoleService extends YtIBaseService<Role, Long> {
-	
+
 	YtIPage<Role> page(Map<String, Object> param);
-	
+
 	/**
 	 * 列表分页
 	 *

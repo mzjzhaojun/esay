@@ -14,7 +14,7 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface SysconfigService extends YtIBaseService<Sysconfig, Long> {
-	
+
 	YtIPage<Sysconfig> page(Map<String, Object> param);
 
 	Sysconfig getUsdtExchangeData();

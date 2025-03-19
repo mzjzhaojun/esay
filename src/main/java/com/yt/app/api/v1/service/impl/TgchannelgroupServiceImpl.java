@@ -1,4 +1,4 @@
- package com.yt.app.api.v1.service.impl;
+package com.yt.app.api.v1.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;

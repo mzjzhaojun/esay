@@ -15,7 +15,6 @@ import com.yt.app.common.base.context.AuthContext;
 import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.exption.YtException;
 
-
 public class SecurityUtil {
 	/**
 	 * API解密

@@ -29,6 +29,7 @@ public class ViewController {
 	@RequestMapping(value = "/income/{orderid}", method = RequestMethod.GET)
 	public String income(@PathVariable String orderid, Model model, HttpServletRequest request, HttpServletResponse response) {
 		Income income = service.getByOrderNum(orderid);
+		model.addAttribute("orderid", orderid);
 		model.addAttribute("resulturl", income.getResulturl());
 		model.addAttribute("status", income.getStatus());
 		return "static/zfbwapview";

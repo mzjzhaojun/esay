@@ -18,9 +18,9 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface FileService extends YtIBaseService<YtFile, Long> {
-	
+
 	YtIPage<YtFile> page(Map<String, Object> param);
-	
+
 	/**
 	 * 保存文件
 	 * 

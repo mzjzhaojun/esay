@@ -9,6 +9,7 @@ import com.yt.app.api.v1.mapper.AgentMapper;
 import com.yt.app.api.v1.mapper.AgentaccountorderMapper;
 import com.yt.app.api.v1.mapper.AisleMapper;
 import com.yt.app.api.v1.mapper.AislechannelMapper;
+import com.yt.app.api.v1.mapper.BlocklistMapper;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper;
@@ -22,6 +23,7 @@ import com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.IncomeService;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
+import com.yt.app.api.v1.service.QrcodeService;
 import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
@@ -37,6 +39,7 @@ import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Aisle;
 import com.yt.app.api.v1.entity.Aislechannel;
+import com.yt.app.api.v1.entity.Blocklist;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
@@ -67,6 +70,7 @@ import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
+import com.yt.app.common.util.AliPayUtil;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.NumberUtil;
 import com.yt.app.common.util.PayUtil;
@@ -131,11 +135,15 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	@Autowired
 	private QrcodeaccountService qrcodeaccountservice;
 	@Autowired
+	private QrcodeService qrcodeservice;
+	@Autowired
 	private SystemaccountService systemaccountservice;
 	@Autowired
 	private AgentaccountService agentaccountservice;
 	@Autowired
 	private ChannelBot channelbot;
+	@Autowired
+	private BlocklistMapper blocklistmapper;
 
 	@Override
 	@Transactional
@@ -775,7 +783,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			Income income = addIncome(channel, qas, mc, qs, qd);
 			// 支付通手机H5
 			if (qd.getCode().equals("ZFTWAP")) {
-				AlipayTradeWapPayResponse response = PayUtil.AlipayTradeWapPay(qd, income.getOrdernum(), income.getAmount());
+				AlipayTradeWapPayResponse response = AliPayUtil.AlipayTradeWapPay(qd, income.getOrdernum(), income.getAmount());
 				Assert.notNull(response, "获取支付宝单号错误!");
 				String pageRedirectionData = response.getBody();
 				income.setQrcode(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
@@ -820,6 +828,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			income.setFewamount(0.00);
 			income.setCollection(mc.getCollection());
 			income.setExchange(channel.getCollection());
+			income.setInipaddress(AuthContext.getIp());
 			income.setType(DictionaryResource.ORDERTYPE_27.toString());
 			income.setRemark("新增代收资金￥：" + income.getAmount());
 			int i = mapper.post(income);
@@ -868,7 +877,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Income income = mapper.getByOrderNum(out_trade_no);
 		Qrcode qrcode = qrcodemapper.get(income.getQrcodeid());
 		log.info("支付宝查单成功: " + trade_no + "===" + out_trade_no);
-		AlipayTradeQueryResponse atqr = PayUtil.AlipayTradeWapQuery(qrcode, out_trade_no, trade_no);
+		AlipayTradeQueryResponse atqr = AliPayUtil.AlipayTradeWapQuery(qrcode, out_trade_no, trade_no);
 		if (atqr.getTradeStatus().equals("TRADE_SUCCESS")) {
 			log.info("支付宝查单成功: )");
 			success(income, trade_no);
@@ -944,7 +953,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	// 上游渠道下单
 	private QrcodeResultVO addOtherOrder(Income income, Channel channel, Aisle qas, Merchant mc, QrcodeSubmitDTO qs) {
-		// 添加qrcode订单
 		Qrcodeaccountorder qao = new Qrcodeaccountorder();
 		qao.setUserid(income.getQrcodeuserid());
 		qao.setQrcodeaisleid(income.getQrcodeaisleid());
@@ -1006,8 +1014,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return qr;
 	}
 
+	// 添加qrcode订单
 	private QrcodeResultVO addOtherOrderMqd(Income income, Channel channel, Qrcodeaisle qas, Merchant mc, QrcodeSubmitDTO qs) {
-		// 添加qrcode订单
 		Qrcodeaccountorder qao = new Qrcodeaccountorder();
 		qao.setUserid(income.getQrcodeuserid());
 		qao.setQrcodeaisleid(income.getQrcodeaisleid());
@@ -1067,59 +1075,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return qr;
 	}
 
-	// 补单
-	private void addMakeupOrder(Income income) {
-		// 添加qrcode订单
-		Qrcodeaccountorder qao = new Qrcodeaccountorder();
-		qao.setUserid(income.getQrcodeuserid());
-		qao.setQrcodeaisleid(income.getQrcodeaisleid());
-		qao.setQrcodeaislename(income.getQrcodeaislename());
-		qao.setQrcodename(income.getQrcodename());
-		qao.setQrcodeid(income.getQrcodeid());
-		qao.setOrdernum(income.getQrcodeordernum());
-		qao.setType(income.getType());
-		qao.setFewamount(income.getFewamount());
-		qao.setAmount(income.getAmount());
-		qao.setRealamount(income.getRealamount());
-		qao.setResulturl(income.getResulturl());
-		qao.setQrcodecode(income.getQrcodecode());
-		qao.setMerchantname(income.getMerchantname());
-		qao.setQrocde(income.getQrcode());
-		qao.setDynamic(income.getDynamic());
-		qao.setStatus(income.getStatus());
-		qao.setQrcodeaislecode(income.getQrcodeaislecode());
-		qao.setChannelid(income.getQrcodeid());
-		qao.setCollection(income.getExchange());
-		qao.setExpireddate(income.getExpireddate());
-		qao.setIncomeamount(income.getChannelincomeamount());
-		qrcodeaccountordermapper.post(qao);
-		// 添加商戶订单
-		Incomemerchantaccountorder imao = new Incomemerchantaccountorder();
-		imao.setUserid(income.getMerchantuserid());
-		imao.setQrcodeaisleid(income.getQrcodeaisleid());
-		imao.setQrcodeaislename(income.getQrcodeaislename());
-		imao.setQrcodename(income.getQrcodename());
-		imao.setQrcodeid(income.getQrcodeid());
-		imao.setOrdernum(income.getMerchantorderid());
-		imao.setDynamic(income.getDynamic());
-		imao.setType(income.getType());
-		imao.setFewamount(income.getFewamount());
-		imao.setAmount(income.getAmount());
-		imao.setRealamount(income.getRealamount());
-		imao.setResulturl(income.getResulturl());
-		imao.setQrcodecode(income.getQrcodecode());
-		imao.setMerchantname(income.getMerchantname());
-		imao.setQrocde(income.getQrcode());
-		imao.setStatus(income.getStatus());
-		imao.setCollection(income.getCollection());
-		imao.setQrcodeaislecode(income.getQrcodeaislecode());
-		imao.setMerchantid(income.getMerchantid());
-		imao.setExpireddate(income.getExpireddate());
-		imao.setIncomeamount(income.getMerchantincomeamount());
-		incomemerchantaccountordermapper.post(imao);
-		incomemerchantaccountservice.totalincome(imao);
-	}
-
 	private void success(Income income) {
 		// 計算代收
 		income.setStatus(DictionaryResource.PAYOUTSTATUS_52);
@@ -1159,7 +1114,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	private void success(Income income, String trade_no) {
-		TenantIdContext.setTenantId(income.getTenant_id());
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			// 渠道
 			Qrcodeaccountorder qrcodeaccountorder = qrcodeaccountordermapper.getByOrderNum(income.getQrcodeordernum());
@@ -1188,6 +1142,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			mapper.put(income);
 			// 计算渠道收入
 			qrcodeaccountservice.updateTotalincome(qrcodeaccountorder);
+			// 计算金额
+			qrcodeservice.updateTotalincome(qrcodeaccountorder);
 			//
 			Incomemerchantaccountorder incomemerchantaccountorder = incomemerchantaccountordermapper.getByOrderNum(income.getMerchantorderid());
 			incomemerchantaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
@@ -1196,34 +1152,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			incomemerchantaccountservice.updateTotalincome(incomemerchantaccountorder);
 			// 计算系统收入
 			systemaccountservice.updateIncome(income);
-			TenantIdContext.remove();
 		}
 
-	}
-
-	@Override
-	public Integer makeuporder(Income inc) {
-		Income newincome = mapper.get(inc.getId());
-
-		newincome.setId(null);
-		newincome.setOrdernum("up_" + StringUtil.getOrderNum());
-		newincome.setMerchantorderid("up_" + newincome.getMerchantorderid());
-		newincome.setQrcodeordernum("up_" + newincome.getQrcodeordernum());
-		newincome.setStatus(DictionaryResource.PAYOUTSTATUS_50);
-		newincome.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_63);
-		newincome.setRemark("补单代收资金￥：" + newincome.getAmount());
-		Integer i = mapper.post(newincome);
-		// 补单（不通知）
-		addMakeupOrder(newincome);
-
-		//
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		success(newincome);
-		return i;
 	}
 
 	@Override
@@ -1238,6 +1168,19 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	public void successstatus(Income income) {
 		Income newincome = mapper.get(income.getId());
 		success(newincome);
+	}
+
+	@Override
+	public Integer addblock(Income income) {
+		Income newincome = mapper.get(income.getId());
+		Blocklist bl = new Blocklist();
+		bl.setMerchantid(newincome.getMerchantid());
+		bl.setHexaddress(newincome.getBlockaddress());
+		bl.setOrdernum(newincome.getOrdernum());
+		Integer i = blocklistmapper.post(bl);
+		income.setBlockaddress("");
+		mapper.updateBlock(income);
+		return i;
 	}
 
 }

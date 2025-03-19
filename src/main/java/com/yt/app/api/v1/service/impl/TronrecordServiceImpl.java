@@ -35,7 +35,6 @@ public class TronrecordServiceImpl extends YtBaseServiceImpl<Tronrecord, Long> i
 		return i;
 	}
 
-
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tronrecord get(Long id) {

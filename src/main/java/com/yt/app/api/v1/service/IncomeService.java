@@ -73,12 +73,12 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 	// 通源回調
 	void tongyuancallback(Map<String, String> params);
 
-	// 补单
-	Integer makeuporder(Income income);
-
 	// 通知
 	Integer notify(Income income);
 
 	// 成功
 	void successstatus(Income income);
+	
+	Integer addblock(Income income);
+	
 }

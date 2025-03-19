@@ -32,7 +32,6 @@ public class TgbotgrouprecordController extends YtBaseEncipherControllerImpl<Tgb
 	@Autowired
 	private TgbotgrouprecordService service;
 
-
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<TgbotgrouprecordVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));

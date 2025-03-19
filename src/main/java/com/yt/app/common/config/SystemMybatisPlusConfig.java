@@ -81,8 +81,7 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantstatisticalreports");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("systemstatisticalreports");
 
-		
-		//tgrame
+		// tgrame
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tgbotgroup");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tgbotgrouprecord");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tgchannelgroup");
@@ -94,6 +93,10 @@ public class SystemMybatisPlusConfig {
 		// tron
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tron");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tronaddress");
+		
+		
+		//黑名单
+		MybatisPlusConfig.TENANT_ID_TABLE.add("blocklist");
 
 	}
 

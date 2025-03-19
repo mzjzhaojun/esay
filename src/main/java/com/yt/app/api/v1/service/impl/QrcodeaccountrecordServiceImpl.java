@@ -37,7 +37,6 @@ public class QrcodeaccountrecordServiceImpl extends YtBaseServiceImpl<Qrcodeacco
 		return i;
 	}
 
-
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Qrcodeaccountrecord get(Long id) {

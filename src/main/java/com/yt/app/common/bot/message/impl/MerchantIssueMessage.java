@@ -54,7 +54,7 @@ public class MerchantIssueMessage implements UpdateMerchantMessageService {
 					}
 					sendMessage.setText(msg.toString());
 					sendMessage.enableMarkdown(true);
-				}else {
+				} else {
 					sendMessage.setText("下发格式 下发 商户名 金额");
 				}
 			} else {

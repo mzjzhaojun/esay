@@ -13,7 +13,7 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface ChannelaccountorderService extends YtIBaseService<Channelaccountorder, Long> {
-	
+
 	YtIPage<Channelaccountorder> page(Map<String, Object> param);
 
 	void incomemanual(Channelaccountorder cco);

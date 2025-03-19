@@ -16,7 +16,7 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface MenuService extends YtIBaseService<Menu, Long> {
-	
+
 	YtIPage<Menu> page(Map<String, Object> param);
 
 	/**

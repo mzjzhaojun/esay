@@ -16,7 +16,7 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface RolescopeService extends YtIBaseService<Rolescope, Long> {
-	
+
 	YtIPage<Rolescope> page(Map<String, Object> param);
 
 	/**

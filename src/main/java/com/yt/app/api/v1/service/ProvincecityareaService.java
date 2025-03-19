@@ -15,8 +15,8 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface ProvincecityareaService extends YtIBaseService<Provincecityarea, Long> {
-	
+
 	YtIPage<Provincecityarea> page(Map<String, Object> param);
-	
+
 	public List<Provincecityarea> tree(SysProvinceCityAreaTreeDTO params);
 }

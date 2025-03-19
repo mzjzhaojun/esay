@@ -31,7 +31,6 @@ public class TgchannelgroupController extends YtBaseEncipherControllerImpl<Tgcha
 	@Autowired
 	private TgchannelgroupService service;
 
-
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<Tgchannelgroup> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));

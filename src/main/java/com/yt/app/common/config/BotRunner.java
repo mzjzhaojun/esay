@@ -42,7 +42,7 @@ public class BotRunner implements CommandLineRunner {
 
 	@Autowired
 	private TronBot tronbot;
-	
+
 	@Autowired
 	private MessageBot messagebot;
 

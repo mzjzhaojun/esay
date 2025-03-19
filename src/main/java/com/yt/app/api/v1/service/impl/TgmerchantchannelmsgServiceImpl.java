@@ -35,7 +35,6 @@ public class TgmerchantchannelmsgServiceImpl extends YtBaseServiceImpl<Tgmerchan
 		return i;
 	}
 
-
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tgmerchantchannelmsg get(Long id) {

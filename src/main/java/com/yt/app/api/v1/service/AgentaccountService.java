@@ -14,7 +14,7 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface AgentaccountService extends YtIBaseService<Agentaccount, Long> {
-	
+
 	YtIPage<Agentaccount> page(Map<String, Object> param);
 
 	Agentaccount getData();

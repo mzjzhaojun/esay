@@ -14,7 +14,7 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface DictService extends YtIBaseService<Dict, Long> {
-	
+
 	YtIPage<Dict> page(Map<String, Object> param);
 
 	List<Dict> listbycode(Map<String, Object> param);

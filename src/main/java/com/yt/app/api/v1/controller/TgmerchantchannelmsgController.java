@@ -32,7 +32,6 @@ public class TgmerchantchannelmsgController extends YtBaseEncipherControllerImpl
 	@Autowired
 	private TgmerchantchannelmsgService service;
 
-
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<TgmerchantchannelmsgVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));

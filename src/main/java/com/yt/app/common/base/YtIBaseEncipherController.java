@@ -59,6 +59,7 @@ public interface YtIBaseEncipherController<T, ID extends Serializable> {
 
 	/**
 	 * 分页查询
+	 * 
 	 * @param YtRequestDecryptEntity
 	 * @param request
 	 * @param response

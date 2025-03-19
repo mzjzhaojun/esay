@@ -48,7 +48,6 @@ public class AislechannelServiceImpl extends YtBaseServiceImpl<Aislechannel, Lon
 		return i;
 	}
 
-
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Aislechannel get(Long id) {

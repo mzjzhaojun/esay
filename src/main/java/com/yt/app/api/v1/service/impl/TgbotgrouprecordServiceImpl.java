@@ -35,7 +35,6 @@ public class TgbotgrouprecordServiceImpl extends YtBaseServiceImpl<Tgbotgrouprec
 		return i;
 	}
 
-
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tgbotgrouprecord get(Long id) {

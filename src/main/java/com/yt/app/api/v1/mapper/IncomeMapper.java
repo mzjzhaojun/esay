@@ -157,4 +157,14 @@ public interface IncomeMapper extends YtIBaseMapper<Income> {
 	 */
 	@YtRedisCacheAnnotation(classs = Income.class)
 	public IncomeVO countSuccessOrder(@Param("dateval") String dateval);
+	
+	
+	/**
+	 * update
+	 * 
+	 * @param o Income
+	 * @return count
+	 */
+	@YtRedisCacheEvictAnnotation(classs = { Income.class })
+	public Integer updateBlock(Object t);
 }

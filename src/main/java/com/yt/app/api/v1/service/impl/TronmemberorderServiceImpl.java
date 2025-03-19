@@ -35,7 +35,6 @@ public class TronmemberorderServiceImpl extends YtBaseServiceImpl<Tronmemberorde
 		return i;
 	}
 
-
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tronmemberorder get(Long id) {

@@ -35,7 +35,6 @@ public class TronaddressServiceImpl extends YtBaseServiceImpl<Tronaddress, Long>
 		return i;
 	}
 
-
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public Tronaddress get(Long id) {

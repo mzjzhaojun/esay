@@ -1,69 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yt.app.api.v1.mapper.QrcodeaccountMapper">
+<mapper namespace="com.yt.app.api.v1.mapper.BlocklistMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,channelid,totalincome,toincomeamount,withdrawamount,towithdrawamount,balance,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,merchantid,ordernum,hexaddress,status,remark,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Qrcodeaccount">
+		type="com.yt.app.api.v1.entity.Blocklist">
 	</resultMap>
 	<!-- ResultMap -->
 	<resultMap id="ResultMapVO"
-		type="com.yt.app.api.v1.vo.QrcodeaccountVO">
+		type="com.yt.app.api.v1.vo.BlocklistVO">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Qrcodeaccount">
+		parameterType="com.yt.app.api.v1.entity.Blocklist">
 		insert into
-		qrcodeaccount(id,userid,channelid,create_by,create_time,update_by,update_time,remark)
+		blocklist(id,merchantid,ordernum,hexaddress,status,remark,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{userid},#{channelid},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{merchantid},#{ordernum},#{hexaddress},#{status},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		qrcodeaccount(id,tenant_id,userid,channelid,totalincome,toincomeamount,withdrawamount,towithdrawamount,balance,create_by,create_time,update_by,update_time,remark)
+		blocklist(id,tenant_id,merchantid,ordernum,hexaddress,status,remark,create_by,create_time,update_by,update_time)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{userid},#{channelid},#{totalincome},#{toincomeamount},#{withdrawamount},#{towithdrawamount},#{balance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+			(#{id},#{tenant_id},#{merchantid},#{ordernum},#{hexaddress},#{status},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from qrcodeaccount
-		where id = #{id}
+		delete from blocklist
+		where id
+		= #{id}
 	</delete>
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Qrcodeaccount">
-		update qrcodeaccount
+		parameterType="com.yt.app.api.v1.entity.Blocklist">
+		update blocklist
 		<set>
 			<if test="tenant_id != null">
 				tenant_id= #{tenant_id},
 			</if>
-			<if test="userid != null">
-				userid= #{userid},
+			<if test="merchantid != null">
+				merchantid= #{merchantid},
 			</if>
-			<if test="channelid != null">
-				channelid= #{channelid},
+			<if test="ordernum != null">
+				ordernum= #{ordernum},
 			</if>
-			<if test="totalincome != null">
-				totalincome= #{totalincome},
+			<if test="hexaddress != null">
+				hexaddress= #{hexaddress},
 			</if>
-			<if test="toincomeamount != null">
-				toincomeamount= #{toincomeamount},
+			<if test="status != null">
+				status= #{status},
 			</if>
-			<if test="withdrawamount != null">
-				withdrawamount= #{withdrawamount},
-			</if>
-			<if test="towithdrawamount != null">
-				towithdrawamount= #{towithdrawamount},
-			</if>
-			<if test="balance != null">
-				balance= #{balance},
+			<if test="remark != null">
+				remark= #{remark},
 			</if>
 			<if test="create_by != null">
 				create_by= #{create_by},
@@ -77,42 +72,35 @@
 			<if test="update_time != null">
 				update_time= #{update_time},
 			</if>
-			<if test="remark != null">
-				remark= #{remark},
-			</if>
-			<if test="version != null">
-				version= #{version}+1
-			</if>
 		</set>
-		where id = #{id} 
+		where id = #{id}
 	</update>
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from qrcodeaccount
+		from blocklist
 		where id = #{id}
 	</select>
-
-	<!--getByUserId -->
-	<select id="getByUserId" parameterType="java.lang.Long"
+	<!--getByHexaddress -->
+	<select id="getByHexaddress" parameterType="java.lang.String"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from qrcodeaccount
-		where userid = #{userid}
+		from blocklist
+		where hexaddress= #{hexaddress}
 	</select>
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from qrcodeaccount
+		from blocklist
 		<where>
 			1=1
 			<if test="name != null and name != ''">
-				and name LIKE CONCAT( '%', #{name} , '%' )
+				and name like "%"#{name}"%"
 			</if>
 		</where>
 	</select>
@@ -121,13 +109,13 @@
 		resultMap="ResultMapVO">
 		select
 		<include refid="Base_Column_List" />
-		from qrcodeaccount
+		from blocklist
 		<where>
 			1=1
 			<if test="name != null and name != ''">
-				and name LIKE CONCAT( '%', #{name} , '%' )
+				and name like "%"#{name}"%"
 			</if>
-			<if test="orderBy != null and dir!= null">
+			<if test="orderBy != null and dir != null">
 				order by ${orderBy} ${dir}
 			</if>
 			<if test="pageStart != null and pageEnd != null">
@@ -138,11 +126,11 @@
 	<!-- getCount -->
 	<select id="countlist" parameterType="java.util.HashMap"
 		resultType="int">
-		select count(*) from qrcodeaccount
+		select count(*) from blocklist
 		<where>
 			1=1
 			<if test="name != null and name != ''">
-				and name LIKE CONCAT( '%', #{name} , '%' )
+				and name like "%"#{name}"%"
 			</if>
 		</where>
 	</select>
@@ -151,7 +139,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from qrcodeaccount
+		from blocklist
 		<where>
 			1=1
 			<if test="array != null and array.length > 0">

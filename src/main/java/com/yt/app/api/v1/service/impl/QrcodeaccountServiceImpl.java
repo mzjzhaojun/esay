@@ -97,8 +97,8 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 		m.setCount(m.getCount() + qo.getIncomeamount());// 利润总和
 		m.setTodaycount(m.getTodaycount() + qo.getIncomeamount());// 当日利润
 		m.setBalance(t.getBalance());
-		m.setTodayincomecount(m.getTodayincomecount() + qo.getAmount());//当日支付
-		m.setIncomecount(m.getIncomecount() + qo.getAmount());//总支付
+		m.setTodayincomecount(m.getTodayincomecount() + qo.getAmount());// 当日支付
+		m.setIncomecount(m.getIncomecount() + qo.getAmount());// 总支付
 		channelmapper.put(m);
 	}
 

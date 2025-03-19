@@ -53,9 +53,9 @@ public class VideoUtil {
 	}
 
 	public static void main(String[] args) throws Exception {
-	String videoFileName = "113.88.200.174,156.246.228.225,18.162.97.219,54.86.50.139,47.83.28.39,113.110.153.5,43.198.98.206";
-	String ip = "97.21954.86.50";
-	System.out.println(videoFileName.indexOf(ip));
+		String videoFileName = "113.88.200.174,156.246.228.225,18.162.97.219,54.86.50.139,47.83.28.39,113.110.153.5,43.198.98.206";
+		String ip = "97.21954.86.50";
+		System.out.println(videoFileName.indexOf(ip));
 	}
 
 }

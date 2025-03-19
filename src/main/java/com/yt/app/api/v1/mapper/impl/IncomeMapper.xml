@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.IncomeMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,merchantuserid,ordernum,qrcodecode,merchantid,merchantname,merchantcode,merchantordernum,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislecode,qrcodeaislename,agentid,agentordernum,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,collection,exchange,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,dynamic,resulturl,fewamount,notifyurl,notifystatus,incomeamount,merchantincomeamount,channelincomeamount,inipaddress,remark,version
+		id,tenant_id,merchantuserid,ordernum,qrcodecode,merchantid,merchantname,merchantcode,merchantordernum,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislecode,qrcodeaislename,agentid,agentordernum,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,collection,exchange,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,dynamic,resulturl,fewamount,notifyurl,notifystatus,incomeamount,merchantincomeamount,channelincomeamount,inipaddress,blockaddress,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -155,6 +155,18 @@
 		</set>
 		where id = #{id} 
 	</update>
+	
+	<!-- update -->
+	<update id="updateBlock" parameterType="com.yt.app.api.v1.entity.Income">
+		update income
+		<set>
+			<if test="blockaddress != null">
+				blockaddress= #{blockaddress}
+			</if>
+		</set>
+		where id = #{id} 
+	</update>
+	
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"
 		resultMap="ResultMap">

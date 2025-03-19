@@ -16,9 +16,9 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface RolemenuService extends YtIBaseService<Rolemenu, Long> {
-	
+
 	YtIPage<Rolemenu> page(Map<String, Object> param);
-	
+
 	/**
 	 * 获取角色id可访问的菜单ids
 	 *

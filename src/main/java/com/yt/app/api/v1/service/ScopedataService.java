@@ -15,8 +15,8 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface ScopedataService extends YtIBaseService<Scopedata, Long> {
-	
+
 	YtIPage<Scopedata> page(Map<String, Object> param);
-	
+
 	public List<Scopedata> tree(SysScopeDataBaseDTO params);
 }

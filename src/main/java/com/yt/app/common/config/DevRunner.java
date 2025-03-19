@@ -22,8 +22,7 @@ import com.yt.app.common.runnable.TronGetAddressThread5;
 @Profile("dev")
 @Component
 public class DevRunner implements CommandLineRunner {
-	
-	
+
 	TronGetAddressThread5 tt1 = new TronGetAddressThread5();
 	TronGetAddressThread5 tt2 = new TronGetAddressThread5();
 	TronGetAddressThread5 tt3 = new TronGetAddressThread5();
@@ -31,7 +30,7 @@ public class DevRunner implements CommandLineRunner {
 	TronGetAddressThread5 tt5 = new TronGetAddressThread5();
 	TronGetAddressThread5 tt6 = new TronGetAddressThread5();
 	TronGetAddressThread5 tt7 = new TronGetAddressThread5();
-	
+
 	@Autowired
 	private ThreadPoolTaskExecutor threadpooltaskexecutor;
 

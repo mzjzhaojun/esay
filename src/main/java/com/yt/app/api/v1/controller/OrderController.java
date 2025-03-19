@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yt.app.api.v1.dbo.SysQueryDTO;
 import com.yt.app.api.v1.dbo.PaySubmitDTO;
 import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
+import com.yt.app.api.v1.entity.Blocklist;
 import com.yt.app.api.v1.entity.Income;
+import com.yt.app.api.v1.service.BlocklistService;
 import com.yt.app.api.v1.service.IncomeService;
 import com.yt.app.api.v1.service.PayoutService;
 import com.yt.app.api.v1.vo.PayResultVO;
@@ -47,6 +49,9 @@ public class OrderController {
 	@Autowired
 	private IncomeService incomeservice;
 
+	@Autowired
+	private BlocklistService blocklistservice;
+
 	/**
 	 * html查询代收支付状态
 	 * 
@@ -61,22 +66,57 @@ public class OrderController {
 		return new YtResponseEntity<Object>(new YtBody(income.getStatus()));
 	}
 
-	// 天下代付反查
+	/**
+	 * 天下代付反查
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/exist", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> exist(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtBody yb = payoutservice.exist(requestEntity.getBody());
 		return new YtResponseEntity<Object>(yb);
 	}
 
-	// 代付盘口查单
+	/**
+	 * 天下代付反查
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/blocklist/{md5}/{ordernum}", method = RequestMethod.GET)
+	public YtResponseEntity<Object> blocklist(@PathVariable String md5, @PathVariable String ordernum, HttpServletRequest request, HttpServletResponse response) {
+		Blocklist yb = blocklistservice.getByHexaddress(md5, ordernum);
+		return new YtResponseEntity<Object>(new YtBody(yb));
+	}
+
+	/**
+	 * 代付盘口查单
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/querypayout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tyquery(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		PayResultVO pt = payoutservice.query(requestEntity.getBody().getMerchantorderid());
 		return new YtResponseEntity<Object>(new YtBody(pt));
 	}
 
-	// 代付盘口下单
-	@RequestMapping(value = "/payoutsubmit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	/**
+	 * 代付盘口下单
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/submitpayout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> submit(YtRequestEntity<PaySubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		PaySubmitDTO psdto = requestEntity.getBody();
 		RLock lock = RedissonUtil.getLock(psdto.getMerchantid());
@@ -92,12 +132,18 @@ public class OrderController {
 		return new YtResponseEntity<Object>(new YtBody(sr));
 	}
 
-	// 代付盘口查询余额
+	/**
+	 * 代付盘口查询余额
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/querybalance", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> query(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		return new YtResponseEntity<Object>(new YtBody(100));
 	}
-
 
 	/**
 	 * 代收远程系统下单
@@ -502,7 +548,7 @@ public class OrderController {
 			lock.unlock();
 		}
 	}
-	
+
 	/**
 	 * 支付宝当面付回调
 	 * 
@@ -525,7 +571,6 @@ public class OrderController {
 		}
 	}
 
-	
 	/**
 	 * 通源回调
 	 * 

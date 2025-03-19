@@ -24,8 +24,7 @@ public class SysYSOrder extends BaseVO {
 	String sign;
 	String payOrderId;
 	data payParams;
-	
-	
+
 	@Data
 	public class data {
 		String payMethod;

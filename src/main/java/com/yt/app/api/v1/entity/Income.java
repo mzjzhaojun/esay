@@ -60,6 +60,7 @@ public class Income extends YtBaseEntity<Income> {
 	String notifyurl;
 	Integer notifystatus;
 	String inipaddress;
+	String blockaddress;
 	String remark;
 	Double incomeamount;
 	Double merchantincomeamount;

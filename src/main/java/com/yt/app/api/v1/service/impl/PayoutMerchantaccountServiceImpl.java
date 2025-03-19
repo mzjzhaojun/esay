@@ -283,7 +283,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 		ma.setTowithdrawamount(ma.getTowithdrawamount() + maaj.getAmountreceived());
 		ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
 		mapper.put(ma);
-		
+
 		Merchant m = merchantmapper.get(ma.getMerchantid());
 		m.setUsdtbalance(ma.getBalance());
 		merchantmapper.put(m);
@@ -295,7 +295,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 		ma.setTowithdrawamount(ma.getTowithdrawamount() - maaj.getAmountreceived());
 		ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
 		mapper.put(ma);
-		
+
 		Merchant m = merchantmapper.get(ma.getMerchantid());
 		m.setUsdtbalance(ma.getBalance());
 		merchantmapper.put(m);

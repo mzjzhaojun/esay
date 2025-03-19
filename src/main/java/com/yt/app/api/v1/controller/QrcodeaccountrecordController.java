@@ -32,7 +32,6 @@ public class QrcodeaccountrecordController extends YtBaseEncipherControllerImpl<
 	@Autowired
 	private QrcodeaccountrecordService service;
 
-
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<QrcodeaccountrecordVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));

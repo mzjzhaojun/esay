@@ -14,7 +14,7 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface PayoutMerchantaccountService extends YtIBaseService<PayoutMerchantaccount, Long> {
-	
+
 	YtIPage<PayoutMerchantaccount> page(Map<String, Object> param);
 
 	PayoutMerchantaccount getData();

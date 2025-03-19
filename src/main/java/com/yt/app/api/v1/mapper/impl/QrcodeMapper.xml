@@ -160,6 +160,14 @@
 		from qrcode
 		where id = #{id}
 	</select>
+	<!--getByUserId -->
+	<select id="getByUserId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from qrcode
+		where userid = #{userid}
+	</select>
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">

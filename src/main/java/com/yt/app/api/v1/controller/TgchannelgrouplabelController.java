@@ -32,7 +32,6 @@ public class TgchannelgrouplabelController extends YtBaseEncipherControllerImpl<
 	@Autowired
 	private TglabelService service;
 
-
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<TgchannelgrouplabelVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
