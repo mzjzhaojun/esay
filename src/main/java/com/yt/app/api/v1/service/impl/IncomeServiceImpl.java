@@ -727,6 +727,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			TenantIdContext.remove();
 			return result;
 		} else {
+			//////////////////////////////////////////////////////////////////////////////////////// 原生支付原生支付原生支付原生支付原生支付
 			long[] qraids = listmc.stream().mapToLong(qa -> qa.getQrcodeaisleid()).distinct().toArray();
 			List<Qrcodeaisle> listqa = qrcodeaislemapper.listByArrayId(qraids);
 			Qrcodeaisle qas;
@@ -741,7 +742,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			long[] qaqids = listqaq.stream().mapToLong(qaq -> qaq.getQrcodelid()).distinct().toArray();
 			List<Qrcode> listqrcode = qrcodemapper.listByArrayId(qaqids);
 			Double amount = Double.valueOf(qs.getPay_amount());
-			List<Qrcode> listcmm = listqrcode.stream().filter(c -> c.getMax() >= amount && c.getMin() <= amount).collect(Collectors.toList());
+			//小于设置限额
+			List<Qrcode> listcmm = listqrcode.stream().filter(c -> c.getMax() >= amount && c.getMin() <= amount && (c.getTodayincome() + amount) < c.getLimits()).collect(Collectors.toList());
 			Assert.notEmpty(listcmm, "代收金额超出限额");
 			List<Qrcode> listcf = listcmm.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 			Qrcode qd = null;
@@ -1142,7 +1144,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			mapper.put(income);
 			// 计算渠道收入
 			qrcodeaccountservice.updateTotalincome(qrcodeaccountorder);
-			// 计算金额
+			// 计算碼商收入金额
 			qrcodeservice.updateTotalincome(qrcodeaccountorder);
 			//
 			Incomemerchantaccountorder incomemerchantaccountorder = incomemerchantaccountordermapper.getByOrderNum(income.getMerchantorderid());

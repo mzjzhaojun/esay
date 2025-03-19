@@ -80,7 +80,8 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("channelstatisticalreports");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantstatisticalreports");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("systemstatisticalreports");
-
+		MybatisPlusConfig.TENANT_ID_TABLE.add("qrcodestatisticalreports");
+		
 		// tgrame
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tgbotgroup");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tgbotgrouprecord");

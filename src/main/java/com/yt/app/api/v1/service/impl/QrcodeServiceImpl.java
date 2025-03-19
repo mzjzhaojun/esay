@@ -6,18 +6,23 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.QrcodeMapper;
+import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper;
+import com.yt.app.api.v1.mapper.QrcodestatisticalreportsMapper;
 import com.yt.app.api.v1.service.QrcodeService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
+import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Qrcodeaccountorder;
 import com.yt.app.api.v1.entity.Qrcodeaisleqrcode;
+import com.yt.app.api.v1.entity.Qrcodestatisticalreports;
 import com.yt.app.api.v1.vo.QrcodeVO;
+import com.yt.app.api.v1.vo.QrcodeaccountorderVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
@@ -44,6 +49,12 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 
 	@Autowired
 	private QrcodeaisleqrcodeMapper qrcodeaisleqrcodemapper;
+
+	@Autowired
+	private QrcodestatisticalreportsMapper qrcodestatisticalreportsmapper;
+
+	@Autowired
+	private QrcodeaccountorderMapper qrcodeaccountordermapper;
 
 	@Override
 	@Transactional
@@ -108,6 +119,7 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 		m.setOrdersum(m.getOrdersum() + 1);
 		m.setTodayincome(m.getTodayincome() + qo.getAmount());
 		m.setIncomesum(m.getIncomesum() + qo.getAmount());
+		m.setTodaybalance(m.getTodaybalance() + qo.getIncomeamount());
 		mapper.put(m);
 	}
 
@@ -122,6 +134,52 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 		} finally {
 			lock.unlock();
 		}
+	}
+
+	@Override
+	public void updateDayValue(Qrcode c, String date) {
+		RLock lock = RedissonUtil.getLock(c.getId());
+		try {
+			lock.lock();
+			TenantIdContext.setTenantId(c.getTenant_id());
+			// 插入报表数据
+			Qrcodestatisticalreports csr = new Qrcodestatisticalreports();
+			csr.setDateval(date);
+			csr.setName(c.getName());
+			csr.setBalance(c.getBalance());
+			csr.setUserid(c.getUserid());
+			csr.setQrcodeid(c.getId());
+			csr.setTodayincome(c.getTodayincome());
+			csr.setIncomecount(c.getIncomesum());
+			// 查询每日统计数据
+			// 统计码商
+			QrcodeaccountorderVO imaov = qrcodeaccountordermapper.countOrder(c.getId(), date);
+			csr.setTodayorder(imaov.getOrdercount());
+			csr.setTodayorderamount(imaov.getAmount());
+			csr.setTodaysuccessorderamount(imaov.getIncomeamount());
+			// 统计码商
+			QrcodeaccountorderVO imaovsuccess = qrcodeaccountordermapper.countSuccessOrder(c.getId(), date);
+			csr.setSuccessorder(imaovsuccess.getOrdercount());
+			csr.setIncomeuserpaycount(imaovsuccess.getAmount());
+			csr.setIncomeuserpaysuccesscount(imaovsuccess.getIncomeamount());
+
+			try {
+				if (csr.getSuccessorder() > 0) {
+					double successRate = ((double) csr.getSuccessorder() / csr.getTodayorder()) * 100;
+					csr.setPayoutrate(successRate);
+				}
+			} catch (Exception e) {
+				csr.setPayoutrate(0.0);
+			}
+			qrcodestatisticalreportsmapper.post(csr);
+			// 清空每日数据
+			mapper.updatetodayvalue(c);
+			TenantIdContext.remove();
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+
 	}
 
 }

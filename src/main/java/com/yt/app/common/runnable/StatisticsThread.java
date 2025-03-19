@@ -5,12 +5,15 @@ import java.util.List;
 
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Merchant;
+import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
+import com.yt.app.api.v1.mapper.QrcodeMapper;
 import com.yt.app.api.v1.mapper.SystemaccountMapper;
 import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.service.MerchantService;
+import com.yt.app.api.v1.service.QrcodeService;
 import com.yt.app.api.v1.service.SystemstatisticalreportsService;
 import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
@@ -41,7 +44,9 @@ public class StatisticsThread implements Runnable {
 		MerchantMapper merchantmapper = BeanContext.getApplicationContext().getBean(MerchantMapper.class);
 		SystemaccountMapper systemaccountmapper = BeanContext.getApplicationContext().getBean(SystemaccountMapper.class);
 		ChannelMapper channelmapper = BeanContext.getApplicationContext().getBean(ChannelMapper.class);
+		QrcodeMapper qrcodemapper = BeanContext.getApplicationContext().getBean(QrcodeMapper.class);
 		ChannelService channelservice = BeanContext.getApplicationContext().getBean(ChannelService.class);
+		QrcodeService qrcodeservice = BeanContext.getApplicationContext().getBean(QrcodeService.class);
 		// 系统
 		List<Systemaccount> listsa = systemaccountmapper.list(new HashMap<String, Object>());
 		listsa.forEach(sa -> {
@@ -62,6 +67,13 @@ public class StatisticsThread implements Runnable {
 			// 单日数据
 			if (c.getTodaycount() > 1)
 				channelservice.updateDayValue(c, dateval);
+		});
+		// 码商
+		List<Qrcode> listq = qrcodemapper.list(new HashMap<String, Object>());
+		listq.forEach(q -> {
+			// 单日数据
+			if (q.getTodaybalance() > 1)
+				qrcodeservice.updateDayValue(q, dateval);
 		});
 	}
 

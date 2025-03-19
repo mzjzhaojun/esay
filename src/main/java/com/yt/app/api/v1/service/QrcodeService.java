@@ -15,8 +15,7 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface QrcodeService extends YtIBaseService<Qrcode, Long> {
-	
-	
+
 	YtIPage<QrcodeVO> page(Map<String, Object> param);
 
 	/**
@@ -26,11 +25,18 @@ public interface QrcodeService extends YtIBaseService<Qrcode, Long> {
 	 * @return
 	 */
 	QrcodeVO paytest(Qrcode qv);
-	
+
 	/**
 	 * 代收成功
 	 * 
 	 * @param mao
 	 */
 	void updateTotalincome(Qrcodeaccountorder mao);
+
+	/**
+	 * 统计
+	 * @param c
+	 * @param date
+	 */
+	void updateDayValue(Qrcode c, String date);
 }

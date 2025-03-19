@@ -2,6 +2,8 @@ package com.yt.app.api.v1.mapper;
 
 import java.util.List;
 import java.util.Map;
+
+import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.vo.QrcodeVO;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
@@ -95,8 +97,7 @@ public interface QrcodeMapper extends YtIBaseMapper<Qrcode> {
 	 */
 	@YtRedisCacheAnnotation(classs = Qrcode.class)
 	public List<Qrcode> listByArrayId(long[] id);
-	
-	
+
 	/**
 	 * getByUserId
 	 *
@@ -105,4 +106,13 @@ public interface QrcodeMapper extends YtIBaseMapper<Qrcode> {
 	 */
 	@YtRedisCacheAnnotation(classs = Qrcode.class)
 	public Qrcode getByUserId(Long userid);
+
+	/**
+	 * update
+	 * 
+	 * @param o Merchant
+	 * @return count
+	 */
+	@YtRedisCacheEvictAnnotation(classs = { Channel.class })
+	public Integer updatetodayvalue(Object t);
 }

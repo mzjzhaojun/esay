@@ -53,7 +53,7 @@ public class Qrcode extends YtBaseEntity<Qrcode> {
 	String alipaypublickey;
 	String alipayprovatekey;
 	Double limits;
-	Double todaylimits;
+	Double todaybalance;
 	Double incomesum;
 	Integer ordersum;
 	String notifyurl;

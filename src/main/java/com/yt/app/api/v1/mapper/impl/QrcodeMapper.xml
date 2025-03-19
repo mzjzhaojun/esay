@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.QrcodeMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,name,nkname,mobile,code,status,balance,collection,expireminute,type,min,max,weight,mtorder,dynamic,accountsplit,fixedcode,firstmatch,firstmatchmoney,yestodayorder,yestodayincome,todayorder,todayincome,appid,appprivatekey,apppublickey,alipaypublickey,alipayprovatekey,limits,todaylimits,notifyurl,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,userid,name,nkname,mobile,code,status,balance,collection,expireminute,type,min,max,weight,mtorder,dynamic,accountsplit,fixedcode,firstmatch,firstmatchmoney,yestodayorder,yestodayincome,todayorder,todayincome,appid,appprivatekey,apppublickey,alipaypublickey,alipayprovatekey,limits,todaybalance,notifyurl,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -17,9 +17,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Qrcode">
 		insert into
-		qrcode(id,userid,name,nkname,mobile,code,status,balance,collection,expireminute,type,min,max,weight,mtorder,dynamic,accountsplit,fixedcode,firstmatch,firstmatchmoney,appid,appprivatekey,apppublickey,alipaypublickey,alipayprovatekey,limits,todaylimits,notifyurl,create_by,create_time,update_by,update_time,remark)
+		qrcode(id,userid,name,nkname,mobile,code,status,balance,collection,expireminute,type,min,max,weight,mtorder,dynamic,accountsplit,fixedcode,firstmatch,firstmatchmoney,appid,appprivatekey,apppublickey,alipaypublickey,alipayprovatekey,limits,todaybalance,notifyurl,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{userid},#{name},#{nkname},#{mobile},#{code},#{status},#{balance},#{collection},#{expireminute},#{type},#{min},#{max},#{weight},#{mtorder},#{dynamic},#{accountsplit},#{fixedcode},#{firstmatch},#{firstmatchmoney},#{appid},#{appprivatekey},#{apppublickey},#{alipaypublickey},#{alipayprovatekey},#{limits},#{todaylimits},#{notifyurl},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{userid},#{name},#{nkname},#{mobile},#{code},#{status},#{balance},#{collection},#{expireminute},#{type},#{min},#{max},#{weight},#{mtorder},#{dynamic},#{accountsplit},#{fixedcode},#{firstmatch},#{firstmatchmoney},#{appid},#{appprivatekey},#{apppublickey},#{alipaypublickey},#{alipayprovatekey},#{limits},#{todaybalance},#{notifyurl},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -119,8 +119,8 @@
 			<if test="limits != null">
 				limits= #{limits},
 			</if>
-			<if test="todaylimits != null">
-				todaylimits= #{todaylimits},
+			<if test="todaybalance != null">
+				todaybalance= #{todaybalance},
 			</if>
 			<if test="incomesum != null">
 				incomesum= #{incomesum},
@@ -150,7 +150,7 @@
 				version= #{version}+1
 			</if>
 		</set>
-		where id = #{id} 
+		where id = #{id}
 	</update>
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"
@@ -288,4 +288,17 @@
 			</if>
 		</where>
 	</select>
+
+	<update id="updatetodayvalue"
+		parameterType="com.yt.app.api.v1.entity.Qrcode">
+		update qrcode
+		set
+		balance = #{todaybalance},
+		yestodayorder = #{todayorder},
+		yestodayincome=#{todayincome},
+		todaybalance = 0,
+		todayorder = 0,
+		todayincome = 0
+		where id = #{id}
+	</update>
 </mapper>
