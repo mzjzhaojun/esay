@@ -129,7 +129,7 @@
 				version= #{version}+1
 			</if>
 		</set>
-		where id = #{id}
+		where id = #{id} and version= #{version}
 	</update>
 	<update id="updatetodayvalue" parameterType="java.lang.Long">
 		update merchant

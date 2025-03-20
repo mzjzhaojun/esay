@@ -142,8 +142,11 @@
 			<if test="remark != null">
 				remark= #{remark}
 			</if>
+			<if test="version != null">
+				version= #{version}+1
+			</if>
 		</set>
-		where id = #{id}
+		where id = #{id} and version= #{version}
 	</update>
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"
