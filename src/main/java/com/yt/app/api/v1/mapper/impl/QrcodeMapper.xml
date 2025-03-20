@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.QrcodeMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,name,nkname,mobile,code,status,balance,collection,expireminute,type,min,max,weight,mtorder,dynamic,accountsplit,fixedcode,firstmatch,firstmatchmoney,yestodayorder,yestodayincome,todayorder,todayincome,appid,appprivatekey,apppublickey,alipaypublickey,alipayprovatekey,limits,todaybalance,notifyurl,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,userid,name,nkname,mobile,code,status,balance,collection,expireminute,type,min,max,weight,mtorder,dynamic,accountsplit,fixedcode,firstmatch,firstmatchmoney,yestodayorder,yestodayincome,todayorder,todayincome,ordersum,incomesum,appid,appprivatekey,apppublickey,alipaypublickey,alipayprovatekey,limits,todaybalance,notifyurl,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -121,6 +121,12 @@
 			</if>
 			<if test="todaybalance != null">
 				todaybalance= #{todaybalance},
+			</if>
+			<if test="todayorder != null">
+				todayorder= #{todayorder},
+			</if>
+			<if test="todayincome != null">
+				todayincome= #{todayincome},
 			</if>
 			<if test="incomesum != null">
 				incomesum= #{incomesum},
