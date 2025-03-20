@@ -877,6 +877,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		String trade_no = params.get("trade_no").toString();
 		String out_trade_no = params.get("out_trade_no").toString();
 		Income income = mapper.getByOrderNum(out_trade_no);
+		TenantIdContext.setTenantId(income.getTenant_id());
 		Qrcode qrcode = qrcodemapper.get(income.getQrcodeid());
 		log.info("支付宝查单成功: " + trade_no + "===" + out_trade_no);
 		AlipayTradeQueryResponse atqr = AliPayUtil.AlipayTradeWapQuery(qrcode, out_trade_no, trade_no);
@@ -884,6 +885,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			log.info("支付宝查单成功: )");
 			success(income, trade_no);
 		}
+		TenantIdContext.remove();
 	}
 
 	private Merchant checkparam(QrcodeSubmitDTO qs) {
