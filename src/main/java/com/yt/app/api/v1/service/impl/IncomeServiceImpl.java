@@ -459,6 +459,22 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		TenantIdContext.remove();
 	}
+	
+	@Override
+	public void alipayftfcallback(Map<String, String> params) {
+		String trade_no = params.get("trade_no").toString();
+		String out_trade_no = params.get("out_trade_no").toString();
+		Income income = mapper.getByOrderNum(out_trade_no);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Qrcode qrcode = qrcodemapper.get(income.getQrcodeid());
+		log.info("支付宝查单成功: " + trade_no + "===" + out_trade_no);
+		AlipayTradeQueryResponse atqr = AliPayUtil.AlipayTradeWapQuery(qrcode, out_trade_no, trade_no);
+		if (atqr.getTradeStatus().equals("TRADE_SUCCESS")) {
+			log.info("支付宝查单成功: )");
+			success(income, trade_no);
+		}
+		TenantIdContext.remove();
+	}
 
 	/**
 	 * 上游渠道下单
@@ -872,21 +888,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		return qrv;
 	}
 
-	@Override
-	public void alipayftfcallback(Map<String, String> params) {
-		String trade_no = params.get("trade_no").toString();
-		String out_trade_no = params.get("out_trade_no").toString();
-		Income income = mapper.getByOrderNum(out_trade_no);
-		TenantIdContext.setTenantId(income.getTenant_id());
-		Qrcode qrcode = qrcodemapper.get(income.getQrcodeid());
-		log.info("支付宝查单成功: " + trade_no + "===" + out_trade_no);
-		AlipayTradeQueryResponse atqr = AliPayUtil.AlipayTradeWapQuery(qrcode, out_trade_no, trade_no);
-		if (atqr.getTradeStatus().equals("TRADE_SUCCESS")) {
-			log.info("支付宝查单成功: )");
-			success(income, trade_no);
-		}
-		TenantIdContext.remove();
-	}
 
 	private Merchant checkparam(QrcodeSubmitDTO qs) {
 		if (qs.getPay_memberid().length() > 10) {

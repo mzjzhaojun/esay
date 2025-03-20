@@ -15,6 +15,9 @@ import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.yt.app.api.v1.entity.Qrcode;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class AliPayUtil {
 
 	private static String URL = "https://openapi.alipay.com/gateway.do";
@@ -24,26 +27,18 @@ public class AliPayUtil {
 	public static AlipayTradeWapPayResponse AlipayTradeWapPay(Qrcode qrcode, String ordernum, Double amount) {
 
 		try {
-			// 初始化SDK
 			AlipayClient client = new DefaultAlipayClient(URL, qrcode.getAppid(), qrcode.getAppprivatekey(), "json", "UTF-8", qrcode.getAlipaypublickey(), "RSA2");
-			// 构造请求参数以调用接口
 			AlipayTradeWapPayRequest request = new AlipayTradeWapPayRequest();
 			AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();
 			request.setNotifyUrl(qrcode.getNotifyurl());
-			// 设置商户订单号
 			model.setOutTradeNo(ordernum);
-			// 设置订单总金额
 			model.setTotalAmount(amount.toString());
-			// 设置订单标题
 			model.setSubject("会员支付");
-			// 设置产品码
 			model.setProductCode("QUICK_WAP_WAY");
 			request.setBizModel(model);
-			// 如果需要返回GET请求，请使用
 			AlipayTradeWapPayResponse response = client.pageExecute(request, "GET");
-			String pageRedirectionData = response.getBody();
-			System.out.println(pageRedirectionData);
 			if (response.isSuccess()) {
+				log.info(" 支付宝成功返回订单号返回消息：" + response.getBody());
 				return response;
 			}
 		} catch (AlipayApiException e) {
