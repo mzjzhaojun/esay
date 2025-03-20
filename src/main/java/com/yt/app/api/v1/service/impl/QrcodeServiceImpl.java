@@ -114,7 +114,8 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	private void scuccessTotalincome(Qrcode m, Qrcodeaccountorder qo) {
+	private void scuccessTotalincome(Qrcodeaccountorder qo) {
+		Qrcode m = mapper.get(qo.getQrcodeid());
 		m.setTodayorder(m.getTodayorder() + 1);
 		m.setOrdersum(m.getOrdersum() + 1);
 		m.setTodayincome(m.getTodayincome() + qo.getAmount());
@@ -125,11 +126,10 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 
 	@Override
 	public void updateTotalincome(Qrcodeaccountorder mao) {
-		RLock lock = RedissonUtil.getLock(mao.getChannelid());
+		RLock lock = RedissonUtil.getLock(mao.getQrcodeid());
 		try {
 			lock.lock();
-			Qrcode t = mapper.get(mao.getQrcodeid());
-			scuccessTotalincome(t, mao);
+			scuccessTotalincome(mao);
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();

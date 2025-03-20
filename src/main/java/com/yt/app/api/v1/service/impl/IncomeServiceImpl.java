@@ -742,7 +742,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			long[] qaqids = listqaq.stream().mapToLong(qaq -> qaq.getQrcodelid()).distinct().toArray();
 			List<Qrcode> listqrcode = qrcodemapper.listByArrayId(qaqids);
 			Double amount = Double.valueOf(qs.getPay_amount());
-			//小于设置限额
+			// 小于设置限额
 			List<Qrcode> listcmm = listqrcode.stream().filter(c -> c.getMax() >= amount && c.getMin() <= amount && (c.getTodayincome() + amount) < c.getLimits()).collect(Collectors.toList());
 			Assert.notEmpty(listcmm, "代收金额超出限额");
 			List<Qrcode> listcf = listcmm.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
@@ -829,7 +829,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			// 计算当前码可生成的订单
 			income.setFewamount(0.00);
 			income.setCollection(mc.getCollection());
-			income.setExchange(channel.getCollection());
+			income.setExchange(qd.getCollection());
 			income.setInipaddress(AuthContext.getIp());
 			income.setType(DictionaryResource.ORDERTYPE_27.toString());
 			income.setRemark("新增代收资金￥：" + income.getAmount());
@@ -1040,6 +1040,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qao.setQrcodeaislecode(qas.getCode());
 		qao.setChannelid(channel.getId());
 		qao.setExpireddate(income.getExpireddate());
+		qao.setCollection(income.getExchange());
 		qao.setIncomeamount(income.getChannelincomeamount());
 		qrcodeaccountordermapper.post(qao);
 		qrcodeaccountservice.totalincome(qao);
@@ -1063,6 +1064,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		imao.setStatus(income.getStatus());
 		imao.setQrcodeaislecode(qas.getCode());
 		imao.setMerchantid(mc.getId());
+		imao.setCollection(income.getCollection());
 		imao.setExpireddate(income.getExpireddate());
 		imao.setIncomeamount(income.getMerchantincomeamount());
 		incomemerchantaccountordermapper.post(imao);
