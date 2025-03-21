@@ -35,4 +35,9 @@ public class ViewController {
 		return "static/zfbwapview";
 	}
 
+	@RequestMapping(value = "/income/error", method = RequestMethod.GET)
+	public String error(HttpServletRequest request, HttpServletResponse response) {
+		return "static/error";
+	}
+
 }

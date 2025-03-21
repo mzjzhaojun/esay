@@ -28,8 +28,6 @@ import com.yt.app.api.v1.vo.SysFcOrder;
 import com.yt.app.api.v1.vo.SysFcQuery;
 import com.yt.app.api.v1.vo.SysFhOrder;
 import com.yt.app.api.v1.vo.SysYSQuery;
-import com.yt.app.api.v1.vo.SysZsOrder;
-import com.yt.app.api.v1.vo.SysZsQuery;
 import com.yt.app.api.v1.vo.SysGzOrder;
 import com.yt.app.api.v1.vo.SysGzQuery;
 import com.yt.app.api.v1.vo.SysHsOrder;
@@ -1643,21 +1641,20 @@ public class PayUtil {
 	}
 
 	// 张三代收对接
-	public static SysZsOrder SendZSSubmit(Income pt, Channel cl) {
+	public static JSONObject SendZSSubmit(Income pt, Channel cl) {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 			Map<String, String> map = new HashMap<String, String>();
-			Long time = DateTimeUtil.getNow().getTime();
-			map.put("key", cl.getCode() + cl.getApikey());
-			map.put("pay_code", cl.getAislecode());
-			map.put("order_amount", String.format("%.2f", pt.getRealamount()));
-			map.put("order_no", pt.getOrdernum());
-
-			map.put("ts", time.toString());
-
+			Long time = System.currentTimeMillis() / 1000;
+			map.put("AccessKey", cl.getCode());
+			map.put("PayChannelId", cl.getAislecode());
+			map.put("Amount", String.format("%.2f", pt.getRealamount()));
+			map.put("OrderNo", pt.getOrdernum());
+			map.put("CallbackUrl", cl.getApireusultip());
+			map.put("Timestamp", time.toString());
 			TreeMap<String, String> sortedMap = new TreeMap<>(map);
 			String signContent = "";
 			for (String key : sortedMap.keySet()) {
@@ -1665,20 +1662,17 @@ public class PayUtil {
 			}
 			signContent = signContent.substring(0, signContent.length() - 1);
 
-			String sign = MD5Utils.md5(signContent);
-			map.put("sign", sign);
-			map.put("callback_url", cl.getApireusultip());
-			map.put("callback_type", "POST");
-			map.put("merchant_no", cl.getCode());
+			String sign = MD5Utils.md5(signContent + "&SecretKey=" + cl.getApikey());
+			map.put("Sign", sign);
 
 			HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
 			//
-			ResponseEntity<SysZsOrder> sov = resttemplate.postForEntity(cl.getApiip() + "/v1/api/create_order ", httpEntity, SysZsOrder.class);
-			SysZsOrder data = sov.getBody();
+			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/PayV2/submit", httpEntity, JSONObject.class);
+			JSONObject data = sov.getBody();
 			log.info("张三返回消息：" + sov);
-			if (data.getCode().equals("200")) {
-				return data;
+			if (data.getStr("Code").equals("0")) {
+				return data.getJSONObject("Data");
 			}
 		} catch (RestClientException e) {
 			log.info("张三返回消息：" + e.getMessage());
@@ -1687,32 +1681,33 @@ public class PayUtil {
 	}
 
 	// 张三代收查单
-	public static String SendZSQuerySubmit(String orderid, Channel cl) {
+	public static JSONObject SendZSQuerySubmit(String orderid, Channel cl) {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			Long time = System.currentTimeMillis() / 1000;
 			Map<String, String> map = new HashMap<String, String>();
-			map.put("key", cl.getCode() + cl.getApikey());
-			map.put("merchant_no", cl.getCode());
-			map.put("order_no", orderid);
+			map.put("AccessKey", cl.getCode());
+			map.put("OrderNo", orderid);
+			map.put("Timestamp", time.toString());
 			TreeMap<String, String> sortedMap = new TreeMap<>(map);
 			String signContent = "";
 			for (String key : sortedMap.keySet()) {
 				signContent = signContent + key + "=" + map.get(key) + "&";
 			}
 			signContent = signContent.substring(0, signContent.length() - 1);
-			String sign = MD5Utils.md5(signContent);
-			map.put("sign", sign);
+			String sign = MD5Utils.md5(signContent + "&SecretKey=" + cl.getApikey());
+			map.put("Sign", sign);
 
 			HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
 			//
-			ResponseEntity<SysZsQuery> sov = resttemplate.postForEntity(cl.getApiip() + "/v1/api/search_order", httpEntity, SysZsQuery.class);
-			SysZsQuery data = sov.getBody();
+			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/PayV2/queryorder", httpEntity, JSONObject.class);
+			JSONObject data = sov.getBody();
 			log.info("张三查单返回消息：" + data);
-			if (data.getCode().equals("200") && data.getData().getOrder_status().equals("6")) {
-				return data.getData().getOrder_status();
+			if (data.getStr("Code").equals("0") && data.getJSONObject("Data").getStr("Status").equals("4")) {
+				return data.getJSONObject("Data");
 			}
 		} catch (RestClientException e) {
 			log.info("张三查单返回消息：" + e.getMessage());

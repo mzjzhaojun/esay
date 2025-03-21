@@ -58,7 +58,6 @@ import com.yt.app.api.v1.vo.SysFhOrder;
 import com.yt.app.api.v1.vo.SysGzOrder;
 import com.yt.app.api.v1.vo.SysHsOrder;
 import com.yt.app.api.v1.vo.SysYSOrder;
-import com.yt.app.api.v1.vo.SysZsOrder;
 import com.yt.app.api.v1.vo.SysRblOrder;
 import com.yt.app.api.v1.vo.SysWdOrder;
 import com.yt.app.api.v1.vo.SysWjOrder;
@@ -452,14 +451,14 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
 			throw new YtException("非法请求,IP加白名单后重试!");
 		}
-		String returnstate = PayUtil.SendZSQuerySubmit(orderid, channel);
+		JSONObject returnstate = PayUtil.SendZSQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "张三通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);
 		}
 		TenantIdContext.remove();
 	}
-	
+
 	@Override
 	public void alipayftfcallback(Map<String, String> params) {
 		String trade_no = params.get("trade_no").toString();
@@ -581,11 +580,11 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				}
 				break;
 			case DictionaryResource.ZSAISLE:
-				SysZsOrder zsjz = PayUtil.SendZSSubmit(income, channel);
+				JSONObject zsjz = PayUtil.SendZSSubmit(income, channel);
 				if (zsjz != null) {
 					flage = false;
-					income.setResulturl(zsjz.getData().getQr_code());
-					income.setQrcodeordernum(zsjz.getData().getOrder_no());
+					income.setResulturl(zsjz.getJSONObject("PayeeInfo").getStr("CashUrl"));
+					income.setQrcodeordernum(zsjz.getStr("MerchantOrderNo"));
 				}
 				break;
 			case DictionaryResource.XSAISLE:
@@ -887,7 +886,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qrv.setPay_md5sign(PayUtil.SignMd5QueryResultQrocde(qrv, mc.getAppkey()));
 		return qrv;
 	}
-
 
 	private Merchant checkparam(QrcodeSubmitDTO qs) {
 		if (qs.getPay_memberid().length() > 10) {

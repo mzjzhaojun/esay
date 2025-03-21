@@ -33,7 +33,7 @@ public class AliPayUtil {
 			request.setNotifyUrl(qrcode.getNotifyurl());
 			model.setOutTradeNo(ordernum);
 			model.setTotalAmount(amount.toString());
-			model.setSubject("会员支付");
+			model.setSubject("Member Payment");
 			model.setProductCode("QUICK_WAP_WAY");
 			request.setBizModel(model);
 			AlipayTradeWapPayResponse response = client.pageExecute(request, "GET");
