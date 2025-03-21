@@ -442,9 +442,10 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	@Override
 	public void zscallback(Map<String, Object> params) {
-		String orderid = params.get("order_no").toString();
-		log.info(" 张三通知返回消息：orderid" + orderid);
-		Income income = mapper.getByQrcodeOrderNum(orderid);
+		String orderid = params.get("OrderNo").toString();
+		String status = params.get("Status").toString();
+		log.info("张三通知返回消息：orderid" + orderid + " status:" + status);
+		Income income = mapper.getByOrderNum(orderid);
 		TenantIdContext.setTenantId(income.getTenant_id());
 		Channel channel = channelmapper.get(income.getQrcodeid());
 		String ip = AuthContext.getIp();
@@ -584,7 +585,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				if (zsjz != null) {
 					flage = false;
 					income.setResulturl(zsjz.getJSONObject("PayeeInfo").getStr("CashUrl"));
-					income.setQrcodeordernum(zsjz.getStr("MerchantOrderNo"));
+					income.setQrcodeordernum(zsjz.getStr("OrderNo"));
 				}
 				break;
 			case DictionaryResource.XSAISLE:
