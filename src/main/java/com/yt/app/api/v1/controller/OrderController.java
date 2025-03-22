@@ -541,7 +541,7 @@ public class OrderController {
 		try {
 			lock.lock();
 			incomeservice.zscallback(RequestUtil.requestEntityToParamMap(requestEntity));
-			response.getWriter().print("success");
+			response.getWriter().print("ok");
 		} catch (Exception e) {
 			throw new YtException(e);
 		} finally {

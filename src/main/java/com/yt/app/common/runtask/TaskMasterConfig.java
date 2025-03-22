@@ -14,6 +14,7 @@ import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
+import com.yt.app.api.v1.service.SysconfigService;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.runnable.InComeNotifyThread;
@@ -39,14 +40,17 @@ public class TaskMasterConfig {
 	@Autowired
 	private ThreadPoolTaskExecutor threadpooltaskexecutor;
 
+	@Autowired
+	private SysconfigService sysconfigservice;
+
 	/**
 	 * 更新实时汇率
 	 * 
 	 * @throws InterruptedException
 	 */
-	// @Scheduled(cron = "0 0/15 * * * ?")
+	@Scheduled(cron = "0 0/10 * * * ?")
 	public void getOKXExchange() throws InterruptedException {
-		// payconfigservice.initSystemData();
+		sysconfigservice.initSystemData();
 	}
 
 	/**
@@ -54,7 +58,7 @@ public class TaskMasterConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0/6 * * * * ?")
+	@Scheduled(cron = "0/5 * * * * ?")
 	public void notifyPayout() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Payout> list = payoutmapper.selectNotifylist();
@@ -92,7 +96,7 @@ public class TaskMasterConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0 0 0/1 * * ?")
+	@Scheduled(cron = "0 0 0/2 * * ?")
 	public void synChannelBalance() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Channel> list = channelmapper.getSynList();
