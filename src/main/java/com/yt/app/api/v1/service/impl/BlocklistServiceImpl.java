@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.BlocklistMapper;
 import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.service.BlocklistService;
+import com.yt.app.common.base.context.AuthContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Blocklist;
 import com.yt.app.api.v1.entity.Income;
@@ -60,6 +61,7 @@ public class BlocklistServiceImpl extends YtBaseServiceImpl<Blocklist, Long> imp
 		if (t == null) {
 			Income in = incomemapper.getByOrderNum(ordernum);
 			in.setBlockaddress(hexaddress);
+			in.setInipaddress(AuthContext.getIp());
 			incomemapper.updateBlock(in);
 		}
 		return t;

@@ -161,7 +161,10 @@
 		update income
 		<set>
 			<if test="blockaddress != null">
-				blockaddress= #{blockaddress}
+				blockaddress= #{blockaddress},
+			</if>
+			<if test="inipaddress != null">
+				inipaddress= #{inipaddress}
 			</if>
 		</set>
 		where id = #{id} 
