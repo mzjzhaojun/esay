@@ -1182,6 +1182,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Blocklist bl = new Blocklist();
 		bl.setMerchantid(newincome.getMerchantid());
 		bl.setHexaddress(newincome.getBlockaddress());
+		bl.setIpaddress(newincome.getInipaddress());
 		bl.setOrdernum(newincome.getOrdernum());
 		Integer i = blocklistmapper.post(bl);
 		income.setBlockaddress("");

@@ -27,7 +27,7 @@ public class Blocklist extends YtBaseEntity<Blocklist> {
 	Long merchantid;
 	String ordernum;
 	String hexaddress;
-	Boolean status;
+	String ipaddress;
 	String remark;
 	Integer version;
 }

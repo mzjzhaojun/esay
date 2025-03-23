@@ -27,7 +27,7 @@ public class BlocklistVO extends BaseVO {
 	Long merchantid;
 	String ordernum;
 	String hexaddress;
-	Boolean status;
+	String ipaddress;
 	String remark;
 	Long create_by;
 	java.util.Date create_time;
