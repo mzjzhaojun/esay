@@ -32,6 +32,7 @@ public class Merchant extends YtBaseEntity<Merchant> {
 	String type;
 	Double balance;
 	Double usdtbalance;
+	Boolean ipstatus;
 	Boolean status;
 	Double todaycost;
 	Double todaycount;

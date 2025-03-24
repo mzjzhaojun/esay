@@ -898,11 +898,13 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Merchant mc = merchantmapper.getByCode(qs.getPay_memberid());
 		Assert.notNull(mc, "商户不存在!");
 		String ip = AuthContext.getIp();
-		if (ip == null || ip.equals("")) {
-			throw new YtException("非法请求,IP加白名单后重试!");
-		}
-		if (mc.getIpaddress() == null || mc.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求,IP加白名单后重试!");
+		if (mc.getIpstatus()) {
+			if (ip == null || ip.equals("")) {
+				throw new YtException("非法请求,IP加白名单后重试!");
+			}
+			if (mc.getIpaddress() == null || mc.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求,IP加白名单后重试!");
+			}
 		}
 		if (!mc.getStatus()) {
 			throw new YtException("商户被冻结!");
