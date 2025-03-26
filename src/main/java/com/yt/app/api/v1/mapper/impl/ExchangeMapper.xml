@@ -164,7 +164,7 @@
 				remark= #{remark},
 			</if>
 			<if test="channelbalance != null">
-				channelbalance= #{channelbalance}
+				channelbalance= #{channelbalance},
 			</if>
 			<if test="version != null">
 				version= #{version}+1

@@ -60,14 +60,14 @@
 			<if test="remark != null">
 				remark= #{remark},
 			</if>
-			<if test="version != null">
-				version= #{version}+1,
-			</if>
 			<if test="update_by != null">
 				update_by= #{update_by},
 			</if>
 			<if test="update_time != null">
-				update_time= #{update_time}
+				update_time= #{update_time},
+			</if>
+			<if test="version != null">
+				version= #{version}+1
 			</if>
 		</set>
 		where id = #{id} 

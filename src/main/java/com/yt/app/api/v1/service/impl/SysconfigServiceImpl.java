@@ -69,19 +69,19 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 	@Override
 	@Transactional
 	public void initSystemData() {
-		getUsdtPrice();
+		// getUsdtPrice();
 		getUsdtToTrx();
 	}
 
-	private void getUsdtPrice() {
-		Long time = System.currentTimeMillis() / 1000;
-		String str = HttpUtil.get("https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=all&userType=all&receivingAds=false&t=" + time);
-		SysOxxVo data = JSONUtil.toBean(str, SysOxxVo.class);
-		List<Object> list = data.getData().getSell();
-		Double exchange = Double.valueOf(BeanUtil.beanToMap(list.get(0)).get("price").toString());
-		mapper.putUsdtExchange(exchange);
-		RedisUtil.set(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTEXCHANGE, exchange.toString());
-	}
+//	private void getUsdtPrice() {
+//		Long time = System.currentTimeMillis() / 1000;
+//		String str = HttpUtil.get("https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=all&userType=all&receivingAds=false&t=" + time);
+//		SysOxxVo data = JSONUtil.toBean(str, SysOxxVo.class);
+//		List<Object> list = data.getData().getSell();
+//		Double exchange = Double.valueOf(BeanUtil.beanToMap(list.get(0)).get("price").toString());
+//		mapper.putUsdtExchange(exchange);
+//		RedisUtil.set(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTEXCHANGE, exchange.toString());
+//	}
 
 	private void getUsdtToTrx() {
 		String str = HttpUtil.get("https://c.tronlink.org/v1/cryptocurrency/getprice?symbol=USDT&convert=TRX");

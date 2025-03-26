@@ -140,7 +140,7 @@
 				notifystatus= #{notifystatus},
 			</if>
 			<if test="remark != null">
-				remark= #{remark}
+				remark= #{remark},
 			</if>
 			<if test="version != null">
 				version= #{version}+1
