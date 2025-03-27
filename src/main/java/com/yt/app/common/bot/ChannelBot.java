@@ -13,6 +13,7 @@ import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.mapper.TgchannelgroupMapper;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.message.impl.ChannelBalanceMessage;
+import com.yt.app.common.bot.message.impl.ChannelGetPhotoMessage;
 import com.yt.app.common.bot.message.impl.ChannelIssueMessage;
 import com.yt.app.common.bot.message.impl.ExchangeMessage;
 import com.yt.app.common.bot.message.impl.NotifyChannelMessage;
@@ -46,6 +47,9 @@ public class ChannelBot extends TelegramLongPollingBot {
 
 	@Autowired
 	private ChannelIssueMessage channelissuemessage;
+
+	@Autowired
+	private ChannelGetPhotoMessage channelgetphotomessage;
 
 	@Override
 	public String getBotUsername() {
@@ -85,6 +89,8 @@ public class ChannelBot extends TelegramLongPollingBot {
 					execute(channelbalancemessage.getUpdate(update, tmg));
 				} else if (update.getMessage().getText().startsWith("下发")) {
 					execute(channelissuemessage.getUpdate(update, tmg));
+				} else if (update.getMessage().getReplyToMessage().getText().startsWith("代付回单") && update.getMessage().getReplyToMessage() != null) {
+					channelgetphotomessage.getUpdateSendPhoto(update);
 				}
 			} else if (update.hasCallbackQuery()) {
 			} else if (update.hasMessage() && update.getMessage().hasPhoto()) {
@@ -104,6 +110,17 @@ public class ChannelBot extends TelegramLongPollingBot {
 	public void notifyChannel(Channel c) {
 		try {
 			SendMessage sm = notifychannelmessage.getNotifyUpdate(c);
+			if (sm != null) {
+				execute(sm);
+			}
+		} catch (TelegramApiException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void getOrderResultImg(Long cid, String orderNum) {
+		try {
+			SendMessage sm = channelgetphotomessage.getUpdate(cid, orderNum);
 			if (sm != null) {
 				execute(sm);
 			}

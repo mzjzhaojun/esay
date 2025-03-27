@@ -1,6 +1,7 @@
 package com.yt.app.api.v1.service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,15 @@ public interface FileService extends YtIBaseService<YtFile, Long> {
 	 * @return
 	 */
 	YtFile addFile(MultipartFile file) throws IOException;
+
+	/**
+	 * 飞机获取图片下载
+	 * 
+	 * @param is
+	 * @return
+	 * @throws IOException
+	 */
+	String addInputStream(InputStream is);
 
 	/**
 	 * 保存文件

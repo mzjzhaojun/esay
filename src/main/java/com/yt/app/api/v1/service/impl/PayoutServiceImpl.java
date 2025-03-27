@@ -114,7 +114,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	private MerchantaisleMapper merchantaislemapper;
 	@Autowired
 	private MerchantcustomerbanksService merchantcustomerbanksservice;
-
 	@Autowired
 	private ChannelBot channelbot;
 
@@ -566,6 +565,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (i > 0) {
 				// 保存客户信息
 				merchantcustomerbanksservice.add(t);
+				// 通知
+				channelbot.getOrderResultImg(pt.getChannelid(), pt.getOrdernum());
 			}
 
 		}

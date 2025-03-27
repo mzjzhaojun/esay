@@ -110,6 +110,39 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 	@Override
 	@Transactional
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
+	public String addInputStream(InputStream is) {
+		Date uploaddate = new Date();
+		String filepath = FileUtil.createfilepath(uploaddate, appConfig);
+		YtFile fl = null;
+		StringBuffer sb = new StringBuffer();
+		String name = "";
+		String path = "";
+		fl = new YtFile();
+		fl.setRoot_path(appConfig.getFilePath());
+		fl.setRelative_path(filepath);
+		fl.setCreatetime(new Date());
+		fl.setFile_size(1);
+		fl.setSuffix("jpeg");
+		mapper.post(fl);
+		name = sb.append(fl.getId()).append(".").append("jpeg").toString();
+		sb = new StringBuffer();
+		String apath = sb.append(filepath).append(java.io.File.separator).append(name).toString();
+		sb = new StringBuffer();
+		path = sb.append(appConfig.getFilePath()).append(apath).toString();
+		java.io.File uploadfile = new java.io.File(path);
+		FileUtil.writeFile(is, uploadfile);
+		YtFile f = mapper.get(fl.getId());
+		if (!name.equals(""))
+			f.setFile_name(name);
+		f.setModifytime(new Date());
+		mapper.put(f);
+		f.setUrl(appConfig.getFileurl().replace("{id}", fl.getId() + ""));
+		return f.getUrl();
+	}
+
+	@Override
+	@Transactional
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	public YtFile addFile(MultipartFile file, String url, String watermark) throws IOException {
 		String fileurl = null;
 		if (watermark != null) {// 需要添加水印
