@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -14,6 +15,7 @@ import com.yt.app.api.v1.mapper.TgmerchantgroupMapper;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.message.impl.ExchangeMessage;
 import com.yt.app.common.bot.message.impl.MerchantBalanceMessage;
+import com.yt.app.common.bot.message.impl.MerchantGetPhotoMessage;
 import com.yt.app.common.bot.message.impl.MerchantIssueMessage;
 import com.yt.app.common.bot.message.impl.MerchantOrderMessage;
 import com.yt.app.common.bot.message.impl.PinMessage;
@@ -50,6 +52,9 @@ public class MerchantBot extends TelegramLongPollingBot {
 
 	@Autowired
 	private MerchantOrderMessage merchantordermessage;
+
+	@Autowired
+	private MerchantGetPhotoMessage merchantgetphotomessage;
 
 	@Override
 	public String getBotUsername() {
@@ -120,6 +125,17 @@ public class MerchantBot extends TelegramLongPollingBot {
 			if (sm != null) {
 				Message msg = execute(sm);
 				execute(pinmessage.getUpdate(msg));
+			}
+		} catch (TelegramApiException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void sendOrderResultImg(Long mid, String imgurl) {
+		try {
+			SendPhoto sm = merchantgetphotomessage.getUpdateSendPhoto(mid, imgurl);
+			if (sm != null) {
+				execute(sm);
 			}
 		} catch (TelegramApiException e) {
 			e.printStackTrace();

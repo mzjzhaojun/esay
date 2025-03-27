@@ -30,6 +30,7 @@ public class SysSnOrder extends BaseVO {
 		Integer OrderStatus;
 		Double Amount;
 		Integer Status;
+		String Attachments;
 	}
 
 }

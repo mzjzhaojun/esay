@@ -26,6 +26,7 @@ import com.yt.app.api.v1.service.MerchantcustomerbanksService;
 import com.yt.app.api.v1.service.PayoutService;
 import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.api.v1.vo.PayoutVO;
+import com.yt.app.api.v1.vo.SysSnOrder;
 import com.yt.app.api.v1.vo.PayResultVO;
 import com.yt.app.api.v1.vo.SysTyOrder;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
@@ -35,6 +36,7 @@ import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.common.bot.ChannelBot;
+import com.yt.app.common.bot.MerchantBot;
 import com.yt.app.api.v1.dbo.PaySubmitDTO;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Agentaccountorder;
@@ -116,6 +118,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	private MerchantcustomerbanksService merchantcustomerbanksservice;
 	@Autowired
 	private ChannelBot channelbot;
+	@Autowired
+	private MerchantBot merchantbot;
 
 	@Override
 	public Integer submitOrder(Payout t) {
@@ -567,6 +571,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				merchantcustomerbanksservice.add(t);
 				// 通知
 				channelbot.getOrderResultImg(pt.getChannelid(), pt.getOrdernum());
+				merchantbot.sendOrderResultImg(pt.getMerchantid(), pt.getImgurl());
 			}
 
 		}
@@ -887,11 +892,12 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				throw new YtException("非法请求!");
 			}
 			// 查询渠道是否真实成功
-			Integer returnstate = PayUtil.SendSnSelectOrder(pt.getOrdernum(), channel);
-			Assert.notNull(returnstate, "十年代付通知反查订单失败!");
-			if (returnstate == 4) {
+			SysSnOrder data = PayUtil.SendSnSelectOrder(pt.getOrdernum(), channel);
+			Assert.notNull(data, "十年代付通知反查订单失败!");
+			if (data.getData().getStatus() == 4) {
+				pt.setImgurl(data.getData().getAttachments());
 				paySuccess(pt);
-			} else if (returnstate == 16) {
+			} else if (data.getData().getStatus() == 16) {
 				payFail(pt);
 			}
 			SysUserContext.remove();

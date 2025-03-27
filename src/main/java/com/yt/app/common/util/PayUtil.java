@@ -232,7 +232,7 @@ public class PayUtil {
 	}
 
 	// 十年代付查单
-	public static Integer SendSnSelectOrder(String orderid, Channel cl) {
+	public static SysSnOrder SendSnSelectOrder(String orderid, Channel cl) {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
@@ -260,7 +260,7 @@ public class PayUtil {
 			SysSnOrder sso = JSONUtil.toBean(data, SysSnOrder.class);
 			log.info("十年代付成功返回订单号：" + data);
 			if (sso.getCode() == 0) {
-				return sso.getData().getStatus();
+				return sso;
 			}
 		} catch (RestClientException e) {
 			log.info("十年代付查单返回消息：" + e.getMessage());
