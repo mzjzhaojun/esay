@@ -101,6 +101,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			scr.setPopostwithdrawamount(t.getPowithdrawamount() + mao.getIncome());
 			scr.setPoamount(mao.getIncome());
 			scr.setPobalance(t.getPobalance());//
+			scr.setAmount(mao.getAmount());
 			scr.setRemark("代付金额：" + String.format("%.2f", mao.getAmount()) + "  单号:" + mao.getOrdernum());
 			systemcapitalrecordmapper.post(scr);
 
