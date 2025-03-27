@@ -89,7 +89,7 @@ public class ChannelBot extends TelegramLongPollingBot {
 					execute(channelbalancemessage.getUpdate(update, tmg));
 				} else if (update.getMessage().getText().startsWith("下发")) {
 					execute(channelissuemessage.getUpdate(update, tmg));
-				} else if (update.getMessage().getReplyToMessage().getText().startsWith("代付回单") && update.getMessage().getReplyToMessage() != null) {
+				} else if (update.getMessage().getReplyToMessage() != null && update.getMessage().getReplyToMessage().getText().startsWith("代付回单") && update.getMessage().getReplyToMessage() != null) {
 					channelgetphotomessage.getUpdateSendPhoto(update);
 				}
 			} else if (update.hasCallbackQuery()) {
