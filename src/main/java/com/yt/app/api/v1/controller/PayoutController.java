@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtIPage;
@@ -91,6 +92,32 @@ public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long>
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<PayoutVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
+	}
+
+	/**
+	 * 成功
+	 * 
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/success/{id}", method = RequestMethod.GET)
+	public YtResponseEntity<Object> success(@PathVariable Long id, MultipartHttpServletRequest request) {
+		Integer i = service.success(id);
+		return new YtResponseEntity<Object>(new YtBody(i));
+	}
+
+	/**
+	 * 失败
+	 * 
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/fail/{id}", method = RequestMethod.GET)
+	public YtResponseEntity<Object> fail(@PathVariable Long id, MultipartHttpServletRequest request) {
+		Integer i = service.fail(id);
+		return new YtResponseEntity<Object>(new YtBody(i));
 	}
 
 }

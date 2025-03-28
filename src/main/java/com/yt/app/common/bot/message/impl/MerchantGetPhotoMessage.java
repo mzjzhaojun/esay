@@ -40,8 +40,10 @@ public class MerchantGetPhotoMessage implements UpdateMerchantMessageService {
 		if (tcg != null) {
 			sendMessage.setChatId(tcg.getTgid());
 			sendMessage.setText("代付回单 " + orderNum);
+			return sendMessage;
+		} else {
+			return null;
 		}
-		return sendMessage;
 	}
 
 	public SendPhoto getUpdateSendPhoto(Long mid, String imgurl) {

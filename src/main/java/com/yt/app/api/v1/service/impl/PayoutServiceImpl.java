@@ -958,4 +958,18 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			TenantIdContext.remove();
 		}
 	}
+
+	@Override
+	public Integer success(Long id) {
+		Payout pt = mapper.get(id);
+		paySuccess(pt);
+		return 1;
+	}
+
+	@Override
+	public Integer fail(Long id) {
+		Payout pt = mapper.get(id);
+		payFail(pt);
+		return 1;
+	}
 }

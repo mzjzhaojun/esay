@@ -54,8 +54,11 @@ public class ChannelGetPhotoMessage implements UpdateChannelMessageService {
 		if (tcg != null) {
 			sendMessage.setChatId(tcg.getTgid());
 			sendMessage.setText("代付回单 " + orderNum);
+			return sendMessage;
 		}
-		return sendMessage;
+		{
+			return null;
+		}
 	}
 
 	public void getUpdateSendPhoto(Update update) {
