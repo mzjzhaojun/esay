@@ -102,7 +102,7 @@ public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long>
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/success/{id}", method = RequestMethod.GET)
-	public YtResponseEntity<Object> success(@PathVariable Long id, MultipartHttpServletRequest request) {
+	public YtResponseEntity<Object> success(@PathVariable Long id, HttpServletRequest request) {
 		Integer i = service.success(id);
 		return new YtResponseEntity<Object>(new YtBody(i));
 	}
@@ -115,7 +115,7 @@ public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long>
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/fail/{id}", method = RequestMethod.GET)
-	public YtResponseEntity<Object> fail(@PathVariable Long id, MultipartHttpServletRequest request) {
+	public YtResponseEntity<Object> fail(@PathVariable Long id, HttpServletRequest request) {
 		Integer i = service.fail(id);
 		return new YtResponseEntity<Object>(new YtBody(i));
 	}

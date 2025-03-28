@@ -48,13 +48,18 @@ public class MerchantGetPhotoMessage implements UpdateMerchantMessageService {
 
 	public SendPhoto getUpdateSendPhoto(Long mid, String imgurl) {
 		Tgmerchantgroup tcg = tgmerchantgroupmapper.getByMerchantId(mid);
-		SendPhoto sendphoto = new SendPhoto();
-		sendphoto.setChatId(tcg.getTgid());
-		InputFile infile = new InputFile();
-		InputStream is = HttpRequest.get(imgurl).execute().bodyStream();
-		infile.setMedia(is, "jpg");
-		sendphoto.setPhoto(infile);
-		return sendphoto;
+		if (tcg != null) {
+			SendPhoto sendphoto = new SendPhoto();
+			sendphoto.setChatId(tcg.getTgid());
+			InputFile infile = new InputFile();
+			InputStream is = HttpRequest.get(imgurl).execute().bodyStream();
+			infile.setMedia(is, "jpg");
+			sendphoto.setPhoto(infile);
+			return sendphoto;
+		} else {
+			return null;
+		}
+
 	}
 
 }
