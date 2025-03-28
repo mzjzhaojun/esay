@@ -42,8 +42,10 @@ div {
 	var orderid = "[[${orderid}]]";
 	var md5str;
 	function initdata() {
-		if (status != "50") {
+		if (status == 53) {
 			$('#message').html('<div>Order Expired</div>');
+		}else if (status == 52) {
+			$('#message').html('<div>Order Success</div>');
 		} else {
 			var url = resulturl.replaceAll('amp;', '');
 			Fingerprint2.get(function(components) {
