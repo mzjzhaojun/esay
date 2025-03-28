@@ -88,9 +88,9 @@ public class OrderController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/blocklist/{md5}/{orderid}", method = RequestMethod.GET)
-	public YtResponseEntity<Object> blocklist(@PathVariable String md5, @PathVariable Long orderid, HttpServletRequest request, HttpServletResponse response) {
-		Blocklist yb = blocklistservice.getByHexaddress(md5, orderid);
+	@RequestMapping(value = "/blocklist/{md5}/{ordernum}", method = RequestMethod.GET)
+	public YtResponseEntity<Object> blocklist(@PathVariable String md5, @PathVariable String ordernum, HttpServletRequest request, HttpServletResponse response) {
+		Blocklist yb = blocklistservice.getByHexaddress(md5, ordernum);
 		return new YtResponseEntity<Object>(new YtBody(yb));
 	}
 
