@@ -804,7 +804,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				AlipayTradeWapPayResponse response = AliPayUtil.AlipayTradeWapPay(qd, income.getOrdernum(), income.getAmount());
 				Assert.notNull(response, "获取支付宝单号错误!");
 				String pageRedirectionData = response.getBody();
-				income.setQrcode(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
+				income.setQrcode(appConfig.getViewurl().replace("{id}", income.getId() + ""));
 				income.setQrcodeordernum("inqd" + StringUtil.getOrderNum());
 				income.setResulturl(pageRedirectionData);
 			} else {

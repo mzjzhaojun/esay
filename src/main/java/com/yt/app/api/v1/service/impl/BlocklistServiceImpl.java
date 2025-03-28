@@ -56,10 +56,10 @@ public class BlocklistServiceImpl extends YtBaseServiceImpl<Blocklist, Long> imp
 	}
 
 	@Override
-	public Blocklist getByHexaddress(String hexaddress, String ordernum) {
+	public Blocklist getByHexaddress(String hexaddress, Long id) {
 		Blocklist t = mapper.getByHexaddress(hexaddress);
 		if (t == null) {
-			Income in = incomemapper.getByOrderNum(ordernum);
+			Income in = incomemapper.get(id);
 			in.setBlockaddress(hexaddress);
 			in.setInipaddress(AuthContext.getIp());
 			incomemapper.updateBlock(in);

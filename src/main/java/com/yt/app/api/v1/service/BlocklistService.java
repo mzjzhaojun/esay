@@ -17,5 +17,5 @@ public interface BlocklistService extends YtIBaseService<Blocklist, Long> {
 
 	YtIPage<BlocklistVO> page(Map<String, Object> param);
 
-	Blocklist getByHexaddress(String hexaddress, String orderid);
+	Blocklist getByHexaddress(String hexaddress, Long orderid);
 }
