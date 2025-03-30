@@ -30,14 +30,15 @@ public class DevRunner implements CommandLineRunner {
 	TronGetAddressThread5 tt5 = new TronGetAddressThread5();
 	TronGetAddressThread5 tt6 = new TronGetAddressThread5();
 	TronGetAddressThread5 tt7 = new TronGetAddressThread5();
-
+	TronGetAddressThread5 tt8 = new TronGetAddressThread5();
+	TronGetAddressThread5 tt9 = new TronGetAddressThread5();
 	@Autowired
 	private ThreadPoolTaskExecutor threadpooltaskexecutor;
 
 	@Override
 	public void run(String... args) throws Exception {
 
-		log.info("slave start...");
+		log.info("dev start...");
 		threadpooltaskexecutor.execute(tt1);
 		threadpooltaskexecutor.execute(tt2);
 		threadpooltaskexecutor.execute(tt3);
@@ -45,6 +46,8 @@ public class DevRunner implements CommandLineRunner {
 		threadpooltaskexecutor.execute(tt5);
 		threadpooltaskexecutor.execute(tt6);
 		threadpooltaskexecutor.execute(tt7);
-		log.info("slave end...");
+		threadpooltaskexecutor.execute(tt8);
+		threadpooltaskexecutor.execute(tt9);
+		log.info("dev end...");
 	}
 }

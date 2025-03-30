@@ -61,7 +61,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	private AgentMapper agentmapper;
 
 	@Autowired
-	private PayoutMerchantaccountMapper merchantaccountmapper;
+	private PayoutMerchantaccountMapper payoutmerchantaccountmapper;
 
 	@Autowired
 	private ExchangeMerchantaccountMapper exchangemerchantaccountmapper;
@@ -106,7 +106,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		sm.setUserid(u.getId());
 		sm.setMerchantid(t.getId());
 		sm.setBalance(0.00);
-		merchantaccountmapper.post(sm);
+		payoutmerchantaccountmapper.post(sm);
 
 		ExchangeMerchantaccount emc = new ExchangeMerchantaccount();
 		emc.setTotalincome(0.00);
@@ -159,7 +159,7 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		sm.setUserid(u.getId());
 		sm.setMerchantid(t.getId());
 		sm.setBalance(0.00);
-		merchantaccountmapper.post(sm);
+		payoutmerchantaccountmapper.post(sm);
 
 		ExchangeMerchantaccount emc = new ExchangeMerchantaccount();
 		emc.setTotalincome(0.00);
@@ -223,6 +223,9 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	@Transactional
 	public Integer delete(Long id) {
 		Merchant t = mapper.get(id);
+		payoutmerchantaccountmapper.deleteByUserId(t.getUserid());
+		exchangemerchantaccountmapper.deleteByUserId(t.getUserid());
+		incomemerchantaccountmapper.deleteByUserId(t.getUserid());
 		usermapper.delete(t.getUserid());
 		return mapper.delete(id);
 	}

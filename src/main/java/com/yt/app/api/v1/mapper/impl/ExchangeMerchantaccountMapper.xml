@@ -33,6 +33,11 @@
 		delete from exchangemerchantaccount
 		where id = #{id}
 	</delete>
+	<!-- deleteByUserId -->
+	<delete id="deleteByUserId" parameterType="java.lang.Long">
+		delete from exchangemerchantaccount
+		where userid = #{userid}
+	</delete>
 	<!-- update -->
 	<update id="put"
 		parameterType="com.yt.app.api.v1.entity.ExchangeMerchantaccount">

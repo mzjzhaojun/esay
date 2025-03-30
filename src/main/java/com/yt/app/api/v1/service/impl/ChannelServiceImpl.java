@@ -150,6 +150,8 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	@Transactional
 	public Integer delete(Long id) {
 		Channel t = mapper.get(id);
+		channelaccountmapper.deleteByUserId(t.getUserid());
+		qrcodeaccountmapper.deleteByUserId(t.getUserid());
 		usermapper.delete(t.getUserid());
 		return mapper.delete(id);
 	}
