@@ -201,26 +201,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
-	public void tdcallback(Map<String, String> params) {
-		String orderid = params.get("orderid").toString();
-		String status = params.get("returncode").toString();
-		log.info("铁蛋通知返回消息：orderid" + orderid + " status:" + status);
-		Income income = mapper.getByOrderNum(orderid);
-		TenantIdContext.setTenantId(income.getTenant_id());
-		Channel channel = channelmapper.get(income.getQrcodeid());
-		String ip = AuthContext.getIp();
-		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
-			throw new YtException("非法请求,IP加白名单后重试!");
-		}
-		String returnstate = PayUtil.SendTDQuerySubmit(orderid, income.getAmount(), channel);
-		Assert.notNull(returnstate, "铁蛋通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-			success(income);
-		}
-		TenantIdContext.remove();
-	}
-
-	@Override
 	public void egcallback(Map<String, String> params) {
 		String orderid = params.get("orderid").toString();
 		String status = params.get("returncode").toString();
@@ -602,14 +582,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 					flage = false;
 					income.setResulturl(syjz.getPayParams().getPayUrl());
 					income.setQrcodeordernum(syjz.getPayOrderId());
-				}
-				break;
-			case DictionaryResource.TDAISLE:
-				SysTdOrder syo = PayUtil.SendTDSubmit(income, channel);
-				if (syo != null) {
-					flage = false;
-					income.setResulturl(syo.getData().getPay_url());
-					income.setQrcodeordernum(income.getMerchantordernum());
 				}
 				break;
 			case DictionaryResource.FHLAISLE:

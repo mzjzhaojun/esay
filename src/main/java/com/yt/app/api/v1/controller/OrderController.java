@@ -206,28 +206,6 @@ public class OrderController {
 	}
 
 	/**
-	 * td代收回调
-	 * 
-	 * @param requestEntity
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "/tdcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public void tdcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
-		RLock lock = RedissonUtil.getLock("tdcallback");
-		try {
-			lock.lock();
-			incomeservice.tdcallback(params);
-			response.getWriter().print("OK");
-		} catch (Exception e) {
-			throw new YtException(e);
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	/**
 	 * eg代收回调
 	 * 
 	 * @param requestEntity

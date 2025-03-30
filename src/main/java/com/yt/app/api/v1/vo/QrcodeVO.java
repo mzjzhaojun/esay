@@ -31,6 +31,7 @@ public class QrcodeVO extends BaseVO {
 	String code;
 	Boolean status;
 	Double balance;
+	Double collection;
 	Integer expireminute;
 	String type;
 	String typename;
