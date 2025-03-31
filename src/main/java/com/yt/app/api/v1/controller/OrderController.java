@@ -206,6 +206,28 @@ public class OrderController {
 	}
 
 	/**
+	 * td代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/xrcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void xrcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("xrcallback");
+		try {
+			lock.lock();
+			payoutservice.xrcallback(params);
+			response.getWriter().print("success");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
 	 * eg代收回调
 	 * 
 	 * @param requestEntity

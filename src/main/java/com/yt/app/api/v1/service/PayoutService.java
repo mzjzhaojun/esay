@@ -47,10 +47,13 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 	void sscallback(Map<String, Object> params);
 
 	// 易生回调
-	public void ysdfcallback(Map<String, String> params);
+	void ysdfcallback(Map<String, String> params);
 
 	// 十年回调
 	void sncallback(Map<String, Object> params);
+	
+	//旭日代付回调
+	void xrcallback(Map<String, String> params);
 
 	// 导入上传
 	String upFile(MultipartFile file, String aisleid) throws IOException;

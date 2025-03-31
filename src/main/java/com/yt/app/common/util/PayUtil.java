@@ -424,6 +424,76 @@ public class PayUtil {
 		return null;
 	}
 
+	// 旭日支付宝代付
+	public static String SendXRSubmit(Payout pt, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		String dtime = DateTimeUtil.getDateTime("yyyyMMddHHmmss");
+		map.add("mchId", cl.getCode());
+		map.add("accountAttr", "0");
+		map.add("mchOrderNo", pt.getOrdernum());
+		map.add("remark", "代付" + String.format("%.2f", pt.getAmount()));
+		map.add("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
+		map.add("notifyUrl", cl.getApireusultip());
+		map.add("bankCode", pt.getBankcode());
+		map.add("accountNo", pt.getAccnumer());
+		map.add("accountName", pt.getAccname());
+		map.add("bankName", pt.getBankname());
+		map.add("reqTime", dtime);
+
+		String signContent = "accountAttr=0&accountName=" + pt.getAccname() + "&accountNo=" + pt.getAccnumer() + "&amount=" + String.format("%.2f", pt.getAmount()).replace(".", "") + "&bankCode=" + pt.getBankcode() + "&bankName=" + pt.getBankname()
+				+ "&mchId=" + cl.getCode() + "&mchOrderNo=" + pt.getOrdernum() + "&notifyUrl=" + cl.getApireusultip() + "&remark=" + "代付" + String.format("%.2f", pt.getAmount()) + "&reqTime=" + dtime + "&keySign=" + cl.getApikey() + "Apm";
+
+		String sign = MD5Utils.md5(signContent);
+		map.add("sign", sign);
+
+		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/agentpayAPI/apply", httpEntity, JSONObject.class);
+		String retCode = sov.getBody().getStr("retCode");
+		log.info("旭日代付成功返回订单号：" + sov.getBody().getStr("agentpayOrderId"));
+		if (retCode.equals("SUCCESS")) {
+			return sov.getBody().getStr("agentpayOrderId");
+		}
+		return null;
+	}
+
+	// 旭日代付查单
+	public static String SendXRSelectOrder(String orderid, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			String dtime = DateTimeUtil.getDateTime("yyyyMMddHHmmss");
+			map.add("mchId", cl.getCode());
+			map.add("mchOrderNo", orderid);
+			map.add("reqTime", dtime);
+
+			String signContent = "mchId=" + cl.getCode() + "&mchOrderNo=" + orderid + "&reqTime=" + dtime + "&keySign=" + cl.getApikey() + "Apm";
+
+			String sign = MD5Utils.md5(signContent);
+			map.add("sign", sign);
+
+			HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/agentpayAPI/queryOrder", httpEntity, JSONObject.class);
+			String retCode = sov.getBody().getStr("retCode");
+			String status = sov.getBody().getStr("status");
+			log.info("旭日代付查詢订单状态：" + status);
+			if (retCode.equals("SUCCESS")) {
+				return status;
+			}
+		} catch (RestClientException e) {
+			log.info("旭日代付查单返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
 	// 代付盘口通知
 	public static String SendPayoutNotify(String url, PayResultVO ss, String key) {
 

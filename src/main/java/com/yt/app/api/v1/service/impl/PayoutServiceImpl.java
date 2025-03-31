@@ -845,6 +845,13 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		// 获取渠道单号
 		boolean flage = true;
 		switch (cl.getName()) {
+		case DictionaryResource.DFXRAISLE:
+			String xrordernum = PayUtil.SendXRSubmit(t, cl);
+			if (xrordernum != null) {
+				flage = false;
+				t.setChannelordernum(xrordernum);
+			}
+			break;
 		case DictionaryResource.DFYSAISLE:
 			String ysordernum = PayUtil.SendYSSubmit(t, cl);
 			if (ysordernum != null) {
@@ -971,5 +978,33 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		Payout pt = mapper.get(id);
 		payFail(pt);
 		return 1;
+	}
+
+	@Override
+	public void xrcallback(Map<String, String> params) {
+		String orderid = params.get("mchOrderNo").toString();
+		String status = params.get("status").toString();
+		log.info("旭日通知返回消息：orderid" + orderid + " status:" + status);
+		Payout pt = mapper.getByOrdernum(orderid);
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			Channel channel = channelmapper.get(pt.getChannelid());
+			String ip = AuthContext.getIp();
+			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求!");
+			}
+			// 查询渠道是否真实成功
+			String returnstate = PayUtil.SendXRSelectOrder(pt.getOrdernum(), channel);
+			Assert.notNull(returnstate, "旭日代付通知反查订单失败!");
+			if (returnstate.equals("2")) {
+				paySuccess(pt);
+			} else if (returnstate.equals("3")) {
+				payFail(pt);
+			}
+			SysUserContext.remove();
+			TenantIdContext.remove();
+		}
+
 	}
 }
