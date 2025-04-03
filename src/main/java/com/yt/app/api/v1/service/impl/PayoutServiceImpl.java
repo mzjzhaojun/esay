@@ -571,7 +571,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				merchantcustomerbanksservice.add(t);
 				// 通知
 				channelbot.getOrderResultImg(pt.getChannelid(), pt.getOrdernum());
-				merchantbot.sendOrderResultImg(pt.getMerchantid(), pt.getImgurl());
+				if (pt.getImgurl() != null && !pt.getImgurl().equals(""))
+					merchantbot.sendOrderResultImg(pt.getMerchantid(), pt.getImgurl());
 			}
 
 		}
@@ -1040,6 +1041,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			SysUserContext.remove();
 			TenantIdContext.remove();
 		}
-		
+
 	}
 }
