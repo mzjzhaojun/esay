@@ -66,84 +66,6 @@ public class OrderController {
 		return new YtResponseEntity<Object>(new YtBody(income.getStatus()));
 	}
 
-	/**
-	 * 天下代付反查
-	 * 
-	 * @param requestEntity
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "/exist", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> exist(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		YtBody yb = payoutservice.exist(requestEntity.getBody());
-		return new YtResponseEntity<Object>(yb);
-	}
-
-	/**
-	 * 
-	 * 
-	 * @param requestEntity
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "/blocklist/{md5}/{ordernum}", method = RequestMethod.GET)
-	public YtResponseEntity<Object> blocklist(@PathVariable String md5, @PathVariable String ordernum, HttpServletRequest request, HttpServletResponse response) {
-		Blocklist yb = blocklistservice.getByHexaddress(md5, ordernum);
-		return new YtResponseEntity<Object>(new YtBody(yb));
-	}
-
-	/**
-	 * 代付盘口查单
-	 * 
-	 * @param requestEntity
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "/querypayout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> tyquery(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		PayResultVO pt = payoutservice.query(requestEntity.getBody().getMerchantorderid());
-		return new YtResponseEntity<Object>(new YtBody(pt));
-	}
-
-	/**
-	 * 代付盘口下单
-	 * 
-	 * @param requestEntity
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "/submitpayout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> submit(YtRequestEntity<PaySubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		PaySubmitDTO psdto = requestEntity.getBody();
-		RLock lock = RedissonUtil.getLock(psdto.getMerchantid());
-		PayResultVO sr = null;
-		try {
-			lock.lock();
-			sr = payoutservice.submit(psdto);
-		} catch (Exception e) {
-			throw new YtException(e);
-		} finally {
-			lock.unlock();
-		}
-		return new YtResponseEntity<Object>(new YtBody(sr));
-	}
-
-	/**
-	 * 代付盘口查询余额
-	 * 
-	 * @param requestEntity
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "/querybalance", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> query(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		return new YtResponseEntity<Object>(new YtBody(100));
-	}
 
 	/**
 	 * 代收远程系统下单
@@ -197,28 +119,6 @@ public class OrderController {
 		try {
 			lock.lock();
 			incomeservice.kfcallback(params);
-			response.getWriter().print("success");
-		} catch (Exception e) {
-			throw new YtException(e);
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	/**
-	 * td代收回调
-	 * 
-	 * @param requestEntity
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "/xrcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public void xrcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
-		RLock lock = RedissonUtil.getLock("xrcallback");
-		try {
-			lock.lock();
-			payoutservice.xrcallback(params);
 			response.getWriter().print("success");
 		} catch (Exception e) {
 			throw new YtException(e);
@@ -382,6 +282,220 @@ public class OrderController {
 	}
 
 	/**
+	 * 新生代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/xscallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void xscallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("xscallback");
+		try {
+			lock.lock();
+			incomeservice.xscallback(params);
+			response.getWriter().print("success");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * 飞黄运通代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/fhcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void fhcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("fhcallback");
+		try {
+			lock.lock();
+			incomeservice.fhcallback(params);
+			response.getWriter().print("ok");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * 易生代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/yscallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void yscallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("yscallback");
+		try {
+			lock.lock();
+			incomeservice.yscallback(params);
+			response.getWriter().print("success");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * 张三代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/zscallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void zscallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("zscallback");
+		try {
+			lock.lock();
+			incomeservice.zscallback(RequestUtil.requestEntityToParamMap(requestEntity));
+			response.getWriter().print("ok");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * 支付宝代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/alipayftfcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void alipayftfcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("alipayftfcallback");
+		try {
+			lock.lock();
+			incomeservice.alipayftfcallback(params);
+			response.getWriter().print("success");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * 通源代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/tongyuancallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void tongyuancallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("tongyuancallback");
+		try {
+			lock.lock();
+			incomeservice.tongyuancallback(params);
+			response.getWriter().print("success");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * 代付反查
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/exist", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> exist(YtRequestEntity<SysTyOrder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		YtBody yb = payoutservice.exist(requestEntity.getBody());
+		return new YtResponseEntity<Object>(yb);
+	}
+
+	/**
+	 * 
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/blocklist/{md5}/{ordernum}", method = RequestMethod.GET)
+	public YtResponseEntity<Object> blocklist(@PathVariable String md5, @PathVariable String ordernum, HttpServletRequest request, HttpServletResponse response) {
+		Blocklist yb = blocklistservice.getByHexaddress(md5, ordernum);
+		return new YtResponseEntity<Object>(new YtBody(yb));
+	}
+
+	/**
+	 * 代付盘口查单
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/querypayout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> tyquery(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		PayResultVO pt = payoutservice.query(requestEntity.getBody().getMerchantorderid());
+		return new YtResponseEntity<Object>(new YtBody(pt));
+	}
+
+	/**
+	 * 代付盘口下单
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/submitpayout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> submit(YtRequestEntity<PaySubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		PaySubmitDTO psdto = requestEntity.getBody();
+		RLock lock = RedissonUtil.getLock(psdto.getMerchantid());
+		PayResultVO sr = null;
+		try {
+			lock.lock();
+			sr = payoutservice.submit(psdto);
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+		return new YtResponseEntity<Object>(new YtBody(sr));
+	}
+
+	/**
+	 * 代付盘口查询余额
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/querybalance", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> query(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		return new YtResponseEntity<Object>(new YtBody(100));
+	}
+
+	/**
 	 * 天下代付回调
 	 * 
 	 * @param requestEntity
@@ -462,19 +576,19 @@ public class OrderController {
 	}
 
 	/**
-	 * 易生代付回调
+	 * 旭日代付回调
 	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/xscallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void xscallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
-		RLock lock = RedissonUtil.getLock("xscallback");
+	@RequestMapping(value = "/xrcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void xrcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("xrcallback");
 		try {
 			lock.lock();
-			incomeservice.xscallback(params);
+			payoutservice.xrcallback(params);
 			response.getWriter().print("success");
 		} catch (Exception e) {
 			throw new YtException(e);
@@ -484,107 +598,19 @@ public class OrderController {
 	}
 
 	/**
-	 * 飞黄运通回调
+	 * 守信代付回调
 	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/fhcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void fhcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
-		RLock lock = RedissonUtil.getLock("fhcallback");
+	@RequestMapping(value = "/sxcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void sxcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("sxcallback");
 		try {
 			lock.lock();
-			incomeservice.fhcallback(params);
-			response.getWriter().print("ok");
-		} catch (Exception e) {
-			throw new YtException(e);
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	/**
-	 * 易生代收回调
-	 * 
-	 * @param requestEntity
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "/yscallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void yscallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
-		RLock lock = RedissonUtil.getLock("yscallback");
-		try {
-			lock.lock();
-			incomeservice.yscallback(params);
-			response.getWriter().print("success");
-		} catch (Exception e) {
-			throw new YtException(e);
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	/**
-	 * 张三代收回调
-	 * 
-	 * @param requestEntity
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "/zscallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void zscallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		RLock lock = RedissonUtil.getLock("zscallback");
-		try {
-			lock.lock();
-			incomeservice.zscallback(RequestUtil.requestEntityToParamMap(requestEntity));
-			response.getWriter().print("ok");
-		} catch (Exception e) {
-			throw new YtException(e);
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	/**
-	 * 支付宝当面付回调
-	 * 
-	 * @param requestEntity
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "/alipayftfcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public void alipayftfcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
-		RLock lock = RedissonUtil.getLock("alipayftfcallback");
-		try {
-			lock.lock();
-			incomeservice.alipayftfcallback(params);
-			response.getWriter().print("success");
-		} catch (Exception e) {
-			throw new YtException(e);
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	/**
-	 * 通源回调
-	 * 
-	 * @param requestEntity
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "/tongyuancallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public void tongyuancallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
-		RLock lock = RedissonUtil.getLock("tongyuancallback");
-		try {
-			lock.lock();
-			incomeservice.tongyuancallback(params);
+			payoutservice.sxcallback(params);
 			response.getWriter().print("success");
 		} catch (Exception e) {
 			throw new YtException(e);

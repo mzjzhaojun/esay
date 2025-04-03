@@ -24,17 +24,17 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 
 	// 代付盘口下单查单
 	PayResultVO query(String ordernum);
-	
-	//查询余额
+
+	// 查询余额
 	PayResultVO queryblance(String merchantid);
-	
-	//盘口提交订单
+
+	// 盘口提交订单
 	PayResultVO submit(PaySubmitDTO ss);
-	
-	//分頁查詢
+
+	// 分頁查詢
 	YtIPage<PayoutVO> page(Map<String, Object> param);
-	
-	//本地提交订单
+
+	// 本地提交订单
 	Integer submitOrder(Payout pt);
 
 	// 天下回調
@@ -51,16 +51,19 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 
 	// 十年回调
 	void sncallback(Map<String, Object> params);
-	
-	//旭日代付回调
+
+	// 旭日代付回调
 	void xrcallback(Map<String, String> params);
+
+	// 旭日代付回调
+	void sxcallback(Map<String, String> params);
 
 	// 导入上传
 	String upFile(MultipartFile file, String aisleid) throws IOException;
-	
-	//成功
+
+	// 成功
 	Integer success(Long id);
-	
-	//失敗
+
+	// 失敗
 	Integer fail(Long id);
 }

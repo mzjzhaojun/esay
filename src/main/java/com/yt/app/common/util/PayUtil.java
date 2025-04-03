@@ -494,6 +494,81 @@ public class PayUtil {
 		return null;
 	}
 
+	// 守信代付
+	public static String SendSXSubmit(Payout pt, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Long time = System.currentTimeMillis() / 1000;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("app_id", cl.getCode().toString());
+		map.put("out_trade_no", pt.getOrdernum().toString());
+		map.put("product_id", cl.getAislecode().toString());
+		map.put("amount", String.format("%.2f", pt.getAmount()).toString());
+		map.put("notify_url", cl.getApireusultip().toString());
+		map.put("time", time.toString());
+		JSONObject obj = new JSONObject();
+		obj.set("bankName", pt.getBankname());
+		obj.set("accountName", pt.getAccname());
+		obj.set("accountNumber", pt.getAccnumer());
+		TreeMap<String, Object> sortedMap = new TreeMap<>(map);
+		String signContent = "";
+		for (String key : sortedMap.keySet()) {
+			signContent = signContent + key + "=" + map.get(key) + "&";
+		}
+		signContent = signContent.substring(0, signContent.length() - 1);
+		signContent = signContent + "&key=" + cl.getApikey();
+		String sign = MD5Utils.md5(signContent);
+		map.put("sign", sign);
+		map.put("ext", obj);
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/payment", httpEntity, JSONObject.class);
+		JSONObject data = sov.getBody();
+		log.info(" 守信代付成功返回订单号：" + data);
+		if (data.getInt("code") == 200) {
+			return data.getJSONObject("data").getStr("trade_no");
+		}
+		return null;
+	}
+
+	// 守信代付查单
+	public static Integer SendSXSelectOrder(String orderid, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			Map<String, Object> map = new HashMap<String, Object>();
+			Long time = System.currentTimeMillis() / 1000;
+			map.put("app_id", cl.getCode());
+			map.put("out_trade_no", orderid);
+			map.put("time", time);
+			TreeMap<String, Object> sortedMap = new TreeMap<>(map);
+			String signContent = "";
+			for (String key : sortedMap.keySet()) {
+				signContent = signContent + key + "=" + map.get(key) + "&";
+			}
+			signContent = signContent.substring(0, signContent.length() - 1);
+			signContent = signContent + "&key=" + cl.getApikey();
+			String sign = MD5Utils.md5(signContent);
+			map.put("sign", sign);
+
+			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/payment/status", httpEntity, JSONObject.class);
+			JSONObject data = sov.getBody();
+			log.info("守信代付成功返回订单号：" + data);
+			if (data.getInt("code") == 200) {
+				return data.getJSONObject("data").getInt("trade_status");
+			}
+		} catch (RestClientException e) {
+			log.info("守信代付查单返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
 	// 代付盘口通知
 	public static String SendPayoutNotify(String url, PayResultVO ss, String key) {
 

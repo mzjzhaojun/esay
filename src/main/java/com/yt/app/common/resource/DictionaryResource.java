@@ -36,6 +36,7 @@ public class DictionaryResource implements Serializable {
 	public static final String DFTXAISLE = "天下"; //
 	public static final String DFYSAISLE = "易生"; //
 	public static final String DFXRAISLE = "旭日"; //
+	public static final String DFSXAISLE = "守信"; //
 	/**
 	 * 
 	 */
