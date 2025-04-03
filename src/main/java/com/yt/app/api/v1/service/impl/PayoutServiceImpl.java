@@ -123,13 +123,13 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	@Override
 	public Integer submitOrder(Payout t) {
-		PayoutMerchantaccount maccount = merchantaccountmapper.getByUserId(SysUserContext.getUserId());
+		PayoutMerchantaccount maccount = merchantaccountmapper.getByMerchantId(t.getMerchantid());
 
 		if (t.getAmount() <= 0 || t.getAmount() > maccount.getBalance()) {
 			throw new YtException("账户余额不足");
 		}
 		///////////////////////////////////////////////////// 录入代付订单/////////////////////////////////////////////////////
-		Merchant m = merchantmapper.getByUserId(SysUserContext.getUserId());
+		Merchant m = merchantmapper.get(t.getMerchantid());
 
 		if (!m.getStatus()) {
 			throw new YtException("商户被冻结!");

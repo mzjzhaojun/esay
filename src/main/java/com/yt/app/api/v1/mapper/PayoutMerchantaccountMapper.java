@@ -112,5 +112,15 @@ public interface PayoutMerchantaccountMapper extends YtIBaseMapper<PayoutMerchan
 	 */
 	@YtRedisCacheAnnotation(classs = PayoutMerchantaccount.class)
 	public PayoutMerchantaccount getByUserId(Long userid);
+	
+	
+	/**
+	 * getByUserId
+	 *
+	 * @param id id
+	 * @return Merchantaccount
+	 */
+	@YtRedisCacheAnnotation(classs = PayoutMerchantaccount.class)
+	public PayoutMerchantaccount getByMerchantId(Long merchantid);
 
 }

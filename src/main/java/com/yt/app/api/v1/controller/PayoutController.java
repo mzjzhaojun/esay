@@ -53,7 +53,7 @@ public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long>
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> post(YtRequestDecryptEntity<Payout> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
 		Payout pt = YtRequestDecryptEntity.getBody();
-		RLock lock = RedissonUtil.getLock(pt.getUserid());
+		RLock lock = RedissonUtil.getLock(pt.getMerchantid());
 		Integer i = 0;
 		try {
 			lock.lock();
