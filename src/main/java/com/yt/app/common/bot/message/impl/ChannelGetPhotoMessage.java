@@ -53,7 +53,7 @@ public class ChannelGetPhotoMessage implements UpdateChannelMessageService {
 		Tgchannelgroup tcg = tgchannelgroupmapper.getByChannelId(cid);
 		if (tcg != null) {
 			sendMessage.setChatId(tcg.getTgid());
-			sendMessage.setText("代付回单 " + orderNum);
+			sendMessage.setText("代付回单" + orderNum);
 			return sendMessage;
 		}
 		{

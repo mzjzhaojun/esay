@@ -573,6 +573,9 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				channelbot.getOrderResultImg(pt.getChannelid(), pt.getOrdernum());
 				if (pt.getImgurl() != null && !pt.getImgurl().equals(""))
 					merchantbot.sendOrderResultImg(pt.getMerchantid(), pt.getImgurl());
+				StringBuffer message = new StringBuffer();
+				message.append("\r\n：姓名*" + pt.getAccname() + "*\r\n卡号：" + pt.getAccnumer() + " \r\n金额：" + pt.getAmount() + " \r\n入款：" + pt.getAmount() + pt.getMerchantcost() + " \r\n状态：成功√√√√√√" + "\r\n\r\n*" + DateTimeUtil.getDateTime() + "*");
+				merchantbot.sendOrderResultSuccess(pt.getMerchantid(), message.toString());
 			}
 
 		}
@@ -621,6 +624,9 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (i > 0) {
 				// 保存客户信息
 				merchantcustomerbanksservice.add(t);
+				StringBuffer message = new StringBuffer();
+				message.append("\r\n：姓名*" + pt.getAccname() + "*\r\n卡号：" + pt.getAccnumer() + " \r\n金额：" + pt.getAmount() + " \r\n状态：失败××××××" + "\r\n\r\n*" + DateTimeUtil.getDateTime() + "*");
+				merchantbot.sendOrderResultFail(pt.getMerchantid(), message.toString());
 			}
 		}
 	}

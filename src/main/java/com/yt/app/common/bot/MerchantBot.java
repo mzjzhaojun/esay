@@ -141,4 +141,26 @@ public class MerchantBot extends TelegramLongPollingBot {
 			e.printStackTrace();
 		}
 	}
+
+	public void sendOrderResultSuccess(Long mid, String message) {
+		try {
+			SendMessage sm = merchantgetphotomessage.getUpdateSendSuccess(mid, message);
+			if (sm != null) {
+				execute(sm);
+			}
+		} catch (TelegramApiException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void sendOrderResultFail(Long mid, String message) {
+		try {
+			SendMessage sm = merchantgetphotomessage.getUpdateSendFail(mid, message);
+			if (sm != null) {
+				execute(sm);
+			}
+		} catch (TelegramApiException e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -59,7 +59,32 @@ public class MerchantGetPhotoMessage implements UpdateMerchantMessageService {
 		} else {
 			return null;
 		}
+	}
 
+	public SendMessage getUpdateSendSuccess(Long mid, String message) {
+		Tgmerchantgroup tcg = tgmerchantgroupmapper.getByMerchantId(mid);
+		if (tcg != null) {
+			SendMessage sendMessage = new SendMessage();
+			sendMessage.setChatId(tcg.getTgid());
+			sendMessage.setText(message);
+			sendMessage.enableMarkdown(true);
+			return sendMessage;
+		} else {
+			return null;
+		}
+	}
+
+	public SendMessage getUpdateSendFail(Long mid, String message) {
+		Tgmerchantgroup tcg = tgmerchantgroupmapper.getByMerchantId(mid);
+		if (tcg != null) {
+			SendMessage sendMessage = new SendMessage();
+			sendMessage.setChatId(tcg.getTgid());
+			sendMessage.setText(message);
+			sendMessage.enableMarkdown(true);
+			return sendMessage;
+		} else {
+			return null;
+		}
 	}
 
 }
