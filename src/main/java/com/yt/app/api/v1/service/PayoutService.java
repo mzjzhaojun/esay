@@ -58,6 +58,9 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 	// 旭日代付回调
 	void sxcallback(Map<String, String> params);
 
+	// 旭日代付回调
+	void ljcallback(Map<String, String> params);
+
 	// 导入上传
 	String upFile(MultipartFile file, String aisleid) throws IOException;
 

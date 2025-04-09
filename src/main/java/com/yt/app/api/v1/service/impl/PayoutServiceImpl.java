@@ -852,6 +852,13 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		// 获取渠道单号
 		boolean flage = true;
 		switch (cl.getName()) {
+		case DictionaryResource.DFLJAISLE:
+			String ljordernum = PayUtil.SendLJSubmit(t, cl);
+			if (ljordernum != null) {
+				flage = false;
+				t.setChannelordernum(ljordernum);
+			}
+			break;
 		case DictionaryResource.DFSXAISLE:
 			String sxordernum = PayUtil.SendSXSubmit(t, cl);
 			if (sxordernum != null) {
@@ -1047,6 +1054,32 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			SysUserContext.remove();
 			TenantIdContext.remove();
 		}
+	}
 
+	@Override
+	public void ljcallback(Map<String, String> params) {
+		String orderid = params.get("out_trade_no").toString();
+		String status = params.get("trade_status").toString();
+		log.info("灵境通知返回消息：orderid" + orderid + " status:" + status);
+		Payout pt = mapper.getByOrdernum(orderid);
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			Channel channel = channelmapper.get(pt.getChannelid());
+			String ip = AuthContext.getIp();
+			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求!");
+			}
+			// 查询渠道是否真实成功
+			Integer returnstate = PayUtil.SendLJSelectOrder(pt.getOrdernum(), channel);
+			Assert.notNull(returnstate, "灵境代付通知反查订单失败!");
+			if (returnstate == 1) {
+				paySuccess(pt);
+			} else if (returnstate == 2) {
+				payFail(pt);
+			}
+			SysUserContext.remove();
+			TenantIdContext.remove();
+		}
 	}
 }

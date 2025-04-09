@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.QrcodeMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,name,nkname,mobile,code,status,balance,collection,expireminute,type,min,max,weight,mtorder,dynamic,accountsplit,fixedcode,firstmatch,firstmatchmoney,yestodayorder,yestodayincome,todayorder,todayincome,ordersum,incomesum,appid,appprivatekey,apppublickey,alipaypublickey,alipayprovatekey,limits,todaybalance,notifyurl,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,userid,name,nkname,pid,code,status,balance,collection,expireminute,type,min,max,weight,mtorder,dynamic,accountsplit,smid,firstmatch,firstmatchmoney,yestodayorder,yestodayincome,todayorder,todayincome,ordersum,incomesum,appid,appprivatekey,apppublickey,alipaypublickey,alipayprovatekey,limits,todaybalance,notifyurl,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -17,18 +17,18 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Qrcode">
 		insert into
-		qrcode(id,userid,name,nkname,mobile,code,status,balance,collection,expireminute,type,min,max,weight,mtorder,dynamic,accountsplit,fixedcode,firstmatch,firstmatchmoney,appid,appprivatekey,apppublickey,alipaypublickey,alipayprovatekey,limits,todaybalance,notifyurl,create_by,create_time,update_by,update_time,remark)
+		qrcode(id,userid,name,nkname,pid,code,status,balance,collection,expireminute,type,min,max,weight,mtorder,dynamic,accountsplit,smid,firstmatch,firstmatchmoney,appid,appprivatekey,apppublickey,alipaypublickey,alipayprovatekey,limits,todaybalance,notifyurl,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{userid},#{name},#{nkname},#{mobile},#{code},#{status},#{balance},#{collection},#{expireminute},#{type},#{min},#{max},#{weight},#{mtorder},#{dynamic},#{accountsplit},#{fixedcode},#{firstmatch},#{firstmatchmoney},#{appid},#{appprivatekey},#{apppublickey},#{alipaypublickey},#{alipayprovatekey},#{limits},#{todaybalance},#{notifyurl},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{userid},#{name},#{nkname},#{pid},#{code},#{status},#{balance},#{collection},#{expireminute},#{type},#{min},#{max},#{weight},#{mtorder},#{dynamic},#{accountsplit},#{smid},#{firstmatch},#{firstmatchmoney},#{appid},#{appprivatekey},#{apppublickey},#{alipaypublickey},#{alipayprovatekey},#{limits},#{todaybalance},#{notifyurl},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		qrcode(id,tenant_id,userid,name,nkname,mobile,code,status,balance,expireminute,type,min,max,weight,mtorder,dynamic,fixedcode,firstmatch,firstmatchmoney,create_by,create_time,update_by,update_time,remark)
+		qrcode(id,tenant_id,userid,name,nkname,pid,code,status,balance,expireminute,type,min,max,weight,mtorder,dynamic,smid,firstmatch,firstmatchmoney,create_by,create_time,update_by,update_time,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{userid},#{name},#{nkname},#{mobile},#{code},#{status},#{balance},#{expireminute},#{type},#{min},#{max},#{weight},#{mtorder},#{dynamic},#{fixedcode},#{firstmatch},#{firstmatchmoney},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+			(#{id},#{tenant_id},#{userid},#{name},#{nkname},#{pid},#{code},#{status},#{balance},#{expireminute},#{type},#{min},#{max},#{weight},#{mtorder},#{dynamic},#{smid},#{firstmatch},#{firstmatchmoney},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -53,8 +53,8 @@
 			<if test="nkname != null">
 				nkname= #{nkname},
 			</if>
-			<if test="mobile != null">
-				mobile= #{mobile},
+			<if test="pid != null">
+				pid= #{pid},
 			</if>
 			<if test="code != null">
 				code= #{code},
@@ -92,8 +92,8 @@
 			<if test="accountsplit != null">
 				accountsplit= #{accountsplit},
 			</if>
-			<if test="fixedcode != null">
-				fixedcode= #{fixedcode},
+			<if test="smid != null">
+				smid= #{smid},
 			</if>
 			<if test="firstmatch != null">
 				firstmatch= #{firstmatch},

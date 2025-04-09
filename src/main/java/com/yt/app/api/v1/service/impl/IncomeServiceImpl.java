@@ -663,7 +663,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				qr.setPay_memberid(mc.getCode());
 				qr.setPay_orderid(qs.getPay_orderid());
 				qr.setPay_amount(qs.getPay_amount());
-				qr.setPay_aislecode(qs.getPay_aislecode());
+				qr.setPay_orderno(income.getOrdernum());
 				qr.setPay_viewurl(appConfig.getApirest() + "/esay/rest/v1/view/income/error");
 				String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
 				qr.setPay_md5sign(signresult);
@@ -985,7 +985,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qr.setPay_memberid(mc.getCode());
 		qr.setPay_orderid(qs.getPay_orderid());
 		qr.setPay_amount(qs.getPay_amount());
-		qr.setPay_aislecode(qs.getPay_aislecode());
+		qr.setPay_orderno(income.getOrdernum());
 		qr.setPay_viewurl(income.getResulturl());
 		String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
 		qr.setPay_md5sign(signresult);
@@ -1048,7 +1048,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qr.setPay_memberid(mc.getCode());
 		qr.setPay_orderid(qs.getPay_orderid());
 		qr.setPay_amount(qs.getPay_amount());
-		qr.setPay_aislecode(qs.getPay_aislecode());
+		qr.setPay_orderno(income.getOrdernum());
 		qr.setPay_viewurl(income.getQrcode());
 		String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
 		qr.setPay_md5sign(signresult);

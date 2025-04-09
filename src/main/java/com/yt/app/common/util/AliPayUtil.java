@@ -1,6 +1,7 @@
 package com.yt.app.common.util;
 
 import com.alipay.api.AlipayClient;
+import com.alipay.api.AlipayConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,10 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradeQueryModel;
 import com.alipay.api.domain.AlipayTradeWapPayModel;
+import com.alipay.api.domain.ExtendParams;
+import com.alipay.api.domain.SettleDetailInfo;
+import com.alipay.api.domain.SettleInfo;
+import com.alipay.api.domain.SubMerchant;
 import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.alipay.api.response.AlipayTradeQueryResponse;
@@ -27,7 +32,7 @@ public class AliPayUtil {
 	public static AlipayTradeWapPayResponse AlipayTradeWapPay(Qrcode qrcode, String ordernum, Double amount) {
 
 		try {
-			AlipayClient client = new DefaultAlipayClient(URL, qrcode.getAppid(), qrcode.getAppprivatekey(), "json", "UTF-8", qrcode.getAlipaypublickey(), "RSA2");
+			AlipayClient client = new DefaultAlipayClient(URL, qrcode.getAppid(), qrcode.getAppprivatekey(), AlipayConstants.FORMAT_JSON, AlipayConstants.CHARSET_UTF8, qrcode.getAlipaypublickey(), AlipayConstants.SIGN_TYPE_RSA2);
 			AlipayTradeWapPayRequest request = new AlipayTradeWapPayRequest();
 			AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();
 			request.setNotifyUrl(qrcode.getNotifyurl());
@@ -35,10 +40,27 @@ public class AliPayUtil {
 			model.setTotalAmount(amount.toString());
 			model.setSubject("Member Payment");
 			model.setProductCode("QUICK_WAP_WAY");
+			if (qrcode.getPid() != null) {
+				SubMerchant subMerchant = new SubMerchant();
+				subMerchant.setMerchantId(qrcode.getSmid());
+				model.setSubMerchant(subMerchant);
+				SettleInfo settleInfo = new SettleInfo();
+				List<SettleDetailInfo> settleDetailInfos = new ArrayList<SettleDetailInfo>();
+				SettleDetailInfo settleDetailInfos0 = new SettleDetailInfo();
+				settleDetailInfos0.setTransInType("defaultSettle");
+				settleDetailInfos0.setAmount(amount.toString());
+				settleDetailInfos.add(settleDetailInfos0);
+				settleInfo.setSettleDetailInfos(settleDetailInfos);
+				model.setSettleInfo(settleInfo);
+				ExtendParams extendParams = new ExtendParams();
+				extendParams.setSpecifiedSellerName(qrcode.getName());
+				extendParams.setRoyaltyFreeze("false");
+				model.setExtendParams(extendParams);
+			}
 			request.setBizModel(model);
 			AlipayTradeWapPayResponse response = client.pageExecute(request, "GET");
 			if (response.isSuccess()) {
-				log.info(" 支付宝成功返回订单号返回消息：" + response.getBody());
+				log.info(" 支付宝创建订单返回消息：" + response.getBody());
 				return response;
 			}
 		} catch (AlipayApiException e) {

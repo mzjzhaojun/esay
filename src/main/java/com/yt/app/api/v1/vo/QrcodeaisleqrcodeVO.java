@@ -30,7 +30,7 @@ public class QrcodeaisleqrcodeVO extends BaseVO {
 	String code;
 	Boolean status;
 	Boolean dynamic;
-	String fixedcode;
+	String smid;
 	Integer expireminute;
 	String remark;
 	Integer version;

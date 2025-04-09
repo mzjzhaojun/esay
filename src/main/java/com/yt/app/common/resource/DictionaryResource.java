@@ -9,6 +9,15 @@ import java.io.Serializable;
  *
  */
 public class DictionaryResource implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1;
+
+	public static final Integer IS_DELETE_0 = 0;
+	public static final Integer IS_DELETE_1 = 1;
+	
 
 	public static final String SUCCESS = "10000"; // 成功
 	public static final String PAYING = "10003"; // 用户支付中
@@ -37,13 +46,7 @@ public class DictionaryResource implements Serializable {
 	public static final String DFYSAISLE = "易生"; //
 	public static final String DFXRAISLE = "旭日"; //
 	public static final String DFSXAISLE = "守信"; //
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1;
-
-	public static final Integer IS_DELETE_0 = 0;
-	public static final Integer IS_DELETE_1 = 1;
+	public static final String DFLJAISLE = "灵境"; //
 
 	/**
 	 * 账户类型

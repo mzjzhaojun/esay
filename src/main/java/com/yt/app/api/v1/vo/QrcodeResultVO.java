@@ -24,7 +24,7 @@ public class QrcodeResultVO extends BaseVO {
 
 	String pay_memberid;
 	String pay_orderid;
-	String pay_aislecode;
+	String pay_orderno;
 	String pay_amount;
 	String pay_viewurl;
 	String pay_md5sign;

@@ -139,7 +139,7 @@ public class PayUtil {
 		//
 		ResponseEntity<SysTyOrder> sov = resttemplate.exchange(cl.getApiip() + "/withdraw/create?sign=" + MD5Utils.md5(signParams), HttpMethod.POST, httpEntity, SysTyOrder.class);
 		SysTyOrder data = sov.getBody();
-		log.info(" 天下代付成功返回订单号：" + data.getTypay_order_id() + "返回消息：" + data.getPay_message());
+		log.info(" 天下代付创建订单：" + data.getTypay_order_id());
 		if (data.getPay_message() == 1) {
 			return data.getTypay_order_id();
 		}
@@ -163,6 +163,7 @@ public class PayUtil {
 		RestTemplate resttemplate = new RestTemplate();
 		ResponseEntity<SysTyOrder> sov = resttemplate.exchange(cl.getApiip() + "/api/query/withdraw/view?sign=" + MD5Utils.md5(signParams), HttpMethod.POST, httpEntity, SysTyOrder.class);
 		SysTyOrder data = sov.getBody();
+		log.info("天下代付查单：" + data);
 		if (valMd5TySelectOrder(data, cl.getApikey())) {
 			log.info(data.getTypay_order_id());
 			return data;
@@ -224,7 +225,7 @@ public class PayUtil {
 		ResponseEntity<String> sov = resttemplate.postForEntity(cl.getApiip() + "/api/WithdrawalV2/submit", httpEntity, String.class);
 		String data = sov.getBody();
 		SysSnOrder sso = JSONUtil.toBean(data, SysSnOrder.class);
-		log.info("十年代付成功返回订单号：" + data);
+		log.info("十年代付创建订单：" + data);
 		if (sso.getCode() == 0) {
 			return sso.getData().getOrderNo();
 		}
@@ -258,7 +259,7 @@ public class PayUtil {
 			ResponseEntity<String> sov = resttemplate.postForEntity(cl.getApiip() + "/api/WithdrawalV2/queryorder", httpEntity, String.class);
 			String data = sov.getBody();
 			SysSnOrder sso = JSONUtil.toBean(data, SysSnOrder.class);
-			log.info("十年代付成功返回订单号：" + data);
+			log.info("十年代付查单：" + data);
 			if (sso.getCode() == 0) {
 				return sso;
 			}
@@ -301,7 +302,7 @@ public class PayUtil {
 		ResponseEntity<String> sov = resttemplate.postForEntity(cl.getApiip() + "/api/WithdrawalV2/submit", httpEntity, String.class);
 		String data = sov.getBody();
 		SysSnOrder sso = JSONUtil.toBean(data, SysSnOrder.class);
-		log.info("盛世代付成功返回订单号：" + data);
+		log.info("盛世代付创建订单：" + data);
 		if (sso.getCode() == 0) {
 			return sso.getData().getOrderNo();
 		}
@@ -335,7 +336,7 @@ public class PayUtil {
 			ResponseEntity<String> sov = resttemplate.postForEntity(cl.getApiip() + "/api/WithdrawalV2/queryorder", httpEntity, String.class);
 			String data = sov.getBody();
 			SysSnOrder sso = JSONUtil.toBean(data, SysSnOrder.class);
-			log.info("盛世代付成功返回订单号：" + data);
+			log.info("盛世代付查订单：" + data);
 			if (sso.getCode() == 0) {
 				return sso.getData().getStatus();
 			}
@@ -379,7 +380,7 @@ public class PayUtil {
 
 		String data = sov.getBody();
 		SyYsOrder sso = JSONUtil.toBean(data, SyYsOrder.class);
-		log.info("易生代付成功返回订单号：" + data);
+		log.info("易生代付创建订单：" + data);
 		if (sso.getRetCode().equals("SUCCESS")) {
 			return sso.getAgentpayOrderId();
 		}
@@ -414,7 +415,7 @@ public class PayUtil {
 			ResponseEntity<String> sov = resttemplate.exchange(cl.getApiip() + "/api/agentpay/query_order", HttpMethod.POST, httpEntity, String.class);
 			String data = sov.getBody();
 			SyYsOrder sso = JSONUtil.toBean(data, SyYsOrder.class);
-			log.info("易生代付成功返回订单号：" + data);
+			log.info("易生代付查单：" + data);
 			if (sso.getRetCode().equals("SUCCESS")) {
 				return sso.getStatus();
 			}
@@ -454,7 +455,7 @@ public class PayUtil {
 		//
 		ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/agentpayAPI/apply", httpEntity, JSONObject.class);
 		String retCode = sov.getBody().getStr("retCode");
-		log.info("旭日代付成功返回订单号：" + sov.getBody().getStr("agentpayOrderId"));
+		log.info("旭日代付创建订单：" + sov.getBody().getStr("agentpayOrderId"));
 		if (retCode.equals("SUCCESS")) {
 			return sov.getBody().getStr("agentpayOrderId");
 		}
@@ -484,7 +485,7 @@ public class PayUtil {
 			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/agentpayAPI/queryOrder", httpEntity, JSONObject.class);
 			String retCode = sov.getBody().getStr("retCode");
 			String status = sov.getBody().getStr("status");
-			log.info("旭日代付查詢订单状态：" + status);
+			log.info("旭日代付查订单：" + status);
 			if (retCode.equals("SUCCESS")) {
 				return status;
 			}
@@ -526,7 +527,7 @@ public class PayUtil {
 		//
 		ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/payment", httpEntity, JSONObject.class);
 		JSONObject data = sov.getBody();
-		log.info(" 守信代付成功返回订单号：" + data);
+		log.info(" 守信代付创建订单：" + data);
 		if (data.getInt("code") == 200) {
 			return data.getJSONObject("data").getStr("trade_no");
 		}
@@ -559,12 +560,87 @@ public class PayUtil {
 			//
 			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/payment/status", httpEntity, JSONObject.class);
 			JSONObject data = sov.getBody();
-			log.info("守信代付成功返回订单号：" + data);
+			log.info("守信代付查单：" + data);
 			if (data.getInt("code") == 200) {
 				return data.getJSONObject("data").getInt("trade_status");
 			}
 		} catch (RestClientException e) {
 			log.info("守信代付查单返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// 灵境代付
+	public static String SendLJSubmit(Payout pt, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Long time = System.currentTimeMillis() / 1000;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("app_id", cl.getCode().toString());
+		map.put("out_trade_no", pt.getOrdernum().toString());
+		map.put("product_id", cl.getAislecode().toString());
+		map.put("amount", String.format("%.2f", pt.getAmount()).toString());
+		map.put("notify_url", cl.getApireusultip().toString());
+		map.put("time", time.toString());
+		JSONObject obj = new JSONObject();
+		obj.set("bankName", pt.getBankname());
+		obj.set("accountName", pt.getAccname());
+		obj.set("accountNumber", pt.getAccnumer());
+		TreeMap<String, Object> sortedMap = new TreeMap<>(map);
+		String signContent = "";
+		for (String key : sortedMap.keySet()) {
+			signContent = signContent + key + "=" + map.get(key) + "&";
+		}
+		signContent = signContent.substring(0, signContent.length() - 1);
+		signContent = signContent + "&key=" + cl.getApikey();
+		String sign = MD5Utils.md5(signContent);
+		map.put("sign", sign);
+		map.put("ext", obj);
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/payment", httpEntity, JSONObject.class);
+		JSONObject data = sov.getBody();
+		log.info(" 灵境代付创建订单：" + data);
+		if (data.getInt("code") == 200) {
+			return data.getJSONObject("data").getStr("trade_no");
+		}
+		return null;
+	}
+
+	// 灵境代付查单
+	public static Integer SendLJSelectOrder(String orderid, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			Map<String, Object> map = new HashMap<String, Object>();
+			Long time = System.currentTimeMillis() / 1000;
+			map.put("app_id", cl.getCode());
+			map.put("out_trade_no", orderid);
+			map.put("time", time);
+			TreeMap<String, Object> sortedMap = new TreeMap<>(map);
+			String signContent = "";
+			for (String key : sortedMap.keySet()) {
+				signContent = signContent + key + "=" + map.get(key) + "&";
+			}
+			signContent = signContent.substring(0, signContent.length() - 1);
+			signContent = signContent + "&key=" + cl.getApikey();
+			String sign = MD5Utils.md5(signContent);
+			map.put("sign", sign);
+
+			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/payment/status", httpEntity, JSONObject.class);
+			JSONObject data = sov.getBody();
+			log.info("灵境代付查单：" + data);
+			if (data.getInt("code") == 200) {
+				return data.getJSONObject("data").getInt("trade_status");
+			}
+		} catch (RestClientException e) {
+			log.info("灵境代付查单返回消息：" + e.getMessage());
 		}
 		return null;
 	}
@@ -652,7 +728,7 @@ public class PayUtil {
 
 	// 代收下单返回签名
 	public static String SignMd5ResultQrocde(QrcodeResultVO qr, String key) {
-		String stringSignTemp = "pay_memberid=" + qr.getPay_memberid() + "&pay_amount=" + qr.getPay_amount() + "&pay_aislecode=" + qr.getPay_aislecode() + "&pay_orderid=" + qr.getPay_orderid() + "&pay_viewurl=" + qr.getPay_viewurl() + "&key=" + key;
+		String stringSignTemp = "pay_memberid=" + qr.getPay_memberid() + "&pay_amount=" + qr.getPay_amount() + "&pay_orderno=" + qr.getPay_orderno() + "&pay_orderid=" + qr.getPay_orderid() + "&pay_viewurl=" + qr.getPay_viewurl() + "&key=" + key;
 		return MD5Utils.md5(stringSignTemp).toUpperCase();
 	}
 

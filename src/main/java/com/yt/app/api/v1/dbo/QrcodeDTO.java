@@ -32,7 +32,7 @@ public class QrcodeDTO {
 	Integer weight;
 	Integer mtorder;
 	Boolean dynamic;
-	String fixedcode;
+	String smid;
 	Boolean firstmatch;
 	String firstmatchmoney;
 	Long create_by;

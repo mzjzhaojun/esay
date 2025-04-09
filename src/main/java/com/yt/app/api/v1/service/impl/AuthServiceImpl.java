@@ -168,7 +168,6 @@ public class AuthServiceImpl implements AuthService {
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public String getPublicKey(HttpServletRequest request) {
 		String ip = AuthContext.getIp();
-		System.out.println(ip);
 		boolean isValid = false;
 		if (!AuthUtil.isMobileDevice(request.getHeader("User-Agent"))) {
 			// 判断ip 是否在配置内

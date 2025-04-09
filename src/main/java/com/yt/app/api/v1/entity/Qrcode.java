@@ -27,7 +27,7 @@ public class Qrcode extends YtBaseEntity<Qrcode> {
 	Long userid;
 	String name;
 	String nkname;
-	String mobile;
+	Long pid;
 	String code;
 	Boolean status;
 	Double balance;
@@ -40,7 +40,7 @@ public class Qrcode extends YtBaseEntity<Qrcode> {
 	Integer mtorder;
 	Boolean dynamic;
 	Boolean accountsplit;
-	String fixedcode;
+	String smid;
 	Boolean firstmatch;
 	String firstmatchmoney;
 	Integer yestodayorder;

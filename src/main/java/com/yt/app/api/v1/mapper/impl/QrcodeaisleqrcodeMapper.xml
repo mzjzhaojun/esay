@@ -130,8 +130,7 @@
 		c.code code,
 		c.status status,
 		c.dynamic dynamic,
-		c.fixedcode
-		fixedcode,
+		c.smid smid,
 		c.expireminute expireminute,
 		c.remark remark
 		FROM

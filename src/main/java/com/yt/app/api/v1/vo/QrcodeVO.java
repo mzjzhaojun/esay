@@ -27,7 +27,7 @@ public class QrcodeVO extends BaseVO {
 	Long userid;
 	String name;
 	String nkname;
-	String mobile;
+	Long pid;
 	String code;
 	Boolean status;
 	Double balance;
@@ -41,7 +41,7 @@ public class QrcodeVO extends BaseVO {
 	Integer mtorder;
 	Boolean dynamic;
 	Boolean accountsplit;
-	String fixedcode;
+	String smid;
 	Boolean firstmatch;
 	String firstmatchmoney;
 	Integer yestodayorder;

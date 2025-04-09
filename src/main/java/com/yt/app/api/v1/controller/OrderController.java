@@ -66,7 +66,6 @@ public class OrderController {
 		return new YtResponseEntity<Object>(new YtBody(income.getStatus()));
 	}
 
-
 	/**
 	 * 代收远程系统下单
 	 * 
@@ -415,7 +414,7 @@ public class OrderController {
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	/**
 	 * 代付反查
 	 * 
@@ -611,6 +610,28 @@ public class OrderController {
 		try {
 			lock.lock();
 			payoutservice.sxcallback(params);
+			response.getWriter().print("success");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * 守信代付回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/ljcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void ljcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("ljcallback");
+		try {
+			lock.lock();
+			payoutservice.ljcallback(params);
 			response.getWriter().print("success");
 		} catch (Exception e) {
 			throw new YtException(e);
