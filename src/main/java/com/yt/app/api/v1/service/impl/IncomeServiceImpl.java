@@ -882,7 +882,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			throw new YtException("商户被冻结!");
 		}
 		String sign = PayUtil.SignMd5SubmitQrocde(qs, mc.getAppkey());
-		log.info(sign);
 		if (!sign.equals(qs.getPay_md5sign())) {
 			throw new YtException("签名不正确!");
 		}
