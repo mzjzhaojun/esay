@@ -728,7 +728,7 @@ public class PayUtil {
 
 	// 代收下单返回签名
 	public static String SignMd5ResultQrocde(QrcodeResultVO qr, String key) {
-		String stringSignTemp = "pay_memberid=" + qr.getPay_memberid() + "&pay_amount=" + qr.getPay_amount() + "&pay_orderno=" + qr.getPay_orderno() + "&pay_orderid=" + qr.getPay_orderid() + "&pay_viewurl=" + qr.getPay_viewurl() + "&key=" + key;
+		String stringSignTemp = "pay_memberid=" + qr.getPay_memberid() + "&pay_amount=" + qr.getPay_amount() + "&pay_aislecode=" + qr.getPay_aislecode() + "&pay_orderid=" + qr.getPay_orderid() + "&pay_viewurl=" + qr.getPay_viewurl() + "&key=" + key;
 		return MD5Utils.md5(stringSignTemp).toUpperCase();
 	}
 

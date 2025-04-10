@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
@@ -34,7 +33,6 @@ import com.yt.app.common.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Profile("master")
 @Component
 public class TaskSlaveConfig {
 
