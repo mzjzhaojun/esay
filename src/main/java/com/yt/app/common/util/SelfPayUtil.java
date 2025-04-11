@@ -5,6 +5,7 @@ import com.alipay.api.AlipayConstants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.DefaultAlipayClient;
@@ -19,16 +20,24 @@ import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.yt.app.api.v1.entity.Qrcode;
+import com.yt.app.common.util.bo.ProtocolPayBindCardRequest;
+import com.yt.app.common.util.bo.ProtocolPayBindCardResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class AliPayUtil {
+public class SelfPayUtil {
 
 	private static String URL = "https://openapi.alipay.com/gateway.do";
 
-	// ===========================alipay============
-
+	/**
+	 * 支付宝创建订单
+	 * 
+	 * @param qrcode
+	 * @param ordernum
+	 * @param amount
+	 * @return
+	 */
 	public static AlipayTradeWapPayResponse AlipayTradeWapPay(Qrcode qrcode, String ordernum, Double amount) {
 
 		try {
@@ -69,6 +78,14 @@ public class AliPayUtil {
 		return null;
 	}
 
+	/**
+	 * 支付宝查单
+	 * 
+	 * @param qrcode
+	 * @param outno
+	 * @param ordernum
+	 * @return
+	 */
 	public static AlipayTradeQueryResponse AlipayTradeWapQuery(Qrcode qrcode, String outno, String ordernum) {
 		try {
 			AlipayClient client = new DefaultAlipayClient(URL, qrcode.getAppid(), qrcode.getAppprivatekey(), "json", "UTF-8", qrcode.getAlipaypublickey(), "RSA2");
@@ -89,4 +106,48 @@ public class AliPayUtil {
 		}
 		return null;
 	}
+
+	/**
+	 * 易票联创建订单
+	 * 
+	 * @param qrcode
+	 * @param ordernum
+	 * @param amount
+	 * @return
+	 */
+	public static ProtocolPayBindCardResponse eplpayTradeWapPay(Qrcode qrcode, String ordernum, Double amount) {
+		try {
+			String userName = RsaUtils.encryptByPublicKey("银联一", RsaUtils.getPublicKey(qrcode.getApppublickey()));
+			String certificatesNo = RsaUtils.encryptByPublicKey("500381198804159412", RsaUtils.getPublicKey(qrcode.getApppublickey()));
+			String bankCardNo = RsaUtils.encryptByPublicKey("621904126549878596", RsaUtils.getPublicKey(qrcode.getApppublickey()));
+			String phoneNum = RsaUtils.encryptByPublicKey("13430293947", RsaUtils.getPublicKey(qrcode.getApppublickey()));
+//6212262011222352668   6225882014767005
+			ProtocolPayBindCardRequest request = new ProtocolPayBindCardRequest();
+			request.setVersion("2.0");
+			request.setCustomerCode(qrcode.getAppid());
+			request.setMemberId("174e23aff1c4d4863d6cc2");// 会员号
+			request.setMchtOrderNo(ordernum);
+			request.setPhoneNum(phoneNum);// 手机号
+			request.setUserName(userName);// 持卡人姓名
+			request.setBankCardNo(bankCardNo);// 银行卡
+			request.setBankCardType("debit");// debit:借记卡,credit:贷记卡;
+			// request.setCvn(RsaUtils.encryptByPublicKey(cvn,
+			// RsaUtils.getPublicKey(publicKeyPath)));// cvn 卡背后三位数 信用卡必填
+			// request.setExpired(RsaUtils.encryptByPublicKey(expired,
+			// RsaUtils.getPublicKey(publicKeyPath)));// 卡有效期 信用卡必填 yymm
+			request.setCertificatesNo(certificatesNo);// 身份证号
+			request.setCertificatesType("01");// 固定传01
+			request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
+			ProtocolPayBindCardResponse response;
+
+			response = PaymentHelper.bindCard(request, qrcode.getApppublickey(), qrcode.getAlipayprovatekey(), qrcode.getAppprivatekey(), qrcode.getAlipaypublickey());
+			System.out.println("SmsNo：" + response.getSmsNo());
+			return response;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }

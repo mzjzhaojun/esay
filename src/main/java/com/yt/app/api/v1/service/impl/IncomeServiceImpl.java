@@ -69,7 +69,7 @@ import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
-import com.yt.app.common.util.AliPayUtil;
+import com.yt.app.common.util.SelfPayUtil;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.NumberUtil;
 import com.yt.app.common.util.PayUtil;
@@ -449,7 +449,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		TenantIdContext.setTenantId(income.getTenant_id());
 		Qrcode qrcode = qrcodemapper.get(income.getQrcodeid());
 		log.info("支付宝查单成功: " + trade_no + "===" + out_trade_no);
-		AlipayTradeQueryResponse atqr = AliPayUtil.AlipayTradeWapQuery(qrcode, out_trade_no, trade_no);
+		AlipayTradeQueryResponse atqr = SelfPayUtil.AlipayTradeWapQuery(qrcode, out_trade_no, trade_no);
 		if (atqr.getTradeStatus().equals("TRADE_SUCCESS")) {
 			success(income, trade_no);
 		}
@@ -477,7 +477,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
 			List<Channel> listc = channelmapper.listByArrayId(cids);
 			Assert.notEmpty(listc, "没有可用渠道!");
-			List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= Double.valueOf(qs.getPay_amount()) && c.getMin() <= Double.valueOf(qs.getPay_amount())).collect(Collectors.toList());
+			List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= Double.valueOf(qs.getPay_amount()) && c.getMin() <= Double.valueOf(qs.getPay_amount()) && c.getStatus()).collect(Collectors.toList());
 			Assert.notEmpty(listcmm, "金额超出限额!");
 			// 有限匹配
 			List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
@@ -731,7 +731,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			List<Qrcode> listqrcode = qrcodemapper.listByArrayId(qaqids);
 			Double amount = Double.valueOf(qs.getPay_amount());
 			// 小于设置限额
-			List<Qrcode> listcmm = listqrcode.stream().filter(c -> c.getMax() >= amount && c.getMin() <= amount && (c.getTodayincome() + amount) < c.getLimits()).collect(Collectors.toList());
+			List<Qrcode> listcmm = listqrcode.stream().filter(c -> c.getMax() >= amount && c.getMin() <= amount && (c.getTodayincome() + amount) < c.getLimits() && c.getStatus()).collect(Collectors.toList());
 			Assert.notEmpty(listcmm, "代收金额超出限额");
 			List<Qrcode> listcf = listcmm.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 			Qrcode qd = null;
@@ -773,7 +773,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			Income income = addIncome(channel, qas, mc, qs, qd);
 			// 支付通手机H5
 			if (qd.getCode().equals("ZFTWAP")) {
-				AlipayTradeWapPayResponse response = AliPayUtil.AlipayTradeWapPay(qd, income.getOrdernum(), income.getAmount());
+				AlipayTradeWapPayResponse response = SelfPayUtil.AlipayTradeWapPay(qd, income.getOrdernum(), income.getAmount());
 				Assert.notNull(response, "获取支付宝单号错误!");
 				String pageRedirectionData = response.getBody();
 				income.setQrcode(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));

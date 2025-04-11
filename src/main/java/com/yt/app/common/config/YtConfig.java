@@ -22,6 +22,8 @@ public class YtConfig {
 	private String workerId;
 
 	private String workerKey;
+	
+	private String efpsPath;
 
 	private String filePath;
 

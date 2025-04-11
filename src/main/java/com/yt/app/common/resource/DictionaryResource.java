@@ -165,8 +165,8 @@ public class DictionaryResource implements Serializable {
 	public static final Integer LOG_TYPE_202 = 202; // app
 
 	// 项目类型
-	public static final Integer PROJECT_TYPE_501 = 501;
-	public static final Integer PROJECT_TYPE_502 = 502;
+	public static final Integer PROJECT_TYPE_501 = 501;//易票联
+	public static final Integer PROJECT_TYPE_502 = 502;//支付宝直付通手机网站支付
 	public static final Integer PROJECT_TYPE_503 = 503;
 	public static final Integer PROJECT_TYPE_504 = 504;
 	public static final Integer PROJECT_TYPE_505 = 505;

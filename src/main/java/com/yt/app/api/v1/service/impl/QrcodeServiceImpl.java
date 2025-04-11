@@ -26,10 +26,11 @@ import com.yt.app.api.v1.vo.QrcodeaccountorderVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
-import com.yt.app.common.util.AliPayUtil;
+import com.yt.app.common.util.SelfPayUtil;
 import com.yt.app.common.util.RedisUtil;
 import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.StringUtil;
+import com.yt.app.common.util.bo.ProtocolPayBindCardResponse;
 
 import cn.hutool.core.lang.Assert;
 
@@ -106,11 +107,17 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 
 	@Override
 	public QrcodeVO paytest(Qrcode qv) {
-		AlipayTradeWapPayResponse atp = AliPayUtil.AlipayTradeWapPay(qv, StringUtil.getOrderNum(), qv.getBalance());
-		Assert.notNull(atp, "获取支付宝单号错误!");
-		QrcodeVO qrv = new QrcodeVO();
-		qrv.setPayurl(atp.getBody());
-		return qrv;
+		if (qv.getCode().equals("ZFTWAP")) {
+			AlipayTradeWapPayResponse atp = SelfPayUtil.AlipayTradeWapPay(qv, StringUtil.getOrderNum(), qv.getBalance());
+			Assert.notNull(atp, "获取支付宝单号错误!");
+			QrcodeVO qrv = new QrcodeVO();
+			qrv.setPayurl(atp.getBody());
+			return qrv;
+		} else if (qv.getCode().equals("EFPSPPBC")) {
+			ProtocolPayBindCardResponse atp = SelfPayUtil.eplpayTradeWapPay(qv, StringUtil.getOrderNum(), qv.getBalance());
+			Assert.notNull(atp, "获取易票联单号错误!");
+		}
+		return null;
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
