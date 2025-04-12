@@ -43,9 +43,10 @@ div {
 	var md5str;
 	function initdata() {
 		if (status == 53) {
-			$('#message').html('<div>Order Expired</div>');
+			$('#message').html('<div>订单已过期!</div>');
 		}else if (status == 52) {
-			$('#message').html('<div>Order Success</div>');
+			$('#message').html('<div>已经支付成功!</div>');
+			window.location.href = url;
 		} else {
 			var url = resulturl.replaceAll('amp;', '');
 			Fingerprint2.get(function(components) {
@@ -63,11 +64,11 @@ div {
 							window.location.href = url;
 						} else {
 							$('#message')
-									.html('<div>Account abnormality</div>');
+									.html('<div>账号被封禁!</div>');
 						}
 					},
 					error : function() {
-						$('#message').html('<div>Server abnormality</div>');
+						$('#message').html('<div>服务器错误!</div>');
 					}
 				});
 			});

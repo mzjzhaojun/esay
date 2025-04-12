@@ -41,7 +41,6 @@ public class KeyUtil {
 		String keyAlias = getKeyAlias();
 		PrivateKey privateKey = (PrivateKey) ks.getKey(keyAlias, "123456".toCharArray());
 		String privateKeyStr = Base64.encodeBase64String(privateKey.getEncoded());
-		System.out.println("privateKeyStr" + privateKeyStr);
 		return privateKeyStr;
 	}
 

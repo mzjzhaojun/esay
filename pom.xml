@@ -66,7 +66,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.hateoas</groupId>
@@ -127,12 +126,6 @@
 		</dependency>
 
 
-		<!-- junit Test -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
 		<!-- lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -351,12 +344,6 @@
 			<version>3.6.1</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.madgag.spongycastle</groupId>
-			<artifactId>core</artifactId>
-			<version>1.58.0.0</version>
-			<scope>compile</scope>
-		</dependency>
 
 		<dependency>
 			<groupId>com.alipay.sdk</groupId>

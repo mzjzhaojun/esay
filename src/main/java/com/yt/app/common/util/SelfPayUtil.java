@@ -117,7 +117,7 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static ProtocolPayBindCardResponse eplpayTradeWapPay(Qrcode qrcode, String ordernum, Double amount) {
+	public static ProtocolPayBindCardResponse eplpayTradeWapPay() {
 		try {
 
 			String mchtOrderNo = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()); // 交易编号,商户侧唯一
@@ -145,7 +145,8 @@ public class SelfPayUtil {
 			request.setCertificatesType("01");// 固定传01
 			request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
 			ProtocolPayBindCardResponse response = PaymentHelper.bindCard(request);
-			System.out.println("SmsNo：" + response.getSmsNo());
+			log.info(" 易票联创建订单返回消息：" + response.getSmsNo());
+			return response;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

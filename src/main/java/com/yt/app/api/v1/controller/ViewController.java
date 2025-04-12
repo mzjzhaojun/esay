@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.service.IncomeService;
+import com.yt.app.common.resource.DictionaryResource;
 
 /**
  * @author yyds
@@ -30,7 +31,10 @@ public class ViewController {
 	public String income(@PathVariable String orderid, Model model, HttpServletRequest request, HttpServletResponse response) {
 		Income income = service.getByOrderNum(orderid);
 		model.addAttribute("orderid", orderid);
-		model.addAttribute("resulturl", income.getResulturl());
+		if (income.getStatus() == DictionaryResource.PAYOUTSTATUS_52)
+			model.addAttribute("resulturl", income.getBackforwardurl());
+		else
+			model.addAttribute("resulturl", income.getResulturl());
 		model.addAttribute("status", income.getStatus());
 		return "static/zfbwapview";
 	}

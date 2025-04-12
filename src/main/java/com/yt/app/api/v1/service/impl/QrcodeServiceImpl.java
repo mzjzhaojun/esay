@@ -114,7 +114,8 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 			qrv.setPayurl(atp.getBody());
 			return qrv;
 		} else if (qv.getCode().equals("EFPSPPBC")) {
-			ProtocolPayBindCardResponse atp = SelfPayUtil.eplpayTradeWapPay(qv, StringUtil.getOrderNum(), qv.getBalance());
+//			ProtocolPayBindCardResponse atp = SelfPayUtil.eplpayTradeWapPay(qv, StringUtil.getOrderNum(), qv.getBalance());
+			ProtocolPayBindCardResponse atp = SelfPayUtil.eplpayTradeWapPay();
 			Assert.notNull(atp, "获取易票联单号错误!");
 		}
 		return null;

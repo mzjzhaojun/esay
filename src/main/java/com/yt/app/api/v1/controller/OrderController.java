@@ -32,6 +32,8 @@ import com.yt.app.common.common.yt.YtResponseEntity;
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.RequestUtil;
+import com.yt.app.common.util.SelfPayUtil;
+import com.yt.app.common.util.bo.ProtocolPayBindCardResponse;
 
 /**
  * @author yyds
@@ -638,5 +640,19 @@ public class OrderController {
 		} finally {
 			lock.unlock();
 		}
+	}
+
+	/**
+	 * html查询代收支付状态
+	 * 
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/testefps/{id}", method = RequestMethod.GET)
+	public YtResponseEntity<Object> testefps(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+		ProtocolPayBindCardResponse res = SelfPayUtil.eplpayTradeWapPay();
+		return new YtResponseEntity<Object>(new YtBody(res.getSmsNo()));
 	}
 }

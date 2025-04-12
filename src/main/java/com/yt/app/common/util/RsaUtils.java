@@ -96,7 +96,6 @@ public class RsaUtils {
 	 * @throws Exception
 	 */
 	public static String encryptByPublicKey(byte[] data, String publicKey) {
-		System.out.println("publicKey+" + publicKey);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		
 		String result = "";
