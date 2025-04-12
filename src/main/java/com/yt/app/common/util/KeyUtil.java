@@ -15,16 +15,13 @@ public class KeyUtil {
 
 	private static KeyStore ks;
 
-	private static String pfxname = "c:/user.pfx";
-	private static String password = "123456";
-
 	static {
 		try {
 			ks = KeyStore.getInstance("PKCS12");
 			// 获得密钥库文件流
-			InputStream is = new FileInputStream(pfxname);
+			InputStream is = new FileInputStream("C:\\Users\\zj\\Downloads\\java\\bin\\user.pfx");
 			// 加载密钥库
-			ks.load(is, password.toCharArray());
+			ks.load(is, "123456".toCharArray());
 
 			// 关闭密钥库文件流
 			is.close();
@@ -42,8 +39,9 @@ public class KeyUtil {
 	 */
 	public static String getPrimaryKey() throws Exception {
 		String keyAlias = getKeyAlias();
-		PrivateKey privateKey = (PrivateKey) ks.getKey(keyAlias, password.toCharArray());
+		PrivateKey privateKey = (PrivateKey) ks.getKey(keyAlias, "123456".toCharArray());
 		String privateKeyStr = Base64.encodeBase64String(privateKey.getEncoded());
+		System.out.println("privateKeyStr" + privateKeyStr);
 		return privateKeyStr;
 	}
 
@@ -73,6 +71,18 @@ public class KeyUtil {
 			keyAlias = (String) aliases.nextElement();
 		}
 		return keyAlias;
+	}
+
+	public static void main(String[] args) {
+		try {
+			String keyAlias = getKeyAlias();
+			PrivateKey privateKey = (PrivateKey) ks.getKey(keyAlias, "123456".toCharArray());
+			String privateKeyStr = Base64.encodeBase64String(privateKey.getEncoded());
+			System.out.println(privateKeyStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }

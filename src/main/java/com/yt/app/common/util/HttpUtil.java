@@ -32,7 +32,7 @@ public class HttpUtil {
 	 * @param params
 	 * @return
 	 */
-	public static <T extends Response> T post(String url, String params, String keyurl, Map<String, String> header, Class<T> clazz) throws Exception {
+	public static <T extends Response> T post(String url, String params, Map<String, String> header, Class<T> clazz) throws Exception {
 		final long start = System.currentTimeMillis();
 		debug("\n---------------------------------------------------------------");
 		debug("接口地址：%s", url);
@@ -71,10 +71,10 @@ public class HttpUtil {
 
 				String signResult = response.getFirstHeader("x-efps-sign").getValue();
 				String signNo = response.getFirstHeader("x-efps-sign-no").getValue();
-				System.out.println("响应证书号：%s"+ signNo);
-				System.out.println("响应签名：%s"+signResult);
+				debug("响应证书号：%s", signNo);
+				debug("响应签名：%s", signResult);
 
-				if (signResult != null && signResult != "" && verify(jsonString, signResult, keyurl)) {
+				if (signResult != null && signResult != "" && verify(jsonString, signResult, "C:\\Users\\zj\\Downloads\\java\\bin\\efps_new.cer")) {
 
 					responseResult = JSONObject.parseObject(jsonString, clazz);
 				} else {

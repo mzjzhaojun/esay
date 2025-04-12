@@ -3,7 +3,9 @@ package com.yt.app.common.util;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.AlipayConstants;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -117,16 +119,20 @@ public class SelfPayUtil {
 	 */
 	public static ProtocolPayBindCardResponse eplpayTradeWapPay(Qrcode qrcode, String ordernum, Double amount) {
 		try {
-			String userName = RsaUtils.encryptByPublicKey("银联一", RsaUtils.getPublicKey(qrcode.getApppublickey()));
-			String certificatesNo = RsaUtils.encryptByPublicKey("500381198804159412", RsaUtils.getPublicKey(qrcode.getApppublickey()));
-			String bankCardNo = RsaUtils.encryptByPublicKey("621904126549878596", RsaUtils.getPublicKey(qrcode.getApppublickey()));
-			String phoneNum = RsaUtils.encryptByPublicKey("13430293947", RsaUtils.getPublicKey(qrcode.getApppublickey()));
-//6212262011222352668   6225882014767005
+
+			String mchtOrderNo = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()); // 交易编号,商户侧唯一
+
+			String publicKeyPath = "C:\\Users\\zj\\Downloads\\java\\bin\\efps_new.cer";
+			String userName = RsaUtils.encryptByPublicKey("银联一", RsaUtils.getPublicKey(publicKeyPath));
+			String certificatesNo = RsaUtils.encryptByPublicKey("500381198804159412", RsaUtils.getPublicKey(publicKeyPath));
+			String bankCardNo = RsaUtils.encryptByPublicKey("621904126549878596", RsaUtils.getPublicKey(publicKeyPath));
+			String phoneNum = RsaUtils.encryptByPublicKey("13430293947", RsaUtils.getPublicKey(publicKeyPath));
+			// 6212262011222352668 6225882014767005
 			ProtocolPayBindCardRequest request = new ProtocolPayBindCardRequest();
 			request.setVersion("2.0");
-			request.setCustomerCode(qrcode.getAppid());
+			request.setCustomerCode("562265003122220");
 			request.setMemberId("174e23aff1c4d4863d6cc2");// 会员号
-			request.setMchtOrderNo(ordernum);
+			request.setMchtOrderNo(mchtOrderNo);
 			request.setPhoneNum(phoneNum);// 手机号
 			request.setUserName(userName);// 持卡人姓名
 			request.setBankCardNo(bankCardNo);// 银行卡
@@ -138,11 +144,8 @@ public class SelfPayUtil {
 			request.setCertificatesNo(certificatesNo);// 身份证号
 			request.setCertificatesType("01");// 固定传01
 			request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
-			ProtocolPayBindCardResponse response;
-
-			response = PaymentHelper.bindCard(request, qrcode.getApppublickey(), qrcode.getAlipayprovatekey(), qrcode.getAppprivatekey(), qrcode.getAlipaypublickey());
+			ProtocolPayBindCardResponse response = PaymentHelper.bindCard(request);
 			System.out.println("SmsNo：" + response.getSmsNo());
-			return response;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
