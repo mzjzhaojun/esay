@@ -40,15 +40,15 @@ div {
 	var resulturl = "[[${resulturl}]]";
 	var status = "[[${status}]]";
 	var orderid = "[[${orderid}]]";
+	var url = resulturl.replaceAll('amp;', '');
 	var md5str;
 	function initdata() {
 		if (status == 53) {
 			$('#message').html('<div>订单已过期!</div>');
 		}else if (status == 52) {
 			$('#message').html('<div>已经支付成功!</div>');
-			window.location.href = url;
+			setTimeout("doReload()", 2000);
 		} else {
-			var url = resulturl.replaceAll('amp;', '');
 			Fingerprint2.get(function(components) {
 				var values = components.map(function(component) {
 					return component.value
@@ -73,6 +73,9 @@ div {
 				});
 			});
 		}
+	}
+	function doReload() {
+		window.location.href = url;
 	}
 </script>
 
