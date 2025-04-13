@@ -30,7 +30,7 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	// KF回调
 	void kfcallback(Map<String, String> params);
-	
+
 	// 二狗
 	void egcallback(Map<String, String> params);
 
@@ -75,7 +75,11 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	// 成功
 	void successstatus(Income income);
-	
+
+	// 拉黑
 	Integer addblock(Income income);
-	
+
+	//确认结算
+	Integer settleconfirm(Income income);
+
 }

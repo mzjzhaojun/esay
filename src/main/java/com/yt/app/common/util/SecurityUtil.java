@@ -51,13 +51,11 @@ public class SecurityUtil {
 		String temp = src;
 
 		src = src.replaceAll("<", "＜").replaceAll(">", "＞");
-		src = src.replaceAll("\\(", "（").replaceAll("\\)", "）");
 		src = src.replaceAll("'", "＇");
 		src = src.replaceAll(";", "；");
 
 		/** -----------------------start-------------------------- */
 		src = src.replaceAll("<", "& lt;").replaceAll(">", "& gt;");
-		src = src.replaceAll("\\(", "& #40;").replaceAll("\\)", "& #41");
 		src = src.replaceAll("eval\\((.*)\\)", "");
 		src = src.replaceAll("[\\\"\\\'][\\s]*javascript:(.*)[\\\"\\\']", "\"\"");
 		src = src.replaceAll("script", "");

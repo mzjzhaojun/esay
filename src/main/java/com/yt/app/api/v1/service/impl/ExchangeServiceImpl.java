@@ -125,6 +125,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		t.setNotifyurl(m.getApireusultip());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
+		t.setType(DictionaryResource.ORDERTYPE_19);
 		t.setOrdernum(StringUtil.getOrderNum());// 系统单号
 		t.setMerchantordernum("EM" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantrealtimeexchange(t.getExchange());
@@ -199,7 +200,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		mao.setUsername(m.getName());
 		mao.setNkname(m.getNikname());
 		mao.setMerchantcode(m.getCode());
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		mao.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		mao.setExchange(t.getExchange() + m.getExchangedownpoint());
 		mao.setMerchantexchange(m.getExchange());
 		mao.setAccname(t.getAccname());
@@ -224,7 +225,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			aat.setUserid(ag.getUserid());
 			aat.setUsername(ag.getName());
 			aat.setNkname(ag.getNkname());
-			aat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+			aat.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 			aat.setExchange(ag.getExchange());
 			aat.setAccname(t.getAccname());
 			aat.setAccnumber(t.getAccnumer());
@@ -232,7 +233,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			aat.setDeal(t.getMerchantpay() * (ag.getExchange() / 100));// 交易费
 			aat.setAmountreceived(aat.getDeal() + ag.getOnecost());// 总费用
 			aat.setOnecost(ag.getOnecost());// 手续费
-			aat.setType(DictionaryResource.ORDERTYPE_22.toString());
+			aat.setType(DictionaryResource.ORDERTYPE_13.toString());
 			aat.setOrdernum("EA" + StringUtil.getOrderNum());
 			aat.setRemark("换汇资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
@@ -334,6 +335,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		t.setMerchantid(m.getId());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
+		t.setType(DictionaryResource.ORDERTYPE_19);
 		t.setOrdernum(StringUtil.getOrderNum());// 系统单号
 		t.setMerchantordernum("EM" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantrealtimeexchange(t.getExchange());
@@ -408,7 +410,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 		mao.setUsername(m.getName());
 		mao.setNkname(m.getNikname());
 		mao.setMerchantcode(m.getCode());
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		mao.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		mao.setExchange(t.getExchange() + m.getExchangedownpoint());
 		mao.setMerchantexchange(m.getExchange());
 		mao.setAccname(t.getAccname());
@@ -433,7 +435,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			aat.setUserid(ag.getUserid());
 			aat.setUsername(ag.getName());
 			aat.setNkname(ag.getNkname());
-			aat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+			aat.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 			aat.setExchange(ag.getExchange());
 			aat.setAccname(t.getAccname());
 			aat.setAccnumber(t.getAccnumer());
@@ -441,7 +443,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			aat.setDeal(t.getMerchantpay() * (ag.getExchange() / 100));// 交易费
 			aat.setAmountreceived(aat.getDeal() + ag.getOnecost());// 总费用
 			aat.setOnecost(ag.getOnecost());// 手续费
-			aat.setType(DictionaryResource.ORDERTYPE_22.toString());
+			aat.setType(DictionaryResource.ORDERTYPE_13.toString());
 			aat.setOrdernum("EA" + StringUtil.getOrderNum());
 			aat.setRemark("群内换汇资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
 			t.setAgentincome(aat.getAmountreceived());
@@ -483,7 +485,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			Exchange t = mapper.get(pt.getId());
 			// 计算商户订单/////////////////////////////////////////////////////
 			ExchangeMerchantaccountorder mao = exchangemerchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
-			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+			mao.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 			// 商户订单
 			exchangemerchantaccountordermapper.put(mao);
 			// 商户账户
@@ -497,7 +499,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			// 计算代理
 			if (t.getAgentid() != null) {
 				Agentaccountorder aao = agentaccountordermapper.getByOrdernum(t.getAgentordernum());
-				aao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+				aao.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 				// 代理订单
 				agentaccountordermapper.put(aao);
 				// 代理账户
@@ -506,7 +508,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 			// 计算渠道
 			Channelaccountorder cao = channelaccountordermapper.getByOrdernum(t.getChannelordernum());
-			cao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+			cao.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 			// 渠道订单
 			channelaccountordermapper.put(cao);
 			// 渠道账户
@@ -544,7 +546,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			lock.lock();
 			// 计算商户订单/////////////////////////////////////////////////////
 			ExchangeMerchantaccountorder mao = exchangemerchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
-			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
+			mao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
 			exchangemerchantaccountordermapper.put(mao);
 			//
 			// exchangemerchantaccountservice.turndownExchange(mao);
@@ -552,7 +554,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 			// 计算代理
 			if (t.getAgentid() != null) {
 				Agentaccountorder aao = agentaccountordermapper.getByOrdernum(t.getAgentordernum());
-				aao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
+				aao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
 				agentaccountordermapper.put(aao);
 				//
 				agentaccountservice.turndownTotalincome(aao);
@@ -560,7 +562,7 @@ public class ExchangeServiceImpl extends YtBaseServiceImpl<Exchange, Long> imple
 
 			// 计算渠道
 			Channelaccountorder cao = channelaccountordermapper.getByOrdernum(t.getChannelordernum());
-			cao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_12);
+			cao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
 			channelaccountordermapper.put(cao);
 			//
 			channelaccountservice.turndownWithdrawamount(cao);

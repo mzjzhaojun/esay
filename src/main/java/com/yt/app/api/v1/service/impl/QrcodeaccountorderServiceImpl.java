@@ -121,12 +121,12 @@ public class QrcodeaccountorderServiceImpl extends YtBaseServiceImpl<Qrcodeaccou
 		t.setChannelid(c.getId());
 		t.setTenant_id(c.getTenant_id());
 		t.setMerchantname(c.getName());
-		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+		t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 		t.setCollection(0.00);
 		t.setAmount(amount);
-		t.setType("" + DictionaryResource.ORDERTYPE_28);
+		t.setType("" + DictionaryResource.ORDERTYPE_16);
 		t.setOrdernum("QDTX" + StringUtil.getOrderNum());
-		t.setRemark("渠道飞机提现￥：" + String.format("%.2f", amount));
+		t.setRemark("自营渠道提现￥：" + String.format("%.2f", amount));
 		mapper.add(t);
 
 		qrcodeaccountservice.withdrawamount(t);

@@ -96,7 +96,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getMerchantname());
-			scr.setType(DictionaryResource.ORDERTYPE_23);
+			scr.setType(DictionaryResource.ORDERTYPE_12);
 			scr.setPoprewithdrawamount(t.getPowithdrawamount());
 			scr.setPopostwithdrawamount(t.getPowithdrawamount() + mao.getIncome());
 			scr.setPoamount(mao.getIncome());
@@ -130,7 +130,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getMerchantname());
-			scr.setType(DictionaryResource.ORDERTYPE_27);
+			scr.setType(DictionaryResource.ORDERTYPE_14);
 			scr.setPretotalincome(t.getTotalincome());
 			scr.setPosttotalincome(t.getTotalincome() + mao.getIncomeamount());
 			scr.setAmount(mao.getIncomeamount());

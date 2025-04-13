@@ -81,7 +81,7 @@ public class ExchangeMerchantaccountorderServiceImpl extends YtBaseServiceImpl<E
 		t.setUsername(m.getName());
 		t.setNkname(m.getNikname());
 		t.setMerchantcode(m.getCode());
-		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		t.setAmountreceived(t.getAmount());
 		t.setType(DictionaryResource.ORDERTYPE_24);
 		t.setOrdernum("MT" + StringUtil.getOrderNum());
@@ -117,7 +117,7 @@ public class ExchangeMerchantaccountorderServiceImpl extends YtBaseServiceImpl<E
 		t.setUsername(m.getName());
 		t.setNkname(m.getNikname());
 		t.setMerchantcode(m.getCode());
-		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		t.setExchange(t.getMerchantexchange());
 		t.setAmountreceived((t.getAmount()));
 		t.setUsdtval(t.getAmount());
@@ -157,7 +157,7 @@ public class ExchangeMerchantaccountorderServiceImpl extends YtBaseServiceImpl<E
 		t.setUsername(m.getName());
 		t.setNkname(m.getNikname());
 		t.setMerchantcode(m.getCode());
-		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		t.setExchange(t.getMerchantexchange());
 		t.setAmountreceived((t.getAmount()));
 		t.setUsdtval(t.getAmount() / t.getMerchantexchange());
@@ -207,11 +207,11 @@ public class ExchangeMerchantaccountorderServiceImpl extends YtBaseServiceImpl<E
 			boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
 			Assert.isTrue(isValid, "验证码错误！");
 			ExchangeMerchantaccountorder mao = mapper.get(mco.getId());
-			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_10)) {
+			if (mao.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 				mao.setStatus(mco.getStatus());
 				Integer i = mapper.put(mao);
 				if (i > 0) {
-					if (mco.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
+					if (mco.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
 						//
 						exchangemerchantaccountservice.updateTotalincome(mao);
 						//
@@ -237,8 +237,8 @@ public class ExchangeMerchantaccountorderServiceImpl extends YtBaseServiceImpl<E
 		try {
 			lock.lock();
 			ExchangeMerchantaccountorder mao = mapper.get(id);
-			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_10)) {
-				mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_13);
+			if (mao.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+				mao.setStatus(DictionaryResource.PAYOUTSTATUS_51);
 				Integer i = mapper.put(mao);
 				//
 				exchangemerchantaccountservice.cancleTotalincome(mao);
@@ -263,12 +263,12 @@ public class ExchangeMerchantaccountorderServiceImpl extends YtBaseServiceImpl<E
 		try {
 			lock.lock();
 			ExchangeMerchantaccountorder mao = mapper.get(mco.getId());
-			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_10)) {
+			if (mao.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 				mao.setStatus(mco.getStatus());
 				mao.setImgurl(mco.getImgurl());
 				Integer i = mapper.put(mao);
 				if (i > 0) {
-					if (mco.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
+					if (mco.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
 						//
 						exchangemerchantaccountservice.updateWithdrawamount(mao);
 						//
@@ -294,8 +294,8 @@ public class ExchangeMerchantaccountorderServiceImpl extends YtBaseServiceImpl<E
 		try {
 			lock.lock();
 			ExchangeMerchantaccountorder mao = mapper.get(id);
-			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_10)) {
-				mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_13);
+			if (mao.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+				mao.setStatus(DictionaryResource.PAYOUTSTATUS_51);
 				Integer i = mapper.put(mao);
 				//
 				exchangemerchantaccountservice.cancleTotalincome(mao);

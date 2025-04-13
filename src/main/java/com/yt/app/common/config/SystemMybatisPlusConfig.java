@@ -99,6 +99,8 @@ public class SystemMybatisPlusConfig {
 		//黑名单
 		MybatisPlusConfig.TENANT_ID_TABLE.add("blocklist");
 
+		//支付宝转账记录
+		MybatisPlusConfig.TENANT_ID_TABLE.add("qrcodetransferrecord");
 	}
 
 }

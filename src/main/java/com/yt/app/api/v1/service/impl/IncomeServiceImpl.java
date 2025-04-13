@@ -33,6 +33,7 @@ import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.common.bot.ChannelBot;
 import com.alipay.api.response.AlipayTradeQueryResponse;
+import com.alipay.api.response.AlipayTradeSettleConfirmResponse;
 import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
 import com.yt.app.api.v1.entity.Agent;
@@ -448,8 +449,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Income income = mapper.getByOrderNum(out_trade_no);
 		TenantIdContext.setTenantId(income.getTenant_id());
 		Qrcode qrcode = qrcodemapper.get(income.getQrcodeid());
+		Qrcode pqrcode = qrcodemapper.get(qrcode.getPid());
 		log.info("支付宝查单成功: " + trade_no + "===" + out_trade_no);
-		AlipayTradeQueryResponse atqr = SelfPayUtil.AlipayTradeWapQuery(qrcode, out_trade_no, trade_no);
+		AlipayTradeQueryResponse atqr = SelfPayUtil.AlipayTradeWapQuery(pqrcode, qrcode, out_trade_no, trade_no);
 		if (atqr.getTradeStatus().equals("TRADE_SUCCESS")) {
 			success(income, trade_no);
 		}
@@ -528,7 +530,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			income.setExpireddate(DateTimeUtil.addMinute(channel.getMtorder()));// 默认30分钟
 			// 通道
 			income.setExpiredminute(channel.getMtorder());
-			income.setDynamic(aisle.getDynamic());
 			income.setQrcodeaisleid(aisle.getId());
 			income.setQrcodeaislename(aisle.getName());
 			income.setQrcodeaislecode(aisle.getCode());
@@ -537,13 +538,13 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			income.setQrcodecode(channel.getAislecode());
 			income.setQrcodename(channel.getName());
 			income.setQrcodeuserid(channel.getUserid());
+			income.setDynamic(false);
 			// 随机数
 			income.setAmount(Double.valueOf(qs.getPay_amount()));
 			if (mc.getClearingtype())
 				income.setRealamount(Double.valueOf(StringUtil.getDouble(qs.getPay_amount())));
 			else
 				income.setRealamount(income.getAmount());
-
 			income.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 			income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
 			income.setNotifyurl(qs.getPay_notifyurl());
@@ -677,7 +678,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				aat.setUserid(ag.getUserid());
 				aat.setUsername(ag.getName());
 				aat.setNkname(ag.getNkname());
-				aat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+				aat.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 				aat.setExchange(ag.getExchange());
 				aat.setAmount(income.getAmount());// 金额
 				aat.setDeal(income.getAmount() * (ag.getExchange() / 100));// 交易费
@@ -773,13 +774,18 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			Income income = addIncome(channel, qas, mc, qs, qd);
 			// 支付通手机H5
 			if (qd.getCode().equals("ZFTWAP")) {
-				AlipayTradeWapPayResponse response = SelfPayUtil.AlipayTradeWapPay(qd, income.getOrdernum(), income.getAmount());
+				Qrcode pqd = qrcodemapper.get(qd.getPid());
+				AlipayTradeWapPayResponse response = SelfPayUtil.AlipayTradeWapPay(pqd, qd, income.getOrdernum(), income.getAmount());
 				Assert.notNull(response, "获取支付宝单号错误!");
 				String pageRedirectionData = response.getBody();
 				income.setQrcode(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
 				income.setQrcodeordernum("inqd" + StringUtil.getOrderNum());
 				income.setResulturl(pageRedirectionData);
+				if (qd.getPid() != null) {
+					income.setDynamic(true);
+				}
 			} else {
+
 			}
 			///////////////////////////////////////////////////// 计算代理订单/////////////////////////////////////////////////////
 			if (mc.getAgentid() != null) {
@@ -790,7 +796,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				aat.setUserid(ag.getUserid());
 				aat.setUsername(ag.getName());
 				aat.setNkname(ag.getNkname());
-				aat.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+				aat.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 				aat.setExchange(ag.getExchange());
 				aat.setAmount(income.getAmount());// 金额
 				aat.setDeal(income.getAmount() * (ag.getExchange() / 100));// 交易费
@@ -911,9 +917,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setQrcodeid(qd.getId());
 		income.setQrcodename(qd.getName());
 		income.setQrcodecode(qd.getCode());
-
-		income.setDynamic(qas.getDynamic());
-
+		income.setDynamic(false);
 		// 随机数
 		income.setAmount(Double.valueOf(qs.getPay_amount()));
 		if (mc.getClearingtype())
@@ -1160,6 +1164,19 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Integer i = blocklistmapper.post(bl);
 		income.setBlockaddress("");
 		mapper.updateBlock(income);
+		return i;
+	}
+
+	@Override
+	public Integer settleconfirm(Income income) {
+		Income in = mapper.get(income.getId());
+		Integer i = 0;
+		if (in.getDynamic()) {
+			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(qrcodemapper.get(in.getQrcodeid()), in.getQrcodeordernum(), in.getAmount());
+			Assert.notNull(atsc, "结算失败!");
+			in.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+			i = mapper.put(in);
+		}
 		return i;
 	}
 

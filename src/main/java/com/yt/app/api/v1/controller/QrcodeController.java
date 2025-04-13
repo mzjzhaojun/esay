@@ -43,4 +43,16 @@ public class QrcodeController extends YtBaseEncipherControllerImpl<Qrcode, Long>
 		QrcodeVO qv = service.paytest(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(qv));
 	}
+
+	@RequestMapping(value = "/accountquery", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> accountquery(YtRequestDecryptEntity<Qrcode> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		service.accountquery(requestEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(1));
+	}
+
+	@RequestMapping(value = "/billereceiptapply", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> billereceiptapply(YtRequestDecryptEntity<Qrcode> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		service.billereceiptapply(requestEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(1));
+	}
 }

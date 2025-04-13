@@ -220,11 +220,11 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		try {
 			lock.lock();
 			Incomemerchantaccountorder mao = mapper.get(mco.getId());
-			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_10)) {
+			if (mao.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 				mao.setStatus(mco.getStatus());
 				Integer i = mapper.put(mao);
 				if (i > 0) {
-					if (mco.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
+					if (mco.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
 						incomemerchantaccountservice.updateTotalincome(mao);
 					} else {
 						incomemerchantaccountservice.turndownWithdrawamount(mao);
@@ -254,7 +254,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		// 支出订单
 		t.setMerchantid(m.getId());
 		t.setMerchantname(m.getName());
-		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		t.setCollection(t.getCollection());
 		t.setMerchantexchange(t.getCollection() + m.getIncomedownpoint());
 		t.setAmountreceived((t.getAmount()));
@@ -287,7 +287,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		// 支出订单
 		t.setMerchantid(m.getId());
 		t.setMerchantname(m.getName());
-		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		t.setCollection(t.getCollection());
 		t.setMerchantexchange(t.getCollection() + m.getIncomedownpoint());
 		t.setAmountreceived((t.getAmount()));
@@ -313,7 +313,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		t.setMerchantid(m.getId());
 		t.setTenant_id(m.getTenant_id());
 		t.setMerchantname(m.getName());
-		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+		t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 		t.setCollection(0.00);
 		t.setAmount(amount);
 		t.setMerchantexchange(0.00);
@@ -321,7 +321,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		t.setUsdtval(amount);
 		t.setType("" + DictionaryResource.ORDERTYPE_28);
 		t.setOrdernum("SHTX" + StringUtil.getOrderNum());
-		t.setRemark("商户飞机提现￥：" + String.format("%.2f", amount));
+		t.setRemark("商户代收飞机提现￥：" + String.format("%.2f", amount));
 		mapper.add(t);
 
 		// 支出账户和记录
@@ -334,7 +334,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 	@Override
 	public Integer success(Long id) {
 		Incomemerchantaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+		mao.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 		Integer j = mapper.put(mao);
 		if (j > 0) {
 			incomemerchantaccountservice.updateWithdrawamount(mao);
@@ -351,7 +351,7 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		try {
 			lock.lock();
 			Incomemerchantaccountorder mao = mapper.get(id);
-			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_13);
+			mao.setStatus(DictionaryResource.PAYOUTSTATUS_51);
 			Integer i = mapper.put(mao);
 			//
 			incomemerchantaccountservice.cancelWithdrawamount(mao);
@@ -373,12 +373,12 @@ public class IncomemerchantaccountorderServiceImpl extends YtBaseServiceImpl<Inc
 		try {
 			lock.lock();
 			Incomemerchantaccountorder mao = mapper.get(mco.getId());
-			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_10)) {
+			if (mao.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 				mao.setStatus(mco.getStatus());
 				mao.setImgurl(mco.getImgurl());
 				Integer i = mapper.put(mao);
 				if (i > 0) {
-					if (mco.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
+					if (mco.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
 						incomemerchantaccountservice.updateWithdrawamount(mao);
 					} else {
 						incomemerchantaccountservice.turndownWithdrawamount(mao);

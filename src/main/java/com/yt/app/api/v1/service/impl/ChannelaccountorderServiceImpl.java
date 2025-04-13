@@ -68,9 +68,9 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 		t.setChannelname(m.getName());
 		t.setNkname(m.getNkname());
 		t.setChannelcode(m.getCode());
-		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		t.setAmountreceived((t.getAmount() * (t.getExchange() + t.getChannelexchange())));
-		t.setType(DictionaryResource.ORDERTYPE_20);
+		t.setType(DictionaryResource.ORDERTYPE_10);
 		t.setUsdtval(t.getAmount());
 		t.setOrdernum("CT" + StringUtil.getOrderNum());
 		t.setRemark("渠道充值￥：" + String.format("%.2f", t.getAmountreceived()));
@@ -116,7 +116,7 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 		mao.setStatus(cco.getStatus());
 		Integer i = mapper.put(mao);
 		if (i > 0) {
-			if (cco.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
+			if (cco.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
 				channelaccountservice.updateTotalincome(mao);
 			} else {
 				channelaccountservice.turndownTotalincome(mao);

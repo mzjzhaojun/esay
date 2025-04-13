@@ -112,7 +112,7 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 		t.setAgentid(m.getId());
 		t.setUsername(m.getName());
 		t.setNkname(m.getNkname());
-		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		t.setExchange(t.getAgentexchange());
 		t.setAmountreceived((t.getAmount()));
 		t.setUsdtval(t.getAmount() / t.getAgentexchange());
@@ -138,7 +138,7 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 		mao.setImgurl(aco.getImgurl());
 		Integer i = mapper.put(mao);
 		if (i > 0) {
-			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
+			if (mao.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
 				agentaccountservice.updateWithdrawamount(mao);
 				//
 				systemaccountservice.updateAgentWithdrawamount(mao);
@@ -151,7 +151,7 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 	@Override
 	public Integer cancleWithdraw(Long id) {
 		Agentaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_13);
+		mao.setStatus(DictionaryResource.PAYOUTSTATUS_51);
 		Integer i = mapper.put(mao);
 		agentaccountservice.cancleWithdrawamount(mao);
 		return i;
@@ -174,7 +174,7 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 		t.setAgentid(m.getId());
 		t.setUsername(m.getName());
 		t.setNkname(m.getNkname());
-		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		t.setExchange(t.getAgentexchange());
 		t.setAmountreceived((t.getAmount()));
 		t.setUsdtval(t.getAmount() / t.getAgentexchange());
@@ -192,7 +192,7 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 	@Override
 	public Integer success(Long id) {
 		Agentaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_11);
+		mao.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 		Integer i = mapper.put(mao);
 		if (i > 0) {
 			agentaccountservice.updateWithdrawamount(mao);

@@ -79,9 +79,9 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 		t.setUsername(m.getName());
 		t.setNkname(m.getNikname());
 		t.setMerchantcode(m.getCode());
-		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		t.setAmountreceived((t.getAmount() * (t.getExchange() + t.getMerchantexchange())));
-		t.setType(DictionaryResource.ORDERTYPE_20);
+		t.setType(DictionaryResource.ORDERTYPE_11);
 		t.setOrdernum("MT" + StringUtil.getOrderNum());
 		t.setRemark("商户充值￥：" + String.format("%.2f", t.getAmountreceived()));
 		Integer i = mapper.post(t);
@@ -102,11 +102,11 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 		try {
 			lock.lock();
 			PayoutMerchantaccountorder mao = mapper.get(mco.getId());
-			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_10)) {
+			if (mao.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 				mao.setStatus(mco.getStatus());
 				Integer i = mapper.put(mao);
 				if (i > 0) {
-					if (mco.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
+					if (mco.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
 						//
 						merchantaccountservice.updateTotalincome(mao);
 						//
@@ -143,13 +143,13 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 		t.setUsername(m.getName());
 		t.setNkname(m.getNikname());
 		t.setMerchantcode(m.getCode());
-		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		t.setExchange(t.getMerchantexchange());
 		t.setAmountreceived((t.getAmount()));
 		t.setUsdtval(t.getAmount() / t.getMerchantexchange());
-		t.setType(DictionaryResource.ORDERTYPE_21);
+		t.setType(DictionaryResource.ORDERTYPE_15);
 		t.setOrdernum("MW" + StringUtil.getOrderNum());
-		t.setRemark("商户提现￥：" + String.format("%.2f", t.getAmountreceived()));
+		t.setRemark("商户代付提现￥：" + String.format("%.2f", t.getAmountreceived()));
 		Integer i = mapper.post(t);
 
 		// 支出账户和记录
@@ -182,13 +182,13 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 		t.setUsername(m.getName());
 		t.setNkname(m.getNikname());
 		t.setMerchantcode(m.getCode());
-		t.setStatus(DictionaryResource.MERCHANTORDERSTATUS_10);
+		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		t.setExchange(t.getMerchantexchange());
 		t.setAmountreceived((t.getAmount()));
 		t.setUsdtval(t.getAmount() / t.getMerchantexchange());
-		t.setType(DictionaryResource.ORDERTYPE_21);
+		t.setType(DictionaryResource.ORDERTYPE_15);
 		t.setOrdernum("MW" + StringUtil.getOrderNum());
-		t.setRemark("商户提现￥：" + String.format("%.2f", t.getAmountreceived()));
+		t.setRemark("商户代付提现￥：" + String.format("%.2f", t.getAmountreceived()));
 		Integer i = mapper.post(t);
 
 		// 支出账户和记录
@@ -230,7 +230,7 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 		try {
 			lock.lock();
 			PayoutMerchantaccountorder mao = mapper.get(id);
-			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_13);
+			mao.setStatus(DictionaryResource.PAYOUTSTATUS_51);
 			Integer i = mapper.put(mao);
 			//
 			merchantaccountservice.cancleTotalincome(mao);
@@ -253,12 +253,12 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 		try {
 			lock.lock();
 			PayoutMerchantaccountorder mao = mapper.get(mco.getId());
-			if (mao.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_10)) {
+			if (mao.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 				mao.setStatus(mco.getStatus());
 				mao.setImgurl(mco.getImgurl());
 				Integer i = mapper.put(mao);
 				if (i > 0) {
-					if (mco.getStatus().equals(DictionaryResource.MERCHANTORDERSTATUS_11)) {
+					if (mco.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
 						//
 						merchantaccountservice.updateWithdrawamount(mao);
 						//
@@ -282,7 +282,7 @@ public class PayoutMerchantaccountorderServiceImpl extends YtBaseServiceImpl<Pay
 		try {
 			lock.lock();
 			PayoutMerchantaccountorder mao = mapper.get(id);
-			mao.setStatus(DictionaryResource.MERCHANTORDERSTATUS_13);
+			mao.setStatus(DictionaryResource.PAYOUTSTATUS_51);
 			Integer i = mapper.put(mao);
 			//
 			merchantaccountservice.cancleWithdrawamount(mao);

@@ -30,5 +30,6 @@ public class AppRun extends SpringBootServletInitializer {
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(new Class[] { AppRun.class }, args);
+//		YtAutoCode.u().p(Arrays.asList("qrcodetransferrecord"));
 	}
 }
