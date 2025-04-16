@@ -18,7 +18,7 @@ import com.yt.app.common.common.yt.YtIPage;
  */
 
 public interface IncomeService extends YtIBaseService<Income, Long> {
-	
+
 	List<Income> list();
 
 	Income getByOrderNum(String ordernum);
@@ -82,7 +82,16 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 	// 拉黑
 	Integer addblock(Income income);
 
-	//确认结算
+	// 确认结算
 	Integer settleconfirm(Income income);
+
+	// 易票联绑卡
+	void sumbmitcheck(Map<String, Object> params);
+
+	// 易票联支付
+	void sumbmitcpay(Map<String, Object> params);
+
+	// 易票联回调
+	void epfpayftfcallback(Map<String, Object> params);
 
 }

@@ -33,7 +33,8 @@ import com.yt.app.common.common.yt.YtResponseEntity;
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.RequestUtil;
-import com.yt.app.common.util.SelfPayUtil;
+
+import cn.hutool.json.JSONUtil;
 
 /**
  * @author yyds
@@ -428,6 +429,29 @@ public class OrderController {
 		}
 	}
 
+	/**
+	 * 
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/epfpayftfcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> epfpayftfcallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("epfpayftfcallback");
+		try {
+			lock.lock();
+			incomeservice.epfpayftfcallback(RequestUtil.requestEntityToParamMap(requestEntity));
+			String json = "{\"returnCode\":\"0000\"}";
+			return new YtResponseEntity<Object>(JSONUtil.parseObj(json));
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -657,16 +681,32 @@ public class OrderController {
 	}
 
 	/**
-	 * html查询代收支付状态
+	 * 易票联绑卡
 	 * 
 	 * @param id
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/testefps/{id}", method = RequestMethod.GET)
-	public YtResponseEntity<Object> testefps(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
-		String res = SelfPayUtil.eplpayTradeWapPay(null, null, null);
-		return new YtResponseEntity<Object>(new YtBody(res));
+	@RequestMapping(value = "/sumbmitcheck", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> sumbmitcheck(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> param = RequestUtil.requestEntityToParamMap(requestEntity);
+		incomeservice.sumbmitcheck(param);
+		return new YtResponseEntity<Object>(new YtBody(1));
+	}
+
+	/**
+	 * 易票联支付
+	 * 
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/sumbmitcpay", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> sumbmitcpay(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> param = RequestUtil.requestEntityToParamMap(requestEntity);
+		incomeservice.sumbmitcpay(param);
+		return new YtResponseEntity<Object>(new YtBody(1));
 	}
 }

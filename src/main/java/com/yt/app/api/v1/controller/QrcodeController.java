@@ -38,9 +38,21 @@ public class QrcodeController extends YtBaseEncipherControllerImpl<Qrcode, Long>
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
-	@RequestMapping(value = "/paytest", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> paytest(YtRequestDecryptEntity<Qrcode> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		QrcodeVO qv = service.paytest(requestEntity.getBody());
+	@RequestMapping(value = "/paytestzft", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> paytestzft(YtRequestDecryptEntity<Qrcode> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		QrcodeVO qv = service.paytestzft(requestEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(qv));
+	}
+
+	@RequestMapping(value = "/paytestepl", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> paytestepl(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		String qv = service.paytestepl(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		return new YtResponseEncryptEntity<Object>(new YtBody(qv));
+	}
+
+	@RequestMapping(value = "/paytesteplcafrom", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> paytesteplcafrom(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		String qv = service.paytesteplcafrom(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(qv));
 	}
 
@@ -50,9 +62,4 @@ public class QrcodeController extends YtBaseEncipherControllerImpl<Qrcode, Long>
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
 
-	@RequestMapping(value = "/billereceiptapply", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> billereceiptapply(YtRequestDecryptEntity<Qrcode> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		service.billereceiptapply(requestEntity.getBody());
-		return new YtResponseEncryptEntity<Object>(new YtBody(1));
-	}
 }

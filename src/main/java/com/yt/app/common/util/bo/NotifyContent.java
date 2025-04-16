@@ -19,9 +19,7 @@ public class NotifyContent {
 	public NotifyContent() {
 	}
 
-	public NotifyContent(String customerCode, String outTradeNo, String transactionNo,
-						 String amount, String payState, String payTime, String settCycle,
-						 String settCycleInterval, String procedureFee, String attachData, String nonceStr) {
+	public NotifyContent(String customerCode, String outTradeNo, String transactionNo, String amount, String payState, String payTime, String settCycle, String settCycleInterval, String procedureFee, String attachData, String nonceStr) {
 		this.customerCode = customerCode;
 		this.outTradeNo = outTradeNo;
 		this.transactionNo = transactionNo;

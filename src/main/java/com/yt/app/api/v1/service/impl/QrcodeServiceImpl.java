@@ -113,19 +113,34 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	}
 
 	@Override
-	public QrcodeVO paytest(Qrcode qv) {
-		if (qv.getCode().equals("ZFTWAP")) {
+	public QrcodeVO paytestzft(Qrcode qv) {
+		if (qv.getCode().equals(DictionaryResource.PRODUCT_ZFTWAP)) {
 			Qrcode pqrcode = mapper.get(qv.getPid());
 			AlipayTradeWapPayResponse atp = SelfPayUtil.AlipayTradeWapPay(pqrcode, qv, StringUtil.getOrderNum(), qv.getBalance());
 			Assert.notNull(atp, "获取支付宝单号错误!");
 			QrcodeVO qrv = new QrcodeVO();
 			qrv.setPayurl(atp.getBody());
 			return qrv;
-		} else if (qv.getCode().equals("EFPSPPBC")) {
-			String atp = SelfPayUtil.eplpayTradeWapPay(qv, StringUtil.getOrderNum(), qv.getBalance());
-			Assert.notNull(atp, "获取易票联单号错误!");
 		}
 		return null;
+	}
+
+	@Override
+	public String paytestepl(Map<String, Object> params) {
+		Qrcode pqrcode = mapper.get(Long.valueOf(params.get("id").toString()));
+		String atp = SelfPayUtil.eplpayTradeWapPay(pqrcode, "174e23aff1c4d4863d6888", Double.valueOf(params.get("amount").toString()), params.get("name").toString(), params.get("pcardno").toString(), params.get("cardno").toString(),
+				params.get("mobile").toString());
+		Assert.notNull(atp, "获取易票联单号错误!");
+		return atp;
+	}
+
+	@Override
+	public String paytesteplcafrom(Map<String, Object> params) {
+		Qrcode pqrcode = mapper.get(Long.valueOf(params.get("id").toString()));
+		System.out.println(params.get("smsno").toString() + "ceee" + params.get("smscode").toString());
+		String atp = SelfPayUtil.eplprotocolPayPre(pqrcode, "174e23aff1c4d4863d6888", params.get("smsno").toString(), params.get("smscode").toString());
+		Assert.notNull(atp, "易票联支付错误!");
+		return atp;
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -214,10 +229,4 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 		qtc.setStatus(DictionaryResource.ALIPAY_STATUS_701);
 		qrcodetransferrecordmapper.post(qtc);
 	}
-
-	@Override
-	public void billereceiptapply(Qrcode c) {
-		// SelfPayUtil.AlipayDataBillEreceiptQuery(c);
-	}
-
 }

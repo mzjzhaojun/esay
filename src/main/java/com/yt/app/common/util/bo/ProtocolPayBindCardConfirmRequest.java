@@ -1,31 +1,31 @@
 package com.yt.app.common.util.bo;
 
-
 /**
  * 协议支付绑卡提交
+ * 
  * @author yjw
  *
  */
 public class ProtocolPayBindCardConfirmRequest {
 
 	/**
-     * 绑卡流水号
-     */
-    private String smsNo;
-    /**
-     * 客户编码
-     */
-    private String customerCode;
-    
-    private String memberId;
-    /**
-     * 短息验证码
-     */
-    private String smsCode;
-	
-    private String nonceStr;
-    private String version;
-    
+	 * 绑卡流水号
+	 */
+	private String smsNo;
+	/**
+	 * 客户编码
+	 */
+	private String customerCode;
+
+	private String memberId;
+	/**
+	 * 短息验证码
+	 */
+	private String smsCode;
+
+	private String nonceStr;
+	private String version;
+
 	public String getVersion() {
 		return version;
 	}
@@ -76,7 +76,6 @@ public class ProtocolPayBindCardConfirmRequest {
 
 	@Override
 	public String toString() {
-		return "ProtocolPayBindCardConfirmRequest [smsNo=" + smsNo + ", customerCode=" + customerCode + ", memberId="
-				+ memberId + ", smsCode=" + smsCode + ", nonceStr=" + nonceStr + "]";
+		return "ProtocolPayBindCardConfirmRequest [smsNo=" + smsNo + ", customerCode=" + customerCode + ", memberId=" + memberId + ", smsCode=" + smsCode + ", nonceStr=" + nonceStr + "]";
 	}
 }

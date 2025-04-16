@@ -58,7 +58,7 @@ public interface PayoutMerchantaccountMapper extends YtIBaseMapper<PayoutMerchan
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { PayoutMerchantaccount.class })
 	public Integer delete(Long id);
-	
+
 	/**
 	 * delete
 	 *
@@ -112,8 +112,7 @@ public interface PayoutMerchantaccountMapper extends YtIBaseMapper<PayoutMerchan
 	 */
 	@YtRedisCacheAnnotation(classs = PayoutMerchantaccount.class)
 	public PayoutMerchantaccount getByUserId(Long userid);
-	
-	
+
 	/**
 	 * getByUserId
 	 *

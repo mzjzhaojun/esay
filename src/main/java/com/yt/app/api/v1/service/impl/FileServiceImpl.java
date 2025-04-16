@@ -44,7 +44,6 @@ import sun.misc.BASE64Decoder;
  * @version 1.1
  */
 
-@SuppressWarnings("restriction")
 @Service
 public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements FileService {
 	@Autowired

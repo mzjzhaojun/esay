@@ -60,7 +60,7 @@ public interface QrcodeaccountMapper extends YtIBaseMapper<Qrcodeaccount> {
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Qrcodeaccount.class })
 	public Integer delete(Long id);
-	
+
 	/**
 	 * delete
 	 *

@@ -11,33 +11,30 @@ import com.yt.app.common.base.BaseVO;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2025-03-19 19:51:13
+ * @version v1 @createdate2025-04-16 23:44:12
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class QrcodestatisticalreportsVO extends BaseVO {
+public class QrcodpaymemberVO extends BaseVO {
 
 	private static final long serialVersionUID = 1L;
 
 	Long id;
 	Long tenant_id;
-	Long userid;
 	Long qrcodeid;
+	String qrcodename;
+	String mobile;
 	String name;
-	Object balance;
-	Object todayincome;
-	Object incomecount;
-	Integer todayorder;
-	Integer successorder;
-	Object todayorderamount;
-	Object todaysuccessorderamount;
-	Object incomeuserpaycount;
-	Object incomeuserpaysuccesscount;
-	Object payoutrate;
-	String dateval;
+	String pcardno;
+	String cardno;
+	String smsno;
+	String protocolno;
+	Integer status;
+	String memberid;
+	String token;
 	Long create_by;
 	java.util.Date create_time;
 	Long update_by;

@@ -11,7 +11,7 @@ public class Response {
 	 * 返回状态码; 0000：处理成功;0000：处理成功
 	 */
 	private String returnCode;
-	
+
 	/**
 	 * 信息
 	 */
@@ -36,10 +36,8 @@ public class Response {
 	/**
 	 * 打印控制台信息。注意：此属性仅用于页面显示调试信息，实际交易中并不存在
 	 */
-	private String consoleMsg;	
+	private String consoleMsg;
 	private String outputJSON;
-	
-	
 
 	public String getConsoleMsg() {
 		return consoleMsg;
@@ -48,7 +46,6 @@ public class Response {
 	public void setConsoleMsg(String consoleMsg) {
 		// this.consoleMsg = consoleMsg;
 	}
-
 
 	public String getOutputJSON() {
 		return outputJSON;

@@ -68,7 +68,7 @@ public class IncomeController extends YtBaseEncipherControllerImpl<Income, Long>
 		service.successstatus(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
-	
+
 	@RequestMapping(value = "/settleconfirm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> settleconfirm(YtRequestDecryptEntity<Income> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		service.settleconfirm(requestEntity.getBody());

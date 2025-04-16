@@ -25,7 +25,23 @@ public interface QrcodeService extends YtIBaseService<Qrcode, Long> {
 	 * @param qv
 	 * @return
 	 */
-	QrcodeVO paytest(Qrcode qv);
+	QrcodeVO paytestzft(Qrcode qv);
+
+	/**
+	 * 测试拉单
+	 * 
+	 * @param qv
+	 * @return
+	 */
+	String paytestepl(Map<String, Object> params);
+
+	/**
+	 * 易票联支付
+	 * 
+	 * @param params
+	 * @return
+	 */
+	String paytesteplcafrom(Map<String, Object> params);
 
 	/**
 	 * 代收成功
@@ -56,10 +72,4 @@ public interface QrcodeService extends YtIBaseService<Qrcode, Long> {
 	 */
 	void transunitransfer(Qrcodetransferrecord c);
 
-	/**
-	 * 回单
-	 * 
-	 * @param c
-	 */
-	void billereceiptapply(Qrcode c);
 }

@@ -99,8 +99,6 @@ public class RsaUtils {
 		String result = "";
 		try {
 			PublicKey publicK = convertPublicKey(publicKey);
-			System.out.println(publicK.toString());
-			System.out.println(Base64.encodeBase64String(publicK.getEncoded()));
 			KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
 			// 对数据加密
 			Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
@@ -210,7 +208,6 @@ public class RsaUtils {
 	private static PublicKey convertPublicKey(String keyStr) throws Exception {
 		CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
 		X509Certificate certificate = (X509Certificate) certificateFactory.generateCertificate(new ByteArrayInputStream(Base64.decodeBase64(keyStr.getBytes(CHARSET))));
-		System.out.println(Base64.encodeBase64String(certificate.getPublicKey().getEncoded()));
 		return certificate.getPublicKey();
 	}
 

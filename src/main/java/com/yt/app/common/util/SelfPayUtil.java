@@ -57,8 +57,12 @@ import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.alipay.api.response.AntMerchantExpandIndirectZftDeleteResponse;
 import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Qrcodetransferrecord;
-import com.yt.app.common.util.bo.ProtocolPayBindCardRequest;
+import com.yt.app.common.util.bo.OrderGoods;
+import com.yt.app.common.util.bo.OrderInfo;
+import com.yt.app.common.util.bo.PaymentQueryRequest;
+import com.yt.app.common.util.bo.ProtocolPayRequest;
 
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -587,39 +591,104 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static String eplpayTradeWapPay(Qrcode qrcode, String ordernum, Double amount) {
+	public static String eplpayTradeWapPay(Qrcode qrcode, String memberId, Double amount, String name, String pcardNo, String cardNo, String mobile) {
 		try {
-
-			//String mchtOrderNo = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()); // 交易编号,商户侧唯一
-
-			//String publicKeyPath = "C:\\Users\\zj\\Downloads\\java\\bin\\efps_new.cer";
-			//String userName = RsaUtils.encryptByPublicKey("test", RsaUtils.getPublicKey(publicKeyPath));
-//			String certificatesNo = RsaUtils.encryptByPublicKey("500381198804159412", RsaUtils.getPublicKey(publicKeyPath));
-//			RsaUtils.vertify(RsaUtils.getPublicKey(publicKeyPath), "500381198804159412", certificatesNo);
-//			String bankCardNo = RsaUtils.encryptByPublicKey("621904126549878596", RsaUtils.getPublicKey(publicKeyPath));
-//			String phoneNum = RsaUtils.encryptByPublicKey("13430293947", RsaUtils.getPublicKey(publicKeyPath));
-//			// 6212262011222352668 6225882014767005
-//			ProtocolPayBindCardRequest request = new ProtocolPayBindCardRequest();
-//			request.setVersion("2.0");
-//			request.setCustomerCode("562265003122220");
-//			request.setMemberId("174e23aff1c4d4863d6cc2");// 会员号
-//			request.setMchtOrderNo(mchtOrderNo);
-//			request.setPhoneNum(phoneNum);// 手机号
-//			request.setUserName(userName);// 持卡人姓名
-//			request.setBankCardNo(bankCardNo);// 银行卡
-//			request.setBankCardType("debit");// debit:借记卡,credit:贷记卡;
-//			// request.setCvn(RsaUtils.encryptByPublicKey(cvn,
-//			// RsaUtils.getPublicKey(publicKeyPath)));// cvn 卡背后三位数 信用卡必填
-//			// request.setExpired(RsaUtils.encryptByPublicKey(expired,
-//			// RsaUtils.getPublicKey(publicKeyPath)));// 卡有效期 信用卡必填 yymm
-//			request.setCertificatesNo(certificatesNo);// 身份证号
-//			request.setCertificatesType("01");// 固定传01
-//			request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
-//			String response = PaymentHelper.bindCard(JSONUtil.toJsonStr(request));
-//			log.info(" 易票联创建订单返回消息：" + response);
-//			return response;
+			String mchtOrderNo = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+			String key = RsaUtils.getPublicKey(qrcode.getApppublickey());
+			String userName = RsaUtils.encryptByPublicKey(name, key);
+			String certificatesNo = RsaUtils.encryptByPublicKey(pcardNo, key);
+			String bankCardNo = RsaUtils.encryptByPublicKey(cardNo, key);
+			String phoneNum = RsaUtils.encryptByPublicKey(mobile, key);
+			String noncestr = UUID.randomUUID().toString().replaceAll("-", "");
+			String request = "{\"version\":\"2.0\",\"mchtOrderNo\":\"" + mchtOrderNo + "\",\"customerCode\":\"" + qrcode.getAppid() + "\",\"memberId\":\"" + memberId + "\",\"userName\":\"" + userName + "\",\"phoneNum\":\"" + phoneNum
+					+ "\",\"bankCardNo\":\"" + bankCardNo + "\",\"bankCardType\":\"debit\",\"certificatesType\":\"01\",\"certificatesNo\":\"" + certificatesNo + "\",\"nonceStr\":\"" + noncestr + "\"}";
+			log.info(request);
+			JSONObject response = PaymentHelper.bindCard(request, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			return response.getStr("smsNo");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 协议支付交易
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static String eplprotocolPayPre(Qrcode qrcode, String memberId, String epfSmsNo, String smscode) {
+		String outTradeNo = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()); // 交易编号,商户侧唯一
+		long payAmount = 103; // 支付金额,分为单位
+		String payCurrency = "CNY"; // 币种，写死
+		String attachData = "attachData"; // 备注数据,可空
+		String transactionEndTime = ""; // 交易结束时间
+		OrderInfo orderInfo = new OrderInfo();
+		orderInfo.setId("test");
+		orderInfo.setBusinessType("test");
+		orderInfo.addGood(new OrderGoods("订单信息", "1箱", 1));
+		ProtocolPayRequest request = new ProtocolPayRequest();
+		request.setVersion("3.0");// 必传
+		request.setCustomerCode(qrcode.getAppid());
+		request.setMemberId(memberId);// 会员号
+		request.setPayAmount(payAmount);
+		request.setOutTradeNo(outTradeNo);
+		request.setPayCurrency(payCurrency);
+		request.setAttachData(attachData);
+		request.setNeedSplit(false);
+		request.setOrderInfo(orderInfo);
+		request.setSplitNotifyUrl("");
+		request.setSmsNo(epfSmsNo);
+		request.setSmsCode(smscode);
+		request.setTransactionStartTime(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
+		request.setTransactionEndTime(transactionEndTime);
+		request.setNotifyUrl(qrcode.getNotifyurl());// 异步通知
+		request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
+		String ss = JSONUtil.toJsonStr(request);
+		try {
+			JSONObject response = PaymentHelper.protocolPayPre(ss, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			return response.getStr("outTradeNo");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 交易结果查询
+	 */
+	public static String eplpaymentQuery(Qrcode qrcode, String outradeno, String noncestr) {
+		PaymentQueryRequest request = new PaymentQueryRequest();
+		request.setCustomerCode(qrcode.getAppid());// 必填
+		request.setOutTradeNo(outradeno);
+		request.setNonceStr(noncestr);
+		String ss = JSONUtil.toJsonStr(request);
+		try {
+			JSONObject response = PaymentHelper.paymentQuery(ss, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			if (response.getStr("payState").equals("00"))
+				return response.getStr("returnCode");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 确认绑卡
+	 * 
+	 * @param qrcode
+	 * @param ordernum
+	 * @param epfsorder
+	 * @param smscode
+	 * @return
+	 */
+	public static String eplpaybindCardConfirm(Qrcode qrcode, String memberId, String epfsorder, String smscode) {
+		try {
+			String noncestr = UUID.randomUUID().toString().replaceAll("-", "");
+			String ss = "{\"smsNo\":\"" + epfsorder + "\",\"customerCode\":\"" + qrcode.getAppid() + "\",\"memberId\":\"" + memberId + "\",\"smsCode\":\"" + smscode + "\",\"nonceStr\":\"" + noncestr + "\"}";
+			JSONObject response = PaymentHelper.bindCardConfirm(ss, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			return response.getStr("returnCode");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;

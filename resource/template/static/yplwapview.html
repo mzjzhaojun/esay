@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="cn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Member Payment</title>
+<script src="/esay/static/js/jquery-3.5.1.min.js"></script>
+<script src="/esay/static/js/fingerprintjs2.js"></script>
+<script src="/esay/static/js/md5.js"></script>
+<style>
+html, body {
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
+div {
+	margin: 0px;
+	padding: 0px;
+}
+
+.alert {
+	position: fixed;
+	top: 1%;
+	left: 50%;
+	min-width: 200px;
+	margin-left: -100px;
+	z-index: 99999;
+	padding: 15px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+}
+</style>
+</head>
+<body onLoad="initdata()">
+	<div id="message" class="alert"></div>
+	<div
+		style="width: 100%; height: 100%; background: #f7f7f7; display: flex; justify-content: center; align-items: center; margin: 0px; padding: 0px;">
+		<div
+			style="background: #FFFFFF; width: 100%; height: 100%;">
+			<div
+				style="width: 100%; height: 20%; display: flex; justify-content: center; align-items: center;">
+				<img src="/esay/static/img/zgyl.jpeg" width="100%"  height="100%">
+			</div>
+			<div style="width: 100%; height: 65%; display: flex;margin-top:20px;">
+				<form action="demo-form.php" style="width: 100%; height: 55%; ">
+					<label style="margin-left:30px;">充值金额 </label> <input type="text" style="width: 230px;height:30px;margin:12px;" id="amount" name="amount" value=""  disabled><br>
+					<label style="margin-left:30px;">姓名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label> <input type="text" style="width: 230px;height:30px;margin:12px;" id="name"  name="name" value=""><br>
+					<label style="margin-left:30px;">身份证号 </label> <input type="text" style="width: 230px;height:30px;margin:12px;" id="pcardno"  name="pcardno" value=""><br>
+					<label style="margin-left:30px;">银行卡号 </label> <input type="text" style="width: 230px;height:30px;margin:12px;" id="cardno"  name="cardno" value=""><br>
+					<label style="margin-left:30px;">手机号码 </label> <input type="text" style="width: 230px;height:30px;margin:12px;" id="mobile"  name="mobile" value=""><br>
+					<label style="margin-left:30px;">验证码&nbsp;&nbsp;&nbsp;&nbsp;</label> <input type="text" style="width: 100px;height:30px;margin:12px;" id="smscode"  name="smscode" value="">
+					<button id="smsbtn" type="button" style="border-radius: 12px; border-color: #00bfff; background-color: #00bfff; color: #FFFFFF; font-size: 16px; height: 30px; width: 115px">获取验证码</button><br>
+				</form>
+			</div>
+			<div id="btn-down"
+				style="width: 100%; height: 1%; display: flex; justify-content: center; align-items: center;">
+				<a id="pay_btn" href="">
+					<button id="sumbitbtn" type="button" style="border-radius: 12px; border-color: #00bfff; background-color: #00bfff; color: #FFFFFF; font-size: 22px; height: 50px; width: 350px;"> 确认支付</button>
+				</a>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	var orderid = "[[${orderid}]]";
+	var amount = "[[${amount}]]";
+	var backurl = "[[${backurl}]]";
+	var md5str;
+	function initdata() {
+		$("#amount").val(amount);
+			Fingerprint2.get(function(components) {
+				var values = components.map(function(component) {
+					return component.value
+				});
+				md5str = hex_md5(values.join(""));
+				$.ajax({
+					type : "GET",
+					dataType : "json",
+					contentType:"application/json",
+					url : "/esay/rest/v1/order/blocklist/" + md5str+"/"+orderid,
+					data : {},
+					success : function(data) {
+						if (data.body != null) {
+							$('#message')
+									.html('<div>账号被封禁!</div>');
+						}
+					},
+					error : function() {
+						$('#message').html('<div>服务器错误!</div>');
+					}
+				});
+			});
+	}
+	
+	$(document).ready(function(){
+		$("#smsbtn").click(function(){
+			if($("#name").val()==null || $("#name").val()==""){
+				alert("姓名不能为空!");
+				return;
+			}
+			if($("#pcardno").val()==null || $("#pcardno").val()==""){
+				alert("身份证号不能为空!");
+				return;
+			}
+			if($("#cardno").val()==null || $("#cardno").val()==""){
+				alert("银行卡号不能为空!");
+				return;
+			}
+			if($("#mobile").val()==null || $("#mobile").val()==""){
+				alert("手机号不能为空!");
+				return;
+			}
+			
+			$.ajax({
+				type : "POST",
+				dataType : "json",
+				contentType:"application/json",
+				url : "/esay/rest/v1/order/sumbmitcheck",
+				data :JSON.stringify({"orderid":orderid,"name":$("#name").val(),"pcardno":$("#pcardno").val(),"cardno":$("#cardno").val(),"mobile":$("#mobile").val()}),
+				success : function(data) {
+					if(data.code =200){
+						alert("验证码已发送!");
+					}
+				},
+				error : function() {
+					$('#message').html('<div>服务器错误!</div>');
+				}
+			});
+		})
+		
+		$("#sumbitbtn").click(function(){
+			if($("#smscode").val()==null || $("#smscode").val()==""){
+				alert("验证码不能为空!");
+				return;
+			}
+		
+			$.ajax({
+				type : "POST",
+				dataType : "json",
+				contentType:"application/json",
+				url : "/esay/rest/v1/order/sumbmitcpay",
+				data :JSON.stringify({"orderid":orderid,"smscode":$("#smscode").val()}),
+				success : function(data) {
+					if(data.code =200){
+						alert("支付成功!");
+						window.location.href = backurl;
+					}
+				},
+				error : function() {
+					$('#message').html('<div>服务器错误!</div>');
+				}
+			});
+		})
+	})
+</script>
+
+</html>

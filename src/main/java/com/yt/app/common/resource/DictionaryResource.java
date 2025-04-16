@@ -168,7 +168,10 @@ public class DictionaryResource implements Serializable {
 	public static final Integer LOG_TYPE_202 = 202; // app
 
 	// 项目类型
+	// 自营产品编码
+	public static final String PRODUCT_YPLWAP = "YPLWAP";
 	public static final Integer PROJECT_TYPE_501 = 501;// 易票联
+	public static final String PRODUCT_ZFTWAP = "ZFTWAP";
 	public static final Integer PROJECT_TYPE_502 = 502;// 支付宝直付通手机网站支付
 	public static final Integer PROJECT_TYPE_503 = 503;
 	public static final Integer PROJECT_TYPE_504 = 504;
@@ -185,7 +188,7 @@ public class DictionaryResource implements Serializable {
 	public static final Integer EXCHANGE_TYPE_602 = 602;// 充值
 
 	// 支付宝状态
-	public static final Integer ALIPAY_STATUS_701= 701;// 支付成功
-	public static final Integer ALIPAY_STATUS_702= 702;// 下载成功
+	public static final Integer ALIPAY_STATUS_701 = 701;// 支付成功
+	public static final Integer ALIPAY_STATUS_702 = 702;// 下载成功
 
 }

@@ -122,6 +122,6 @@ public class MD5Utils {
 //		
 //		String sign = md5(signContent);
 
-		System.out.println(randomName(false,3));
+		System.out.println(randomName(false, 3));
 	}
 }

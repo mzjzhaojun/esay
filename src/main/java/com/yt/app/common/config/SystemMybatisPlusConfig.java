@@ -81,7 +81,7 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantstatisticalreports");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("systemstatisticalreports");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("qrcodestatisticalreports");
-		
+
 		// tgrame
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tgbotgroup");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tgbotgrouprecord");
@@ -94,13 +94,14 @@ public class SystemMybatisPlusConfig {
 		// tron
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tron");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tronaddress");
-		
-		
-		//黑名单
+
+		// 黑名单
 		MybatisPlusConfig.TENANT_ID_TABLE.add("blocklist");
 
-		//支付宝转账记录
+		// 支付宝转账记录
 		MybatisPlusConfig.TENANT_ID_TABLE.add("qrcodetransferrecord");
+		//会员绑卡信息
+		MybatisPlusConfig.TENANT_ID_TABLE.add("qrcodpaymember");
 	}
 
 }

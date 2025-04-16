@@ -1,6 +1,5 @@
 package com.yt.app.common.tron;
 
-
 //@Profile("dev")
 //@Component
 public class TronMonitor {

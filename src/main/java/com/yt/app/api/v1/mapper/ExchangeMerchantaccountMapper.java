@@ -58,7 +58,7 @@ public interface ExchangeMerchantaccountMapper extends YtIBaseMapper<ExchangeMer
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { ExchangeMerchantaccount.class })
 	public Integer delete(Long id);
-	
+
 	/**
 	 * delete
 	 *

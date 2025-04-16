@@ -31,12 +31,16 @@ public class ViewController {
 	public String income(@PathVariable String orderid, Model model, HttpServletRequest request, HttpServletResponse response) {
 		Income income = service.getByOrderNum(orderid);
 		model.addAttribute("orderid", orderid);
-		if (income.getStatus() == DictionaryResource.PAYOUTSTATUS_52)
-			model.addAttribute("resulturl", income.getBackforwardurl());
-		else
-			model.addAttribute("resulturl", income.getResulturl());
+		model.addAttribute("amount", income.getAmount());
+		model.addAttribute("backurl", income.getBackforwardurl());
+		model.addAttribute("resulturl", income.getResulturl());
 		model.addAttribute("status", income.getStatus());
-		return "static/zfbwapview";
+		if (income.getQrcodecode().equals(DictionaryResource.PRODUCT_ZFTWAP)) {
+			return "static/zfbwapview";
+		} else if (income.getQrcodecode().equals(DictionaryResource.PRODUCT_YPLWAP)) {
+			return "static/yplwapview";
+		}
+		return "static/error";
 	}
 
 	@RequestMapping(value = "/income/error", method = RequestMethod.GET)
