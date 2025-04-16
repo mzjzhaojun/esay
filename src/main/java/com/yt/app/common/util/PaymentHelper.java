@@ -1,10 +1,5 @@
 package com.yt.app.common.util;
 
-import com.yt.app.common.util.bo.ProtocolPayBindCardConfirmRequest;
-import com.yt.app.common.util.bo.ProtocolPayBindCardConfirmResponse;
-import com.yt.app.common.util.bo.ProtocolPayBindCardRequest;
-import com.yt.app.common.util.bo.ProtocolPayBindCardResponse;
-
 public class PaymentHelper {
 
 	static String bindCard = "https://test-efps.epaylinks.cn/api/txs/protocol/bindCard";
@@ -16,8 +11,8 @@ public class PaymentHelper {
 	 * @param request 订单内容
 	 * @throws Exception
 	 */
-	public static ProtocolPayBindCardResponse bindCard(ProtocolPayBindCardRequest request) throws Exception {
-		return RemoteInvoker.invoke(request, bindCard, ProtocolPayBindCardResponse.class);
+	public static String bindCard(String request) throws Exception {
+		return RemoteInvoker.invoke(request, bindCard);
 	}
 
 	/**
@@ -26,8 +21,8 @@ public class PaymentHelper {
 	 * @param request 订单内容
 	 * @throws Exception
 	 */
-	public static ProtocolPayBindCardConfirmResponse bindCardConfirm(ProtocolPayBindCardConfirmRequest request, String keyurl, String signno) throws Exception {
-		return RemoteInvoker.invoke(request, bindCardConfirm, ProtocolPayBindCardConfirmResponse.class);
+	public static String bindCardConfirm(String request, String keyurl, String signno) throws Exception {
+		return RemoteInvoker.invoke(request, bindCardConfirm);
 	}
 
 }

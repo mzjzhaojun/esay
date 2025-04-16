@@ -1,9 +1,5 @@
 package com.yt.app.common.util;
 
-import com.alibaba.fastjson.JSONObject;
-import com.yt.app.common.util.bo.Response;
-
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,16 +9,15 @@ import java.util.Map;
 public class RemoteInvoker {
 	private final static DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 
-	public static <T extends Response> T invoke(Object request, String url, Class<T> c) throws Exception {
-		final String jsonData = request instanceof String? (String)request: JSONObject.toJSONString(request);
-        final String sign = RsaUtils.sign(KeyUtil.getPrimaryKey(), jsonData);//签名
-        Map<String , String> header = new HashMap<String , String>();
-        header.put("x-efps-sign", sign);
-        header.put("x-efps-sign-no", "562265003122220003");
-        header.put("x-efps-sign-type","SHA256withRSA");
-        header.put("x-efps-timestamp",df.format(new Date()));
-        header.put("Content-Type", "application/json");
-        T response = HttpUtil.post(url, jsonData ,header , c);
+	public static String invoke(String request, String url) throws Exception {
+		final String sign = RsaUtils.sign(KeyUtil.getPrimaryKey(), request);// 签名
+		Map<String, String> header = new HashMap<String, String>();
+		header.put("x-efps-sign", sign);
+		header.put("x-efps-sign-no", "562265003122220003");
+		header.put("x-efps-sign-type", "SHA256withRSA");
+		header.put("x-efps-timestamp", df.format(new Date()));
+		header.put("Content-Type", "application/json");
+		String response = HttpUtil.post(url, request, header);
 
 		return response;
 	}

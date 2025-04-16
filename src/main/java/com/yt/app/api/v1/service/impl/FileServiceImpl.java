@@ -34,7 +34,6 @@ import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.FileUtil;
-import com.yt.app.common.util.VideoUtil;
 
 import cn.hutool.core.lang.Snowflake;
 import sun.misc.BASE64Decoder;
@@ -45,6 +44,7 @@ import sun.misc.BASE64Decoder;
  * @version 1.1
  */
 
+@SuppressWarnings("restriction")
 @Service
 public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements FileService {
 	@Autowired
@@ -236,9 +236,6 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 				fJPG.setSuffix("jpg");
 				mapper.post(fJPG);
 
-				StringBuffer sbJPG = new StringBuffer();
-				String getJPGpath = sbJPG.append(appConfig.getFilePath()).append(filepath).toString();
-				VideoUtil.getVideoFirstImg(path, getJPGpath, fJPG.getId());
 				YtFile getFile = mapper.get(fJPG.getId());
 				getFile.setFile_name(fJPG.getId() + ".jpg");
 				mapper.put(getFile);

@@ -1,5 +1,6 @@
 package com.yt.app.api.v1.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +34,6 @@ import com.yt.app.common.exption.YtException;
 import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.RequestUtil;
 import com.yt.app.common.util.SelfPayUtil;
-import com.yt.app.common.util.bo.ProtocolPayBindCardResponse;
 
 /**
  * @author yyds
@@ -66,6 +66,20 @@ public class OrderController {
 	public YtResponseEntity<Object> queryIncomeOrder(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
 		Income income = incomeservice.get(id);
 		return new YtResponseEntity<Object>(new YtBody(income.getStatus()));
+	}
+
+	/**
+	 * 給小程序使用的訂單數據
+	 * 
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/incomeorderlist", method = RequestMethod.GET)
+	public YtResponseEntity<Object> incomeorderlist(HttpServletRequest request, HttpServletResponse response) {
+		List<Income> incomes = incomeservice.list();
+		return new YtResponseEntity<Object>(new YtBody(incomes));
 	}
 
 	/**
@@ -652,7 +666,7 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/testefps/{id}", method = RequestMethod.GET)
 	public YtResponseEntity<Object> testefps(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
-		ProtocolPayBindCardResponse res = SelfPayUtil.eplpayTradeWapPay();
-		return new YtResponseEntity<Object>(new YtBody(res.getSmsNo()));
+		String res = SelfPayUtil.eplpayTradeWapPay(null, null, null);
+		return new YtResponseEntity<Object>(new YtBody(res));
 	}
 }

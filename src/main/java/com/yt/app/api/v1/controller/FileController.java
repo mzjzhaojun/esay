@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.google.gson.Gson;
 import com.yt.app.api.v1.entity.YtFile;
 import com.yt.app.api.v1.service.FileService;
 import com.yt.app.common.base.impl.YtBaseControllerImpl;
@@ -35,6 +34,8 @@ import com.yt.app.common.common.yt.YtRequestEntity;
 import com.yt.app.common.common.yt.YtResponseEntity;
 import com.yt.app.common.util.FileUtil;
 import com.yt.app.common.util.RequestUtil;
+
+import cn.hutool.json.JSONUtil;
 
 /**
  * @author zj default test
@@ -48,9 +49,6 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 
 	@Autowired
 	private FileService service;
-
-	@Autowired
-	private Gson gson;
 
 	/**
 	 * 普通上传
@@ -177,7 +175,7 @@ public class FileController extends YtBaseControllerImpl<YtFile, Long> {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return gson.toJson(furl);
+		return JSONUtil.toJsonStr(furl);
 	}
 
 	/**

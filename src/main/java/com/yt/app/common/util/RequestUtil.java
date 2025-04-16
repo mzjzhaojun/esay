@@ -6,12 +6,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.beanutils.BeanUtils;
-
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.common.yt.YtRequestDecryptEntity;
 import com.yt.app.common.common.yt.YtRequestEntity;
 import com.yt.app.common.enums.YtPageBeanEnum;
+
+import cn.hutool.core.bean.BeanUtil;
 
 public class RequestUtil {
 
@@ -23,7 +23,7 @@ public class RequestUtil {
 			map = requestEntity.getBody() == null ? new HashMap<String, Object>() : (Map<String, Object>) requestEntity.getBody();
 		} else {
 			try {
-				map = BeanUtils.describe(obj);
+				map = BeanUtil.beanToMap(obj);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

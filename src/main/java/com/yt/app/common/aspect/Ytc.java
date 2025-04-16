@@ -6,11 +6,9 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
 import com.yt.app.common.util.IpUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 @Aspect
 @Component
 public class Ytc {
-
-	@Autowired
-	Gson gson;
 
 	@Pointcut("(execution(* com.yt.app.api.v1.controller.*.*(..)))")
 	public void controllerPointCut() {

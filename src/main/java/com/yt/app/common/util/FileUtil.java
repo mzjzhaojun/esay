@@ -3,8 +3,6 @@
  */
 package com.yt.app.common.util;
 
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -618,20 +616,6 @@ public class FileUtil {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-	}
-
-	/**
-	 * 计算文本占用的width
-	 *
-	 * @param fontName  字体名称
-	 * @param fontStyle 字体风格
-	 * @param fontSize  字体大小
-	 * @param pressText 输入文本
-	 * @return 文字所占用的宽带
-	 */
-	public static int getFontWidth(Font f, String pressText) {
-		FontMetrics fm = sun.font.FontDesignMetrics.getMetrics(f);
-		return fm.stringWidth(pressText);
 	}
 
 	public static String createfilepath(Date date, YtConfig appConfig) {

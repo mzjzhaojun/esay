@@ -72,6 +72,7 @@ import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.SelfPayUtil;
 import com.yt.app.common.util.DateTimeUtil;
+import com.yt.app.common.util.MD5Utils;
 import com.yt.app.common.util.NumberUtil;
 import com.yt.app.common.util.PayUtil;
 import com.yt.app.common.util.RedisUtil;
@@ -87,6 +88,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -150,6 +152,16 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	public Integer post(Income t) {
 		Integer i = mapper.post(t);
 		return i;
+	}
+
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+	public List<Income> list() {
+		Map<String, Object> param = new HashMap<String, Object>();
+		List<Income> list = mapper.list(param);
+		list.forEach(ii -> {
+			ii.setQrcodeaislename(MD5Utils.randomName(true, 3));
+		});
+		return list;
 	}
 
 	@Override
@@ -1172,7 +1184,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Income in = mapper.get(income.getId());
 		Integer i = 0;
 		if (in.getDynamic()) {
-			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(qrcodemapper.get(in.getQrcodeid()), in.getQrcodeordernum(), in.getAmount());
+			Qrcode qd = qrcodemapper.get(in.getQrcodeid());
+			Qrcode pqd = qrcodemapper.get(qd.getPid());
+			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, in.getQrcodeordernum(), in.getAmount());
 			Assert.notNull(atsc, "结算失败!");
 			in.setStatus(DictionaryResource.PAYOUTSTATUS_54);
 			i = mapper.put(in);

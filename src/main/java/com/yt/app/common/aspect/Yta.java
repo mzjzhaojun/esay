@@ -1,6 +1,5 @@
 package com.yt.app.common.aspect;
 
-import com.google.gson.Gson;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
 import com.yt.app.common.config.YtConfig;
@@ -8,6 +7,7 @@ import com.yt.app.common.config.YtRedis;
 import com.yt.app.common.util.RedisHashUtil;
 
 import cn.hutool.core.lang.Snowflake;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.annotation.Annotation;
@@ -44,9 +44,6 @@ public class Yta {
 
 	@Autowired
 	Snowflake e;
-
-	@Autowired
-	Gson g;
 
 	@Pointcut("(execution(* com.yt.app.api.v1.mapper..*(..))) || (execution(* com.yt.app.common.base.YtIBaseMapper.*(..))) ")
 	public void a() {
@@ -111,7 +108,7 @@ public class Yta {
 
 	private String getCacheKey(String targetName, String methodName, Object[] arguments) {
 		StringBuffer sbu = new StringBuffer();
-		sbu.append("payboot:" + targetName).append(methodName).append(":").append(g.toJson(arguments));
+		sbu.append("payboot:" + targetName).append(methodName).append(":").append(JSONUtil.toJsonStr(arguments));
 		return sbu.toString();
 	}
 }

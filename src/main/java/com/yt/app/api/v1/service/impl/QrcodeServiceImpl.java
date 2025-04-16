@@ -35,7 +35,6 @@ import com.yt.app.common.util.SelfPayUtil;
 import com.yt.app.common.util.RedisUtil;
 import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.StringUtil;
-import com.yt.app.common.util.bo.ProtocolPayBindCardResponse;
 
 import cn.hutool.core.lang.Assert;
 
@@ -123,8 +122,7 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 			qrv.setPayurl(atp.getBody());
 			return qrv;
 		} else if (qv.getCode().equals("EFPSPPBC")) {
-//			ProtocolPayBindCardResponse atp = SelfPayUtil.eplpayTradeWapPay(qv, StringUtil.getOrderNum(), qv.getBalance());
-			ProtocolPayBindCardResponse atp = SelfPayUtil.eplpayTradeWapPay();
+			String atp = SelfPayUtil.eplpayTradeWapPay(qv, StringUtil.getOrderNum(), qv.getBalance());
 			Assert.notNull(atp, "获取易票联单号错误!");
 		}
 		return null;
@@ -219,7 +217,7 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 
 	@Override
 	public void billereceiptapply(Qrcode c) {
-		//SelfPayUtil.AlipayDataBillEreceiptQuery(c);
+		// SelfPayUtil.AlipayDataBillEreceiptQuery(c);
 	}
 
 }

@@ -8,8 +8,6 @@ import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cloud.commons.util.InetUtils;
-import org.springframework.cloud.commons.util.InetUtilsProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -23,7 +21,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import redis.clients.jedis.JedisPoolConfig;
 
-import com.ecwid.consul.v1.ConsulClient;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -101,15 +98,5 @@ public class YtCachingConfigurer extends CachingConfigurerSupport {
 		Config config = new Config();
 		config.useSingleServer().setAddress("redis://" + c.getHost() + ":" + c.getPort()).setTimeout(3000).setDatabase(1).setPassword(c.getPassword()).setPingConnectionInterval(60000).setConnectionPoolSize(64).setConnectionMinimumIdleSize(10);
 		return Redisson.create(config);
-	}
-
-	@Bean
-	public ConsulClient consulclient() {
-		return new ConsulClient();
-	}
-
-	@Bean
-	public InetUtils inetutils() {
-		return new InetUtils(new InetUtilsProperties());
 	}
 }

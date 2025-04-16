@@ -58,8 +58,8 @@ import com.alipay.api.response.AntMerchantExpandIndirectZftDeleteResponse;
 import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Qrcodetransferrecord;
 import com.yt.app.common.util.bo.ProtocolPayBindCardRequest;
-import com.yt.app.common.util.bo.ProtocolPayBindCardResponse;
 
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -587,36 +587,37 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static ProtocolPayBindCardResponse eplpayTradeWapPay() {
+	public static String eplpayTradeWapPay(Qrcode qrcode, String ordernum, Double amount) {
 		try {
 
-			String mchtOrderNo = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()); // 交易编号,商户侧唯一
+			//String mchtOrderNo = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()); // 交易编号,商户侧唯一
 
-			String publicKeyPath = "C:\\Users\\zj\\Downloads\\java\\bin\\efps_new.cer";
-			String userName = RsaUtils.encryptByPublicKey("银联一", RsaUtils.getPublicKey(publicKeyPath));
-			String certificatesNo = RsaUtils.encryptByPublicKey("500381198804159412", RsaUtils.getPublicKey(publicKeyPath));
-			String bankCardNo = RsaUtils.encryptByPublicKey("621904126549878596", RsaUtils.getPublicKey(publicKeyPath));
-			String phoneNum = RsaUtils.encryptByPublicKey("13430293947", RsaUtils.getPublicKey(publicKeyPath));
-			// 6212262011222352668 6225882014767005
-			ProtocolPayBindCardRequest request = new ProtocolPayBindCardRequest();
-			request.setVersion("2.0");
-			request.setCustomerCode("562265003122220");
-			request.setMemberId("174e23aff1c4d4863d6cc2");// 会员号
-			request.setMchtOrderNo(mchtOrderNo);
-			request.setPhoneNum(phoneNum);// 手机号
-			request.setUserName(userName);// 持卡人姓名
-			request.setBankCardNo(bankCardNo);// 银行卡
-			request.setBankCardType("debit");// debit:借记卡,credit:贷记卡;
-			// request.setCvn(RsaUtils.encryptByPublicKey(cvn,
-			// RsaUtils.getPublicKey(publicKeyPath)));// cvn 卡背后三位数 信用卡必填
-			// request.setExpired(RsaUtils.encryptByPublicKey(expired,
-			// RsaUtils.getPublicKey(publicKeyPath)));// 卡有效期 信用卡必填 yymm
-			request.setCertificatesNo(certificatesNo);// 身份证号
-			request.setCertificatesType("01");// 固定传01
-			request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
-			ProtocolPayBindCardResponse response = PaymentHelper.bindCard(request);
-			log.info(" 易票联创建订单返回消息：" + response.getSmsNo());
-			return response;
+			//String publicKeyPath = "C:\\Users\\zj\\Downloads\\java\\bin\\efps_new.cer";
+			//String userName = RsaUtils.encryptByPublicKey("test", RsaUtils.getPublicKey(publicKeyPath));
+//			String certificatesNo = RsaUtils.encryptByPublicKey("500381198804159412", RsaUtils.getPublicKey(publicKeyPath));
+//			RsaUtils.vertify(RsaUtils.getPublicKey(publicKeyPath), "500381198804159412", certificatesNo);
+//			String bankCardNo = RsaUtils.encryptByPublicKey("621904126549878596", RsaUtils.getPublicKey(publicKeyPath));
+//			String phoneNum = RsaUtils.encryptByPublicKey("13430293947", RsaUtils.getPublicKey(publicKeyPath));
+//			// 6212262011222352668 6225882014767005
+//			ProtocolPayBindCardRequest request = new ProtocolPayBindCardRequest();
+//			request.setVersion("2.0");
+//			request.setCustomerCode("562265003122220");
+//			request.setMemberId("174e23aff1c4d4863d6cc2");// 会员号
+//			request.setMchtOrderNo(mchtOrderNo);
+//			request.setPhoneNum(phoneNum);// 手机号
+//			request.setUserName(userName);// 持卡人姓名
+//			request.setBankCardNo(bankCardNo);// 银行卡
+//			request.setBankCardType("debit");// debit:借记卡,credit:贷记卡;
+//			// request.setCvn(RsaUtils.encryptByPublicKey(cvn,
+//			// RsaUtils.getPublicKey(publicKeyPath)));// cvn 卡背后三位数 信用卡必填
+//			// request.setExpired(RsaUtils.encryptByPublicKey(expired,
+//			// RsaUtils.getPublicKey(publicKeyPath)));// 卡有效期 信用卡必填 yymm
+//			request.setCertificatesNo(certificatesNo);// 身份证号
+//			request.setCertificatesType("01");// 固定传01
+//			request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
+//			String response = PaymentHelper.bindCard(JSONUtil.toJsonStr(request));
+//			log.info(" 易票联创建订单返回消息：" + response);
+//			return response;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

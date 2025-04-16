@@ -694,7 +694,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		int maxRow = sheet.getLastRowNum();
 		for (int i = 1; i <= maxRow; i++) {
 			Row row = sheet.getRow(i);
-			if (row.getCell(0) != null) {
+			if (row != null && row.getCell(0) != null) {
 				countamount = countamount + Double.valueOf(row.getCell(3).toString());
 			}
 		}
@@ -723,14 +723,14 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 		for (int i = 1; i <= maxRow; i++) {
 			Row row = sheet.getRow(i);
-			if (row.getCell(0) != null) {
-				importOrder(aisle, row.getCell(0).toString(), row.getCell(1).toString(), row.getCell(2).toString(), Double.valueOf(row.getCell(3).toString()), maccount, m, cl);
+			if (row != null && row.getCell(0) != null) {
+				importOrder(aisle, row.getCell(0).toString(), row.getCell(1).toString(), row.getCell(2).toString(), Double.valueOf(row.getCell(3).toString()), m, cl);
 			}
 		}
 		return file.getOriginalFilename();
 	}
 
-	public Integer importOrder(Aisle al, String name, String cardno, String bankname, Double amount, PayoutMerchantaccount maccount, Merchant m, Channel cl) {
+	public synchronized Integer importOrder(Aisle al, String name, String cardno, String bankname, Double amount, Merchant m, Channel cl) {
 
 		Payout t = new Payout();
 		t.setAccname(name.replaceAll(" ", ""));

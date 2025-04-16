@@ -213,6 +213,7 @@
 			<if test="name != null and name != ''">
 				and name LIKE CONCAT( '%', #{name} , '%' )
 			</if>
+				order by create_time desc LIMIT 1,20
 		</where>
 	</select>
 	<!-- getMap -->
@@ -240,6 +241,9 @@
 			</if>
 			<if test="qrcodecode != null and qrcodecode != ''">
 				and qrcodecode = #{qrcodecode}
+			</if>
+			<if test="qrcodename != null and qrcodename != ''">
+				and qrcodename = #{qrcodename}
 			</if>
 			<if test="amount != null and amount != ''">
 				and amount = #{amount}
@@ -284,6 +288,9 @@
 			</if>
 			<if test="qrcodecode != null and qrcodecode != ''">
 				and qrcodecode = #{qrcodecode}
+			</if>
+			<if test="qrcodename != null and qrcodename != ''">
+				and qrcodename = #{qrcodename}
 			</if>
 			<if test="amount != null and amount != ''">
 				and amount = #{amount}
