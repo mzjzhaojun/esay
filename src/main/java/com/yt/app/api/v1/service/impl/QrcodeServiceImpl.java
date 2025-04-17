@@ -129,7 +129,7 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	@Override
 	public String paytestepl(Map<String, Object> params) {
 		Qrcode pqrcode = mapper.get(Long.valueOf(params.get("id").toString()));
-		String atp = SelfPayUtil.eplpayTradeWapPay(pqrcode, "174e23aff1c4d4863d6888", Double.valueOf(params.get("amount").toString()), params.get("name").toString(), params.get("pcardno").toString(), params.get("cardno").toString(),
+		String atp = SelfPayUtil.eplpayTradeWapPay(pqrcode, params.get("menmberid").toString(), Double.valueOf(params.get("amount").toString()), params.get("name").toString(), params.get("pcardno").toString(), params.get("cardno").toString(),
 				params.get("mobile").toString());
 		Assert.notNull(atp, "获取易票联单号错误!");
 		return atp;
@@ -139,7 +139,7 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	public String paytesteplcafrom(Map<String, Object> params) {
 		Qrcode pqrcode = mapper.get(Long.valueOf(params.get("id").toString()));
 		System.out.println(params.get("smsno").toString() + "ceee" + params.get("smscode").toString());
-		String atp = SelfPayUtil.eplprotocolPayPre(pqrcode, StringUtil.getOrderNum(), "174e23aff1c4d4863d6888", params.get("smsno").toString(), params.get("smscode").toString(), Long.valueOf(params.get("amount").toString()));
+		String atp = SelfPayUtil.eplprotocolPayPre(pqrcode, StringUtil.getOrderNum(), params.get("menmberid").toString(), params.get("smsno").toString(), params.get("smscode").toString(), Long.valueOf(params.get("amount").toString()));
 		Assert.notNull(atp, "易票联支付错误!");
 		return atp;
 	}

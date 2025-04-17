@@ -729,7 +729,12 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		for (int i = 1; i <= maxRow; i++) {
 			Row row = sheet.getRow(i);
 			if (row != null && row.getCell(0) != null) {
-				importOrder(aisle, row.getCell(0).toString(), row.getCell(1).toString(), row.getCell(2).toString(), Double.valueOf(row.getCell(3).toString()), m, cl);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				importOrder(aisle, row.getCell(0).toString().replace(" ", ""), row.getCell(1).toString().replace(" ", ""), row.getCell(2).toString().replace(" ", ""), Double.valueOf(row.getCell(3).toString()), m, cl);
 			}
 		}
 		return file.getOriginalFilename();

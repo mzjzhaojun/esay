@@ -27,7 +27,7 @@ public class SecurityUtil {
 			data = AesUtil.decrypt(data, aesKey);
 			return cleanXSS(data);
 		} catch (Throwable e) {
-			throw new YtException("用户长时间未登录！", YtCodeEnum.YT401);
+			throw new YtException("参数存在问题！", YtCodeEnum.YT400);
 		}
 	}
 
