@@ -23,8 +23,6 @@ public class YtConfig {
 
 	private String workerKey;
 
-	private String efpsPath;
-
 	private String filePath;
 
 	private String fileurl;
