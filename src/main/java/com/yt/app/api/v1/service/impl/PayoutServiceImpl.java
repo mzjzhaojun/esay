@@ -17,6 +17,7 @@ import com.yt.app.api.v1.mapper.ChannelaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.PayoutMerchantaccountMapper;
 import com.yt.app.api.v1.mapper.PayoutMerchantaccountorderMapper;
+import com.yt.app.api.v1.mapper.QrcodeMapper;
 import com.yt.app.api.v1.mapper.MerchantaisleMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.service.AgentaccountService;
@@ -47,6 +48,7 @@ import com.yt.app.api.v1.entity.Channelaccountorder;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.PayoutMerchantaccount;
 import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
+import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Merchantaisle;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.common.common.yt.YtBody;
@@ -58,6 +60,7 @@ import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.PayUtil;
 import com.yt.app.common.util.RedisUtil;
+import com.yt.app.common.util.SelfPayUtil;
 import com.yt.app.common.util.StringUtil;
 
 import cn.hutool.core.date.DateUnit;
@@ -92,6 +95,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	private AisleMapper aislemapper;
 	@Autowired
 	private ChannelMapper channelmapper;
+	@Autowired
+	private QrcodeMapper qrcodemapper;
 	@Autowired
 	private AislechannelMapper aislechannelmapper;
 	@Autowired
@@ -1084,5 +1089,29 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			SysUserContext.remove();
 			TenantIdContext.remove();
 		}
+	}
+
+	@Override
+	public void epfcallback(Map<String, Object> params) {
+		String orderid = params.get("outTradeNo").toString();
+		String status = params.get("payState").toString();
+		log.info("易票联通知返回消息：orderid" + orderid + " status:" + status);
+		Payout pt = mapper.getByOrdernum(orderid);
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			Qrcode qrcode = qrcodemapper.get(pt.getChannelid());
+			// 查询渠道是否真实成功
+			String returnstate = SelfPayUtil.eplwithdrawalToCardQuery(qrcode, orderid);
+			Assert.notNull(returnstate, "易票联代付通知反查订单失败!");
+			if (returnstate.equals("0000")) {
+				paySuccess(pt);
+			} else {
+				payFail(pt);
+			}
+			SysUserContext.remove();
+			TenantIdContext.remove();
+		}
+
 	}
 }

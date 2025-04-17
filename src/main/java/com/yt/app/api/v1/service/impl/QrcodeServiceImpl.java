@@ -29,7 +29,6 @@ import com.yt.app.api.v1.vo.QrcodeVO;
 import com.yt.app.api.v1.vo.QrcodeaccountorderVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.SelfPayUtil;
@@ -50,9 +49,6 @@ import java.util.Map;
  */
 @Service
 public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implements QrcodeService {
-
-	@Autowired
-	private YtConfig appConfig;
 
 	@Autowired
 	private QrcodeMapper mapper;
@@ -121,7 +117,7 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	public QrcodeVO paytestzft(Qrcode qv) {
 		if (qv.getCode().equals(DictionaryResource.PRODUCT_ZFTWAP)) {
 			Qrcode pqrcode = mapper.get(qv.getPid());
-			AlipayTradeWapPayResponse atp = SelfPayUtil.AlipayTradeWapPay(appConfig.getAligeteway(), pqrcode, qv, StringUtil.getOrderNum(), qv.getBalance());
+			AlipayTradeWapPayResponse atp = SelfPayUtil.AlipayTradeWapPay(pqrcode, StringUtil.getOrderNum(), qv.getBalance());
 			Assert.notNull(atp, "获取支付宝单号错误!");
 			QrcodeVO qrv = new QrcodeVO();
 			qrv.setPayurl(atp.getBody());
@@ -133,8 +129,8 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	@Override
 	public String paytestepl(Map<String, Object> params) {
 		Qrcode pqrcode = mapper.get(Long.valueOf(params.get("id").toString()));
-		String atp = SelfPayUtil.eplpayTradeWapPay(appConfig.getBindcard(), pqrcode, "174e23aff1c4d4863d6888", Double.valueOf(params.get("amount").toString()), params.get("name").toString(), params.get("pcardno").toString(),
-				params.get("cardno").toString(), params.get("mobile").toString());
+		String atp = SelfPayUtil.eplpayTradeWapPay(pqrcode, "174e23aff1c4d4863d6888", Double.valueOf(params.get("amount").toString()), params.get("name").toString(), params.get("pcardno").toString(), params.get("cardno").toString(),
+				params.get("mobile").toString());
 		Assert.notNull(atp, "获取易票联单号错误!");
 		return atp;
 	}
@@ -143,7 +139,7 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	public String paytesteplcafrom(Map<String, Object> params) {
 		Qrcode pqrcode = mapper.get(Long.valueOf(params.get("id").toString()));
 		System.out.println(params.get("smsno").toString() + "ceee" + params.get("smscode").toString());
-		String atp = SelfPayUtil.eplprotocolPayPre(appConfig.getProtocolpaypre(), pqrcode, "174e23aff1c4d4863d6888", params.get("smsno").toString(), params.get("smscode").toString());
+		String atp = SelfPayUtil.eplprotocolPayPre(pqrcode, StringUtil.getOrderNum(), "174e23aff1c4d4863d6888", params.get("smsno").toString(), params.get("smscode").toString(), Long.valueOf(params.get("amount").toString()));
 		Assert.notNull(atp, "易票联支付错误!");
 		return atp;
 	}
@@ -218,17 +214,17 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	}
 
 	@Override
-	public void accountquery(Qrcode c) {
-		AlipayFundAccountQueryResponse afaqr = SelfPayUtil.AlipayFundAccountQuery(appConfig.getAligeteway(), c);
-		c.setBalance(Double.valueOf(afaqr.getAvailableAmount()));
-		mapper.put(c);
+	public void accountquery(Qrcode qrcode) {
+		AlipayFundAccountQueryResponse afaqr = SelfPayUtil.AlipayFundAccountQuery(qrcode);
+		qrcode.setBalance(Double.valueOf(afaqr.getAvailableAmount()));
+		mapper.put(qrcode);
 	}
 
 	@Override
 	public void transunitransfer(Qrcodetransferrecord qtc) {
-		Qrcode c = mapper.get(qtc.getQrcodeid());
+		Qrcode qrcode = mapper.get(qtc.getQrcodeid());
 		qtc.setOutbizno(StringUtil.getOrderNum());
-		AlipayFundTransUniTransferResponse aftutr = SelfPayUtil.AlipayFundTransUniTransfer(appConfig.getAligeteway(), c, qtc);
+		AlipayFundTransUniTransferResponse aftutr = SelfPayUtil.AlipayFundTransUniTransfer(qrcode, qtc);
 		Assert.notNull(aftutr, "转账失败!");
 		qtc.setOrdernum(aftutr.getOrderId());
 		qtc.setStatus(DictionaryResource.ALIPAY_STATUS_701);

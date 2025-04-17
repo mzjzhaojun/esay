@@ -430,7 +430,7 @@ public class OrderController {
 	}
 
 	/**
-	 * 
+	 * 易票联代收通知
 	 * 
 	 * @param requestEntity
 	 * @param request
@@ -673,6 +673,30 @@ public class OrderController {
 			lock.lock();
 			payoutservice.ljcallback(params);
 			response.getWriter().print("success");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+	
+	
+	/**
+	 * 易票联代付回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/epfcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> epfcallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("epfcallback");
+		try {
+			lock.lock();
+			payoutservice.epfcallback(RequestUtil.requestEntityToParamMap(requestEntity));
+			String json = "{\"returnCode\":\"0000\"}";
+			return new YtResponseEntity<Object>(JSONUtil.parseObj(json));
 		} catch (Exception e) {
 			throw new YtException(e);
 		} finally {

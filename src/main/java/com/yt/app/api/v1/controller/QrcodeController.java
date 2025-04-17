@@ -38,28 +38,56 @@ public class QrcodeController extends YtBaseEncipherControllerImpl<Qrcode, Long>
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
+	/**
+	 * 支付余额查询
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/accountquery", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> accountquery(YtRequestDecryptEntity<Qrcode> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		service.accountquery(requestEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(1));
+	}
+
+	/**
+	 * 支付宝测试
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/paytestzft", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> paytestzft(YtRequestDecryptEntity<Qrcode> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		QrcodeVO qv = service.paytestzft(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(qv));
 	}
 
+	/**
+	 * 易票联绑卡
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/paytestepl", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> paytestepl(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		String qv = service.paytestepl(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(qv));
 	}
 
+	/**
+	 * 易票聯协议支付
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/paytesteplcafrom", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> paytesteplcafrom(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		String qv = service.paytesteplcafrom(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(qv));
-	}
-
-	@RequestMapping(value = "/accountquery", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> accountquery(YtRequestDecryptEntity<Qrcode> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		service.accountquery(requestEntity.getBody());
-		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
 
 }

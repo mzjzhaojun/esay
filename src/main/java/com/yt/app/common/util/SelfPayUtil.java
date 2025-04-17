@@ -7,7 +7,9 @@ import com.alipay.api.AlipayConstants;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import com.alipay.api.AlipayApiException;
@@ -61,6 +63,7 @@ import com.yt.app.common.util.bo.OrderGoods;
 import com.yt.app.common.util.bo.OrderInfo;
 import com.yt.app.common.util.bo.PaymentQueryRequest;
 import com.yt.app.common.util.bo.ProtocolPayRequest;
+import com.yt.app.common.util.bo.WithdrawToCardRequest;
 
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -68,6 +71,32 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SelfPayUtil {
+
+	private static AlipayConfig getAlipayConfig(Qrcode qrcode) {
+		AlipayConfig alipayConfig = new AlipayConfig();
+		alipayConfig.setPrivateKey(qrcode.getAppprivatekey());
+		alipayConfig.setServerUrl(qrcode.getApirest());
+		alipayConfig.setAppId(qrcode.getAppid());
+		alipayConfig.setCharset(AlipayConstants.CHARSET_UTF8);
+		alipayConfig.setSignType(AlipayConstants.SIGN_TYPE_RSA2);
+		alipayConfig.setFormat(AlipayConstants.FORMAT_JSON);
+		alipayConfig.setAlipayPublicKey(qrcode.getAlipaypublickey());
+		return alipayConfig;
+	}
+
+	private static AlipayConfig getAlipayConfigCert(Qrcode qrcode) {
+		AlipayConfig alipayConfig = new AlipayConfig();
+		alipayConfig.setPrivateKey(qrcode.getAppprivatekey());
+		alipayConfig.setServerUrl(qrcode.getApirest());
+		alipayConfig.setAppId(qrcode.getAppid());
+		alipayConfig.setCharset(AlipayConstants.CHARSET_UTF8);
+		alipayConfig.setSignType(AlipayConstants.SIGN_TYPE_RSA2);
+		alipayConfig.setFormat(AlipayConstants.FORMAT_JSON);
+		alipayConfig.setAppCertPath(qrcode.getApppublickey());
+		alipayConfig.setAlipayPublicCertPath(qrcode.getAlipaypublickey());
+		alipayConfig.setRootCertPath(qrcode.getAlipayprovatekey());
+		return alipayConfig;
+	}
 
 	/**
 	 * 支付宝创建订单
@@ -77,10 +106,10 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static AlipayTradeWapPayResponse AlipayTradeWapPay(String geteway, Qrcode pqrcode, Qrcode qrcode, String ordernum, Double amount) {
+	public static AlipayTradeWapPayResponse AlipayTradeWapPay(Qrcode qrcode, String ordernum, Double amount) {
 
 		try {
-			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(pqrcode, geteway));
+			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(qrcode));
 
 			AlipayTradeWapPayRequest request = new AlipayTradeWapPayRequest();
 			AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();
@@ -126,9 +155,9 @@ public class SelfPayUtil {
 	 * @param ordernum
 	 * @return
 	 */
-	public static AlipayTradeQueryResponse AlipayTradeWapQuery(String geteway, Qrcode pqrcode, Qrcode qrcode, String outno, String ordernum) {
+	public static AlipayTradeQueryResponse AlipayTradeWapQuery(Qrcode pqrcode, String outno, String ordernum) {
 		try {
-			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(pqrcode, geteway));
+			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(pqrcode));
 
 			AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
 			AlipayTradeQueryModel model = new AlipayTradeQueryModel();
@@ -156,9 +185,9 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static AlipayTradeSettleConfirmResponse AlipayTradeSettleConfirm(String geteway, Qrcode qrcode, String ordernum, Double amount) {
+	public static AlipayTradeSettleConfirmResponse AlipayTradeSettleConfirm(Qrcode qrcode, String ordernum, Double amount) {
 		try {
-			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(qrcode, geteway));
+			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(qrcode));
 			// 构造请求参数以调用接口
 			AlipayTradeSettleConfirmRequest request = new AlipayTradeSettleConfirmRequest();
 			AlipayTradeSettleConfirmModel model = new AlipayTradeSettleConfirmModel();
@@ -205,9 +234,9 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static AlipayTradeOrderSettleResponse AlipayTradeOrderSettle(String geteway, Qrcode qrcode, String ordernum, Double amount) {
+	public static AlipayTradeOrderSettleResponse AlipayTradeOrderSettle(Qrcode qrcode, String ordernum, Double amount) {
 		try {
-			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(qrcode, geteway));
+			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(qrcode));
 			// 构造请求参数以调用接口
 			AlipayTradeOrderSettleRequest request = new AlipayTradeOrderSettleRequest();
 			AlipayTradeOrderSettleModel model = new AlipayTradeOrderSettleModel();
@@ -251,9 +280,9 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static AlipayTradeRefundResponse AlipayTradeRefund(String geteway, Qrcode qrcode, String ordernum, Double amount) {
+	public static AlipayTradeRefundResponse AlipayTradeRefund(Qrcode qrcode, String ordernum, Double amount) {
 		try {
-			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(qrcode, geteway));
+			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(qrcode));
 			// 构造请求参数以调用接口
 			AlipayTradeRefundRequest request = new AlipayTradeRefundRequest();
 			AlipayTradeRefundModel model = new AlipayTradeRefundModel();
@@ -331,9 +360,9 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static AntMerchantExpandIndirectZftDeleteResponse AntMerchantExpandIndirectZftDelete(String geteway, Qrcode qrcode) {
+	public static AntMerchantExpandIndirectZftDeleteResponse AntMerchantExpandIndirectZftDelete(Qrcode qrcode) {
 		try {
-			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(qrcode, geteway));
+			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(qrcode));
 			AntMerchantExpandIndirectZftDeleteRequest request = new AntMerchantExpandIndirectZftDeleteRequest();
 			AntMerchantExpandIndirectZftDeleteModel model = new AntMerchantExpandIndirectZftDeleteModel();
 
@@ -361,9 +390,9 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static AlipayTradeRoyaltyRelationBindResponse AlipayTradeRoyaltyRelationBind(String geteway, Qrcode qrcode) {
+	public static AlipayTradeRoyaltyRelationBindResponse AlipayTradeRoyaltyRelationBind(Qrcode qrcode) {
 		try {
-			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(qrcode, geteway));
+			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(qrcode));
 			// 构造请求参数以调用接口
 			AlipayTradeRoyaltyRelationBindRequest request = new AlipayTradeRoyaltyRelationBindRequest();
 			AlipayTradeRoyaltyRelationBindModel model = new AlipayTradeRoyaltyRelationBindModel();
@@ -406,9 +435,9 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static AlipayTradeRoyaltyRelationUnbindResponse AlipayTradeRoyaltyRelationUnbind(String geteway, Qrcode qrcode) {
+	public static AlipayTradeRoyaltyRelationUnbindResponse AlipayTradeRoyaltyRelationUnbind(Qrcode qrcode) {
 		try {
-			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(qrcode, geteway));
+			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(qrcode));
 			AlipayTradeRoyaltyRelationUnbindRequest request = new AlipayTradeRoyaltyRelationUnbindRequest();
 			AlipayTradeRoyaltyRelationUnbindModel model = new AlipayTradeRoyaltyRelationUnbindModel();
 			model.setOutRequestNo("2019032200000001");
@@ -443,9 +472,9 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static AlipayFundAccountQueryResponse AlipayFundAccountQuery(String geteway, Qrcode qrcode) {
+	public static AlipayFundAccountQueryResponse AlipayFundAccountQuery(Qrcode qrcode) {
 		try {
-			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfigCert(qrcode, geteway));
+			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfigCert(qrcode));
 
 			// 构造请求参数以调用接口
 			AlipayFundAccountQueryRequest request = new AlipayFundAccountQueryRequest();
@@ -481,10 +510,10 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static AlipayFundTransUniTransferResponse AlipayFundTransUniTransfer(String geteway, Qrcode qrcode, Qrcodetransferrecord qtc) {
+	public static AlipayFundTransUniTransferResponse AlipayFundTransUniTransfer(Qrcode qrcode, Qrcodetransferrecord qtc) {
 		try {
 
-			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfigCert(qrcode, geteway));
+			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfigCert(qrcode));
 
 			// 构造请求参数以调用接口
 			AlipayFundTransUniTransferRequest request = new AlipayFundTransUniTransferRequest();
@@ -539,10 +568,10 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static AlipayDataBillEreceiptApplyResponse AlipayDataBillEreceiptApply(String geteway, Qrcode qrcode, String key) {
+	public static AlipayDataBillEreceiptApplyResponse AlipayDataBillEreceiptApply(Qrcode qrcode, String key) {
 		try {
 
-			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfigCert(qrcode, geteway));
+			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfigCert(qrcode));
 
 			AlipayDataBillEreceiptApplyRequest request = new AlipayDataBillEreceiptApplyRequest();
 			request.setBizContent("{" + "  \"type\":\"FUND_DETAIL\"," + "  \"key\":\"" + key + "\"}");
@@ -565,10 +594,10 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static AlipayDataBillEreceiptQueryResponse AlipayDataBillEreceiptQuery(String geteway, Qrcode qrcode, String fileid) {
+	public static AlipayDataBillEreceiptQueryResponse AlipayDataBillEreceiptQuery(Qrcode qrcode, String fileid) {
 		try {
 
-			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfigCert(qrcode, geteway));
+			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfigCert(qrcode));
 
 			AlipayDataBillEreceiptQueryRequest request = new AlipayDataBillEreceiptQueryRequest();
 			request.setBizContent("{" + "  \"file_id\":\"" + fileid + "\"" + "}");
@@ -591,7 +620,7 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static String eplpayTradeWapPay(String geteway, Qrcode qrcode, String memberId, Double amount, String name, String pcardNo, String cardNo, String mobile) {
+	public static String eplpayTradeWapPay(Qrcode qrcode, String memberId, Double amount, String name, String pcardNo, String cardNo, String mobile) {
 		try {
 			String mchtOrderNo = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
 			String key = RsaUtils.getPublicKey(qrcode.getApppublickey());
@@ -603,7 +632,7 @@ public class SelfPayUtil {
 			String param = "{\"version\":\"2.0\",\"mchtOrderNo\":\"" + mchtOrderNo + "\",\"customerCode\":\"" + qrcode.getAppid() + "\",\"memberId\":\"" + memberId + "\",\"userName\":\"" + userName + "\",\"phoneNum\":\"" + phoneNum
 					+ "\",\"bankCardNo\":\"" + bankCardNo + "\",\"bankCardType\":\"debit\",\"certificatesType\":\"01\",\"certificatesNo\":\"" + certificatesNo + "\",\"nonceStr\":\"" + noncestr + "\"}";
 			log.info(param);
-			JSONObject response = PaymentHelper.bindCard(geteway, param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			JSONObject response = PaymentHelper.bindCard(qrcode.getApirest(), param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
 			return response.getStr("smsNo");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -617,9 +646,7 @@ public class SelfPayUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String eplprotocolPayPre(String geteway, Qrcode qrcode, String memberId, String epfSmsNo, String smscode) {
-		String outTradeNo = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()); // 交易编号,商户侧唯一
-		long payAmount = 103; // 支付金额,分为单位
+	public static String eplprotocolPayPre(Qrcode qrcode, String outTradeNo, String memberId, String epfSmsNo, String smscode, Long payAmount) {
 		String payCurrency = "CNY"; // 币种，写死
 		String attachData = "attachData"; // 备注数据,可空
 		String transactionEndTime = ""; // 交易结束时间
@@ -646,7 +673,7 @@ public class SelfPayUtil {
 		request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
 		String param = JSONUtil.toJsonStr(request);
 		try {
-			JSONObject response = PaymentHelper.protocolPayPre(geteway, param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			JSONObject response = PaymentHelper.protocolPayPre(qrcode.getApirest(), param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
 			return response.getStr("outTradeNo");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -657,14 +684,14 @@ public class SelfPayUtil {
 	/**
 	 * 交易结果查询
 	 */
-	public static String eplpaymentQuery(String geteway, Qrcode qrcode, String outradeno, String noncestr) {
+	public static String eplpaymentQuery(Qrcode qrcode, String outradeno, String noncestr) {
 		PaymentQueryRequest request = new PaymentQueryRequest();
 		request.setCustomerCode(qrcode.getAppid());// 必填
 		request.setOutTradeNo(outradeno);
 		request.setNonceStr(noncestr);
 		String param = JSONUtil.toJsonStr(request);
 		try {
-			JSONObject response = PaymentHelper.paymentQuery(geteway, param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			JSONObject response = PaymentHelper.paymentQuery(qrcode.getApirest(), param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
 			if (response.getStr("payState").equals("00"))
 				return response.getStr("returnCode");
 		} catch (Exception e) {
@@ -682,11 +709,11 @@ public class SelfPayUtil {
 	 * @param smscode
 	 * @return
 	 */
-	public static String eplpaybindCardConfirm(String geteway, Qrcode qrcode, String memberId, String epfsorder, String smscode) {
+	public static String eplpaybindCardConfirm(Qrcode qrcode, String memberId, String epfsorder, String smscode) {
 		try {
 			String noncestr = UUID.randomUUID().toString().replaceAll("-", "");
 			String param = "{\"smsNo\":\"" + epfsorder + "\",\"customerCode\":\"" + qrcode.getAppid() + "\",\"memberId\":\"" + memberId + "\",\"smsCode\":\"" + smscode + "\",\"nonceStr\":\"" + noncestr + "\"}";
-			JSONObject response = PaymentHelper.bindCardConfirm(geteway, param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			JSONObject response = PaymentHelper.bindCardConfirm(qrcode.getApirest(), param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
 			return response.getStr("returnCode");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -694,29 +721,85 @@ public class SelfPayUtil {
 		return null;
 	}
 
-	private static AlipayConfig getAlipayConfig(Qrcode qrcode, String geteway) {
-		AlipayConfig alipayConfig = new AlipayConfig();
-		alipayConfig.setPrivateKey(qrcode.getAppprivatekey());
-		alipayConfig.setServerUrl(geteway);
-		alipayConfig.setAppId(qrcode.getAppid());
-		alipayConfig.setCharset(AlipayConstants.CHARSET_UTF8);
-		alipayConfig.setSignType(AlipayConstants.SIGN_TYPE_RSA2);
-		alipayConfig.setFormat(AlipayConstants.FORMAT_JSON);
-		alipayConfig.setAlipayPublicKey(qrcode.getAlipaypublickey());
-		return alipayConfig;
+	/**
+	 * 单笔代付 单笔提现
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static String eplwithdrawalToCard(Qrcode qrcode, String outTradeNo, String name, String cardNo, String bankName, String accountType, Long payAmount) {
+
+		String payCurrency = "CNY";
+		String remark = "这是附言";
+
+		String key = RsaUtils.getPublicKey(qrcode.getApppublickey());
+
+		try {
+			String bankUserName = RsaUtils.encryptByPublicKey(name, key);
+			String bankCardNo = RsaUtils.encryptByPublicKey(cardNo, key);
+			WithdrawToCardRequest request = new WithdrawToCardRequest();
+			request.setOutTradeNo(outTradeNo);
+			request.setCustomerCode(qrcode.getAppid());
+			request.setAmount(payAmount);
+			request.setBankUserName(bankUserName);
+			request.setBankCardNo(bankCardNo);
+			request.setBankName(bankName);
+			request.setBankAccountType(accountType);// 1：对公，2：对私
+			request.setPayCurrency(payCurrency);
+			request.setNotifyUrl(qrcode.getPayoutnotifyurl());
+			request.setRemark(remark);
+			request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
+			String param = JSONUtil.toJsonStr(request);
+			JSONObject response = PaymentHelper.withdrawalToCard(qrcode.getApirest(), param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			return response.getStr("returnCode");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
-	private static AlipayConfig getAlipayConfigCert(Qrcode qrcode, String geteway) {
-		AlipayConfig alipayConfig = new AlipayConfig();
-		alipayConfig.setPrivateKey(qrcode.getAppprivatekey());
-		alipayConfig.setServerUrl(geteway);
-		alipayConfig.setAppId(qrcode.getAppid());
-		alipayConfig.setCharset(AlipayConstants.CHARSET_UTF8);
-		alipayConfig.setSignType(AlipayConstants.SIGN_TYPE_RSA2);
-		alipayConfig.setFormat(AlipayConstants.FORMAT_JSON);
-		alipayConfig.setAppCertPath(qrcode.getApppublickey());
-		alipayConfig.setAlipayPublicCertPath(qrcode.getAlipaypublickey());
-		alipayConfig.setRootCertPath(qrcode.getAlipayprovatekey());
-		return alipayConfig;
+	/**
+	 * 单笔代付结果查询
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static String eplwithdrawalToCardQuery(Qrcode qrcode, String outTradeNo) {
+
+		PaymentQueryRequest request = new PaymentQueryRequest();
+		request.setCustomerCode(qrcode.getAppid());// 必填
+		request.setOutTradeNo(outTradeNo);
+		request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
+		try {
+			String param = JSONUtil.toJsonStr(request);
+			JSONObject response = PaymentHelper.withdrawalToCardQuery(qrcode.getApirest(), param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			return response.getStr("returnCode");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
+
+	/**
+	 * 余额查询
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static String eplaccountQuery(Qrcode qrcode) {
+
+		Map<String, String> request = new HashMap<String, String>();
+		request.put("customerCode", qrcode.getAppid());
+		request.put("nonceStr", UUID.randomUUID().toString().replaceAll("-", ""));
+		try {
+			String param = JSONUtil.toJsonStr(request);
+			JSONObject response = PaymentHelper.accountQuery(qrcode.getApirest(), param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			return response.getStr("returnCode");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }

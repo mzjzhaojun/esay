@@ -467,7 +467,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Qrcode qrcode = qrcodemapper.get(income.getQrcodeid());
 		Qrcode pqrcode = qrcodemapper.get(qrcode.getPid());
 		log.info("支付宝查单成功: " + trade_no + "===" + out_trade_no);
-		AlipayTradeQueryResponse atqr = SelfPayUtil.AlipayTradeWapQuery(appConfig.getAligeteway(), pqrcode, qrcode, out_trade_no, trade_no);
+		AlipayTradeQueryResponse atqr = SelfPayUtil.AlipayTradeWapQuery(pqrcode, out_trade_no, trade_no);
 		if (atqr.getTradeStatus().equals("TRADE_SUCCESS")) {
 			success(income, trade_no);
 		}
@@ -791,7 +791,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			// 支付通手机H5
 			if (qd.getCode().equals(DictionaryResource.PRODUCT_ZFTWAP)) {
 				Qrcode pqd = qrcodemapper.get(qd.getPid());
-				AlipayTradeWapPayResponse response = SelfPayUtil.AlipayTradeWapPay(appConfig.getAligeteway(), pqd, qd, income.getOrdernum(), income.getAmount());
+				AlipayTradeWapPayResponse response = SelfPayUtil.AlipayTradeWapPay(pqd, income.getOrdernum(), income.getAmount());
 				Assert.notNull(response, "获取支付宝单号错误!");
 				String pageRedirectionData = response.getBody();
 				income.setQrcode(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
@@ -1194,7 +1194,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		if (in.getDynamic()) {
 			Qrcode qd = qrcodemapper.get(in.getQrcodeid());
 			Qrcode pqd = qrcodemapper.get(qd.getPid());
-			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(appConfig.getAligeteway(), pqd, in.getQrcodeordernum(), in.getAmount());
+			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, in.getQrcodeordernum(), in.getAmount());
 			Assert.notNull(atsc, "结算失败!");
 			in.setStatus(DictionaryResource.PAYOUTSTATUS_54);
 			i = mapper.put(in);
@@ -1208,8 +1208,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		TenantIdContext.setTenantId(in.getTenant_id());
 		log.info(params.get("orderid").toString());
 		Qrcode qrcode = qrcodemapper.get(in.getQrcodeid());
-		String smsno = SelfPayUtil.eplpayTradeWapPay(appConfig.getBindcard(), qrcode, in.getOrdernum(), in.getAmount(), params.get("name").toString(), params.get("pcardno").toString(), params.get("cardno").toString(),
-				params.get("mobile").toString());
+		String smsno = SelfPayUtil.eplpayTradeWapPay(qrcode, in.getOrdernum(), in.getAmount(), params.get("name").toString(), params.get("pcardno").toString(), params.get("cardno").toString(), params.get("mobile").toString());
 		Assert.notNull(smsno, "易票联下单失败");
 		Qrcodpaymember qrcodpaymember = new Qrcodpaymember();
 		qrcodpaymember.setQrcodeid(qrcode.getId());
@@ -1229,14 +1228,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Income in = mapper.getByOrderNum(params.get("orderid").toString());
 		Qrcodpaymember qrcodpaymember = qrcodpaymembermapper.getByMermberId(params.get("orderid").toString());
 		log.info(params.get("orderid").toString());
-		String outTradeNo = SelfPayUtil.eplprotocolPayPre(appConfig.getProtocolpaypre(), qrcodemapper.get(in.getQrcodeid()), in.getOrdernum(), qrcodpaymember.getSmsno(), params.get("smscode").toString());
+		String outTradeNo = SelfPayUtil.eplprotocolPayPre(qrcodemapper.get(in.getQrcodeid()), in.getQrcodeordernum(), in.getOrdernum(), qrcodpaymember.getSmsno(), params.get("smscode").toString(),
+				Long.valueOf(String.format("%.2f", in.getAmount()).replace(".", "")));
 		Assert.notNull(outTradeNo, "易票联支付失败");
-
-		Qrcodeaccountorder qrcodeaccountorder = qrcodeaccountordermapper.getByOrderNum(in.getQrcodeordernum());
-		qrcodeaccountorder.setOrdernum(outTradeNo);
-		qrcodeaccountordermapper.put(qrcodeaccountorder);
-		in.setQrcodeordernum(outTradeNo);
-		mapper.put(in);
 	}
 
 	@Override
@@ -1252,7 +1246,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		log.info("易票联通知返回消息：outradeno" + outradeno + " noncestr:" + noncestr);
 		Income income = mapper.getByQrcodeOrderNum(outradeno);
 		TenantIdContext.setTenantId(income.getTenant_id());
-		String returnstate = SelfPayUtil.eplpaymentQuery(appConfig.getPaymentquery(), qrcodemapper.get(income.getQrcodeid()), outradeno, noncestr);
+		String returnstate = SelfPayUtil.eplpaymentQuery(qrcodemapper.get(income.getQrcodeid()), outradeno, noncestr);
 		Assert.notNull(returnstate, "易票联通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			success(income);

@@ -56,7 +56,9 @@ public class Qrcode extends YtBaseEntity<Qrcode> {
 	Double todaybalance;
 	Double incomesum;
 	Integer ordersum;
+	String apirest;
 	String notifyurl;
+	String payoutnotifyurl;
 	String remark;
 	Integer version;
 }
