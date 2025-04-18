@@ -791,7 +791,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			// 支付通手机H5
 			if (qd.getCode().equals(DictionaryResource.PRODUCT_ZFTWAP)) {
 				Qrcode pqd = qrcodemapper.get(qd.getPid());
-				AlipayTradeWapPayResponse response = SelfPayUtil.AlipayTradeWapPay(pqd, income.getOrdernum(), income.getAmount());
+				AlipayTradeWapPayResponse response = SelfPayUtil.AlipayTradeWapPay(pqd, qd, income.getOrdernum(), income.getAmount());
 				Assert.notNull(response, "获取支付宝单号错误!");
 				String pageRedirectionData = response.getBody();
 				income.setQrcode(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));

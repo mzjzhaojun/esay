@@ -114,16 +114,13 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	}
 
 	@Override
-	public QrcodeVO paytestzft(Qrcode qv) {
-		if (qv.getCode().equals(DictionaryResource.PRODUCT_ZFTWAP)) {
-			Qrcode pqrcode = mapper.get(qv.getPid());
-			AlipayTradeWapPayResponse atp = SelfPayUtil.AlipayTradeWapPay(pqrcode, StringUtil.getOrderNum(), qv.getBalance());
-			Assert.notNull(atp, "获取支付宝单号错误!");
-			QrcodeVO qrv = new QrcodeVO();
-			qrv.setPayurl(atp.getBody());
-			return qrv;
-		}
-		return null;
+	public QrcodeVO paytestzft(Qrcode qrcode) {
+		Qrcode pqrcode = mapper.get(qrcode.getPid());
+		AlipayTradeWapPayResponse atp = SelfPayUtil.AlipayTradeWapPay(pqrcode, qrcode, StringUtil.getOrderNum(), qrcode.getBalance());
+		Assert.notNull(atp, "获取支付宝单号错误!");
+		QrcodeVO qrv = new QrcodeVO();
+		qrv.setPayurl(atp.getBody());
+		return qrv;
 	}
 
 	@Override

@@ -75,7 +75,7 @@ public class SelfPayUtil {
 	private static AlipayConfig getAlipayConfig(Qrcode qrcode) {
 		AlipayConfig alipayConfig = new AlipayConfig();
 		alipayConfig.setPrivateKey(qrcode.getAppprivatekey());
-		alipayConfig.setServerUrl(qrcode.getApirest());
+		alipayConfig.setServerUrl("https://openapi.alipay.com/gateway.do");
 		alipayConfig.setAppId(qrcode.getAppid());
 		alipayConfig.setCharset(AlipayConstants.CHARSET_UTF8);
 		alipayConfig.setSignType(AlipayConstants.SIGN_TYPE_RSA2);
@@ -87,7 +87,7 @@ public class SelfPayUtil {
 	private static AlipayConfig getAlipayConfigCert(Qrcode qrcode) {
 		AlipayConfig alipayConfig = new AlipayConfig();
 		alipayConfig.setPrivateKey(qrcode.getAppprivatekey());
-		alipayConfig.setServerUrl(qrcode.getApirest());
+		alipayConfig.setServerUrl("https://openapi.alipay.com/gateway.do");
 		alipayConfig.setAppId(qrcode.getAppid());
 		alipayConfig.setCharset(AlipayConstants.CHARSET_UTF8);
 		alipayConfig.setSignType(AlipayConstants.SIGN_TYPE_RSA2);
@@ -106,7 +106,7 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static AlipayTradeWapPayResponse AlipayTradeWapPay(Qrcode qrcode, String ordernum, Double amount) {
+	public static AlipayTradeWapPayResponse AlipayTradeWapPay(Qrcode qrcode, Qrcode sqrcode, String ordernum, Double amount) {
 
 		try {
 			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(qrcode));
@@ -118,9 +118,9 @@ public class SelfPayUtil {
 			model.setTotalAmount(amount.toString());
 			model.setSubject("Member Payment");
 			model.setProductCode("QUICK_WAP_WAY");
-			if (qrcode.getPid() != null) {
+			if (sqrcode.getPid() != null) {
 				SubMerchant subMerchant = new SubMerchant();
-				subMerchant.setMerchantId(qrcode.getSmid());
+				subMerchant.setMerchantId(sqrcode.getSmid());
 				model.setSubMerchant(subMerchant);
 				SettleInfo settleInfo = new SettleInfo();
 				List<SettleDetailInfo> settleDetailInfos = new ArrayList<SettleDetailInfo>();
@@ -131,8 +131,8 @@ public class SelfPayUtil {
 				settleInfo.setSettleDetailInfos(settleDetailInfos);
 				model.setSettleInfo(settleInfo);
 				ExtendParams extendParams = new ExtendParams();
-				extendParams.setSpecifiedSellerName(qrcode.getName());
-				extendParams.setRoyaltyFreeze("true");
+				extendParams.setSpecifiedSellerName(sqrcode.getName());
+				extendParams.setRoyaltyFreeze("false");
 				model.setExtendParams(extendParams);
 			}
 			request.setBizModel(model);
@@ -216,7 +216,7 @@ public class SelfPayUtil {
 			request.setBizModel(model);
 
 			AlipayTradeSettleConfirmResponse response = alipayClient.execute(request);
-			System.out.println(response.getBody());
+			log.info(response.getBody());
 			if (response.isSuccess()) {
 				return response;
 			}
@@ -261,7 +261,7 @@ public class SelfPayUtil {
 			request.setBizModel(model);
 
 			AlipayTradeOrderSettleResponse response = alipayClient.execute(request);
-			System.out.println(response.getBody());
+			log.info(response.getBody());
 
 			if (response.isSuccess()) {
 				return response;
@@ -341,7 +341,7 @@ public class SelfPayUtil {
 			request.setBizModel(model);
 
 			AlipayTradeRefundResponse response = alipayClient.execute(request);
-			System.out.println(response.getBody());
+			log.info(response.getBody());
 
 			if (response.isSuccess()) {
 				return response;
@@ -371,7 +371,7 @@ public class SelfPayUtil {
 
 			request.setBizModel(model);
 			AntMerchantExpandIndirectZftDeleteResponse response = alipayClient.execute(request);
-			System.out.println(response.getBody());
+			log.info(response.getBody());
 
 			if (response.isSuccess()) {
 				return response;
@@ -416,7 +416,7 @@ public class SelfPayUtil {
 			request.setBizModel(model);
 
 			AlipayTradeRoyaltyRelationBindResponse response = alipayClient.execute(request);
-			System.out.println(response.getBody());
+			log.info(response.getBody());
 
 			if (response.isSuccess()) {
 				return response;
@@ -454,7 +454,7 @@ public class SelfPayUtil {
 			model.setReceiverList(receiverList);
 			request.setBizModel(model);
 			AlipayTradeRoyaltyRelationUnbindResponse response = alipayClient.execute(request);
-			System.out.println(response.getBody());
+			log.info(response.getBody());
 			if (response.isSuccess()) {
 				return response;
 			}
@@ -481,17 +481,14 @@ public class SelfPayUtil {
 			AlipayFundAccountQueryModel model = new AlipayFundAccountQueryModel();
 
 			// uid参数未来计划废弃，存量商户可继续使用，新商户请使用openid。请根据应用-开发配置-openid配置选择支持的字段。
-			model.setAlipayUserId("2088051199192250");
-
-			// 设置支付宝openId
-//	        model.setAlipayOpenId("061P6NAblcWDWJoDRxSVvOYz-ufp-3wQaA4E_szQyMFTXse");
+			model.setAlipayUserId(qrcode.getRemark());
 
 			// 设置查询的账号类型
 			model.setAccountType("ACCTRANS_ACCOUNT");
 
 			request.setBizModel(model);
 			AlipayFundAccountQueryResponse response = alipayClient.certificateExecute(request);
-			System.out.println(response.getBody());
+			log.info(response.getBody());
 
 			if (response.isSuccess()) {
 				return response;
@@ -549,7 +546,7 @@ public class SelfPayUtil {
 
 			request.setBizModel(model);
 			AlipayFundTransUniTransferResponse response = alipayClient.certificateExecute(request);
-			System.out.println(response.getBody());
+			log.info(response.getBody());
 
 			if (response.isSuccess()) {
 				return response;
@@ -576,7 +573,7 @@ public class SelfPayUtil {
 			AlipayDataBillEreceiptApplyRequest request = new AlipayDataBillEreceiptApplyRequest();
 			request.setBizContent("{" + "  \"type\":\"FUND_DETAIL\"," + "  \"key\":\"" + key + "\"}");
 			AlipayDataBillEreceiptApplyResponse response = alipayClient.certificateExecute(request);
-			System.out.println(response.getBody());
+			log.info(response.getBody());
 			if (response.isSuccess()) {
 				return response;
 			}
@@ -602,7 +599,7 @@ public class SelfPayUtil {
 			AlipayDataBillEreceiptQueryRequest request = new AlipayDataBillEreceiptQueryRequest();
 			request.setBizContent("{" + "  \"file_id\":\"" + fileid + "\"" + "}");
 			AlipayDataBillEreceiptQueryResponse response = alipayClient.certificateExecute(request);
-			System.out.println(response.getBody());
+			log.info(response.getBody());
 			if (response.isSuccess()) {
 				return response;
 			}
