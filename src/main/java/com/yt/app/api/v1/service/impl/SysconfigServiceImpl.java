@@ -8,17 +8,14 @@ import com.yt.app.api.v1.service.SysconfigService;
 import com.yt.app.api.v1.vo.SysOxxVo;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
-import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Sysconfig;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
-import com.yt.app.common.util.RedisUtil;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 
 import java.util.ArrayList;
@@ -70,7 +67,7 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 	@Transactional
 	public void initSystemData() {
 		// getUsdtPrice();
-		getUsdtToTrx();
+		//getUsdtToTrx();
 	}
 
 //	private void getUsdtPrice() {
@@ -83,13 +80,13 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 //		RedisUtil.set(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTEXCHANGE, exchange.toString());
 //	}
 
-	private void getUsdtToTrx() {
-		String str = HttpUtil.get("https://c.tronlink.org/v1/cryptocurrency/getprice?symbol=USDT&convert=TRX");
-		JSONObject data = JSONUtil.parseObj(str);
-		Double price = data.getJSONObject("data").getJSONObject("USDT").getJSONObject("quote").getJSONObject("TRX").getDouble("price");
-		mapper.putUsdtToTrxExchange(price);
-		RedisUtil.set(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTOTEXCHANGE, price.toString());
-	}
+//	private void getUsdtToTrx() {
+//		String str = HttpUtil.get("https://c.tronlink.org/v1/cryptocurrency/getprice?symbol=USDT&convert=TRX");
+//		JSONObject data = JSONUtil.parseObj(str);
+//		Double price = data.getJSONObject("data").getJSONObject("USDT").getJSONObject("quote").getJSONObject("TRX").getDouble("price");
+//		mapper.putUsdtToTrxExchange(price);
+//		RedisUtil.set(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTOTEXCHANGE, price.toString());
+//	}
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
