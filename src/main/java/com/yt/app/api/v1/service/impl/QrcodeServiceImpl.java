@@ -136,7 +136,7 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	public String paytesteplcafrom(Map<String, Object> params) {
 		Qrcode pqrcode = mapper.get(Long.valueOf(params.get("id").toString()));
 		System.out.println(params.get("smsno").toString() + "ceee" + params.get("smscode").toString());
-		String atp = SelfPayUtil.eplprotocolPayPre(pqrcode, StringUtil.getOrderNum(), params.get("menmberid").toString(), params.get("smsno").toString(), params.get("smscode").toString(), Long.valueOf(params.get("amount").toString()));
+		String atp = SelfPayUtil.eplprotocolPayPre(pqrcode, StringUtil.getOrderNum(), params.get("menmberid").toString(), params.get("smsno").toString(), params.get("smscode").toString(), Long.valueOf(String.format("%.2f", params.get("amount")).replace(".", "")));
 		Assert.notNull(atp, "易票联支付错误!");
 		return atp;
 	}
@@ -211,7 +211,7 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	}
 
 	@Override
-	public void accountquery(Qrcode qrcode) {
+	public void zftaccountquery(Qrcode qrcode) {
 		AlipayFundAccountQueryResponse afaqr = SelfPayUtil.AlipayFundAccountQuery(qrcode);
 		qrcode.setBalance(Double.valueOf(afaqr.getAvailableAmount()));
 		mapper.put(qrcode);
@@ -226,5 +226,20 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 		qtc.setOrdernum(aftutr.getOrderId());
 		qtc.setStatus(DictionaryResource.ALIPAY_STATUS_701);
 		qrcodetransferrecordmapper.post(qtc);
+	}
+
+	@Override
+	public void eplaccountquery(Qrcode qrcode) {
+		Qrcode pqrcode = mapper.get(qrcode.getId());
+		String availableBalance = SelfPayUtil.eplaccountQuery(pqrcode);
+		pqrcode.setBalance(Double.valueOf(availableBalance.substring(0, availableBalance.length() - 2) + "." + availableBalance.substring(availableBalance.length() - 2)));
+		mapper.put(pqrcode);
+	}
+
+	@Override
+	public void epltransunitransfer(Qrcodetransferrecord qrcode) {
+		Qrcode pqrcode = mapper.get(qrcode.getId());
+		String returndata = SelfPayUtil.eplwithdrawalToCard(pqrcode, qrcode.getOrdernum(), qrcode.getPayeename(), qrcode.getPayeeid(), qrcode.getBankname(), qrcode.getPayeetype(), Long.valueOf(String.format("%.2f", qrcode.getAmount()).replace(".", "")));
+		Assert.notNull(returndata, "转账失败!");
 	}
 }

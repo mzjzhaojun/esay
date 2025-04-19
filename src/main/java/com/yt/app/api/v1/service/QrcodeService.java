@@ -59,11 +59,19 @@ public interface QrcodeService extends YtIBaseService<Qrcode, Long> {
 	void updateDayValue(Qrcode c, String date);
 
 	/**
-	 * 账户余额查询
+	 * 支付通账户余额查询
 	 * 
 	 * @param c
 	 */
-	void accountquery(Qrcode c);
+	void zftaccountquery(Qrcode c);
+	
+	
+	/**
+	 * 易票联账户余额查询
+	 * 
+	 * @param c
+	 */
+	void eplaccountquery(Qrcode c);
 
 	/**
 	 * 转账额度
@@ -71,5 +79,11 @@ public interface QrcodeService extends YtIBaseService<Qrcode, Long> {
 	 * @param c
 	 */
 	void transunitransfer(Qrcodetransferrecord c);
-
+	
+	/**
+	 * 易票联转账
+	 * @param c
+	 */
+	void epltransunitransfer(Qrcodetransferrecord c);
+	
 }

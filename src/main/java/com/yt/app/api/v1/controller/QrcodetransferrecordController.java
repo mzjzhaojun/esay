@@ -42,10 +42,33 @@ public class QrcodetransferrecordController extends YtBaseEncipherControllerImpl
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
-	@RequestMapping(value = "/transunitransfer", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	
+	/**
+	 * 支付宝转账
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/zfbtransunitransfer", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> transunitransfer(YtRequestDecryptEntity<Qrcodetransferrecord> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		qrcodeservice.transunitransfer(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
+	
+	
+	/**
+	 * 易票联转账
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/epltransunitransfer", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> epltransunitransfer(YtRequestDecryptEntity<Qrcodetransferrecord> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		qrcodeservice.epltransunitransfer(requestEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(1));
+	}
+	
 
 }

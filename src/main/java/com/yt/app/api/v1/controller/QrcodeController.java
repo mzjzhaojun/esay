@@ -39,15 +39,28 @@ public class QrcodeController extends YtBaseEncipherControllerImpl<Qrcode, Long>
 	}
 
 	/**
-	 * 支付余额查询
+	 * 支付bao余额查询
 	 * @param requestEntity
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/accountquery", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/zftaccountquery", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> accountquery(YtRequestDecryptEntity<Qrcode> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		service.accountquery(requestEntity.getBody());
+		service.zftaccountquery(requestEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(1));
+	}
+	
+	/**
+	 * 易票联余额查询
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/eplaccountquery", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> eplaccountquery(YtRequestDecryptEntity<Qrcode> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		service.eplaccountquery(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
 
@@ -78,7 +91,7 @@ public class QrcodeController extends YtBaseEncipherControllerImpl<Qrcode, Long>
 	}
 
 	/**
-	 * 易票聯协议支付
+	 * 易票联协议支付
 	 * @param requestEntity
 	 * @param request
 	 * @param response

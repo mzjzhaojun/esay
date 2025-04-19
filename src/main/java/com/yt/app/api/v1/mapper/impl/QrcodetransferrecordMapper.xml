@@ -4,7 +4,7 @@
 	namespace="com.yt.app.api.v1.mapper.QrcodetransferrecordMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,qrcodeid,qrcodename,outbizno,ordernum,amount,payeeid,payeename,payeetype,status,fileid,dowloadurl,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,qrcodeid,qrcodename,outbizno,ordernum,amount,payeeid,payeename,payeetype,bankname,bankcode,status,fileid,dowloadurl,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -18,9 +18,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Qrcodetransferrecord">
 		insert into
-		qrcodetransferrecord(id,qrcodeid,qrcodename,outbizno,ordernum,amount,payeeid,payeename,payeetype,status,fileid,dowloadurl,create_by,create_time,update_by,update_time,remark)
+		qrcodetransferrecord(id,qrcodeid,qrcodename,outbizno,ordernum,amount,payeeid,payeename,payeetype,bankname,bankcode,status,fileid,dowloadurl,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{qrcodeid},#{qrcodename},#{outbizno},#{ordernum},#{amount},#{payeeid},#{payeename},#{payeetype},#{status},#{fileid},#{dowloadurl},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{qrcodeid},#{qrcodename},#{outbizno},#{ordernum},#{amount},#{payeeid},#{payeename},#{payeetype},#{bankname},#{bankcode},#{status},#{fileid},#{dowloadurl},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">

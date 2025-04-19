@@ -29,6 +29,8 @@ public class QrcodetransferrecordVO extends BaseVO {
 	String outbizno;
 	String ordernum;
 	Object amount;
+	String bankcode;
+	String bankname;
 	String payeeid;
 	String payeename;
 	String payeetype;

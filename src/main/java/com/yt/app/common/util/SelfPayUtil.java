@@ -792,7 +792,7 @@ public class SelfPayUtil {
 		try {
 			String param = JSONUtil.toJsonStr(request);
 			JSONObject response = PaymentHelper.accountQuery(qrcode.getApirest(), param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
-			return response.getStr("returnCode");
+			return response.getStr("availableBalance");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

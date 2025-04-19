@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.json.JSONObject;
 
 public class RemoteInvoker {
@@ -20,6 +21,7 @@ public class RemoteInvoker {
 		header.put("x-efps-timestamp", df.format(new Date()));
 		header.put("Content-Type", "application/json");
 		JSONObject response = HttpUtil.post(url, request, header);
+		Assert.notNull(response, "易票联查询出错!");
 		return response;
 	}
 

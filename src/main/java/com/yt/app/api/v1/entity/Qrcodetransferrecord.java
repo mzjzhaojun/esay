@@ -30,6 +30,8 @@ public class Qrcodetransferrecord extends YtBaseEntity<Qrcodetransferrecord> {
 	String ordernum;
 	Double amount;
 	String payeeid;
+	String bankcode;
+	String bankname;
 	String payeename;
 	String payeetype;
 	Integer status;
