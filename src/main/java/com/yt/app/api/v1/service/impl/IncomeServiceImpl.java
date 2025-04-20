@@ -33,6 +33,7 @@ import com.yt.app.common.base.context.AuthContext;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.common.bot.ChannelBot;
+import com.alipay.api.response.AlipayTradeOrderSettleResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.response.AlipayTradeSettleConfirmResponse;
 import com.alipay.api.response.AlipayTradeWapPayResponse;
@@ -1197,6 +1198,21 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, in.getQrcodeordernum(), in.getAmount());
 			Assert.notNull(atsc, "结算失败!");
 			in.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+			i = mapper.put(in);
+		}
+		return i;
+	}
+
+	@Override
+	public Integer tradeordersettle(Income income) {
+		Income in = mapper.get(income.getId());
+		Integer i = 0;
+		if (in.getDynamic()) {
+			Qrcode qd = qrcodemapper.get(in.getQrcodeid());
+			Qrcode pqd = qrcodemapper.get(qd.getPid());
+			AlipayTradeOrderSettleResponse atsc = SelfPayUtil.AlipayTradeOrderSettle(pqd, in.getQrcodeordernum(), in.getAmount() * 0.01);
+			Assert.notNull(atsc, "分账失败!");
+			in.setStatus(DictionaryResource.PAYOUTSTATUS_55);
 			i = mapper.put(in);
 		}
 		return i;

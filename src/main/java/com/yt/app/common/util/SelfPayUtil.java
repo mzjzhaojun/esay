@@ -242,19 +242,19 @@ public class SelfPayUtil {
 			AlipayTradeOrderSettleModel model = new AlipayTradeOrderSettleModel();
 
 			// 设置结算请求流水号
-			model.setOutRequestNo("20160727001");
+			model.setOutRequestNo(StringUtil.getOrderNum());
 
 			// 设置支付宝订单号
-			model.setTradeNo("2014030411001007850000672009");
+			model.setTradeNo(ordernum);
 
 			// 设置分账明细信息
 			List<OpenApiRoyaltyDetailInfoPojo> royaltyParameters = new ArrayList<OpenApiRoyaltyDetailInfoPojo>();
 			OpenApiRoyaltyDetailInfoPojo royaltyParameters0 = new OpenApiRoyaltyDetailInfoPojo();
 			royaltyParameters0.setRoyaltyType("transfer");
-			royaltyParameters0.setTransInType("userId");
-			royaltyParameters0.setTransIn("2088101126708402");
-			royaltyParameters0.setAmount("0.1");
-			royaltyParameters0.setDesc("分账给2088101126708402");
+			royaltyParameters0.setTransInType("loginName");
+			royaltyParameters0.setTransIn("li1850420@sina.com");
+			royaltyParameters0.setAmount(amount.toString());
+			royaltyParameters0.setDesc("分账给li1850420@sina.com");
 			royaltyParameters.add(royaltyParameters0);
 			model.setRoyaltyParameters(royaltyParameters);
 
@@ -300,7 +300,7 @@ public class SelfPayUtil {
 			model.setRefundReason("正常退款");
 
 			// 设置退款请求号
-			model.setOutRequestNo("HZ01RF001");
+			model.setOutRequestNo(StringUtil.getOrderNum());
 
 			// 设置退款包含的商品列表信息
 			List<RefundGoodsDetail> refundGoodsDetail = new ArrayList<RefundGoodsDetail>();
@@ -411,7 +411,7 @@ public class SelfPayUtil {
 			model.setReceiverList(receiverList);
 
 			// 设置外部请求号
-			model.setOutRequestNo("2019032200000001");
+			model.setOutRequestNo(StringUtil.getOrderNum());
 
 			request.setBizModel(model);
 
@@ -440,7 +440,7 @@ public class SelfPayUtil {
 			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(qrcode));
 			AlipayTradeRoyaltyRelationUnbindRequest request = new AlipayTradeRoyaltyRelationUnbindRequest();
 			AlipayTradeRoyaltyRelationUnbindModel model = new AlipayTradeRoyaltyRelationUnbindModel();
-			model.setOutRequestNo("2019032200000001");
+			model.setOutRequestNo(StringUtil.getOrderNum());
 			List<RoyaltyEntity> receiverList = new ArrayList<RoyaltyEntity>();
 			RoyaltyEntity receiverList0 = new RoyaltyEntity();
 			receiverList0.setType("userId");

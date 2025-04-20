@@ -84,6 +84,9 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	// 确认结算
 	Integer settleconfirm(Income income);
+	
+	// 确认结算
+	Integer tradeordersettle(Income income);
 
 	// 易票联绑卡
 	void sumbmitcheck(Map<String, Object> params);
