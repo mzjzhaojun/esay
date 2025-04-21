@@ -254,7 +254,7 @@ public class SelfPayUtil {
 			royaltyParameters0.setTransInType("loginName");
 			royaltyParameters0.setTransIn("li1850420@sina.com");
 			royaltyParameters0.setAmount(amount.toString());
-			royaltyParameters0.setDesc("分账给li1850420@sina.com");
+			royaltyParameters0.setDesc("百亿补贴-达人佣金");
 			royaltyParameters0.setRoyaltyScene("达人佣金");
 			royaltyParameters.add(royaltyParameters0);
 			model.setRoyaltyParameters(royaltyParameters);
