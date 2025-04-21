@@ -1291,6 +1291,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			Assert.notNull(atsc, "结算失败!");
 			in.setStatus(DictionaryResource.PAYOUTSTATUS_54);
 			mapper.put(in);
+			in.setVersion(in.getVersion() + 1);
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
