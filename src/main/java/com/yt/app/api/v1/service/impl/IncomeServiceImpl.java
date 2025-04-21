@@ -1197,6 +1197,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			Qrcode pqd = qrcodemapper.get(qd.getPid());
 			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, in.getQrcodeordernum(), in.getAmount());
 			Assert.notNull(atsc, "结算失败!");
+			in.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+			mapper.put(in);
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -1275,6 +1277,31 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			success(income);
 		}
 		TenantIdContext.remove();
+	}
+
+	@Override
+	public Integer batchsettleconfirm(Map<String, Object> param) {
+		param.put("dir", "Asc");
+		List<IncomeVO> list = mapper.page(param);
+		Integer i = 0;
+		list.forEach(in -> {
+			Qrcode qd = qrcodemapper.get(in.getQrcodeid());
+			Qrcode pqd = qrcodemapper.get(qd.getPid());
+			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, in.getQrcodeordernum(), in.getAmount());
+			Assert.notNull(atsc, "结算失败!");
+			in.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+			mapper.put(in);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			AlipayTradeOrderSettleResponse atos = SelfPayUtil.AlipayTradeOrderSettle(pqd, in.getQrcodeordernum(), in.getAmount() * 0.01);
+			Assert.notNull(atos, "分账失败!");
+			in.setStatus(DictionaryResource.PAYOUTSTATUS_55);
+			mapper.put(in);
+		});
+		return i;
 	}
 
 }

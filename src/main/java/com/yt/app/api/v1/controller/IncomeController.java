@@ -36,6 +36,9 @@ public class IncomeController extends YtBaseEncipherControllerImpl<Income, Long>
 	@Autowired
 	private IncomeService service;
 
+	/**
+	 * 集合
+	 */
 	@Override
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> list(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
@@ -43,12 +46,22 @@ public class IncomeController extends YtBaseEncipherControllerImpl<Income, Long>
 		return new YtResponseEncryptEntity<Object>(new YtBody(list));
 	}
 
+	/**
+	 * 分页
+	 */
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		YtIPage<IncomeVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
+	/**
+	 * 屏蔽
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/addblock", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> makeuporder(YtRequestDecryptEntity<Income> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.addblock(requestEntity.getBody());
@@ -56,6 +69,13 @@ public class IncomeController extends YtBaseEncipherControllerImpl<Income, Long>
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 
+	/**
+	 * 通知
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/notify", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> notify(YtRequestDecryptEntity<Income> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.notify(requestEntity.getBody());
@@ -63,6 +83,13 @@ public class IncomeController extends YtBaseEncipherControllerImpl<Income, Long>
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
 
+	/**
+	 * 成功
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/success", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> success(YtRequestDecryptEntity<Income> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		service.successstatus(requestEntity.getBody());
@@ -93,6 +120,20 @@ public class IncomeController extends YtBaseEncipherControllerImpl<Income, Long>
 	@RequestMapping(value = "/tradeordersettle", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> tradeordersettle(YtRequestDecryptEntity<Income> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		service.tradeordersettle(requestEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(1));
+	}
+	
+	
+	/**
+	 * 結算
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/batchsettleconfirm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> batchsettleconfirm(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		service.batchsettleconfirm(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
 }

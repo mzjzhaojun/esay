@@ -38,7 +38,7 @@ public class IncomeVO extends BaseVO {
 	Long agentid;
 	String agentordernum;
 	Double agentincome;
-	Double qrcodeid;
+	Long qrcodeid;
 	String qrcodename;
 	String qrcodecode;
 	String qrcodeaislecode;

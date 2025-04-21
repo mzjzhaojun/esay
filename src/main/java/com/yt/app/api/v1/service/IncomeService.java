@@ -20,6 +20,8 @@ import com.yt.app.common.common.yt.YtIPage;
 public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	List<Income> list();
+	
+	Integer batchsettleconfirm(Map<String, Object> param);
 
 	Income getByOrderNum(String ordernum);
 
