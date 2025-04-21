@@ -1197,7 +1197,14 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			Qrcode pqd = qrcodemapper.get(qd.getPid());
 			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, in.getQrcodeordernum(), in.getAmount());
 			Assert.notNull(atsc, "结算失败!");
-			in.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			AlipayTradeOrderSettleResponse atos = SelfPayUtil.AlipayTradeOrderSettle(pqd, in.getQrcodeordernum(), in.getAmount() * 0.01);
+			Assert.notNull(atos, "分账失败!");
+			in.setStatus(DictionaryResource.PAYOUTSTATUS_55);
 			i = mapper.put(in);
 		}
 		return i;
