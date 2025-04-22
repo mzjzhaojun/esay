@@ -377,7 +377,6 @@ public class PayUtil {
 		RestTemplate resttemplate = new RestTemplate();
 		//
 		ResponseEntity<String> sov = resttemplate.exchange(cl.getApiip() + "/api/agentpay/apply", HttpMethod.POST, httpEntity, String.class);
-
 		String data = sov.getBody();
 		SyYsOrder sso = JSONUtil.toBean(data, SyYsOrder.class);
 		log.info("易生代付创建订单：" + data);
@@ -455,7 +454,7 @@ public class PayUtil {
 		//
 		ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/agentpayAPI/apply", httpEntity, JSONObject.class);
 		String retCode = sov.getBody().getStr("retCode");
-		log.info("旭日代付创建订单：" + sov.getBody().getStr("agentpayOrderId"));
+		log.info("旭日代付创建订单：" + sov.getBody());
 		if (retCode.equals("SUCCESS")) {
 			return sov.getBody().getStr("agentpayOrderId");
 		}
@@ -485,7 +484,7 @@ public class PayUtil {
 			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/agentpayAPI/queryOrder", httpEntity, JSONObject.class);
 			String retCode = sov.getBody().getStr("retCode");
 			String status = sov.getBody().getStr("status");
-			log.info("旭日代付查订单：" + status);
+			log.info("旭日代付查订单：" +  sov.getBody());
 			if (retCode.equals("SUCCESS")) {
 				return status;
 			}
@@ -641,6 +640,71 @@ public class PayUtil {
 			}
 		} catch (RestClientException e) {
 			log.info("灵境代付查单返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// HYT代付
+	public static String SendHYTSubmit(Payout pt, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		map.add("MerchantId", cl.getCode());
+		map.add("MerchantUniqueOrderId", pt.getOrdernum());
+		map.add("WithdrawTypeId", "0");
+		map.add("Amount", String.format("%.2f", pt.getAmount()));
+		map.add("NotifyUrl", cl.getApireusultip());
+		map.add("BankCardNumber", pt.getAccnumer());
+		map.add("BankCardRealName", pt.getAccname());
+		map.add("BankCardBankName", pt.getBankname());
+		map.add("Remark", "");
+
+		String signContent = "Amount=" + String.format("%.2f", pt.getAmount()) + "&BankCardBankName=" + pt.getBankname() + "&BankCardNumber=" + pt.getAccnumer() + "&BankCardRealName=" + pt.getAccname() + "&MerchantId=" + cl.getCode()
+				+ "&MerchantUniqueOrderId=" + pt.getOrdernum() + "&NotifyUrl=" + cl.getApireusultip() + "&Remark=&WithdrawTypeId=0&Sign=" + cl.getApikey() + "";
+
+		String sign = MD5Utils.md5(signContent);
+		map.add("Sign", sign);
+
+		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/InterfaceV9/CreateWithdrawOrder", httpEntity, JSONObject.class);
+		String retCode = sov.getBody().getStr("Code");
+		log.info("HYT代付创建订单：" + sov.getBody());
+		if (retCode.equals("0")) {
+			return sov.getBody().getStr("Code");
+		}
+		return null;
+	}
+
+	// HYT代付查单
+	public static String SendHYTSelectOrder(String orderid, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("MerchantId", cl.getCode());
+			map.add("MerchantUniqueOrderId", orderid);
+
+			String signContent = "MerchantId=" + cl.getCode() + "&MerchantUniqueOrderId=" + orderid + "&keySign=" + cl.getApikey() + "";
+
+			String sign = MD5Utils.md5(signContent);
+			map.add("sign", sign);
+
+			HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/InterfaceV9/QueryWithdrawOrder", httpEntity, JSONObject.class);
+			String retCode = sov.getBody().getStr("Code");
+			String status = sov.getBody().getStr("WithdrawOrderStatus");
+			log.info("HYT代付查订单：" +  sov.getBody());
+			if (retCode.equals("0")) {
+				return status;
+			}
+		} catch (RestClientException e) {
+			log.info("HYT代付查单返回消息：" + e.getMessage());
 		}
 		return null;
 	}

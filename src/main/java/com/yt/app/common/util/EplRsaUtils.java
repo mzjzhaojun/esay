@@ -18,7 +18,7 @@ import javax.crypto.Cipher;
 
 import org.apache.commons.codec.binary.Base64;
 
-public class RsaUtils {
+public class EplRsaUtils {
 
 	private static final String CHARSET = "UTF-8";
 

@@ -452,6 +452,29 @@ public class OrderController {
 		}
 	}
 
+//	/**
+//	 * 易票联代付回调
+//	 * 
+//	 * @param requestEntity
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@RequestMapping(value = "/huifutxcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+//	public YtResponseEntity<Object> huifutxcallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+//		RLock lock = RedissonUtil.getLock("huifutxcallback");
+//		try {
+//			lock.lock();
+//			incomeservice.huifutxcallback(RequestUtil.requestEntityToParamMap(requestEntity));
+//			String json = "{\"returnCode\":\"0000\"}";
+//			return new YtResponseEntity<Object>(JSONUtil.parseObj(json));
+//		} catch (Exception e) {
+//			throw new YtException(e);
+//		} finally {
+//			lock.unlock();
+//		}
+//	}
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -679,8 +702,29 @@ public class OrderController {
 			lock.unlock();
 		}
 	}
-	
-	
+
+	/**
+	 * HYT代付回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/hytcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void hytcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("hytcallback");
+		try {
+			lock.lock();
+			payoutservice.hytcallback(params);
+			response.getWriter().print("SUCCESS");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+
 	/**
 	 * 易票联代付回调
 	 * 

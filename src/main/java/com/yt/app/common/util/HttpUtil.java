@@ -53,7 +53,7 @@ public class HttpUtil {
 		boolean flag = false;
 		if (content != null && !content.equals("") && sign != null && !sign.equals("")) {
 
-			boolean result = RsaUtils.vertify(RsaUtils.getPublicKey(publicKey), content, sign);
+			boolean result = EplRsaUtils.vertify(EplRsaUtils.getPublicKey(publicKey), content, sign);
 			debug("验签结果:" + result);
 			if (result) {
 				flag = true;

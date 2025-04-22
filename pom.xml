@@ -172,7 +172,13 @@
 			<version>4.39.218.ALL</version>
 		</dependency>
 
-
+		
+		<dependency>  
+		    <groupId>com.huifu.bspay.sdk</groupId>  
+		    <artifactId>dg-java-sdk</artifactId>  
+		    <version>3.0.21</version>  
+		</dependency>
+		
 	</dependencies>
 
 	<profiles>

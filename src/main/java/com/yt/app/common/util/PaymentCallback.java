@@ -33,7 +33,7 @@ public class PaymentCallback {
 		PrintWriter writer = response.getWriter();
 		JSONObject jsonObject = new JSONObject();
 		if (wholeStr != null && !wholeStr.equals("") && sign != null && !sign.equals("")) {
-			boolean result = RsaUtils.vertify(RsaUtils.getPublicKey(publicPath), wholeStr, sign);
+			boolean result = EplRsaUtils.vertify(EplRsaUtils.getPublicKey(publicPath), wholeStr, sign);
 			System.out.println("验签结果:" + result);
 			if (result) {
 

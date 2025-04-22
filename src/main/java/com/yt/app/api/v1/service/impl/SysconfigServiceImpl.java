@@ -8,11 +8,13 @@ import com.yt.app.api.v1.service.SysconfigService;
 import com.yt.app.api.v1.vo.SysOxxVo;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
+import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Sysconfig;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
+import com.yt.app.common.util.RedisUtil;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.http.HttpUtil;
@@ -66,19 +68,19 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 	@Override
 	@Transactional
 	public void initSystemData() {
-		// getUsdtPrice();
+		 getUsdtPrice();
 		//getUsdtToTrx();
 	}
 
-//	private void getUsdtPrice() {
-//		Long time = System.currentTimeMillis() / 1000;
-//		String str = HttpUtil.get("https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=all&userType=all&receivingAds=false&t=" + time);
-//		SysOxxVo data = JSONUtil.toBean(str, SysOxxVo.class);
-//		List<Object> list = data.getData().getSell();
-//		Double exchange = Double.valueOf(BeanUtil.beanToMap(list.get(0)).get("price").toString());
-//		mapper.putUsdtExchange(exchange);
-//		RedisUtil.set(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTEXCHANGE, exchange.toString());
-//	}
+	private void getUsdtPrice() {
+		Long time = System.currentTimeMillis() / 1000;
+		String str = HttpUtil.get("https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=all&userType=all&receivingAds=false&t=" + time);
+		SysOxxVo data = JSONUtil.toBean(str, SysOxxVo.class);
+		List<Object> list = data.getData().getSell();
+		Double exchange = Double.valueOf(BeanUtil.beanToMap(list.get(0)).get("price").toString());
+		mapper.putUsdtExchange(exchange);
+		RedisUtil.set(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTEXCHANGE, exchange.toString());
+	}
 
 //	private void getUsdtToTrx() {
 //		String str = HttpUtil.get("https://c.tronlink.org/v1/cryptocurrency/getprice?symbol=USDT&convert=TRX");

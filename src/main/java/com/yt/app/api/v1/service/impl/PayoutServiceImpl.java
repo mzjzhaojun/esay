@@ -865,6 +865,13 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		// 获取渠道单号
 		boolean flage = true;
 		switch (cl.getName()) {
+		case DictionaryResource.DFHYTAISLE:
+			String hytordernum = PayUtil.SendHYTSubmit(t, cl);
+			if (hytordernum != null) {
+				flage = false;
+				t.setChannelordernum("outc" + StringUtil.getOrderNum());
+			}
+			break;
 		case DictionaryResource.DFLJAISLE:
 			String ljordernum = PayUtil.SendLJSubmit(t, cl);
 			if (ljordernum != null) {
@@ -1118,5 +1125,32 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			TenantIdContext.remove();
 		}
 
+	}
+
+	@Override
+	public void hytcallback(Map<String, String> params) {
+		String orderid = params.get("MerchantUniqueOrderId").toString();
+		String status = params.get("WithdrawOrderStatus").toString();
+		log.info("HYT通知返回消息：orderid" + orderid + " status:" + status);
+		Payout pt = mapper.getByOrdernum(orderid);
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			Channel channel = channelmapper.get(pt.getChannelid());
+			String ip = AuthContext.getIp();
+			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求!");
+			}
+			// 查询渠道是否真实成功
+			String returnstate = PayUtil.SendHYTSelectOrder(pt.getOrdernum(), channel);
+			Assert.notNull(returnstate, "HYT代付通知反查订单失败!");
+			if (returnstate.equals("100")) {
+				paySuccess(pt);
+			} else if (returnstate.equals("90")) {
+				payFail(pt);
+			}
+			SysUserContext.remove();
+			TenantIdContext.remove();
+		}
 	}
 }

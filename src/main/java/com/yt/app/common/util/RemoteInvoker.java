@@ -13,7 +13,7 @@ public class RemoteInvoker {
 	private final static DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 
 	public static JSONObject invoke(String request, String url, String signNo, String privatekey) throws Exception {
-		final String sign = RsaUtils.sign(privatekey, request);// 签名
+		final String sign = EplRsaUtils.sign(privatekey, request);// 签名
 		Map<String, String> header = new HashMap<String, String>();
 		header.put("x-efps-sign", sign);
 		header.put("x-efps-sign-no", signNo);

@@ -17,7 +17,8 @@ public class DateUtil {
 
 	/** 存放不同的日期模板格式的sdf的Map */
 	private static Map<String, DateFormat> sdfMap = new Hashtable<>();
-	public static final String YMD = "yyyy-MM-dd";
+	public static final String YMD = "yyyyMMdd";
+	public static final String Y_M_D = "yyyy-MM-dd";
 	public static final String YMD_HM = "yyyy-MM-dd HH:mm";
 	public static final String YMD_HMS = "yyyy-MM-dd HH:mm:ss";
 

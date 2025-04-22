@@ -61,6 +61,9 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 	// 旭日代付回调
 	void ljcallback(Map<String, String> params);
 	
+	//HYT代付回调
+	void hytcallback(Map<String, String> params);
+	
 	// 易票联代付回调
 	void epfcallback(Map<String, Object> params);
 

@@ -57,6 +57,10 @@ import com.alipay.api.response.AlipayTradeRoyaltyRelationUnbindResponse;
 import com.alipay.api.response.AlipayTradeSettleConfirmResponse;
 import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.alipay.api.response.AntMerchantExpandIndirectZftDeleteResponse;
+import com.huifu.bspay.sdk.opps.core.BasePay;
+import com.huifu.bspay.sdk.opps.core.config.MerConfig;
+import com.huifu.bspay.sdk.opps.core.exception.BasePayException;
+import com.huifu.bspay.sdk.opps.core.net.BasePayRequest;
 import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Qrcodetransferrecord;
 import com.yt.app.common.util.bo.OrderGoods;
@@ -80,7 +84,7 @@ public class SelfPayUtil {
 		alipayConfig.setCharset(AlipayConstants.CHARSET_UTF8);
 		alipayConfig.setSignType(AlipayConstants.SIGN_TYPE_RSA2);
 		alipayConfig.setFormat(AlipayConstants.FORMAT_JSON);
-		alipayConfig.setAlipayPublicKey(qrcode.getAlipaypublickey());
+		alipayConfig.setAlipayPublicKey(qrcode.getAppprivatekey());
 		return alipayConfig;
 	}
 
@@ -93,8 +97,8 @@ public class SelfPayUtil {
 		alipayConfig.setSignType(AlipayConstants.SIGN_TYPE_RSA2);
 		alipayConfig.setFormat(AlipayConstants.FORMAT_JSON);
 		alipayConfig.setAppCertPath(qrcode.getApppublickey());
-		alipayConfig.setAlipayPublicCertPath(qrcode.getAlipaypublickey());
-		alipayConfig.setRootCertPath(qrcode.getAlipayprovatekey());
+		alipayConfig.setAlipayPublicCertPath(qrcode.getAppprivatekey());
+		alipayConfig.setRootCertPath(qrcode.getSmid());
 		return alipayConfig;
 	}
 
@@ -621,16 +625,16 @@ public class SelfPayUtil {
 	public static String eplpayTradeWapPay(Qrcode qrcode, String memberId, Double amount, String name, String pcardNo, String cardNo, String mobile) {
 		try {
 			String mchtOrderNo = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
-			String key = RsaUtils.getPublicKey(qrcode.getApppublickey());
-			String userName = RsaUtils.encryptByPublicKey(name, key);
-			String certificatesNo = RsaUtils.encryptByPublicKey(pcardNo, key);
-			String bankCardNo = RsaUtils.encryptByPublicKey(cardNo, key);
-			String phoneNum = RsaUtils.encryptByPublicKey(mobile, key);
+			String key = EplRsaUtils.getPublicKey(qrcode.getApppublickey());
+			String userName = EplRsaUtils.encryptByPublicKey(name, key);
+			String certificatesNo = EplRsaUtils.encryptByPublicKey(pcardNo, key);
+			String bankCardNo = EplRsaUtils.encryptByPublicKey(cardNo, key);
+			String phoneNum = EplRsaUtils.encryptByPublicKey(mobile, key);
 			String noncestr = UUID.randomUUID().toString().replaceAll("-", "");
 			String param = "{\"version\":\"2.0\",\"mchtOrderNo\":\"" + mchtOrderNo + "\",\"customerCode\":\"" + qrcode.getAppid() + "\",\"memberId\":\"" + memberId + "\",\"userName\":\"" + userName + "\",\"phoneNum\":\"" + phoneNum
 					+ "\",\"bankCardNo\":\"" + bankCardNo + "\",\"bankCardType\":\"debit\",\"certificatesType\":\"01\",\"certificatesNo\":\"" + certificatesNo + "\",\"nonceStr\":\"" + noncestr + "\"}";
 			log.info(param);
-			JSONObject response = PaymentHelper.bindCard(qrcode.getApirest(), param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			JSONObject response = PaymentHelper.bindCard(qrcode.getApirest(), param, qrcode.getSmid(), qrcode.getAppprivatekey());
 			return response.getStr("smsNo");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -671,7 +675,7 @@ public class SelfPayUtil {
 		request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
 		String param = JSONUtil.toJsonStr(request);
 		try {
-			JSONObject response = PaymentHelper.protocolPayPre(qrcode.getApirest(), param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			JSONObject response = PaymentHelper.protocolPayPre(qrcode.getApirest(), param, qrcode.getSmid(), qrcode.getAppprivatekey());
 			return response.getStr("outTradeNo");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -689,7 +693,7 @@ public class SelfPayUtil {
 		request.setNonceStr(noncestr);
 		String param = JSONUtil.toJsonStr(request);
 		try {
-			JSONObject response = PaymentHelper.paymentQuery(qrcode.getApirest(), param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			JSONObject response = PaymentHelper.paymentQuery(qrcode.getApirest(), param, qrcode.getSmid(), qrcode.getAppprivatekey());
 			if (response.getStr("payState").equals("00"))
 				return response.getStr("returnCode");
 		} catch (Exception e) {
@@ -711,7 +715,7 @@ public class SelfPayUtil {
 		try {
 			String noncestr = UUID.randomUUID().toString().replaceAll("-", "");
 			String param = "{\"smsNo\":\"" + epfsorder + "\",\"customerCode\":\"" + qrcode.getAppid() + "\",\"memberId\":\"" + memberId + "\",\"smsCode\":\"" + smscode + "\",\"nonceStr\":\"" + noncestr + "\"}";
-			JSONObject response = PaymentHelper.bindCardConfirm(qrcode.getApirest(), param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			JSONObject response = PaymentHelper.bindCardConfirm(qrcode.getApirest(), param, qrcode.getSmid(), qrcode.getAppprivatekey());
 			return response.getStr("returnCode");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -730,11 +734,11 @@ public class SelfPayUtil {
 		String payCurrency = "CNY";
 		String remark = "这是附言";
 
-		String key = RsaUtils.getPublicKey(qrcode.getApppublickey());
+		String key = EplRsaUtils.getPublicKey(qrcode.getApppublickey());
 
 		try {
-			String bankUserName = RsaUtils.encryptByPublicKey(name, key);
-			String bankCardNo = RsaUtils.encryptByPublicKey(cardNo, key);
+			String bankUserName = EplRsaUtils.encryptByPublicKey(name, key);
+			String bankCardNo = EplRsaUtils.encryptByPublicKey(cardNo, key);
 			WithdrawToCardRequest request = new WithdrawToCardRequest();
 			request.setOutTradeNo(outTradeNo);
 			request.setCustomerCode(qrcode.getAppid());
@@ -748,7 +752,7 @@ public class SelfPayUtil {
 			request.setRemark(remark);
 			request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
 			String param = JSONUtil.toJsonStr(request);
-			JSONObject response = PaymentHelper.withdrawalToCard(qrcode.getApirest(), param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			JSONObject response = PaymentHelper.withdrawalToCard(qrcode.getApirest(), param, qrcode.getSmid(), qrcode.getAppprivatekey());
 			return response.getStr("returnCode");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -771,7 +775,7 @@ public class SelfPayUtil {
 		request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
 		try {
 			String param = JSONUtil.toJsonStr(request);
-			JSONObject response = PaymentHelper.withdrawalToCardQuery(qrcode.getApirest(), param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			JSONObject response = PaymentHelper.withdrawalToCardQuery(qrcode.getApirest(), param, qrcode.getSmid(), qrcode.getAppprivatekey());
 			return response.getStr("returnCode");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -792,8 +796,75 @@ public class SelfPayUtil {
 		request.put("nonceStr", UUID.randomUUID().toString().replaceAll("-", ""));
 		try {
 			String param = JSONUtil.toJsonStr(request);
-			JSONObject response = PaymentHelper.accountQuery(qrcode.getApirest(), param, qrcode.getAlipayprovatekey(), qrcode.getAlipaypublickey());
+			JSONObject response = PaymentHelper.accountQuery(qrcode.getApirest(), param, qrcode.getSmid(), qrcode.getAppprivatekey());
 			return response.getStr("availableBalance");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	// 汇付分配的产品号
+	public static final String DEMO_PRODUCT_ID = "PAYUN";
+
+	// 汇付分配的系统号
+	public static final String DEMO_SYS_ID = "6666000109133323";
+
+	// 服务商私钥，用于调用接口时进行签名
+	public static final String DEMO_RSA_PRIVATE_KEY = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDN7oETicxHo+LDuXDx1Dt034Yze9CTXrw/j9NpRSUUr3Ok4X2w++inKyIWUQ2rrIle9ZkIZUCHcdp3hyhokHwU/YJXQ178/r/C62P7P6U7EkbQ59btBJ+RB+UjrsqeBlN1pklgEfENqMPUri5k7Mcy0VWuGyfFRQ5jKi5deq6SVtOcKCOznt+Y+X1R+jB5DBJ5ALTVWRQCwIE8ihmfIbd2Wnl+Vi7UTpi+TkUyjfefLUcWaFKHPMaUr/KjwlSYJ0wqAoTAp86dqlkVdGcSYP/KqBJcb/35q41t+uyHVaylW1BpCgVLY+IIqOSlT03r5k27xW19fUsBHrV1TsDgfFGZAgMBAAECggEBAKGVFgSdqANCbakDtcKas7hltyhoa2Vm/TCmiszb61eKv6PNJtGbJ5cbuhhmquJcdEFlVhmHURW12STWkXdSf3n83KvZ+gtrXE32YzH+Y4ixM42xjCvX59hlqH7SJLvP3ObAfmx6R3lfRaF4toCMZVTTenYtaoxYPgzDSTQiEh5RxkzjBb3Ckl4qeyl/c5eHLWD7xR7/owgQSt/EhkN9MnVt+1Q1vw0lfbY6ftfkr9vPLzJ/YA+4mY4Uxn1AMzBkyzSGqzeEn5mYo+fSa5t374ynOUJsayk3/A1FVdWq7UXsp23lCQPd87dHGUdqLwc6R5mMnhnM47lF+UHvXTYdDPECgYEA/zMID3d5U+vqz8ZuxGITqv/zsanrX/bjp5evrXWXga6NJm2RR/WdDjrNxwnKDiONW6L8Op97iXrF6XG3fa1JvBEubGwZYq/J+KgjcpfC6eNh1liPtOBXG4krf+WzaKUYBNQjaROMH1zMLyv/gyzexLsg6iIXE5G4U+H9ElXf5rUCgYEAzpPnAmxx2kUe66eZb4y9EW6KdeGU1S20JI1pzs67q3/nKwn0FcQkNltLxuzktd7HEbX4M0pggjOs468I1MD/d5tnyHeav1CexRijbwGAmAssk52IkdV+nWhx6oSgWrAeB+D3mgc1tVVR66uV3VQGIdPmwuXvmb29f8JrukXhCdUCgYEAhdf57kK2+3DMIlTsW0slDZZX9WIs9JPEKm2/0bXO1FD77p+ghqEm0gO9URqtQmUbCmic6RIj9KLTke/2UI/GEEDinDLFzaBsyWFF1iAKNijvcz/XfwH6LZLvoZCTW9rakg3A1KdP4lMFM+hbhizOWVfbl3Bxse3HQxdPZ4Jqf9ECgYAS1jnCZtEa7iKbqnS7T0IOTN4jUaaYqco7awmy6fcC9G7H5ehz86a5rimCwic4zk+otcckJiwWs0+Yk2ViwRaKeYlFJmLd/yP7JPwCK0jmlF5EN6E0axtYjyWUFPPqURTr8v+g8/dZyaXmr4bC396PRxtLulvW0Q5uj/Py0Fxs4QKBgAkPbTGTr6w/cvvZ273b9i0u9rzSBwmsEPN1KvDwaJjVDdm1yahWlOcf/ceENd73gIdDmiZjuVuIXZocg1HYFdzQCjC7e3DOiT/88Gm5qwoPuTt01D2mioZb6GA+zjf3fB3C2i2wp6wB6Fdl45Nhvdm+OtJEzVemUbjpwDexWvqW";
+
+	// 汇付公钥，用于对汇付返回报文进行签名验证
+	public static final String DEMO_RSA_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnCBeHnDOFLhsAKTdTgsW4Q2fiEugL1HwHFU5xvLk+fHJ8T7MEq3FyLZk6VG04RrjRqpcUOqu66SilN7k4ZTYj016uC6EW+uvUXwvbdIyA/BKV0EeNt638OsSUZf9EXWz1GB6SPwq3VzxoaSWzboCnPysJGJRXr2biqGdQBtfaeywwgBhogqHm0/xzPEFmynZQrwA3Yt3d0smyaYrzKqp/h2GyZJTaC06SbDCs6soJJrlhalip0eNP0PYGSJ8hQULCOs1mtA/LzsPa59Q0DMND/IQnVRJ4U1C7xmEx5Fp4s4v3tEY0kIIJ2uxiv76YRN6gXI87BLLJkpcF9/9D3XO9QIDAQAB";
+
+	/**
+	 * 汇付绑卡
+	 * 
+	 * @param qrcode
+	 * @return
+	 */
+	public static String quickbuckle(Qrcode qrcode, String backviewrul) {
+
+		// 1. 数据初始化，填入对应的商户配置
+		MerConfig merConfig = new MerConfig();
+		merConfig.setProcutId("PAYUN");
+		merConfig.setSysId("6666000162821367");
+		merConfig.setRsaPrivateKey(DEMO_RSA_PRIVATE_KEY);
+		merConfig.setRsaPublicKey(DEMO_RSA_PUBLIC_KEY);
+		try {
+			BasePay.initWithMerConfig(merConfig);
+			String date = DateUtil.getDateFormat(DateUtil.YMD).toString();
+			Long time = System.currentTimeMillis() / 1000;
+			// 2.组装请求参数
+			Map<String, Object> paramsInfo = new HashMap<>();
+			// 业务请求流水号
+			paramsInfo.put("req_seq_id", "rQ" + date + time.toString());
+			// 请求日期
+			paramsInfo.put("req_date", date);
+			// 商户号
+			paramsInfo.put("huifu_id", qrcode.getAppid());
+			// 订单金额
+			paramsInfo.put("trans_amt", "1.00");
+			// 银行扩展信息
+			paramsInfo.put("extend_pay_data", "{\"goods_short_name\":\"01\",\"biz_tp\":\"123451\",\"gw_chnnl_tp\":\"02\"}");
+			// 设备信息
+			paramsInfo.put("terminal_device_data", "{\"device_type\":\"1\",\"device_ip\":\"127.0.0.1\"}");
+			// 安全信息
+			paramsInfo.put("risk_check_data", "{\"ip_addr\":\"127.0.0.1\"}");
+			// 异步通知地址
+			paramsInfo.put("notify_url", qrcode.getNotifyurl());
+			// 商品描述
+			paramsInfo.put("goods_desc", "快捷支付接口");
+			// 备注
+			paramsInfo.put("remark", "remark快捷支付接口");
+			// 页面跳转地址
+			paramsInfo.put("front_url", backviewrul);
+			// 3. 发起API调用
+			Map<String, Object> response = BasePayRequest.requestBasePay("v2/trade/onlinepayment/quickpay/frontpay", paramsInfo, null, false);
+			;
+			System.out.println(response);
+			return JSONUtil.toJsonStr(response);
+		} catch (BasePayException e) {
+			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

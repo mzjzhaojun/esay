@@ -25,9 +25,9 @@ public class SecurityUtil {
 			byte[] plaintext = RsaUtil.decryptByPrivateKey(Base64.decodeBase64(aesKey), RsaUtil.getPrivateKey());
 			aesKey = new String(plaintext);
 			data = AesUtil.decrypt(data, aesKey);
-			return cleanXSS(data);
+			return data;
 		} catch (Throwable e) {
-			throw new YtException("参数存在问题！", YtCodeEnum.YT400);
+			throw new YtException("长时间未登录！", YtCodeEnum.YT401);
 		}
 	}
 
