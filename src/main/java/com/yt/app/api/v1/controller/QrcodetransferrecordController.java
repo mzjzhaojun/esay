@@ -44,6 +44,20 @@ public class QrcodetransferrecordController extends YtBaseEncipherControllerImpl
 
 	
 	/**
+	 * 支付宝分账
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/zfbtradeordersettle", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> zfbtradeordersettle(YtRequestDecryptEntity<Qrcodetransferrecord> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		qrcodeservice.zfbtradeordersettle(requestEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(1));
+	}
+	
+	
+	/**
 	 * 支付宝转账
 	 * @param requestEntity
 	 * @param request

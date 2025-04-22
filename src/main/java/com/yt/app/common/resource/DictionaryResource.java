@@ -189,6 +189,7 @@ public class DictionaryResource implements Serializable {
 
 	// 支付宝状态
 	public static final Integer ALIPAY_STATUS_701 = 701;// 支付成功
-	public static final Integer ALIPAY_STATUS_702 = 702;// 下载成功
+	public static final Integer ALIPAY_STATUS_702 = 702;// 分账成功
+	public static final Integer ALIPAY_STATUS_703 = 703;// 下载成功
 
 }

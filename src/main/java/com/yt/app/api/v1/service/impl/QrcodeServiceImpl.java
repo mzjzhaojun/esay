@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+
+import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.QrcodeMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper;
@@ -19,7 +21,9 @@ import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.alipay.api.response.AlipayFundAccountQueryResponse;
 import com.alipay.api.response.AlipayFundTransUniTransferResponse;
+import com.alipay.api.response.AlipayTradeOrderSettleResponse;
 import com.alipay.api.response.AlipayTradeWapPayResponse;
+import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Qrcodeaccountorder;
 import com.yt.app.api.v1.entity.Qrcodeaisleqrcode;
@@ -52,6 +56,12 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 
 	@Autowired
 	private QrcodeMapper mapper;
+
+	@Autowired
+	private IncomeMapper incomemapper;
+
+	@Autowired
+	private QrcodeMapper qrcodemapper;
 
 	@Autowired
 	private QrcodeaisleqrcodeMapper qrcodeaisleqrcodemapper;
@@ -136,7 +146,8 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	public String paytesteplcafrom(Map<String, Object> params) {
 		Qrcode pqrcode = mapper.get(Long.valueOf(params.get("id").toString()));
 		System.out.println(params.get("smsno").toString() + "ceee" + params.get("smscode").toString());
-		String atp = SelfPayUtil.eplprotocolPayPre(pqrcode, StringUtil.getOrderNum(), params.get("menmberid").toString(), params.get("smsno").toString(), params.get("smscode").toString(), Long.valueOf(String.format("%.2f", params.get("amount")).replace(".", "")));
+		String atp = SelfPayUtil.eplprotocolPayPre(pqrcode, StringUtil.getOrderNum(), params.get("menmberid").toString(), params.get("smsno").toString(), params.get("smscode").toString(),
+				Long.valueOf(String.format("%.2f", params.get("amount")).replace(".", "")));
 		Assert.notNull(atp, "易票联支付错误!");
 		return atp;
 	}
@@ -239,7 +250,25 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	@Override
 	public void epltransunitransfer(Qrcodetransferrecord qrcode) {
 		Qrcode pqrcode = mapper.get(qrcode.getId());
-		String returndata = SelfPayUtil.eplwithdrawalToCard(pqrcode, qrcode.getOrdernum(), qrcode.getPayeename(), qrcode.getPayeeid(), qrcode.getBankname(), qrcode.getPayeetype(), Long.valueOf(String.format("%.2f", qrcode.getAmount()).replace(".", "")));
+		String returndata = SelfPayUtil.eplwithdrawalToCard(pqrcode, qrcode.getOrdernum(), qrcode.getPayeename(), qrcode.getPayeeid(), qrcode.getBankname(), qrcode.getPayeetype(),
+				Long.valueOf(String.format("%.2f", qrcode.getAmount()).replace(".", "")));
 		Assert.notNull(returndata, "转账失败!");
+	}
+
+	@Override
+	public void zfbtradeordersettle(Qrcodetransferrecord c) {
+		Income in = incomemapper.get(c.getQrcodeid());
+		if (in.getDynamic()) {
+			Qrcode qd = qrcodemapper.get(in.getQrcodeid());
+			Qrcode pqd = qrcodemapper.get(qd.getPid());
+			AlipayTradeOrderSettleResponse atsc = SelfPayUtil.AlipayTradeOrderSettle(pqd, in.getQrcodeordernum(), c.getPayeeid(), c.getAmount());
+			Assert.notNull(atsc, "分账失败!");
+			in.setStatus(DictionaryResource.PAYOUTSTATUS_55);
+			incomemapper.put(in);
+			c.setOutbizno(in.getOrdernum());
+			c.setOrdernum(in.getQrcodeordernum());
+			c.setStatus(DictionaryResource.ALIPAY_STATUS_702);
+			qrcodetransferrecordmapper.post(c);
+		}
 	}
 }

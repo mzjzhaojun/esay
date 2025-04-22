@@ -111,20 +111,6 @@ public class IncomeController extends YtBaseEncipherControllerImpl<Income, Long>
 	
 	
 	/**
-	 * 分账
-	 * @param requestEntity
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "/tradeordersettle", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> tradeordersettle(YtRequestDecryptEntity<Income> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		service.tradeordersettle(requestEntity.getBody());
-		return new YtResponseEncryptEntity<Object>(new YtBody(1));
-	}
-	
-	
-	/**
 	 * 結算
 	 * @param requestEntity
 	 * @param request

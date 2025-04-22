@@ -234,7 +234,7 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static AlipayTradeOrderSettleResponse AlipayTradeOrderSettle(Qrcode qrcode, String ordernum, Double amount) {
+	public static AlipayTradeOrderSettleResponse AlipayTradeOrderSettle(Qrcode qrcode, String ordernum, String transin, Double amount) {
 		try {
 			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(qrcode));
 			// 构造请求参数以调用接口
@@ -252,7 +252,7 @@ public class SelfPayUtil {
 			OpenApiRoyaltyDetailInfoPojo royaltyParameters0 = new OpenApiRoyaltyDetailInfoPojo();
 			royaltyParameters0.setRoyaltyType("transfer");
 			royaltyParameters0.setTransInType("loginName");
-			royaltyParameters0.setTransIn("li1850420@sina.com");
+			royaltyParameters0.setTransIn(transin);// li1850420@sina.com
 			royaltyParameters0.setAmount(amount.toString());
 			royaltyParameters0.setDesc("百亿补贴-达人佣金");
 			royaltyParameters0.setRoyaltyScene("达人佣金");

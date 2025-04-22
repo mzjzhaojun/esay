@@ -1199,30 +1199,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			Assert.notNull(atsc, "结算失败!");
 			in.setStatus(DictionaryResource.PAYOUTSTATUS_54);
 			mapper.put(in);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			AlipayTradeOrderSettleResponse atos = SelfPayUtil.AlipayTradeOrderSettle(pqd, in.getQrcodeordernum(), in.getAmount() * 0.01);
-			Assert.notNull(atos, "分账失败!");
-			in.setStatus(DictionaryResource.PAYOUTSTATUS_55);
-			i = mapper.put(in);
-		}
-		return i;
-	}
-
-	@Override
-	public Integer tradeordersettle(Income income) {
-		Income in = mapper.get(income.getId());
-		Integer i = 0;
-		if (in.getDynamic()) {
-			Qrcode qd = qrcodemapper.get(in.getQrcodeid());
-			Qrcode pqd = qrcodemapper.get(qd.getPid());
-			AlipayTradeOrderSettleResponse atsc = SelfPayUtil.AlipayTradeOrderSettle(pqd, in.getQrcodeordernum(), in.getAmount() * 0.01);
-			Assert.notNull(atsc, "分账失败!");
-			in.setStatus(DictionaryResource.PAYOUTSTATUS_55);
-			i = mapper.put(in);
 		}
 		return i;
 	}
@@ -1297,7 +1273,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			AlipayTradeOrderSettleResponse atos = SelfPayUtil.AlipayTradeOrderSettle(pqd, in.getQrcodeordernum(), in.getAmount() * 0.01);
+			AlipayTradeOrderSettleResponse atos = SelfPayUtil.AlipayTradeOrderSettle(pqd, in.getQrcodeordernum(), "li1850420@sina.com", in.getAmount() * 0.01);
 			Assert.notNull(atos, "分账失败!");
 			in.setStatus(DictionaryResource.PAYOUTSTATUS_55);
 			mapper.put(in);
