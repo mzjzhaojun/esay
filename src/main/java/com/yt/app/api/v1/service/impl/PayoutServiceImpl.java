@@ -1146,7 +1146,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			Assert.notNull(returnstate, "HYT代付通知反查订单失败!");
 			if (returnstate.equals("100")) {
 				paySuccess(pt);
-			} else if (returnstate.equals("90")) {
+			} else if (returnstate.equals("-90")) {
 				payFail(pt);
 			}
 			SysUserContext.remove();

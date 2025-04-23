@@ -661,7 +661,7 @@ public class PayUtil {
 		map.add("Remark", "");
 
 		String signContent = "Amount=" + String.format("%.2f", pt.getAmount()) + "&BankCardBankName=" + pt.getBankname() + "&BankCardNumber=" + pt.getAccnumer() + "&BankCardRealName=" + pt.getAccname() + "&MerchantId=" + cl.getCode()
-				+ "&MerchantUniqueOrderId=" + pt.getOrdernum() + "&NotifyUrl=" + cl.getApireusultip() + "&Remark=&WithdrawTypeId=0&Sign=" + cl.getApikey() + "";
+				+ "&MerchantUniqueOrderId=" + pt.getOrdernum() + "&NotifyUrl=" + cl.getApireusultip() + "&Remark=&WithdrawTypeId=0" + cl.getApikey() + "";
 
 		String sign = MD5Utils.md5(signContent);
 		map.add("Sign", sign);
@@ -688,7 +688,7 @@ public class PayUtil {
 			map.add("MerchantId", cl.getCode());
 			map.add("MerchantUniqueOrderId", orderid);
 
-			String signContent = "MerchantId=" + cl.getCode() + "&MerchantUniqueOrderId=" + orderid + "&keySign=" + cl.getApikey() + "";
+			String signContent = "MerchantId=" + cl.getCode() + "&MerchantUniqueOrderId=" + orderid + "" + cl.getApikey() + "";
 
 			String sign = MD5Utils.md5(signContent);
 			map.add("sign", sign);
