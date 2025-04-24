@@ -379,6 +379,26 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
+	public void onepluscallback(Map<String, String> params) {
+		String orderid = params.get("mchOrderNo").toString();
+		String status = params.get("state").toString();
+		log.info("oneplus通知返回消息：payOrderId" + orderid + " status:" + status);
+		Income income = mapper.getByOrderNum(orderid);
+		TenantIdContext.setTenantId(income.getTenant_id());
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求,IP加白名单后重试!");
+		}
+		JSONObject returnstate = PayUtil.SendOnePlusQuerySubmit(orderid, channel);
+		Assert.notNull(returnstate, "oneplus通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
+		}
+		TenantIdContext.remove();
+	}
+
+	@Override
 	public void yscallback(Map<String, String> params) {
 		String orderid = params.get("mchOrderNo").toString();
 		String status = params.get("status").toString();
@@ -468,9 +488,11 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Qrcode qrcode = qrcodemapper.get(income.getQrcodeid());
 		Qrcode pqrcode = qrcodemapper.get(qrcode.getPid());
 		log.info("支付宝查单成功: " + trade_no + "===" + out_trade_no);
-		AlipayTradeQueryResponse atqr = SelfPayUtil.AlipayTradeWapQuery(pqrcode, out_trade_no, trade_no);
-		if (atqr.getTradeStatus().equals("TRADE_SUCCESS")) {
-			success(income, trade_no);
+		if (income.getStatus() == DictionaryResource.PAYOUTSTATUS_50) {
+			AlipayTradeQueryResponse atqr = SelfPayUtil.AlipayTradeWapQuery(pqrcode, out_trade_no, trade_no);
+			if (atqr.getTradeStatus().equals("TRADE_SUCCESS")) {
+				success(income, trade_no);
+			}
 		}
 		TenantIdContext.remove();
 	}
@@ -570,6 +592,14 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			//
 			boolean flage = true;
 			switch (channel.getName()) {
+			case DictionaryResource.ONEPLUSAISLE:
+				JSONObject dataoneplus = PayUtil.SendOnePlusSubmit(income, channel);
+				if (dataoneplus != null) {
+					flage = false;
+					income.setResulturl(dataoneplus.getStr("payData"));
+					income.setQrcodeordernum(dataoneplus.getStr("payOrderId"));
+				}
+				break;
 			case DictionaryResource.TONGYUSNAISLE:
 				JSONObject data = PayUtil.SendTongYuanSubmit(income, channel);
 				if (data != null) {

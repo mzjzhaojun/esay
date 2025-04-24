@@ -1,5 +1,6 @@
 package com.yt.app.api.v1.dbo;
 
+import cn.hutool.json.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,4 +25,5 @@ public class QrcodeSubmitDTO {
 	String pay_attach;
 	String pay_md5sign;
 	String pay_applydate;
+	JSONObject cardInfo;
 }

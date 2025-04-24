@@ -428,6 +428,28 @@ public class OrderController {
 			lock.unlock();
 		}
 	}
+	
+	/**
+	 * 通源代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/onepluscallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void onepluscallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("onepluscallback");
+		try {
+			lock.lock();
+			incomeservice.onepluscallback(params);
+			response.getWriter().print("success");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
 
 	/**
 	 * 易票联代收通知

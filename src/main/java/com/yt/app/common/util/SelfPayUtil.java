@@ -84,7 +84,7 @@ public class SelfPayUtil {
 		alipayConfig.setCharset(AlipayConstants.CHARSET_UTF8);
 		alipayConfig.setSignType(AlipayConstants.SIGN_TYPE_RSA2);
 		alipayConfig.setFormat(AlipayConstants.FORMAT_JSON);
-		alipayConfig.setAlipayPublicKey(qrcode.getAppprivatekey());
+		alipayConfig.setAlipayPublicKey(qrcode.getAlipaypublickey());
 		return alipayConfig;
 	}
 
@@ -97,8 +97,8 @@ public class SelfPayUtil {
 		alipayConfig.setSignType(AlipayConstants.SIGN_TYPE_RSA2);
 		alipayConfig.setFormat(AlipayConstants.FORMAT_JSON);
 		alipayConfig.setAppCertPath(qrcode.getApppublickey());
-		alipayConfig.setAlipayPublicCertPath(qrcode.getAppprivatekey());
-		alipayConfig.setRootCertPath(qrcode.getSmid());
+		alipayConfig.setAlipayPublicCertPath(qrcode.getAlipaypublickey());
+		alipayConfig.setRootCertPath(qrcode.getAlipayprovatekey());
 		return alipayConfig;
 	}
 
@@ -167,9 +167,9 @@ public class SelfPayUtil {
 			AlipayTradeQueryModel model = new AlipayTradeQueryModel();
 			model.setOutTradeNo(outno);
 			model.setTradeNo(ordernum);
-			List<String> queryOptions = new ArrayList<String>();
-			queryOptions.add("trade_settle_info");
-			model.setQueryOptions(queryOptions);
+//			List<String> queryOptions = new ArrayList<String>();
+//			queryOptions.add("trade_settle_info");
+//			model.setQueryOptions(queryOptions);
 			request.setBizModel(model);
 			AlipayTradeQueryResponse response = alipayClient.execute(request);
 			if (response.isSuccess()) {

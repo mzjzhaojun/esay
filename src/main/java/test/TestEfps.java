@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.yt.app.common.util.SelfPayUtil;
+
 @SpringBootTest
 public class TestEfps {
 
@@ -20,7 +22,7 @@ public class TestEfps {
 	public void getUserInfoById() {
 		// 测试代码
 		long beginTime = System.currentTimeMillis();
-//		SelfPayUtil.eplpayTradeWapPay(null, null, null);
+//		SelfPayUtil.quickbuckle(null);
 		long time = System.currentTimeMillis() - beginTime;
 		System.out.println(">>>  Time " + time);
 	}

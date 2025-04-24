@@ -37,6 +37,7 @@ public class DictionaryResource implements Serializable {
 	public static final String XSAISLE = "新生"; // 新生
 	public static final String ZSAISLE = "张三";// 张三
 	public static final String TONGYUSNAISLE = "通源";// 通源
+	public static final String ONEPLUSAISLE = "oneplus";// oneplus
 
 	// 代付
 	public static final String DFSNAISLE = "十年"; //
