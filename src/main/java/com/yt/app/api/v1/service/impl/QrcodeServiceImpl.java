@@ -41,6 +41,7 @@ import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.StringUtil;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.json.JSONObject;
 
 import java.util.Collections;
 import java.util.List;
@@ -225,6 +226,7 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	public void zftaccountquery(Qrcode qrcode) {
 		AlipayFundAccountQueryResponse afaqr = SelfPayUtil.AlipayFundAccountQuery(qrcode);
 		qrcode.setBalance(Double.valueOf(afaqr.getAvailableAmount()));
+		qrcode.setFreezebalance(Double.valueOf(afaqr.getFreezeAmount()));
 		mapper.put(qrcode);
 	}
 
@@ -242,9 +244,14 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	@Override
 	public void eplaccountquery(Qrcode qrcode) {
 		Qrcode pqrcode = mapper.get(qrcode.getId());
-		String availableBalance = SelfPayUtil.eplaccountQuery(pqrcode);
-		pqrcode.setBalance(Double.valueOf(availableBalance.substring(0, availableBalance.length() - 2) + "." + availableBalance.substring(availableBalance.length() - 2)));
-		mapper.put(pqrcode);
+		JSONObject response = SelfPayUtil.eplaccountQuery(pqrcode);
+		String availableBalance = response.getStr("availableBalance");
+		String floatBalance = response.getStr("floatBalance");
+		if (!availableBalance.equals("0")) {
+			pqrcode.setBalance(Double.valueOf(availableBalance.substring(0, availableBalance.length() - 2) + "." + availableBalance.substring(availableBalance.length() - 2)));
+			pqrcode.setFreezebalance(Double.valueOf(floatBalance.substring(0, floatBalance.length() - 2) + "." + floatBalance.substring(floatBalance.length() - 2)));
+			mapper.put(pqrcode);
+		}
 	}
 
 	@Override

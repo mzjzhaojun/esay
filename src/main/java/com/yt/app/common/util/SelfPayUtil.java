@@ -789,7 +789,7 @@ public class SelfPayUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String eplaccountQuery(Qrcode qrcode) {
+	public static JSONObject eplaccountQuery(Qrcode qrcode) {
 
 		Map<String, String> request = new HashMap<String, String>();
 		request.put("customerCode", qrcode.getAppid());
@@ -797,7 +797,7 @@ public class SelfPayUtil {
 		try {
 			String param = JSONUtil.toJsonStr(request);
 			JSONObject response = PaymentHelper.accountQuery(qrcode.getApirest(), param, qrcode.getSmid(), qrcode.getAppprivatekey());
-			return response.getStr("availableBalance");
+			return response;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

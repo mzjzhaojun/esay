@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.QrcodeMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,name,nkname,pid,code,status,balance,collection,expireminute,type,min,max,weight,mtorder,dynamic,accountsplit,smid,firstmatch,firstmatchmoney,yestodayorder,yestodayincome,todayorder,todayincome,ordersum,incomesum,appid,appprivatekey,apppublickey,alipaypublickey,alipayprovatekey,limits,todaybalance,notifyurl,payoutnotifyurl,apirest,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,userid,name,nkname,pid,code,status,balance,freezebalance,collection,expireminute,type,min,max,weight,mtorder,dynamic,accountsplit,smid,firstmatch,firstmatchmoney,yestodayorder,yestodayincome,todayorder,todayincome,ordersum,incomesum,appid,appprivatekey,apppublickey,alipaypublickey,alipayprovatekey,limits,todaybalance,notifyurl,payoutnotifyurl,apirest,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -17,9 +17,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Qrcode">
 		insert into
-		qrcode(id,userid,name,nkname,pid,code,status,balance,collection,expireminute,type,min,max,weight,mtorder,dynamic,accountsplit,smid,firstmatch,firstmatchmoney,appid,appprivatekey,apppublickey,alipaypublickey,alipayprovatekey,limits,todaybalance,notifyurl,payoutnotifyurl,apirest,create_by,create_time,update_by,update_time,remark)
+		qrcode(id,userid,name,nkname,pid,code,status,balance,freezebalance,collection,expireminute,type,min,max,weight,mtorder,dynamic,accountsplit,smid,firstmatch,firstmatchmoney,appid,appprivatekey,apppublickey,alipaypublickey,alipayprovatekey,limits,todaybalance,notifyurl,payoutnotifyurl,apirest,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{userid},#{name},#{nkname},#{pid},#{code},#{status},#{balance},#{collection},#{expireminute},#{type},#{min},#{max},#{weight},#{mtorder},#{dynamic},#{accountsplit},#{smid},#{firstmatch},#{firstmatchmoney},#{appid},#{appprivatekey},#{apppublickey},#{alipaypublickey},#{alipayprovatekey},#{limits},#{todaybalance},#{notifyurl},#{payoutnotifyurl},#{apirest},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{userid},#{name},#{nkname},#{pid},#{code},#{status},#{balance},#{freezebalance},#{collection},#{expireminute},#{type},#{min},#{max},#{weight},#{mtorder},#{dynamic},#{accountsplit},#{smid},#{firstmatch},#{firstmatchmoney},#{appid},#{appprivatekey},#{apppublickey},#{alipaypublickey},#{alipayprovatekey},#{limits},#{todaybalance},#{notifyurl},#{payoutnotifyurl},#{apirest},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -64,6 +64,9 @@
 			</if>
 			<if test="balance != null">
 				balance= #{balance},
+			</if>
+			<if test="freezebalance != null">
+				freezebalance= #{freezebalance},
 			</if>
 			<if test="collection != null">
 				collection= #{collection},

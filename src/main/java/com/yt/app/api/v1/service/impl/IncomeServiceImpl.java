@@ -1147,16 +1147,19 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		systemaccountservice.updateIncome(income);
 	}
 
+	// 自营三方回调
 	private void success(Income income, String trade_no) {
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			// 渠道
 			Qrcodeaccountorder qrcodeaccountorder = qrcodeaccountordermapper.getByOrderNum(income.getQrcodeordernum());
 			qrcodeaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
-			qrcodeaccountorder.setOrdernum(trade_no);
+			if (trade_no != null)
+				qrcodeaccountorder.setOrdernum(trade_no);
 			qrcodeaccountordermapper.put(qrcodeaccountorder);
 			// 計算代收
 			income.setStatus(DictionaryResource.PAYOUTSTATUS_52);
-			income.setQrcodeordernum(trade_no);
+			if (trade_no != null)
+				income.setQrcodeordernum(trade_no);
 			if (income.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61)
 				income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 			income.setSuccesstime(DateTimeUtil.getNow());
@@ -1280,7 +1283,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		String returnstate = SelfPayUtil.eplpaymentQuery(qrcodemapper.get(income.getQrcodeid()), outradeno, noncestr);
 		Assert.notNull(returnstate, "易票联通知反查订单失败!");
 		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-			success(income);
+			success(income, null);
 		}
 		TenantIdContext.remove();
 	}

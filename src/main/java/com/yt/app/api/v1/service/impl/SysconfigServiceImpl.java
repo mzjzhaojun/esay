@@ -77,7 +77,7 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 	@Override
 	@Transactional
 	public void initSystemData() {
-		//getUsdtPrice();
+		getUsdtPrice();
 		// getUsdtToTrx();
 	}
 
