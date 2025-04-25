@@ -4,6 +4,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.streaming.SXSSFCell;
+import org.apache.poi.xssf.streaming.SXSSFRow;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Service;
@@ -70,6 +74,7 @@ import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.util.RandomUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -527,7 +532,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	/***
-	 * 手动成功
+	 * 成功
 	 */
 	public void paySuccess(Payout pt) {
 		Payout t = mapper.get(pt.getId());
@@ -581,7 +586,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				if (pt.getImgurl() != null && !pt.getImgurl().equals(""))
 					merchantbot.sendOrderResultImg(pt.getMerchantid(), pt.getImgurl());
 				StringBuffer message = new StringBuffer();
-				message.append("\r\n姓名：*" + pt.getAccname() + "*\r\n卡号：" + pt.getAccnumer() + " \r\n金额：" + pt.getAmount() + " \r\n单笔：" + pt.getMerchantcost() + " \r\n状态：成功✔✔✔" + "\r\n*" + DateTimeUtil.getDateTime() + "*");
+				message.append("\r\n姓名：*" + pt.getAccname() + "*\r\n卡号：" + pt.getAccnumer() + " \r\n金额：" + pt.getAmount() + " \r\n单笔：" + pt.getMerchantcost() + " \r\n状态：成功✔✔✔" + "\r\n*" + pt.getOrdernum() + "*");
 				merchantbot.sendOrderResultSuccess(pt.getMerchantid(), message.toString());
 			}
 
@@ -590,7 +595,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	/**
 	 * 
-	 * 手动回调失败
+	 * 回调失败
 	 * 
 	 */
 	public void payFail(Payout pt) {
@@ -632,7 +637,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				// 保存客户信息
 				merchantcustomerbanksservice.add(t);
 				StringBuffer message = new StringBuffer();
-				message.append("\r\n姓名：*" + pt.getAccname() + "*\r\n卡号：" + pt.getAccnumer() + " \r\n金额：" + pt.getAmount() + " \r\n状态：失败❌❌❌" + "\r\n*" + DateTimeUtil.getDateTime() + "*");
+				message.append("\r\n姓名：*" + pt.getAccname() + "*\r\n卡号：" + pt.getAccnumer() + " \r\n金额：" + pt.getAmount() + " \r\n状态：失败❌❌❌" + "\r\n*" + pt.getOrdernum() + "*");
 				merchantbot.sendOrderResultFail(pt.getMerchantid(), message.toString());
 			}
 		}
@@ -730,7 +735,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			Row row = sheet.getRow(i);
 			if (row != null && row.getCell(0) != null) {
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -1153,4 +1158,66 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			TenantIdContext.remove();
 		}
 	}
+	
+	@Override
+	public ByteArrayOutputStream download(Map<String, Object> param) throws IOException {
+		SXSSFWorkbook workbook = new SXSSFWorkbook();
+		SXSSFSheet sheet = workbook.createSheet("Sheet");
+		List<PayoutVO> list = mapper.page(param);
+		list.forEach(mco -> {
+			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
+		});
+		SXSSFRow titleRow = sheet.createRow(0);
+		SXSSFCell titleCell0 = titleRow.createCell(0);
+		titleCell0.setCellValue("编号");
+		SXSSFCell titleCell1 = titleRow.createCell(1);
+		titleCell1.setCellValue("系统单号");
+		SXSSFCell titleCell2 = titleRow.createCell(2);
+		titleCell2.setCellValue("账户名");
+		SXSSFCell titleCell3 = titleRow.createCell(3);
+		titleCell3.setCellValue("银行名称");
+		SXSSFCell titleCell4 = titleRow.createCell(4);
+		titleCell4.setCellValue("账号");
+		SXSSFCell titleCell5 = titleRow.createCell(5);
+		titleCell5.setCellValue("提现金额");
+		SXSSFCell titleCell6 = titleRow.createCell(6);
+		titleCell6.setCellValue("手续费");
+		SXSSFCell titleCell7 = titleRow.createCell(7);
+		titleCell7.setCellValue("扣款");
+		SXSSFCell titleCell8 = titleRow.createCell(8);
+		titleCell8.setCellValue("订单状态");
+		SXSSFCell titleCell9 = titleRow.createCell(9);
+		titleCell9.setCellValue("创建时间");
+		// 填充数据
+		for (int i = 0; i < list.size(); i++) {
+			PayoutVO imao = list.get(i);
+			SXSSFRow row = sheet.createRow(i + 1);
+			SXSSFCell cell0 = row.createCell(0);
+			cell0.setCellValue(i + 1);
+			SXSSFCell cell1 = row.createCell(1);
+			cell1.setCellValue(imao.getOrdernum());
+			SXSSFCell cell2 = row.createCell(2);
+			cell2.setCellValue(imao.getAccname());
+			SXSSFCell cell3 = row.createCell(3);
+			cell3.setCellValue(imao.getBankname());
+			SXSSFCell cell4 = row.createCell(4);
+			cell4.setCellValue(imao.getAccnumer());
+			SXSSFCell cell5 = row.createCell(5);
+			cell5.setCellValue(imao.getAmount());
+			SXSSFCell cell6 = row.createCell(6);
+			cell6.setCellValue(imao.getMerchantcost());
+			SXSSFCell cell7 = row.createCell(7);
+			cell7.setCellValue(imao.getMerchantpay());
+			SXSSFCell cell8 = row.createCell(8);
+			cell8.setCellValue(imao.getStatusname());
+			SXSSFCell cell9 = row.createCell(9);
+			cell9.setCellValue(DateTimeUtil.getDateTime(imao.getCreate_time(), DateTimeUtil.DEFAULT_DATETIME_FORMAT));
+		}
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		workbook.write(outputStream);
+		workbook.close();
+		return outputStream;
+	}
+	
+	
 }

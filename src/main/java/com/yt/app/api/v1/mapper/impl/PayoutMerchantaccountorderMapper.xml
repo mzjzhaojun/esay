@@ -147,7 +147,7 @@
 		</where>
 	</select>
 	<!-- getMap -->
-	<select id="map" parameterType="java.util.HashMap"
+	<select id="page" parameterType="java.util.HashMap"
 		resultType="java.util.HashMap">
 		select
 		<include refid="Base_Column_List" />
@@ -156,6 +156,9 @@
 			1=1
 			<if test="name != null and name != ''">
 				and name LIKE CONCAT( '%', #{name} , '%' )
+			</if>
+			<if test="stime != null and etime != ''">
+				and create_time BETWEEN  #{stime} AND  #{etime}
 			</if>
 			<if test="orderBy != null and dir!= null">
 				order by ${orderBy} ${dir}

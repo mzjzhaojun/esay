@@ -1,5 +1,6 @@
 package com.yt.app.api.v1.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
@@ -75,4 +76,8 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 
 	// 失敗
 	Integer fail(Long id);
+	
+	
+	//下载
+	ByteArrayOutputStream download(Map<String, Object> param) throws IOException;
 }

@@ -85,7 +85,7 @@ public interface PayoutMerchantaccountorderMapper extends YtIBaseMapper<PayoutMe
 	 * @return mapMerchantaccountorder
 	 */
 	@YtRedisCacheAnnotation(classs = PayoutMerchantaccountorder.class)
-	public List<Map<String, Object>> map(Map<String, Object> param);
+	public List<PayoutMerchantaccountorder> page(Map<String, Object> param);
 
 	/**
 	 * listbyids
