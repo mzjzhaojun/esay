@@ -144,7 +144,7 @@ div {
 				success : function(data) {
 					if (data.code == 200) {
 						$("#smsbtn").attr("disabled", true);
-						alert("验证码已发送!");
+						inittimer(60)
 					} else {
 						alert("请核对信息后重试!");
 					}
@@ -154,6 +154,30 @@ div {
 				}
 			});
 		})
+		
+		function inittimer(intDiff) {
+			var myTimer = window.setInterval(
+						function() {
+							var day = 0, hour = 0, minute = 0, second = intDiff;
+							if (intDiff > 0) {
+								day = Math.floor(intDiff / (60 * 60 * 24));
+								hour = Math.floor(intDiff / (60 * 60))
+										- (day * 24);
+								minute = Math.floor(intDiff / 60)
+										- (day * 24 * 60) - (hour * 60);
+								second = Math.floor(intDiff)
+										- (day * 24 * 60 * 60)
+										- (hour * 60 * 60) - (minute * 60);
+							}
+							$("#smsbtn").text(second)
+							if (second == 1) {
+								$("#smsbtn").attr("disabled", false);
+								$("#smsbtn").text("重新发送");
+								window.clearInterval(myTimer);
+							} 
+							intDiff--;
+				}, 1000);
+		}
 
 		$("#sumbitbtn").click(function() {
 			if ($("#smscode").val() == null || $("#smscode").val() == "") {

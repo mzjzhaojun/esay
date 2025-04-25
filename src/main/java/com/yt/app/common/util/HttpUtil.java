@@ -25,12 +25,11 @@ public class HttpUtil {
 	 * @return
 	 */
 	public static JSONObject post(String url, String params, Map<String, String> header) throws Exception {
-		log.info("\n---------------------------------------------------------------");
-		log.info("接口地址：%s" + url);
+		log.info("接口地址：" + url);
 		try {
 			String body = HttpRequest.post(url).addHeaders(header).header("Content-Type", "application/json").body(params).execute().body();
 			JSONObject jsonObject = JSONUtil.parseObj(body);
-			log.info(" 易票联订单返回：" + body);
+			log.info(" 易票联返回：" + body);
 			if (jsonObject.getStr("returnCode").equals("0000"))
 				return jsonObject;
 		} catch (Exception e) {

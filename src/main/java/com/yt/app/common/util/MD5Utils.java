@@ -122,6 +122,11 @@ public class MD5Utils {
 //		
 //		String sign = md5(signContent);
 
-		System.out.println(randomName(false, 3));
+		String availableBalance = "3778";
+		System.out.println(Double.valueOf(availableBalance.substring(0, availableBalance.length() - 2) + "." + availableBalance.substring(availableBalance.length() - 2)));
+		String result = "\"success\"";
+		System.out.println(result);
+		result = result.replaceAll("\"", "");
+		System.out.println(result);
 	}
 }

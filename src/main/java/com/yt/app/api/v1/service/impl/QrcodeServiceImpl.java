@@ -42,6 +42,7 @@ import com.yt.app.common.util.StringUtil;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.json.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.List;
@@ -52,6 +53,7 @@ import java.util.Map;
  * 
  * @version v1 @createdate2024-08-21 14:30:58
  */
+@Slf4j
 @Service
 public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implements QrcodeService {
 
@@ -245,13 +247,18 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	public void eplaccountquery(Qrcode qrcode) {
 		Qrcode pqrcode = mapper.get(qrcode.getId());
 		JSONObject response = SelfPayUtil.eplaccountQuery(pqrcode);
-		String availableBalance = response.getStr("availableBalance");
-		String floatBalance = response.getStr("floatBalance");
-		if (!availableBalance.equals("0")) {
-			pqrcode.setBalance(Double.valueOf(availableBalance.substring(0, availableBalance.length() - 2) + "." + availableBalance.substring(availableBalance.length() - 2)));
-			pqrcode.setFreezebalance(Double.valueOf(floatBalance.substring(0, floatBalance.length() - 2) + "." + floatBalance.substring(floatBalance.length() - 2)));
-			mapper.put(pqrcode);
+		log.info(response.getInt("availableBalance").toString());
+		String availableBalance = response.getInt("availableBalance").toString();
+		String floatBalance = response.getInt("floatBalance").toString();
+		if (availableBalance.equals("0")) {
+			availableBalance = "0000";
 		}
+		if (floatBalance.equals("0")) {
+			floatBalance = "0000";
+		}
+		pqrcode.setBalance(Double.valueOf(availableBalance.substring(0, availableBalance.length() - 2) + "." + availableBalance.substring(availableBalance.length() - 2)));
+		pqrcode.setFreezebalance(Double.valueOf(floatBalance.substring(0, floatBalance.length() - 2) + "." + floatBalance.substring(floatBalance.length() - 2)));
+		mapper.put(pqrcode);
 	}
 
 	@Override

@@ -33,14 +33,16 @@ public class InComeNotifyThread implements Runnable {
 		qqr.setPay_orderid(income.getMerchantorderid());
 		qqr.setPay_amount(income.getAmount().toString());
 		qqr.setPay_code(income.getStatus());
-		log.info("代收通知 start-----------商户单号：" + income.getOrdernum() + " url:" + income.getNotifyurl());
+		log.info("代收通知 start>>>>>>商户单号：" + income.getOrdernum() + " url:" + income.getNotifyurl());
 		int i = 1;
 		while (true) {
 			try {
 				String result = PayUtil.SendIncomeNotify(income.getNotifyurl(), qqr, merchant.getAppkey());
+				if (result != null)
+					result = result.replaceAll("\"", "");
 				// 通知到
 				if (result != null && result.equals("success")) {
-					log.info("代收通知成功，商户单号：" + income.getOrdernum());
+					log.info("代收通知成功>>>>>>商户单号：" + income.getOrdernum());
 					income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_63);
 					int j = mapper.put(income);
 					if (j > 0)
@@ -59,7 +61,6 @@ public class InComeNotifyThread implements Runnable {
 				}
 			}
 		}
-		log.info("代收通知 end---------------------" + income.getOrdernum());
 	}
 
 }

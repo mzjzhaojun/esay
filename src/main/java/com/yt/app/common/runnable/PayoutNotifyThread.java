@@ -36,14 +36,16 @@ public class PayoutNotifyThread implements Runnable {
 		ss.setBankcode(payout.getBankcode());
 		ss.setCode(payout.getStatus());
 		ss.setRemark(payout.getRemark());
-		log.info("代付通知 start---------------------商户单号：" + payout.getOrdernum());
+		log.info("代付通知 start>>>>>>商户单号：" + payout.getOrdernum());
 		int i = 1;
 		while (true) {
 			try {
 				String result = PayUtil.SendPayoutNotify(payout.getNotifyurl(), ss, merchant.getAppkey());
+				if (result != null)
+					result = result.replaceAll("\"", "");
 				// 通知到
 				if (result != null && result.equals("success")) {
-					log.info("代付通知成功，商户单号：" + payout.getOrdernum());
+					log.info("代付通知成功>>>>>>商户单号：" + payout.getOrdernum());
 					payout.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_63);
 					int j = mapper.put(payout);
 					if (j > 0)
@@ -51,7 +53,7 @@ public class PayoutNotifyThread implements Runnable {
 				}
 				Thread.sleep(1000 * 60 * 3);
 			} catch (Exception e1) {
-				log.info("代收通知错误：" + e1.getMessage());
+				log.info("代付通知错误：" + e1.getMessage());
 			} finally {
 				i++;
 				if (i > 4) {
@@ -62,7 +64,6 @@ public class PayoutNotifyThread implements Runnable {
 				}
 			}
 		}
-		log.info("代付通知 end---------------------" + payout.getOrdernum());
 	}
 
 }
