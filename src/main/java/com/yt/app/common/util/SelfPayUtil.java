@@ -753,7 +753,7 @@ public class SelfPayUtil {
 			request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
 			String param = JSONUtil.toJsonStr(request);
 			JSONObject response = PaymentHelper.withdrawalToCard(qrcode.getApirest(), param, qrcode.getSmid(), qrcode.getAppprivatekey());
-			return response.getStr("returnCode");
+			return response.getStr("transactionNo");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -804,46 +804,37 @@ public class SelfPayUtil {
 		return null;
 	}
 
-	// 汇付分配的产品号
-	public static final String DEMO_PRODUCT_ID = "PAYUN";
-
-	// 汇付分配的系统号
-	public static final String DEMO_SYS_ID = "6666000109133323";
-
-	// 服务商私钥，用于调用接口时进行签名
-	public static final String DEMO_RSA_PRIVATE_KEY = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDN7oETicxHo+LDuXDx1Dt034Yze9CTXrw/j9NpRSUUr3Ok4X2w++inKyIWUQ2rrIle9ZkIZUCHcdp3hyhokHwU/YJXQ178/r/C62P7P6U7EkbQ59btBJ+RB+UjrsqeBlN1pklgEfENqMPUri5k7Mcy0VWuGyfFRQ5jKi5deq6SVtOcKCOznt+Y+X1R+jB5DBJ5ALTVWRQCwIE8ihmfIbd2Wnl+Vi7UTpi+TkUyjfefLUcWaFKHPMaUr/KjwlSYJ0wqAoTAp86dqlkVdGcSYP/KqBJcb/35q41t+uyHVaylW1BpCgVLY+IIqOSlT03r5k27xW19fUsBHrV1TsDgfFGZAgMBAAECggEBAKGVFgSdqANCbakDtcKas7hltyhoa2Vm/TCmiszb61eKv6PNJtGbJ5cbuhhmquJcdEFlVhmHURW12STWkXdSf3n83KvZ+gtrXE32YzH+Y4ixM42xjCvX59hlqH7SJLvP3ObAfmx6R3lfRaF4toCMZVTTenYtaoxYPgzDSTQiEh5RxkzjBb3Ckl4qeyl/c5eHLWD7xR7/owgQSt/EhkN9MnVt+1Q1vw0lfbY6ftfkr9vPLzJ/YA+4mY4Uxn1AMzBkyzSGqzeEn5mYo+fSa5t374ynOUJsayk3/A1FVdWq7UXsp23lCQPd87dHGUdqLwc6R5mMnhnM47lF+UHvXTYdDPECgYEA/zMID3d5U+vqz8ZuxGITqv/zsanrX/bjp5evrXWXga6NJm2RR/WdDjrNxwnKDiONW6L8Op97iXrF6XG3fa1JvBEubGwZYq/J+KgjcpfC6eNh1liPtOBXG4krf+WzaKUYBNQjaROMH1zMLyv/gyzexLsg6iIXE5G4U+H9ElXf5rUCgYEAzpPnAmxx2kUe66eZb4y9EW6KdeGU1S20JI1pzs67q3/nKwn0FcQkNltLxuzktd7HEbX4M0pggjOs468I1MD/d5tnyHeav1CexRijbwGAmAssk52IkdV+nWhx6oSgWrAeB+D3mgc1tVVR66uV3VQGIdPmwuXvmb29f8JrukXhCdUCgYEAhdf57kK2+3DMIlTsW0slDZZX9WIs9JPEKm2/0bXO1FD77p+ghqEm0gO9URqtQmUbCmic6RIj9KLTke/2UI/GEEDinDLFzaBsyWFF1iAKNijvcz/XfwH6LZLvoZCTW9rakg3A1KdP4lMFM+hbhizOWVfbl3Bxse3HQxdPZ4Jqf9ECgYAS1jnCZtEa7iKbqnS7T0IOTN4jUaaYqco7awmy6fcC9G7H5ehz86a5rimCwic4zk+otcckJiwWs0+Yk2ViwRaKeYlFJmLd/yP7JPwCK0jmlF5EN6E0axtYjyWUFPPqURTr8v+g8/dZyaXmr4bC396PRxtLulvW0Q5uj/Py0Fxs4QKBgAkPbTGTr6w/cvvZ273b9i0u9rzSBwmsEPN1KvDwaJjVDdm1yahWlOcf/ceENd73gIdDmiZjuVuIXZocg1HYFdzQCjC7e3DOiT/88Gm5qwoPuTt01D2mioZb6GA+zjf3fB3C2i2wp6wB6Fdl45Nhvdm+OtJEzVemUbjpwDexWvqW";
-
-	// 汇付公钥，用于对汇付返回报文进行签名验证
-	public static final String DEMO_RSA_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnCBeHnDOFLhsAKTdTgsW4Q2fiEugL1HwHFU5xvLk+fHJ8T7MEq3FyLZk6VG04RrjRqpcUOqu66SilN7k4ZTYj016uC6EW+uvUXwvbdIyA/BKV0EeNt638OsSUZf9EXWz1GB6SPwq3VzxoaSWzboCnPysJGJRXr2biqGdQBtfaeywwgBhogqHm0/xzPEFmynZQrwA3Yt3d0smyaYrzKqp/h2GyZJTaC06SbDCs6soJJrlhalip0eNP0PYGSJ8hQULCOs1mtA/LzsPa59Q0DMND/IQnVRJ4U1C7xmEx5Fp4s4v3tEY0kIIJ2uxiv76YRN6gXI87BLLJkpcF9/9D3XO9QIDAQAB";
 
 	/**
-	 * 汇付绑卡
+	 * 汇付下单
 	 * 
 	 * @param qrcode
 	 * @return
 	 */
-	public static String quickbuckle(Qrcode qrcode, String backviewrul) {
+	public static Map<String, Object> quickbuckle(Qrcode qrcode, String ordernum, Double amount, String backurl) {
 
 		// 1. 数据初始化，填入对应的商户配置
 		MerConfig merConfig = new MerConfig();
-		merConfig.setProcutId("PAYUN");
-		merConfig.setSysId("6666000162821367");
-		merConfig.setRsaPrivateKey(DEMO_RSA_PRIVATE_KEY);
-		merConfig.setRsaPublicKey(DEMO_RSA_PUBLIC_KEY);
+		merConfig.setProcutId(qrcode.getSmid());
+		merConfig.setSysId(qrcode.getAppid());
+		merConfig.setRsaPrivateKey(qrcode.getAppprivatekey());
+		merConfig.setRsaPublicKey(qrcode.getApppublickey());
 		try {
 			BasePay.initWithMerConfig(merConfig);
-			String date = DateUtil.getDateFormat(DateUtil.YMD).toString();
-			Long time = System.currentTimeMillis() / 1000;
+			String date = DateUtil.format(DateUtil.YMD, new Date());
+
 			// 2.组装请求参数
 			Map<String, Object> paramsInfo = new HashMap<>();
 			// 业务请求流水号
-			paramsInfo.put("req_seq_id", "rQ" + date + time.toString());
+			paramsInfo.put("req_seq_id", ordernum);
 			// 请求日期
 			paramsInfo.put("req_date", date);
 			// 商户号
 			paramsInfo.put("huifu_id", qrcode.getAppid());
 			// 订单金额
-			paramsInfo.put("trans_amt", "1.00");
+			paramsInfo.put("trans_amt",String.format("%.2f", amount));
+			// 订单类型
+			paramsInfo.put("request_type", "M");
 			// 银行扩展信息
 			paramsInfo.put("extend_pay_data", "{\"goods_short_name\":\"01\",\"biz_tp\":\"123451\",\"gw_chnnl_tp\":\"02\"}");
 			// 设备信息
@@ -857,14 +848,48 @@ public class SelfPayUtil {
 			// 备注
 			paramsInfo.put("remark", "remark快捷支付接口");
 			// 页面跳转地址
-			paramsInfo.put("front_url", backviewrul);
+			paramsInfo.put("front_url", backurl);
 			// 3. 发起API调用
 			Map<String, Object> response = BasePayRequest.requestBasePay("v2/trade/onlinepayment/quickpay/frontpay", paramsInfo, null, false);
-			;
 			System.out.println(response);
-			return JSONUtil.toJsonStr(response);
+			return response;
 		} catch (BasePayException e) {
 			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 交易结果查询
+	 */
+	public static String huifupaymentQuery(Qrcode qrcode, String outradeno) {
+		MerConfig merConfig = new MerConfig();
+		merConfig.setProcutId(qrcode.getSmid());
+		merConfig.setSysId(qrcode.getAppid());
+		merConfig.setRsaPrivateKey(qrcode.getAppprivatekey());
+		merConfig.setRsaPublicKey(qrcode.getApppublickey());
+		try {
+			BasePay.initWithMerConfig(merConfig);
+			String date = DateUtil.format(DateUtil.YMD, new Date());
+
+			// 2.组装请求参数
+			Map<String, Object> paramsInfo = new HashMap<>();
+			// 商户号
+			paramsInfo.put("huifu_id", qrcode.getAppid());
+			// 原交易请求日期
+			paramsInfo.put("org_req_date", date);
+			paramsInfo.put("org_req_seq_id", outradeno);
+			// 原交易支付类型QUICK_PAY：快捷支付、快捷充值(查询快捷交易必填)&lt;br/&gt;ONLINE_PAY：网银支付、网银充值&lt;br/&gt;WAP_PAY：手机WAP支付&lt;br/&gt;UNION_PAY：银联APP统一支付&lt;br/&gt;QUICK_PAY_APPLY：银行卡分期申请&lt;br/&gt;QUICK_PAY_CONFIRM：银行卡分期确认&lt;br/&gt;TRANSFER_ACCT：网银转账&lt;br/&gt;&lt;font
+			paramsInfo.put("pay_type", "QUICK_PAY");
+			// 3. 发起API调用
+			Map<String, Object> response = BasePayRequest.requestBasePay("v2/trade/onlinepayment/query", paramsInfo, null, false);
+			System.out.println(response);
+			JSONObject data = JSONUtil.parseObj(response.get("data").toString());
+			if (data.get("trans_stat").toString().equals("S")) {
+				return data.get("trans_stat").toString();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

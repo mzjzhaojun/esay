@@ -131,6 +131,9 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Autowired
 	private MerchantBot merchantbot;
 
+	/**
+	 * 本地提交
+	 */
 	@Override
 	public Integer submitOrder(Payout t) {
 		PayoutMerchantaccount maccount = merchantaccountmapper.getByMerchantId(t.getMerchantid());
@@ -144,7 +147,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		if (!m.getStatus()) {
 			throw new YtException("商户被冻结!");
 		}
-
+		t.setAccname(t.getAccname().replaceAll(" ", ""));
+		t.setAccnumer(t.getAccnumer().replaceAll(" ", ""));
 		t.setUserid(m.getUserid());
 		t.setMerchantid(m.getId());
 		t.setNotifyurl(m.getApireusultip());
@@ -870,6 +874,13 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		// 获取渠道单号
 		boolean flage = true;
 		switch (cl.getName()) {
+		case DictionaryResource.DFXJAISLE:
+			String xjordernum = PayUtil.SendXJSubmit(t, cl);
+			if (xjordernum != null) {
+				flage = false;
+				t.setChannelordernum(xjordernum);
+			}
+			break;
 		case DictionaryResource.DFHYTAISLE:
 			String hytordernum = PayUtil.SendHYTSubmit(t, cl);
 			if (hytordernum != null) {
@@ -1158,7 +1169,34 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			TenantIdContext.remove();
 		}
 	}
-	
+
+	@Override
+	public void xjcallback(Map<String, String> params) {
+		String orderid = params.get("outTradeNo").toString();
+		String status = params.get("state").toString();
+		log.info("仙剑通知返回消息：orderid" + orderid + " status:" + status);
+		Payout pt = mapper.getByOrdernum(orderid);
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			Channel channel = channelmapper.get(pt.getChannelid());
+			String ip = AuthContext.getIp();
+			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求!");
+			}
+			// 查询渠道是否真实成功
+			Integer returnstate = PayUtil.SendXJSelectOrder(pt.getOrdernum(), channel);
+			Assert.notNull(returnstate, "仙剑代付通知反查订单失败!");
+			if (returnstate == 2) {
+				paySuccess(pt);
+			} else if (returnstate == 3) {
+				payFail(pt);
+			}
+			SysUserContext.remove();
+			TenantIdContext.remove();
+		}
+	}
+
 	@Override
 	public ByteArrayOutputStream download(Map<String, Object> param) throws IOException {
 		SXSSFWorkbook workbook = new SXSSFWorkbook();
@@ -1218,6 +1256,5 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		workbook.close();
 		return outputStream;
 	}
-	
-	
+
 }

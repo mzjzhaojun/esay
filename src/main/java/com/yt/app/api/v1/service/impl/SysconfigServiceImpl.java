@@ -116,7 +116,7 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 		RestTemplate resttemplate = new RestTemplate();
 		ResponseEntity<String> str = resttemplate.exchange("https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=all&userType=all&receivingAds=false&t=" + time, HttpMethod.GET, httpEntity,
 				String.class);
-
+		
 		JSONObject data = JSONUtil.parseObj(str);
 		Double price = data.getJSONObject("data").getJSONObject("USDT").getJSONObject("quote").getJSONObject("TRX").getDouble("price");
 		mapper.putUsdtToTrxExchange(price);

@@ -35,12 +35,10 @@ public class ViewController {
 		model.addAttribute("backurl", income.getBackforwardurl());
 		model.addAttribute("resulturl", income.getResulturl());
 		model.addAttribute("status", income.getStatus());
-		if (income.getQrcodecode().equals(DictionaryResource.PRODUCT_ZFTWAP)) {
-			return "static/zfbwapview";
-		} else if (income.getQrcodecode().equals(DictionaryResource.PRODUCT_YPLWAP)) {
+		 if (income.getQrcodecode().equals(DictionaryResource.PRODUCT_YPLWAP)) {
 			return "static/yplwapview";
 		}
-		return "static/error";
+		return "static/merchantpay";
 	}
 
 	@RequestMapping(value = "/income/error", method = RequestMethod.GET)

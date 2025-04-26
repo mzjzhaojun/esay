@@ -484,7 +484,7 @@ public class PayUtil {
 			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/agentpayAPI/queryOrder", httpEntity, JSONObject.class);
 			String retCode = sov.getBody().getStr("retCode");
 			String status = sov.getBody().getStr("status");
-			log.info("旭日代付查订单：" +  sov.getBody());
+			log.info("旭日代付查订单：" + sov.getBody());
 			if (retCode.equals("SUCCESS")) {
 				return status;
 			}
@@ -699,12 +699,88 @@ public class PayUtil {
 			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/InterfaceV9/QueryWithdrawOrder", httpEntity, JSONObject.class);
 			String retCode = sov.getBody().getStr("Code");
 			String status = sov.getBody().getStr("WithdrawOrderStatus");
-			log.info("HYT代付查订单：" +  sov.getBody());
+			log.info("HYT代付查订单：" + sov.getBody());
 			if (retCode.equals("0")) {
 				return status;
 			}
 		} catch (RestClientException e) {
 			log.info("HYT代付查单返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// 仙剑代付
+	public static String SendXJSubmit(Payout pt, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Long time = System.currentTimeMillis() / 1000;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("mchId", cl.getCode().toString());
+		map.put("outTradeNo", pt.getOrdernum().toString());
+		map.put("wayCode", cl.getAislecode().toString());
+		map.put("amount", String.format("%.2f", pt.getAmount()).toString());
+		map.put("notifyUrl", cl.getApireusultip().toString());
+		map.put("reqTime", time.toString());
+		map.put("payeeName", time.toString());
+		map.put("payeeAccount", time.toString());
+		map.put("payeeBankName", time.toString());
+		map.put("clientIp", "127.0.0.1");
+
+		TreeMap<String, Object> sortedMap = new TreeMap<>(map);
+		String signContent = "";
+		for (String key : sortedMap.keySet()) {
+			signContent = signContent + key + "=" + map.get(key) + "&";
+		}
+		signContent = signContent.substring(0, signContent.length() - 1);
+		signContent = signContent + "&key=" + cl.getApikey();
+		String sign = MD5Utils.md5(signContent);
+		map.put("sign", sign);
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/transfer/unifiedorder", httpEntity, JSONObject.class);
+		String retCode = sov.getBody().getStr("code");
+		log.info("仙剑代付创建订单：" + sov.getBody());
+		if (retCode.equals("0")) {
+			return sov.getBody().getStr("tradeNo");
+		}
+		return null;
+	}
+
+	// 仙剑代付查单
+	public static Integer SendXJSelectOrder(String orderid, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			Map<String, Object> map = new HashMap<String, Object>();
+			Long time = System.currentTimeMillis() / 1000;
+			map.put("mchId", cl.getCode());
+			map.put("outTradeNo", orderid);
+			map.put("reqTime", time);
+			TreeMap<String, Object> sortedMap = new TreeMap<>(map);
+			String signContent = "";
+			for (String key : sortedMap.keySet()) {
+				signContent = signContent + key + "=" + map.get(key) + "&";
+			}
+			signContent = signContent.substring(0, signContent.length() - 1);
+			signContent = signContent + "&key=" + cl.getApikey();
+			String sign = MD5Utils.md5(signContent);
+			map.put("sign", sign);
+
+			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/transfer/query", httpEntity, JSONObject.class);
+			String retCode = sov.getBody().getStr("code");
+			Integer status = sov.getBody().getInt("state");
+			log.info("仙剑代付查订单：" + sov.getBody());
+			if (retCode.equals("0")) {
+				return status;
+			}
+		} catch (RestClientException e) {
+			log.info("仙剑代付查单返回消息：" + e.getMessage());
 		}
 		return null;
 	}
@@ -2020,8 +2096,7 @@ public class PayUtil {
 		}
 		return null;
 	}
-	
-	
+
 	// oneplus代收对接
 	public static JSONObject SendOnePlusSubmit(Income pt, Channel cl) {
 		try {

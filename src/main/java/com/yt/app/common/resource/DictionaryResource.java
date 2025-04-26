@@ -48,6 +48,7 @@ public class DictionaryResource implements Serializable {
 	public static final String DFSXAISLE = "守信"; //
 	public static final String DFLJAISLE = "灵境"; //
 	public static final String DFHYTAISLE = "HYT"; //
+	public static final String DFXJAISLE = "仙剑"; //
 
 	/**
 	 * 账户类型
@@ -175,7 +176,9 @@ public class DictionaryResource implements Serializable {
 	public static final Integer PROJECT_TYPE_501 = 501;// 易票联
 	public static final String PRODUCT_ZFTWAP = "ZFTWAP";
 	public static final Integer PROJECT_TYPE_502 = 502;// 支付宝直付通手机网站支付
+	public static final String PRODUCT_HUIFUTXWAP= "HUIFUTX";
 	public static final Integer PROJECT_TYPE_503 = 503;
+	
 	public static final Integer PROJECT_TYPE_504 = 504;
 	public static final Integer PROJECT_TYPE_505 = 505;
 	public static final Integer PROJECT_TYPE_506 = 506;

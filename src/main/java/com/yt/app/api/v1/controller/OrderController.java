@@ -428,9 +428,9 @@ public class OrderController {
 			lock.unlock();
 		}
 	}
-	
+
 	/**
-	 * 通源代收回调
+	 * oneplus代收回调
 	 * 
 	 * @param requestEntity
 	 * @param request
@@ -465,6 +465,29 @@ public class OrderController {
 		try {
 			lock.lock();
 			incomeservice.epfpayftfcallback(RequestUtil.requestEntityToParamMap(requestEntity));
+			String json = "{\"returnCode\":\"0000\"}";
+			return new YtResponseEntity<Object>(JSONUtil.parseObj(json));
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * 易票联代收通知
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/huifupayftfcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public YtResponseEntity<Object> huifupayftfcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("huifupayftfcallback");
+		try {
+			lock.lock();
+			incomeservice.huifupayftfcallback(params);
 			String json = "{\"returnCode\":\"0000\"}";
 			return new YtResponseEntity<Object>(JSONUtil.parseObj(json));
 		} catch (Exception e) {
@@ -704,7 +727,7 @@ public class OrderController {
 	}
 
 	/**
-	 * 守信代付回调
+	 * 灵境代付回调
 	 * 
 	 * @param requestEntity
 	 * @param request
@@ -740,6 +763,28 @@ public class OrderController {
 			lock.lock();
 			payoutservice.hytcallback(params);
 			response.getWriter().print("SUCCESS");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * 仙剑代付回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/xjcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void xjcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("xjcallback");
+		try {
+			lock.lock();
+			payoutservice.xjcallback(params);
+			response.getWriter().print("success");
 		} catch (Exception e) {
 			throw new YtException(e);
 		} finally {

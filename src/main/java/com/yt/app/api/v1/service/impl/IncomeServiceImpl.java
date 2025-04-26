@@ -398,6 +398,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		TenantIdContext.remove();
 	}
 
+
 	@Override
 	public void yscallback(Map<String, String> params) {
 		String orderid = params.get("mchOrderNo").toString();
@@ -505,7 +506,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		// 验证
 		Merchant mc = checkparam(qs);
 		TenantIdContext.setTenantId(mc.getTenant_id());
-
+		//
+		boolean flage = true;
 		List<Merchantqrcodeaisle> listmc = merchantqrcodeaislemapper.getByMid(mc.getId());
 		if (listmc == null || listmc.size() == 0) {
 			////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
@@ -589,8 +591,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			income.setNotifyurl(qs.getPay_notifyurl());
 			income.setBackforwardurl(qs.getPay_callbackurl());
 			income.setInipaddress(AuthContext.getIp());
-			//
-			boolean flage = true;
 			switch (channel.getName()) {
 			case DictionaryResource.ONEPLUSAISLE:
 				JSONObject dataoneplus = PayUtil.SendOnePlusSubmit(income, channel);
@@ -823,19 +823,43 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			if (qd.getCode().equals(DictionaryResource.PRODUCT_ZFTWAP)) {
 				Qrcode pqd = qrcodemapper.get(qd.getPid());
 				AlipayTradeWapPayResponse response = SelfPayUtil.AlipayTradeWapPay(pqd, qd, income.getOrdernum(), income.getAmount());
-				Assert.notNull(response, "获取支付宝单号错误!");
-				String pageRedirectionData = response.getBody();
-				income.setQrcode(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
-				income.setQrcodeordernum("inqd" + StringUtil.getOrderNum());
-				income.setResulturl(pageRedirectionData);
-				if (qd.getPid() != null) {
-					income.setDynamic(true);
+				if (response != null) {
+					flage = false;
+					String pageRedirectionData = response.getBody();
+					income.setQrcode(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
+					income.setQrcodeordernum("inqd" + StringUtil.getOrderNum());
+					income.setResulturl(pageRedirectionData);
+					if (qd.getPid() != null) {
+						income.setDynamic(true);
+					}
 				}
 			} else if (qd.getCode().equals(DictionaryResource.PRODUCT_YPLWAP)) {
-
+				flage = false;
 				income.setQrcode(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
 				income.setResulturl(income.getQrcode());
 				income.setQrcodeordernum("inqd" + StringUtil.getOrderNum());
+			} else if (qd.getCode().equals(DictionaryResource.PRODUCT_HUIFUTXWAP)) {
+				Map<String, Object> response = SelfPayUtil.quickbuckle(qd, income.getOrdernum(), income.getAmount(),income.getBackforwardurl());
+				if (response != null) {
+					flage = false;
+					String outradeno = response.get("hf_seq_id").toString();
+					String form_url = response.get("form_url").toString();
+					income.setQrcode(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
+					income.setResulturl(form_url);
+					income.setQrcodeordernum(outradeno);
+				}
+			}
+			if (flage) {
+				channelbot.notifyChannel(channel);
+				QrcodeResultVO qr = new QrcodeResultVO();
+				qr.setPay_memberid(mc.getCode());
+				qr.setPay_orderid(qs.getPay_orderid());
+				qr.setPay_amount(qs.getPay_amount());
+				qr.setPay_aislecode(income.getOrdernum());
+				qr.setPay_viewurl(appConfig.getOrigin() + "/esay/rest/v1/view/income/error");
+				String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
+				qr.setPay_md5sign(signresult);
+				return qr;
 			}
 			///////////////////////////////////////////////////// 计算代理订单/////////////////////////////////////////////////////
 			if (mc.getAgentid() != null) {
@@ -1286,6 +1310,24 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			success(income, null);
 		}
 		TenantIdContext.remove();
+	}
+	
+	
+	@Override
+	public void huifupayftfcallback(Map<String, String> params) {
+		if (params.get("resp_code").toString().equals("00000000")) {
+			String outradeno = params.get("req_seq_id").toString();
+			String status = params.get("trans_stat").toString();
+			log.info("汇付通知返回消息：payOrderId" + outradeno + " status:" + status);
+			Income income = mapper.getByOrderNum(outradeno);
+			TenantIdContext.setTenantId(income.getTenant_id());
+			String response = SelfPayUtil.huifupaymentQuery(qrcodemapper.get(income.getQrcodeid()), outradeno);
+			Assert.notNull(response, "汇付通知反查订单失败!");
+			if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+				success(income, null);
+			}
+			TenantIdContext.remove();
+		}
 	}
 
 	@Override

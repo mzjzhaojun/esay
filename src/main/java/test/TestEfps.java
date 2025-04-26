@@ -22,7 +22,7 @@ public class TestEfps {
 	public void getUserInfoById() {
 		// 测试代码
 		long beginTime = System.currentTimeMillis();
-//		SelfPayUtil.quickbuckle(null);
+//		SelfPayUtil.quickbuckle(null,"http://www.baidu.com");
 		long time = System.currentTimeMillis() - beginTime;
 		System.out.println(">>>  Time " + time);
 	}
