@@ -61,6 +61,7 @@ import com.huifu.bspay.sdk.opps.core.BasePay;
 import com.huifu.bspay.sdk.opps.core.config.MerConfig;
 import com.huifu.bspay.sdk.opps.core.exception.BasePayException;
 import com.huifu.bspay.sdk.opps.core.net.BasePayRequest;
+import com.huifu.bspay.sdk.opps.core.utils.RsaUtils;
 import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Qrcodetransferrecord;
 import com.yt.app.common.util.bo.OrderGoods;
@@ -643,7 +644,7 @@ public class SelfPayUtil {
 	}
 
 	/**
-	 * 协议支付交易
+	 * 易票联协议支付交易
 	 * 
 	 * @return
 	 * @throws Exception
@@ -684,7 +685,7 @@ public class SelfPayUtil {
 	}
 
 	/**
-	 * 交易结果查询
+	 * 易票联交易结果查询
 	 */
 	public static String eplpaymentQuery(Qrcode qrcode, String outradeno, String noncestr) {
 		PaymentQueryRequest request = new PaymentQueryRequest();
@@ -703,7 +704,7 @@ public class SelfPayUtil {
 	}
 
 	/**
-	 * 确认绑卡
+	 * 易票联确认绑卡
 	 * 
 	 * @param qrcode
 	 * @param ordernum
@@ -724,7 +725,7 @@ public class SelfPayUtil {
 	}
 
 	/**
-	 * 单笔代付 单笔提现
+	 * 易票联单笔代付 单笔提现
 	 * 
 	 * @return
 	 * @throws Exception
@@ -762,7 +763,7 @@ public class SelfPayUtil {
 	}
 
 	/**
-	 * 单笔代付结果查询
+	 * 易票联单笔代付结果查询
 	 * 
 	 * @return
 	 * @throws Exception
@@ -784,7 +785,7 @@ public class SelfPayUtil {
 	}
 
 	/**
-	 * 余额查询
+	 * 易票联余额查询
 	 * 
 	 * @return
 	 * @throws Exception
@@ -803,7 +804,6 @@ public class SelfPayUtil {
 		}
 		return null;
 	}
-
 
 	/**
 	 * 汇付下单
@@ -832,7 +832,7 @@ public class SelfPayUtil {
 			// 商户号
 			paramsInfo.put("huifu_id", qrcode.getAppid());
 			// 订单金额
-			paramsInfo.put("trans_amt",String.format("%.2f", amount));
+			paramsInfo.put("trans_amt", String.format("%.2f", amount));
 			// 订单类型
 			paramsInfo.put("request_type", "M");
 			// 银行扩展信息
@@ -896,4 +896,62 @@ public class SelfPayUtil {
 		return null;
 	}
 
+	// 汇付分配的产品号
+	public static final String DEMO_PRODUCT_ID = "PAYUN";
+
+	// 汇付分配的系统号
+	public static final String DEMO_SYS_ID = "6666000162332298";
+
+	// 服务商私钥，用于调用接口时进行签名
+	public static final String DEMO_RSA_PRIVATE_KEY = "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCmEMA+X+OBEyvWIM6X1yh8Lf0OyqKUmhJhYIXdVq1CIEMRYoeraoN5MG2aOwOYz3KlmbPN+fpMKFCmAPH2xYr9duYbOv/EvAWW/2O6qwQzLFQ/2FtZ4X4jgL+IjXQoPh1JB4CfwkSmwRQavfumc6KWxNYuNvZLZoX5H4kIc9gcpKQbYmLeqzWGlHXlfhh8xorP8P/IVCe2yox+gVOBYUegirqTDPL1JvFnb3xuMhbEdjcjbzigrwqJU2kjqwszttOfybvCmxdUHRkOm2x6p633u8eXzX4Tn97o1pIaLcFZbins+TqlEp6yiLl8cpahlYLHNmqoadmS7/3R/PllusnRAgMBAAECggEBAJeXePY3cCVWi9CnGA/xv6pEDNpgzbLbRmYPx4M6aWSQsMiA6hnnXGbXd2Wv82OeEyjqOwGO7RZyQtSWzkoXH/6qd/lpjStY+71QGwi+rlHMaIfzh8hvmEbuc2lCv0MxGGie6aJso2CZpjGXNc5HhqccvetoDsLbrvav+9Z0cVYK1kA5HsQ+3LiUzxIaucIWQWPwcvEwwSChb3emYAkTANzhlNT736SBpXcqCDVJp0UhZ5aeAeqL7uXPswVLnbP7bONwqduBCJoAPt+JPimbUVMoGAw03Cbrxuv9lOonhagA6vWEARV8nl18sGmhuOZh5VmOEWFiHC5RFI3YVpB7XgECgYEA5y3jgwpDiM3vx+9v/lX/uub+jfZy6laW81yGS2VlNZPwiIVkURB7wcXw3a3Pw/8Tgpcak/2+3uJy68ub7cIwbIGBJsboRv09AsRGkmmH3oFNqT2eUjL3iIGUh1WUWYBz3ilfvDM6mammgeR2EnZ/cwSAI4SSlxnRm8gYVWk7bKECgYEAt+UqswM7uCy1Z2gtMe1eFQ5M6ALtwUDQ3W+l1c9vT/+6j1hL/78D5sZew7nrO3WL76FY5gleZ1sKD/Bk2zZodTf6OagrhQJUHvgqw29kTpgUXwJITAlK64y8o9nv/rlJxdD7CwebUPnthNFu8VQze1qCOxwA7o6lXW0RLjMDnzECgYEAv5Kqd7v4rRSjQJbtwuE3U4X6ql/xaLoqyy8AZth2n4iiCjAoKnkzZSeH69wOUUg+vbhEISFkm8UiIL6Qz91dTX2gLick8zcF6RYHuWrUWhHi7n2OhmWP9UIUeHX1wpmM6yx0FjyJsi8BOaC+K5yhDwpKuaQx6h9OMP8HEzhqMyECgYAG4KA3L7DFE475PhEqo9j36p//sVRY/OaS0YEfPPHJySOeBsxY1Tj9IYAby9E7WQsRvDQJ7mHEdcgrjm8HL8K6V4yZKWvvPoYM3nUi+ACFW/SvFPPFPDe8FXhcnGL4YM+cgVNSN0ecwKwcYoTGq8J9I4ZpVYPHaDhRBSo2UxwYkQKBgQC3z9soA3Y7AkpD/7RDhA2/Hlva3IOSAC8ejl9xPHKQMiKXMS2RTgbEf/pedwkJhuRfi4oqLhA1Ki5FRNC+tzkmJcMXY2bE6zND/KZUrkRFLi8JOSB1DBtPKD9+v2992EjkultwiNCVigA6lBFSBUabLt47q9g/qWctXVX1JWhwGg==";
+
+	// 汇付公钥，用于对汇付返回报文进行签名验证
+	public static final String DEMO_RSA_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgDQoKxdf+Ys+tgwn6K+yPCcl8w/rg+AuYGMHxyd/lbmZZ/w3QGGLb+dzSg6UUPVSBvtMMXj77/XhIodZUob3+++aqcRR6oQniY1gfXho5B9UUjMNGqidFQD9+KfOZiLf4ewPPRQcTTz1xRL+ToIwAELo31qjIy+DXuJ3W640l7aqqoresDCMuGiS6KL7z8744k4YFqSS3UBoLWi6+ihkOjcNF872coOVo3gbCWmKFbdjGw9EAg3ONS/Np6MBKZEFlOSS6zKrsvIahWdJkoxMcA2SIzEMpwWtbFeADjOICVxHHt0gOqtyfpB1F0x6j2Koe7RLRH5Z/qWhP84vsKGFVwIDAQAB";
+
+	public static String huifuPaymentSettlement() {
+		// 1. 数据初始化，填入对应的商户配置
+		MerConfig merConfig = new MerConfig();
+		merConfig.setProcutId(DEMO_PRODUCT_ID);
+		merConfig.setSysId(DEMO_SYS_ID);
+		merConfig.setRsaPrivateKey(DEMO_RSA_PRIVATE_KEY);
+		merConfig.setRsaPublicKey(DEMO_RSA_PUBLIC_KEY);
+		try {
+			BasePay.initWithMerConfig(merConfig);
+			String date = DateUtil.format(DateUtil.YMD, new Date());
+			// 2.组装请求参数
+			Map<String, Object> paramsInfo = new HashMap<>();
+//			req_seq_id	请求流水号	String	128	Y	示例值：2021091708126665001
+//			req_date	请求日期	String	8	Y	格式yyyyMMdd；示例值：20211123
+//			huifu_id	商户号	String	32	Y	斗拱分配的商户号，示例值：6666000109812000
+//			cash_amt	代发金额	String	14	Y	单位元，需保留小数点后两位，示例值：5.00
+//			purpose_desc	代发用途描述	String	255	Y	示例值：退款
+//			bank_account_name	银行卡用户名	String	60	Y	示例值：上海汇付支付服务公司
+//			card_acct_type	对公对私标识	String	1	Y	对公:E，对私:P；示例值：E
+//			bank_card_no_crypt	银行账号密文	String	512	Y	使用斗拱系统的公钥对银行账号进行RSA加密得到秘文；
+//			示例值：b9LE5RccVVLChrHgo9lvp……PhWhjKrWg2NPfbe0mkQ==
+//			certificate_no_crypt	证件号密文	String	512	Y	使用斗拱系统的公钥对证件号进行RSA加密得到秘文；
+//			示例值：b9LE5RccVVLChrHgo9lvp……PhWhjKrWg2NPfbe0mkQ
+			// 请求日期
+			paramsInfo.put("req_date", date);
+			// 请求流水号
+			paramsInfo.put("req_seq_id", "rQ20250427130411377887");
+			paramsInfo.put("huifu_id",DEMO_SYS_ID);
+			paramsInfo.put("cash_amt", "1.00");
+			paramsInfo.put("purpose_desc", "代付");
+			paramsInfo.put("bank_account_name", "房晓辉");
+			paramsInfo.put("card_acct_type", "P");
+//			paramsInfo.put("certificate_no_crypt", "20250427");
+			// 银行卡号密文
+			paramsInfo.put("bank_card_no_crypt", RsaUtils.encrypt("6230524020043757279", DEMO_RSA_PUBLIC_KEY));
+			paramsInfo.put("certificate_type", "14");
+//			paramsInfo.put("mobile_no_crypt", "14");
+			paramsInfo.put("into_acct_date_type", "T0");
+			// 3. 发起API调用
+			Map<String, Object> response = BasePayRequest.requestBasePay("v2/trade/settlement/surrogate", paramsInfo, null, false);
+			System.out.println(response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
