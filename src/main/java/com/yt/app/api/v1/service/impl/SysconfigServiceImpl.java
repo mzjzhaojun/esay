@@ -86,6 +86,7 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 		System.out.println(time);
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("accept", "application/json");
+		headers.add("accept-charset", "UTF-8");
 		headers.add("accept-encoding", "gzip, deflate, br, zstd");
 		headers.add("accept-language", "zh-CN,zh;q=0.9");
 		headers.add("app-type", "web");

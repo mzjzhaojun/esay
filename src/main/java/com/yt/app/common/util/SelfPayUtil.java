@@ -886,9 +886,8 @@ public class SelfPayUtil {
 			// 3. 发起API调用
 			Map<String, Object> response = BasePayRequest.requestBasePay("v2/trade/onlinepayment/query", paramsInfo, null, false);
 			System.out.println(response);
-			JSONObject data = JSONUtil.parseObj(response.get("data").toString());
-			if (data.get("trans_stat").toString().equals("S")) {
-				return data.get("trans_stat").toString();
+			if (response.get("trans_stat").toString().equals("S")) {
+				return response.get("trans_stat").toString();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

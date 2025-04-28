@@ -483,13 +483,13 @@ public class OrderController {
 	 * @return
 	 */
 	@RequestMapping(value = "/huifupayftfcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public YtResponseEntity<Object> huifupayftfcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+	public void huifupayftfcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
 		RLock lock = RedissonUtil.getLock("huifupayftfcallback");
 		try {
 			lock.lock();
-			incomeservice.huifupayftfcallback(params);
-			String json = "{\"returnCode\":\"0000\"}";
-			return new YtResponseEntity<Object>(JSONUtil.parseObj(json));
+			String reqSeqId = incomeservice.huifupayftfcallback(params);
+			String json = "RECV_ORD_ID_" + reqSeqId;
+			response.getWriter().print(json);
 		} catch (Exception e) {
 			throw new YtException(e);
 		} finally {

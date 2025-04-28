@@ -87,6 +87,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -397,7 +398,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		TenantIdContext.remove();
 	}
-
 
 	@Override
 	public void yscallback(Map<String, String> params) {
@@ -839,7 +839,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				income.setResulturl(income.getQrcode());
 				income.setQrcodeordernum("inqd" + StringUtil.getOrderNum());
 			} else if (qd.getCode().equals(DictionaryResource.PRODUCT_HUIFUTXWAP)) {
-				Map<String, Object> response = SelfPayUtil.quickbuckle(qd, income.getOrdernum(), income.getAmount(),income.getBackforwardurl());
+				Map<String, Object> response = SelfPayUtil.quickbuckle(qd, income.getOrdernum(), income.getAmount(), income.getBackforwardurl());
 				if (response != null) {
 					flage = false;
 					String outradeno = response.get("hf_seq_id").toString();
@@ -1311,14 +1311,12 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		TenantIdContext.remove();
 	}
-	
-	
+
 	@Override
-	public void huifupayftfcallback(Map<String, String> params) {
+	public String huifupayftfcallback(Map<String, String> params) {
 		if (params.get("resp_code").toString().equals("00000000")) {
-			String outradeno = params.get("req_seq_id").toString();
-			String status = params.get("trans_stat").toString();
-			log.info("汇付通知返回消息：payOrderId" + outradeno + " status:" + status);
+			String outradeno = JSONUtil.parseObj(params.get("resp_data").toString()).getStr("req_seq_id");
+			log.info("汇付通知返回消息：payOrderId" + outradeno);
 			Income income = mapper.getByOrderNum(outradeno);
 			TenantIdContext.setTenantId(income.getTenant_id());
 			String response = SelfPayUtil.huifupaymentQuery(qrcodemapper.get(income.getQrcodeid()), outradeno);
@@ -1327,7 +1325,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				success(income, null);
 			}
 			TenantIdContext.remove();
+			return income.getOrdernum();
 		}
+		return null;
 	}
 
 	@Override

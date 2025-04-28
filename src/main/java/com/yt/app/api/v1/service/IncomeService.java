@@ -79,7 +79,7 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 	void onepluscallback(Map<String, String> params);
 	
 	// huifu回調
-	void huifupayftfcallback(Map<String, String> params);
+	String huifupayftfcallback(Map<String, String> params);
 
 	// 通知
 	Integer notify(Income income);
