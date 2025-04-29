@@ -1226,6 +1226,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		titleCell8.setCellValue("订单状态");
 		SXSSFCell titleCell9 = titleRow.createCell(9);
 		titleCell9.setCellValue("创建时间");
+		SXSSFCell titleCell10 = titleRow.createCell(10);
+		titleCell10.setCellValue("渠道");
 		// 填充数据
 		for (int i = 0; i < list.size(); i++) {
 			PayoutVO imao = list.get(i);
@@ -1250,6 +1252,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			cell8.setCellValue(imao.getStatusname());
 			SXSSFCell cell9 = row.createCell(9);
 			cell9.setCellValue(DateTimeUtil.getDateTime(imao.getCreate_time(), DateTimeUtil.DEFAULT_DATETIME_FORMAT));
+			SXSSFCell cell10 = row.createCell(10);
+			cell10.setCellValue(imao.getChannelname());
 		}
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		workbook.write(outputStream);

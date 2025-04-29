@@ -22,8 +22,6 @@ public interface IncomemerchantaccountorderService extends YtIBaseService<Income
 
 	ByteArrayOutputStream download(Map<String, Object> param) throws IOException;
 
-	ByteArrayOutputStream reconciliation(Map<String, Object> param) throws IOException;
-
 	// 充值
 	void incomemanual(Incomemerchantaccountorder mco);
 

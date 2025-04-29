@@ -40,6 +40,7 @@ div {
 	var resulturl = "[[${resulturl}]]";
 	var status = "[[${status}]]";
 	var orderid = "[[${orderid}]]";
+	var backurl = "[[${backurl}]]";
 	var url = resulturl.replaceAll('amp;', '');
 	var md5str;
 	function initdata() {
@@ -75,7 +76,7 @@ div {
 		}
 	}
 	function doReload() {
-		window.location.href = url;
+		window.location.href = backurl;
 	}
 </script>
 

@@ -257,7 +257,7 @@ public class SelfPayUtil {
 			OpenApiRoyaltyDetailInfoPojo royaltyParameters0 = new OpenApiRoyaltyDetailInfoPojo();
 			royaltyParameters0.setRoyaltyType("transfer");
 			royaltyParameters0.setTransInType("loginName");
-			royaltyParameters0.setTransIn(transin);// li1850420@sina.com
+			royaltyParameters0.setTransIn(transin);
 			royaltyParameters0.setAmount(amount.toString());
 			royaltyParameters0.setDesc("百亿补贴-达人佣金");
 			royaltyParameters0.setRoyaltyScene("达人佣金");
@@ -396,7 +396,7 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static AlipayTradeRoyaltyRelationBindResponse AlipayTradeRoyaltyRelationBind(Qrcode qrcode) {
+	public static AlipayTradeRoyaltyRelationBindResponse AlipayTradeRoyaltyRelationBind(Qrcode qrcode, String ordernum, String name, String loginName) {
 		try {
 			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(qrcode));
 			// 构造请求参数以调用接口
@@ -406,18 +406,16 @@ public class SelfPayUtil {
 			// 设置分账接收方列表
 			List<RoyaltyEntity> receiverList = new ArrayList<RoyaltyEntity>();
 			RoyaltyEntity receiverList0 = new RoyaltyEntity();
-			receiverList0.setLoginName("test@alitest.xyz");
-			receiverList0.setName("测试名称");
-			receiverList0.setMemo("分账给测试商户");
-			receiverList0.setAccountOpenId("093PJtAPYb2UkQ0mXk_X86Z_FaMou-DtIEvERQ8X8yqKaEf");
-			receiverList0.setBindLoginName("test@alitest.xyz");
-			receiverList0.setType("userId");
-			receiverList0.setAccount("2088xxxxx00");
+			receiverList0.setLoginName(loginName);
+			receiverList0.setName(name);
+			receiverList0.setType("loginName");
+			receiverList0.setAccount(loginName);
+			receiverList0.setBindLoginName(loginName);
 			receiverList.add(receiverList0);
 			model.setReceiverList(receiverList);
 
 			// 设置外部请求号
-			model.setOutRequestNo(StringUtil.getOrderNum());
+			model.setOutRequestNo(ordernum);
 
 			request.setBizModel(model);
 
@@ -485,13 +483,10 @@ public class SelfPayUtil {
 			// 构造请求参数以调用接口
 			AlipayFundAccountQueryRequest request = new AlipayFundAccountQueryRequest();
 			AlipayFundAccountQueryModel model = new AlipayFundAccountQueryModel();
-
 			// uid参数未来计划废弃，存量商户可继续使用，新商户请使用openid。请根据应用-开发配置-openid配置选择支持的字段。
 			model.setAlipayUserId(qrcode.getRemark());
-
 			// 设置查询的账号类型
 			model.setAccountType("ACCTRANS_ACCOUNT");
-
 			request.setBizModel(model);
 			AlipayFundAccountQueryResponse response = alipayClient.certificateExecute(request);
 			log.info(response.getBody());
@@ -506,7 +501,7 @@ public class SelfPayUtil {
 	}
 
 	/**
-	 * 支付宝账户余额查询
+	 * 支付宝账户转账
 	 * 
 	 * @param qrcode
 	 * @param ordernum
@@ -521,39 +516,23 @@ public class SelfPayUtil {
 			// 构造请求参数以调用接口
 			AlipayFundTransUniTransferRequest request = new AlipayFundTransUniTransferRequest();
 			AlipayFundTransUniTransferModel model = new AlipayFundTransUniTransferModel();
-
-			// 设置商家侧唯一订单号
 			model.setOutBizNo(qtc.getOutbizno());
-
-			// 设置订单总金额
 			model.setTransAmount(qtc.getAmount().toString());
-
-			// 设置描述特定的业务场景
 			model.setBizScene("DIRECT_TRANSFER");
-
-			// 设置业务产品码
 			model.setProductCode("TRANS_ACCOUNT_NO_PWD");
-
-			// 设置转账业务的标题
 			model.setOrderTitle("代发");
-
 			// 设置收款方信息
 			Participant payeeInfo = new Participant();
 			payeeInfo.setIdentity(qtc.getPayeeid());
 			payeeInfo.setIdentityType("ALIPAY_LOGON_ID");
 			payeeInfo.setName(qtc.getPayeename());
 			model.setPayeeInfo(payeeInfo);
-
 			// 设置业务备注
 			model.setRemark("代发");
-
-			// 设置转账业务请求的扩展参数
 			model.setBusinessParams("{\"payer_show_name_use_alias\":\"true\"}");
-
 			request.setBizModel(model);
 			AlipayFundTransUniTransferResponse response = alipayClient.certificateExecute(request);
 			log.info(response.getBody());
-
 			if (response.isSuccess()) {
 				return response;
 			}
@@ -934,7 +913,7 @@ public class SelfPayUtil {
 			paramsInfo.put("req_date", date);
 			// 请求流水号
 			paramsInfo.put("req_seq_id", "rQ20250427130411377887");
-			paramsInfo.put("huifu_id",DEMO_SYS_ID);
+			paramsInfo.put("huifu_id", DEMO_SYS_ID);
 			paramsInfo.put("cash_amt", "1.00");
 			paramsInfo.put("purpose_desc", "代付");
 			paramsInfo.put("bank_account_name", "房晓辉");
