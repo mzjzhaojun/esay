@@ -2,6 +2,8 @@ package com.yt.app.api.v1.mapper;
 
 import java.util.List;
 import java.util.Map;
+
+import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.yt.app.api.v1.entity.Sysokx;
 import com.yt.app.api.v1.vo.SysokxVO;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
@@ -59,8 +61,7 @@ public interface SysokxMapper extends YtIBaseMapper<Sysokx> {
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Sysokx.class })
 	public Integer delete(Long id);
-	
-	
+
 	/**
 	 * deleteAll
 	 *
@@ -68,6 +69,7 @@ public interface SysokxMapper extends YtIBaseMapper<Sysokx> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Sysokx.class })
+	@InterceptorIgnore(blockAttack = "true")
 	public Integer deleteAll();
 
 	/**
@@ -87,6 +89,15 @@ public interface SysokxMapper extends YtIBaseMapper<Sysokx> {
 	 */
 	@YtRedisCacheAnnotation(classs = Sysokx.class)
 	public List<Sysokx> list(Map<String, Object> param);
+
+	/**
+	 * listTop
+	 * 
+	 * @param param map
+	 * @return listSysokx
+	 */
+	@YtRedisCacheAnnotation(classs = Sysokx.class)
+	public List<Sysokx> listTop(String type);
 
 	/**
 	 * map

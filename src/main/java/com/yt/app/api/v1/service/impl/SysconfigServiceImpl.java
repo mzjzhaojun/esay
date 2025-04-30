@@ -21,10 +21,8 @@ import com.yt.app.common.util.RedisUtil;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -115,10 +113,10 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 		SysOxxVo data = JSONUtil.toBean(str, SysOxxVo.class);
 		List<Object> array = data.getData().getSell();
 		Double price = Double.valueOf(BeanUtil.beanToMap(array.get(0)).get("price").toString());
-		mapper.putUsdtToTrxExchange(price);
-		RedisUtil.set(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTOTEXCHANGE, price.toString());
+		mapper.putUsdtExchange(price);
+		RedisUtil.set(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTEXCHANGE, price.toString());
 		sysokxmapper.deleteAll();
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 100; i++) {
 			Sysokx tt = new Sysokx();
 			tt.setName(BeanUtil.beanToMap(array.get(i)).get("nickName").toString());
 			tt.setPrice(Double.valueOf(BeanUtil.beanToMap(array.get(0)).get("price").toString()));
@@ -134,40 +132,14 @@ public class SysconfigServiceImpl extends YtBaseServiceImpl<Sysconfig, Long> imp
 	}
 
 	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public Sysconfig getUsdtToTrxExchangeData() {
-		return mapper.getByName(ServiceConstant.SYSTEM_PAYCONFIG_USDTOTEXCHANGE);
-	}
-
-	@Override
-	public List<Sysconfig> getDataTop() {
-		Long time = System.currentTimeMillis() / 1000;
-		String str = HttpUtil.get("https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=all&userType=all&receivingAds=false&t=" + time);
-		SysOxxVo data = JSONUtil.toBean(str, SysOxxVo.class);
-		List<Object> list = data.getData().getSell();
-		List<Sysconfig> listpc = new ArrayList<Sysconfig>();
-		for (Integer i = 0; i < 10; i++) {
-			Sysconfig e = new Sysconfig();
-			e.setName(BeanUtil.beanToMap(list.get(i)).get("nickName").toString());
-			e.setExchange(Double.valueOf(BeanUtil.beanToMap(list.get(i)).get("price").toString()));
-			listpc.add(e);
-		}
+	public List<Sysokx> getDataTop() {
+		List<Sysokx> listpc = sysokxmapper.listTop("");
 		return listpc;
 	}
 
 	@Override
-	public List<Sysconfig> getAliPayDataTop() {
-		Long time = System.currentTimeMillis() / 1000;
-		String str = HttpUtil.get("https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=CNY&baseCurrency=USDT&side=sell&paymentMethod=all&userType=all&receivingAds=false&t=" + time);
-		SysOxxVo data = JSONUtil.toBean(str, SysOxxVo.class);
-		List<Object> list = data.getData().getSell();
-		List<Sysconfig> listpc = new ArrayList<Sysconfig>();
-		for (Integer i = 0; i < 10; i++) {
-			Sysconfig e = new Sysconfig();
-			e.setName(BeanUtil.beanToMap(list.get(i)).get("nickName").toString());
-			e.setExchange(Double.valueOf(BeanUtil.beanToMap(list.get(i)).get("price").toString()));
-			listpc.add(e);
-		}
+	public List<Sysokx> getAliPayDataTop() {
+		List<Sysokx> listpc = sysokxmapper.listTop("aliPay");
 		return listpc;
 	}
 

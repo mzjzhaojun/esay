@@ -32,7 +32,7 @@ public class TrxFlashRentMessage implements UpdateMessageService {
 
 	@Override
 	public SendMessage getUpdate(Update update) {
-		Double price = Double.valueOf(RedisUtil.get(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTOTEXCHANGE));
+		Double price = Double.valueOf(RedisUtil.get(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTEXCHANGE));
 		SendMessage sendMessage = new SendMessage();
 		sendMessage.setChatId(update.getMessage().getChatId().toString());
 		sendMessage.setText("*实时汇率*\r\n" + "1 USDT = " + (price - 0.64) + " TRX  \r\n" + "\r\n" + "转账即兑，全自动返，等值 10U 起换\r\n" + "\r\n" + "选择兑换数量\r\n" + "例如: “10U” 可实时计算10U可兑换的TRX数量=" + (10 * (price - 0.64)) + "\r\n");
@@ -42,7 +42,7 @@ public class TrxFlashRentMessage implements UpdateMessageService {
 	}
 
 	public EditMessageText excuteExchange(Update update, Tronmember tronmember) {
-		Double price = Double.valueOf(RedisUtil.get(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTOTEXCHANGE));
+		Double price = Double.valueOf(RedisUtil.get(SystemConstant.CACHE_SYS_EXCHANGE + ServiceConstant.SYSTEM_PAYCONFIG_USDTEXCHANGE));
 		String callbackdata = update.getCallbackQuery().getData();
 		Double amount = Double.valueOf(callbackdata.replace(ButtonResource.EXCHANGE, ""));
 		User sender = update.getCallbackQuery().getFrom();

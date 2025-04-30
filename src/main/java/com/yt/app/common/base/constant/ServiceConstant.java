@@ -13,8 +13,6 @@ public interface ServiceConstant {
 
 	String SYSTEM_PAYCONFIG_USDTEXCHANGE = "usdtexchange"; // 汇率
 
-	String SYSTEM_PAYCONFIG_USDTOTEXCHANGE = "usdtotrxexchange"; // trx汇率
-
 	String UPDATE_FAIL_MSG = "修改失败!";
 
 	String ADD_FAIL_MSG = "新增失败!";

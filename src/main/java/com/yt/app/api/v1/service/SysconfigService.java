@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.yt.app.api.v1.entity.Sysconfig;
+import com.yt.app.api.v1.entity.Sysokx;
 import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.common.yt.YtIPage;
 
@@ -19,11 +20,9 @@ public interface SysconfigService extends YtIBaseService<Sysconfig, Long> {
 
 	Sysconfig getUsdtExchangeData();
 
-	Sysconfig getUsdtToTrxExchangeData();
-
-	List<Sysconfig> getDataTop();
+	List<Sysokx> getDataTop();
 
 	void initSystemData();
 
-	List<Sysconfig> getAliPayDataTop();
+	List<Sysokx> getAliPayDataTop();
 }
