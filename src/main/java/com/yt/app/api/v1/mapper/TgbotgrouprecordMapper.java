@@ -64,6 +64,15 @@ public interface TgbotgrouprecordMapper extends YtIBaseMapper<Tgbotgrouprecord> 
 	public Integer delete(Long id);
 
 	/**
+	 * delete
+	 *
+	 * @param id id
+	 * @return count
+	 */
+	@YtRedisCacheEvictAnnotation(classs = { Tgbotgrouprecord.class })
+	public Integer deleteByTgid(Long tgid);
+	
+	/**
 	 * listcount
 	 * 
 	 * @param param map
@@ -107,5 +116,15 @@ public interface TgbotgrouprecordMapper extends YtIBaseMapper<Tgbotgrouprecord> 
 	 */
 	@YtRedisCacheAnnotation(classs = Tgbotgrouprecord.class)
 	public List<Tgbotgrouprecord> listByType(@Param("tgid") Long tgid, @Param("type") Integer type);
+	
+	/**
+	 * listbyids
+	 * 
+	 * @param id long[]ids
+	 * @return listTgbotgrouprecord
+	 */
+	@YtRedisCacheAnnotation(classs = Tgbotgrouprecord.class)
+	public List<Tgbotgrouprecord> listByTypeAll(@Param("tgid") Long tgid, @Param("type") Integer type);
+	
 
 }
