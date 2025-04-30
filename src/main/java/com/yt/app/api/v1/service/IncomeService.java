@@ -20,7 +20,7 @@ import com.yt.app.common.common.yt.YtIPage;
 public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	List<Income> list();
-	
+
 	Integer batchsettleconfirm(Map<String, Object> param);
 
 	Income getByOrderNum(String ordernum);
@@ -74,10 +74,10 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	// 通源回調
 	void tongyuancallback(Map<String, String> params);
-	
+
 	// oneplus回調
 	void onepluscallback(Map<String, String> params);
-	
+
 	// huifu回調
 	String huifupayftfcallback(Map<String, String> params);
 
@@ -92,7 +92,7 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	// 确认结算
 	Integer settleconfirm(Income income);
-	
+
 	// 易票联绑卡
 	void sumbmitcheck(Map<String, Object> params);
 

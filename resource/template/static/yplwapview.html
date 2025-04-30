@@ -43,26 +43,29 @@ div {
 				<img src="/esay/static/img/zgyl.jpeg" width="100%" height="100%">
 			</div>
 			<div
-				style="width: 100%; height: 65%; display: flex; margin-top: 20px;">
+				style="width: 100%; height: 68%; display: flex; margin-top: 10px;">
 				<form action="demo-form.php" style="width: 100%; height: 55%;">
+				<label style="margin-left: 30px;">订单编号 </label> <input type="text"
+						style="width: 230px; height: 30px; margin: 8px;" id="ordernum"
+						name="ordernum" value="" disabled><br>
 					<label style="margin-left: 30px;">充值金额 </label> <input type="text"
-						style="width: 230px; height: 30px; margin: 12px;" id="amount"
+						style="width: 230px; height: 30px; margin: 8px;" id="amount"
 						name="amount" value="" disabled><br> <label
 						style="margin-left: 30px;">姓名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
 					<input type="text"
-						style="width: 230px; height: 30px; margin: 12px;" id="name"
+						style="width: 230px; height: 30px; margin: 8px;" id="name"
 						name="name" value=""><br> <label
 						style="margin-left: 30px;">身份证号 </label> <input type="text"
-						style="width: 230px; height: 30px; margin: 12px;" id="pcardno"
+						style="width: 230px; height: 30px; margin: 8px;" id="pcardno"
 						name="pcardno" value=""><br> <label
 						style="margin-left: 30px;">银行卡号 </label> <input type="text"
-						style="width: 230px; height: 30px; margin: 12px;" id="cardno"
+						style="width: 230px; height: 30px; margin: 8px;" id="cardno"
 						name="cardno" value=""><br> <label
 						style="margin-left: 30px;">手机号码 </label> <input type="text"
-						style="width: 230px; height: 30px; margin: 12px;" id="mobile"
+						style="width: 230px; height: 30px; margin: 8px;" id="mobile"
 						name="mobile" value=""><br> <label
 						style="margin-left: 30px;">验证码&nbsp;&nbsp;&nbsp;&nbsp;</label> <input
-						type="text" style="width: 100px; height: 30px; margin: 12px;"
+						type="text" style="width: 100px; height: 30px; margin: 8px;"
 						id="smscode" name="smscode" value="">
 					<button id="smsbtn" type="button"
 						style="border-radius: 3px; border-color: #00bfff; background-color: #4e6ef2; color: #000000; font-size: 16px; height: 36px; width: 115px">获取验证码</button>
@@ -84,6 +87,7 @@ div {
 	var md5str;
 	function initdata() {
 		$("#amount").val(amount);
+		$("#ordernum").val(orderid);
 		Fingerprint2.get(function(components) {
 			var values = components.map(function(component) {
 				return component.value

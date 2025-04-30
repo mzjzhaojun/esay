@@ -64,8 +64,7 @@ public interface QrcodeService extends YtIBaseService<Qrcode, Long> {
 	 * @param c
 	 */
 	void zftaccountquery(Qrcode c);
-	
-	
+
 	/**
 	 * 易票联账户余额查询
 	 * 
@@ -79,19 +78,19 @@ public interface QrcodeService extends YtIBaseService<Qrcode, Long> {
 	 * @param c
 	 */
 	void transunitransfer(Qrcodetransferrecord c);
-	
-	
+
 	/**
 	 * 支付宝分账
 	 * 
 	 * @param c
 	 */
 	void zfbtradeordersettle(Qrcodetransferrecord c);
-	
+
 	/**
 	 * 易票联转账
+	 * 
 	 * @param c
 	 */
 	void epltransunitransfer(Qrcodetransferrecord c);
-	
+
 }

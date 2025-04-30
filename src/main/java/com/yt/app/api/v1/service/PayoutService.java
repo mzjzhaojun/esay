@@ -61,13 +61,13 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 
 	// 旭日代付回调
 	void ljcallback(Map<String, String> params);
-	
-	//HYT代付回调
+
+	// HYT代付回调
 	void hytcallback(Map<String, String> params);
-	
-	//仙剑代付回调
+
+	// 仙剑代付回调
 	void xjcallback(Map<String, String> params);
-	
+
 	// 易票联代付回调
 	void epfcallback(Map<String, Object> params);
 
@@ -79,8 +79,7 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 
 	// 失敗
 	Integer fail(Long id);
-	
-	
-	//下载
+
+	// 下载
 	ByteArrayOutputStream download(Map<String, Object> param) throws IOException;
 }

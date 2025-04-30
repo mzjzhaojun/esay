@@ -42,11 +42,11 @@ public class YtConfig {
 	private String aligeteway;
 
 	private String bindcard;
-	
+
 	private String bindcardconfirm;
-	
+
 	private String protocolpaypre;
-	
+
 	private String paymentquery;
 
 	public void setOrigin(String origin) {

@@ -279,7 +279,7 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 		if (in.getDynamic()) {
 			Qrcode qd = qrcodemapper.get(in.getQrcodeid());
 			Qrcode pqd = qrcodemapper.get(qd.getPid());
-			AlipayTradeRoyaltyRelationBindResponse artrbr =  SelfPayUtil.AlipayTradeRoyaltyRelationBind(pqd,in.getOrdernum(),c.getPayeename(),c.getPayeeid());
+			AlipayTradeRoyaltyRelationBindResponse artrbr = SelfPayUtil.AlipayTradeRoyaltyRelationBind(pqd, in.getOrdernum(), c.getPayeename(), c.getPayeeid());
 			Assert.notNull(artrbr, "绑定分账关系失败!");
 			AlipayTradeOrderSettleResponse atsc = SelfPayUtil.AlipayTradeOrderSettle(pqd, in.getQrcodeordernum(), c.getPayeeid(), c.getAmount());
 			Assert.notNull(atsc, "分账失败!");

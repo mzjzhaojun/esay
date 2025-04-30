@@ -712,20 +712,20 @@ public class PayUtil {
 	// 仙剑代付
 	public static String SendXJSubmit(Payout pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 		Long time = System.currentTimeMillis() / 1000;
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("mchId", cl.getCode().toString());
-		map.put("outTradeNo", pt.getOrdernum().toString());
-		map.put("wayCode", cl.getAislecode().toString());
-		map.put("amount", String.format("%.2f", pt.getAmount()).toString());
-		map.put("notifyUrl", cl.getApireusultip().toString());
-		map.put("reqTime", time.toString());
-		map.put("payeeName", time.toString());
-		map.put("payeeAccount", time.toString());
-		map.put("payeeBankName", time.toString());
-		map.put("clientIp", "127.0.0.1");
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("mchId", cl.getCode().toString());
+		map.add("outTradeNo", pt.getOrdernum().toString());
+		map.add("wayCode", cl.getAislecode().toString());
+		map.add("amount", String.format("%.2f", pt.getAmount()).toString());
+		map.add("notifyUrl", cl.getApireusultip().toString());
+		map.add("reqTime", time.toString());
+		map.add("payeeName", time.toString());
+		map.add("payeeAccount", time.toString());
+		map.add("payeeBankName", time.toString());
+		map.add("clientIp", "127.0.0.1");
 
 		TreeMap<String, Object> sortedMap = new TreeMap<>(map);
 		String signContent = "";
@@ -735,8 +735,8 @@ public class PayUtil {
 		signContent = signContent.substring(0, signContent.length() - 1);
 		signContent = signContent + "&key=" + cl.getApikey();
 		String sign = MD5Utils.md5(signContent);
-		map.put("sign", sign);
-		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		map.add("sign", sign);
+		HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		//
 		ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/transfer/unifiedorder", httpEntity, JSONObject.class);
@@ -752,13 +752,13 @@ public class PayUtil {
 	public static Integer SendXJSelectOrder(String orderid, Channel cl) {
 		try {
 			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-			Map<String, Object> map = new HashMap<String, Object>();
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			Long time = System.currentTimeMillis() / 1000;
-			map.put("mchId", cl.getCode());
-			map.put("outTradeNo", orderid);
-			map.put("reqTime", time);
+			map.add("mchId", cl.getCode());
+			map.add("outTradeNo", orderid);
+			map.add("reqTime", time);
 			TreeMap<String, Object> sortedMap = new TreeMap<>(map);
 			String signContent = "";
 			for (String key : sortedMap.keySet()) {
@@ -767,9 +767,9 @@ public class PayUtil {
 			signContent = signContent.substring(0, signContent.length() - 1);
 			signContent = signContent + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
-			map.put("sign", sign);
+			map.add("sign", sign);
 
-			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+			HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
 			//
 			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/transfer/query", httpEntity, JSONObject.class);

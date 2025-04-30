@@ -57,6 +57,7 @@ public class IncomeController extends YtBaseEncipherControllerImpl<Income, Long>
 
 	/**
 	 * 屏蔽
+	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response
@@ -71,6 +72,7 @@ public class IncomeController extends YtBaseEncipherControllerImpl<Income, Long>
 
 	/**
 	 * 通知
+	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response
@@ -85,6 +87,7 @@ public class IncomeController extends YtBaseEncipherControllerImpl<Income, Long>
 
 	/**
 	 * 成功
+	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response
@@ -98,6 +101,7 @@ public class IncomeController extends YtBaseEncipherControllerImpl<Income, Long>
 
 	/**
 	 * 結算
+	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response
@@ -108,10 +112,10 @@ public class IncomeController extends YtBaseEncipherControllerImpl<Income, Long>
 		service.settleconfirm(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
-	
-	
+
 	/**
 	 * 結算
+	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response

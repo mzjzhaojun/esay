@@ -46,9 +46,8 @@ public class TaskMasterConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0 0/30 * * * ?")
+	@Scheduled(cron = "0 0/2 * * * ?")
 	public void getOKXExchange() throws InterruptedException {
-		System.out.println("================================");
 		sysconfigservice.initSystemData();
 	}
 

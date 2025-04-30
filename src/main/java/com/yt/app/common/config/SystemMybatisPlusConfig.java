@@ -100,7 +100,7 @@ public class SystemMybatisPlusConfig {
 
 		// 支付宝转账记录
 		MybatisPlusConfig.TENANT_ID_TABLE.add("qrcodetransferrecord");
-		//会员绑卡信息
+		// 会员绑卡信息
 		MybatisPlusConfig.TENANT_ID_TABLE.add("qrcodpaymember");
 	}
 

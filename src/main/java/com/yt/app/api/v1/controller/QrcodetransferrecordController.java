@@ -42,9 +42,9 @@ public class QrcodetransferrecordController extends YtBaseEncipherControllerImpl
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
-	
 	/**
 	 * 支付宝分账
+	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response
@@ -55,10 +55,10 @@ public class QrcodetransferrecordController extends YtBaseEncipherControllerImpl
 		qrcodeservice.zfbtradeordersettle(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
-	
-	
+
 	/**
 	 * 支付宝转账
+	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response
@@ -69,10 +69,10 @@ public class QrcodetransferrecordController extends YtBaseEncipherControllerImpl
 		qrcodeservice.transunitransfer(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
-	
-	
+
 	/**
 	 * 易票联转账
+	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response
@@ -83,6 +83,5 @@ public class QrcodetransferrecordController extends YtBaseEncipherControllerImpl
 		qrcodeservice.epltransunitransfer(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
-	
 
 }

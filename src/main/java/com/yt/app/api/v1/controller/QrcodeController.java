@@ -40,6 +40,7 @@ public class QrcodeController extends YtBaseEncipherControllerImpl<Qrcode, Long>
 
 	/**
 	 * 支付bao余额查询
+	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response
@@ -50,9 +51,10 @@ public class QrcodeController extends YtBaseEncipherControllerImpl<Qrcode, Long>
 		service.zftaccountquery(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
-	
+
 	/**
 	 * 易票联余额查询
+	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response
@@ -66,6 +68,7 @@ public class QrcodeController extends YtBaseEncipherControllerImpl<Qrcode, Long>
 
 	/**
 	 * 支付宝测试
+	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response
@@ -79,6 +82,7 @@ public class QrcodeController extends YtBaseEncipherControllerImpl<Qrcode, Long>
 
 	/**
 	 * 易票联绑卡
+	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response
@@ -92,6 +96,7 @@ public class QrcodeController extends YtBaseEncipherControllerImpl<Qrcode, Long>
 
 	/**
 	 * 易票联协议支付
+	 * 
 	 * @param requestEntity
 	 * @param request
 	 * @param response
