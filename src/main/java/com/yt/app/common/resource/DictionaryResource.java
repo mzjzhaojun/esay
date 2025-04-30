@@ -49,7 +49,7 @@ public class DictionaryResource implements Serializable {
 	public static final String DFLJAISLE = "灵境"; //
 	public static final String DFHYTAISLE = "HYT"; //
 	public static final String DFXJAISLE = "仙剑"; //
-
+	public static final String DFQWAISLE = "青蛙"; //
 	/**
 	 * 账户类型
 	 */

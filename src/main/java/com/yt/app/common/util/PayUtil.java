@@ -722,9 +722,9 @@ public class PayUtil {
 		map.put("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
 		map.put("notifyUrl", cl.getApireusultip().toString());
 		map.put("reqTime", time.toString());
-		map.put("payeeName", time.toString());
-		map.put("payeeAccount", time.toString());
-		map.put("payeeBankName", time.toString());
+		map.put("payeeName", pt.getAccname());
+		map.put("payeeAccount", pt.getAccnumer());
+		map.put("payeeBankName", pt.getBankname());
 		map.put("clientIp", "127.0.0.1");
 
 		TreeMap<String, Object> sortedMap = new TreeMap<>(map);
@@ -782,6 +782,82 @@ public class PayUtil {
 			}
 		} catch (RestClientException e) {
 			log.info("仙剑代付查单返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// 青蛙代付
+	public static String SendQWSubmit(Payout pt, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Long time = System.currentTimeMillis();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("mchId", cl.getCode().toString());
+		map.put("mchOrderNo", pt.getOrdernum().toString());
+		map.put("passageId", cl.getAislecode().toString());
+		map.put("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
+		map.put("notifyUrl", cl.getApireusultip().toString());
+		map.put("reqTime", time.toString());
+		map.put("accountName", pt.getAccname());
+		map.put("accountNo", pt.getAccnumer());
+		map.put("bankName", pt.getBankname());
+
+		TreeMap<String, Object> sortedMap = new TreeMap<>(map);
+		String signContent = "";
+		for (String key : sortedMap.keySet()) {
+			signContent = signContent + key + "=" + map.get(key) + "&";
+		}
+		signContent = signContent.substring(0, signContent.length() - 1);
+		signContent = signContent + "&key=" + cl.getApikey();
+		System.out.println(signContent);
+		String sign = MD5Utils.md5(signContent);
+		map.put("sign", sign);
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/transfer/unifiedorder", httpEntity, JSONObject.class);
+		String retCode = sov.getBody().getStr("retCode");
+		log.info("青蛙代付创建订单：" + sov.getBody());
+		if (retCode.equals("SUCCESS")) {
+			return sov.getBody().getStr("agentpayOrderId");
+		}
+		return null;
+	}
+
+	// 青蛙代付查单
+	public static Integer SendQWSelectOrder(String orderid, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			Map<String, Object> map = new HashMap<String, Object>();
+			Long time = System.currentTimeMillis();
+			map.put("mchId", cl.getCode());
+			map.put("mchOrderNo", orderid);
+			map.put("reqTime", time);
+			TreeMap<String, Object> sortedMap = new TreeMap<>(map);
+			String signContent = "";
+			for (String key : sortedMap.keySet()) {
+				signContent = signContent + key + "=" + map.get(key) + "&";
+			}
+			signContent = signContent.substring(0, signContent.length() - 1);
+			signContent = signContent + "&key=" + cl.getApikey();
+			String sign = MD5Utils.md5(signContent);
+			map.put("sign", sign);
+
+			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/transfer/query", httpEntity, JSONObject.class);
+			String retCode = sov.getBody().getStr("retCode");
+			Integer status = sov.getBody().getInt("status");
+			log.info("青蛙代付查订单：" + sov.getBody());
+			if (retCode.equals("SUCCESS")) {
+				return status;
+			}
+		} catch (RestClientException e) {
+			log.info("青蛙代付查单返回消息：" + e.getMessage());
 		}
 		return null;
 	}

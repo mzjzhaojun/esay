@@ -874,6 +874,13 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		// 获取渠道单号
 		boolean flage = true;
 		switch (cl.getName()) {
+		case DictionaryResource.DFQWAISLE:
+			String qwordernum = PayUtil.SendQWSubmit(t, cl);
+			if (qwordernum != null) {
+				flage = false;
+				t.setChannelordernum(qwordernum);
+			}
+			break;
 		case DictionaryResource.DFXJAISLE:
 			String xjordernum = PayUtil.SendXJSubmit(t, cl);
 			if (xjordernum != null) {
@@ -1187,6 +1194,33 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			// 查询渠道是否真实成功
 			Integer returnstate = PayUtil.SendXJSelectOrder(pt.getOrdernum(), channel);
 			Assert.notNull(returnstate, "仙剑代付通知反查订单失败!");
+			if (returnstate == 2) {
+				paySuccess(pt);
+			} else if (returnstate == 3) {
+				payFail(pt);
+			}
+			SysUserContext.remove();
+			TenantIdContext.remove();
+		}
+	}
+
+	@Override
+	public void qwcallback(Map<String, Object> params) {
+		String orderid = params.get("mchOrderNo").toString();
+		String status = params.get("status").toString();
+		log.info("青蛙通知返回消息：orderid" + orderid + " status:" + status);
+		Payout pt = mapper.getByOrdernum(orderid);
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			Channel channel = channelmapper.get(pt.getChannelid());
+			String ip = AuthContext.getIp();
+			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求!");
+			}
+			// 查询渠道是否真实成功
+			Integer returnstate = PayUtil.SendQWSelectOrder(pt.getOrdernum(), channel);
+			Assert.notNull(returnstate, "青蛙代付通知反查订单失败!");
 			if (returnstate == 2) {
 				paySuccess(pt);
 			} else if (returnstate == 3) {

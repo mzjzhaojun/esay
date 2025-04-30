@@ -791,6 +791,29 @@ public class OrderController {
 			lock.unlock();
 		}
 	}
+	
+	
+	/**
+	 * 青蛙代付回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/qwcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void qwcallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("qwcallback");
+		try {
+			lock.lock();
+			payoutservice.qwcallback(RequestUtil.requestEntityToParamMap(requestEntity));
+			response.getWriter().print("success");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
 
 	/**
 	 * 易票联代付回调
