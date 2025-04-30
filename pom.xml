@@ -156,27 +156,42 @@
 			<artifactId>telegrambots</artifactId>
 			<version>6.9.7.1</version>
 		</dependency>
-
-
 		<dependency>
 			<groupId>org.bitcoinj</groupId>
 			<artifactId>bitcoinj-core</artifactId>
 			<version>0.16.1</version>
 		</dependency>
-
-
-
 		<dependency>
 			<groupId>com.alipay.sdk</groupId>
 			<artifactId>alipay-sdk-java</artifactId>
 			<version>4.39.218.ALL</version>
 		</dependency>
-
-		
 		<dependency>  
 		    <groupId>com.huifu.bspay.sdk</groupId>  
 		    <artifactId>dg-java-sdk</artifactId>  
 		    <version>3.0.21</version>  
+		</dependency>
+		
+		<!-- tron -->
+		<dependency>
+			<groupId>org.tron.trident</groupId>
+			<artifactId>abi</artifactId>
+			<version>0.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.tron.trident</groupId>
+			<artifactId>utils</artifactId>
+			<version>0.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.tron.trident</groupId>
+			<artifactId>core</artifactId>
+			<version>0.9.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.web3j</groupId>
+		    <artifactId>abi</artifactId>
+		    <version>4.12.3</version>
 		</dependency>
 		
 	</dependencies>
