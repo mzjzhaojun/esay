@@ -1171,7 +1171,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
-	public void xjcallback(Map<String, String> params) {
+	public void xjcallback(Map<String, Object> params) {
 		String orderid = params.get("outTradeNo").toString();
 		String status = params.get("state").toString();
 		log.info("仙剑通知返回消息：orderid" + orderid + " status:" + status);

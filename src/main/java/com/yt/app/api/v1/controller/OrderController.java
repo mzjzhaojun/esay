@@ -779,11 +779,11 @@ public class OrderController {
 	 * @return
 	 */
 	@RequestMapping(value = "/xjcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void xjcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+	public void xjcallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
 		RLock lock = RedissonUtil.getLock("xjcallback");
 		try {
 			lock.lock();
-			payoutservice.xjcallback(params);
+			payoutservice.xjcallback(RequestUtil.requestEntityToParamMap(requestEntity));
 			response.getWriter().print("success");
 		} catch (Exception e) {
 			throw new YtException(e);

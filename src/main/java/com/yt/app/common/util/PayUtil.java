@@ -714,12 +714,12 @@ public class PayUtil {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		Long time = System.currentTimeMillis() / 1000;
+		Long time = System.currentTimeMillis();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("mchId", cl.getCode().toString());
 		map.put("outTradeNo", pt.getOrdernum().toString());
 		map.put("wayCode", cl.getAislecode().toString());
-		map.put("amount", String.format("%.2f", pt.getAmount()).toString());
+		map.put("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
 		map.put("notifyUrl", cl.getApireusultip().toString());
 		map.put("reqTime", time.toString());
 		map.put("payeeName", time.toString());
@@ -734,6 +734,7 @@ public class PayUtil {
 		}
 		signContent = signContent.substring(0, signContent.length() - 1);
 		signContent = signContent + "&key=" + cl.getApikey();
+		System.out.println(signContent);
 		String sign = MD5Utils.md5(signContent);
 		map.put("sign", sign);
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
@@ -743,7 +744,7 @@ public class PayUtil {
 		String retCode = sov.getBody().getStr("code");
 		log.info("仙剑代付创建订单：" + sov.getBody());
 		if (retCode.equals("0")) {
-			return sov.getBody().getStr("tradeNo");
+			return sov.getBody().getJSONObject("data").getStr("tradeNo");
 		}
 		return null;
 	}
@@ -755,7 +756,7 @@ public class PayUtil {
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 			Map<String, Object> map = new HashMap<String, Object>();
-			Long time = System.currentTimeMillis() / 1000;
+			Long time = System.currentTimeMillis();
 			map.put("mchId", cl.getCode());
 			map.put("outTradeNo", orderid);
 			map.put("reqTime", time);
@@ -774,7 +775,7 @@ public class PayUtil {
 			//
 			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/transfer/query", httpEntity, JSONObject.class);
 			String retCode = sov.getBody().getStr("code");
-			Integer status = sov.getBody().getInt("state");
+			Integer status = sov.getBody().getJSONObject("data").getInt("state");
 			log.info("仙剑代付查订单：" + sov.getBody());
 			if (retCode.equals("0")) {
 				return status;
