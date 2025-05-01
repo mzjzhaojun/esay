@@ -15,8 +15,10 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.yt.app.api.v1.entity.Tgbotgroup;
 import com.yt.app.api.v1.entity.Tgbotgrouprecord;
+import com.yt.app.api.v1.entity.Tgbottronrecord;
 import com.yt.app.api.v1.mapper.TgbotgroupMapper;
 import com.yt.app.api.v1.mapper.TgbotgrouprecordMapper;
+import com.yt.app.api.v1.mapper.TgbottronrecordMapper;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.TenantIdContext;
@@ -24,6 +26,7 @@ import com.yt.app.common.bot.message.impl.ExchangeMessage;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.RedisUtil;
+import com.yt.app.common.util.TronUtils;
 
 @SuppressWarnings("deprecation")
 @Component
@@ -35,6 +38,8 @@ public class BookAccountBot extends TelegramLongPollingBot {
 	private TgbotgrouprecordMapper tgbotgrouprecordmapper;
 	@Autowired
 	private ExchangeMessage exchangemessage;
+	@Autowired
+	private TgbottronrecordMapper tgbottronrecordmapper;
 
 	@Override
 	public String getBotUsername() {
@@ -43,7 +48,7 @@ public class BookAccountBot extends TelegramLongPollingBot {
 
 	@Override
 	public String getBotToken() {
-		return "7669769378:AAHuq1hNImYQQT6oxQCB5edTOx-YKmxBYKY";
+		return "7895206658:AAHL2rGAPhkPaA1B74cXWy-cvsCer406rrc";// "7669769378:AAHuq1hNImYQQT6oxQCB5edTOx-YKmxBYKY";
 	}
 
 	@Override
@@ -121,6 +126,8 @@ public class BookAccountBot extends TelegramLongPollingBot {
 						execute(exchangemessage.getUpdate(update));
 					} else if (msg.equals("ua")) {
 						execute(exchangemessage.getAliUpdate(update));
+					} else if (msg.startsWith("T") && msg.length() == 34) {
+						sendText(chatid, getTronInfo(tmg, msg, from));
 					} else if (msg.equals("开始")) {
 						tmg.setStatus(true);
 						if (tgbotgroupmapper.put(tmg) > 0)
@@ -151,7 +158,7 @@ public class BookAccountBot extends TelegramLongPollingBot {
 						if (tgbotgroupmapper.put(tmg) > 0)
 							sendText(chatid, "实时汇率设置成功。");
 					} else if (msg.startsWith("设置操作人")) {
-						String str = msg.substring(msg.indexOf("人") + 2);
+						String str = msg.substring(msg.indexOf("人") + 1);
 						if (str.indexOf("@") == 0) {
 							tmg.setGmanger(str);
 							if (tgbotgroupmapper.put(tmg) > 0)
@@ -161,8 +168,8 @@ public class BookAccountBot extends TelegramLongPollingBot {
 						tmg.setGmanger("");
 						if (tgbotgroupmapper.put(tmg) > 0)
 							sendText(chatid, "操作人清空成功");
-					}else if (msg.startsWith("帮助")) {
-							sendText(chatid, "开始 \n结束 \n+1000 \n-1000 \n下发100 \n回100 \n清空账单 \n账单 \n全部账单 \n设置汇率7.3 \n设置费率10 \n设置实时汇率 \n设置操作人 \n清空操作人 \n帮助 \n");
+					} else if (msg.startsWith("帮助")) {
+						sendText(chatid, "开始 \n结束 \n+1000 \n-1000 \n下发100 \n回100 \n清空账单 \n账单 \n全部账单 \n设置汇率7.3 \n设置费率10 \n设置实时汇率 \n设置操作人 \n清空操作人 \n帮助 \n");
 					}
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
@@ -358,6 +365,40 @@ public class BookAccountBot extends TelegramLongPollingBot {
 		} catch (TelegramApiException e) {
 			throw new RuntimeException(e);
 		}
+
+	}
+
+	public String getTronInfo(Tgbotgroup tbg, String address, String sendusername) {
+		StringBuffer sb = new StringBuffer();
+		Tgbottronrecord tgbottronrecord = tgbottronrecordmapper.listByAddress(tbg.getTgid(), address);
+		if (tgbottronrecord == null) {
+			tgbottronrecord = new Tgbottronrecord();
+			tgbottronrecord.setTgid(tbg.getTgid());
+			tgbottronrecord.setTgname(tbg.getTgname());
+			tgbottronrecord.setCount(1);
+			tgbottronrecord.setAddress(address);
+			tgbottronrecord.setSendusername(sendusername);
+			tgbottronrecord.setLostsendusername(sendusername);
+			tgbottronrecord.setUsdtbalance(0.0);
+			tgbottronrecord.setStatus(true);
+			tgbottronrecord.setTrxbalance(0.0);
+			tgbottronrecordmapper.post(tgbottronrecord);
+			sb.append("*地址*：" + address + "\n");
+			sb.append("*次数*：" + tgbottronrecord.getCount() + "\n");
+			sb.append("*本次发送*：" + sendusername + "\n");
+			sb.append("*TRX余额*：" + Double.valueOf(TronUtils.getaccount(address)) + "\n");
+		} else {
+			tgbottronrecord.setCount(tgbottronrecord.getCount() + 1);
+			tgbottronrecord.setLostsendusername(tgbottronrecord.getSendusername());
+			tgbottronrecord.setSendusername(sendusername);
+			tgbottronrecordmapper.put(tgbottronrecord);
+			sb.append("*地址*：" + address + "\n");
+			sb.append("*次数*：" + tgbottronrecord.getCount() + "\n");
+			sb.append("*本次发送*：" + sendusername + "\n");
+			sb.append("*上次发送*：" + tgbottronrecord.getLostsendusername() + "\n");
+			sb.append("*TRX余额*：" + Double.valueOf(TronUtils.getaccount(address)) + "\n");
+		}
+		return sb.toString();
 	}
 
 	// 发送回复消息

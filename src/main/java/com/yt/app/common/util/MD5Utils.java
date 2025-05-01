@@ -124,9 +124,9 @@ public class MD5Utils {
 
 		String availableBalance = "3778";
 		System.out.println(Double.valueOf(availableBalance.substring(0, availableBalance.length() - 2) + "." + availableBalance.substring(availableBalance.length() - 2)));
-		String result = "\"success\"";
-		System.out.println(result);
-		result = result.replaceAll("\"", "");
+		String result = "TWdB36dh1u2CRKQoUYBwKkua1VDP1hhhhh";
+		System.out.println(result.length());
+//		result = result.replaceAll("\"", "");
 		System.out.println(result);
 	}
 }

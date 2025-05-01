@@ -71,7 +71,7 @@ public interface TgbotgrouprecordMapper extends YtIBaseMapper<Tgbotgrouprecord> 
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Tgbotgrouprecord.class })
 	public Integer deleteByTgid(Long tgid);
-	
+
 	/**
 	 * listcount
 	 * 
@@ -116,7 +116,7 @@ public interface TgbotgrouprecordMapper extends YtIBaseMapper<Tgbotgrouprecord> 
 	 */
 	@YtRedisCacheAnnotation(classs = Tgbotgrouprecord.class)
 	public List<Tgbotgrouprecord> listByType(@Param("tgid") Long tgid, @Param("type") Integer type);
-	
+
 	/**
 	 * listbyids
 	 * 
@@ -125,6 +125,5 @@ public interface TgbotgrouprecordMapper extends YtIBaseMapper<Tgbotgrouprecord> 
 	 */
 	@YtRedisCacheAnnotation(classs = Tgbotgrouprecord.class)
 	public List<Tgbotgrouprecord> listByTypeAll(@Param("tgid") Long tgid, @Param("type") Integer type);
-	
 
 }

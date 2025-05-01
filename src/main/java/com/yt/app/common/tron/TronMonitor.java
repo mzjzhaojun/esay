@@ -2,7 +2,6 @@ package com.yt.app.common.tron;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -10,10 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.web3j.abi.datatypes.Address;
-import org.web3j.abi.datatypes.Type;
-import org.web3j.abi.datatypes.generated.Uint256;
-import org.web3j.abi.FunctionEncoder;
 
 import com.yt.app.api.v1.entity.Tron;
 import com.yt.app.api.v1.entity.Tronmember;
@@ -26,24 +21,23 @@ import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.NumberUtil;
 import com.yt.app.common.util.TransformUtil;
-import com.yt.app.common.util.TronUtil;
+import com.yt.app.common.util.TronUtils;
 
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import lombok.extern.slf4j.Slf4j;
 import java.math.RoundingMode;
 
-@Slf4j
+//@Slf4j
 //@Profile("dev")
 //@Component
 public class TronMonitor {
 
 	@Autowired
-	private TronService tronservice;
+	private TronBot tronbot;
 
 	@Autowired
-	private TronBot tronbot;
+	private TronService tronservice;
 
 	@Autowired
 	private TronmemberMapper tronmembermapper;
@@ -55,7 +49,7 @@ public class TronMonitor {
 
 	private String contract = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t";
 
-	private String collecaddress = "TWXQjegKptQkfaGXA3m7V5A2AnMGT88888";
+//	private String collecaddress = "TWXQjegKptQkfaGXA3m7V5A2AnMGT88888";
 
 	private static BigInteger TRC20_TARGET_BLOCK_NUMBER;
 	private static BigInteger CURRENT_SYNC_BLOCK_NUMBER;
@@ -64,7 +58,7 @@ public class TronMonitor {
 	@EventListener(ApplicationReadyEvent.class)
 	public void init() {
 		if (TRC20_TARGET_BLOCK_NUMBER == null) {
-			String responseString = tronservice.getnowblock();
+			String responseString = TronUtils.getnowblock();
 			JSONObject jsonObject = JSONUtil.parseObj(responseString);
 			BigInteger blockNumber = jsonObject.getJSONObject("block_header").getJSONObject("raw_data").getBigInteger("number");
 			CURRENT_SYNC_BLOCK_NUMBER = blockNumber.subtract(BLOCKS);
@@ -76,17 +70,17 @@ public class TronMonitor {
 		Tron tron = tronservice.get();
 		Double balance = Double.valueOf(balanceOf(tron.getAddress()).toString());
 		if (balance >= 510) {
-			sendTrx(new BigDecimal(balance - 500), collecaddress, tron.getAddress(), tron.getPrivatekey());
+//			sendTrx(new BigDecimal(balance - 500), collecaddress, tron.getAddress(), tron.getPrivatekey());
 		}
 	}
 
 	@Scheduled(cron = "0/10 * * * * ?")
 	public void synTrcBalance() throws Throwable {
-		Tron tron = tronservice.get();
-		Double balance = Double.valueOf(balanceOfTrc20(tron.getAddress(), contract).toString());
-		if (balance >= 100) {
-			sendTrc20(collecaddress, new BigDecimal(balance - 99), tron.getAddress(), tron.getPrivatekey());
-		}
+//		Tron tron = tronservice.get();
+//		Double balance = Double.valueOf(balanceOfTrc20(tron.getAddress(), contract).toString());
+//		if (balance >= 100) {
+//			sendTrc20(collecaddress, new BigDecimal(balance - 99), tron.getAddress(), tron.getPrivatekey());
+//		}
 	}
 
 	/**
@@ -98,18 +92,18 @@ public class TronMonitor {
 	public void charge() throws Throwable {
 		if (CURRENT_SYNC_BLOCK_NUMBER != null) {
 			Tron tron = tronservice.get();
-			String responseString = tronservice.getnowblock();
+			String responseString = TronUtils.getnowblock();
 			JSONObject jsonObject = JSONUtil.parseObj(responseString);
 			BigInteger blockNumber = jsonObject.getJSONObject("block_header").getJSONObject("raw_data").getBigInteger("number");
 			TRC20_TARGET_BLOCK_NUMBER = blockNumber.subtract(BLOCKS);
 			if (CURRENT_SYNC_BLOCK_NUMBER.compareTo(TRC20_TARGET_BLOCK_NUMBER) <= 0) {
-				String transactionInfoByBlockNum = tronservice.gettransactioninfobyblocknum(CURRENT_SYNC_BLOCK_NUMBER);
+				String transactionInfoByBlockNum = TronUtils.gettransactioninfobyblocknum(CURRENT_SYNC_BLOCK_NUMBER);
 				JSONArray parseArray = JSONUtil.parseArray(transactionInfoByBlockNum);
 				if (parseArray.size() > 0) {
 					parseArray.forEach(e -> {
 						try {
 							String txId = JSONUtil.parseObj(e.toString()).getStr("id");
-							JSONObject parseObject = JSONUtil.parseObj(tronservice.gettransactionbyid(txId));
+							JSONObject parseObject = JSONUtil.parseObj(TronUtils.gettransactionbyid(txId));
 							if (parseObject != null && parseObject.getJSONArray("ret") != null) {
 								String contractRet = parseObject.getJSONArray("ret").getJSONObject(0).getStr("contractRet");
 								// 交易成功
@@ -149,7 +143,7 @@ public class TronMonitor {
 		if (toAddress.equalsIgnoreCase(owneraddress)) {
 			Double balance = Double.valueOf(balanceOf(owneraddress).toString());
 			if (balance >= 1200) {
-				sendTrx(new BigDecimal(balance - 1200), collecaddress, owneraddress, privatekey);
+//				sendTrx(new BigDecimal(balance - 1200), collecaddress, owneraddress, privatekey);
 			}
 		}
 	}
@@ -197,8 +191,8 @@ public class TronMonitor {
 				tronmemberorder = tronmemberordermapper.getByAmount(Double.valueOf(amount.toString()));
 				if (tronmemberorder != null) {
 					if (tronmemberorder.getType().equals(DictionaryResource.EXCHANGE_TYPE_601)) {
-						String hash = sendTrx(new BigDecimal(tronmemberorder.getTrxamount().toString()), owner_address, owneraddress, privatekey);
-						log.info("给 " + toAddress + "发送手续费，交易hash：" + hash);
+//						String hash = sendTrx(new BigDecimal(tronmemberorder.getTrxamount().toString()), owner_address, owneraddress, privatekey);
+//						log.info("给 " + toAddress + "发送手续费，交易hash：" + hash);
 						tronbot.notifyMermberSuccess(tronmemberorder.getTgid(), tronmemberorder.getOrdernum(), tronmemberorder.getAmount());
 					} else if (tronmemberorder.getType().equals(DictionaryResource.EXCHANGE_TYPE_602)) {
 						// 處理充值
@@ -220,29 +214,10 @@ public class TronMonitor {
 	}
 
 	/**
-	 * 查询trc20数量
-	 */
-	@SuppressWarnings("rawtypes")
-	public BigDecimal balanceOfTrc20(String address, String contract) {
-		List<Type> inputParameters = new ArrayList<Type>();
-		inputParameters.add(new Address(TronUtil.toHexAddress(address).substring(2)));
-		String responseString = tronservice.triggerconstantcontract(TronUtil.toHexAddress(address), TronUtil.toHexAddress(contract), FunctionEncoder.encodeConstructor(inputParameters));
-		if (StringUtils.isNotEmpty(responseString)) {
-			JSONObject obj = JSONUtil.parseObj(responseString);
-			JSONArray results = obj.getJSONArray("constant_result");
-			if (results != null && results.size() > 0) {
-				BigInteger amount = new BigInteger(results.getStr(0), 16);
-				return new BigDecimal(amount).divide(decimal, 6, RoundingMode.FLOOR);
-			}
-		}
-		return BigDecimal.ZERO;
-	}
-
-	/**
 	 * 查询TRX余额
 	 */
 	public BigDecimal balanceOf(String address) {
-		String result = tronservice.getaccount(address);
+		String result = TronUtils.getaccount(address);
 		BigInteger balance = BigInteger.ZERO;
 		if (!StringUtils.isEmpty(result)) {
 			JSONObject obj = JSONUtil.parseObj(result);
@@ -252,36 +227,6 @@ public class TronMonitor {
 			}
 		}
 		return new BigDecimal(balance).divide(decimal, 6, RoundingMode.FLOOR);
-	}
-
-	/**
-	 * 发起trc20转账 (目标地址,数量,合约地址,私钥) 地址 默认为usdt 合约地址
-	 * 
-	 * @throws Throwable
-	 */
-	@SuppressWarnings("rawtypes")
-	public synchronized String sendTrc20(String toAddress, BigDecimal amount, String ownerAddress, String privateKey) throws Throwable {
-
-		List<Type> inputParameters = new ArrayList<>();
-		inputParameters.add(new Address(TronUtil.toHexAddress(toAddress).substring(2)));
-		inputParameters.add(new Uint256(amount.multiply(decimal).toBigInteger()));
-		String parameter = FunctionEncoder.encodeConstructor(inputParameters);
-
-		String responseString = tronservice.triggersmartcontract(privateKey, TronUtil.toHexAddress(ownerAddress), TronUtil.toHexAddress(contract), parameter, 14000000L, 0);
-		log.info("trc20 result:" + responseString);
-		return responseString;
-	}
-
-	/**
-	 * TRX转账
-	 */
-	public String sendTrx(BigDecimal amount, String toAddress, String owneraddress, String privatekey) throws Throwable {
-		String result = tronservice.createtransaction(privatekey, toAddress, owneraddress, amount.multiply(decimal).toBigInteger());
-		if (StringUtils.isNotEmpty(result)) {
-			return result;
-		}
-		return null;
-
 	}
 
 }

@@ -1,11 +1,20 @@
 package test;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.util.HashMap;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.yt.app.common.util.SelfPayUtil;
+
+import cn.hutool.http.HttpRequest;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 
 @SpringBootTest
 public class TestEfps {
@@ -20,9 +29,25 @@ public class TestEfps {
 
 	@Test
 	public void getUserInfoById() {
+
+		String URL = "http://192.168.110.231:8090";
+		BigDecimal decimal = new BigDecimal("1000000");
 		// 测试代码
 		long beginTime = System.currentTimeMillis();
-		SelfPayUtil.huifuPaymentSettlement();
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("address", "TWXQjegKptQkfaGXA3m7V5A2AnMGT88888");
+		map.put("visible", true);
+
+		String sub_url = URL + "/wallet/getaccount";
+		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
+		System.out.println(body);
+		BigInteger balance = BigInteger.ZERO;
+		JSONObject obj = JSONUtil.parseObj(body);
+		BigInteger b = obj.getBigInteger("balance");
+		if (b != null) {
+			balance = b;
+		}
+		System.out.println(Double.valueOf(new BigDecimal(balance).divide(decimal, 6, RoundingMode.FLOOR).toString()));
 		long time = System.currentTimeMillis() - beginTime;
 		System.out.println(">>>  Time " + time);
 	}
