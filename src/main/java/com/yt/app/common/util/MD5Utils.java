@@ -124,8 +124,8 @@ public class MD5Utils {
 
 		String availableBalance = "3778";
 		System.out.println(Double.valueOf(availableBalance.substring(0, availableBalance.length() - 2) + "." + availableBalance.substring(availableBalance.length() - 2)));
-		String result = "TWdB36dh1u2CRKQoUYBwKkua1VDP1hhhhh";
-		System.out.println(result.length());
+		String result = "accountName=[梁广才]&accountNo=[6217003390009927777]&amount=[11100]&bankName=[建设银行]&bankNumber=[CCB]&mchId=[20000230]&mchOrderNo=[out2505011952271974]&notifyUrl=[http://103.151.116.145:18800/esay/rest/v1/order/qwcallback]&passageId=[10]&remark=[payout]&reqTime=[20250501195227]&key=TFRPV9P9BIWKFRSUPNDVVGAQLGNK2RLGGMLTJ1AKOROZA69XCKQMPAERIIPWHSRX9BFASBDSICTD1ZRHAA4RZIHPEXFBITY8LCEYANKPSFY0RKZX1GJTJKMZSVEZ9DAY";
+		System.out.println(result.replaceAll("\\[", "").replaceAll("\\]", ""));
 //		result = result.replaceAll("\"", "");
 		System.out.println(result);
 	}

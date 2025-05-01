@@ -1205,7 +1205,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
-	public void qwcallback(Map<String, Object> params) {
+	public void qwcallback(Map<String, String> params) {
 		String orderid = params.get("mchOrderNo").toString();
 		String status = params.get("status").toString();
 		log.info("青蛙通知返回消息：orderid" + orderid + " status:" + status);

@@ -800,12 +800,12 @@ public class OrderController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/qwcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void qwcallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "/qwcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void qwcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
 		RLock lock = RedissonUtil.getLock("qwcallback");
 		try {
 			lock.lock();
-			payoutservice.qwcallback(RequestUtil.requestEntityToParamMap(requestEntity));
+			payoutservice.qwcallback(params);
 			response.getWriter().print("success");
 		} catch (Exception e) {
 			throw new YtException(e);

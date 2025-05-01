@@ -789,34 +789,35 @@ public class PayUtil {
 	// 青蛙代付
 	public static String SendQWSubmit(Payout pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		Long time = System.currentTimeMillis();
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("mchId", cl.getCode().toString());
-		map.put("mchOrderNo", pt.getOrdernum().toString());
-		map.put("passageId", cl.getAislecode().toString());
-		map.put("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
-		map.put("notifyUrl", cl.getApireusultip().toString());
-		map.put("reqTime", time.toString());
-		map.put("accountName", pt.getAccname());
-		map.put("accountNo", pt.getAccnumer());
-		map.put("bankName", pt.getBankname());
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		map.add("mchId", cl.getCode().toString());
+		map.add("mchOrderNo", pt.getOrdernum().toString());
+		map.add("passageId", cl.getAislecode().toString());
+		map.add("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
+		map.add("notifyUrl", cl.getApireusultip().toString());
+		map.add("reqTime", DateTimeUtil.getDateTime("yyyyMMddHHmmss"));
+		map.add("accountName", pt.getAccname());
+		map.add("accountNo", pt.getAccnumer());
+		map.add("bankName", pt.getBankname());
+		map.add("bankNumber", pt.getBankcode());
+		map.add("remark", "payout");
 
 		TreeMap<String, Object> sortedMap = new TreeMap<>(map);
 		String signContent = "";
 		for (String key : sortedMap.keySet()) {
-			signContent = signContent + key + "=" + map.get(key) + "&";
+			signContent = signContent + key + "=" + map.get(key).toString() + "&";
 		}
 		signContent = signContent.substring(0, signContent.length() - 1);
-		signContent = signContent + "&key=" + cl.getApikey();
+		signContent = signContent.replaceAll("\\[", "").replaceAll("\\]", "") + "&key=" + cl.getApikey();
 		System.out.println(signContent);
 		String sign = MD5Utils.md5(signContent);
-		map.put("sign", sign);
-		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		map.add("sign", sign);
+		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		//
-		ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/transfer/unifiedorder", httpEntity, JSONObject.class);
+		ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/agentpay/apply", httpEntity, JSONObject.class);
 		String retCode = sov.getBody().getStr("retCode");
 		log.info("青蛙代付创建订单：" + sov.getBody());
 		if (retCode.equals("SUCCESS")) {
@@ -829,27 +830,26 @@ public class PayUtil {
 	public static Integer SendQWSelectOrder(String orderid, Channel cl) {
 		try {
 			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-			Map<String, Object> map = new HashMap<String, Object>();
-			Long time = System.currentTimeMillis();
-			map.put("mchId", cl.getCode());
-			map.put("mchOrderNo", orderid);
-			map.put("reqTime", time);
+			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+			map.add("mchId", cl.getCode());
+			map.add("mchOrderNo", orderid);
+			map.add("reqTime", DateTimeUtil.getDateTime("yyyyMMddHHmmss"));
 			TreeMap<String, Object> sortedMap = new TreeMap<>(map);
 			String signContent = "";
 			for (String key : sortedMap.keySet()) {
-				signContent = signContent + key + "=" + map.get(key) + "&";
+				signContent = signContent + key + "=" + map.get(key).toString() + "&";
 			}
 			signContent = signContent.substring(0, signContent.length() - 1);
-			signContent = signContent + "&key=" + cl.getApikey();
+			signContent = signContent.replaceAll("\\[", "").replaceAll("\\]", "") + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
-			map.put("sign", sign);
+			map.add("sign", sign);
 
-			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
 			//
-			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/transfer/query", httpEntity, JSONObject.class);
+			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/api/agentpay/query_order", httpEntity, JSONObject.class);
 			String retCode = sov.getBody().getStr("retCode");
 			Integer status = sov.getBody().getInt("status");
 			log.info("青蛙代付查订单：" + sov.getBody());
