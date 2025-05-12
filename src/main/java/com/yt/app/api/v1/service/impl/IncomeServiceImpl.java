@@ -950,6 +950,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Merchant mc = merchantmapper.getByCode(qs.getPay_memberid());
 		Assert.notNull(mc, "商户不存在!");
 		String ip = AuthContext.getIp();
+		log.info(ip);
 		if (mc.getIpstatus()) {
 			if (ip == null || ip.equals("")) {
 				throw new YtException("非法请求,IP加白名单后重试!");
@@ -1274,7 +1275,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			mapper.put(in);
 			in.setVersion(in.getVersion() + 1);
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(200);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

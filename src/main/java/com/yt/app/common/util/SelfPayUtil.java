@@ -10,7 +10,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.UUID;
+
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.DefaultAlipayClient;
@@ -70,6 +73,9 @@ import com.yt.app.common.util.bo.PaymentQueryRequest;
 import com.yt.app.common.util.bo.ProtocolPayRequest;
 import com.yt.app.common.util.bo.WithdrawToCardRequest;
 
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.crypto.digest.DigestUtil;
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -732,6 +738,7 @@ public class SelfPayUtil {
 			request.setRemark(remark);
 			request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
 			String param = JSONUtil.toJsonStr(request);
+			log.info(param);
 			JSONObject response = PaymentHelper.withdrawalToCard(qrcode.getApirest(), param, qrcode.getSmid(), qrcode.getAppprivatekey());
 			return response.getStr("transactionNo");
 		} catch (Exception e) {
@@ -873,6 +880,42 @@ public class SelfPayUtil {
 		}
 		return null;
 	}
+	
+	// appId(从对接运营人员获取)
+	public static final String APP_ID = "41722c4337bf461f95fed7801dfb8553";
+	public static final String APP_SECRET = "x09OEujyCCypsVxA1ArBC+ZMY2ydOii5gRlRk4wAaj4=";
+	//请求URL地址
+	public static final String URL = "https://api-safefund.yuanshouyin.com";
+	
+	public static boolean generalRequest(String accnumber){
+		
+		SortedMap<String, Object> map = new TreeMap<>();
+		map.put("name", "XJT数据");
+		map.put("identity", accnumber);
+		
+        //时间戳
+        Long timestamp = System.currentTimeMillis();
+        // 准备参数，请求头参数使用TreeMap自动排序字段；便于验签
+        SortedMap<String, String> headers = new TreeMap<>();
+        headers.put("appId", APP_ID);
+        headers.put("nonce", StringUtil.getOrderNum());
+        headers.put("timestamp", String.valueOf(timestamp));
+        //请求参数格式化为json字符串，用于加签验证
+        String paramJsonStr = JSONUtil.toJsonStr(map);
+        String param = paramJsonStr+ MapUtil.join(headers, "&", "=")+ APP_SECRET;
+        //采用sha256Hex签名
+        String sign = DigestUtil.sha256Hex(param);
+        //拼接字符串,签名开头保留，${} 全替换为header参数
+        headers.put("sign", sign);
+        //固定值，加签后赋值
+        headers.put("tenant-id", "1");
+        //执行请求调用
+        String body = HttpUtils.post(URL + "/app-api/fms/risk-exterior-query/api/query", headers, map);
+        JSONArray data=  JSONUtil.parseObj(body).getJSONObject("data").getJSONArray("data");
+        if(data.size()>1)
+        	return false;
+		return true;
+    }
 
 	// 汇付分配的产品号
 	public static final String DEMO_PRODUCT_ID = "PAYUN";
@@ -925,6 +968,7 @@ public class SelfPayUtil {
 //			paramsInfo.put("mobile_no_crypt", "14");
 			paramsInfo.put("into_acct_date_type", "T0");
 			// 3. 发起API调用
+			
 			Map<String, Object> response = BasePayRequest.requestBasePay("v2/trade/settlement/surrogate", paramsInfo, null, false);
 			System.out.println(response);
 		} catch (Exception e) {

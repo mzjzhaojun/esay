@@ -739,7 +739,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			Row row = sheet.getRow(i);
 			if (row != null && row.getCell(0) != null) {
 				try {
-					Thread.sleep(500);
+					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
