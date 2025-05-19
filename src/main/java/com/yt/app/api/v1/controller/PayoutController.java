@@ -103,13 +103,35 @@ public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long>
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/upload", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> add(MultipartHttpServletRequest request) {
+	public YtResponseEntity<Object> upload(MultipartHttpServletRequest request) {
 		MultipartFile file = request.getFile("file");
 		String aisleid = request.getParameter("aisleid");
 		Assert.notNull(aisleid, "请选择通道后再上传");
 		String name = "";
 		try {
 			name = service.upFile(file, aisleid);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return new YtResponseEntity<Object>(new YtBody(name));
+	}
+	
+	
+	/**
+	 * 批量上传代付渠道
+	 * 
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/self/upload", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> uploadself(MultipartHttpServletRequest request) {
+		MultipartFile file = request.getFile("file");
+		String aisleid = request.getParameter("aisleid");
+		Assert.notNull(aisleid, "请选择通道后再上传");
+		String name = "";
+		try {
+			name = service.uploadself(file, aisleid);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

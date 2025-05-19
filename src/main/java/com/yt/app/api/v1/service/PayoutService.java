@@ -81,7 +81,7 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 	String upFile(MultipartFile file, String aisleid) throws IOException;
 	
 	// 导入代付自营
-	String upFileSelf(MultipartFile file, String aisleid) throws IOException;
+	String uploadself(MultipartFile file, String aisleid) throws IOException;
 
 	// 成功
 	Integer success(Long id);

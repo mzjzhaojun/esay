@@ -269,16 +269,6 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 		JSONObject returndata = SelfPayUtil.eplwithdrawalToCard(pqrcode, ordernum, qrcode.getPayeename(), qrcode.getPayeeid(), qrcode.getBankname(),
 				Long.valueOf(String.format("%.2f", qrcode.getAmount()).replace(".", "")));
 		Assert.notNull(returndata, "转账失败!");
-		if (returndata.getStr("returnCode").equals("0000")) {
-//			JSONObject jsonresult = SelfPayUtil.eplwithdrawalToCardQuery(pqrcode,ordernum);
-//			String code = jsonresult.getStr("returnCode");
-			
-			String transactionNo = returndata.getStr("transactionNo");
-			qrcode.setOrdernum(transactionNo);
-			qrcode.setQrcodeid(qrcode.getId());
-			qrcode.setStatus(DictionaryResource.ALIPAY_STATUS_701);
-			qrcodetransferrecordmapper.post(qrcode);
-		}
 	}
 
 	@Override

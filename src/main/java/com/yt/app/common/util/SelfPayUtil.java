@@ -721,28 +721,29 @@ public class SelfPayUtil {
 		String remark = "附言";
 
 		String key = EplRsaUtils.getPublicKey(qrcode.getApppublickey());
-
-		try {
-			String bankUserName = EplRsaUtils.encryptByPublicKey(name, key);
-			String bankCardNo = EplRsaUtils.encryptByPublicKey(cardNo, key);
-			WithdrawToCardRequest request = new WithdrawToCardRequest();
-			request.setOutTradeNo(outTradeNo);
-			request.setCustomerCode(qrcode.getAppid());
-			request.setAmount(payAmount);
-			request.setBankUserName(bankUserName);
-			request.setBankCardNo(bankCardNo);
-			request.setBankName(bankName);
-			request.setBankAccountType("2");// 1：对公，2：对私
-			request.setPayCurrency(payCurrency);
-			request.setNotifyUrl(qrcode.getPayoutnotifyurl());
-			request.setRemark(remark);
-			request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
-			String param = JSONUtil.toJsonStr(request);
-			log.info(param);
-			JSONObject response = PaymentHelper.withdrawalToCard(qrcode.getApirest(), param, qrcode.getSmid(), qrcode.getAppprivatekey());
-			return response;
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(generalRequest(cardNo)) {
+			try {
+				String bankUserName = EplRsaUtils.encryptByPublicKey(name, key);
+				String bankCardNo = EplRsaUtils.encryptByPublicKey(cardNo, key);
+				WithdrawToCardRequest request = new WithdrawToCardRequest();
+				request.setOutTradeNo(outTradeNo);
+				request.setCustomerCode(qrcode.getAppid());
+				request.setAmount(payAmount);
+				request.setBankUserName(bankUserName);
+				request.setBankCardNo(bankCardNo);
+				request.setBankName(bankName);
+				request.setBankAccountType("2");// 1：对公，2：对私
+				request.setPayCurrency(payCurrency);
+				request.setNotifyUrl(qrcode.getPayoutnotifyurl());
+				request.setRemark(remark);
+				request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
+				String param = JSONUtil.toJsonStr(request);
+				log.info(param);
+				JSONObject response = PaymentHelper.withdrawalToCard(qrcode.getApirest(), param, qrcode.getSmid(), qrcode.getAppprivatekey());
+				return response;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return null;
@@ -912,8 +913,11 @@ public class SelfPayUtil {
         //执行请求调用
         String body = HttpUtils.post(URL + "/app-api/fms/risk-exterior-query/api/query", headers, map);
         JSONArray data=  JSONUtil.parseObj(body).getJSONObject("data").getJSONArray("data");
-        if(data.size()>1)
+        if(data.size()>1) {
+        	log.info("test card fait"+accnumber);
         	return false;
+        }
+        log.info("test card succcess"+accnumber);
 		return true;
     }
 
