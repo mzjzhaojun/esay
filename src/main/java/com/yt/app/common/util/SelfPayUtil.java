@@ -67,6 +67,7 @@ import com.huifu.bspay.sdk.opps.core.net.BasePayRequest;
 import com.huifu.bspay.sdk.opps.core.utils.RsaUtils;
 import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Qrcodetransferrecord;
+import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.util.bo.OrderGoods;
 import com.yt.app.common.util.bo.OrderInfo;
 import com.yt.app.common.util.bo.PaymentQueryRequest;
@@ -124,7 +125,7 @@ public class SelfPayUtil {
 
 			AlipayTradeWapPayRequest request = new AlipayTradeWapPayRequest();
 			AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();
-			request.setNotifyUrl(qrcode.getNotifyurl());
+			request.setNotifyUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+qrcode.getNotifyurl());
 			model.setOutTradeNo(ordernum);
 			model.setTotalAmount(amount.toString());
 			model.setSubject("Member Payment");
@@ -657,7 +658,7 @@ public class SelfPayUtil {
 		request.setSmsCode(smscode);
 		request.setTransactionStartTime(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
 		request.setTransactionEndTime(transactionEndTime);
-		request.setNotifyUrl(qrcode.getNotifyurl());// 异步通知
+		request.setNotifyUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+qrcode.getNotifyurl());// 异步通知
 		request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
 		String param = JSONUtil.toJsonStr(request);
 		try {
@@ -734,7 +735,7 @@ public class SelfPayUtil {
 				request.setBankName(bankName);
 				request.setBankAccountType("2");// 1：对公，2：对私
 				request.setPayCurrency(payCurrency);
-				request.setNotifyUrl(qrcode.getPayoutnotifyurl());
+				request.setNotifyUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+qrcode.getPayoutnotifyurl());
 				request.setRemark(remark);
 				request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
 				String param = JSONUtil.toJsonStr(request);
@@ -829,7 +830,7 @@ public class SelfPayUtil {
 			// 安全信息
 			paramsInfo.put("risk_check_data", "{\"ip_addr\":\"127.0.0.1\"}");
 			// 异步通知地址
-			paramsInfo.put("notify_url", qrcode.getNotifyurl());
+			paramsInfo.put("notify_url", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+qrcode.getNotifyurl());
 			// 商品描述
 			paramsInfo.put("goods_desc", "快捷支付接口");
 			// 备注

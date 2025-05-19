@@ -28,6 +28,7 @@ import com.yt.app.api.v1.vo.SysFcOrder;
 import com.yt.app.api.v1.vo.SysFcQuery;
 import com.yt.app.api.v1.vo.SysFhOrder;
 import com.yt.app.api.v1.vo.SysYSQuery;
+import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.api.v1.vo.SysGzOrder;
 import com.yt.app.api.v1.vo.SysGzQuery;
 import com.yt.app.api.v1.vo.SysHsOrder;
@@ -113,7 +114,7 @@ public class PayUtil {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		String signParams = "merchant_id=" + cl.getCode() + "&merchant_order_id=" + pt.getOrdernum() + "&pay_type=912&pay_amt=" + String.format("%.2f", pt.getAmount()) + "&notify_url=" + cl.getApireusultip() + "&return_url=" + cl.getApireusultip()
+		String signParams = "merchant_id=" + cl.getCode() + "&merchant_order_id=" + pt.getOrdernum() + "&pay_type=912&pay_amt=" + String.format("%.2f", pt.getAmount()) + "&notify_url=" +RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip() + "&return_url=" + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip()
 				+ "&bank_code=" + pt.getBankcode() + "&bank_num=" + pt.getAccnumer() + "&bank_owner=" + pt.getAccname() + "&bank_address=" + pt.getBankaddress() + "&remark=payout&key=" + cl.getApikey();
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add("merchant_id", cl.getCode());
@@ -123,8 +124,8 @@ public class PayUtil {
 		map.add("pay_amt", String.format("%.2f", pt.getAmount()));
 		map.add("user_level", "0");
 		map.add("pay_type", "912");
-		map.add("notify_url", cl.getApireusultip());
-		map.add("return_url", cl.getApireusultip());
+		map.add("notify_url", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
+		map.add("return_url", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 		map.add("bank_code", pt.getBankcode());
 		map.add("bank_num", pt.getAccnumer());
 		map.add("bank_owner", pt.getAccname());
@@ -203,7 +204,7 @@ public class PayUtil {
 		map.put("OrderNo", pt.getOrdernum());
 		map.put("PayChannelId", cl.getAislecode());
 		map.put("Amount", String.format("%.2f", pt.getAmount()));
-		map.put("CallbackUrl", cl.getApireusultip());
+		map.put("CallbackUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 		map.put("PayeeNo", pt.getAccnumer());
 		map.put("Payee", pt.getAccname());
 		map.put("PayeeAddress", pt.getBankname());
@@ -280,7 +281,7 @@ public class PayUtil {
 		map.put("OrderNo", pt.getOrdernum());
 		map.put("PayChannelId", cl.getAislecode());
 		map.put("Amount", String.format("%.2f", pt.getAmount()));
-		map.put("CallbackUrl", cl.getApireusultip());
+		map.put("CallbackUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 		map.put("PayeeNo", pt.getAccnumer());
 		map.put("Payee", pt.getAccname());
 		map.put("PayeeAddress", pt.getBankname());
@@ -356,7 +357,7 @@ public class PayUtil {
 		map.add("mchOrderNo", pt.getOrdernum());
 		map.add("remark", "代付" + String.format("%.2f", pt.getAmount()));
 		map.add("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
-		map.add("notifyUrl", cl.getApireusultip());
+		map.add("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 		map.add("accountNo", pt.getAccnumer());
 		map.add("accountName", pt.getAccname());
 		map.add("bankName", pt.getBankname());
@@ -436,7 +437,7 @@ public class PayUtil {
 		map.add("mchOrderNo", pt.getOrdernum());
 		map.add("remark", "代付" + String.format("%.2f", pt.getAmount()));
 		map.add("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
-		map.add("notifyUrl", cl.getApireusultip());
+		map.add("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 		map.add("bankCode", pt.getBankcode());
 		map.add("accountNo", pt.getAccnumer());
 		map.add("accountName", pt.getAccname());
@@ -444,7 +445,7 @@ public class PayUtil {
 		map.add("reqTime", dtime);
 
 		String signContent = "accountAttr=0&accountName=" + pt.getAccname() + "&accountNo=" + pt.getAccnumer() + "&amount=" + String.format("%.2f", pt.getAmount()).replace(".", "") + "&bankCode=" + pt.getBankcode() + "&bankName=" + pt.getBankname()
-				+ "&mchId=" + cl.getCode() + "&mchOrderNo=" + pt.getOrdernum() + "&notifyUrl=" + cl.getApireusultip() + "&remark=" + "代付" + String.format("%.2f", pt.getAmount()) + "&reqTime=" + dtime + "&keySign=" + cl.getApikey() + "Apm";
+				+ "&mchId=" + cl.getCode() + "&mchOrderNo=" + pt.getOrdernum() + "&notifyUrl=" + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip() + "&remark=" + "代付" + String.format("%.2f", pt.getAmount()) + "&reqTime=" + dtime + "&keySign=" + cl.getApikey() + "Apm";
 
 		String sign = MD5Utils.md5(signContent);
 		map.add("sign", sign);
@@ -505,7 +506,7 @@ public class PayUtil {
 		map.put("out_trade_no", pt.getOrdernum().toString());
 		map.put("product_id", cl.getAislecode().toString());
 		map.put("amount", String.format("%.2f", pt.getAmount()).toString());
-		map.put("notify_url", cl.getApireusultip().toString());
+		map.put("notify_url", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip().toString());
 		map.put("time", time.toString());
 		JSONObject obj = new JSONObject();
 		obj.set("bankName", pt.getBankname());
@@ -580,7 +581,7 @@ public class PayUtil {
 		map.put("out_trade_no", pt.getOrdernum().toString());
 		map.put("product_id", cl.getAislecode().toString());
 		map.put("amount", String.format("%.2f", pt.getAmount()).toString());
-		map.put("notify_url", cl.getApireusultip().toString());
+		map.put("notify_url", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip().toString());
 		map.put("time", time.toString());
 		JSONObject obj = new JSONObject();
 		obj.set("bankName", pt.getBankname());
@@ -654,14 +655,14 @@ public class PayUtil {
 		map.add("MerchantUniqueOrderId", pt.getOrdernum());
 		map.add("WithdrawTypeId", "0");
 		map.add("Amount", String.format("%.2f", pt.getAmount()));
-		map.add("NotifyUrl", cl.getApireusultip());
+		map.add("NotifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 		map.add("BankCardNumber", pt.getAccnumer());
 		map.add("BankCardRealName", pt.getAccname());
 		map.add("BankCardBankName", pt.getBankname());
 		map.add("Remark", "");
 
 		String signContent = "Amount=" + String.format("%.2f", pt.getAmount()) + "&BankCardBankName=" + pt.getBankname() + "&BankCardNumber=" + pt.getAccnumer() + "&BankCardRealName=" + pt.getAccname() + "&MerchantId=" + cl.getCode()
-				+ "&MerchantUniqueOrderId=" + pt.getOrdernum() + "&NotifyUrl=" + cl.getApireusultip() + "&Remark=&WithdrawTypeId=0" + cl.getApikey() + "";
+				+ "&MerchantUniqueOrderId=" + pt.getOrdernum() + "&NotifyUrl=" + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip() + "&Remark=&WithdrawTypeId=0" + cl.getApikey() + "";
 
 		String sign = MD5Utils.md5(signContent);
 		map.add("Sign", sign);
@@ -720,7 +721,7 @@ public class PayUtil {
 		map.put("outTradeNo", pt.getOrdernum().toString());
 		map.put("wayCode", cl.getAislecode().toString());
 		map.put("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
-		map.put("notifyUrl", cl.getApireusultip().toString());
+		map.put("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip().toString());
 		map.put("reqTime", time.toString());
 		map.put("payeeName", pt.getAccname());
 		map.put("payeeAccount", pt.getAccnumer());
@@ -796,7 +797,7 @@ public class PayUtil {
 		map.add("mchOrderNo", pt.getOrdernum().toString());
 		map.add("passageId", cl.getAislecode().toString());
 		map.add("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
-		map.add("notifyUrl", cl.getApireusultip().toString());
+		map.add("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip().toString());
 		map.add("reqTime", DateTimeUtil.getDateTime("yyyyMMddHHmmss"));
 		map.add("accountName", pt.getAccname());
 		map.add("accountNo", pt.getAccnumer());
@@ -969,12 +970,12 @@ public class PayUtil {
 		map.add("orderid", pt.getOrdernum());
 		map.add("applydate", DateTimeUtil.getDateTime());
 		map.add("amount", pt.getRealamount().toString());
-		map.add("notify_url", cl.getApireusultip());
+		map.add("notify_url", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 		map.add("return_url", pt.getBackforwardurl());
 		map.add("attach", "goods");
 		map.add("sign_type", "RSA2");
 
-		String signContent = "amount=" + pt.getRealamount() + "&appid=" + cl.getApikey() + "&applydate=" + DateTimeUtil.getDateTime() + "&bankcode=" + pt.getQrcodecode() + "&memberid=" + cl.getCode() + "&notify_url=" + cl.getApireusultip()
+		String signContent = "amount=" + pt.getRealamount() + "&appid=" + cl.getApikey() + "&applydate=" + DateTimeUtil.getDateTime() + "&bankcode=" + pt.getQrcodecode() + "&memberid=" + cl.getCode() + "&notify_url=" + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip()
 				+ "&orderid=" + pt.getOrdernum() + "&return_url=" + pt.getBackforwardurl();
 		String sign = "";
 		try {
@@ -1118,11 +1119,11 @@ public class PayUtil {
 			map.add("pay_orderid", pt.getOrdernum());
 			map.add("type", "1");
 			map.add("pay_amount", pt.getRealamount().toString());
-			map.add("pay_notifyurl", cl.getApireusultip());
+			map.add("pay_notifyurl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 			map.add("pay_callbackurl", pt.getBackforwardurl());
 
 			String signContent = "pay_amount=" + pt.getRealamount() + "&pay_applydate=" + datetime + "&pay_bankcode=" + pt.getQrcodecode() + "&pay_callbackurl=" + pt.getBackforwardurl() + "&pay_memberid=" + cl.getCode() + "&pay_notifyurl="
-					+ cl.getApireusultip() + "&pay_orderid=" + pt.getOrdernum() + "&key=" + cl.getApikey() + "";
+					+ RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip() + "&pay_orderid=" + pt.getOrdernum() + "&key=" + cl.getApikey() + "";
 
 			String sign = MD5Utils.md5(signContent);
 			map.add("pay_md5sign", sign.toUpperCase());
@@ -1185,10 +1186,10 @@ public class PayUtil {
 			map.add("mchOrderNo", pt.getOrdernum());
 			map.add("reqTime", time.toString());
 			map.add("amount", String.format("%.2f", pt.getRealamount()).replace(".", ""));
-			map.add("notifyUrl", cl.getApireusultip());
+			map.add("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 			map.add("clientIp", "127.0.0.1");
 
-			String signContent = "amount=" + String.format("%.2f", pt.getRealamount()).replace(".", "") + "&clientIp=127.0.0.1&mchNo=" + cl.getCode() + "&mchOrderNo=" + pt.getOrdernum() + "&notifyUrl=" + cl.getApireusultip() + "&productId="
+			String signContent = "amount=" + String.format("%.2f", pt.getRealamount()).replace(".", "") + "&clientIp=127.0.0.1&mchNo=" + cl.getCode() + "&mchOrderNo=" + pt.getOrdernum() + "&notifyUrl=" + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip() + "&productId="
 					+ pt.getQrcodecode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
 
 			String sign = MD5Utils.md5(signContent);
@@ -1284,12 +1285,12 @@ public class PayUtil {
 			map.put("outTradeNo", pt.getOrdernum());
 			map.put("subject", time.toString());
 			map.put("amount", String.format("%.2f", pt.getRealamount()).replace(".", ""));
-			map.put("notifyUrl", cl.getApireusultip());
+			map.put("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 			map.put("returnUrl", pt.getBackforwardurl());
 			map.put("clientIp", "127.0.0.1");
 			map.put("reqTime", time.toString());
 
-			String signContent = "amount=" + String.format("%.2f", pt.getRealamount()).replace(".", "") + "&clientIp=127.0.0.1&mchId=" + cl.getCode() + "&notifyUrl=" + cl.getApireusultip() + "&outTradeNo=" + pt.getOrdernum() + "&reqTime="
+			String signContent = "amount=" + String.format("%.2f", pt.getRealamount()).replace(".", "") + "&clientIp=127.0.0.1&mchId=" + cl.getCode() + "&notifyUrl=" + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip() + "&outTradeNo=" + pt.getOrdernum() + "&reqTime="
 					+ time.toString() + "&returnUrl=" + pt.getBackforwardurl() + "&subject=" + time.toString() + "&wayCode=" + pt.getQrcodecode() + "&key=" + cl.getApikey();
 
 			String sign = MD5Utils.md5(signContent);
@@ -1382,7 +1383,7 @@ public class PayUtil {
 			map.put("orderId", pt.getOrdernum());
 			map.put("orderAmount", pt.getRealamount().toString());
 			map.put("channelType", pt.getQrcodecode());
-			map.put("notifyUrl", cl.getApireusultip());
+			map.put("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 			map.put("returnUrl", pt.getBackforwardurl());
 			TreeMap<String, String> sortedMap = new TreeMap<>(map);
 			String signContent = "";
@@ -1490,10 +1491,10 @@ public class PayUtil {
 			map.add("mchOrderNo", pt.getOrdernum());
 			map.add("reqTime", time.toString());
 			map.add("amount", String.format("%.2f", pt.getRealamount()).replace(".", ""));
-			map.add("notifyUrl", cl.getApireusultip());
+			map.add("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 			map.add("clientIp", "127.0.0.1");
 
-			String signContent = "amount=" + String.format("%.2f", pt.getRealamount()).replace(".", "") + "&clientIp=127.0.0.1&mchNo=" + cl.getCode() + "&mchOrderNo=" + pt.getOrdernum() + "&notifyUrl=" + cl.getApireusultip() + "&productId="
+			String signContent = "amount=" + String.format("%.2f", pt.getRealamount()).replace(".", "") + "&clientIp=127.0.0.1&mchNo=" + cl.getCode() + "&mchOrderNo=" + pt.getOrdernum() + "&notifyUrl=" + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip() + "&productId="
 					+ pt.getQrcodecode() + "&reqTime=" + time.toString() + "&key=" + cl.getApikey();
 
 			String sign = MD5Utils.md5(signContent);
@@ -1589,12 +1590,12 @@ public class PayUtil {
 			map.put("outTradeNo", pt.getOrdernum());
 			map.put("subject", time.toString());
 			map.put("amount", String.format("%.2f", pt.getRealamount()).replace(".", ""));
-			map.put("notifyUrl", cl.getApireusultip());
+			map.put("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 			map.put("returnUrl", pt.getBackforwardurl());
 			map.put("clientIp", "127.0.0.1");
 			map.put("reqTime", time.toString());
 
-			String signContent = "amount=" + String.format("%.2f", pt.getRealamount()).replace(".", "") + "&clientIp=127.0.0.1&mchId=" + cl.getCode() + "&notifyUrl=" + cl.getApireusultip() + "&outTradeNo=" + pt.getOrdernum() + "&reqTime="
+			String signContent = "amount=" + String.format("%.2f", pt.getRealamount()).replace(".", "") + "&clientIp=127.0.0.1&mchId=" + cl.getCode() + "&notifyUrl=" + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip() + "&outTradeNo=" + pt.getOrdernum() + "&reqTime="
 					+ time.toString() + "&returnUrl=" + pt.getBackforwardurl() + "&subject=" + time.toString() + "&wayCode=" + pt.getQrcodecode() + "&key=" + cl.getApikey();
 
 			String sign = MD5Utils.md5(signContent);
@@ -1689,12 +1690,12 @@ public class PayUtil {
 			map.put("outTradeNo", pt.getOrdernum());
 			map.put("subject", time.toString());
 			map.put("amount", String.format("%.2f", pt.getRealamount()).replace(".", ""));
-			map.put("notifyUrl", cl.getApireusultip());
+			map.put("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 			map.put("returnUrl", pt.getBackforwardurl());
 			map.put("clientIp", "127.0.0.1");
 			map.put("reqTime", time.toString());
 
-			String signContent = "amount=" + String.format("%.2f", pt.getRealamount()).replace(".", "") + "&clientIp=127.0.0.1&mchId=" + cl.getCode() + "&notifyUrl=" + cl.getApireusultip() + "&outTradeNo=" + pt.getOrdernum() + "&reqTime="
+			String signContent = "amount=" + String.format("%.2f", pt.getRealamount()).replace(".", "") + "&clientIp=127.0.0.1&mchId=" + cl.getCode() + "&notifyUrl=" + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip() + "&outTradeNo=" + pt.getOrdernum() + "&reqTime="
 					+ time.toString() + "&returnUrl=" + pt.getBackforwardurl() + "&subject=" + time.toString() + "&wayCode=" + pt.getQrcodecode() + "&key=" + cl.getApikey();
 
 			String sign = MD5Utils.md5(signContent);
@@ -1791,7 +1792,7 @@ public class PayUtil {
 			map.add("currency", "cny");
 			map.add("subject", time.toString());
 			map.add("amount", String.format("%.2f", pt.getRealamount()).replace(".", ""));
-			map.add("notifyUrl", cl.getApireusultip());
+			map.add("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 			map.add("clientIp", "127.0.0.1");
 			map.add("body", time.toString());
 
@@ -1873,7 +1874,7 @@ public class PayUtil {
 			map.add("currency", "cny");
 			map.add("subject", time.toString());
 			map.add("amount", String.format("%.2f", pt.getRealamount()).replace(".", ""));
-			map.add("notifyUrl", cl.getApireusultip());
+			map.add("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 			map.add("body", time.toString());
 
 			TreeMap<String, Object> sortedMap = new TreeMap<>(map);
@@ -2023,7 +2024,7 @@ public class PayUtil {
 			map.put("PayChannelId", cl.getAislecode());
 			map.put("Amount", String.format("%.2f", pt.getRealamount()));
 			map.put("OrderNo", pt.getOrdernum());
-			map.put("CallbackUrl", cl.getApireusultip());
+			map.put("CallbackUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 			map.put("Timestamp", time.toString());
 			TreeMap<String, String> sortedMap = new TreeMap<>(map);
 			String signContent = "";
@@ -2099,7 +2100,7 @@ public class PayUtil {
 			map.add("currency", "cny");
 			map.add("subject", DateTimeUtil.getNow().getTime());
 			map.add("amount", Integer.parseInt(String.format("%.2f", pt.getRealamount()).replace(".", "")));
-			map.add("notifyUrl", cl.getApireusultip());
+			map.add("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 			map.add("clientIp", "127.0.0.1");
 			map.add("signType", "MD5");
 			map.add("divisionMode", 1);
@@ -2188,7 +2189,7 @@ public class PayUtil {
 			map.add("currency", "CNY");
 			map.add("subject", DateTimeUtil.getNow().getTime());
 			map.add("amount", Integer.parseInt(String.format("%.2f", pt.getRealamount()).replace(".", "")));
-			map.add("notifyUrl", cl.getApireusultip());
+			map.add("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip());
 			map.add("clientIp", "127.0.0.1");
 			map.add("signType", "MD5");
 			map.add("divisionMode", 1);
