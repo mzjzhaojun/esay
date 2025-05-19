@@ -68,7 +68,7 @@ div {
 						type="text" style="width: 100px; height: 30px; margin: 8px;"
 						id="smscode" name="smscode" value="">
 					<button id="smsbtn" type="button"
-						style="border-radius: 3px; border-color: #00bfff; background-color: #4e6ef2; color: #000000; font-size: 16px; height: 36px; width: 115px">获取验证码</button>
+						style="border-radius: 3px; border-color: #00bfff; background-color: #4e6ef2; color: #000000; font-size: 16px; height: 36px; width: 115px">验证码</button>
 					<br>
 				</form>
 			</div>
@@ -146,11 +146,12 @@ div {
 					"mobile" : $("#mobile").val()
 				}),
 				success : function(data) {
+					console.info(data);
 					if (data.code == 200) {
 						$("#smsbtn").attr("disabled", true);
 						inittimer(60)
 					} else {
-						alert("请核对信息后重试!");
+						alert(data.msg);
 					}
 				},
 				error : function() {

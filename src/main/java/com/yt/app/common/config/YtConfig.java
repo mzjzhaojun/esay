@@ -1,8 +1,5 @@
 package com.yt.app.common.config;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -25,13 +22,7 @@ public class YtConfig {
 
 	private String filePath;
 
-	private String fileurl;
-
-	private String viewurl;
-
 	private String origin;
-
-	private List<String> origins;
 
 	private Integer timeout;
 
@@ -49,8 +40,4 @@ public class YtConfig {
 
 	private String paymentquery;
 
-	public void setOrigin(String origin) {
-		this.origins = Arrays.asList(origin.split(","));
-		this.origin = origin;
-	}
 }

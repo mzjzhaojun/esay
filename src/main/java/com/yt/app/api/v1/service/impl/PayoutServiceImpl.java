@@ -22,6 +22,9 @@ import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.PayoutMerchantaccountMapper;
 import com.yt.app.api.v1.mapper.PayoutMerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.QrcodeMapper;
+import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
+import com.yt.app.api.v1.mapper.QrcodeaisleMapper;
+import com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper;
 import com.yt.app.api.v1.mapper.MerchantaisleMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.service.AgentaccountService;
@@ -53,6 +56,9 @@ import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.PayoutMerchantaccount;
 import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
 import com.yt.app.api.v1.entity.Qrcode;
+import com.yt.app.api.v1.entity.Qrcodeaccountorder;
+import com.yt.app.api.v1.entity.Qrcodeaisle;
+import com.yt.app.api.v1.entity.Qrcodeaisleqrcode;
 import com.yt.app.api.v1.entity.Merchantaisle;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.common.common.yt.YtBody;
@@ -72,6 +78,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayOutputStream;
@@ -105,9 +112,15 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Autowired
 	private AislechannelMapper aislechannelmapper;
 	@Autowired
+	private QrcodeaisleqrcodeMapper qrcodeaisleqrcodemapper;
+	@Autowired
 	private PayoutMerchantaccountorderMapper merchantaccountordermapper;
 	@Autowired
 	private AgentMapper agentmapper;
+	@Autowired
+	private QrcodeaccountorderMapper qrcodeaccountordermapper;
+	@Autowired
+	private QrcodeaisleMapper qrcodeaislemapper;
 	@Autowired
 	private AgentaccountorderMapper agentaccountordermapper;
 	@Autowired
@@ -295,6 +308,159 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		// 渠道余额
 		t.setChannelbalance(cl.getBalance() - t.getChannelpay());
 		// 小计
+		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
+		return mapper.post(t);
+	}
+
+	/**
+	 * 本地自营渠道提交
+	 */
+	@Override
+	public Integer submitOrderSelf(Payout t) {
+		PayoutMerchantaccount maccount = merchantaccountmapper.getByMerchantId(t.getMerchantid());
+
+		if (t.getAmount() <= 0 || t.getAmount() > maccount.getBalance()) {
+			throw new YtException("账户余额不足");
+		}
+		///////////////////////////////////////////////////// 录入代付订单/////////////////////////////////////////////////////
+		Merchant m = merchantmapper.get(t.getMerchantid());
+
+		if (!m.getStatus()) {
+			throw new YtException("商户被冻结!");
+		}
+		t.setAccname(t.getAccname().replaceAll(" ", ""));
+		t.setAccnumer(t.getAccnumer().replaceAll(" ", ""));
+		t.setUserid(m.getUserid());
+		t.setMerchantid(m.getId());
+		t.setNotifyurl(m.getApireusultip());
+		t.setMerchantcode(m.getCode());
+		t.setMerchantname(m.getName());
+		t.setType(DictionaryResource.ORDERTYPE_18);
+		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
+		t.setMerchantordernum("outm" + StringUtil.getOrderNum());// 商户单号
+		t.setMerchantcost(m.getOnecost());// 手续费
+		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
+		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
+		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);// 商戶發起
+		t.setRemark("新增代付￥:" + String.format("%.2f", t.getAmount()));
+		Qrcodeaisle a = qrcodeaislemapper.get(t.getAisleid());
+		t.setAislename(a.getName());
+
+		////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
+
+		List<Qrcodeaisleqrcode> listqaq = qrcodeaisleqrcodemapper.getByQrcodeAisleId(t.getAisleid());
+		long[] qaqids = listqaq.stream().mapToLong(qaq -> qaq.getQrcodelid()).distinct().toArray();
+		List<Qrcode> listqrcode = qrcodemapper.listByArrayId(qaqids);
+		Double amount = Double.valueOf(t.getAmount());
+		// 小于设置限额
+		List<Qrcode> listcmm = listqrcode.stream().filter(c -> c.getMax() >= amount && c.getMin() <= amount && (c.getTodayincome() + amount) < c.getLimits() && c.getStatus()).collect(Collectors.toList());
+		Assert.notEmpty(listcmm, "代付金额超出限额");
+		List<Qrcode> listcf = listcmm.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
+		Qrcode qd = null;
+		if (listcf.size() > 0) {
+			for (int j = 0; j < listcf.size(); j++) {
+				Qrcode cc = listcf.get(j);
+				String[] match = cc.getFirstmatchmoney().split(",");
+				for (int i = 0; i < match.length; i++) {
+					String number = match[i];
+					if (number.indexOf("-") == -1 && t.getAmount().intValue() == Integer.parseInt(number)) {
+						qd = cc;
+					} else {
+						String[] matchs = number.split("-");
+						Integer min = Integer.parseInt(matchs[0]);
+						Integer max = Integer.parseInt(matchs[1]);
+						if (t.getAmount().intValue() >= min && t.getAmount().intValue() <= max) {
+							qd = cc;
+						}
+					}
+				}
+			}
+		} else {
+			List<WeightRandom.WeightObj<String>> weightList = new ArrayList<>(); //
+			double count = 0;
+			for (Qrcode cml : listcmm) {
+				count = count + cml.getWeight();
+			}
+			for (Qrcode cmm : listcmm) {
+				weightList.add(new WeightRandom.WeightObj<String>(cmm.getCode(), (cmm.getWeight() / count) * 100));
+			}
+			WeightRandom<String> wr = RandomUtil.weightRandom(weightList);
+			String code = wr.next();
+			qd = listcmm.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
+			Assert.notNull(qd, "没有可用的渠道!");
+			t.setChannelid(qd.getId());
+			t.setChannelname(qd.getName());
+			t.setChannelcost(2.00);// 渠道手续费
+			t.setChanneldeal(t.getAmount() + t.getChannelcost());
+			t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
+			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
+		}
+		RedisUtil.setEx(SystemConstant.CACHE_SYS_PAYOUT_EXIST + t.getOrdernum(), t.getOrdernum(), 60, TimeUnit.SECONDS);
+		// 获取渠道单号
+		getQrcodelOrderNo(t, qd);
+
+		///////////////////////////////////////////////////// 计算商户订单
+		PayoutMerchantaccountorder mao = new PayoutMerchantaccountorder();
+		mao.setUserid(m.getUserid());
+		mao.setMerchantid(m.getId());
+		mao.setUsername(m.getName());
+		mao.setNkname(m.getNikname());
+		mao.setMerchantcode(m.getCode());
+		mao.setStatus(DictionaryResource.PAYOUTSTATUS_50);
+		mao.setExchange(m.getExchange());
+		mao.setAccname(t.getAccname());
+		mao.setAccnumber(t.getAccnumer());
+		mao.setDeal(t.getMerchantdeal());// 交易费
+		mao.setOnecost(m.getOnecost());// 手续费
+		mao.setAmount(t.getAmount());// 操作资金
+		mao.setAmountreceived(t.getMerchantpay());// 总支付费用
+		mao.setType(DictionaryResource.ORDERTYPE_29);
+		mao.setOrdernum(t.getMerchantordernum());
+		mao.setRemark("代付资金：" + t.getAmount() + " 交易费：" + String.format("%.2f", t.getMerchantdeal()) + " 手续费：" + m.getOnecost());
+		merchantaccountordermapper.post(mao);
+		merchantaccountservice.withdrawamount(mao);
+
+		Qrcodeaccountorder qao = new Qrcodeaccountorder();
+		qao.setUserid(m.getUserid());
+		qao.setQrcodeaisleid(t.getAisleid());
+		qao.setQrcodeaislename(t.getAislename());
+		qao.setQrcodename(qd.getName());
+		qao.setQrcodeid(qd.getId());
+		qao.setOrdernum(t.getChannelordernum());
+		qao.setType(t.getType().toString());
+		qao.setFewamount(0.00);
+		qao.setAmount(t.getAmount());
+
+		qrcodeaccountordermapper.post(qao);
+
+		///////////////////////////////////////////////////// 计算代理订单/////////////////////////////////////////////////////
+		if (m.getAgentid() != null) {
+			Agent ag = agentmapper.get(m.getAgentid());
+			t.setAgentid(ag.getId());
+			Agentaccountorder aat = new Agentaccountorder();
+			aat.setAgentid(ag.getId());
+			aat.setUserid(ag.getUserid());
+			aat.setUsername(ag.getName());
+			aat.setNkname(ag.getNkname());
+			aat.setStatus(DictionaryResource.PAYOUTSTATUS_50);
+			aat.setExchange(ag.getExchange());
+			aat.setAccname(t.getAccname());
+			aat.setAccnumber(t.getAccnumer());
+			aat.setAmount(t.getMerchantdeal());// 金额
+			aat.setDeal(t.getMerchantdeal() * (ag.getExchange() / 100));// 交易费
+			aat.setAmountreceived(aat.getDeal() + ag.getOnecost());// 总费用
+			aat.setOnecost(ag.getOnecost());// 手续费
+			aat.setType(DictionaryResource.ORDERTYPE_23.toString());
+			aat.setOrdernum("PA" + StringUtil.getOrderNum());
+			aat.setRemark("代付资金￥：" + aat.getAmount() + " 交易费：" + String.format("%.2f", aat.getDeal()) + " 手续费：" + aat.getOnecost());
+			t.setAgentincome(aat.getAmountreceived());
+			t.setAgentordernum(aat.getOrdernum());
+			agentaccountordermapper.post(aat);
+			agentaccountservice.totalincome(aat);
+		} else {
+			t.setAgentincome(0.00);
+		}
+		// 渠道余额
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 		return mapper.post(t);
 	}
@@ -647,6 +813,119 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		}
 	}
 
+	/***
+	 * 成功
+	 */
+	public void paySuccessSelf(Payout pt) {
+		Payout t = mapper.get(pt.getId());
+		if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			// 计算商户订单/////////////////////////////////////////////////////
+			PayoutMerchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
+			mao.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			mao.setImgurl(pt.getImgurl());
+			// 商户订单
+			merchantaccountordermapper.put(mao);
+			// 商户账户
+			merchantaccountservice.updateWithdrawamount(mao);
+			// 系统账户
+			systemaccountservice.updatePayout(t);
+
+			// 计算代理
+			if (t.getAgentid() != null) {
+				Agentaccountorder aao = agentaccountordermapper.getByOrdernum(t.getAgentordernum());
+				aao.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+				// 代理订单
+				agentaccountordermapper.put(aao);
+				// 代理账户
+				agentaccountservice.updateTotalincome(aao);
+			}
+
+			// 计算渠道
+			Qrcodeaccountorder cao = qrcodeaccountordermapper.getByOrderNum(t.getChannelordernum());
+			cao.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			// 渠道订单
+			qrcodeaccountordermapper.put(cao);
+			// 渠道账户
+//			channelaccountservice.updateWithdrawamount(cao);
+
+			// ------------------更新代付订单-----------------
+			t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
+				t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
+			}
+			t.setRemark("代付成功￥" + pt.getAmount());
+			t.setSuccesstime(DateTimeUtil.getNow());
+			t.setBacklong(DateUtil.between(t.getSuccesstime(), t.getCreate_time(), DateUnit.SECOND));
+
+			t.setImgurl(pt.getImgurl());
+			//
+			int i = mapper.put(t);
+			if (i > 0) {
+				// 保存客户信息
+				merchantcustomerbanksservice.add(t);
+				// 通知
+				channelbot.getOrderResultImg(pt.getChannelid(), pt.getOrdernum());
+				if (pt.getImgurl() != null && !pt.getImgurl().equals(""))
+					merchantbot.sendOrderResultImg(pt.getMerchantid(), pt.getImgurl());
+				StringBuffer message = new StringBuffer();
+				message.append("\r\n姓名：*" + pt.getAccname() + "*\r\n卡号：" + pt.getAccnumer() + " \r\n金额：" + pt.getAmount() + " \r\n单笔：" + pt.getMerchantcost() + " \r\n状态：成功✔✔✔" + "\r\n*" + pt.getOrdernum() + "*");
+				merchantbot.sendOrderResultSuccess(pt.getMerchantid(), message.toString());
+			}
+
+		}
+	}
+
+	/**
+	 * 
+	 * 回调失败
+	 * 
+	 */
+	public void payFailSelf(Payout pt) {
+		Payout t = mapper.get(pt.getId());
+		if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			// 计算商户订单/////////////////////////////////////////////////////
+			PayoutMerchantaccountorder mao = merchantaccountordermapper.getByOrdernum(t.getMerchantordernum());
+			mao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
+			merchantaccountordermapper.put(mao);
+			//
+			merchantaccountservice.turndownWithdrawamount(mao);
+
+			// 计算代理
+			if (t.getAgentid() != null) {
+				Agentaccountorder aao = agentaccountordermapper.getByOrdernum(t.getAgentordernum());
+				aao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
+				agentaccountordermapper.put(aao);
+				//
+				agentaccountservice.turndownTotalincome(aao);
+			}
+
+			// 计算渠道
+			Qrcodeaccountorder cao = qrcodeaccountordermapper.getByOrderNum(t.getChannelordernum());
+			cao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
+			// 渠道订单
+			qrcodeaccountordermapper.put(cao);
+			//
+//			channelaccountservice.turndownWithdrawamount(cao);
+
+			//
+			t.setStatus(DictionaryResource.PAYOUTSTATUS_53);
+			if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
+				t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
+			}
+			t.setRemark("代付失败￥" + t.getAmount());
+			t.setSuccesstime(DateTimeUtil.getNow());
+			t.setBacklong(DateTimeUtil.diffDays(t.getSuccesstime(), t.getCreate_time()));
+			int i = mapper.put(t);
+			if (i > 0) {
+				// 保存客户信息
+				merchantcustomerbanksservice.add(t);
+				StringBuffer message = new StringBuffer();
+				message.append("\r\n姓名：*" + pt.getAccname() + "*\r\n卡号：" + pt.getAccnumer() + " \r\n金额：" + pt.getAmount() + " \r\n状态：失败❌❌❌" + "\r\n*" + pt.getOrdernum() + "*");
+				merchantbot.sendOrderResultFail(pt.getMerchantid(), message.toString());
+			}
+		}
+	}
+
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public PayResultVO queryblance(String merchantid) {
@@ -699,6 +978,58 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	@Override
 	public String upFile(MultipartFile file, String aisleid) throws IOException {
+		Aisle aisle = aislemapper.get(Long.valueOf(aisleid));
+		PayoutMerchantaccount maccount = merchantaccountmapper.getByUserId(SysUserContext.getUserId());
+		Merchant m = merchantmapper.getByUserId(SysUserContext.getUserId());
+		Workbook wb = WorkbookFactory.create(file.getInputStream());
+		Sheet sheet = wb.getSheetAt(0);
+		Double countamount = 0.0;
+		int maxRow = sheet.getLastRowNum();
+		for (int i = 1; i <= maxRow; i++) {
+			Row row = sheet.getRow(i);
+			if (row != null && row.getCell(0) != null) {
+				countamount = countamount + Double.valueOf(row.getCell(3).toString());
+			}
+		}
+		if (countamount <= 0 || countamount > maccount.getBalance()) {
+			throw new YtException("账户余额不足");
+		}
+
+		////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
+		List<Aislechannel> listac = aislechannelmapper.getByAisleId(aisle.getId());
+		Assert.notEmpty(listac, "没有可用通道!");
+		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
+		List<Channel> listc = channelmapper.listByArrayId(cids);
+		Assert.notEmpty(listc, "没有可用渠道!");
+		List<WeightRandom.WeightObj<String>> weightList = new ArrayList<>(); //
+		double count = 0;
+		for (Channel cml : listc) {
+			count = count + cml.getWeight();
+		}
+		for (Channel cmm : listc) {
+			weightList.add(new WeightRandom.WeightObj<String>(cmm.getCode(), (cmm.getWeight() / count) * 100));
+		}
+		WeightRandom<String> wr = RandomUtil.weightRandom(weightList);
+		String code = wr.next();
+		Channel cl = listc.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
+		Assert.notNull(cl, "没有可用的渠道!");
+
+		for (int i = 1; i <= maxRow; i++) {
+			Row row = sheet.getRow(i);
+			if (row != null && row.getCell(0) != null) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				importOrder(aisle, row.getCell(0).toString().replace(" ", ""), row.getCell(1).toString().replace(" ", ""), row.getCell(2).toString().replace(" ", ""), Double.valueOf(row.getCell(3).toString()), m, cl);
+			}
+		}
+		return file.getOriginalFilename();
+	}
+
+	@Override
+	public String upFileSelf(MultipartFile file, String aisleid) throws IOException {
 		Aisle aisle = aislemapper.get(Long.valueOf(aisleid));
 		PayoutMerchantaccount maccount = merchantaccountmapper.getByUserId(SysUserContext.getUserId());
 		Merchant m = merchantmapper.getByUserId(SysUserContext.getUserId());
@@ -948,6 +1279,21 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		return flage;
 	}
 
+	void getQrcodelOrderNo(Payout t, Qrcode qd) {
+		// 获取渠道单号
+		switch (qd.getCode()) {
+		case DictionaryResource.PRODUCT_YPLWAP:
+			JSONObject returndata = SelfPayUtil.eplwithdrawalToCard(qd, t.getOrdernum(), t.getAccname(), t.getAccnumer(), t.getBankname(), Long.valueOf(String.format("%.2f", t.getAmount()).replace(".", "")));
+			if (returndata.getStr("returnCode").equals("0000")) {
+				String transactionNo = returndata.getStr("transactionNo");
+				t.setChannelordernum(transactionNo);
+			} else {
+				throw new YtException(returndata.getStr("returnMsg"));
+			}
+			break;
+		}
+	}
+
 	@Override
 	public void sncallback(Map<String, Object> params) {
 		String orderid = params.get("OrderNo").toString();
@@ -1137,12 +1483,12 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			TenantIdContext.setTenantId(pt.getTenant_id());
 			Qrcode qrcode = qrcodemapper.get(pt.getChannelid());
 			// 查询渠道是否真实成功
-			String returnstate = SelfPayUtil.eplwithdrawalToCardQuery(qrcode, orderid);
+			JSONObject returnstate = SelfPayUtil.eplwithdrawalToCardQuery(qrcode, orderid);
 			Assert.notNull(returnstate, "易票联代付通知反查订单失败!");
-			if (returnstate.equals("0000")) {
-				paySuccess(pt);
+			if (returnstate.getStr("returnCode").equals("0000")&& returnstate.getStr("payState").equals("01")) {
+				paySuccessSelf(pt);
 			} else {
-				payFail(pt);
+				payFailSelf(pt);
 			}
 			SysUserContext.remove();
 			TenantIdContext.remove();

@@ -5,12 +5,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.DictMapper;
 import com.yt.app.api.v1.mapper.DicttypeMapper;
+import com.yt.app.api.v1.mapper.SysconfigMapper;
 import com.yt.app.api.v1.service.DictService;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.yt.app.api.v1.entity.Dict;
 import com.yt.app.api.v1.entity.Dicttype;
+import com.yt.app.api.v1.entity.TSysconfig;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
@@ -33,6 +35,9 @@ import java.util.Map;
 public class DictServiceImpl extends YtBaseServiceImpl<Dict, Long> implements DictService {
 	@Autowired
 	private DictMapper mapper;
+	
+	@Autowired
+	private SysconfigMapper sysconfigmapper;
 
 	@Autowired
 	private DicttypeMapper dicttypemapper;
@@ -92,5 +97,10 @@ public class DictServiceImpl extends YtBaseServiceImpl<Dict, Long> implements Di
 				});
 			});
 		}
+		
+		List<TSysconfig> listtt= sysconfigmapper.listSysconfig();
+		listtt.forEach(tt -> {
+			RedisUtil.set(SystemConstant.CACHE_SYS_CONFIG_PREFIX + tt.getKeyn(), tt.getValuen());
+		});
 	}
 }

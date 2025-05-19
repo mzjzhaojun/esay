@@ -72,7 +72,7 @@ public class StatisticsThread implements Runnable {
 		List<Qrcode> listq = qrcodemapper.list(new HashMap<String, Object>());
 		listq.forEach(q -> {
 			// 单日数据
-			if (q.getTodaybalance() > 1)
+			if (q.getTodayincome() > 1)
 				qrcodeservice.updateDayValue(q, dateval);
 		});
 	}

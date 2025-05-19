@@ -3,6 +3,7 @@ package com.yt.app.api.v1.mapper;
 import java.util.List;
 import java.util.Map;
 import com.yt.app.api.v1.entity.Sysconfig;
+import com.yt.app.api.v1.entity.TSysconfig;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
 import com.yt.app.common.base.YtIBaseMapper;
@@ -121,5 +122,8 @@ public interface SysconfigMapper extends YtIBaseMapper<Sysconfig> {
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Sysconfig.class })
 	public Integer putUsdtToTrxExchange(Double value);
+	
+	
+	public List<TSysconfig> listSysconfig();
 
 }

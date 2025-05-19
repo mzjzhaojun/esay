@@ -110,9 +110,23 @@
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from qrcodeaisleqrcode
+		select ac.id id,
+		ac.qrcodelid qrcodelid,
+		ac.qrcodeaisleid qrcodeaisleid,
+		c.name name,
+		c.code code,
+		c.status status,
+		c.dynamic dynamic,
+		c.smid smid,
+		c.expireminute expireminute,
+		c.remark remark
+		FROM
+		qrcodeaisleqrcode ac
+		JOIN qrcodeaisle ae
+		ON ae.id = ac.qrcodeaisleid
+		JOIN qrcode c
+		ON
+		ac.qrcodelid = c.id
 		<where>
 			1=1
 			<if test="name != null and name != ''">

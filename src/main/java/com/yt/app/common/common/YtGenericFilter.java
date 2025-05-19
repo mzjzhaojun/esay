@@ -6,10 +6,10 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -17,6 +17,7 @@ import org.springframework.web.filter.GenericFilterBean;
 
 import com.yt.app.common.config.YtConfig;
 
+@Profile("dev")
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class YtGenericFilter extends GenericFilterBean {
@@ -26,11 +27,8 @@ public class YtGenericFilter extends GenericFilterBean {
 
 	@Override
 	public void doFilter(ServletRequest paramServletRequest, ServletResponse paramServletResponse, FilterChain paramFilterChain) throws IOException, ServletException {
-		HttpServletRequest localHttpServletRequest = (HttpServletRequest) paramServletRequest;
-		String str = localHttpServletRequest.getHeader("Origin");
-		Integer localInteger = Integer.valueOf(this.ytconfig.getOrigins().lastIndexOf(str) >= 0 ? this.ytconfig.getOrigins().lastIndexOf(str) : 0);
 		HttpServletResponse localHttpServletResponse = (HttpServletResponse) paramServletResponse;
-		localHttpServletResponse.setHeader("Access-Control-Allow-Origin", (String) this.ytconfig.getOrigins().get(localInteger.intValue()));
+		localHttpServletResponse.setHeader("Access-Control-Allow-Origin", this.ytconfig.getOrigin());
 		localHttpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
 		localHttpServletResponse.setHeader("Access-Control-Allow-Methods", "DELETE, GET, OPTIONS, POST, PUT");
 		localHttpServletResponse.setHeader("Access-Control-Max-Age", "3600");

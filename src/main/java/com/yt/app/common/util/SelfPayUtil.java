@@ -137,7 +137,7 @@ public class SelfPayUtil {
 				List<SettleDetailInfo> settleDetailInfos = new ArrayList<SettleDetailInfo>();
 				SettleDetailInfo settleDetailInfos0 = new SettleDetailInfo();
 				settleDetailInfos0.setTransInType("defaultSettle");
-				settleDetailInfos0.setAmount(amount.toString());
+				settleDetailInfos0.setAmount(String.format("%.2f", amount));
 				settleDetailInfos.add(settleDetailInfos0);
 				settleInfo.setSettleDetailInfos(settleDetailInfos);
 				model.setSettleInfo(settleInfo);
@@ -214,7 +214,7 @@ public class SelfPayUtil {
 			List<SettleDetailInfo> settleDetailInfos = new ArrayList<SettleDetailInfo>();
 			SettleDetailInfo settleDetailInfos0 = new SettleDetailInfo();
 			settleDetailInfos0.setTransInType("defaultSettle");
-			settleDetailInfos0.setAmount(amount.toString());
+			settleDetailInfos0.setAmount(String.format("%.2f", amount));
 			settleDetailInfos.add(settleDetailInfos0);
 			settleInfo.setSettleDetailInfos(settleDetailInfos);
 			model.setSettleInfo(settleInfo);
@@ -264,7 +264,7 @@ public class SelfPayUtil {
 			royaltyParameters0.setRoyaltyType("transfer");
 			royaltyParameters0.setTransInType("loginName");
 			royaltyParameters0.setTransIn(transin);
-			royaltyParameters0.setAmount(amount.toString());
+			royaltyParameters0.setAmount(String.format("%.2f", amount));
 			royaltyParameters0.setDesc("百亿补贴-达人佣金");
 			royaltyParameters0.setRoyaltyScene("达人佣金");
 			royaltyParameters.add(royaltyParameters0);
@@ -320,7 +320,7 @@ public class SelfPayUtil {
 			refundGoodsDetail0.setOutSkuId("outSku_01");
 			refundGoodsDetail0.setOutItemId("outItem_01");
 			refundGoodsDetail0.setGoodsId("apple-01");
-			refundGoodsDetail0.setRefundAmount("19.50");
+			refundGoodsDetail0.setRefundAmount(String.format("%.2f", amount));
 			List<String> outCertificateNoList = new ArrayList<String>();
 			outCertificateNoList.add("202407013232143241231243243423");
 			refundGoodsDetail0.setOutCertificateNoList(outCertificateNoList);
@@ -523,7 +523,7 @@ public class SelfPayUtil {
 			AlipayFundTransUniTransferRequest request = new AlipayFundTransUniTransferRequest();
 			AlipayFundTransUniTransferModel model = new AlipayFundTransUniTransferModel();
 			model.setOutBizNo(qtc.getOutbizno());
-			model.setTransAmount(qtc.getAmount().toString());
+			model.setTransAmount(String.format("%.2f", qtc.getAmount()));
 			model.setBizScene("DIRECT_TRANSFER");
 			model.setProductCode("TRANS_ACCOUNT_NO_PWD");
 			model.setOrderTitle("代发");
@@ -608,7 +608,7 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static String eplpayTradeWapPay(Qrcode qrcode, String memberId, Double amount, String name, String pcardNo, String cardNo, String mobile) {
+	public static JSONObject eplpayTradeWapPay(Qrcode qrcode, String memberId, Double amount, String name, String pcardNo, String cardNo, String mobile) {
 		try {
 			String mchtOrderNo = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
 			String key = EplRsaUtils.getPublicKey(qrcode.getApppublickey());
@@ -621,7 +621,7 @@ public class SelfPayUtil {
 					+ "\",\"bankCardNo\":\"" + bankCardNo + "\",\"bankCardType\":\"debit\",\"certificatesType\":\"01\",\"certificatesNo\":\"" + certificatesNo + "\",\"nonceStr\":\"" + noncestr + "\"}";
 			log.info(param);
 			JSONObject response = PaymentHelper.bindCard(qrcode.getApirest(), param, qrcode.getSmid(), qrcode.getAppprivatekey());
-			return response.getStr("smsNo");
+			return response;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -715,10 +715,10 @@ public class SelfPayUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String eplwithdrawalToCard(Qrcode qrcode, String outTradeNo, String name, String cardNo, String bankName, String accountType, Long payAmount) {
+	public static JSONObject eplwithdrawalToCard(Qrcode qrcode, String outTradeNo, String name, String cardNo, String bankName, Long payAmount) {
 
 		String payCurrency = "CNY";
-		String remark = "这是附言";
+		String remark = "附言";
 
 		String key = EplRsaUtils.getPublicKey(qrcode.getApppublickey());
 
@@ -732,7 +732,7 @@ public class SelfPayUtil {
 			request.setBankUserName(bankUserName);
 			request.setBankCardNo(bankCardNo);
 			request.setBankName(bankName);
-			request.setBankAccountType(accountType);// 1：对公，2：对私
+			request.setBankAccountType("2");// 1：对公，2：对私
 			request.setPayCurrency(payCurrency);
 			request.setNotifyUrl(qrcode.getPayoutnotifyurl());
 			request.setRemark(remark);
@@ -740,7 +740,7 @@ public class SelfPayUtil {
 			String param = JSONUtil.toJsonStr(request);
 			log.info(param);
 			JSONObject response = PaymentHelper.withdrawalToCard(qrcode.getApirest(), param, qrcode.getSmid(), qrcode.getAppprivatekey());
-			return response.getStr("transactionNo");
+			return response;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -754,7 +754,7 @@ public class SelfPayUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String eplwithdrawalToCardQuery(Qrcode qrcode, String outTradeNo) {
+	public static JSONObject eplwithdrawalToCardQuery(Qrcode qrcode, String outTradeNo) {
 
 		PaymentQueryRequest request = new PaymentQueryRequest();
 		request.setCustomerCode(qrcode.getAppid());// 必填
@@ -763,7 +763,7 @@ public class SelfPayUtil {
 		try {
 			String param = JSONUtil.toJsonStr(request);
 			JSONObject response = PaymentHelper.withdrawalToCardQuery(qrcode.getApirest(), param, qrcode.getSmid(), qrcode.getAppprivatekey());
-			return response.getStr("returnCode");
+			return response;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

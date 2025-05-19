@@ -71,9 +71,32 @@ public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long>
 		Assert.notEquals(i, 0, "新增失败！");
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
+	
+	
+	/**
+	 * 
+	 * 
+	 * @version 1.1
+	 */
+	@RequestMapping(value = "/selfadd", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> selfadd(YtRequestDecryptEntity<Payout> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
+		Payout pt = YtRequestDecryptEntity.getBody();
+		RLock lock = RedissonUtil.getLock(pt.getMerchantid());
+		Integer i = 0;
+		try {
+			lock.lock();
+			i = service.submitOrderSelf(pt);
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+		Assert.notEquals(i, 0, "新增失败！");
+		return new YtResponseEncryptEntity<Object>(new YtBody(i));
+	}
 
 	/**
-	 * 普通上传
+	 * 批量上传代付渠道
 	 * 
 	 * @param request
 	 * @return
@@ -87,6 +110,27 @@ public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long>
 		String name = "";
 		try {
 			name = service.upFile(file, aisleid);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return new YtResponseEntity<Object>(new YtBody(name));
+	}
+	
+	
+	/**
+	 * 批量上传代付自营
+	 * 
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/uploadself", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> addself(MultipartHttpServletRequest request) {
+		MultipartFile file = request.getFile("file");
+		String qid = request.getParameter("id");
+		String name = "";
+		try {
+			name = service.upFile(file, qid);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

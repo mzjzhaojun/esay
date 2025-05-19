@@ -140,10 +140,10 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	@Override
 	public String paytestepl(Map<String, Object> params) {
 		Qrcode pqrcode = mapper.get(Long.valueOf(params.get("id").toString()));
-		String atp = SelfPayUtil.eplpayTradeWapPay(pqrcode, params.get("menmberid").toString(), Double.valueOf(params.get("amount").toString()), params.get("name").toString(), params.get("pcardno").toString(), params.get("cardno").toString(),
+		JSONObject jsonObject = SelfPayUtil.eplpayTradeWapPay(pqrcode, params.get("menmberid").toString(), Double.valueOf(params.get("amount").toString()), params.get("name").toString(), params.get("pcardno").toString(), params.get("cardno").toString(),
 				params.get("mobile").toString());
-		Assert.notNull(atp, "获取易票联单号错误!");
-		return atp;
+		Assert.notNull(jsonObject, jsonObject.getStr("returnMsg"));
+		return jsonObject.getStr("smsNo");
 	}
 
 	@Override
@@ -264,13 +264,21 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 
 	@Override
 	public void epltransunitransfer(Qrcodetransferrecord qrcode) {
+		String ordernum = StringUtil.getOrderNum();
 		Qrcode pqrcode = mapper.get(qrcode.getId());
-		String returndata = SelfPayUtil.eplwithdrawalToCard(pqrcode, qrcode.getOrdernum(), qrcode.getPayeename(), qrcode.getPayeeid(), qrcode.getBankname(), qrcode.getPayeetype(),
+		JSONObject returndata = SelfPayUtil.eplwithdrawalToCard(pqrcode, ordernum, qrcode.getPayeename(), qrcode.getPayeeid(), qrcode.getBankname(),
 				Long.valueOf(String.format("%.2f", qrcode.getAmount()).replace(".", "")));
 		Assert.notNull(returndata, "转账失败!");
-		qrcode.setOrdernum(returndata);
-		qrcode.setStatus(DictionaryResource.ALIPAY_STATUS_701);
-		qrcodetransferrecordmapper.post(qrcode);
+		if (returndata.getStr("returnCode").equals("0000")) {
+//			JSONObject jsonresult = SelfPayUtil.eplwithdrawalToCardQuery(pqrcode,ordernum);
+//			String code = jsonresult.getStr("returnCode");
+			
+			String transactionNo = returndata.getStr("transactionNo");
+			qrcode.setOrdernum(transactionNo);
+			qrcode.setQrcodeid(qrcode.getId());
+			qrcode.setStatus(DictionaryResource.ALIPAY_STATUS_701);
+			qrcodetransferrecordmapper.post(qrcode);
+		}
 	}
 
 	@Override

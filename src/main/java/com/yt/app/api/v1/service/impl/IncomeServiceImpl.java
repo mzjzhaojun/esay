@@ -819,6 +819,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			// 开始业务
 			Channel channel = channelmapper.getByUserId(qd.getUserid());
 			Income income = addIncome(channel, qas, mc, qs, qd);
+			String urlview  = RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "payviewurl");
 			// 支付通手机H5
 			if (qd.getCode().equals(DictionaryResource.PRODUCT_ZFTWAP)) {
 				Qrcode pqd = qrcodemapper.get(qd.getPid());
@@ -826,7 +827,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				if (response != null) {
 					flage = false;
 					String pageRedirectionData = response.getBody();
-					income.setQrcode(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
+					income.setQrcode(urlview.replace("{id}", income.getOrdernum() + ""));
 					income.setQrcodeordernum("inqd" + StringUtil.getOrderNum());
 					income.setResulturl(pageRedirectionData);
 					if (qd.getPid() != null) {
@@ -835,7 +836,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				}
 			} else if (qd.getCode().equals(DictionaryResource.PRODUCT_YPLWAP)) {
 				flage = false;
-				income.setQrcode(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
+				income.setQrcode(urlview.replace("{id}", income.getOrdernum() + ""));
 				income.setResulturl(income.getQrcode());
 				income.setQrcodeordernum("inqd" + StringUtil.getOrderNum());
 			} else if (qd.getCode().equals(DictionaryResource.PRODUCT_HUIFUTXWAP)) {
@@ -844,7 +845,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 					flage = false;
 					String outradeno = response.get("hf_seq_id").toString();
 					String form_url = response.get("form_url").toString();
-					income.setQrcode(appConfig.getViewurl().replace("{id}", income.getOrdernum() + ""));
+					income.setQrcode(urlview.replace("{id}", income.getOrdernum() + ""));
 					income.setResulturl(form_url);
 					income.setQrcodeordernum(outradeno);
 				}
@@ -1289,22 +1290,26 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	@Override
 	public void sumbmitcheck(Map<String, Object> params) {
+		
 		Income in = mapper.getByOrderNum(params.get("orderid").toString());
 		TenantIdContext.setTenantId(in.getTenant_id());
 		log.info(params.get("orderid").toString());
 		Qrcode qrcode = qrcodemapper.get(in.getQrcodeid());
-		String smsno = SelfPayUtil.eplpayTradeWapPay(qrcode, in.getOrdernum(), in.getAmount(), params.get("name").toString(), params.get("pcardno").toString(), params.get("cardno").toString(), params.get("mobile").toString());
-		Assert.notNull(smsno, "易票联下单失败");
-		Qrcodpaymember qrcodpaymember = new Qrcodpaymember();
-		qrcodpaymember.setQrcodeid(qrcode.getId());
-		qrcodpaymember.setQrcodename(qrcode.getName());
-		qrcodpaymember.setMobile(params.get("mobile").toString());
-		qrcodpaymember.setPcardno(params.get("pcardno").toString());
-		qrcodpaymember.setName(params.get("name").toString());
-		qrcodpaymember.setCardno(params.get("cardno").toString());
-		qrcodpaymember.setSmsno(smsno);
-		qrcodpaymember.setMemberid(in.getOrdernum());
-		qrcodpaymembermapper.post(qrcodpaymember);
+		JSONObject jsonObject = SelfPayUtil.eplpayTradeWapPay(qrcode, in.getOrdernum(), in.getAmount(), params.get("name").toString(), params.get("pcardno").toString(), params.get("cardno").toString(), params.get("mobile").toString());
+		if (jsonObject.getStr("returnCode").equals("0000")) {
+			Qrcodpaymember qrcodpaymember = new Qrcodpaymember();
+			qrcodpaymember.setQrcodeid(qrcode.getId());
+			qrcodpaymember.setQrcodename(qrcode.getName());
+			qrcodpaymember.setMobile(params.get("mobile").toString());
+			qrcodpaymember.setPcardno(params.get("pcardno").toString());
+			qrcodpaymember.setName(params.get("name").toString());
+			qrcodpaymember.setCardno(params.get("cardno").toString());
+			qrcodpaymember.setSmsno(jsonObject.getStr("smsNo"));
+			qrcodpaymember.setMemberid(in.getOrdernum());
+			qrcodpaymembermapper.post(qrcodpaymember);
+		}else {
+			throw new YtException(jsonObject.getStr("returnMsg"));
+		}
 		TenantIdContext.remove();
 	}
 
@@ -1321,7 +1326,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	@Override
 	public void epfpayftfcallback(Map<String, Object> params) {
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -1329,7 +1334,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		String outradeno = params.get("outTradeNo").toString();
 		String noncestr = params.get("nonceStr").toString();
 		log.info("易票联通知返回消息：outradeno" + outradeno + " noncestr:" + noncestr);
-		Income income = mapper.getByQrcodeOrderNum(outradeno);
+		Income income = mapper.getByOrderNum(outradeno);
 		TenantIdContext.setTenantId(income.getTenant_id());
 		String returnstate = SelfPayUtil.eplpaymentQuery(qrcodemapper.get(income.getQrcodeid()), outradeno, noncestr);
 		Assert.notNull(returnstate, "易票联通知反查订单失败!");

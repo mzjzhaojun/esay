@@ -813,7 +813,7 @@ public class PayUtil {
 		signContent = signContent.replaceAll("\\[", "").replaceAll("\\]", "") + "&key=" + cl.getApikey();
 		System.out.println(signContent);
 		String sign = MD5Utils.md5(signContent);
-		map.add("sign", sign);
+		map.add("sign", sign.toUpperCase());
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 		RestTemplate resttemplate = new RestTemplate();
 		//

@@ -26,5 +26,6 @@ public class Qrcodeaisleqrcode extends YtBaseEntity<Qrcodeaisleqrcode> {
 	Long tenant_id;
 	Long qrcodeaisleid;
 	Long qrcodelid;
+	String name;
 	Integer version;
 }

@@ -30,8 +30,7 @@ public class HttpUtil {
 			String body = HttpRequest.post(url).addHeaders(header).header("Content-Type", "application/json").body(params).execute().body();
 			JSONObject jsonObject = JSONUtil.parseObj(body);
 			log.info(" 易票联返回：" + body);
-			if (jsonObject.getStr("returnCode").equals("0000"))
-				return jsonObject;
+			return jsonObject;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

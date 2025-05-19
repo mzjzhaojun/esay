@@ -28,12 +28,14 @@ import com.yt.app.api.v1.entity.YtFile;
 import com.yt.app.api.v1.mapper.FileMapper;
 import com.yt.app.api.v1.service.FileService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
+import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.FileUtil;
+import com.yt.app.common.util.RedisUtil;
 
 import cn.hutool.core.lang.Snowflake;
 import sun.misc.BASE64Decoder;
@@ -102,7 +104,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 			f.setFile_name(name);
 		f.setModifytime(new Date());
 		mapper.put(f);
-		f.setUrl(appConfig.getFileurl().replace("{id}", fl.getId() + ""));
+		f.setUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{id}", fl.getId() + ""));
 		return f;
 	}
 
@@ -135,7 +137,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 			f.setFile_name(name);
 		f.setModifytime(new Date());
 		mapper.put(f);
-		f.setUrl(appConfig.getFileurl().replace("{id}", fl.getId() + ""));
+		f.setUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{id}", fl.getId() + ""));
 		return f.getUrl();
 	}
 
@@ -246,7 +248,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 
 		f.setFile_name(filename);
 		f.setModifytime(new Date());
-		String curl = appConfig.getFileurl().replace("{file}", "file");
+		String curl = RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{file}", "file");
 		f.setUrl(curl.replace("{id}", fl.getId() + ""));
 		mapper.put(f);
 		return f;
@@ -370,7 +372,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 			f.setFile_name(name);
 		f.setModifytime(new Date());
 		mapper.put(f);
-		String curl = appConfig.getFileurl().replace("{file}", "file");
+		String curl = RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{file}", "file");
 		f.setUrl(curl.replace("{id}", fl.getId() + ""));
 		return f;
 	}
@@ -410,7 +412,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 			f.setFile_name(name);
 		f.setModifytime(new Date());
 		mapper.put(f);
-		f.setUrl(appConfig.getFileurl().replace("{id}", fl.getId() + "/" + size));
+		f.setUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{id}", fl.getId() + "/" + size));
 		return f;
 	}
 

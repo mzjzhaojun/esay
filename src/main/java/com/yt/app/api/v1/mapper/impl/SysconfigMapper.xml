@@ -9,6 +9,10 @@
 	<resultMap id="ResultMap"
 		type="com.yt.app.api.v1.entity.Sysconfig">
 	</resultMap>
+	<!-- ResultMapTT -->
+	<resultMap id="ResultMapTT"
+		type="com.yt.app.api.v1.entity.TSysconfig">
+	</resultMap>
 	<!-- add -->
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Sysconfig">
@@ -105,6 +109,14 @@
 				LIMIT #{pageStart},#{pageEnd}
 			</if>
 		</where>
+	</select>
+	
+	<!-- getList -->
+	<select id="listSysconfig" parameterType="java.util.HashMap"
+		resultMap="ResultMapTT">
+		select
+		id,keyn,valuen
+		from t_sys_config
 	</select>
 	<!-- getMap -->
 	<select id="map" parameterType="java.util.HashMap"

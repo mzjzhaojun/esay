@@ -94,7 +94,6 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		//
 		t.setUserid(u.getId());
 		t.setAppkey(StringUtil.getUUID());
-		t.setType(DictionaryResource.AISLE_TYPE_INCOME_72.toString());
 		Integer i = mapper.post(t);
 
 		//

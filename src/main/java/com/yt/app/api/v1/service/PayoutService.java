@@ -37,6 +37,9 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 
 	// 本地提交订单
 	Integer submitOrder(Payout pt);
+	
+	//本地自营渠道
+	Integer submitOrderSelf(Payout pt);
 
 	// 天下回調
 	YtBody txcallbackpay(SysTyOrder so);
@@ -74,8 +77,11 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 	// 易票联代付回调
 	void epfcallback(Map<String, Object> params);
 
-	// 导入上传
+	// 导入代付渠道
 	String upFile(MultipartFile file, String aisleid) throws IOException;
+	
+	// 导入代付自营
+	String upFileSelf(MultipartFile file, String aisleid) throws IOException;
 
 	// 成功
 	Integer success(Long id);
