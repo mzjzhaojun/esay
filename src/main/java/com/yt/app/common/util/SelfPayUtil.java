@@ -125,7 +125,9 @@ public class SelfPayUtil {
 
 			AlipayTradeWapPayRequest request = new AlipayTradeWapPayRequest();
 			AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();
-			request.setNotifyUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+qrcode.getNotifyurl());
+			String url =RedisUtil.get( SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+qrcode.getNotifyurl();
+			request.setNotifyUrl(url);
+			log.info(url);
 			model.setOutTradeNo(ordernum);
 			model.setTotalAmount(amount.toString());
 			model.setSubject("Member Payment");
@@ -138,7 +140,7 @@ public class SelfPayUtil {
 				List<SettleDetailInfo> settleDetailInfos = new ArrayList<SettleDetailInfo>();
 				SettleDetailInfo settleDetailInfos0 = new SettleDetailInfo();
 				settleDetailInfos0.setTransInType("defaultSettle");
-				settleDetailInfos0.setAmount(String.format("%.2f", amount));
+				settleDetailInfos0.setAmount(amount.toString());
 				settleDetailInfos.add(settleDetailInfos0);
 				settleInfo.setSettleDetailInfos(settleDetailInfos);
 				model.setSettleInfo(settleInfo);
@@ -215,7 +217,7 @@ public class SelfPayUtil {
 			List<SettleDetailInfo> settleDetailInfos = new ArrayList<SettleDetailInfo>();
 			SettleDetailInfo settleDetailInfos0 = new SettleDetailInfo();
 			settleDetailInfos0.setTransInType("defaultSettle");
-			settleDetailInfos0.setAmount(String.format("%.2f", amount));
+			settleDetailInfos0.setAmount(amount.toString());
 			settleDetailInfos.add(settleDetailInfos0);
 			settleInfo.setSettleDetailInfos(settleDetailInfos);
 			model.setSettleInfo(settleInfo);
