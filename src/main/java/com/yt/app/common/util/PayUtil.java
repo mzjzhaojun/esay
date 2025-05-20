@@ -795,7 +795,7 @@ public class PayUtil {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add("mchId", cl.getCode().toString());
 		map.add("mchOrderNo", pt.getOrdernum().toString());
-		map.add("passageId", cl.getAislecode().toString());
+		//map.add("passageId", cl.getAislecode().toString());
 		map.add("amount", String.format("%.2f", pt.getAmount()).replace(".", ""));
 		map.add("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+ cl.getApireusultip().toString());
 		map.add("reqTime", DateTimeUtil.getDateTime("yyyyMMddHHmmss"));
@@ -845,7 +845,7 @@ public class PayUtil {
 			signContent = signContent.substring(0, signContent.length() - 1);
 			signContent = signContent.replaceAll("\\[", "").replaceAll("\\]", "") + "&key=" + cl.getApikey();
 			String sign = MD5Utils.md5(signContent);
-			map.add("sign", sign);
+			map.add("sign", sign.toUpperCase());
 
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
