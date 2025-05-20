@@ -2,6 +2,7 @@ package com.yt.app.api.v1.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
+import lombok.extern.slf4j.Slf4j;
 
 import com.yt.app.api.v1.bo.JwtUserBO;
 import com.yt.app.api.v1.bo.SysScopeDataBO;
@@ -54,6 +55,7 @@ import javax.servlet.http.HttpServletRequest;
  * @description
  * @date 2020/4/15 11:33
  */
+@Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -168,7 +170,7 @@ public class AuthServiceImpl implements AuthService {
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public String getPublicKey(HttpServletRequest request) {
 		String ip = AuthContext.getIp();
-		System.out.println(ip);
+		log.info(ip);
 		boolean isValid = false;
 		if (!AuthUtil.isMobileDevice(request.getHeader("User-Agent"))) {
 			// 判断ip 是否在配置内
