@@ -78,5 +78,7 @@ public interface FileService extends YtIBaseService<YtFile, Long> {
 	 * @return
 	 */
 	YtFile addFileVideo(MultipartFile file, Integer size) throws Exception;
+	
+	String addBase64String(String base64);
 
 }

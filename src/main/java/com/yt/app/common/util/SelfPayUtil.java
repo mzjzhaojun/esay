@@ -76,7 +76,6 @@ import com.yt.app.common.util.bo.WithdrawToCardRequest;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.digest.DigestUtil;
-import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -773,6 +772,29 @@ public class SelfPayUtil {
 		}
 		return null;
 	}
+	
+	
+	/**
+	 * 易票联单笔代付凭证
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static JSONObject eplwithdrawalCertification(Qrcode qrcode, String outTradeNo) {
+
+		PaymentQueryRequest request = new PaymentQueryRequest();
+		request.setCustomerCode(qrcode.getAppid());// 必填
+		request.setOutTradeNo(outTradeNo);
+		request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
+		try {
+			String param = JSONUtil.toJsonStr(request);
+			JSONObject response = PaymentHelper.withdrawalCertification(qrcode.getApirest(), param, qrcode.getSmid(), qrcode.getAppprivatekey());
+			return response;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	/**
 	 * 易票联余额查询
@@ -914,12 +936,12 @@ public class SelfPayUtil {
         //固定值，加签后赋值
         headers.put("tenant-id", "1");
         //执行请求调用
-        String body = HttpUtils.post(URL + "/app-api/fms/risk-exterior-query/api/query", headers, map);
-        JSONArray data=  JSONUtil.parseObj(body).getJSONObject("data").getJSONArray("data");
-        if(data.size()>1) {
-        	log.info("test card fait"+accnumber);
-        	return false;
-        }
+//        String body = HttpUtils.post(URL + "/app-api/fms/risk-exterior-query/api/query", headers, map);
+//        JSONArray data=  JSONUtil.parseObj(body).getJSONObject("data").getJSONArray("data");
+//        if(data.size()>1) {
+//        	log.info("test card fait"+accnumber);
+//        	return false;
+//        }
         log.info("test card succcess"+accnumber);
 		return true;
     }

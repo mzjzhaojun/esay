@@ -29,6 +29,7 @@ import com.yt.app.api.v1.mapper.MerchantaisleMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.ChannelaccountService;
+import com.yt.app.api.v1.service.FileService;
 import com.yt.app.api.v1.service.PayoutMerchantaccountService;
 import com.yt.app.api.v1.service.MerchantcustomerbanksService;
 import com.yt.app.api.v1.service.PayoutService;
@@ -141,6 +142,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	private MerchantcustomerbanksService merchantcustomerbanksservice;
 	@Autowired
 	private ChannelBot channelbot;
+	@Autowired
+	private FileService fileservice;
 	@Autowired
 	private MerchantBot merchantbot;
 
@@ -912,7 +915,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
 				t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 			}
-			t.setRemark("代付失败￥" + t.getAmount());
 			t.setSuccesstime(DateTimeUtil.getNow());
 			t.setBacklong(DateTimeUtil.diffDays(t.getSuccesstime(), t.getCreate_time()));
 			int i = mapper.put(t);
@@ -1241,8 +1243,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		RedisUtil.setEx(SystemConstant.CACHE_SYS_PAYOUT_EXIST + t.getOrdernum(), t.getOrdernum(), 60, TimeUnit.SECONDS);
 
 		// 获取渠道单号
-		if(!getQrcodelOrderNo(t, qd))
-			return 0;
+		getQrcodelOrderNo(t, qd);
 
 		///////////////////////////////////////////////////// 计算商户订单
 		PayoutMerchantaccountorder mao = new PayoutMerchantaccountorder();
@@ -1388,7 +1389,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		return flage;
 	}
 
-	boolean getQrcodelOrderNo(Payout t, Qrcode qd) {
+	void getQrcodelOrderNo(Payout t, Qrcode qd) {
 		// 获取渠道单号
 		switch (qd.getCode()) {
 		case DictionaryResource.PRODUCT_YPLWAP:
@@ -1397,11 +1398,11 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				String transactionNo = returndata.getStr("transactionNo");
 				t.setChannelordernum(transactionNo);
 			} else {
-				return false;
+				t.setRemark(returndata.getStr("returnMsg"));
+				t.setChannelordernum(StringUtil.getOrderNum());
 			}
 			break;
 		}
-		return true;
 	}
 
 	@Override
@@ -1595,9 +1596,16 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			// 查询渠道是否真实成功
 			JSONObject returnstate = SelfPayUtil.eplwithdrawalToCardQuery(qrcode, orderid);
 			Assert.notNull(returnstate, "易票联代付通知反查订单失败!");
-			if (returnstate.getStr("returnCode").equals("0000")&& returnstate.getStr("payState").equals("01")) {
+			if (returnstate.getStr("returnCode").equals("0000")&& returnstate.getStr("payState").equals("00")) {
+				JSONObject returnspayimg = SelfPayUtil.eplwithdrawalCertification(qrcode, orderid);
+				if(returnspayimg.getStr("returnCode").equals("0000")) {
+					log.info("payimg"+returnspayimg.getStr("imageContent"));
+					String imgurl = fileservice.addBase64String(returnspayimg.getStr("imageContent"));
+					pt.setImgurl(imgurl);
+				}
 				paySuccessSelf(pt);
 			} else {
+				pt.setRemark(returnstate.getStr("returnMsg"));
 				payFailSelf(pt);
 			}
 			SysUserContext.remove();

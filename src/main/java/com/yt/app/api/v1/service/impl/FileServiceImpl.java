@@ -2,7 +2,9 @@ package com.yt.app.api.v1.service.impl;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -140,6 +142,55 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 		f.setUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{id}", fl.getId() + ""));
 		return f.getUrl();
 	}
+	
+	
+	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
+	public String addBase64String(String base64) {
+		Date uploaddate = new Date();
+		String filepath = FileUtil.createfilepath(uploaddate, appConfig);
+		YtFile fl = null;
+		StringBuffer sb = new StringBuffer();
+		String name = "";
+		String path = "";
+		fl = new YtFile();
+		fl.setRoot_path(appConfig.getFilePath());
+		fl.setRelative_path(filepath);
+		fl.setCreatetime(new Date());
+		fl.setFile_size(1);
+		fl.setSuffix("jpeg");
+		mapper.post(fl);
+		name = sb.append(fl.getId()).append(".").append("jpeg").toString();
+		sb = new StringBuffer();
+		String apath = sb.append(filepath).append(java.io.File.separator).append(name).toString();
+		sb = new StringBuffer();
+		path = sb.append(appConfig.getFilePath()).append(apath).toString();
+		java.io.File uploadfile = new java.io.File(path);
+		BufferedOutputStream bos = null;
+        FileOutputStream fos = null;
+		BASE64Decoder decoder = new BASE64Decoder();
+        try {
+			byte[] bfile = decoder.decodeBuffer(base64);
+			fos = new FileOutputStream(uploadfile);
+			bos = new BufferedOutputStream(fos);
+			bos.write(bfile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		YtFile f = mapper.get(fl.getId());
+		if (!name.equals(""))
+			f.setFile_name(name);
+		f.setModifytime(new Date());
+		
+		mapper.put(f);
+		f.setUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{id}", fl.getId() + ""));
+		return f.getUrl();
+	}
+	
+	
 
 	@Override
 	@Transactional

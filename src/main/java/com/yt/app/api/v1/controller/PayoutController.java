@@ -137,27 +137,6 @@ public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long>
 		}
 		return new YtResponseEntity<Object>(new YtBody(name));
 	}
-	
-	
-	/**
-	 * 批量上传代付自营
-	 * 
-	 * @param request
-	 * @return
-	 * @throws IOException
-	 */
-	@RequestMapping(value = "/uploadself", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> addself(MultipartHttpServletRequest request) {
-		MultipartFile file = request.getFile("file");
-		String qid = request.getParameter("id");
-		String name = "";
-		try {
-			name = service.upFile(file, qid);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return new YtResponseEntity<Object>(new YtBody(name));
-	}
 
 	/**
 	 * 下载
