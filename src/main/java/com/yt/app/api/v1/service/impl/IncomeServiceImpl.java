@@ -69,7 +69,6 @@ import com.yt.app.api.v1.vo.SysXSOrder;
 import com.yt.app.api.v1.vo.SysTdOrder;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
-import com.yt.app.common.config.YtConfig;
 import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
@@ -106,8 +105,6 @@ import java.util.stream.Collectors;
 @Service
 public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implements IncomeService {
 
-	@Autowired
-	private YtConfig appConfig;
 	@Autowired
 	private IncomeMapper mapper;
 	@Autowired
@@ -712,7 +709,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				qr.setPay_orderid(qs.getPay_orderid());
 				qr.setPay_amount(qs.getPay_amount());
 				qr.setPay_aislecode(income.getOrdernum());
-				qr.setPay_viewurl(appConfig.getOrigin() + "/esay/rest/v1/view/income/error");
+				qr.setPay_viewurl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + "/esay/rest/v1/view/income/error");
 				String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
 				qr.setPay_md5sign(signresult);
 				return qr;
@@ -857,7 +854,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				qr.setPay_orderid(qs.getPay_orderid());
 				qr.setPay_amount(qs.getPay_amount());
 				qr.setPay_aislecode(income.getOrdernum());
-				qr.setPay_viewurl(appConfig.getOrigin() + "/esay/rest/v1/view/income/error");
+				qr.setPay_viewurl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + "/esay/rest/v1/view/income/error");
 				String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
 				qr.setPay_md5sign(signresult);
 				return qr;
