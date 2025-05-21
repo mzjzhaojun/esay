@@ -816,7 +816,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			// 开始业务
 			Channel channel = channelmapper.getByUserId(qd.getUserid());
 			Income income = addIncome(channel, qas, mc, qs, qd);
-			String urlview  = RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "payviewurl");
+			String urlview = RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "payviewurl");
 			// 支付通手机H5
 			if (qd.getCode().equals(DictionaryResource.PRODUCT_ZFTWAP)) {
 				Qrcode pqd = qrcodemapper.get(qd.getPid());
@@ -1287,24 +1287,27 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	@Override
 	public void sumbmitcheck(Map<String, Object> params) {
-		
+
 		Income in = mapper.getByOrderNum(params.get("orderid").toString());
 		TenantIdContext.setTenantId(in.getTenant_id());
 		log.info(params.get("orderid").toString());
 		Qrcode qrcode = qrcodemapper.get(in.getQrcodeid());
 		JSONObject jsonObject = SelfPayUtil.eplpayTradeWapPay(qrcode, in.getOrdernum(), in.getAmount(), params.get("name").toString(), params.get("pcardno").toString(), params.get("cardno").toString(), params.get("mobile").toString());
 		if (jsonObject.getStr("returnCode").equals("0000")) {
-			Qrcodpaymember qrcodpaymember = new Qrcodpaymember();
-			qrcodpaymember.setQrcodeid(qrcode.getId());
-			qrcodpaymember.setQrcodename(qrcode.getName());
-			qrcodpaymember.setMobile(params.get("mobile").toString());
-			qrcodpaymember.setPcardno(params.get("pcardno").toString());
-			qrcodpaymember.setName(params.get("name").toString());
-			qrcodpaymember.setCardno(params.get("cardno").toString());
-			qrcodpaymember.setSmsno(jsonObject.getStr("smsNo"));
-			qrcodpaymember.setMemberid(in.getOrdernum());
-			qrcodpaymembermapper.post(qrcodpaymember);
-		}else {
+			Qrcodpaymember qrcodpaymember = qrcodpaymembermapper.getByMermberId(params.get("orderid").toString());
+			if (qrcodpaymember == null) {
+				qrcodpaymember = new Qrcodpaymember();
+				qrcodpaymember.setQrcodeid(qrcode.getId());
+				qrcodpaymember.setQrcodename(qrcode.getName());
+				qrcodpaymember.setMobile(params.get("mobile").toString());
+				qrcodpaymember.setPcardno(params.get("pcardno").toString());
+				qrcodpaymember.setName(params.get("name").toString());
+				qrcodpaymember.setCardno(params.get("cardno").toString());
+				qrcodpaymember.setSmsno(jsonObject.getStr("smsNo"));
+				qrcodpaymember.setMemberid(in.getOrdernum());
+				qrcodpaymembermapper.post(qrcodpaymember);
+			}
+		} else {
 			throw new YtException(jsonObject.getStr("returnMsg"));
 		}
 		TenantIdContext.remove();
