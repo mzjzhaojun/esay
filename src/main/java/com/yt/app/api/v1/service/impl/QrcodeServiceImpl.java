@@ -35,6 +35,7 @@ import com.yt.app.api.v1.vo.QrcodeaccountorderVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
+import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.SelfPayUtil;
 import com.yt.app.common.util.RedisUtil;
@@ -140,8 +141,8 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	@Override
 	public String paytestepl(Map<String, Object> params) {
 		Qrcode pqrcode = mapper.get(Long.valueOf(params.get("id").toString()));
-		JSONObject jsonObject = SelfPayUtil.eplpayTradeWapPay(pqrcode, params.get("menmberid").toString(), Double.valueOf(params.get("amount").toString()), params.get("name").toString(), params.get("pcardno").toString(), params.get("cardno").toString(),
-				params.get("mobile").toString());
+		JSONObject jsonObject = SelfPayUtil.eplpayTradeWapPay(pqrcode, params.get("menmberid").toString(), Double.valueOf(params.get("amount").toString()), params.get("name").toString(), params.get("pcardno").toString(),
+				params.get("cardno").toString(), params.get("mobile").toString());
 		Assert.notNull(jsonObject, jsonObject.getStr("returnMsg"));
 		return jsonObject.getStr("smsNo");
 	}
@@ -150,10 +151,12 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	public String paytesteplcafrom(Map<String, Object> params) {
 		Qrcode pqrcode = mapper.get(Long.valueOf(params.get("id").toString()));
 		System.out.println(params.get("smsno").toString() + "ceee" + params.get("smscode").toString());
-		String atp = SelfPayUtil.eplprotocolPayPre(pqrcode, StringUtil.getOrderNum(), params.get("menmberid").toString(), params.get("smsno").toString(), params.get("smscode").toString(),
+		JSONObject jsonObject = SelfPayUtil.eplprotocolPayPre(pqrcode, StringUtil.getOrderNum(), params.get("menmberid").toString(), params.get("smsno").toString(), params.get("smscode").toString(),
 				Long.valueOf(String.format("%.2f", params.get("amount")).replace(".", "")));
-		Assert.notNull(atp, "易票联支付错误!");
-		return atp;
+		if (!jsonObject.getStr("returnCode").equals("0000")) {
+			throw new YtException(jsonObject.getStr("returnMsg"));
+		}
+		return jsonObject.getStr("outTradeNo");
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -266,8 +269,7 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	public void epltransunitransfer(Qrcodetransferrecord qrcode) {
 		String ordernum = StringUtil.getOrderNum();
 		Qrcode pqrcode = mapper.get(qrcode.getId());
-		JSONObject returndata = SelfPayUtil.eplwithdrawalToCard(pqrcode, ordernum, qrcode.getPayeename(), qrcode.getPayeeid(), qrcode.getBankname(),
-				Long.valueOf(String.format("%.2f", qrcode.getAmount()).replace(".", "")));
+		JSONObject returndata = SelfPayUtil.eplwithdrawalToCard(pqrcode, ordernum, qrcode.getPayeename(), qrcode.getPayeeid(), qrcode.getBankname(), Long.valueOf(String.format("%.2f", qrcode.getAmount()).replace(".", "")));
 		Assert.notNull(returndata, "转账失败!");
 	}
 

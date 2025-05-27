@@ -189,7 +189,7 @@ div {
 				alert("验证码不能为空!");
 				return;
 			}
-			$("#sumbitbtn").text("支付中等待8秒");
+			$("#sumbitbtn").text("支付中...");
 			$.ajax({
 				type : "POST",
 				dataType : "json",
@@ -203,6 +203,9 @@ div {
 				success : function(data) {
 					if (data.code == 200) {
 						alert("支付成功!");
+						window.location.href = backurl;
+					}else{
+						alert("支付失败,"+data.msg);
 						window.location.href = backurl;
 					}
 				},

@@ -44,7 +44,7 @@ public class PayoutNotifyThread implements Runnable {
 				if (result != null)
 					result = result.replaceAll("\"", "");
 				// 通知到
-				if (result != null && result.equals("success")) {
+				if (result != null && result.toLowerCase().equals("success")) {
 					log.info("代付通知成功>>>>>>商户单号：" + payout.getOrdernum());
 					payout.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_63);
 					int j = mapper.put(payout);

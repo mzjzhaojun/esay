@@ -802,7 +802,7 @@ public class PayUtil {
 		map.add("accountName", pt.getAccname());
 		map.add("accountNo", pt.getAccnumer());
 		map.add("bankName", pt.getBankname());
-		map.add("bankNumber", pt.getBankcode());
+		map.add("bankNumber", "其他银行");
 		map.add("remark", "payout");
 
 		TreeMap<String, Object> sortedMap = new TreeMap<>(map);

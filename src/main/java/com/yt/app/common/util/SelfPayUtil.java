@@ -614,10 +614,10 @@ public class SelfPayUtil {
 		try {
 			String mchtOrderNo = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
 			String key = EplRsaUtils.getPublicKey(qrcode.getApppublickey());
-			String userName = EplRsaUtils.encryptByPublicKey(name, key);
-			String certificatesNo = EplRsaUtils.encryptByPublicKey(pcardNo, key);
-			String bankCardNo = EplRsaUtils.encryptByPublicKey(cardNo, key);
-			String phoneNum = EplRsaUtils.encryptByPublicKey(mobile, key);
+			String userName = EplRsaUtils.encryptByPublicKey(name.trim(), key);
+			String certificatesNo = EplRsaUtils.encryptByPublicKey(pcardNo.trim(), key);
+			String bankCardNo = EplRsaUtils.encryptByPublicKey(cardNo.trim(), key);
+			String phoneNum = EplRsaUtils.encryptByPublicKey(mobile.trim(), key);
 			String noncestr = UUID.randomUUID().toString().replaceAll("-", "");
 			String param = "{\"version\":\"2.0\",\"mchtOrderNo\":\"" + mchtOrderNo + "\",\"customerCode\":\"" + qrcode.getAppid() + "\",\"memberId\":\"" + memberId + "\",\"userName\":\"" + userName + "\",\"phoneNum\":\"" + phoneNum
 					+ "\",\"bankCardNo\":\"" + bankCardNo + "\",\"bankCardType\":\"debit\",\"certificatesType\":\"01\",\"certificatesNo\":\"" + certificatesNo + "\",\"nonceStr\":\"" + noncestr + "\"}";
@@ -636,7 +636,8 @@ public class SelfPayUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String eplprotocolPayPre(Qrcode qrcode, String outTradeNo, String memberId, String epfSmsNo, String smscode, Long payAmount) {
+	public static JSONObject eplprotocolPayPre(Qrcode qrcode, String outTradeNo, String memberId, String epfSmsNo, String smscode, Long payAmount) {
+		log.info("smscode"+smscode);
 		String payCurrency = "CNY"; // 币种，写死
 		String attachData = "attachData"; // 备注数据,可空
 		String transactionEndTime = ""; // 交易结束时间
@@ -656,7 +657,7 @@ public class SelfPayUtil {
 		request.setOrderInfo(orderInfo);
 		request.setSplitNotifyUrl("");
 		request.setSmsNo(epfSmsNo);
-		request.setSmsCode(smscode);
+		request.setSmsCode(smscode.trim());
 		request.setTransactionStartTime(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
 		request.setTransactionEndTime(transactionEndTime);
 		request.setNotifyUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+qrcode.getNotifyurl());// 异步通知
@@ -664,7 +665,7 @@ public class SelfPayUtil {
 		String param = JSONUtil.toJsonStr(request);
 		try {
 			JSONObject response = PaymentHelper.protocolPayPre(qrcode.getApirest(), param, qrcode.getSmid(), qrcode.getAppprivatekey());
-			return response.getStr("outTradeNo");
+			return response;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

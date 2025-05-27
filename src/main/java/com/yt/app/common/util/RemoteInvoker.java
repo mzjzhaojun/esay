@@ -14,8 +14,8 @@ public class RemoteInvoker {
 	public static JSONObject invoke(String request, String url, String signNo, String privatekey) throws Exception {
 		final String sign = EplRsaUtils.sign(privatekey, request);// 签名
 		Map<String, String> header = new HashMap<String, String>();
-		header.put("x-efps-sign", sign);
-		header.put("x-efps-sign-no", signNo);
+		header.put("x-efps-sign", sign.trim());
+		header.put("x-efps-sign-no", signNo.trim());
 		header.put("x-efps-sign-type", "SHA256withRSA");
 		header.put("x-efps-timestamp", df.format(new Date()));
 		header.put("Content-Type", "application/json");

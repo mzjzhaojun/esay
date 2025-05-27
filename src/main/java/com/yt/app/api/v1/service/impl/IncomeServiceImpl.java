@@ -1318,9 +1318,11 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Income in = mapper.getByOrderNum(params.get("orderid").toString());
 		Qrcodpaymember qrcodpaymember = qrcodpaymembermapper.getByMermberId(params.get("orderid").toString());
 		log.info(params.get("orderid").toString());
-		String outTradeNo = SelfPayUtil.eplprotocolPayPre(qrcodemapper.get(in.getQrcodeid()), in.getOrdernum(), in.getQrcodeordernum(), qrcodpaymember.getSmsno(), params.get("smscode").toString(),
+		JSONObject jsonObject = SelfPayUtil.eplprotocolPayPre(qrcodemapper.get(in.getQrcodeid()), in.getOrdernum(), in.getQrcodeordernum(), qrcodpaymember.getSmsno(), params.get("smscode").toString(),
 				Long.valueOf(String.format("%.2f", in.getAmount()).replace(".", "")));
-		Assert.notNull(outTradeNo, "易票联支付失败");
+		if (!jsonObject.getStr("returnCode").equals("0000")) {
+			throw new YtException(jsonObject.getStr("returnMsg"));
+		}
 	}
 
 	@Override
