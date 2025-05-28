@@ -1049,7 +1049,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			throw new YtException("账户余额不足");
 		}
 
-
 		////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
 
 		List<Qrcodeaisleqrcode> listqaq = qrcodeaisleqrcodemapper.getByQrcodeAisleId(Long.valueOf(aisleid));
@@ -1065,7 +1064,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		}
 		WeightRandom<String> wr = RandomUtil.weightRandom(weightList);
 		String code = wr.next();
-		Qrcode  qd = listqrcode.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
+		Qrcode qd = listqrcode.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
 		Assert.notNull(qd, "没有可用的渠道!");
 
 		for (int i = 1; i <= maxRow; i++) {
@@ -1077,7 +1076,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 					e.printStackTrace();
 				}
 				Integer j = importOrderSelf(a, row.getCell(0).toString().replace(" ", ""), row.getCell(1).toString().replace(" ", ""), row.getCell(2).toString().replace(" ", ""), Double.valueOf(row.getCell(3).toString()), m, qd);
-				if(j==0)
+				if (j == 0)
 					break;
 			}
 		}
@@ -1204,7 +1203,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 		return mapper.post(t);
 	}
-	
+
 	public synchronized Integer importOrderSelf(Qrcodeaisle a, String name, String cardno, String bankname, Double amount, Merchant m, Qrcode qd) {
 
 		Payout t = new Payout();
@@ -1231,7 +1230,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);// 商戶發起
 		t.setRemark("新增代付￥:" + String.format("%.2f", t.getAmount()));
-		
+
 		t.setAisleid(a.getId());
 		t.setAislename(a.getName());
 		t.setChannelid(qd.getId());
@@ -1315,6 +1314,20 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		// 获取渠道单号
 		boolean flage = true;
 		switch (cl.getName()) {
+		case DictionaryResource.DFHYAISLE:
+			String orderflage = PayUtil.SendHYSubmit(t, cl);
+			if (orderflage != null) {
+				flage = false;
+				t.setChannelordernum("outc" + StringUtil.getOrderNum());
+			}
+			break;
+		case DictionaryResource.DF8GAISLE:
+			String egordernum = PayUtil.Send8GSubmit(t, cl);
+			if (egordernum != null) {
+				flage = false;
+				t.setChannelordernum(egordernum);
+			}
+			break;
 		case DictionaryResource.DFQWAISLE:
 			String qwordernum = PayUtil.SendQWSubmit(t, cl);
 			if (qwordernum != null) {
@@ -1596,10 +1609,10 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			// 查询渠道是否真实成功
 			JSONObject returnstate = SelfPayUtil.eplwithdrawalToCardQuery(qrcode, orderid);
 			Assert.notNull(returnstate, "易票联代付通知反查订单失败!");
-			if (returnstate.getStr("returnCode").equals("0000")&& returnstate.getStr("payState").equals("00")) {
+			if (returnstate.getStr("returnCode").equals("0000") && returnstate.getStr("payState").equals("00")) {
 				JSONObject returnspayimg = SelfPayUtil.eplwithdrawalCertification(qrcode, orderid);
-				if(returnspayimg.getStr("returnCode").equals("0000")) {
-					log.info("payimg"+returnspayimg.getStr("imageContent"));
+				if (returnspayimg.getStr("returnCode").equals("0000")) {
+					log.info("payimg" + returnspayimg.getStr("imageContent"));
 					String imgurl = fileservice.addBase64String(returnspayimg.getStr("imageContent"));
 					pt.setImgurl(imgurl);
 				}
@@ -1688,6 +1701,58 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (returnstate == 2) {
 				paySuccess(pt);
 			} else if (returnstate == 3) {
+				payFail(pt);
+			}
+			SysUserContext.remove();
+			TenantIdContext.remove();
+		}
+	}
+
+	@Override
+	public void g8callback(Map<String, Object> params) {
+		String orderid = params.get("merchantOrderNo").toString();
+		String status = params.get("status").toString();
+		log.info("8g通知返回消息：orderid" + orderid + " status:" + status);
+		Payout pt = mapper.getByOrdernum(orderid);
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			Channel channel = channelmapper.get(pt.getChannelid());
+			String ip = AuthContext.getIp();
+			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求!");
+			}
+			// 查询渠道是否真实成功
+			String returnstate = PayUtil.Send8GSelectOrder(pt.getOrdernum(), channel);
+			Assert.notNull(returnstate, "8g代付通知反查订单失败!");
+			if (returnstate.equals("SUCCESS")) {
+				paySuccess(pt);
+			} else if (returnstate.equals("FAIL")) {
+				payFail(pt);
+			}
+			SysUserContext.remove();
+			TenantIdContext.remove();
+		}
+	}
+	
+	@Override
+	public void hycallback(String orderid) {
+		log.info("环宇通知返回消息：orderid" + orderid);
+		Payout pt = mapper.getByOrdernum(orderid);
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			Channel channel = channelmapper.get(pt.getChannelid());
+			String ip = AuthContext.getIp();
+			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求!");
+			}
+			// 查询渠道是否真实成功
+			String returnstate = PayUtil.SendHYSelectOrder(pt.getOrdernum(), channel);
+			Assert.notNull(returnstate, "环宇代付通知反查订单失败!");
+			if (returnstate.equals("成功")) {
+				paySuccess(pt);
+			} else if (returnstate.equals("失败")) {
 				payFail(pt);
 			}
 			SysUserContext.remove();

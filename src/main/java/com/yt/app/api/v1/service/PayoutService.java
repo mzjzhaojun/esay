@@ -37,8 +37,8 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 
 	// 本地提交订单
 	Integer submitOrder(Payout pt);
-	
-	//本地自营渠道
+
+	// 本地自营渠道
 	Integer submitOrderSelf(Payout pt);
 
 	// 天下回調
@@ -71,6 +71,12 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 	// 仙剑代付回调
 	void xjcallback(Map<String, Object> params);
 
+	// 8g代付回调
+	void g8callback(Map<String, Object> params);
+	
+	// 环宇代付回调
+	void hycallback(String orderid);
+
 	// 青蛙代付回调
 	void qwcallback(Map<String, String> params);
 
@@ -79,7 +85,7 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 
 	// 导入代付渠道
 	String upFile(MultipartFile file, String aisleid) throws IOException;
-	
+
 	// 导入代付自营
 	String uploadself(MultipartFile file, String aisleid) throws IOException;
 

@@ -50,6 +50,8 @@ public class DictionaryResource implements Serializable {
 	public static final String DFHYTAISLE = "HYT"; //
 	public static final String DFXJAISLE = "仙剑"; //
 	public static final String DFQWAISLE = "青蛙"; //
+	public static final String DF8GAISLE = "8G"; //
+	public static final String DFHYAISLE = "环宇"; //
 	/**
 	 * 账户类型
 	 */

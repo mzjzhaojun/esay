@@ -793,6 +793,50 @@ public class OrderController {
 	}
 
 	/**
+	 * 8g代付回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/g8callback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void g8callback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("g8callback");
+		try {
+			lock.lock();
+			payoutservice.g8callback(RequestUtil.requestEntityToParamMap(requestEntity));
+			response.getWriter().print("SUCCESS");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+	
+	/**
+	 * 环宇代付回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/hycallback", method = RequestMethod.GET)
+	public void hycallback(@RequestParam("orderid") String orderid, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("hycallback");
+		try {
+			lock.lock();
+			payoutservice.hycallback(orderid);
+			response.getWriter().print("ok");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
 	 * 青蛙代付回调
 	 * 
 	 * @param requestEntity
