@@ -79,13 +79,22 @@
 		where id = #{id}
 	</select>
 	
-	<!--getById -->
+	<!--getByUserId -->
 	<select id="getByUserId" parameterType="java.lang.Long"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from agentaccount
 		where userid = #{userid}
+	</select>
+	
+	<!--getByAgentId -->
+	<select id="getByAgentId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from agentaccount
+		where agentid = #{agentid}
 	</select>
 	
 	<!-- getList -->

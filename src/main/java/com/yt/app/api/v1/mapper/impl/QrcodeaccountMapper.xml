@@ -108,6 +108,16 @@
 		from qrcodeaccount
 		where userid = #{userid}
 	</select>
+	
+	<!--getByQrcodeId -->
+	<select id="getByQrcodeId" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from qrcodeaccount
+		where channelid = #{channelid}
+	</select>
+	
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">

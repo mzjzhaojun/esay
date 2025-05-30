@@ -3,7 +3,8 @@ package com.yt.app.api.v1.service;
 import java.util.Map;
 
 import com.yt.app.api.v1.entity.Agentaccount;
-import com.yt.app.api.v1.entity.Agentaccountorder;
+import com.yt.app.api.v1.entity.Income;
+import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.common.yt.YtIPage;
 
@@ -23,21 +24,21 @@ public interface AgentaccountService extends YtIBaseService<Agentaccount, Long> 
 
 	Agentaccount getDataBank(Long id);
 
-	// 收入
-	void totalincome(Agentaccountorder t);
+	// 代收收入
+	void totalincome(Income t);
 
-	void updateTotalincome(Agentaccountorder mao);
+	void updateTotalincome(Income t);
 
-	void turndownTotalincome(Agentaccountorder mao);
+	void turndownTotalincome(Income t);
 
-	void cancleTotalincome(Agentaccountorder mao);
+	void cancleTotalincome(Income t);
 
-	// 提现
-	void withdrawamount(Agentaccountorder t);
+	// 代付收入
+	void totalincome(Payout t);
 
-	void updateWithdrawamount(Agentaccountorder mao);
+	void updateTotalincome(Payout t);
 
-	void turndownWithdrawamount(Agentaccountorder mao);
+	void turndownTotalincome(Payout t);
 
-	void cancleWithdrawamount(Agentaccountorder mao);
+	void cancleTotalincome(Payout t);
 }

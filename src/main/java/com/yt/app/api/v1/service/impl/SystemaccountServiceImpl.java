@@ -11,9 +11,7 @@ import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.context.JwtUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
-import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Income;
-import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.api.v1.entity.Systemaccountrecord;
@@ -145,42 +143,42 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 		}
 	}
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void updateBalance(Systemaccount t, Incomemerchantaccountorder mao) {
-		t.setTotalincome(t.getTotalincome() + mao.getIncomeamount());
-		t.setBalance(t.getTotalincome() - t.getWithdrawamount());
-		mapper.put(t);
-	}
+//	@Transactional(propagation = Propagation.REQUIRES_NEW)
+//	public void updateBalance(Systemaccount t, Incomemerchantaccountorder mao) {
+//		t.setTotalincome(t.getTotalincome() + mao.getIncomeamount());
+//		t.setBalance(t.getTotalincome() - t.getWithdrawamount());
+//		mapper.put(t);
+//	}
 
-	@Override
-	public void updateAgentWithdrawamount(Agentaccountorder mao) {
-		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
-		try {
-			lock.lock();
-			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
-			Systemaccountrecord scr = new Systemaccountrecord();
-			scr.setSystemaccountid(t.getId());
-			scr.setName(mao.getUsername());
-			scr.setType(DictionaryResource.ORDERTYPE_26);
-			scr.setPoprewithdrawamount(t.getWithdrawamount());
-			scr.setPopostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
-			scr.setPoamount(mao.getAmountreceived());
-			scr.setPobalance(t.getBalance());//
-			scr.setRemark("代理提现金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
-			systemcapitalrecordmapper.post(scr);
+//	@Override
+//	public void updateAgentWithdrawamount(Agentaccountorder mao) {
+//		RLock lock = RedissonUtil.getLock(mao.getTenant_id());
+//		try {
+//			lock.lock();
+//			Systemaccount t = mapper.getByTenantId(mao.getTenant_id());
+//			Systemaccountrecord scr = new Systemaccountrecord();
+//			scr.setSystemaccountid(t.getId());
+//			scr.setName(mao.getUsername());
+//			scr.setType(DictionaryResource.ORDERTYPE_26);
+//			scr.setPoprewithdrawamount(t.getWithdrawamount());
+//			scr.setPopostwithdrawamount(t.getWithdrawamount() + mao.getAmountreceived());
+//			scr.setPoamount(mao.getAmountreceived());
+//			scr.setPobalance(t.getBalance());//
+//			scr.setRemark("代理提现金额：" + String.format("%.2f", mao.getAmountreceived()) + "  单号:" + mao.getOrdernum());
+//			systemcapitalrecordmapper.post(scr);
+//
+//			updateAgentwithdraw(t, mao);
+//		} catch (Exception e) {
+//		} finally {
+//			lock.unlock();
+//		}
+//	}
 
-			updateAgentwithdraw(t, mao);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void updateAgentwithdraw(Systemaccount t, Agentaccountorder mao) {
-		t.setPowithdrawamount(t.getPowithdrawamount() + mao.getAmountreceived());
-		t.setPobalance(t.getPototalincome() - t.getPowithdrawamount());
-		mapper.put(t);
-	}
+//	@Transactional(propagation = Propagation.REQUIRES_NEW)
+//	public void updateAgentwithdraw(Systemaccount t, Agentaccountorder mao) {
+//		t.setPowithdrawamount(t.getPowithdrawamount() + mao.getAmountreceived());
+//		t.setPobalance(t.getPototalincome() - t.getPowithdrawamount());
+//		mapper.put(t);
+//	}
 
 }

@@ -14,8 +14,8 @@ import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Channel;
+import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Qrcodeaccount;
-import com.yt.app.api.v1.entity.Qrcodeaccountorder;
 import com.yt.app.api.v1.entity.Qrcodeaccountrecord;
 import com.yt.app.api.v1.vo.QrcodeaccountVO;
 import com.yt.app.common.common.yt.YtIPage;
@@ -71,21 +71,21 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	private void setToincomeamount(Qrcodeaccount ma, Qrcodeaccountorder mao) {
+	private void setToincomeamount(Qrcodeaccount ma, Income mao) {
 		// 更新帶收入金額
 		ma.setToincomeamount(ma.getToincomeamount() + mao.getAmount());
 		mapper.put(ma);
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	private void cancelToincomeamount(Qrcodeaccount ma, Qrcodeaccountorder mao) {
+	private void cancelToincomeamount(Qrcodeaccount ma, Income mao) {
 		// 更新帶收入金額
 		ma.setToincomeamount(ma.getToincomeamount() - mao.getAmount());
 		mapper.put(ma);
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	private void scuccessTotalincome(Qrcodeaccount t, Qrcodeaccountorder qo) {
+	private void scuccessTotalincome(Qrcodeaccount t, Income qo) {
 		// 收入金额增加
 		t.setTotalincome(t.getTotalincome() + qo.getAmount());
 		// 代收金额更新
@@ -106,14 +106,14 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 	 * 代收新增
 	 */
 	@Override
-	public void totalincome(Qrcodeaccountorder t) {
-		RLock lock = RedissonUtil.getLock(t.getChannelid());
+	public void totalincome(Income t) {
+		RLock lock = RedissonUtil.getLock(t.getQrcodeid());
 		try {
 			lock.lock();
-			Qrcodeaccount ma = mapper.getByUserId(t.getUserid());
+			Qrcodeaccount ma = mapper.getByQrcodeId(t.getQrcodeid());
 			Qrcodeaccountrecord maaj = new Qrcodeaccountrecord();
 
-			maaj.setUserid(t.getUserid());
+			maaj.setUserid(ma.getUserid());
 			maaj.setChannelname(t.getQrcodename());
 			maaj.setOrdernum(t.getOrdernum());
 			maaj.setType(DictionaryResource.RECORDTYPE_30);
@@ -142,11 +142,11 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 	 * 代收成功
 	 */
 	@Override
-	public void updateTotalincome(Qrcodeaccountorder mao) {
+	public void updateTotalincome(Income mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
-			Qrcodeaccount t = mapper.getByUserId(mao.getUserid());
+			Qrcodeaccount t = mapper.getByQrcodeId(mao.getQrcodeid());
 			//
 			Qrcodeaccountrecord maaj = new Qrcodeaccountrecord();
 			maaj.setUserid(t.getUserid());
@@ -175,11 +175,11 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 
 	// 超时取消
 	@Override
-	public void cancleTotalincome(Qrcodeaccountorder mao) {
+	public void cancleTotalincome(Income mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
-			Qrcodeaccount t = mapper.getByUserId(mao.getUserid());
+			Qrcodeaccount t = mapper.getByQrcodeId(mao.getQrcodeid());
 
 			//
 			Qrcodeaccountrecord maaj = new Qrcodeaccountrecord();
@@ -214,14 +214,14 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 	 */
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	private void setWithdrawamount(Qrcodeaccount ma, Qrcodeaccountorder mao) {
+	private void setWithdrawamount(Qrcodeaccount ma, Income mao) {
 		// 待支出加金额
 		ma.setTowithdrawamount(ma.getTowithdrawamount() + mao.getAmount());
 		mapper.put(ma);
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	private void successWithdrawamount(Qrcodeaccount t, Qrcodeaccountorder aaaj) {
+	private void successWithdrawamount(Qrcodeaccount t, Income aaaj) {
 		// 待支出减去金额
 		t.setTowithdrawamount(t.getTowithdrawamount() - aaaj.getAmount());
 		// 支出总金额更新
@@ -239,14 +239,14 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 
 	// 待确认支出
 	@Override
-	public void withdrawamount(Qrcodeaccountorder t) {
+	public void withdrawamount(Income t) {
 		RLock lock = RedissonUtil.getLock(t.getChannelid());
 		try {
 			lock.lock();
-			Qrcodeaccount ma = mapper.getByUserId(t.getUserid());
+			Qrcodeaccount ma = mapper.getByQrcodeId(t.getQrcodeid());
 			Qrcodeaccountrecord aaaj = new Qrcodeaccountrecord();
 
-			aaaj.setUserid(t.getUserid());
+			aaaj.setUserid(ma.getUserid());
 			aaaj.setChannelname(t.getQrcodename());
 			aaaj.setOrdernum(t.getOrdernum());
 			aaaj.setType(DictionaryResource.RECORDTYPE_34);
@@ -273,11 +273,11 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 
 	// 确认支出
 	@Override
-	public void updateWithdrawamount(Qrcodeaccountorder mao) {
+	public void updateWithdrawamount(Income mao) {
 		RLock lock = RedissonUtil.getLock(mao.getChannelid());
 		try {
 			lock.lock();
-			Qrcodeaccount t = mapper.getByUserId(mao.getUserid());
+			Qrcodeaccount t = mapper.getByQrcodeId(mao.getQrcodeid());
 			//
 			Qrcodeaccountrecord aaaj = new Qrcodeaccountrecord();
 			//

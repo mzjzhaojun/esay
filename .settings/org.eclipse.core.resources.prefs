@@ -1,6 +1,5 @@
 eclipse.preferences.version=1
 encoding//src/main/java=UTF-8
-encoding//src/main/java/com/yt/app/api/v1/service/impl/ExchangeMerchantaccountServiceImpl.java=UTF-8
 encoding//src/main/java/com/yt/app/api/v1/service/impl/PayoutMerchantaccountServiceImpl.java=UTF-8
 encoding//src/main/java/com/yt/app/common/util=gbk
 encoding//src/main/java/com/yt/app/common/util/EplRsaUtils.java=utf-8

@@ -103,4 +103,14 @@ public interface AgentaccountMapper extends YtIBaseMapper<Agentaccount> {
 	 */
 	@YtRedisCacheAnnotation(classs = Agentaccount.class)
 	public Agentaccount getByUserId(Long userid);
+
+	/**
+	 * getByUserId
+	 *
+	 * @param id id
+	 * @return Merchantaccount
+	 */
+	@YtRedisCacheAnnotation(classs = Agentaccount.class)
+	public Agentaccount getByAgentId(Long agentid);
+
 }

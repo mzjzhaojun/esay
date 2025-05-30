@@ -8,19 +8,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
-import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Income;
-import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.entity.Payout;
-import com.yt.app.api.v1.entity.Qrcodeaccountorder;
 import com.yt.app.api.v1.entity.Tronmemberorder;
-import com.yt.app.api.v1.mapper.AgentaccountorderMapper;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.IncomeMapper;
-import com.yt.app.api.v1.mapper.IncomemerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
-import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
 import com.yt.app.api.v1.mapper.TronmemberorderMapper;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
@@ -56,19 +50,10 @@ public class TaskMasterConfig {
 	private ThreadPoolTaskExecutor threadpooltaskexecutor;
 
 	@Autowired
-	private QrcodeaccountorderMapper qrcodeaccountordermapper;
-
-	@Autowired
-	private IncomemerchantaccountorderMapper incomemerchantaccountordermapper;
-
-	@Autowired
 	private QrcodeaccountService qrcodeaccountservice;
 
 	@Autowired
 	private IncomemerchantaccountService incomemerchantaccountservice;
-
-	@Autowired
-	private AgentaccountorderMapper agentaccountordermapper;
 
 	@Autowired
 	private AgentaccountService agentaccountservice;
@@ -162,16 +147,9 @@ public class TaskMasterConfig {
 				p.setStatus(DictionaryResource.PAYOUTSTATUS_53);
 				p.setRemark("超時取消代收资金￥：" + p.getAmount());
 				incomemapper.put(p);
-				// 處理渠道
-				Qrcodeaccountorder qao = qrcodeaccountordermapper.getByOrderNum(p.getQrcodeordernum());
-				qao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
-				qrcodeaccountordermapper.put(qao);
-				qrcodeaccountservice.cancleTotalincome(qao);
+				qrcodeaccountservice.cancleTotalincome(p);
 				// 處理商戶
-				Incomemerchantaccountorder imqao = incomemerchantaccountordermapper.getByOrderNum(p.getMerchantorderid());
-				imqao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
-				incomemerchantaccountordermapper.put(imqao);
-				incomemerchantaccountservice.cancleTotalincome(imqao);
+				incomemerchantaccountservice.cancleTotalincome(p);
 
 				// 释放收款码数据
 				String key = SystemConstant.CACHE_SYS_QRCODE + p.getQrcodeid() + "" + p.getFewamount();
@@ -180,12 +158,8 @@ public class TaskMasterConfig {
 
 				// 计算代理
 				if (p.getAgentid() != null) {
-					Agentaccountorder aao = agentaccountordermapper.getByOrdernum(p.getAgentordernum());
-					aao.setStatus(DictionaryResource.PAYOUTSTATUS_53);
-					// 代理订单
-					agentaccountordermapper.put(aao);
 					// 代理账户
-					agentaccountservice.cancleTotalincome(aao);
+					agentaccountservice.cancleTotalincome(p);
 				}
 
 				TenantIdContext.remove();

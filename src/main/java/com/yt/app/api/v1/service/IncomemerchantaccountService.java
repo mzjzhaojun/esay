@@ -2,8 +2,8 @@ package com.yt.app.api.v1.service;
 
 import java.util.Map;
 
+import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Incomemerchantaccount;
-import com.yt.app.api.v1.entity.Incomemerchantaccountorder;
 import com.yt.app.api.v1.vo.IncomemerchantaccountVO;
 import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.common.yt.YtIPage;
@@ -22,21 +22,21 @@ public interface IncomemerchantaccountService extends YtIBaseService<Incomemerch
 	 * 
 	 * @param t
 	 */
-	void totalincome(Incomemerchantaccountorder t);
+	void totalincome(Income t);
 
 	/**
 	 * 代收成功
 	 * 
 	 * @param mao
 	 */
-	void updateTotalincome(Incomemerchantaccountorder mao);
+	void updateTotalincome(Income mao);
 
 	/**
 	 * 超时取消
 	 * 
 	 * @param mao
 	 */
-	void cancleTotalincome(Incomemerchantaccountorder mao);
+	void cancleTotalincome(Income mao);
 
 	/**
 	 * 
@@ -56,31 +56,31 @@ public interface IncomemerchantaccountService extends YtIBaseService<Incomemerch
 	 * 
 	 * @param t
 	 */
-	void withdrawamount(Incomemerchantaccountorder t);
+	void withdrawamount(Income t);
 
 	/**
 	 * 代收提现成功
 	 * 
 	 * @param t
 	 */
-	void updateWithdrawamount(Incomemerchantaccountorder mao);
+	void updateWithdrawamount(Income t);
 
 	/**
 	 * 代收提现失败
 	 * 
 	 * @param t
 	 */
-	void turndownWithdrawamount(Incomemerchantaccountorder mao);
+	void turndownWithdrawamount(Income t);
 
 	/**
 	 * 取消
 	 * 
 	 * @param t
 	 */
-	void cancelWithdrawamount(Incomemerchantaccountorder mao);
+	void cancelWithdrawamount(Income t);
 
-	void canlWithdrawamount(Incomemerchantaccountorder mao);
+	void canlWithdrawamount(Income t);
 
-	void setWithdrawamount(Incomemerchantaccountorder mao);
+	void setWithdrawamount(Income t);
 
 }

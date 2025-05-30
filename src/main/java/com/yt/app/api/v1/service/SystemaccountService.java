@@ -2,7 +2,6 @@ package com.yt.app.api.v1.service;
 
 import java.util.Map;
 
-import com.yt.app.api.v1.entity.Agentaccountorder;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Systemaccount;
@@ -20,9 +19,6 @@ public interface SystemaccountService extends YtIBaseService<Systemaccount, Long
 	YtIPage<Systemaccount> page(Map<String, Object> param);
 
 	Systemaccount getData();
-
-	// 代理提现
-	void updateAgentWithdrawamount(Agentaccountorder mao);
 
 	// 代付成功
 	void updatePayout(Payout mao);

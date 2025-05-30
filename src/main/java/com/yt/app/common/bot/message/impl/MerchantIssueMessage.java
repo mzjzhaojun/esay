@@ -10,7 +10,6 @@ import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Tgmerchantgroup;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
-import com.yt.app.api.v1.service.IncomemerchantaccountorderService;
 import com.yt.app.common.bot.message.UpdateMerchantMessageService;
 import com.yt.app.common.util.DateTimeUtil;
 
@@ -29,9 +28,6 @@ public class MerchantIssueMessage implements UpdateMerchantMessageService {
 	@Autowired
 	private MerchantMapper merchantmapper;
 
-	@Autowired
-	private IncomemerchantaccountorderService incomemerchantaccountorderservice;
-
 	@Override
 	public SendMessage getUpdate(Update update, Tgmerchantgroup tmg) {
 		SendMessage sendMessage = new SendMessage();
@@ -46,7 +42,7 @@ public class MerchantIssueMessage implements UpdateMerchantMessageService {
 					for (Long mid : tmg.getMerchantids()) {
 						Merchant m = merchantmapper.get(mid);
 						if (m.getName().equals(merchantname)) {
-							incomemerchantaccountorderservice.incomewithdrawTelegram(m, Double.valueOf(text[2]));
+//							incomemerchantaccountorderservice.incomewithdrawTelegram(m, Double.valueOf(text[2]));
 						}
 						Incomemerchantaccount merchantaccount = IncomemerchantaccountMapper.getByMerchantId(mid);
 						msg.append("\r\n商户：*" + m.getName() + "*\r\n\r\n今日收入：" + m.getTodaycount() + " \r\n总共下发：" + merchantaccount.getWithdrawamount() + "\r\n总共收入：" + merchantaccount.getTotalincome() + " \r\n可用余额：" + merchantaccount.getBalance()

@@ -3,7 +3,7 @@ package com.yt.app.api.v1.service;
 import java.util.Map;
 
 import com.yt.app.api.v1.entity.PayoutMerchantaccount;
-import com.yt.app.api.v1.entity.PayoutMerchantaccountorder;
+import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.common.yt.YtIPage;
 
@@ -24,21 +24,21 @@ public interface PayoutMerchantaccountService extends YtIBaseService<PayoutMerch
 	PayoutMerchantaccount getDataBank(Long id);
 
 	// 收入
-	void totalincome(PayoutMerchantaccountorder t);
+	void totalincome(Payout t);
 
-	void updateTotalincome(PayoutMerchantaccountorder mao);
+	void updateTotalincome(Payout t);
 
-	void turndownTotalincome(PayoutMerchantaccountorder mao);
+	void turndownTotalincome(Payout t);
 
-	void cancleTotalincome(PayoutMerchantaccountorder mao);
+	void cancleTotalincome(Payout t);
 
 	// 提现
-	void withdrawamount(PayoutMerchantaccountorder t);
+	void withdrawamount(Payout t);
 
-	void updateWithdrawamount(PayoutMerchantaccountorder mao);
+	void updateWithdrawamount(Payout t);
 
-	void turndownWithdrawamount(PayoutMerchantaccountorder mao);
+	void turndownWithdrawamount(Payout t);
 
-	void cancleWithdrawamount(PayoutMerchantaccountorder mao);
+	void cancleWithdrawamount(Payout t);
 
 }

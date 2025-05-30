@@ -114,4 +114,14 @@ public interface QrcodeaccountMapper extends YtIBaseMapper<Qrcodeaccount> {
 	 */
 	@YtRedisCacheAnnotation(classs = Qrcodeaccount.class)
 	public Qrcodeaccount getByUserId(Long userid);
+
+	/**
+	 * getByQrcodeId
+	 *
+	 * @param id id
+	 * @return Merchantaccount
+	 */
+	@YtRedisCacheAnnotation(classs = Qrcodeaccount.class)
+	public Qrcodeaccount getByQrcodeId(Long channelid);
+
 }

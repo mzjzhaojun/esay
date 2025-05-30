@@ -29,7 +29,7 @@ public class Income extends YtBaseEntity<Income> {
 	Long merchantid;
 	String merchantname;
 	String merchantcode;
-	String merchantordernum;
+	Long channelid;
 	String merchantorderid;
 	String backforwardurl;
 	java.util.Date expireddate;
@@ -38,7 +38,7 @@ public class Income extends YtBaseEntity<Income> {
 	String qrcodeaislecode;
 	String qrcodeaislename;
 	Long agentid;
-	String agentordernum;
+	String channelname;
 	Double agentincome;
 	Long qrcodeid;
 	String qrcodecode;
