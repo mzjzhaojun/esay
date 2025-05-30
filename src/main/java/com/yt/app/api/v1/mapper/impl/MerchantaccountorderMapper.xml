@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.yt.app.api.v1.mapper.MerchantaccountorderMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,tenant_id,userid,merchantname,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,dynamic,fewamount,expireddate,amount,collection,incomeamount,realamount,resulturl,qrocde,imgurl,accnumber,amountreceived,merchantexchange,usdtval,status,remark,merchantid,create_by,create_time,update_by,update_time,version
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Merchantaccountorder">
+	</resultMap>
+	<!-- ResultMap -->
+	<resultMap id="ResultMapVO"
+		type="com.yt.app.api.v1.vo.MerchantaccountorderVO">
+	</resultMap>
+	<!-- add -->
+	<insert id="post"
+		parameterType="com.yt.app.api.v1.entity.Merchantaccountorder">
+		insert into
+		merchantaccountorder(id,userid,merchantname,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,dynamic,fewamount,expireddate,amount,collection,incomeamount,realamount,resulturl,qrocde,imgurl,accnumber,amountreceived,merchantexchange,usdtval,status,remark,merchantid,create_by,create_time,update_by,update_time)
+		values
+		(#{id},#{userid},#{merchantname},#{qrcodeaislecode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{dynamic},#{fewamount},#{expireddate},#{amount},#{collection},#{incomeamount},#{realamount},#{resulturl},#{qrocde},#{imgurl},#{accnumber},#{amountreceived},#{merchantexchange},#{usdtval},#{status},#{remark},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
+	</insert>
+	
+	<insert id="add"
+		parameterType="com.yt.app.api.v1.entity.Merchantaccountorder">
+		insert into
+		merchantaccountorder(id,tenant_id,userid,merchantname,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,dynamic,fewamount,expireddate,amount,collection,incomeamount,realamount,resulturl,qrocde,imgurl,accnumber,amountreceived,merchantexchange,usdtval,status,remark,merchantid,create_by,create_time,update_by,update_time)
+		values
+		(#{id},#{tenant_id},#{userid},#{merchantname},#{qrcodeaislecode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{dynamic},#{fewamount},#{expireddate},#{amount},#{collection},#{incomeamount},#{realamount},#{resulturl},#{qrocde},#{imgurl},#{accnumber},#{amountreceived},#{merchantexchange},#{usdtval},#{status},#{remark},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
+	</insert>
+	
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		merchantaccountorder(id,tenant_id,userid,merchantname,qrcodeaislecode,qrcodeaisleid,qrcodeaislename,qrcodename,qrcodeid,qrcodecode,ordernum,type,fewamount,expireddate,amount,realamount,resulturl,qrocde,status,remark,merchantid,create_by,create_time,update_by,update_time)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{tenant_id},#{userid},#{merchantname},#{qrcodeaislecode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{fewamount},#{expireddate},#{amount},#{realamount},#{resulturl},#{qrocde},#{status},#{remark},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from
+		merchantaccountorder
+		where id = #{id}
+	</delete>
+	<!-- update -->
+	<update id="put"
+		parameterType="com.yt.app.api.v1.entity.Merchantaccountorder">
+		update merchantaccountorder
+		<set>
+			<if test="tenant_id != null">
+				tenant_id= #{tenant_id},
+			</if>
+			<if test="userid != null">
+				userid= #{userid},
+			</if>
+			<if test="merchantname != null">
+				merchantname= #{merchantname},
+			</if>
+			<if test="qrcodeaislecode != null">
+				qrcodeaislecode= #{qrcodeaislecode},
+			</if>
+			<if test="qrcodeaisleid != null">
+				qrcodeaisleid= #{qrcodeaisleid},
+			</if>
+			<if test="qrcodeaislename != null">
+				qrcodeaislename= #{qrcodeaislename},
+			</if>
+			<if test="qrcodename != null">
+				qrcodename= #{qrcodename},
+			</if>
+			<if test="qrcodeid != null">
+				qrcodeid= #{qrcodeid},
+			</if>
+			<if test="qrcodecode != null">
+				qrcodecode= #{qrcodecode},
+			</if>
+			<if test="ordernum != null">
+				ordernum= #{ordernum},
+			</if>
+			<if test="type != null">
+				type= #{type},
+			</if>
+			<if test="fewamount != null">
+				fewamount= #{fewamount},
+			</if>
+			<if test="expireddate != null">
+				expireddate= #{expireddate},
+			</if>
+			<if test="amount != null">
+				amount= #{amount},
+			</if>
+			<if test="realamount != null">
+				realamount= #{realamount},
+			</if>
+			<if test="resulturl != null">
+				resulturl= #{resulturl},
+			</if>
+			<if test="qrocde != null">
+				qrocde= #{qrocde},
+			</if>
+			<if test="imgurl != null">
+				imgurl= #{imgurl},
+			</if>
+			<if test="status != null">
+				status= #{status},
+			</if>
+			<if test="remark != null">
+				remark= #{remark},
+			</if>
+			<if test="merchantid != null">
+				merchantid= #{merchantid},
+			</if>
+			<if test="create_by != null">
+				create_by= #{create_by},
+			</if>
+			<if test="create_time != null">
+				create_time= #{create_time},
+			</if>
+			<if test="update_by != null">
+				update_by= #{update_by},
+			</if>
+			<if test="update_time != null">
+				update_time= #{update_time},
+			</if>
+			<if test="version != null">
+				version= #{version}+1
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from merchantaccountorder
+		where id = #{id}
+	</select>
+	<!--getByOrderNum -->
+	<select id="getByOrderNum" parameterType="java.lang.String"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from merchantaccountorder
+		where ordernum= #{ordernum}
+	</select>
+
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from merchantaccountorder
+		<where>
+			1=1
+			<if test="userid != null and userid != ''">
+				and userid = #{userid}
+			</if>
+			<if test="ordernum != null and ordernum != ''">
+				and ordernum = #{ordernum}
+			</if>
+			<if test="amount != null and amount != ''">
+				and amount = #{amount}
+			</if>
+			<if test="status != null and status != ''">
+				and status = #{status}
+			</if>
+			<if test="type != null">
+				and type= #{type}
+			</if>
+			<if test="qrcodeaislename != null and qrcodeaislename != ''">
+				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename}
+				, '%' )
+			</if>
+			<if test="merchantname != null and merchantname != ''">
+				and merchantname LIKE CONCAT( '%', #{merchantname} , '%'
+				)
+			</if>
+			<if test="stime != null and etime != ''">
+				and create_time BETWEEN #{stime} AND #{etime}
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="page" parameterType="java.util.HashMap"
+		resultMap="ResultMapVO">
+		select
+		<include refid="Base_Column_List" />
+		from merchantaccountorder
+		<where>
+			1=1
+			<if test="userid != null and userid != ''">
+				and userid = #{userid}
+			</if>
+			<if test="ordernum != null and ordernum != ''">
+				and ordernum = #{ordernum}
+			</if>
+			<if test="amount != null and amount != ''">
+				and amount = #{amount}
+			</if>
+			<if test="status != null and status != ''">
+				and status = #{status}
+			</if>
+			<if test="type != null">
+				and type= #{type}
+			</if>
+			<if test="dateval != null and dateval != ''">
+				and create_time LIKE CONCAT(#{dateval} , '%')
+			</if>
+			<if test="qrcodeaislename != null and qrcodeaislename != ''">
+				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename},
+				'%' )
+			</if>
+			<if test="merchantname != null and merchantname != ''">
+				and merchantname LIKE CONCAT( '%', #{merchantname} , '%')
+			</if>
+			<if test="stime != null and etime != ''">
+				and create_time BETWEEN #{stime} AND #{etime}
+			</if>
+			<if test="orderBy != null and dir!= null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		select count(*) from merchantaccountorder
+		<where>
+			1=1
+			<if test="userid != null and userid != ''">
+				and userid = #{userid}
+			</if>
+			<if test="ordernum != null and ordernum != ''">
+				and ordernum = #{ordernum}
+			</if>
+			<if test="amount != null and amount != ''">
+				and amount = #{amount}
+			</if>
+			<if test="type != null">
+				and type= #{type}
+			</if>
+			<if test="status != null and status != ''">
+				and status = #{status}
+			</if>
+			<if test="qrcodeaislename != null and qrcodeaislename != ''">
+				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename}
+				, '%' )
+			</if>
+			<if test="merchantname != null and merchantname != ''">
+				and merchantname LIKE CONCAT( '%', #{merchantname} , '%'
+				)
+			</if>
+			<if test="stime != null and etime != ''">
+				and create_time BETWEEN #{stime} AND #{etime}
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from merchantaccountorder
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<select id="countOrder" resultMap="ResultMapVO">
+		SELECT
+		count(*) as ordercount,
+		sum(amount) as amount,
+		sum(merchantincomeamount) as incomeamount
+		FROM
+		income
+		WHERE
+		merchantid = #{userid}
+		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
+		AND create_time &lt; CONCAT(#{dateval} +INTERVAL 1 DAY,' 00:00:00')
+	</select>
+
+	<select id="countSuccessOrder" resultMap="ResultMapVO">
+		SELECT
+		count(*) as ordercount,
+		sum(amount) as amount,
+		sum(merchantincomeamount) as incomeamount
+		FROM
+		income
+		WHERE
+		merchantid = #{userid}
+		AND status = 52
+		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
+		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
+	</select>
+</mapper>
