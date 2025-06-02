@@ -151,7 +151,7 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 	@Override
 	public Integer cancleWithdraw(Long id) {
 		Agentaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.PAYOUTSTATUS_51);
+//		mao.setStatus(DictionaryResource.PAYOUTSTATUS_51);
 		Integer i = mapper.put(mao);
 //		agentaccountservice.cancleWithdrawamount(mao);
 		return i;

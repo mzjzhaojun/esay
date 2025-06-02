@@ -188,6 +188,9 @@
 			<if test="status != null">
 				and status = #{status}
 			</if>
+			<if test="type != null">
+				and type= #{type}
+			</if>
 			<if test="existids != null and existids.length > 0">
 				and id not in
 				<foreach item="item" index="index" collection="existids"
@@ -243,6 +246,9 @@
 			</if>
 			<if test="status != null">
 				and status = #{status}
+			</if>
+			<if test="type != null">
+				and type= #{type}
 			</if>
 			<if test="existids != null and existids.length > 0">
 				and id not in

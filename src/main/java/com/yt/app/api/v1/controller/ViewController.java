@@ -30,8 +30,11 @@ public class ViewController {
 	@RequestMapping(value = "/income/{orderid}", method = RequestMethod.GET)
 	public String income(@PathVariable String orderid, Model model, HttpServletRequest request, HttpServletResponse response) {
 		Income income = service.getByOrderNum(orderid);
+		if (income == null)
+			return "static/error";
 		model.addAttribute("orderid", orderid);
 		model.addAttribute("amount", income.getAmount());
+		model.addAttribute("realamount", income.getRealamount());
 		model.addAttribute("backurl", income.getBackforwardurl());
 		model.addAttribute("resulturl", income.getResulturl());
 		model.addAttribute("status", income.getStatus());

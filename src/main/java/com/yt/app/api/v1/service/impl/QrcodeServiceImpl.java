@@ -28,6 +28,7 @@ import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Qrcodeaisleqrcode;
 import com.yt.app.api.v1.entity.Qrcodestatisticalreports;
 import com.yt.app.api.v1.entity.Qrcodetransferrecord;
+import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.api.v1.vo.QrcodeVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -193,15 +194,15 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 			csr.setIncomecount(c.getIncomesum());
 			// 查询每日统计数据
 			// 统计码商
-//			QrcodeaccountorderVO imaov = qrcodeaccountordermapper.countOrder(c.getId(), date);
-//			csr.setTodayorder(imaov.getOrdercount());
-//			csr.setTodayorderamount(imaov.getAmount());
-//			csr.setTodaysuccessorderamount(imaov.getIncomeamount());
-//			// 统计码商
-//			QrcodeaccountorderVO imaovsuccess = qrcodeaccountordermapper.countSuccessOrder(c.getId(), date);
-//			csr.setSuccessorder(imaovsuccess.getOrdercount());
-//			csr.setIncomeuserpaycount(imaovsuccess.getAmount());
-//			csr.setIncomeuserpaysuccesscount(imaovsuccess.getIncomeamount());
+			IncomeVO imaov = incomemapper.countQrcodeOrder(c.getId(), date);
+			csr.setTodayorder(imaov.getOrdercount());
+			csr.setTodayorderamount(imaov.getAmount());
+			csr.setTodaysuccessorderamount(imaov.getIncomeamount());
+			// 统计码商
+			IncomeVO imaovsuccess = incomemapper.countQrcodeSuccessOrder(c.getId(), date);
+			csr.setSuccessorder(imaovsuccess.getOrdercount());
+			csr.setIncomeuserpaycount(imaovsuccess.getAmount());
+			csr.setIncomeuserpaysuccesscount(imaovsuccess.getIncomeamount());
 
 			try {
 				if (csr.getSuccessorder() > 0) {

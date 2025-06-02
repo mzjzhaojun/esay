@@ -35,7 +35,7 @@ import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
  */
 
 @RestController
-@RequestMapping("/rest/v1/incomemerchantaccountorder")
+@RequestMapping("/rest/v1/merchantaccountorder")
 public class MerchantaccountorderController extends YtBaseEncipherControllerImpl<Merchantaccountorder, Long> {
 
 	@Autowired

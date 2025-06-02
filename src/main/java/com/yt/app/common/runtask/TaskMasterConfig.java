@@ -8,13 +8,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
-import com.yt.app.api.v1.entity.Channel;
+import com.alipay.api.response.AlipayTradeSettleConfirmResponse;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Payout;
+import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Tronmemberorder;
-import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
+import com.yt.app.api.v1.mapper.QrcodeMapper;
 import com.yt.app.api.v1.mapper.TronmemberorderMapper;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
@@ -26,14 +27,11 @@ import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.runnable.InComeNotifyThread;
 import com.yt.app.common.runnable.PayoutNotifyThread;
 import com.yt.app.common.runnable.StatisticsThread;
-import com.yt.app.common.runnable.SynChannelBalanceThread;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.NumberUtil;
 import com.yt.app.common.util.RedisUtil;
+import com.yt.app.common.util.SelfPayUtil;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Component
 public class TaskMasterConfig {
 
@@ -41,10 +39,10 @@ public class TaskMasterConfig {
 	private IncomeMapper incomemapper;
 
 	@Autowired
-	private ChannelMapper channelmapper;
+	private PayoutMapper payoutmapper;
 
 	@Autowired
-	private PayoutMapper payoutmapper;
+	private QrcodeMapper qrcodemapper;
 
 	@Autowired
 	private ThreadPoolTaskExecutor threadpooltaskexecutor;
@@ -69,12 +67,11 @@ public class TaskMasterConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0/5 * * * * ?")
+	@Scheduled(cron = "0/7 * * * * ?")
 	public void notifyPayout() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Payout> list = payoutmapper.selectNotifylist();
 		for (Payout p : list) {
-			log.info("代付通知ID：" + p.getOrdernum() + " 状态：" + p.getStatus());
 			p.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_65);
 			if (payoutmapper.put(p) > 0) {
 				PayoutNotifyThread nf = new PayoutNotifyThread(p.getId());
@@ -88,12 +85,11 @@ public class TaskMasterConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0/5 * * * * ?")
+	@Scheduled(cron = "0/8 * * * * ?")
 	public void notifyIncome() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Income> list = incomemapper.selectNotifylist();
 		for (Income p : list) {
-			log.info("代收通知ID：" + p.getOrdernum() + " 状态：" + p.getStatus());
 			p.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_65);
 			if (incomemapper.put(p) > 0) {
 				InComeNotifyThread nf = new InComeNotifyThread(p.getId());
@@ -103,18 +99,25 @@ public class TaskMasterConfig {
 	}
 
 	/**
-	 * 同步渠道余额
+	 * 支付宝结算
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0 0 0/2 * * ?")
+	@Scheduled(cron = "* 0/3 * * * ?")
 	public void synChannelBalance() throws InterruptedException {
 		TenantIdContext.removeFlag();
-		List<Channel> list = channelmapper.getSynList();
-		for (Channel c : list) {
-			log.info("同步渠道余额：" + c.getName() + "  支付：" + c.getTodayincomecount());
-			SynChannelBalanceThread scbt = new SynChannelBalanceThread(c.getId());
-			threadpooltaskexecutor.execute(scbt);
+		List<Income> list = incomemapper.selectOrderSettlelist();
+		for (Income in : list) {
+			Qrcode qd = qrcodemapper.get(in.getQrcodeid());
+			Qrcode pqd = qrcodemapper.get(qd.getPid());
+			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, in.getQrcodeordernum(), in.getAmount());
+			if (atsc != null) {
+				in.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+				incomemapper.put(in);
+			} else {
+				in.setStatus(DictionaryResource.PAYOUTSTATUS_51);
+				incomemapper.put(in);
+			}
 		}
 	}
 
@@ -127,7 +130,6 @@ public class TaskMasterConfig {
 	public void updateTodayValue() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		String date = DateTimeUtil.getDateTime(new Date(), DateTimeUtil.DEFAULT_DATE_FORMAT);
-
 		StatisticsThread statisticsthread = new StatisticsThread(date);
 		threadpooltaskexecutor.execute(statisticsthread);
 	}
@@ -135,33 +137,28 @@ public class TaskMasterConfig {
 	/**
 	 * 代收超时分钟未支付订单处理
 	 */
-	@Scheduled(cron = "0/50 * * * * ?")
+	@Scheduled(cron = "0/33 * * * * ?")
 	public void income() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Income> list = incomemapper.selectAddlist();
 		for (Income p : list) {
 			if (p.getExpireddate().getTime() < new Date().getTime()) {
-
 				TenantIdContext.setTenantId(p.getTenant_id());
-				log.info("代收支付超时单号ID：" + p.getOrdernum() + " 状态：" + p.getStatus());
 				p.setStatus(DictionaryResource.PAYOUTSTATUS_53);
 				p.setRemark("超時取消代收资金￥：" + p.getAmount());
 				incomemapper.put(p);
 				qrcodeaccountservice.cancleTotalincome(p);
 				// 處理商戶
 				incomemerchantaccountservice.cancleTotalincome(p);
-
 				// 释放收款码数据
 				String key = SystemConstant.CACHE_SYS_QRCODE + p.getQrcodeid() + "" + p.getFewamount();
 				if (RedisUtil.hasKey(key))
 					RedisUtil.delete(key);
-
 				// 计算代理
 				if (p.getAgentid() != null) {
 					// 代理账户
 					agentaccountservice.cancleTotalincome(p);
 				}
-
 				TenantIdContext.remove();
 			}
 		}
@@ -170,7 +167,7 @@ public class TaskMasterConfig {
 	/**
 	 * 充值超时分钟未支付订单处理
 	 */
-	@Scheduled(cron = "0/30 * * * * ?")
+	@Scheduled(cron = "0/43 * * * * ?")
 	public void tronorder() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Tronmemberorder> list = tronmemberordermapper.selectAddlist();
@@ -178,7 +175,6 @@ public class TaskMasterConfig {
 			if (p.getExpireddate().getTime() < new Date().getTime()) {
 
 				TenantIdContext.setTenantId(p.getTenant_id());
-				log.info("充值兑换超时单号ID：" + p.getOrdernum() + " 状态：" + p.getStatus());
 				p.setStatus(DictionaryResource.PAYOUTSTATUS_53);
 				p.setRemark("超时充值兑换￥：" + p.getAmount());
 				tronmemberordermapper.put(p);

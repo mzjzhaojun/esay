@@ -21,8 +21,6 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 
 	List<Income> list();
 
-	Integer batchsettleconfirm(Map<String, Object> param);
-
 	Income getByOrderNum(String ordernum);
 
 	YtIPage<IncomeVO> page(Map<String, Object> param);
@@ -81,6 +79,9 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 	// huifu回調
 	String huifupayftfcallback(Map<String, String> params);
 
+	// 阿力回調
+	void aliftfcallback(Map<String, String> params);
+
 	// 通知
 	Integer notify(Income income);
 
@@ -91,7 +92,12 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 	Integer addblock(Income income);
 
 	// 确认结算
-	Integer settleconfirm(Income income);
+	void settleconfirm(Income income);
+
+	void settle(String ordernum);
+
+	// 批量结算
+	void batchsettleconfirm(Map<String, Object> param);
 
 	// 易票联绑卡
 	void sumbmitcheck(Map<String, Object> params);

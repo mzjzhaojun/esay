@@ -14,7 +14,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.UUID;
 
-
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayFundAccountQueryModel;
@@ -124,9 +123,8 @@ public class SelfPayUtil {
 
 			AlipayTradeWapPayRequest request = new AlipayTradeWapPayRequest();
 			AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();
-			String url =RedisUtil.get( SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+qrcode.getNotifyurl();
+			String url = RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + qrcode.getNotifyurl();
 			request.setNotifyUrl(url);
-			log.info(url);
 			model.setOutTradeNo(ordernum);
 			model.setTotalAmount(amount.toString());
 			model.setSubject("Member Payment");
@@ -168,14 +166,13 @@ public class SelfPayUtil {
 	 * @param ordernum
 	 * @return
 	 */
-	public static AlipayTradeQueryResponse AlipayTradeWapQuery(Qrcode pqrcode, String outno, String ordernum) {
+	public static AlipayTradeQueryResponse AlipayTradeWapQuery(Qrcode pqrcode, String tradeno) {
 		try {
 			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(pqrcode));
 
 			AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
 			AlipayTradeQueryModel model = new AlipayTradeQueryModel();
-			model.setOutTradeNo(outno);
-			model.setTradeNo(ordernum);
+			model.setTradeNo(tradeno);
 //			List<String> queryOptions = new ArrayList<String>();
 //			queryOptions.add("trade_settle_info");
 //			model.setQueryOptions(queryOptions);
@@ -637,7 +634,7 @@ public class SelfPayUtil {
 	 * @throws Exception
 	 */
 	public static JSONObject eplprotocolPayPre(Qrcode qrcode, String outTradeNo, String memberId, String epfSmsNo, String smscode, Long payAmount) {
-		log.info("smscode"+smscode);
+		log.info("smscode" + smscode);
 		String payCurrency = "CNY"; // 币种，写死
 		String attachData = "attachData"; // 备注数据,可空
 		String transactionEndTime = ""; // 交易结束时间
@@ -660,7 +657,7 @@ public class SelfPayUtil {
 		request.setSmsCode(smscode.trim());
 		request.setTransactionStartTime(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
 		request.setTransactionEndTime(transactionEndTime);
-		request.setNotifyUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+qrcode.getNotifyurl());// 异步通知
+		request.setNotifyUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + qrcode.getNotifyurl());// 异步通知
 		request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
 		String param = JSONUtil.toJsonStr(request);
 		try {
@@ -724,7 +721,7 @@ public class SelfPayUtil {
 		String remark = "附言";
 
 		String key = EplRsaUtils.getPublicKey(qrcode.getApppublickey());
-		if(generalRequest(cardNo)) {
+		if (generalRequest(cardNo)) {
 			try {
 				String bankUserName = EplRsaUtils.encryptByPublicKey(name, key);
 				String bankCardNo = EplRsaUtils.encryptByPublicKey(cardNo, key);
@@ -737,7 +734,7 @@ public class SelfPayUtil {
 				request.setBankName(bankName);
 				request.setBankAccountType("2");// 1：对公，2：对私
 				request.setPayCurrency(payCurrency);
-				request.setNotifyUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+qrcode.getPayoutnotifyurl());
+				request.setNotifyUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + qrcode.getPayoutnotifyurl());
 				request.setRemark(remark);
 				request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
 				String param = JSONUtil.toJsonStr(request);
@@ -773,8 +770,7 @@ public class SelfPayUtil {
 		}
 		return null;
 	}
-	
-	
+
 	/**
 	 * 易票联单笔代付凭证
 	 * 
@@ -855,7 +851,7 @@ public class SelfPayUtil {
 			// 安全信息
 			paramsInfo.put("risk_check_data", "{\"ip_addr\":\"127.0.0.1\"}");
 			// 异步通知地址
-			paramsInfo.put("notify_url", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+qrcode.getNotifyurl());
+			paramsInfo.put("notify_url", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + qrcode.getNotifyurl());
 			// 商品描述
 			paramsInfo.put("goods_desc", "快捷支付接口");
 			// 备注
@@ -907,45 +903,45 @@ public class SelfPayUtil {
 		}
 		return null;
 	}
-	
+
 	// appId(从对接运营人员获取)
 	public static final String APP_ID = "41722c4337bf461f95fed7801dfb8553";
 	public static final String APP_SECRET = "x09OEujyCCypsVxA1ArBC+ZMY2ydOii5gRlRk4wAaj4=";
-	//请求URL地址
+	// 请求URL地址
 	public static final String URL = "https://api-safefund.yuanshouyin.com";
-	
-	public static boolean generalRequest(String accnumber){
-		
+
+	public static boolean generalRequest(String accnumber) {
+
 		SortedMap<String, Object> map = new TreeMap<>();
 		map.put("name", "XJT数据");
 		map.put("identity", accnumber);
-		
-        //时间戳
-        Long timestamp = System.currentTimeMillis();
-        // 准备参数，请求头参数使用TreeMap自动排序字段；便于验签
-        SortedMap<String, String> headers = new TreeMap<>();
-        headers.put("appId", APP_ID);
-        headers.put("nonce", StringUtil.getOrderNum());
-        headers.put("timestamp", String.valueOf(timestamp));
-        //请求参数格式化为json字符串，用于加签验证
-        String paramJsonStr = JSONUtil.toJsonStr(map);
-        String param = paramJsonStr+ MapUtil.join(headers, "&", "=")+ APP_SECRET;
-        //采用sha256Hex签名
-        String sign = DigestUtil.sha256Hex(param);
-        //拼接字符串,签名开头保留，${} 全替换为header参数
-        headers.put("sign", sign);
-        //固定值，加签后赋值
-        headers.put("tenant-id", "1");
-        //执行请求调用
+
+		// 时间戳
+		Long timestamp = System.currentTimeMillis();
+		// 准备参数，请求头参数使用TreeMap自动排序字段；便于验签
+		SortedMap<String, String> headers = new TreeMap<>();
+		headers.put("appId", APP_ID);
+		headers.put("nonce", StringUtil.getOrderNum());
+		headers.put("timestamp", String.valueOf(timestamp));
+		// 请求参数格式化为json字符串，用于加签验证
+		String paramJsonStr = JSONUtil.toJsonStr(map);
+		String param = paramJsonStr + MapUtil.join(headers, "&", "=") + APP_SECRET;
+		// 采用sha256Hex签名
+		String sign = DigestUtil.sha256Hex(param);
+		// 拼接字符串,签名开头保留，${} 全替换为header参数
+		headers.put("sign", sign);
+		// 固定值，加签后赋值
+		headers.put("tenant-id", "1");
+		// 执行请求调用
 //        String body = HttpUtils.post(URL + "/app-api/fms/risk-exterior-query/api/query", headers, map);
 //        JSONArray data=  JSONUtil.parseObj(body).getJSONObject("data").getJSONArray("data");
 //        if(data.size()>1) {
 //        	log.info("test card fait"+accnumber);
 //        	return false;
 //        }
-        log.info("test card succcess"+accnumber);
+		log.info("test card succcess" + accnumber);
 		return true;
-    }
+	}
 
 	// 汇付分配的产品号
 	public static final String DEMO_PRODUCT_ID = "PAYUN";
@@ -998,7 +994,7 @@ public class SelfPayUtil {
 //			paramsInfo.put("mobile_no_crypt", "14");
 			paramsInfo.put("into_acct_date_type", "T0");
 			// 3. 发起API调用
-			
+
 			Map<String, Object> response = BasePayRequest.requestBasePay("v2/trade/settlement/surrogate", paramsInfo, null, false);
 			System.out.println(response);
 		} catch (Exception e) {

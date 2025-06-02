@@ -93,7 +93,15 @@ public class StringUtil {
 	public static String getDouble(String str) {
 		Random random = new Random();
 		double randomnum = random.nextDouble() * (0.3 - 0.01) + 0.01;
-		return String.format("%.2f", Double.valueOf(str) + randomnum);
+		return String.format("%.2f", Double.valueOf(str) - randomnum);
+	}
+
+	// 增加随机小数
+	public static String getInt(String str) {
+		Random random = new Random();
+		double randomnum = random.nextInt(10);
+		randomnum = randomnum + random.nextDouble() * (0.90 - 0.01) + 0.01;
+		return String.format("%.2f", Double.valueOf(str) - randomnum);
 	}
 
 	/**

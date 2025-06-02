@@ -336,7 +336,7 @@
 			status = 50
 		</where>
 	</select>
-	<!-- getList -->
+	<!-- selectNotifylist -->
 	<select id="selectNotifylist" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
 		select
@@ -344,6 +344,17 @@
 		from income
 		<where>
 			notifystatus = 62
+		</where>
+	</select>
+	
+	<!-- selectOrderSettlelist -->
+	<select id="selectOrderSettlelist" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from income
+		<where>
+			status = 52 and dynamic = 1 and expireddate  &lt; NOW()
 		</where>
 	</select>
 	
@@ -368,6 +379,89 @@
 		income
 		WHERE
 		status = 52
+		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
+		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
+	</select>
+	
+	<select id="countMerchantOrder" resultMap="ResultMapVO">
+		SELECT
+		count(*) as ordercount,
+		sum(amount) as amount,
+		sum(merchantincomeamount) as incomeamount
+		FROM
+		income
+		WHERE
+		merchantid = #{userid}
+		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
+		AND create_time &lt; CONCAT(#{dateval} +INTERVAL 1 DAY,' 00:00:00')
+	</select>
+
+	<select id="countMerchantSuccessOrder" resultMap="ResultMapVO">
+		SELECT
+		count(*) as ordercount,
+		sum(amount) as amount,
+		sum(merchantincomeamount) as incomeamount
+		FROM
+		income
+		WHERE
+		merchantid = #{userid}
+		AND status = 52
+		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
+		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
+	</select>
+	
+	
+	<select id="countChannelOrder" resultMap="ResultMapVO">
+		SELECT
+		count(*) as ordercount,
+		sum(amount) as amount,
+		sum(merchantincomeamount) as incomeamount
+		FROM
+		income
+		WHERE
+		channelid = #{userid}
+		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
+		AND create_time &lt; CONCAT(#{dateval} +INTERVAL 1 DAY,' 00:00:00')
+	</select>
+
+	<select id="countChannelSuccessOrder" resultMap="ResultMapVO">
+		SELECT
+		count(*) as ordercount,
+		sum(amount) as amount,
+		sum(merchantincomeamount) as incomeamount
+		FROM
+		income
+		WHERE
+		channelid = #{userid}
+		AND status = 52
+		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
+		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
+	</select>
+	
+	
+	<select id="countQrcodeOrder" resultMap="ResultMapVO">
+		SELECT
+		count(*) as ordercount,
+		sum(amount) as amount,
+		sum(merchantincomeamount) as incomeamount
+		FROM
+		income
+		WHERE
+		qrcodeid = #{userid}
+		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
+		AND create_time &lt; CONCAT(#{dateval} +INTERVAL 1 DAY,' 00:00:00')
+	</select>
+
+	<select id="countQrcodeSuccessOrder" resultMap="ResultMapVO">
+		SELECT
+		count(*) as ordercount,
+		sum(amount) as amount,
+		sum(merchantincomeamount) as incomeamount
+		FROM
+		income
+		WHERE
+		qrcodeid = #{userid}
+		AND status = 52
 		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
 		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
 	</select>

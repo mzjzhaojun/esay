@@ -44,37 +44,39 @@ div {
 			</div>
 			<div
 				style="width: 100%; height: 68%; display: flex; margin-top: 10px;">
-				<form action="demo-form.php" style="width: 100%; height: 55%;">
-				<label style="margin-left: 30px;">订单编号 </label> <input type="text"
-						style="width: 230px; height: 30px; margin: 8px;" id="ordernum"
+				<form style="width: 100%; height: 55%;">
+					<label style="margin-left: 30px;">订单编号</label><input type="text"
+						style="width: 230px; height: 30px; margin: 8px;font-size: 22px;border:0px;" id="ordernum"
 						name="ordernum" value="" disabled><br>
-					<label style="margin-left: 30px;">充值金额 </label> <input type="text"
-						style="width: 230px; height: 30px; margin: 8px;" id="amount"
-						name="amount" value="" disabled><br> <label
-						style="margin-left: 30px;">姓名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-					<input type="text"
-						style="width: 230px; height: 30px; margin: 8px;" id="name"
+						<label style="margin-left: 30px;">订单金额</label><input type="text"
+						style="width: 230px; height: 30px; margin: 8px;font-size: 22px;border:0px;text-decoration: line-through;" id="amount"
+						name="amount" value="" disabled><br>
+					<label style="margin-left: 30px;">支付金额</label><input type="text"
+						style="width: 230px; height: 30px; margin: 8px;font-size: 22px;border:0px;" id="realamount"
+						name="realamount" value="" disabled><br> <label
+						style="margin-left: 30px;">卡主姓名</label><input type="text"
+						style="width: 230px; height: 30px; margin: 8px;font-size: 18px;" id="name"
 						name="name" value=""><br> <label
-						style="margin-left: 30px;">身份证号 </label> <input type="text"
-						style="width: 230px; height: 30px; margin: 8px;" id="pcardno"
+						style="margin-left: 30px;">身份证号</label><input type="text"
+						style="width: 230px; height: 30px; margin: 8px;font-size: 18px;" id="pcardno"
 						name="pcardno" value=""><br> <label
-						style="margin-left: 30px;">银行卡号 </label> <input type="text"
-						style="width: 230px; height: 30px; margin: 8px;" id="cardno"
+						style="margin-left: 30px;">银行卡号</label><input type="text"
+						style="width: 230px; height: 30px; margin: 8px;font-size: 18px;" id="cardno"
 						name="cardno" value=""><br> <label
-						style="margin-left: 30px;">手机号码 </label> <input type="text"
-						style="width: 230px; height: 30px; margin: 8px;" id="mobile"
+						style="margin-left: 30px;">手机号码</label><input type="text"
+						style="width: 230px; height: 30px; margin: 8px;font-size: 18px;" id="mobile"
 						name="mobile" value=""><br> <label
-						style="margin-left: 30px;">验证码&nbsp;&nbsp;&nbsp;&nbsp;</label> <input
-						type="text" style="width: 100px; height: 30px; margin: 8px;"
+						style="margin-left: 30px;">验证码&nbsp;&nbsp;&nbsp;&nbsp;</label><input
+						type="text" style="width: 100px; height: 30px; margin: 8px;font-size: 18px;"
 						id="smscode" name="smscode" value="">
 					<button id="smsbtn" type="button"
-						style="border-radius: 3px; border-color: #00bfff; background-color: #4e6ef2; color: #000000; font-size: 16px; height: 36px; width: 115px">验证码</button>
+						style="border-radius: 10px; border-color: #476fce; background-color: #476fce; color: #000000; font-size: 16px; height: 36px; width: 115px">发送</button>
 					<br>
 				</form>
 			</div>
 			<div id="btn-down"  style="width: 100%; height: 1%; display: flex; justify-content: center; align-items: center;">
 					<button id="sumbitbtn"  type="button"
-						style="border-radius: 12px; border-color: #00bfff; background-color: #00bfff; color: #FFFFFF; font-size: 22px; height: 50px; width: 350px;">
+						style="border-radius: 12px; border-color: #047e78; background-color: #047e78; color: #FFFFFF; font-size: 22px; height: 50px; width: 350px;">
 						确认支付</button>
 			</div>
 		</div>
@@ -83,18 +85,19 @@ div {
 <script type="text/javascript">
 	var orderid = "[[${orderid}]]";
 	var amount = "[[${amount}]]";
+	var realamount = "[[${realamount}]]";
 	var backurl = "[[${backurl}]]";
 	var md5str;
 	function initdata() {
 		$("#amount").val(amount);
+		$("#realamount").val(realamount);
 		$("#ordernum").val(orderid);
 		Fingerprint2.get(function(components) {
 			var values = components.map(function(component) {
 				return component.value
 			});
 			md5str = hex_md5(values.join(""));
-			$
-					.ajax({
+			$.ajax({
 						type : "GET",
 						dataType : "json",
 						contentType : "application/json",

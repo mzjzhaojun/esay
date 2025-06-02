@@ -465,23 +465,25 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
-	public void alipayftfcallback(Map<String, String> params) {
-		String trade_no = params.get("trade_no").toString();
-		String out_trade_no = params.get("out_trade_no").toString();
-		log.info("支付宝通知返回消息：trade_no" + trade_no + " out_trade_no:" + out_trade_no);
-		Income income = mapper.getByOrderNum(out_trade_no);
+	public void aliftfcallback(Map<String, String> params) {
+		String orderid = params.get("orderId").toString();
+		String status = params.get("status").toString();
+		log.info("阿力通知返回消息：orderid" + orderid + " status:" + status);
+		Income income = mapper.getByOrderNum(orderid);
 		TenantIdContext.setTenantId(income.getTenant_id());
-		Qrcode qrcode = qrcodemapper.get(income.getQrcodeid());
-		Qrcode pqrcode = qrcodemapper.get(qrcode.getPid());
-		log.info("支付宝查单成功: " + trade_no + "===" + out_trade_no);
-		if (income.getStatus() == DictionaryResource.PAYOUTSTATUS_50) {
-			AlipayTradeQueryResponse atqr = SelfPayUtil.AlipayTradeWapQuery(pqrcode, out_trade_no, trade_no);
-			if (atqr.getTradeStatus().equals("TRADE_SUCCESS")) {
-				success(income, trade_no);
-			}
+		Channel channel = channelmapper.get(income.getQrcodeid());
+		String ip = AuthContext.getIp();
+		if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+			throw new YtException("非法请求,IP加白名单后重试!");
+		}
+		JSONObject returnstate = PayUtil.SendALiQuerySubmit(orderid, channel);
+		Assert.notNull(returnstate, "阿力通知反查订单失败!");
+		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			success(income);
 		}
 		TenantIdContext.remove();
 	}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * 上游渠道下单
@@ -578,6 +580,14 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			income.setBackforwardurl(qs.getPay_callbackurl());
 			income.setInipaddress(AuthContext.getIp());
 			switch (channel.getName()) {
+			case DictionaryResource.ALISAISLE:
+				JSONObject dataali = PayUtil.SendALiSubmit(income, channel);
+				if (dataali != null) {
+					flage = false;
+					income.setResulturl(dataali.getStr("payurl"));
+					income.setQrcodeordernum(dataali.getStr("sysorderno"));
+				}
+				break;
 			case DictionaryResource.ONEPLUSAISLE:
 				JSONObject dataoneplus = PayUtil.SendOnePlusSubmit(income, channel);
 				if (dataoneplus != null) {
@@ -701,6 +711,15 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				qr.setPay_md5sign(signresult);
 				return qr;
 			}
+			///////////////////////////////////////////////////// 计算代理订单/////////////////////////////////////////////////////
+			if (mc.getAgentid() != null) {
+				Agent ag = agentmapper.get(mc.getAgentid());
+				income.setAgentid(ag.getId());
+				income.setAgentincome(income.getAmount() * (ag.getExchange() / 100));// 交易费
+				agentaccountservice.totalincome(income);
+			} else {
+				income.setAgentincome(0.00);
+			}
 			// 渠道收入
 			income.setChannelincomeamount(NumberUtil.multiply(income.getAmount().toString(), (channel.getCollection() / 100) + "", 2).doubleValue());
 			// 商户收入
@@ -717,14 +736,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			income.setType(DictionaryResource.ORDERTYPE_27.toString());
 			income.setRemark("新增代收资金￥：" + income.getAmount());
 			int i = mapper.post(income);
-			//
-			if (mc.getAgentid() != null) {
-				Agent ag = agentmapper.get(mc.getAgentid());
-				income.setAgentid(ag.getId());
-				agentaccountservice.totalincome(income);
-			} else {
-				income.setAgentincome(0.00);
-			}
 			if (i == 0) {
 				throw new YtException("当前系統繁忙");
 			}
@@ -789,7 +800,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			Channel channel = channelmapper.getByUserId(qd.getUserid());
 			Income income = addIncome(channel, qas, mc, qs, qd);
 			String urlview = RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "payviewurl");
-			// 支付通手机H5
+			// 直付通手机H5
 			if (qd.getCode().equals(DictionaryResource.PRODUCT_ZFTWAP)) {
 				Qrcode pqd = qrcodemapper.get(qd.getPid());
 				AlipayTradeWapPayResponse response = SelfPayUtil.AlipayTradeWapPay(pqd, qd, income.getOrdernum(), income.getAmount());
@@ -805,6 +816,12 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				}
 			} else if (qd.getCode().equals(DictionaryResource.PRODUCT_YPLWAP)) {
 				flage = false;
+				// 随机数
+				income.setAmount(Double.valueOf(qs.getPay_amount()));
+				if (mc.getClearingtype())
+					income.setRealamount(Double.valueOf(StringUtil.getInt(qs.getPay_amount())));
+				else
+					income.setRealamount(income.getAmount());
 				income.setQrcode(urlview.replace("{id}", income.getOrdernum() + ""));
 				income.setResulturl(income.getQrcode());
 				income.setQrcodeordernum("inqd" + StringUtil.getOrderNum());
@@ -831,6 +848,15 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				qr.setPay_md5sign(signresult);
 				return qr;
 			}
+			///////////////////////////////////////////////////// 计算代理订单/////////////////////////////////////////////////////
+			if (mc.getAgentid() != null) {
+				Agent ag = agentmapper.get(mc.getAgentid());
+				income.setAgentid(ag.getId());
+				income.setAgentincome(income.getAmount() * (ag.getExchange() / 100));// 交易费
+				agentaccountservice.totalincome(income);
+			} else {
+				income.setAgentincome(0.00);
+			}
 			// 渠道收入
 			income.setChannelincomeamount(NumberUtil.multiply(income.getAmount().toString(), (qd.getCollection() / 100) + "", 2).doubleValue());
 			// 商户收入
@@ -846,14 +872,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			income.setInipaddress(AuthContext.getIp());
 			income.setType(DictionaryResource.ORDERTYPE_27.toString());
 			income.setRemark("新增代收资金￥：" + income.getAmount());
-///////////////////////////////////////////////////// 计算代理订单/////////////////////////////////////////////////////
-			if (mc.getAgentid() != null) {
-				Agent ag = agentmapper.get(mc.getAgentid());
-				income.setAgentid(ag.getId());
-				agentaccountservice.totalincome(income);
-			} else {
-				income.setAgentincome(0.00);
-			}
+
 			int i = mapper.post(income);
 			if (i == 0) {
 				throw new YtException("当前系統繁忙");
@@ -1085,9 +1104,8 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	}
 
 	@Override
-	public Integer settleconfirm(Income income) {
+	public void settleconfirm(Income income) {
 		Income in = mapper.get(income.getId());
-		Integer i = 0;
 		if (in.getDynamic()) {
 			Qrcode qd = qrcodemapper.get(in.getQrcodeid());
 			Qrcode pqd = qrcodemapper.get(qd.getPid());
@@ -1096,14 +1114,12 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			in.setStatus(DictionaryResource.PAYOUTSTATUS_54);
 			mapper.put(in);
 		}
-		return i;
 	}
 
 	@Override
-	public Integer batchsettleconfirm(Map<String, Object> param) {
+	public void batchsettleconfirm(Map<String, Object> param) {
 		param.put("dir", "Asc");
 		List<IncomeVO> list = mapper.page(param);
-		Integer i = 0;
 		list.forEach(in -> {
 			Qrcode qd = qrcodemapper.get(in.getQrcodeid());
 			Qrcode pqd = qrcodemapper.get(qd.getPid());
@@ -1111,28 +1127,16 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			Assert.notNull(atsc, "结算失败!");
 			in.setStatus(DictionaryResource.PAYOUTSTATUS_54);
 			mapper.put(in);
-			in.setVersion(in.getVersion() + 1);
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			AlipayTradeOrderSettleResponse atos = SelfPayUtil.AlipayTradeOrderSettle(pqd, in.getQrcodeordernum(), "li1850420@sina.com", in.getAmount() * 0.01);
-			Assert.notNull(atos, "分账失败!");
-			in.setStatus(DictionaryResource.PAYOUTSTATUS_55);
-			mapper.put(in);
 		});
-		return i;
 	}
 
 	@Override
 	public void sumbmitcheck(Map<String, Object> params) {
-
 		Income in = mapper.getByOrderNum(params.get("orderid").toString());
 		TenantIdContext.setTenantId(in.getTenant_id());
 		log.info(params.get("orderid").toString());
 		Qrcode qrcode = qrcodemapper.get(in.getQrcodeid());
-		JSONObject jsonObject = SelfPayUtil.eplpayTradeWapPay(qrcode, in.getOrdernum(), in.getAmount(), params.get("name").toString(), params.get("pcardno").toString(), params.get("cardno").toString(), params.get("mobile").toString());
+		JSONObject jsonObject = SelfPayUtil.eplpayTradeWapPay(qrcode, in.getOrdernum(), in.getRealamount(), params.get("name").toString(), params.get("pcardno").toString(), params.get("cardno").toString(), params.get("mobile").toString());
 		if (jsonObject.getStr("returnCode").equals("0000")) {
 			Qrcodpaymember qrcodpaymember = qrcodpaymembermapper.getByMermberId(params.get("orderid").toString());
 			if (qrcodpaymember == null) {
@@ -1159,12 +1163,13 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Qrcodpaymember qrcodpaymember = qrcodpaymembermapper.getByMermberId(params.get("orderid").toString());
 		log.info(params.get("orderid").toString());
 		JSONObject jsonObject = SelfPayUtil.eplprotocolPayPre(qrcodemapper.get(in.getQrcodeid()), in.getOrdernum(), in.getQrcodeordernum(), qrcodpaymember.getSmsno(), params.get("smscode").toString(),
-				Long.valueOf(String.format("%.2f", in.getAmount()).replace(".", "")));
+				Long.valueOf(String.format("%.2f", in.getRealamount()).replace(".", "")));
 		if (!jsonObject.getStr("returnCode").equals("0000")) {
 			throw new YtException(jsonObject.getStr("returnMsg"));
 		}
 	}
 
+/////////////////////////////////////////////////////////////////////////////自营回调////////////////////////////////////////////////////////
 	@Override
 	public void epfpayftfcallback(Map<String, Object> params) {
 		try {
@@ -1202,6 +1207,48 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			return income.getOrdernum();
 		}
 		return null;
+	}
+
+	@Override
+	public void alipayftfcallback(Map<String, String> params) {
+		String trade_no = params.get("trade_no").toString();
+		String out_trade_no = params.get("out_trade_no").toString();
+		log.info("支付宝通知返回消息：trade_no" + trade_no + " out_trade_no:" + out_trade_no);
+		// 处理交易通知
+		Income in = mapper.getByOrderNum(out_trade_no);
+		if (in == null)
+			return;
+		TenantIdContext.setTenantId(in.getTenant_id());
+		if (in.getStatus() == DictionaryResource.PAYOUTSTATUS_50) {
+			Qrcode qd = qrcodemapper.get(in.getQrcodeid());
+			Qrcode pqd = qrcodemapper.get(qd.getPid());
+			AlipayTradeQueryResponse atqr = SelfPayUtil.AlipayTradeWapQuery(pqd, trade_no);
+			if (atqr.getTradeStatus().equals("TRADE_SUCCESS")) {
+				Integer expiredminute = NumberUtil.randomInt(720, 1440);
+				in.setExpiredminute(expiredminute);
+				in.setExpireddate(DateTimeUtil.addMinute(expiredminute));
+				success(in, trade_no);
+			}
+		} else if (in.getStatus() == DictionaryResource.PAYOUTSTATUS_54) {
+			if (in.getDynamic()) {
+				Qrcode qd = qrcodemapper.get(in.getQrcodeid());
+				Qrcode pqd = qrcodemapper.get(qd.getPid());
+				AlipayTradeOrderSettleResponse atos = SelfPayUtil.AlipayTradeOrderSettle(pqd, in.getQrcodeordernum(), "li1850420@sina.com", in.getAmount() * 0.01);
+				Assert.notNull(atos, "分账失败!");
+				in.setStatus(DictionaryResource.PAYOUTSTATUS_55);
+				mapper.put(in);
+			}
+		}
+		TenantIdContext.remove();
+	}
+
+	@Override
+	public void settle(String tradeno) {
+		Qrcode pqd = qrcodemapper.get(1902349988894216192L);
+		AlipayTradeQueryResponse atqr = SelfPayUtil.AlipayTradeWapQuery(pqd, tradeno);
+
+		AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, tradeno, Double.valueOf(atqr.getTotalAmount()));
+		Assert.notNull(atsc, "结算失败!");
 	}
 
 }

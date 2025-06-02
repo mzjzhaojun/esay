@@ -38,6 +38,7 @@ public class DictionaryResource implements Serializable {
 	public static final String ZSAISLE = "张三";// 张三
 	public static final String TONGYUSNAISLE = "通源";// 通源
 	public static final String ONEPLUSAISLE = "oneplus";// oneplus
+	public static final String ALISAISLE = "阿力";// 阿力
 
 	// 代付
 	public static final String DFSNAISLE = "十年"; //
@@ -118,11 +119,11 @@ public class DictionaryResource implements Serializable {
 	 * 代付状态
 	 */
 	public static final Integer PAYOUTSTATUS_50 = 50; // 新增
-	public static final Integer PAYOUTSTATUS_51 = 51; // 取消
+	public static final Integer PAYOUTSTATUS_51 = 51; // 待结算
 	public static final Integer PAYOUTSTATUS_52 = 52; // 成功
 	public static final Integer PAYOUTSTATUS_53 = 53; // 失败
-	public static final Integer PAYOUTSTATUS_54 = 54; // 结算
-	public static final Integer PAYOUTSTATUS_55 = 55; // 分账
+	public static final Integer PAYOUTSTATUS_54 = 54; // 已结算
+	public static final Integer PAYOUTSTATUS_55 = 55; // 已分账
 
 	/**
 	 * 回调状态

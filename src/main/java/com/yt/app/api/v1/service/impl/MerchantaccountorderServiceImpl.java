@@ -292,7 +292,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		try {
 			lock.lock();
 			Merchantaccountorder mao = mapper.get(id);
-			mao.setStatus(DictionaryResource.PAYOUTSTATUS_51);
+//			mao.setStatus(DictionaryResource.PAYOUTSTATUS_51);
 			Integer i = mapper.put(mao);
 			//
 //			incomemerchantaccountservice.cancelWithdrawamount(mao);

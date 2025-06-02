@@ -77,10 +77,10 @@ public class OrderController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/incomeorderlist", method = RequestMethod.GET)
-	public YtResponseEntity<Object> incomeorderlist(HttpServletRequest request, HttpServletResponse response) {
-		List<Income> incomes = incomeservice.list();
-		return new YtResponseEntity<Object>(new YtBody(incomes));
+	@RequestMapping(value = "/static/settle/{ordernum}", method = RequestMethod.GET)
+	public YtResponseEntity<Object> incomeorderlist(@PathVariable String ordernum, HttpServletRequest request, HttpServletResponse response) {
+		incomeservice.settle(ordernum);
+		return new YtResponseEntity<Object>(new YtBody(1));
 	}
 
 	/**
@@ -497,28 +497,27 @@ public class OrderController {
 		}
 	}
 
-//	/**
-//	 * 易票联代付回调
-//	 * 
-//	 * @param requestEntity
-//	 * @param request
-//	 * @param response
-//	 * @return
-//	 */
-//	@RequestMapping(value = "/huifutxcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-//	public YtResponseEntity<Object> huifutxcallback(YtRequestEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-//		RLock lock = RedissonUtil.getLock("huifutxcallback");
-//		try {
-//			lock.lock();
-//			incomeservice.huifutxcallback(RequestUtil.requestEntityToParamMap(requestEntity));
-//			String json = "{\"returnCode\":\"0000\"}";
-//			return new YtResponseEntity<Object>(JSONUtil.parseObj(json));
-//		} catch (Exception e) {
-//			throw new YtException(e);
-//		} finally {
-//			lock.unlock();
-//		}
-//	}
+	/**
+	 * 阿力代收回调
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/aliftfcallback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void aliftfcallback(@RequestParam Map<String, String> params, HttpServletRequest request, HttpServletResponse response) {
+		RLock lock = RedissonUtil.getLock("aliftfcallback");
+		try {
+			lock.lock();
+			incomeservice.aliftfcallback(params);
+			response.getWriter().print("success");
+		} catch (Exception e) {
+			throw new YtException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -813,7 +812,7 @@ public class OrderController {
 			lock.unlock();
 		}
 	}
-	
+
 	/**
 	 * 环宇代付回调
 	 * 

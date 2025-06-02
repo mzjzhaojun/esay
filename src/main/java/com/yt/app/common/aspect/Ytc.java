@@ -36,9 +36,10 @@ public class Ytc {
 				break;
 			}
 		}
+		log.info("start >>>>>> " + sb.toString() + ">>>");
 		Object result = pjp.proceed(pjp.getArgs());
 		long time = System.currentTimeMillis() - beginTime;
-		log.info(">>>>>> " + sb.toString() + ">>>  Time = {} /ms", time);
+		log.info("end >>>>>> " + sb.toString() + ">>>  Time = {} /ms", time);
 		return result;
 	}
 }

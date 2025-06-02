@@ -1285,7 +1285,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (returnstate.getStr("returnCode").equals("0000") && returnstate.getStr("payState").equals("00")) {
 				JSONObject returnspayimg = SelfPayUtil.eplwithdrawalCertification(qrcode, orderid);
 				if (returnspayimg.getStr("returnCode").equals("0000")) {
-					log.info("payimg" + returnspayimg.getStr("imageContent"));
 					String imgurl = fileservice.addBase64String(returnspayimg.getStr("imageContent"));
 					pt.setImgurl(imgurl);
 				}

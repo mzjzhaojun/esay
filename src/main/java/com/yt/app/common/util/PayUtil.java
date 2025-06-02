@@ -2,9 +2,11 @@ package com.yt.app.common.util;
 
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -133,7 +135,7 @@ public class PayUtil {
 		map.add("bank_address", pt.getBankaddress());
 		map.add("user_ip", "127.0.0.1");
 		map.add("member_account", pt.getAccname());
-		map.add("query_url", cl.getPrivatersa());
+		map.add("query_url", cl.getRemark());
 		map.add("remark", "payout");
 
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
@@ -952,7 +954,7 @@ public class PayUtil {
 		map.add("card", pt.getAccnumer());
 		map.add("bank", pt.getBankname());
 
-		String signContent = cl.getApikey()+ pt.getOrdernum().toString();
+		String signContent = cl.getApikey() + pt.getOrdernum().toString();
 		System.out.println(signContent);
 		String sign = MD5Utils.md5(signContent);
 		map.add("sign", sign.toLowerCase());
@@ -976,7 +978,7 @@ public class PayUtil {
 			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			map.add("orderid", orderid);
-			String signContent = cl.getApikey()+orderid;
+			String signContent = cl.getApikey() + orderid;
 			System.out.println(signContent);
 			String sign = MD5Utils.md5(signContent);
 			map.add("sign", sign.toLowerCase());
@@ -1112,7 +1114,7 @@ public class PayUtil {
 				+ RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + cl.getApireusultip() + "&orderid=" + pt.getOrdernum() + "&return_url=" + pt.getBackforwardurl();
 		String sign = "";
 		try {
-			sign = sign(signContent, cl.getPrivatersa());
+			sign = sign(signContent, cl.getRemark());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1145,7 +1147,7 @@ public class PayUtil {
 		String signContent = "appid=" + cl.getApikey() + "&memberid=" + cl.getCode() + "&orderid=" + orderid;
 		String sign = "";
 		try {
-			sign = sign(signContent, cl.getPrivatersa());
+			sign = sign(signContent, cl.getRemark());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1177,7 +1179,7 @@ public class PayUtil {
 		String signContent = "mchid=" + cl.getCode();
 		String sign = "";
 		try {
-			sign = sign(signContent, cl.getPrivatersa());
+			sign = sign(signContent, cl.getRemark());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1919,7 +1921,7 @@ public class PayUtil {
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.add("mchId", cl.getCode());
-			map.add("appId", cl.getPrivatersa());
+			map.add("appId", cl.getRemark());
 			map.add("productId", pt.getQrcodecode());
 			map.add("mchOrderNo", pt.getOrdernum());
 			map.add("currency", "cny");
@@ -1963,7 +1965,7 @@ public class PayUtil {
 			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			map.add("mchId", cl.getCode());
-			map.add("appId", cl.getPrivatersa());
+			map.add("appId", cl.getRemark());
 			map.add("mchOrderNo", orderid);
 
 			TreeMap<String, Object> sortedMap = new TreeMap<>(map);
@@ -2001,7 +2003,7 @@ public class PayUtil {
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.add("mchId", cl.getCode());
-			map.add("appId", cl.getPrivatersa());
+			map.add("appId", cl.getRemark());
 			map.add("productId", pt.getQrcodecode());
 			map.add("mchOrderNo", pt.getOrdernum());
 			map.add("currency", "cny");
@@ -2044,7 +2046,7 @@ public class PayUtil {
 			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			map.add("mchId", cl.getCode());
-			map.add("appId", cl.getPrivatersa());
+			map.add("appId", cl.getRemark());
 			map.add("mchOrderNo", orderid);
 
 			TreeMap<String, Object> sortedMap = new TreeMap<>(map);
@@ -2227,7 +2229,7 @@ public class PayUtil {
 			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("mchNo", cl.getCode());
-			map.add("appId", cl.getPrivatersa());
+			map.add("appId", cl.getRemark());
 			map.add("wayCode", pt.getQrcodecode());
 			map.add("mchOrderNo", pt.getOrdernum());
 			map.add("currency", "cny");
@@ -2276,7 +2278,7 @@ public class PayUtil {
 			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("mchNo", cl.getCode());
-			map.add("appId", cl.getPrivatersa());
+			map.add("appId", cl.getRemark());
 			map.add("mchOrderNo", orderid);
 			map.add("signType", "MD5");
 			map.add("version", "1.0");
@@ -2316,7 +2318,7 @@ public class PayUtil {
 			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("mchNo", cl.getCode());
-			map.add("appId", cl.getPrivatersa());
+			map.add("appId", cl.getRemark());
 			map.add("wayCode", pt.getQrcodecode());
 			map.add("mchOrderNo", pt.getOrdernum());
 			map.add("currency", "CNY");
@@ -2365,7 +2367,7 @@ public class PayUtil {
 			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("mchNo", cl.getCode());
-			map.add("appId", cl.getPrivatersa());
+			map.add("appId", cl.getRemark());
 			map.add("mchOrderNo", orderid);
 			map.add("signType", "MD5");
 			map.add("version", "1.0");
@@ -2393,6 +2395,99 @@ public class PayUtil {
 			}
 		} catch (RestClientException e) {
 			log.info("OnePlus查单返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// 阿力代收对接
+	public static JSONObject SendALiSubmit(Income pt, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("merId", cl.getCode());
+			map.put("channel", pt.getQrcodecode());
+			map.put("orderId", pt.getOrdernum());
+			map.put("returnUrl", pt.getBackforwardurl());
+			map.put("nonceStr", "" + DateTimeUtil.getNow().getTime());
+			map.put("orderAmt", String.format("%.2f", pt.getRealamount()).replace(".", ""));
+			map.put("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + cl.getApireusultip());
+			map.put("ip", "127.0.0.1");
+			map.put("desc", "1.0");
+
+			Map<String, String> sortMap = new TreeMap<>(map);
+			StringBuffer sb = new StringBuffer();
+			Iterator<String> iterator = sortMap.keySet().iterator();
+			while (iterator.hasNext()) {
+				String key = iterator.next();
+				String val = sortMap.get(key);
+				if (StringUtils.isBlank(val) || key.equalsIgnoreCase("sign")) {
+					continue;
+				}
+				sb.append(key).append("=").append(val).append("&");
+			}
+			sb.append("key=").append(cl.getApikey());
+			// 生成待签名串
+			String sign = SHA256WithRSAUtils.buildRSASignByPrivateKey(sb.toString(), cl.getPrivatersa());
+
+			map.put("sign", sign.toUpperCase());
+			log.info("sign" + "==" + sign.toUpperCase());
+			HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<JSONObject> sov = resttemplate.exchange(cl.getApiip() + "/Api/pay/index", HttpMethod.POST, httpEntity, JSONObject.class);
+			JSONObject data = sov.getBody().getJSONObject("data");
+			log.info("阿力返回消息：" + data);
+			if (data != null) {
+				return data;
+			}
+		} catch (RestClientException e) {
+			log.info("阿力返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// 阿力代收查单
+	public static JSONObject SendALiQuerySubmit(String orderid, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("merId", cl.getCode());
+			map.put("orderId", orderid);
+			map.put("nonceStr", "" + DateTimeUtil.getNow().getTime());
+
+			Map<String, String> sortMap = new TreeMap<>(map);
+			StringBuffer sb = new StringBuffer();
+			Iterator<String> iterator = sortMap.keySet().iterator();
+			while (iterator.hasNext()) {
+				String key = iterator.next();
+				String val = sortMap.get(key);
+				if (StringUtils.isBlank(val) || key.equalsIgnoreCase("sign")) {
+					continue;
+				}
+				sb.append(key).append("=").append(val).append("&");
+			}
+			sb.append("key=").append(cl.getApikey());
+			// 生成待签名串
+			String sign = SHA256WithRSAUtils.buildRSASignByPrivateKey(sb.toString(), cl.getPrivatersa());
+
+			map.put("sign", sign.toUpperCase());
+			log.info("sign" + "==" + sign.toUpperCase());
+			HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<JSONObject> sov = resttemplate.exchange(cl.getApiip() + "/Api/pay/query", HttpMethod.POST, httpEntity, JSONObject.class);
+			JSONObject data = sov.getBody().getJSONObject("data");
+			log.info("阿力查单返回消息：" + data);
+			if (data.getInt("status") != null && data.getInt("status") == 1) {
+				return data;
+			}
+
+		} catch (RestClientException e) {
+			log.info("阿力查单返回消息：" + e.getMessage());
 		}
 		return null;
 	}

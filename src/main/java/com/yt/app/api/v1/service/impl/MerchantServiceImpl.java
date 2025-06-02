@@ -6,12 +6,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.yt.app.api.v1.mapper.AgentMapper;
+import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.MerchantstatisticalreportsMapper;
 import com.yt.app.api.v1.mapper.PayoutMerchantaccountMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.MerchantService;
+import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.context.SysUserContext;
@@ -49,6 +51,9 @@ import java.util.Map;
 public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> implements MerchantService {
 	@Autowired
 	private MerchantMapper mapper;
+	
+	@Autowired
+	private IncomeMapper incomemapper;
 
 	@Autowired
 	private UserMapper usermapper;
@@ -245,24 +250,24 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 			msr.setMerchantid(m.getId());
 			msr.setTodayincome(m.getTodaycount());
 			msr.setIncomecount(m.getCount());
-//			// 查询每日统计数据
-//			IncomemerchantaccountorderVO imaov = incomemerchantaccountordermapper.countOrder(m.getId(), date);
-//			msr.setTodayorder(imaov.getOrdercount());
-//			msr.setTodayorderamount(imaov.getAmount());
-//			msr.setTodaysuccessorderamount(imaov.getIncomeamount());
-//
-//			IncomemerchantaccountorderVO imaovsuccess = incomemerchantaccountordermapper.countSuccessOrder(m.getId(), date);
-//			msr.setSuccessorder(imaovsuccess.getOrdercount());
-//			msr.setIncomeuserpaycount(imaovsuccess.getAmount());
-//			msr.setIncomeuserpaysuccesscount(imaovsuccess.getIncomeamount());
-//			try {
-//				if (msr.getSuccessorder() > 0) {
-//					double successRate = ((double) msr.getSuccessorder() / msr.getTodayorder()) * 100;
-//					msr.setPayoutrate(successRate);
-//				}
-//			} catch (Exception e) {
-//				msr.setPayoutrate(0.0);
-//			}
+			// 查询每日统计数据
+			IncomeVO imaov = incomemapper.countMerchantOrder(m.getId(), date);
+			msr.setTodayorder(imaov.getOrdercount());
+			msr.setTodayorderamount(imaov.getAmount());
+			msr.setTodaysuccessorderamount(imaov.getIncomeamount());
+
+			IncomeVO imaovsuccess = incomemapper.countMerchantSuccessOrder(m.getId(), date);
+			msr.setSuccessorder(imaovsuccess.getOrdercount());
+			msr.setIncomeuserpaycount(imaovsuccess.getAmount());
+			msr.setIncomeuserpaysuccesscount(imaovsuccess.getIncomeamount());
+			try {
+				if (msr.getSuccessorder() > 0) {
+					double successRate = ((double) msr.getSuccessorder() / msr.getTodayorder()) * 100;
+					msr.setPayoutrate(successRate);
+				}
+			} catch (Exception e) {
+				msr.setPayoutrate(0.0);
+			}
 			merchantstatisticalreportsmapper.post(msr);
 			// 发送机器人数据
 			merchantbot.statisticsMerchant(m);

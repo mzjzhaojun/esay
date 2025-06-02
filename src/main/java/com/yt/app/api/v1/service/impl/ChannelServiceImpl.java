@@ -9,9 +9,11 @@ import com.yt.app.api.v1.mapper.AislechannelMapper;
 import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ChannelaccountMapper;
 import com.yt.app.api.v1.mapper.ChannelstatisticalreportsMapper;
+import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.ChannelService;
+import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.api.v1.vo.SysTyBalance;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.AppConstant;
@@ -50,7 +52,10 @@ import java.util.Map;
 public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> implements ChannelService {
 	@Autowired
 	private ChannelMapper mapper;
-
+	
+	@Autowired
+	private IncomeMapper incomemapper;
+	
 	@Autowired
 	private ChannelBot channelbot;
 
@@ -232,24 +237,24 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 			csr.setTodayincome(c.getTodaycount());
 			csr.setIncomecount(c.getCount());
 			// 查询每日统计数据
-//			QrcodeaccountorderVO imaov = qrcodeaccountordermapper.countOrder(c.getId(), date);
-//			csr.setTodayorder(imaov.getOrdercount());
-//			csr.setTodayorderamount(imaov.getAmount());
-//			csr.setTodaysuccessorderamount(imaov.getIncomeamount());
-//
-//			QrcodeaccountorderVO imaovsuccess = qrcodeaccountordermapper.countSuccessOrder(c.getId(), date);
-//			csr.setSuccessorder(imaovsuccess.getOrdercount());
-//			csr.setIncomeuserpaycount(imaovsuccess.getAmount());
-//			csr.setIncomeuserpaysuccesscount(imaovsuccess.getIncomeamount());
-//
-//			try {
-//				if (csr.getSuccessorder() > 0) {
-//					double successRate = ((double) csr.getSuccessorder() / csr.getTodayorder()) * 100;
-//					csr.setPayoutrate(successRate);
-//				}
-//			} catch (Exception e) {
-//				csr.setPayoutrate(0.0);
-//			}
+			IncomeVO imaov = incomemapper.countChannelOrder(c.getId(), date);
+			csr.setTodayorder(imaov.getOrdercount());
+			csr.setTodayorderamount(imaov.getAmount());
+			csr.setTodaysuccessorderamount(imaov.getIncomeamount());
+
+			IncomeVO imaovsuccess = incomemapper.countChannelSuccessOrder(c.getId(), date);
+			csr.setSuccessorder(imaovsuccess.getOrdercount());
+			csr.setIncomeuserpaycount(imaovsuccess.getAmount());
+			csr.setIncomeuserpaysuccesscount(imaovsuccess.getIncomeamount());
+
+			try {
+				if (csr.getSuccessorder() > 0) {
+					double successRate = ((double) csr.getSuccessorder() / csr.getTodayorder()) * 100;
+					csr.setPayoutrate(successRate);
+				}
+			} catch (Exception e) {
+				csr.setPayoutrate(0.0);
+			}
 
 			channelstatisticalreportsmapper.post(csr);
 

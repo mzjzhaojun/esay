@@ -180,4 +180,23 @@ public class NumberUtil {
 		}
 	}
 
+	/**
+	 * @param start 数值的起范围
+	 * @param end   数值的止范围
+	 * @return 一个在这个范围内的整数值
+	 */
+	public static int randomInt(int start, int end) {
+		int rtnn = new Long(start + (long) (Math.random() * (end - start))).intValue();
+		if (rtnn == start || rtnn == end) {
+			return randomInt(start, end);
+		}
+		return rtnn;
+	}
+
+	public static void main(String args[]) {
+		Random random = new Random();
+		double randomnum = random.nextInt(10);
+		randomnum = randomnum + random.nextDouble() * (0.90 - 0.01) + 0.01;
+		System.out.println(randomnum);
+	}
 }

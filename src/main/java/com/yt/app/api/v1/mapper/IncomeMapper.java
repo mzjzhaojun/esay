@@ -134,11 +134,20 @@ public interface IncomeMapper extends YtIBaseMapper<Income> {
 	public List<Income> selectAddlist();
 
 	/**
+	 * 代收通知
 	 * 
 	 * @return
 	 */
 	@YtRedisCacheAnnotation(classs = Income.class)
 	public List<Income> selectNotifylist();
+
+	/**
+	 * 代收自动结算
+	 * 
+	 * @return
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public List<Income> selectOrderSettlelist();
 
 	/**
 	 * countorder
@@ -166,4 +175,62 @@ public interface IncomeMapper extends YtIBaseMapper<Income> {
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Income.class })
 	public Integer updateBlock(Object t);
+	
+	
+	/**
+	 * countMerchantOrder
+	 *
+	 * @param id id
+	 * @return Incomemerchantaccountorder
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public IncomeVO countMerchantOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
+
+	/**
+	 * countMerchantSuccessOrder
+	 *
+	 * @param id id
+	 * @return Incomemerchantaccountorder
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public IncomeVO countMerchantSuccessOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
+	
+	
+	/**
+	 * countMerchantOrder
+	 *
+	 * @param id id
+	 * @return Incomemerchantaccountorder
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public IncomeVO countChannelOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
+
+	/**
+	 * countMerchantSuccessOrder
+	 *
+	 * @param id id
+	 * @return Incomemerchantaccountorder
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public IncomeVO countChannelSuccessOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
+	
+	
+	
+	/**
+	 * countMerchantOrder
+	 *
+	 * @param id id
+	 * @return Incomemerchantaccountorder
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public IncomeVO countQrcodeOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
+
+	/**
+	 * countMerchantSuccessOrder
+	 *
+	 * @param id id
+	 * @return Incomemerchantaccountorder
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public IncomeVO countQrcodeSuccessOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
 }

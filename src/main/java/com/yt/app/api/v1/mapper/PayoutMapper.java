@@ -115,7 +115,7 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 	public Payout getByOrdernum(String ordernum);
 
 	/**
-	 * 
+	 * 代付通知
 	 * @return
 	 */
 	@YtRedisCacheAnnotation(classs = Payout.class)
