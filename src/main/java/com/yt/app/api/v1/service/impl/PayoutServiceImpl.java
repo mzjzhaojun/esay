@@ -596,15 +596,15 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		Payout t = mapper.get(pt.getId());
 		if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			// 计算商户订单/////////////////////////////////////////////////////
-			merchantaccountservice.turndownWithdrawamount(t);
+			merchantaccountservice.cancleWithdrawamount(t);
 
 			// 计算代理
 			if (t.getAgentid() != null) {
-				agentaccountservice.turndownTotalincome(t);
+				agentaccountservice.cancleTotalincome(t);
 			}
 
 			// 计算渠道
-			channelaccountservice.turndownWithdrawamount(t);
+			channelaccountservice.cancleWithdrawamount(t);
 
 			//
 			t.setStatus(DictionaryResource.PAYOUTSTATUS_53);
@@ -680,12 +680,12 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		Payout t = mapper.get(pt.getId());
 		if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
 			// 计算商户订单/////////////////////////////////////////////////////
-			merchantaccountservice.turndownWithdrawamount(t);
+			merchantaccountservice.cancleWithdrawamount(t);
 
 			// 计算代理
 			if (t.getAgentid() != null) {
 				//
-				agentaccountservice.turndownTotalincome(t);
+				agentaccountservice.cancleTotalincome(t);
 			}
 
 			// 计算渠道

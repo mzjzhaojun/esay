@@ -101,11 +101,9 @@ public class DictionaryResource implements Serializable {
 	 */
 	public static final Integer RECORDTYPE_30 = 30; // 收入待确认
 	public static final Integer RECORDTYPE_31 = 31; // 收入成功
-	public static final Integer RECORDTYPE_32 = 32; // 收入失败
 	public static final Integer RECORDTYPE_33 = 33; // 收入取消
 	public static final Integer RECORDTYPE_34 = 34; // 支出待确认
 	public static final Integer RECORDTYPE_35 = 35; // 支出成功
-	public static final Integer RECORDTYPE_36 = 36; // 支出失败
 	public static final Integer RECORDTYPE_37 = 37; // 支出取消
 
 	/**

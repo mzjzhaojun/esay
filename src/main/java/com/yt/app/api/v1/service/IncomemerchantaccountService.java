@@ -66,13 +66,6 @@ public interface IncomemerchantaccountService extends YtIBaseService<Incomemerch
 	void updateWithdrawamount(Income t);
 
 	/**
-	 * 代收提现失败
-	 * 
-	 * @param t
-	 */
-	void turndownWithdrawamount(Income t);
-
-	/**
 	 * 取消
 	 * 
 	 * @param t

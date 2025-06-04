@@ -123,8 +123,11 @@
 		from qrcodpaymember
 		<where>
 			1=1
+			<if test="memberid != null and memberid != ''">
+				and memberid = #{memberid}
+			</if>
 			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+				and name = #{name}
 			</if>
 		</where>
 	</select>
@@ -136,8 +139,11 @@
 		from qrcodpaymember
 		<where>
 			1=1
+			<if test="memberid != null and memberid != ''">
+				and memberid = #{memberid}
+			</if>
 			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+				and name = #{name}
 			</if>
 			<if test="orderBy != null and dir != null">
 				order by ${orderBy} ${dir}
@@ -153,8 +159,11 @@
 		select count(*) from qrcodpaymember
 		<where>
 			1=1
+			<if test="memberid != null and memberid != ''">
+				and memberid = #{memberid}
+			</if>
 			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+				and name = #{name}
 			</if>
 		</where>
 	</select>

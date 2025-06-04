@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.ChannelMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,name,userid,nkname,code,aislecode,status,balance,remotebalance,type,exchange,collection,todaycost,todaycount,count,todayincomecount,incomecount,onecost,downpoint,costexchange,exchangeonecost,exchangedownpoint,min,max,weight,mtorder,ifordernum,firstmatch,firstmatchmoney,apiip,apikey,publicrsa,privatersa,apireusultip,ipaddress,tenant_id,remark,create_by,create_time,update_by,update_time,version
+		id,name,userid,nkname,code,aislecode,status,balance,remotebalance,type,exchange,collection,todaycost,todaycount,count,todayincomecount,incomecount,onecost,downpoint,yesterdayrate,countorder,success,min,max,weight,mtorder,ifordernum,firstmatch,firstmatchmoney,apiip,apikey,publicrsa,privatersa,apireusultip,ipaddress,tenant_id,remark,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -13,18 +13,18 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Channel">
 		insert into
-		channel(id,userid,name,nkname,code,aislecode,status,type,exchange,collection,onecost,downpoint,costexchange,exchangeonecost,exchangedownpoint,min,max,weight,mtorder,ifordernum,firstmatch,firstmatchmoney,apiip,apikey,apireusultip,ipaddress,remark,create_by,create_time,update_by,update_time)
+		channel(id,userid,name,nkname,code,aislecode,status,type,exchange,collection,onecost,downpoint,yesterdayrate,countorder,success,min,max,weight,mtorder,ifordernum,firstmatch,firstmatchmoney,apiip,apikey,apireusultip,ipaddress,remark,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{userid},#{name},#{nkname},#{code},#{aislecode},#{status},#{type},#{exchange},#{collection},#{onecost},#{downpoint},#{costexchange},#{exchangeonecost},#{exchangedownpoint},#{min},#{max},#{weight},#{mtorder},#{ifordernum},#{firstmatch},#{firstmatchmoney},#{apiip},#{apikey},#{apireusultip},#{ipaddress},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{userid},#{name},#{nkname},#{code},#{aislecode},#{status},#{type},#{exchange},#{collection},#{onecost},#{downpoint},#{yesterdayrate},#{countorder},#{success},#{min},#{max},#{weight},#{mtorder},#{ifordernum},#{firstmatch},#{firstmatchmoney},#{apiip},#{apikey},#{apireusultip},#{ipaddress},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		channel(id,name,nkname,code,status,balance,exchange,onecost,downpoint,costexchange,min,max,weight,mtorder,ifordernum,firstmatch,firstmatchmoney,apiip,apikey,apireusultip,tenant_id,remark,create_by,create_time,update_by,update_time)
+		channel(id,name,nkname,code,status,balance,exchange,onecost,downpoint,yesterdayrate,min,max,weight,mtorder,ifordernum,firstmatch,firstmatchmoney,apiip,apikey,apireusultip,tenant_id,remark,create_by,create_time,update_by,update_time)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{name},#{nkname},#{code},#{status},#{balance},#{exchange},#{onecost},#{downpoint},#{costexchange},#{min},#{max},#{weight},#{mtorder},#{ifordernum},#{firstmatch},#{firstmatchmoney},#{apiip},#{apikey},#{apireusultip},#{tenant_id},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+			(#{id},#{name},#{nkname},#{code},#{status},#{balance},#{exchange},#{onecost},#{downpoint},#{yesterdayrate},#{min},#{max},#{weight},#{mtorder},#{ifordernum},#{firstmatch},#{firstmatchmoney},#{apiip},#{apikey},#{apireusultip},#{tenant_id},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -89,14 +89,14 @@
 			<if test="downpoint != null">
 				downpoint= #{downpoint},
 			</if>
-			<if test="costexchange != null">
-				costexchange= #{costexchange},
+			<if test="yesterdayrate != null">
+				yesterdayrate= #{yesterdayrate},
 			</if>
-			<if test="exchangeonecost != null">
-				exchangeonecost= #{exchangeonecost},
+			<if test="countorder != null">
+				countorder= #{countorder},
 			</if>
-			<if test="exchangedownpoint != null">
-				exchangedownpoint= #{exchangedownpoint},
+			<if test="success != null">
+				success= #{success},
 			</if>
 			<if test="min != null">
 				min= #{min},

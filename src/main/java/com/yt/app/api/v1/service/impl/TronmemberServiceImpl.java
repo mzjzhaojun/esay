@@ -62,8 +62,6 @@ public class TronmemberServiceImpl extends YtBaseServiceImpl<Tronmember, Long> i
 			m.setCollection(0.00);
 			m.setOnecost(0.00);
 			m.setDownpoint(0.00);
-			m.setExchangeonecost(0.00);
-			m.setExchangedownpoint(0.00);
 			Merchant mm = merchantservice.postMerchant(m);
 			t.setUserid(mm.getUserid());
 			t.setTenant_id(m.getTenant_id());

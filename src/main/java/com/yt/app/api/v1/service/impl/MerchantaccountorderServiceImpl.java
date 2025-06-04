@@ -197,7 +197,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		t.setMerchantname(m.getName());
 		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		t.setCollection(t.getCollection());
-		t.setMerchantexchange(t.getCollection() + m.getIncomedownpoint());
+		t.setMerchantexchange(t.getCollection());
 		t.setAmountreceived((t.getAmount()));
 		t.setUsdtval(t.getAmount() / t.getCollection());
 		t.setType("" + DictionaryResource.ORDERTYPE_28);
@@ -230,7 +230,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		t.setMerchantname(m.getName());
 		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 		t.setCollection(t.getCollection());
-		t.setMerchantexchange(t.getCollection() + m.getIncomedownpoint());
+		t.setMerchantexchange(t.getCollection());
 		t.setAmountreceived((t.getAmount()));
 		t.setUsdtval(t.getAmount() / t.getCollection());
 		t.setType("" + DictionaryResource.ORDERTYPE_28);

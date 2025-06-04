@@ -202,41 +202,6 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 		}
 	}
 
-	// 拒绝收入
-	@Override
-	public void turndownTotalincome(Income income) {
-		RLock lock = RedissonUtil.getLock(income.getAgentid());
-		try {
-			lock.lock();
-			Agentaccount t = mapper.getByAgentId(income.getAgentid());
-			//
-			Agentaccountrecord aaaj = new Agentaccountrecord();
-			aaaj.setUserid(t.getUserid());
-			aaaj.setOrdernum(income.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_32);
-
-			// 变更前
-			aaaj.setPretotalincome(t.getTotalincome());// 总收入
-			aaaj.setPretoincomeamount(t.getToincomeamount() - income.getAgentincome());// 待确认收入
-			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			aaaj.setPretowithdrawamount(t.getTowithdrawamount());// 待确认支出
-			// 变更后
-			aaaj.setPosttotalincome(t.getTotalincome());// 总收入
-			aaaj.setPosttoincomeamount(0.00);// 确认收入
-			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-			aaaj.setPosttowithdrawamount(0.00);// 确认支出
-			aaaj.setRemark("收入失败￥：" + String.format("%.2f", income.getAgentincome()));
-
-			agentaccountapplyjournamapper.post(aaaj);
-			//
-			cancelToincomeamount(t, income);
-
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
 	// 客户取消
 	@Override
 	public void cancleTotalincome(Income income) {
@@ -358,41 +323,6 @@ public class AgentaccountServiceImpl extends YtBaseServiceImpl<Agentaccount, Lon
 			agentaccountapplyjournamapper.post(aaaj);
 			//
 			successTotalincome(t, payout);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	// 拒绝收入
-	@Override
-	public void turndownTotalincome(Payout payout) {
-		RLock lock = RedissonUtil.getLock(payout.getAgentid());
-		try {
-			lock.lock();
-			Agentaccount t = mapper.getByAgentId(payout.getAgentid());
-			//
-			Agentaccountrecord aaaj = new Agentaccountrecord();
-			aaaj.setUserid(t.getUserid());
-			aaaj.setOrdernum(payout.getOrdernum());
-			aaaj.setType(DictionaryResource.RECORDTYPE_32);
-
-			// 变更前
-			aaaj.setPretotalincome(t.getTotalincome());// 总收入
-			aaaj.setPretoincomeamount(t.getToincomeamount() - payout.getAgentincome());// 待确认收入
-			aaaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			aaaj.setPretowithdrawamount(t.getTowithdrawamount());// 待确认支出
-			// 变更后
-			aaaj.setPosttotalincome(t.getTotalincome());// 总收入
-			aaaj.setPosttoincomeamount(0.00);// 确认收入
-			aaaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
-			aaaj.setPosttowithdrawamount(0.00);// 确认支出
-			aaaj.setRemark("收入失败￥：" + String.format("%.2f", payout.getAgentincome()));
-
-			agentaccountapplyjournamapper.post(aaaj);
-			//
-			cancelToincomeamount(t, payout);
-
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();

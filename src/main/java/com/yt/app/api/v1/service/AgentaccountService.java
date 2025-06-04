@@ -29,16 +29,12 @@ public interface AgentaccountService extends YtIBaseService<Agentaccount, Long> 
 
 	void updateTotalincome(Income t);
 
-	void turndownTotalincome(Income t);
-
 	void cancleTotalincome(Income t);
 
 	// 代付收入
 	void totalincome(Payout t);
 
 	void updateTotalincome(Payout t);
-
-	void turndownTotalincome(Payout t);
 
 	void cancleTotalincome(Payout t);
 }

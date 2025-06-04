@@ -28,16 +28,12 @@ public interface PayoutMerchantaccountService extends YtIBaseService<PayoutMerch
 
 	void updateTotalincome(Payout t);
 
-	void turndownTotalincome(Payout t);
-
 	void cancleTotalincome(Payout t);
 
 	// 提现
 	void withdrawamount(Payout t);
 
 	void updateWithdrawamount(Payout t);
-
-	void turndownWithdrawamount(Payout t);
 
 	void cancleWithdrawamount(Payout t);
 

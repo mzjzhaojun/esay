@@ -40,10 +40,10 @@ public class Channel extends YtBaseEntity<Channel> {
 	Double collection;
 	Double todayincomecount;
 	Double incomecount;
-	Double exchangeonecost;
-	Double exchangedownpoint;
+	Integer countorder;
+	Integer success;
 	Double downpoint;
-	Double costexchange;
+	Double yesterdayrate;
 	String type;
 	String typename;
 	Integer min;
