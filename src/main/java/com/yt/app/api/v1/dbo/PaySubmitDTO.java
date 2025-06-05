@@ -14,7 +14,7 @@ public class PaySubmitDTO {
 	String merchantid;
 	String merchantorderid;
 	Integer paytype;
-	Double payamt;
+	Double payamount;
 	String notifyurl;
 	String banknum;
 	String bankcode;

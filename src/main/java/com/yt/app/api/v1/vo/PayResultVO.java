@@ -20,12 +20,11 @@ public class PayResultVO extends BaseVO {
 	 */
 	private static final long serialVersionUID = 1L;
 	String merchantid;
-	String payorderid;
+	String outorderid;
 	String merchantorderid;
-	Integer paytype;
-	Double payamt;
+	Double payamount;
 	String bankcode;
-	Integer code;
+	Integer status;
 	String remark;
 	String sign;
 	Double balance;

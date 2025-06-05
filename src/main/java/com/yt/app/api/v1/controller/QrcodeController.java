@@ -51,6 +51,22 @@ public class QrcodeController extends YtBaseEncipherControllerImpl<Qrcode, Long>
 		service.zftaccountquery(requestEntity.getBody());
 		return new YtResponseEncryptEntity<Object>(new YtBody(1));
 	}
+	
+	
+	/**
+	 * 支付删除二级商户
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/merchantexpandindirectzftdelete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> merchantexpandindirectzftdelete(YtRequestDecryptEntity<Qrcode> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		service.merchantexpandindirectzftdelete(requestEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(1));
+	}
+	
 
 	/**
 	 * 易票联余额查询

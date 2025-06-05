@@ -94,9 +94,9 @@ public class PayUtil {
 
 	// 盘口代付下单验证签名
 	public static boolean Md5Submit(PaySubmitDTO ss, String key) {
-		String signParams = "merchantid=" + ss.getMerchantid() + "&merchantorderid=" + ss.getMerchantorderid() + "&notifyurl=" + ss.getNotifyurl() + "&bankname=" + ss.getBankname() + "&bankcode=" + ss.getBankcode() + "&banknum=" + ss.getBanknum()
-				+ "&bankowner=" + ss.getBankowner() + "&paytype=" + ss.getPaytype() + "&payamt=" + String.format("%.2f", ss.getPayamt()) + "&remark=" + ss.getRemark() + "&key=" + key;
-		String sign = MD5Utils.md5(signParams);
+		String signParams = "merchantid=" + ss.getMerchantid() + "&merchantorderid=" + ss.getMerchantorderid() + "&notifyurl=" + ss.getNotifyurl() + "&bankname=" + ss.getBankname() + "&banknum=" + ss.getBanknum() + "&bankowner=" + ss.getBankowner()
+				+ "&payamount=" + String.format("%.2f", ss.getPayamount()) + "&key=" + key;
+		String sign = MD5Utils.md5(signParams).toUpperCase();
 		log.info("盘口代付我方签名:" + signParams + "结果:" + sign + "对方签名:" + ss.getSign());
 		if (ss.getSign().equals(sign)) {
 			return true;
@@ -105,10 +105,16 @@ public class PayUtil {
 	}
 
 	// 盘口代付通知簽名
+	public static String Md5QueryResult(PayResultVO ss, String key) {
+		String signParams = "merchantid=" + ss.getMerchantid() + "&outorderid=" + ss.getOutorderid() + "&merchantorderid=" + ss.getMerchantorderid() + "&payamount=" + String.format("%.2f", ss.getPayamount()) + "&key=" + key;
+		return MD5Utils.md5(signParams).toUpperCase();
+	}
+
+	// 盘口代付通知簽名
 	public static String Md5Notify(PayResultVO ss, String key) {
-		String signParams = "merchantid=" + ss.getMerchantid() + "&payorderid=" + ss.getPayorderid() + "&merchantorderid=" + ss.getMerchantorderid() + "&bankcode=" + ss.getBankcode() + "&payamt=" + String.format("%.2f", ss.getPayamt()) + "&remark="
-				+ ss.getRemark() + "&code=" + ss.getCode() + "&key=" + key;
-		return MD5Utils.md5(signParams);
+		String signParams = "merchantid=" + ss.getMerchantid() + "&outorderid=" + ss.getOutorderid() + "&merchantorderid=" + ss.getMerchantorderid() + "&payamount=" + String.format("%.2f", ss.getPayamount()) + "&status=" + ss.getStatus() + "&key="
+				+ key;
+		return MD5Utils.md5(signParams).toUpperCase();
 	}
 
 	// 天下代付下单
@@ -1009,21 +1015,19 @@ public class PayUtil {
 			String signParams = Md5Notify(ss, key);
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			map.add("merchantid", ss.getMerchantid());
-			map.add("payorderid", ss.getPayorderid());
+			map.add("outorderid", ss.getOutorderid());
 			map.add("merchantorderid", ss.getMerchantorderid());
-			map.add("payamt", ss.getPayamt().toString());
-			map.add("bankcode", ss.getBankcode());
-			map.add("code", ss.getCode().toString());
-			map.add("remark", ss.getRemark());
+			map.add("payamount", ss.getPayamount().toString());
+			map.add("status", ss.getStatus().toString());
 			map.add("sign", signParams);
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
 			ResponseEntity<String> sov = resttemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
 			String data = sov.getBody();
-			log.info("商户代付盘口通知" + ss.getPayorderid() + "通知返回:" + data);
+			log.info("商户代付盘口通知" + ss.getOutorderid() + "通知返回:" + data);
 			return data;
 		} catch (RestClientException e) {
-			log.info("请求错误。商户代付盘口通知" + ss.getPayorderid() + "通知返回:" + e.getMessage());
+			log.info("请求错误。商户代付盘口通知" + ss.getOutorderid() + "通知返回:" + e.getMessage());
 		}
 		return null;
 	}

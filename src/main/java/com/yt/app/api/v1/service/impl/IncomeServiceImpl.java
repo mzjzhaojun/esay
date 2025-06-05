@@ -68,6 +68,7 @@ import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.SelfPayUtil;
 import com.yt.app.common.util.DateTimeUtil;
+import com.yt.app.common.util.IncomeProduct;
 import com.yt.app.common.util.MD5Utils;
 import com.yt.app.common.util.NumberUtil;
 import com.yt.app.common.util.PayUtil;
@@ -494,7 +495,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		Merchant mc = checkparam(qs);
 		TenantIdContext.setTenantId(mc.getTenant_id());
 		//
-		boolean flage = true;
 		List<Merchantqrcodeaisle> listmc = merchantqrcodeaislemapper.getByMid(mc.getId());
 		if (listmc == null || listmc.size() == 0) {
 			////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
@@ -579,127 +579,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			income.setNotifyurl(qs.getPay_notifyurl());
 			income.setBackforwardurl(qs.getPay_callbackurl());
 			income.setInipaddress(AuthContext.getIp());
-			switch (channel.getName()) {
-			case DictionaryResource.ALISAISLE:
-				JSONObject dataali = PayUtil.SendALiSubmit(income, channel);
-				if (dataali != null) {
-					flage = false;
-					income.setResulturl(dataali.getStr("payurl"));
-					income.setQrcodeordernum(dataali.getStr("sysorderno"));
-				}
-				break;
-			case DictionaryResource.ONEPLUSAISLE:
-				JSONObject dataoneplus = PayUtil.SendOnePlusSubmit(income, channel);
-				if (dataoneplus != null) {
-					flage = false;
-					income.setResulturl(dataoneplus.getStr("payData"));
-					income.setQrcodeordernum(dataoneplus.getStr("payOrderId"));
-				}
-				break;
-			case DictionaryResource.TONGYUSNAISLE:
-				JSONObject data = PayUtil.SendTongYuanSubmit(income, channel);
-				if (data != null) {
-					flage = false;
-					income.setResulturl(data.getStr("payData"));
-					income.setQrcodeordernum(data.getStr("payOrderId"));
-				}
-				break;
-			case DictionaryResource.ZSAISLE:
-				JSONObject zsjz = PayUtil.SendZSSubmit(income, channel);
-				if (zsjz != null) {
-					flage = false;
-					income.setResulturl(zsjz.getJSONObject("PayeeInfo").getStr("CashUrl"));
-					income.setQrcodeordernum(zsjz.getStr("OrderNo"));
-				}
-				break;
-			case DictionaryResource.XSAISLE:
-				SysXSOrder xsjz = PayUtil.SendXSSubmit(income, channel);
-				if (xsjz != null) {
-					flage = false;
-					income.setResulturl(xsjz.getResult().getQrCode());
-					income.setQrcodeordernum(xsjz.getResult().getOrderCode());
-				}
-				break;
-			case DictionaryResource.YSAISLE:
-				SysYSOrder syjz = PayUtil.SendYSSubmit(income, channel);
-				if (syjz != null) {
-					flage = false;
-					income.setResulturl(syjz.getPayParams().getPayUrl());
-					income.setQrcodeordernum(syjz.getPayOrderId());
-				}
-				break;
-			case DictionaryResource.FHLAISLE:
-				SysFhOrder sfh = PayUtil.SendFhSubmit(income, channel);
-				if (sfh != null) {
-					flage = false;
-					income.setResulturl(sfh.getPayParams().getPayJumpUrl());
-					income.setQrcodeordernum(sfh.getPayOrderId());
-				}
-				break;
-			case DictionaryResource.EGAISLE:
-				SysTdOrder seg = PayUtil.SendEgSubmit(income, channel);
-				if (seg != null) {
-					flage = false;
-					income.setResulturl(seg.getData().getPay_url());
-				}
-				break;
-			case DictionaryResource.KFAISLE:
-				SysHsOrder sho = PayUtil.SendKFSubmit(income, channel);
-				if (sho != null) {
-					flage = false;
-					income.setResulturl(sho.getPay_url());
-					income.setQrcodeordernum(sho.getSys_order_no());
-				}
-				break;
-			case DictionaryResource.WDAISLE:
-				SysWdOrder wd = PayUtil.SendWdSubmit(income, channel);
-				if (wd != null) {
-					flage = false;
-					income.setResulturl(wd.getData().getPayData());
-					income.setQrcodeordernum(wd.getData().getPayOrderId());
-				}
-				break;
-			case DictionaryResource.RBLAISLE:
-				SysRblOrder rbl = PayUtil.SendRblSubmit(income, channel);
-				if (rbl != null) {
-					flage = false;
-					income.setResulturl(rbl.getData().getPayUrl());
-					income.setQrcodeordernum(rbl.getData().getTradeNo());
-				}
-				break;
-			case DictionaryResource.GZAISLE:
-				SysGzOrder gz = PayUtil.SendGzSubmit(income, channel);
-				if (gz != null) {
-					flage = false;
-					income.setResulturl(gz.getData().getPayUrl());
-				}
-				break;
-			case DictionaryResource.WJAISLE:
-				SysWjOrder wj = PayUtil.SendWjSubmit(income, channel);
-				if (wj != null) {
-					flage = false;
-					income.setResulturl(wj.getData().getPayData());
-					income.setQrcodeordernum(wj.getData().getPayOrderId());
-				}
-				break;
-			case DictionaryResource.FCAISLE:
-				SysFcOrder fc = PayUtil.SendFcSubmit(income, channel);
-				if (fc != null) {
-					flage = false;
-					income.setResulturl(fc.getData().getPayUrl());
-					income.setQrcodeordernum(fc.getData().getTradeNo());
-				}
-				break;
-			case DictionaryResource.AKLAISLE:
-				SysFcOrder akl = PayUtil.SendAklSubmit(income, channel);
-				if (akl != null) {
-					flage = false;
-					income.setResulturl(akl.getData().getPayUrl());
-					income.setQrcodeordernum(akl.getData().getTradeNo());
-				}
-				break;
-			}
-			if (flage) {
+			// 获取上游产品
+			income = IncomeProduct.getIncomeProduct(income, channel);
+			if (income == null) {
 				channelbot.notifyChannel(channel);
 				QrcodeResultVO qr = new QrcodeResultVO();
 				qr.setPay_memberid(mc.getCode());
@@ -796,6 +678,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				qd = listqrcode.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
 				Assert.notNull(qd, "没有可用的渠道!");
 			}
+			boolean flage = true;
 			// 开始业务
 			Channel channel = channelmapper.getByUserId(qd.getUserid());
 			Income income = addIncome(channel, qas, mc, qs, qd);
@@ -803,7 +686,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			// 直付通手机H5
 			if (qd.getCode().equals(DictionaryResource.PRODUCT_ZFTWAP)) {
 				Qrcode pqd = qrcodemapper.get(qd.getPid());
-				AlipayTradeWapPayResponse response = SelfPayUtil.AlipayTradeWapPay(pqd, qd, income.getOrdernum(), income.getAmount());
+				AlipayTradeWapPayResponse response = SelfPayUtil.AlipayTradeWapPay(pqd, qd, income.getOrdernum(), income.getRealamount());
 				if (response != null) {
 					flage = false;
 					String pageRedirectionData = response.getBody();
@@ -826,7 +709,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				income.setResulturl(income.getQrcode());
 				income.setQrcodeordernum("inqd" + StringUtil.getOrderNum());
 			} else if (qd.getCode().equals(DictionaryResource.PRODUCT_HUIFUTXWAP)) {
-				Map<String, Object> response = SelfPayUtil.quickbuckle(qd, income.getOrdernum(), income.getAmount(), income.getBackforwardurl());
+				Map<String, Object> response = SelfPayUtil.quickbuckle(qd, income.getOrdernum(), income.getRealamount(), income.getBackforwardurl());
 				if (response != null) {
 					flage = false;
 					String outradeno = response.get("hf_seq_id").toString();

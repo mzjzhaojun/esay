@@ -22,6 +22,7 @@ import com.yt.app.api.v1.mapper.QrcodeMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper;
 import com.yt.app.api.v1.mapper.MerchantaisleMapper;
+import com.yt.app.api.v1.mapper.MerchantqrcodeaisleMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.ChannelaccountService;
@@ -53,6 +54,7 @@ import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Qrcodeaisle;
 import com.yt.app.api.v1.entity.Qrcodeaisleqrcode;
 import com.yt.app.api.v1.entity.Merchantaisle;
+import com.yt.app.api.v1.entity.Merchantqrcodeaisle;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtIPage;
@@ -62,6 +64,7 @@ import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.PayUtil;
+import com.yt.app.common.util.PayoutProduct;
 import com.yt.app.common.util.RedisUtil;
 import com.yt.app.common.util.SelfPayUtil;
 import com.yt.app.common.util.StringUtil;
@@ -122,6 +125,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	private PayoutMerchantaccountMapper merchantaccountmapper;
 	@Autowired
 	private MerchantaisleMapper merchantaislemapper;
+	@Autowired
+	private MerchantqrcodeaisleMapper merchantqrcodeaislemapper;
 	@Autowired
 	private MerchantcustomerbanksService merchantcustomerbanksservice;
 	@Autowired
@@ -215,7 +220,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		}
 		RedisUtil.setEx(SystemConstant.CACHE_SYS_PAYOUT_EXIST + t.getOrdernum(), t.getOrdernum(), 60, TimeUnit.SECONDS);
 		// 获取渠道单号
-		boolean flage = getChannelOrderNo(t, cl);
+		boolean flage = PayoutProduct.getPayoutProduct(t, cl);
 		if (flage) {
 			channelbot.notifyChannel(cl);
 			throw new YtException("渠道错误!");
@@ -356,12 +361,14 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		if (pt == null) {
 			throw new YtException("订单不存在!");
 		}
+		Merchant mc = merchantmapper.get(pt.getMerchantid());
 		PayResultVO srv = new PayResultVO();
-		srv.setBankcode(pt.getBankcode());
-		srv.setCode(pt.getStatus());
+		srv.setOutorderid(pt.getOrdernum());
+		srv.setStatus(pt.getStatus());
 		srv.setMerchantid(pt.getMerchantcode());
 		srv.setMerchantorderid(merchantordernum);
-		srv.setPayamt(pt.getAmount());
+		srv.setPayamount(pt.getAmount());
+		srv.setSign(PayUtil.Md5Notify(srv, mc.getAppkey()));
 		return srv;
 	}
 
@@ -384,7 +391,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		}
 
 		PayoutMerchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
-		if (ma.getBalance() < ss.getPayamt() || ss.getPayamt() <= 0) {
+		if (ma.getBalance() < ss.getPayamount() || ss.getPayamount() <= 0) {
 			throw new YtException("账户余额不足");
 		}
 
@@ -398,19 +405,14 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			throw new YtException("已经存在的订单!");
 		}
 
-		List<Merchantaisle> listmc = merchantaislemapper.getByMid(mc.getId());
-		if (listmc == null || listmc.size() == 0) {
-			throw new YtException("商戶沒有配置通道!");
-		}
 		// 下單
 		pt = new Payout();
 		pt.setAccname(ss.getBankowner());
 		pt.setAccnumer(ss.getBanknum());
 		pt.setBankcode(ss.getBankcode());
 		pt.setBankaddress(ss.getBankaddress());
-		pt.setAmount(ss.getPayamt());
+		pt.setAmount(ss.getPayamount());
 		pt.setNotifyurl(ss.getNotifyurl());
-		pt.setAisleid(listmc.get(0).getAisleid());
 		pt.setBankname(ss.getBankname());
 		pt.setMerchantorderid(ss.getMerchantorderid());
 		addPayout(pt, mc);
@@ -419,11 +421,10 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		sr.setBankcode(ss.getBankcode());
 		sr.setMerchantid(sr.getMerchantid());
 		sr.setMerchantorderid(ss.getMerchantorderid());
-		sr.setPayamt(ss.getPayamt());
-		sr.setPayorderid(pt.getMerchantordernum());
+		sr.setPayamount(ss.getPayamount());
+		sr.setOutorderid(pt.getOrdernum());
 		sr.setRemark(ss.getRemark());
-		sr.setPaytype(ss.getPaytype());
-		sr.setSign(PayUtil.Md5Notify(sr, mc.getAppkey()));
+		sr.setSign(PayUtil.Md5QueryResult(sr, mc.getAppkey()));
 		// 返回给盘口订单号
 		return sr;
 	}
@@ -443,63 +444,126 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61); // 盘口发起
 		t.setRemark("新增代付￥:" + String.format("%.2f", t.getAmount()));
-		Aisle a = aislemapper.get(t.getAisleid());
-		t.setAislename(a.getName());
 
-		////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
-		List<Aislechannel> listac = aislechannelmapper.getByAisleId(t.getAisleid());
-		Assert.notEmpty(listac, "没有可用通道!");
-		long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
-		List<Channel> listc = channelmapper.listByArrayId(cids);
-		Assert.notEmpty(listc, "没有可用渠道!");
-		List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount() && c.getStatus()).collect(Collectors.toList());
-		Assert.notEmpty(listcmm, "代付金额超出限额");
-		List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
-		Channel cl = null;
-		if (listcf.size() > 0) {
-			for (int j = 0; j < listcf.size(); j++) {
-				Channel cc = listcf.get(j);
-				String[] match = cc.getFirstmatchmoney().split(",");
-				for (int i = 0; i < match.length; i++) {
-					String number = match[i];
-					if (number.indexOf("-") == -1 && t.getAmount().intValue() == Integer.parseInt(number)) {
-						cl = cc;
-					} else {
-						String[] matchs = number.split("-");
-						Integer min = Integer.parseInt(matchs[0]);
-						Integer max = Integer.parseInt(matchs[1]);
-						if (t.getAmount().intValue() >= min && t.getAmount().intValue() <= max) {
+		List<Merchantaisle> listmc = merchantaislemapper.getByMid(m.getId());
+		if (listmc != null && listmc.size() > 0) {
+			t.setAisleid(listmc.get(0).getAisleid());
+			Aisle a = aislemapper.get(t.getAisleid());
+			t.setAislename(a.getName());
+			////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
+			List<Aislechannel> listac = aislechannelmapper.getByAisleId(t.getAisleid());
+			Assert.notEmpty(listac, "没有可用通道!");
+			long[] cids = listac.stream().mapToLong(ac -> ac.getChannelid()).distinct().toArray();
+			List<Channel> listc = channelmapper.listByArrayId(cids);
+			Assert.notEmpty(listc, "没有可用渠道!");
+			List<Channel> listcmm = listc.stream().filter(c -> c.getMax() >= t.getAmount() && c.getMin() <= t.getAmount() && c.getStatus()).collect(Collectors.toList());
+			Assert.notEmpty(listcmm, "代付金额超出限额");
+			List<Channel> listcf = listc.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
+			Channel cl = null;
+			if (listcf.size() > 0) {
+				for (int j = 0; j < listcf.size(); j++) {
+					Channel cc = listcf.get(j);
+					String[] match = cc.getFirstmatchmoney().split(",");
+					for (int i = 0; i < match.length; i++) {
+						String number = match[i];
+						if (number.indexOf("-") == -1 && t.getAmount().intValue() == Integer.parseInt(number)) {
 							cl = cc;
+						} else {
+							String[] matchs = number.split("-");
+							Integer min = Integer.parseInt(matchs[0]);
+							Integer max = Integer.parseInt(matchs[1]);
+							if (t.getAmount().intValue() >= min && t.getAmount().intValue() <= max) {
+								cl = cc;
+							}
 						}
 					}
 				}
+			} else {
+				List<WeightRandom.WeightObj<String>> weightList = new ArrayList<>(); //
+				double count = 0;
+				for (Channel cml : listcmm) {
+					count = count + cml.getWeight();
+				}
+				for (Channel cmm : listcmm) {
+					weightList.add(new WeightRandom.WeightObj<String>(cmm.getCode(), (cmm.getWeight() / count) * 100));
+				}
+				WeightRandom<String> wr = RandomUtil.weightRandom(weightList);
+				String code = wr.next();
+				cl = listc.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
+				Assert.notNull(cl, "没有可用的渠道!");
+				t.setChannelid(cl.getId());
+				t.setChannelname(cl.getName());
+				t.setChannelcost(cl.getOnecost());// 渠道手续费
+				t.setChanneldeal(t.getAmount() * (cl.getExchange() / 1000));
+				t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
+				t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 			}
+
+			boolean flage = PayoutProduct.getPayoutProduct(t, cl);
+
+			if (flage) {
+				channelbot.notifyChannel(cl);
+				throw new YtException("渠道错误!");
+			}
+			// 渠道余额
+			t.setChannelbalance(cl.getBalance() - t.getChannelpay());
 		} else {
-			List<WeightRandom.WeightObj<String>> weightList = new ArrayList<>(); //
-			double count = 0;
-			for (Channel cml : listcmm) {
-				count = count + cml.getWeight();
+			List<Merchantqrcodeaisle> listmqa = merchantqrcodeaislemapper.getByMid(m.getId());
+			Assert.notEmpty(listmqa, "没有可用通道!");
+			////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
+			t.setAisleid(listmqa.get(0).getQrcodeaisleid());
+			Qrcodeaisle a = qrcodeaislemapper.get(t.getAisleid());
+			t.setAislename(a.getName());
+			List<Qrcodeaisleqrcode> listqaq = qrcodeaisleqrcodemapper.getByQrcodeAisleId(t.getAisleid());
+			long[] qaqids = listqaq.stream().mapToLong(qaq -> qaq.getQrcodelid()).distinct().toArray();
+			List<Qrcode> listqrcode = qrcodemapper.listByArrayId(qaqids);
+			Double amount = Double.valueOf(t.getAmount());
+			// 小于设置限额
+			List<Qrcode> listcmm = listqrcode.stream().filter(c -> c.getMax() >= amount && c.getMin() <= amount && (c.getTodayincome() + amount) < c.getLimits() && c.getStatus()).collect(Collectors.toList());
+			Assert.notEmpty(listcmm, "代付金额超出限额");
+			List<Qrcode> listcf = listcmm.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
+			Qrcode qd = null;
+			if (listcf.size() > 0) {
+				for (int j = 0; j < listcf.size(); j++) {
+					Qrcode cc = listcf.get(j);
+					String[] match = cc.getFirstmatchmoney().split(",");
+					for (int i = 0; i < match.length; i++) {
+						String number = match[i];
+						if (number.indexOf("-") == -1 && t.getAmount().intValue() == Integer.parseInt(number)) {
+							qd = cc;
+						} else {
+							String[] matchs = number.split("-");
+							Integer min = Integer.parseInt(matchs[0]);
+							Integer max = Integer.parseInt(matchs[1]);
+							if (t.getAmount().intValue() >= min && t.getAmount().intValue() <= max) {
+								qd = cc;
+							}
+						}
+					}
+				}
+			} else {
+				List<WeightRandom.WeightObj<String>> weightList = new ArrayList<>(); //
+				double count = 0;
+				for (Qrcode cml : listcmm) {
+					count = count + cml.getWeight();
+				}
+				for (Qrcode cmm : listcmm) {
+					weightList.add(new WeightRandom.WeightObj<String>(cmm.getCode(), (cmm.getWeight() / count) * 100));
+				}
+				WeightRandom<String> wr = RandomUtil.weightRandom(weightList);
+				String code = wr.next();
+				qd = listcmm.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
+				Assert.notNull(qd, "没有可用的渠道!");
+				t.setChannelid(qd.getId());
+				t.setChannelname(qd.getName());
+				t.setChannelcost(2.00);// 渠道手续费
+				t.setChanneldeal(t.getAmount() + t.getChannelcost());
+				t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
+				t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
 			}
-			for (Channel cmm : listcmm) {
-				weightList.add(new WeightRandom.WeightObj<String>(cmm.getCode(), (cmm.getWeight() / count) * 100));
-			}
-			WeightRandom<String> wr = RandomUtil.weightRandom(weightList);
-			String code = wr.next();
-			cl = listc.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
-			Assert.notNull(cl, "没有可用的渠道!");
-			t.setChannelid(cl.getId());
-			t.setChannelname(cl.getName());
-			t.setChannelcost(cl.getOnecost());// 渠道手续费
-			t.setChanneldeal(t.getAmount() * (cl.getExchange() / 1000));
-			t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
-			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
-		}
-
-		boolean flage = getChannelOrderNo(t, cl);
-
-		if (flage) {
-			channelbot.notifyChannel(cl);
-			throw new YtException("渠道错误!");
+			RedisUtil.setEx(SystemConstant.CACHE_SYS_PAYOUT_EXIST + t.getOrdernum(), t.getOrdernum(), 60, TimeUnit.SECONDS);
+			// 获取渠道单号
+			getQrcodelOrderNo(t, qd);
 		}
 
 		///////////////////////////////////////////////////// 计算商户订单/////////////////////////////////////////////////////
@@ -513,8 +577,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		} else {
 			t.setAgentincome(0.00);
 		}
-		// 渠道余额
-		t.setChannelbalance(cl.getBalance() - t.getChannelpay());
 		// 小计
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 		//
@@ -900,7 +962,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 		RedisUtil.setEx(SystemConstant.CACHE_SYS_PAYOUT_EXIST + t.getOrdernum(), t.getOrdernum(), 60, TimeUnit.SECONDS);
 
-		boolean flage = getChannelOrderNo(t, cl);
+		boolean flage = PayoutProduct.getPayoutProduct(t, cl);
 		if (flage) {
 			channelbot.notifyChannel(cl);
 			throw new YtException("渠道错误!");
@@ -981,98 +1043,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		// 渠道余额
 		t.setIncome(t.getMerchantpay() - t.getChannelpay() - t.getAgentincome()); // 此订单完成后预计总收入
 		return mapper.post(t);
-	}
-
-	boolean getChannelOrderNo(Payout t, Channel cl) {
-		// 获取渠道单号
-		boolean flage = true;
-		switch (cl.getName()) {
-		case DictionaryResource.DFHYAISLE:
-			String orderflage = PayUtil.SendHYSubmit(t, cl);
-			if (orderflage != null) {
-				flage = false;
-				t.setChannelordernum("outc" + StringUtil.getOrderNum());
-			}
-			break;
-		case DictionaryResource.DF8GAISLE:
-			String egordernum = PayUtil.Send8GSubmit(t, cl);
-			if (egordernum != null) {
-				flage = false;
-				t.setChannelordernum(egordernum);
-			}
-			break;
-		case DictionaryResource.DFQWAISLE:
-			String qwordernum = PayUtil.SendQWSubmit(t, cl);
-			if (qwordernum != null) {
-				flage = false;
-				t.setChannelordernum(qwordernum);
-			}
-			break;
-		case DictionaryResource.DFXJAISLE:
-			String xjordernum = PayUtil.SendXJSubmit(t, cl);
-			if (xjordernum != null) {
-				flage = false;
-				t.setChannelordernum(xjordernum);
-			}
-			break;
-		case DictionaryResource.DFHYTAISLE:
-			String hytordernum = PayUtil.SendHYTSubmit(t, cl);
-			if (hytordernum != null) {
-				flage = false;
-				t.setChannelordernum("outc" + StringUtil.getOrderNum());
-			}
-			break;
-		case DictionaryResource.DFLJAISLE:
-			String ljordernum = PayUtil.SendLJSubmit(t, cl);
-			if (ljordernum != null) {
-				flage = false;
-				t.setChannelordernum(ljordernum);
-			}
-			break;
-		case DictionaryResource.DFSXAISLE:
-			String sxordernum = PayUtil.SendSXSubmit(t, cl);
-			if (sxordernum != null) {
-				flage = false;
-				t.setChannelordernum(sxordernum);
-			}
-			break;
-		case DictionaryResource.DFXRAISLE:
-			String xrordernum = PayUtil.SendXRSubmit(t, cl);
-			if (xrordernum != null) {
-				flage = false;
-				t.setChannelordernum(xrordernum);
-			}
-			break;
-		case DictionaryResource.DFYSAISLE:
-			String ysordernum = PayUtil.SendYSSubmit(t, cl);
-			if (ysordernum != null) {
-				flage = false;
-				t.setChannelordernum(ysordernum);
-			}
-			break;
-		case DictionaryResource.DFSNAISLE:
-			String ordernum = PayUtil.SendSnSubmit(t, cl);
-			if (ordernum != null) {
-				flage = false;
-				t.setChannelordernum(ordernum);
-			}
-			break;
-		case DictionaryResource.DFSSAISLE:
-			String ssordernum = PayUtil.SendSSSubmit(t, cl);
-			if (ssordernum != null) {
-				flage = false;
-				t.setChannelordernum(ssordernum);
-			}
-			break;
-		case DictionaryResource.DFTXAISLE:
-			String txordernum = PayUtil.SendTxSubmit(t, cl);
-			if (txordernum != null) {
-				flage = false;
-				t.setChannelordernum(txordernum);
-			}
-			break;
-		}
-		return flage;
 	}
 
 	void getQrcodelOrderNo(Payout t, Qrcode qd) {

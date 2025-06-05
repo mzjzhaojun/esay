@@ -30,12 +30,10 @@ public class PayoutNotifyThread implements Runnable {
 		Merchant merchant = merchantmapper.get(payout.getMerchantid());
 		PayResultVO ss = new PayResultVO();
 		ss.setMerchantid(payout.getMerchantcode());
-		ss.setPayorderid(payout.getMerchantordernum());
+		ss.setOutorderid(payout.getOrdernum());
 		ss.setMerchantorderid(payout.getMerchantorderid());
-		ss.setPayamt(payout.getAmount());
-		ss.setBankcode(payout.getBankcode());
-		ss.setCode(payout.getStatus());
-		ss.setRemark(payout.getRemark());
+		ss.setPayamount(payout.getAmount());
+		ss.setStatus(payout.getStatus());
 		log.info("代付通知 start>>>>>>商户单号：" + payout.getOrdernum());
 		int i = 1;
 		while (true) {

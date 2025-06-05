@@ -1,5 +1,6 @@
 package com.yt.app.api.v1.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,12 +9,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.yt.app.api.v1.dbo.SysQueryDTO;
 import com.yt.app.api.v1.dbo.PaySubmitDTO;
@@ -563,6 +571,36 @@ public class OrderController {
 		PayResultVO pt = payoutservice.query(requestEntity.getBody().getMerchantorderid());
 		return new YtResponseEntity<Object>(new YtBody(pt));
 	}
+
+//	/**
+//	 * 代付盘口下单
+//	 * 
+//	 * @param requestEntity
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@RequestMapping(value = "/testsubmitpayout", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//	public YtResponseEntity<Object> testsubmitpayout(YtRequestEntity<PaySubmitDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+//			HttpHeaders headers = new HttpHeaders();
+//			headers.setContentType(MediaType.APPLICATION_JSON);
+//			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+//			// 签名
+//			Map<String, String> map = new HashMap<String, String>();
+//			map.put("merchantid", "SH88002");
+//			map.put("merchantorderid", "123123dsfsd");
+//			map.put("payamount", "110.00");
+//			map.put("bankowner", "测试");
+//			map.put("banknum", "62212321232423432");
+//			map.put("bankname", "中国银行");
+//			map.put("sign", "0dfe0d28a410e79b1267116ac2488fc7");
+//			HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
+//			RestTemplate resttemplate = new RestTemplate();
+//			ResponseEntity<String> sov = resttemplate.exchange("http://192.168.118.26:18080/esay/rest/v1/order/submitpayout", HttpMethod.POST, httpEntity, String.class);
+//			String data = sov.getBody();
+//			System.out.println(data);
+//		return new YtResponseEntity<Object>(new YtBody(data));
+//	}
 
 	/**
 	 * 代付盘口下单

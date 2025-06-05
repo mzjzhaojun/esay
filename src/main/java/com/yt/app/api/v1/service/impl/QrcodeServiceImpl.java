@@ -23,6 +23,7 @@ import com.alipay.api.response.AlipayFundTransUniTransferResponse;
 import com.alipay.api.response.AlipayTradeOrderSettleResponse;
 import com.alipay.api.response.AlipayTradeRoyaltyRelationBindResponse;
 import com.alipay.api.response.AlipayTradeWapPayResponse;
+import com.alipay.api.response.AntMerchantExpandIndirectZftDeleteResponse;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Qrcodeaisleqrcode;
@@ -230,6 +231,13 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 		qrcode.setFreezebalance(Double.valueOf(afaqr.getFreezeAmount()));
 		mapper.put(qrcode);
 	}
+	
+	@Override
+	public void merchantexpandindirectzftdelete(Qrcode qrcode) {
+		AntMerchantExpandIndirectZftDeleteResponse afaqr = SelfPayUtil.AntMerchantExpandIndirectZftDelete(qrcode);
+		Assert.notNull(afaqr, "清退失败!");
+	}
+	
 
 	@Override
 	public void transunitransfer(Qrcodetransferrecord qtc) {

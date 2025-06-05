@@ -64,6 +64,9 @@ public interface QrcodeService extends YtIBaseService<Qrcode, Long> {
 	 * @param c
 	 */
 	void zftaccountquery(Qrcode c);
+	
+	//
+	 void merchantexpandindirectzftdelete(Qrcode qrcode) ;
 
 	/**
 	 * 易票联账户余额查询
