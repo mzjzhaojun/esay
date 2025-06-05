@@ -123,7 +123,7 @@ public class QrcodeaccountorderServiceImpl extends YtBaseServiceImpl<Qrcodeaccou
 		t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
 		t.setCollection(0.00);
 		t.setAmount(amount);
-		t.setType("" + DictionaryResource.ORDERTYPE_16);
+		t.setType("" + DictionaryResource.ORDERTYPE_11);
 		t.setOrdernum("QDTX" + StringUtil.getOrderNum());
 		t.setRemark("自营渠道提现￥：" + String.format("%.2f", amount));
 		mapper.add(t);

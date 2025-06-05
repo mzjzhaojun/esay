@@ -200,9 +200,9 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		t.setMerchantexchange(t.getCollection());
 		t.setAmountreceived((t.getAmount()));
 		t.setUsdtval(t.getAmount() / t.getCollection());
-		t.setType("" + DictionaryResource.ORDERTYPE_28);
+		t.setType("" + DictionaryResource.ORDERTYPE_11);
 		t.setOrdernum("SHTX" + StringUtil.getOrderNum());
-		t.setRemark("商户代收提现￥：" + String.format("%.2f", t.getAmount()));
+		t.setRemark("商户提现￥：" + String.format("%.2f", t.getAmount()));
 		Integer i = mapper.post(t);
 
 		// 支出账户和记录
@@ -233,7 +233,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		t.setMerchantexchange(t.getCollection());
 		t.setAmountreceived((t.getAmount()));
 		t.setUsdtval(t.getAmount() / t.getCollection());
-		t.setType("" + DictionaryResource.ORDERTYPE_28);
+		t.setType("" + DictionaryResource.ORDERTYPE_11);
 		t.setOrdernum("SHTX" + StringUtil.getOrderNum());
 		t.setRemark("商户代收提现￥：" + String.format("%.2f", t.getAmount()));
 		mapper.post(t);
@@ -243,33 +243,6 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		return t.getId();
 	}
 
-	/**
-	 * 飞机下发
-	 */
-	@Override
-	public void incomewithdrawTelegram(Merchant m, double amount) {
-		Merchantaccountorder t = new Merchantaccountorder();
-		t.setUserid(m.getUserid());
-		// 支出订单
-		t.setMerchantid(m.getId());
-		t.setTenant_id(m.getTenant_id());
-		t.setMerchantname(m.getName());
-		t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
-		t.setCollection(0.00);
-		t.setAmount(amount);
-		t.setMerchantexchange(0.00);
-		t.setAmountreceived(amount);
-		t.setUsdtval(amount);
-		t.setType("" + DictionaryResource.ORDERTYPE_28);
-		t.setOrdernum("SHTX" + StringUtil.getOrderNum());
-		t.setRemark("商户代收飞机提现￥：" + String.format("%.2f", amount));
-		mapper.add(t);
-
-		// 支出账户和记录
-//		incomemerchantaccountservice.withdrawamount(t);
-
-//		incomemerchantaccountservice.updateWithdrawamount(t);
-	}
 
 	// 提现成功
 	@Override

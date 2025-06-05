@@ -159,7 +159,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setNotifyurl(m.getApireusultip());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
-		t.setType(DictionaryResource.ORDERTYPE_18);
+		t.setType(DictionaryResource.ORDERTYPE_11);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
 		t.setMerchantordernum("outm" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantcost(m.getOnecost());// 手续费
@@ -268,7 +268,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setNotifyurl(m.getApireusultip());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
-		t.setType(DictionaryResource.ORDERTYPE_18);
+		t.setType(DictionaryResource.ORDERTYPE_11);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
 		t.setMerchantordernum("outm" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantcost(m.getOnecost());// 手续费
@@ -436,8 +436,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantid(m.getId());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
-		t.setType(DictionaryResource.ORDERTYPE_18);
-		t.setOrdernum(StringUtil.getOrderNum());// 系统单号
+		t.setType(DictionaryResource.ORDERTYPE_11);
+		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
 		t.setMerchantordernum("PM" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
@@ -949,7 +949,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setNotifyurl(m.getApireusultip());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
-		t.setType(DictionaryResource.ORDERTYPE_18);
+		t.setType(DictionaryResource.ORDERTYPE_11);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
 		t.setMerchantordernum("outm" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantcost(m.getOnecost());// 手续费
@@ -1007,7 +1007,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setNotifyurl(m.getApireusultip());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
-		t.setType(DictionaryResource.ORDERTYPE_18);
+		t.setType(DictionaryResource.ORDERTYPE_11);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
 		t.setMerchantordernum("outm" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantcost(m.getOnecost());// 手续费

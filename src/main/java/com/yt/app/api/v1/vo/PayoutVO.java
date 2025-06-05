@@ -32,6 +32,7 @@ public class PayoutVO extends BaseVO {
 	String merchantname;
 	String merchantcode;
 	Double merchantbalance;
+	String merchantorderid;
 	String merchantordernum;
 	Double merchantcost;
 	Double merchantdeal;

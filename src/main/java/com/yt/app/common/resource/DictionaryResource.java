@@ -63,38 +63,15 @@ public class DictionaryResource implements Serializable {
 	public static final long SYSTEM_ADMINTYPE_5 = 5; // 代理
 	public static final long SYSTEM_ADMINTYPE_6 = 6; // 渠道
 	public static final long SYSTEM_ADMINTYPE_7 = 7; // 代收商户
-	public static final long SYSTEM_ADMINTYPE_8 = 8; // 换汇商户
 
 	/**
 	 * 订单类型
 	 */
-	public static final Integer ORDERTYPE_10 = 10; // 渠道充值
-	public static final Integer ORDERTYPE_16 = 16; // 自营渠道提现
+	public static final Integer ORDERTYPE_10 = 10; // 收入
+	public static final Integer ORDERTYPE_11 = 11; // 支出
+	public static final Integer ORDERTYPE_12 = 12; // 拒绝
+	public static final Integer ORDERTYPE_13 = 13; // 取消
 
-	public static final Integer ORDERTYPE_11 = 11; // 商户代付充值
-
-	public static final Integer ORDERTYPE_12 = 12; // 系统代付订单
-	public static final Integer ORDERTYPE_14 = 14; // 系统代收订单
-	public static final Integer ORDERTYPE_26 = 26; // 系统代理订单
-
-	public static final Integer ORDERTYPE_21 = 21; // 代理提现
-	public static final Integer ORDERTYPE_13 = 13; // 代理换汇订单
-	public static final Integer ORDERTYPE_23 = 23; // 代理代付订单
-	public static final Integer ORDERTYPE_20 = 20; // 代理代收订单
-
-	public static final Integer ORDERTYPE_22 = 22; // 商户换汇订单
-	public static final Integer ORDERTYPE_28 = 28; // 商户代收提现
-	public static final Integer ORDERTYPE_29 = 29; // 商户代付订单
-	public static final Integer ORDERTYPE_15 = 25; // 商户代付提现
-
-	public static final Integer ORDERTYPE_24 = 24; // 换汇充值
-	public static final Integer ORDERTYPE_25 = 25; // 换汇提现
-
-	public static final Integer ORDERTYPE_27 = 27; // 代收订单
-	public static final Integer ORDERTYPE_18 = 18; // 代付订单
-	public static final Integer ORDERTYPE_19 = 19; // 換汇订单
-
-	public static final Integer ORDERTYPE_17 = 17; // 渠道代付订单
 
 	/**
 	 * 收入支出资金明细类型
@@ -102,6 +79,7 @@ public class DictionaryResource implements Serializable {
 	public static final Integer RECORDTYPE_30 = 30; // 收入待确认
 	public static final Integer RECORDTYPE_31 = 31; // 收入成功
 	public static final Integer RECORDTYPE_33 = 33; // 收入取消
+	
 	public static final Integer RECORDTYPE_34 = 34; // 支出待确认
 	public static final Integer RECORDTYPE_35 = 35; // 支出成功
 	public static final Integer RECORDTYPE_37 = 37; // 支出取消
@@ -134,23 +112,6 @@ public class DictionaryResource implements Serializable {
 	public static final Integer PAYOUTNOTIFYSTATUS_64 = 64; // 通知失败
 	public static final Integer PAYOUTNOTIFYSTATUS_65 = 65; // 正在通知
 
-	/**
-	 * 通道类型
-	 */
-	public static final Integer AISLE_TYPE_PAYOUT_70 = 70;// 代付
-	public static final Integer AISLE_TYPE_EXCHANGE_71 = 71;// 换汇
-
-	/**
-	 * 换汇资金明细类型
-	 */
-	public static final Integer EXCHANGETYPE_80 = 80; // 换汇待确认
-	public static final Integer EXCHANGETYPE_81 = 81; // 换汇通过
-	public static final Integer EXCHANGETYPE_82 = 82; // 收入通过
-	public static final Integer EXCHANGETYPE_83 = 83; // 支出通过
-	public static final Integer EXCHANGETYPE_84 = 84; // 收入拒絕
-	public static final Integer EXCHANGETYPE_85 = 85; // 支出拒絕
-	public static final Integer EXCHANGETYPE_86 = 86; // 收入取消
-	public static final Integer EXCHANGETYPE_87 = 87; // 支出取消
 
 	public static final Integer TGBOT_TYPE_M = 101; // 商户
 	public static final Integer TGBOT_TYPE_C = 102; // 运营

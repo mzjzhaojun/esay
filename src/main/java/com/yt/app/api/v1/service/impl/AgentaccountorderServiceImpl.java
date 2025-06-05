@@ -116,8 +116,8 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 		t.setExchange(t.getAgentexchange());
 		t.setAmountreceived((t.getAmount()));
 		t.setUsdtval(t.getAmount() / t.getAgentexchange());
-		t.setType(DictionaryResource.ORDERTYPE_21.toString());
-		t.setOrdernum("AW" + StringUtil.getOrderNum());
+		t.setType(DictionaryResource.ORDERTYPE_11.toString());
+		t.setOrdernum("AG" + StringUtil.getOrderNum());
 		t.setRemark("提现￥:" + String.format("%.2f", t.getAmountreceived()));
 		Integer i = mapper.post(t);
 
@@ -178,8 +178,8 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 		t.setExchange(t.getAgentexchange());
 		t.setAmountreceived((t.getAmount()));
 		t.setUsdtval(t.getAmount() / t.getAgentexchange());
-		t.setType(DictionaryResource.ORDERTYPE_21.toString());
-		t.setOrdernum("AW" + StringUtil.getOrderNum());
+		t.setType(DictionaryResource.ORDERTYPE_11.toString());
+		t.setOrdernum("AG" + StringUtil.getOrderNum());
 		t.setRemark("提现￥:" + String.format("%.2f", t.getAmountreceived()));
 		mapper.post(t);
 

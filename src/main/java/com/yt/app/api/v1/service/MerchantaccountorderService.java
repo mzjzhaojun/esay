@@ -36,5 +36,4 @@ public interface MerchantaccountorderService extends YtIBaseService<Merchantacco
 
 	void incomewithdrawmanual(Merchantaccountorder mco);
 
-	void incomewithdrawTelegram(Merchant m, double amount);
 }

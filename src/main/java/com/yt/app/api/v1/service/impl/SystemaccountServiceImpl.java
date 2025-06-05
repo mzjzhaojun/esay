@@ -128,7 +128,7 @@ public class SystemaccountServiceImpl extends YtBaseServiceImpl<Systemaccount, L
 			Systemaccountrecord scr = new Systemaccountrecord();
 			scr.setSystemaccountid(t.getId());
 			scr.setName(mao.getMerchantname());
-			scr.setType(DictionaryResource.ORDERTYPE_14);
+			scr.setType(DictionaryResource.ORDERTYPE_10);
 			scr.setPretotalincome(t.getTotalincome());
 			scr.setPosttotalincome(t.getTotalincome() + mao.getIncomeamount());
 			scr.setAmount(mao.getIncomeamount());

@@ -131,7 +131,6 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		t.setTenant_id(u.getTenant_id());
 		t.setUserid(u.getId());
 		t.setAppkey(StringUtil.getUUID());
-		t.setType(DictionaryResource.AISLE_TYPE_PAYOUT_70.toString());
 		mapper.post(t);
 
 		//

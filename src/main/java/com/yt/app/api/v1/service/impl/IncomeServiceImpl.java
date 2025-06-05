@@ -615,7 +615,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			income.setFewamount(0.00);
 			income.setCollection(mc.getCollection());
 			income.setExchange(channel.getCollection());
-			income.setType(DictionaryResource.ORDERTYPE_27.toString());
+			income.setType(DictionaryResource.ORDERTYPE_10.toString());
 			income.setRemark("新增代收资金￥：" + income.getAmount());
 			int i = mapper.post(income);
 			if (i == 0) {
@@ -753,7 +753,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			income.setCollection(mc.getCollection());
 			income.setExchange(qd.getCollection());
 			income.setInipaddress(AuthContext.getIp());
-			income.setType(DictionaryResource.ORDERTYPE_27.toString());
+			income.setType(DictionaryResource.ORDERTYPE_10.toString());
 			income.setRemark("新增代收资金￥：" + income.getAmount());
 
 			int i = mapper.post(income);
