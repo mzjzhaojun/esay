@@ -4,7 +4,6 @@ import org.apache.poi.xssf.streaming.SXSSFCell;
 import org.apache.poi.xssf.streaming.SXSSFRow;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.MerchantaccountorderMapper;
@@ -29,7 +28,6 @@ import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.RedisUtil;
-import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.StringUtil;
 
 import cn.hutool.core.lang.Assert;
@@ -180,30 +178,23 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	/// 代收提现处理
 	@Override
 	public Integer incomewithdrawmanual(Merchantaccountorder mco) {
-		RLock lock = RedissonUtil.getLock(mco.getId());
 		User u = usermapper.get(SysUserContext.getUserId());
 		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
 		Assert.isTrue(isValid, "验证码错误！");
 		Integer i = 0;
-		try {
-			lock.lock();
-			Merchantaccountorder mao = mapper.get(mco.getId());
-			if (mao.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
-				mao.setStatus(mco.getStatus());
-				if (mco.getImgurl() != null)
-					mao.setImgurl(mco.getImgurl());
-				i = mapper.put(mao);
-				if (i > 0) {
-					if (mco.getStatus().equals(DictionaryResource.ORDERSTATUS_52)) {
-						incomemerchantaccountservice.updateWithdrawamount(mao);
-					} else {
-						incomemerchantaccountservice.cancelWithdrawamount(mao);
-					}
+		Merchantaccountorder mao = mapper.get(mco.getId());
+		if (mao.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
+			mao.setStatus(mco.getStatus());
+			if (mco.getImgurl() != null)
+				mao.setImgurl(mco.getImgurl());
+			i = mapper.put(mao);
+			if (i > 0) {
+				if (mco.getStatus().equals(DictionaryResource.ORDERSTATUS_52)) {
+					incomemerchantaccountservice.updateWithdrawamount(mao);
+				} else {
+					incomemerchantaccountservice.cancelWithdrawamount(mao);
 				}
 			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
 		}
 		return i;
 	}
@@ -213,20 +204,12 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	 */
 	@Override
 	public Integer cancleincomewithdraw(Long id) {
-		RLock lock = RedissonUtil.getLock(id);
-		try {
-			lock.lock();
-			Merchantaccountorder mao = mapper.get(id);
-			mao.setStatus(DictionaryResource.ORDERSTATUS_53);
-			Integer i = mapper.put(mao);
-			//
-			incomemerchantaccountservice.cancelWithdrawamount(mao);
-			return i;
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-		return 0;
+		Merchantaccountorder mao = mapper.get(id);
+		mao.setStatus(DictionaryResource.ORDERSTATUS_53);
+		Integer i = mapper.put(mao);
+		//
+		incomemerchantaccountservice.cancelWithdrawamount(mao);
+		return i;
 	}
 
 	// 代付提现
@@ -266,30 +249,23 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	/// 代付提现处理
 	@Override
 	public Integer payoutmanual(Merchantaccountorder mco) {
-		RLock lock = RedissonUtil.getLock(mco.getId());
 		User u = usermapper.get(SysUserContext.getUserId());
 		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
 		Assert.isTrue(isValid, "验证码错误！");
 		Integer i = 0;
-		try {
-			lock.lock();
-			Merchantaccountorder mao = mapper.get(mco.getId());
-			if (mao.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
-				mao.setStatus(mco.getStatus());
-				if (mco.getImgurl() != null)
-					mao.setImgurl(mco.getImgurl());
-				i = mapper.put(mao);
-				if (i > 0) {
-					if (mco.getStatus().equals(DictionaryResource.ORDERSTATUS_52)) {
-						payoutmerchantaccountservice.updateWithdrawamount(mao);
-					} else {
-						payoutmerchantaccountservice.cancleWithdrawamount(mao);
-					}
+		Merchantaccountorder mao = mapper.get(mco.getId());
+		if (mao.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
+			mao.setStatus(mco.getStatus());
+			if (mco.getImgurl() != null)
+				mao.setImgurl(mco.getImgurl());
+			i = mapper.put(mao);
+			if (i > 0) {
+				if (mco.getStatus().equals(DictionaryResource.ORDERSTATUS_52)) {
+					payoutmerchantaccountservice.updateWithdrawamount(mao);
+				} else {
+					payoutmerchantaccountservice.cancleWithdrawamount(mao);
 				}
 			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
 		}
 		return i;
 	}
@@ -299,20 +275,12 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	 */
 	@Override
 	public Integer payoutcancleWithdraw(Long id) {
-		RLock lock = RedissonUtil.getLock(id);
-		try {
-			lock.lock();
-			Merchantaccountorder mao = mapper.get(id);
-			mao.setStatus(DictionaryResource.ORDERSTATUS_53);
-			Integer i = mapper.put(mao);
-			//
-			payoutmerchantaccountservice.cancleWithdrawamount(mao);
-			return i;
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-		return 0;
+		Merchantaccountorder mao = mapper.get(id);
+		mao.setStatus(DictionaryResource.ORDERSTATUS_53);
+		Integer i = mapper.put(mao);
+		//
+		payoutmerchantaccountservice.cancleWithdrawamount(mao);
+		return i;
 	}
 
 	/**
@@ -353,26 +321,19 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	// 充值成功
 	@Override
 	public Integer incomemanual(Merchantaccountorder mco) {
-		RLock lock = RedissonUtil.getLock(mco.getId());
 		User u = usermapper.get(SysUserContext.getUserId());
 		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
 		Assert.isTrue(isValid, "验证码错误！");
 		Integer i = 0;
-		try {
-			lock.lock();
-			Merchantaccountorder mao = mapper.get(mco.getId());
-			mao.setStatus(mco.getStatus());
-			i = mapper.put(mao);
-			if (i > 0) {
-				if (mco.getStatus() == DictionaryResource.ORDERSTATUS_52) {
-					payoutmerchantaccountservice.updateTotalincome(mao);
-				} else {
-					payoutmerchantaccountservice.cancleTotalincome(mao);
-				}
+		Merchantaccountorder mao = mapper.get(mco.getId());
+		mao.setStatus(mco.getStatus());
+		i = mapper.put(mao);
+		if (i > 0) {
+			if (mco.getStatus() == DictionaryResource.ORDERSTATUS_52) {
+				payoutmerchantaccountservice.updateTotalincome(mao);
+			} else {
+				payoutmerchantaccountservice.cancleTotalincome(mao);
 			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
 		}
 		return i;
 	}
@@ -382,20 +343,12 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	 */
 	@Override
 	public Integer incomecancle(Long id) {
-		RLock lock = RedissonUtil.getLock(id);
-		try {
-			lock.lock();
-			Merchantaccountorder mao = mapper.get(id);
-			mao.setStatus(DictionaryResource.ORDERSTATUS_53);
-			Integer i = mapper.put(mao);
-			//
-			payoutmerchantaccountservice.cancleTotalincome(mao);
-			return i;
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-		return 0;
+		Merchantaccountorder mao = mapper.get(id);
+		mao.setStatus(DictionaryResource.ORDERSTATUS_53);
+		Integer i = mapper.put(mao);
+		//
+		payoutmerchantaccountservice.cancleTotalincome(mao);
+		return i;
 	}
 
 	// 代收提现app

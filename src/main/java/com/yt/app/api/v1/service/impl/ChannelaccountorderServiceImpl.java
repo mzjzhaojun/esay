@@ -1,6 +1,5 @@
 package com.yt.app.api.v1.service.impl;
 
-import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,6 @@ import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.RedisUtil;
-import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.StringUtil;
 
 import cn.hutool.core.lang.Assert;
@@ -90,20 +88,12 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 	 */
 	@Override
 	public Integer cancelmanual(Long id) {
-		RLock lock = RedissonUtil.getLock(id);
-		try {
-			lock.lock();
-			Channelaccountorder mao = mapper.get(id);
-			mao.setStatus(DictionaryResource.ORDERSTATUS_53);
-			Integer i = mapper.put(mao);
-			//
-			channelaccountservice.cancleTotalincome(mao);
-			return i;
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-		return 0;
+		Channelaccountorder mao = mapper.get(id);
+		mao.setStatus(DictionaryResource.ORDERSTATUS_53);
+		Integer i = mapper.put(mao);
+		//
+		channelaccountservice.cancleTotalincome(mao);
+		return i;
 	}
 
 	@Override
