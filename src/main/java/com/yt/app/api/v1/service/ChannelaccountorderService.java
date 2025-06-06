@@ -16,6 +16,10 @@ public interface ChannelaccountorderService extends YtIBaseService<Channelaccoun
 
 	YtIPage<Channelaccountorder> page(Map<String, Object> param);
 
+	// 处理充值
 	void incomemanual(Channelaccountorder cco);
+
+	// 取消充值
+	Integer cancelmanual(Long id);
 
 }

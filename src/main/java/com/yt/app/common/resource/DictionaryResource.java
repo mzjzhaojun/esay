@@ -76,6 +76,7 @@ public class DictionaryResource implements Serializable {
 	public static final Integer ORDERTYPE_20 = 20; // 商户充值
 	public static final Integer ORDERTYPE_21 = 21; // 代付商户提现
 	public static final Integer ORDERTYPE_22 = 22; // 代收商户提现
+	public static final Integer ORDERTYPE_23 = 23; // 渠道充值
 
 	/**
 	 * 收入支出资金明细类型

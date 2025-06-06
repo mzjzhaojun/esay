@@ -1,5 +1,6 @@
 package com.yt.app.api.v1.service.impl;
 
+import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
 import com.yt.app.common.util.RedisUtil;
+import com.yt.app.common.util.RedissonUtil;
 import com.yt.app.common.util.StringUtil;
 
 import cn.hutool.core.lang.Assert;
@@ -70,17 +72,38 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 		t.setChannelcode(m.getCode());
 		t.setStatus(DictionaryResource.ORDERSTATUS_50);
 		t.setAmountreceived((t.getAmount() * (t.getExchange() + t.getChannelexchange())));
-		t.setType(DictionaryResource.ORDERTYPE_10);
+		t.setType(DictionaryResource.ORDERTYPE_23);
 		t.setUsdtval(t.getAmount());
 		t.setOrdernum("CT" + StringUtil.getOrderNum());
 		t.setRemark("渠道充值￥：" + String.format("%.2f", t.getAmountreceived()));
 		Integer i = mapper.post(t);
 
 		// 收入账户和记录
-//		channelaccountservice.totalincome(t);
+		channelaccountservice.totalincome(t);
 
 		//
 		return i;
+	}
+
+	/**
+	 * 代收提现取消
+	 */
+	@Override
+	public Integer cancelmanual(Long id) {
+		RLock lock = RedissonUtil.getLock(id);
+		try {
+			lock.lock();
+			Channelaccountorder mao = mapper.get(id);
+			mao.setStatus(DictionaryResource.ORDERSTATUS_53);
+			Integer i = mapper.put(mao);
+			//
+			channelaccountservice.cancleTotalincome(mao);
+			return i;
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+		return 0;
 	}
 
 	@Override
@@ -106,7 +129,7 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 		return t;
 	}
 
-//////////////////////////////////////////////////////////////充值到渠道
+	// 充值到渠道
 	@Override
 	public void incomemanual(Channelaccountorder cco) {
 		User u = usermapper.get(SysUserContext.getUserId());
@@ -117,9 +140,9 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 		Integer i = mapper.put(mao);
 		if (i > 0) {
 			if (cco.getStatus().equals(DictionaryResource.ORDERSTATUS_52)) {
-//				channelaccountservice.updateTotalincome(mao);
+				channelaccountservice.updateTotalincome(mao);
 			} else {
-//				channelaccountservice.turndownTotalincome(mao);
+				channelaccountservice.cancleTotalincome(mao);
 			}
 		}
 //
