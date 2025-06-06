@@ -34,6 +34,8 @@ public class PayoutNotifyThread implements Runnable {
 		ss.setMerchantorderid(payout.getMerchantorderid());
 		ss.setPayamount(payout.getAmount());
 		ss.setStatus(payout.getStatus());
+		ss.setRemark(payout.getRemark());
+		ss.setImgurl(payout.getImgurl());
 		log.info("代付通知 start>>>>>>商户单号：" + payout.getOrdernum());
 		int i = 1;
 		while (true) {

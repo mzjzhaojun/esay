@@ -286,7 +286,7 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 			Assert.notNull(artrbr, "绑定分账关系失败!");
 			AlipayTradeOrderSettleResponse atsc = SelfPayUtil.AlipayTradeOrderSettle(pqd, in.getQrcodeordernum(), c.getPayeeid(), c.getAmount());
 			Assert.notNull(atsc, "分账失败!");
-			in.setStatus(DictionaryResource.PAYOUTSTATUS_55);
+			in.setStatus(DictionaryResource.ORDERSTATUS_55);
 			incomemapper.put(in);
 			c.setOutbizno(in.getOrdernum());
 			c.setOrdernum(in.getQrcodeordernum());

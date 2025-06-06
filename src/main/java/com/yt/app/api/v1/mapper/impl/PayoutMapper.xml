@@ -163,7 +163,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from payout
-		where merchantorderid= #{channelordernum}
+		where merchantorderid= #{merchantorderid}
 	</select>
 
 	<!--getByOrdernum -->
@@ -232,8 +232,8 @@
 			<if test="ordernum != null and ordernum != ''">
 				and ordernum = #{ordernum}
 			</if>
-			<if test="merchantordernum != null and merchantordernum != ''">
-				and merchantordernum = #{merchantordernum}
+			<if test="merchantorderid != null and merchantorderid != ''">
+				and merchantorderid = #{merchantorderid}
 			</if>
 			<if test="merchantname != null and merchantname != ''">
 				and merchantname = #{merchantname}
@@ -276,8 +276,8 @@
 			<if test="ordernum != null and ordernum != ''">
 				and ordernum = #{ordernum}
 			</if>
-			<if test="merchantordernum != null and merchantordernum != ''">
-				and merchantordernum = #{merchantordernum}
+			<if test="merchantorderid != null and merchantorderid != ''">
+				and merchantorderid = #{merchantorderid}
 			</if>
 			<if test="merchantname != null and merchantname != ''">
 				and merchantname = #{merchantname}

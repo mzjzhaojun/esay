@@ -26,7 +26,7 @@ import com.yt.app.api.v1.entity.PayoutMerchantaccount;
  */
 
 @RestController
-@RequestMapping("/rest/v1/merchantaccount")
+@RequestMapping("/rest/v1/payoutmerchantaccount")
 public class PayoutMerchantaccountController extends YtBaseEncipherControllerImpl<PayoutMerchantaccount, Long> {
 
 	@Autowired

@@ -29,7 +29,7 @@ public class HttpUtil {
 		try {
 			String body = HttpRequest.post(url).addHeaders(header).header("Content-Type", "application/json").body(params).execute().body();
 			JSONObject jsonObject = JSONUtil.parseObj(body);
-			log.info(" 易票联返回：" + body);
+			log.info(" 易票联返回：" + jsonObject.getStr("returnMsg"));
 			return jsonObject;
 		} catch (Exception e) {
 			e.printStackTrace();

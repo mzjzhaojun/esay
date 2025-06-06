@@ -25,7 +25,7 @@ public class MerchantaccountorderVO extends BaseVO {
 	Long id;
 	Long tenant_id;
 	Long userid;
-	String merchantname;
+	String username;
 	String qrcodeaislecode;
 	Long qrcodeaisleid;
 	String qrcodeaislename;
@@ -37,7 +37,7 @@ public class MerchantaccountorderVO extends BaseVO {
 	Boolean dynamic;
 	String typename;
 	Double fewamount;
-	java.util.Date expireddate;
+	String merchantcode;
 	Double amount;
 	Double collection;
 	Double realamount;
@@ -48,6 +48,7 @@ public class MerchantaccountorderVO extends BaseVO {
 	String remark;
 	String imgurl;
 	String accnumber;
+	Double exchange;
 	Double merchantexchange;
 	Double amountreceived;
 	Double usdtval;

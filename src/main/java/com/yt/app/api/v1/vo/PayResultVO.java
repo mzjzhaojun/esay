@@ -23,7 +23,7 @@ public class PayResultVO extends BaseVO {
 	String outorderid;
 	String merchantorderid;
 	Double payamount;
-	String bankcode;
+	String imgurl;
 	Integer status;
 	String remark;
 	String sign;

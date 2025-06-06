@@ -114,7 +114,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Autowired
 	private QrcodeaisleMapper qrcodeaislemapper;
 	@Autowired
-	private PayoutMerchantaccountService merchantaccountservice;
+	private PayoutMerchantaccountService payoutmerchantaccountservice;
 	@Autowired
 	private AgentaccountService agentaccountservice;
 	@Autowired
@@ -161,7 +161,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantname(m.getName());
 		t.setType(DictionaryResource.ORDERTYPE_11);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
-		t.setMerchantordernum("outm" + StringUtil.getOrderNum());// 商户单号
+		t.setMerchantorderid("outm" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
@@ -214,9 +214,14 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setChannelid(cl.getId());
 			t.setChannelname(cl.getName());
 			t.setChannelcost(cl.getOnecost());// 渠道手续费
-			t.setChanneldeal(t.getAmount() * (cl.getExchange() / 1000));
-			t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
-			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
+			if (cl.getExchange() >= 1) {
+				t.setChanneldeal(t.getAmount() * (cl.getExchange() / 1000));
+				t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
+			} else {
+				t.setChanneldeal(t.getAmount() + t.getChannelcost());
+				t.setChannelpay(t.getChanneldeal());// 渠道总支付费用
+			}
+			t.setStatus(DictionaryResource.ORDERSTATUS_50);
 		}
 		RedisUtil.setEx(SystemConstant.CACHE_SYS_PAYOUT_EXIST + t.getOrdernum(), t.getOrdernum(), 60, TimeUnit.SECONDS);
 		// 获取渠道单号
@@ -226,7 +231,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			throw new YtException("渠道错误!");
 		}
 
-		merchantaccountservice.withdrawamount(t);
+		payoutmerchantaccountservice.withdrawamount(t);
 
 		channelaccountservice.withdrawamount(t);
 
@@ -270,7 +275,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantname(m.getName());
 		t.setType(DictionaryResource.ORDERTYPE_11);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
-		t.setMerchantordernum("outm" + StringUtil.getOrderNum());// 商户单号
+		t.setMerchantorderid("outm" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
@@ -325,14 +330,14 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setChannelname(qd.getName());
 			t.setChannelcost(2.00);// 渠道手续费
 			t.setChanneldeal(t.getAmount() + t.getChannelcost());
-			t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
-			t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
+			t.setChannelpay(t.getChanneldeal());// 渠道总支付费用
+			t.setStatus(DictionaryResource.ORDERSTATUS_50);
 		}
 		RedisUtil.setEx(SystemConstant.CACHE_SYS_PAYOUT_EXIST + t.getOrdernum(), t.getOrdernum(), 60, TimeUnit.SECONDS);
 		// 获取渠道单号
 		getQrcodelOrderNo(t, qd);
 
-		merchantaccountservice.withdrawamount(t);
+		payoutmerchantaccountservice.withdrawamount(t);
 
 		///////////////////////////////////////////////////// 计算代理订单/////////////////////////////////////////////////////
 		if (m.getAgentid() != null) {
@@ -418,7 +423,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		addPayout(pt, mc);
 		// 返回
 		PayResultVO sr = new PayResultVO();
-		sr.setBankcode(ss.getBankcode());
 		sr.setMerchantid(sr.getMerchantid());
 		sr.setMerchantorderid(ss.getMerchantorderid());
 		sr.setPayamount(ss.getPayamount());
@@ -438,7 +442,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantname(m.getName());
 		t.setType(DictionaryResource.ORDERTYPE_11);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
-		t.setMerchantordernum("PM" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
@@ -494,9 +497,14 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				t.setChannelid(cl.getId());
 				t.setChannelname(cl.getName());
 				t.setChannelcost(cl.getOnecost());// 渠道手续费
-				t.setChanneldeal(t.getAmount() * (cl.getExchange() / 1000));
-				t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
-				t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
+				if (cl.getExchange() >= 1) {
+					t.setChanneldeal(t.getAmount() * (cl.getExchange() / 1000));
+					t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
+				} else {
+					t.setChanneldeal(t.getAmount() + t.getChannelcost());
+					t.setChannelpay(t.getChanneldeal());// 渠道总支付费用
+				}
+				t.setStatus(DictionaryResource.ORDERSTATUS_50);
 			}
 
 			boolean flage = PayoutProduct.getPayoutProduct(t, cl);
@@ -558,8 +566,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				t.setChannelname(qd.getName());
 				t.setChannelcost(2.00);// 渠道手续费
 				t.setChanneldeal(t.getAmount() + t.getChannelcost());
-				t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
-				t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
+				t.setChannelpay(t.getChanneldeal());// 渠道总支付费用
+				t.setStatus(DictionaryResource.ORDERSTATUS_50);
 			}
 			RedisUtil.setEx(SystemConstant.CACHE_SYS_PAYOUT_EXIST + t.getOrdernum(), t.getOrdernum(), 60, TimeUnit.SECONDS);
 			// 获取渠道单号
@@ -567,7 +575,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		}
 
 		///////////////////////////////////////////////////// 计算商户订单/////////////////////////////////////////////////////
-		merchantaccountservice.withdrawamount(t);
+		payoutmerchantaccountservice.withdrawamount(t);
 
 		///////////////////////////////////////////////////// 计算代理订单
 		if (m.getAgentid() != null) {
@@ -607,9 +615,9 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	 */
 	public void paySuccess(Payout pt) {
 		Payout t = mapper.get(pt.getId());
-		if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (t.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			// 商户账户
-			merchantaccountservice.updateWithdrawamount(t);
+			payoutmerchantaccountservice.updateWithdrawamount(t);
 			// 系统账户
 			systemaccountservice.updatePayout(t);
 
@@ -623,7 +631,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			channelaccountservice.updateWithdrawamount(t);
 
 			// ------------------更新代付订单-----------------
-			t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			t.setStatus(DictionaryResource.ORDERSTATUS_52);
 			if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
 				t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 			}
@@ -656,9 +664,9 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	 */
 	public void payFail(Payout pt) {
 		Payout t = mapper.get(pt.getId());
-		if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (t.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			// 计算商户订单/////////////////////////////////////////////////////
-			merchantaccountservice.cancleWithdrawamount(t);
+			payoutmerchantaccountservice.cancleWithdrawamount(t);
 
 			// 计算代理
 			if (t.getAgentid() != null) {
@@ -669,11 +677,10 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			channelaccountservice.cancleWithdrawamount(t);
 
 			//
-			t.setStatus(DictionaryResource.PAYOUTSTATUS_53);
+			t.setStatus(DictionaryResource.ORDERSTATUS_53);
 			if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
 				t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 			}
-			t.setRemark("代付失败￥" + t.getAmount());
 			t.setSuccesstime(DateTimeUtil.getNow());
 			t.setBacklong(DateTimeUtil.diffDays(t.getSuccesstime(), t.getCreate_time()));
 			int i = mapper.put(t);
@@ -692,9 +699,9 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	 */
 	public void paySuccessSelf(Payout pt) {
 		Payout t = mapper.get(pt.getId());
-		if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (t.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			// 计算商户订单/////////////////////////////////////////////////////
-			merchantaccountservice.updateWithdrawamount(t);
+			payoutmerchantaccountservice.updateWithdrawamount(t);
 			// 系统账户
 			systemaccountservice.updatePayout(t);
 
@@ -707,7 +714,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 //			channelaccountservice.turndownWithdrawamount(cao);
 
 			// ------------------更新代付订单-----------------
-			t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			t.setStatus(DictionaryResource.ORDERSTATUS_52);
 			if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
 				t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 			}
@@ -740,9 +747,9 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	 */
 	public void payFailSelf(Payout pt) {
 		Payout t = mapper.get(pt.getId());
-		if (t.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (t.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			// 计算商户订单/////////////////////////////////////////////////////
-			merchantaccountservice.cancleWithdrawamount(t);
+			payoutmerchantaccountservice.cancleWithdrawamount(t);
 
 			// 计算代理
 			if (t.getAgentid() != null) {
@@ -754,7 +761,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 //			channelaccountservice.turndownWithdrawamount(cao);
 
 			//
-			t.setStatus(DictionaryResource.PAYOUTSTATUS_53);
+			t.setStatus(DictionaryResource.ORDERSTATUS_53);
 			if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
 				t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 			}
@@ -789,7 +796,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		if (pt != null) {
 			SysUserContext.setUserId(pt.getUserid());
 			TenantIdContext.setTenantId(pt.getTenant_id());
-			if (pt.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			if (pt.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 				Channel cl = channelmapper.get(pt.getChannelid());
 				String ip = AuthContext.getIp();
 				if (cl.getIpaddress() == null || cl.getIpaddress().indexOf(ip) == -1) {
@@ -940,9 +947,14 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setChannelid(cl.getId());
 		t.setChannelname(cl.getName());
 		t.setChannelcost(cl.getOnecost());// 渠道手续费
-		t.setChanneldeal(t.getAmount() * (cl.getExchange() / 1000));
-		t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
-		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
+		if (cl.getExchange() >= 1) {
+			t.setChanneldeal(t.getAmount() * (cl.getExchange() / 1000));
+			t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
+		} else {
+			t.setChanneldeal(t.getAmount() + t.getChannelcost());
+			t.setChannelpay(t.getChanneldeal());// 渠道总支付费用
+		}
+		t.setStatus(DictionaryResource.ORDERSTATUS_50);
 
 		t.setUserid(m.getUserid());
 		t.setMerchantid(m.getId());
@@ -951,7 +963,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantname(m.getName());
 		t.setType(DictionaryResource.ORDERTYPE_11);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
-		t.setMerchantordernum("outm" + StringUtil.getOrderNum());// 商户单号
+		t.setMerchantorderid("outm" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
@@ -969,7 +981,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		}
 
 		///////////////////////////////////////////////////// 计算商户订单
-		merchantaccountservice.withdrawamount(t);
+		payoutmerchantaccountservice.withdrawamount(t);
 
 		channelaccountservice.withdrawamount(t);
 
@@ -1009,7 +1021,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantname(m.getName());
 		t.setType(DictionaryResource.ORDERTYPE_11);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
-		t.setMerchantordernum("outm" + StringUtil.getOrderNum());// 商户单号
+		t.setMerchantorderid("outm" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
@@ -1022,15 +1034,15 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setChannelname(qd.getName());
 		t.setChannelcost(2.00);// 渠道手续费
 		t.setChanneldeal(t.getAmount() + t.getChannelcost());
-		t.setChannelpay(t.getAmount() + t.getChannelcost() + t.getChanneldeal());// 渠道总支付费用
-		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
+		t.setChannelpay(t.getChanneldeal());// 渠道总支付费用
+		t.setStatus(DictionaryResource.ORDERSTATUS_50);
 		RedisUtil.setEx(SystemConstant.CACHE_SYS_PAYOUT_EXIST + t.getOrdernum(), t.getOrdernum(), 60, TimeUnit.SECONDS);
 
 		// 获取渠道单号
 		getQrcodelOrderNo(t, qd);
 
 		///////////////////////////////////////////////////// 计算商户订单
-		merchantaccountservice.withdrawamount(t);
+		payoutmerchantaccountservice.withdrawamount(t);
 
 		///////////////////////////////////////////////////// 计算代理订单/////////////////////////////////////////////////////
 		if (m.getAgentid() != null) {

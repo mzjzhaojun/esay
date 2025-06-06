@@ -6,22 +6,19 @@ import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.MerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
-import com.yt.app.api.v1.mapper.MerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
 import com.yt.app.api.v1.service.MerchantaccountorderService;
-import com.yt.app.api.v1.service.MerchantaccountorderService;
+import com.yt.app.api.v1.service.PayoutMerchantaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Merchantaccountorder;
 import com.yt.app.api.v1.entity.Merchant;
-import com.yt.app.api.v1.entity.Merchantaccountorder;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.api.v1.vo.MerchantaccountorderVO;
 import com.yt.app.common.common.yt.YtIPage;
@@ -54,18 +51,13 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	@Autowired
 	private MerchantaccountorderMapper mapper;
 	@Autowired
-	private IncomemerchantaccountService incomemerchantaccountservice;
-	@Autowired
 	private UserMapper usermapper;
 	@Autowired
 	private MerchantMapper merchantmapper;
-
-	@Override
-	@Transactional
-	public Integer post(Merchantaccountorder t) {
-		Integer i = mapper.post(t);
-		return i;
-	}
+	@Autowired
+	private PayoutMerchantaccountService payoutmerchantaccountservice;
+	@Autowired
+	private IncomemerchantaccountService incomemerchantaccountservice;
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
@@ -151,34 +143,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		return outputStream;
 	}
 
-//////////////////////////////////////////////////////////////提现处理
-	@Override
-	public void incomemanual(Merchantaccountorder mco) {
-		RLock lock = RedissonUtil.getLock(mco.getId());
-		User u = usermapper.get(SysUserContext.getUserId());
-		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
-		Assert.isTrue(isValid, "验证码错误！");
-		try {
-			lock.lock();
-			Merchantaccountorder mao = mapper.get(mco.getId());
-			if (mao.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-				mao.setStatus(mco.getStatus());
-				Integer i = mapper.put(mao);
-				if (i > 0) {
-					if (mco.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
-//						incomemerchantaccountservice.updateTotalincome(mao);
-					} else {
-//						incomemerchantaccountservice.turndownWithdrawamount(mao);
-					}
-				}
-			}
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
-
-//代收提现
+	// 代收提现
 	@Override
 	public Integer incomewithdraw(Merchantaccountorder t) {
 		if (t.getAmount() <= 0) {
@@ -194,26 +159,79 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		}
 		// 支出订单
 		t.setMerchantid(m.getId());
-		t.setMerchantname(m.getName());
-		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
-		t.setCollection(t.getCollection());
-		t.setMerchantexchange(t.getCollection());
+		t.setUsername(m.getName());
+		t.setNkname(m.getName());
+		t.setMerchantcode(m.getCode());
+		t.setStatus(DictionaryResource.ORDERSTATUS_50);
+		t.setMerchantexchange(t.getExchange());
 		t.setAmountreceived((t.getAmount()));
-		t.setUsdtval(t.getAmount() / t.getCollection());
-		t.setType("" + DictionaryResource.ORDERTYPE_11);
+		t.setUsdtval(t.getAmount() / t.getExchange());
+		t.setType(DictionaryResource.ORDERTYPE_22);
 		t.setOrdernum("SHTX" + StringUtil.getOrderNum());
 		t.setRemark("商户提现￥：" + String.format("%.2f", t.getAmount()));
 		Integer i = mapper.post(t);
 
 		// 支出账户和记录
-//		incomemerchantaccountservice.withdrawamount(t);
+		incomemerchantaccountservice.withdrawamount(t);
 		//
 		return i;
 	}
 
-	// 代收提现app
+	/// 代收提现处理
 	@Override
-	public Long incomewithdrawapp(Merchantaccountorder t) {
+	public Integer incomewithdrawmanual(Merchantaccountorder mco) {
+		RLock lock = RedissonUtil.getLock(mco.getId());
+		User u = usermapper.get(SysUserContext.getUserId());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
+		Assert.isTrue(isValid, "验证码错误！");
+		Integer i = 0;
+		try {
+			lock.lock();
+			Merchantaccountorder mao = mapper.get(mco.getId());
+			if (mao.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
+				mao.setStatus(mco.getStatus());
+				if (mco.getImgurl() != null)
+					mao.setImgurl(mco.getImgurl());
+				i = mapper.put(mao);
+				if (i > 0) {
+					if (mco.getStatus().equals(DictionaryResource.ORDERSTATUS_52)) {
+						incomemerchantaccountservice.updateWithdrawamount(mao);
+					} else {
+						incomemerchantaccountservice.cancelWithdrawamount(mao);
+					}
+				}
+			}
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+		return i;
+	}
+
+	/**
+	 * 代收提现取消
+	 */
+	@Override
+	public Integer cancleincomewithdraw(Long id) {
+		RLock lock = RedissonUtil.getLock(id);
+		try {
+			lock.lock();
+			Merchantaccountorder mao = mapper.get(id);
+			mao.setStatus(DictionaryResource.ORDERSTATUS_53);
+			Integer i = mapper.put(mao);
+			//
+			incomemerchantaccountservice.cancelWithdrawamount(mao);
+			return i;
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+		return 0;
+	}
+
+	// 代付提现
+	@Override
+	public Integer payoutwithdraw(Merchantaccountorder t) {
 		if (t.getAmount() <= 0) {
 			throw new YtException("金额不能小于1");
 		}
@@ -227,48 +245,68 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		}
 		// 支出订单
 		t.setMerchantid(m.getId());
-		t.setMerchantname(m.getName());
-		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
-		t.setCollection(t.getCollection());
-		t.setMerchantexchange(t.getCollection());
+		t.setUsername(m.getName());
+		t.setNkname(m.getName());
+		t.setMerchantcode(m.getCode());
+		t.setStatus(DictionaryResource.ORDERSTATUS_50);
+		t.setMerchantexchange(t.getExchange());
 		t.setAmountreceived((t.getAmount()));
-		t.setUsdtval(t.getAmount() / t.getCollection());
-		t.setType("" + DictionaryResource.ORDERTYPE_11);
+		t.setUsdtval(t.getAmount() / t.getExchange());
+		t.setType(DictionaryResource.ORDERTYPE_21);
 		t.setOrdernum("SHTX" + StringUtil.getOrderNum());
-		t.setRemark("商户代收提现￥：" + String.format("%.2f", t.getAmount()));
-		mapper.post(t);
+		t.setRemark("商户提现￥：" + String.format("%.2f", t.getAmount()));
+		Integer i = mapper.post(t);
 
 		// 支出账户和记录
-//		incomemerchantaccountservice.withdrawamount(t);
-		return t.getId();
+		payoutmerchantaccountservice.withdrawamount(t);
+		//
+		return i;
 	}
 
-
-	// 提现成功
+	/// 代付提现处理
 	@Override
-	public Integer success(Long id) {
-		Merchantaccountorder mao = mapper.get(id);
-		mao.setStatus(DictionaryResource.PAYOUTSTATUS_52);
-		Integer j = mapper.put(mao);
-		if (j > 0) {
-//			incomemerchantaccountservice.updateWithdrawamount(mao);
+	public Integer payoutmanual(Merchantaccountorder mco) {
+		RLock lock = RedissonUtil.getLock(mco.getId());
+		User u = usermapper.get(SysUserContext.getUserId());
+		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
+		Assert.isTrue(isValid, "验证码错误！");
+		Integer i = 0;
+		try {
+			lock.lock();
+			Merchantaccountorder mao = mapper.get(mco.getId());
+			if (mao.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
+				mao.setStatus(mco.getStatus());
+				if (mco.getImgurl() != null)
+					mao.setImgurl(mco.getImgurl());
+				i = mapper.put(mao);
+				if (i > 0) {
+					if (mco.getStatus().equals(DictionaryResource.ORDERSTATUS_52)) {
+						payoutmerchantaccountservice.updateWithdrawamount(mao);
+					} else {
+						payoutmerchantaccountservice.cancleWithdrawamount(mao);
+					}
+				}
+			}
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
 		}
-		return j;
+		return i;
 	}
 
 	/**
-	 * 提现取消
+	 * 代付提现取消
 	 */
 	@Override
-	public Integer incomecancleWithdraw(Long id) {
+	public Integer payoutcancleWithdraw(Long id) {
 		RLock lock = RedissonUtil.getLock(id);
 		try {
 			lock.lock();
 			Merchantaccountorder mao = mapper.get(id);
-//			mao.setStatus(DictionaryResource.PAYOUTSTATUS_51);
+			mao.setStatus(DictionaryResource.ORDERSTATUS_53);
 			Integer i = mapper.put(mao);
 			//
-//			incomemerchantaccountservice.cancelWithdrawamount(mao);
+			payoutmerchantaccountservice.cancleWithdrawamount(mao);
 			return i;
 		} catch (Exception e) {
 		} finally {
@@ -277,269 +315,118 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		return 0;
 	}
 
-	// 通过提现
+	/**
+	 * 充值
+	 */
 	@Override
-	public void incomewithdrawmanual(Merchantaccountorder mco) {
+	public Integer post(Merchantaccountorder t) {
+		if (t.getAmount() <= 0) {
+			throw new YtException("金额不能小于1");
+		}
+		Merchant m = null;
+		if (t.getMerchantid() == null) {
+			m = merchantmapper.getByUserId(SysUserContext.getUserId());
+			t.setUserid(SysUserContext.getUserId());
+		} else {
+			m = merchantmapper.get(t.getMerchantid());
+			t.setUserid(m.getUserid());
+		}
+		// 收入订单
+		t.setUsdtval(t.getAmount());
+		t.setMerchantid(m.getId());
+		t.setUsername(m.getName());
+		t.setNkname(m.getNikname());
+		t.setMerchantcode(m.getCode());
+		t.setStatus(DictionaryResource.ORDERSTATUS_50);
+		t.setAmountreceived((t.getAmount() * (t.getExchange() + t.getMerchantexchange())));
+		t.setType(DictionaryResource.ORDERTYPE_20);
+		t.setOrdernum("MT" + StringUtil.getOrderNum());
+		t.setRemark("商户充值￥：" + String.format("%.2f", t.getAmountreceived()));
+		Integer i = mapper.post(t);
+
+		// 收入账户和记录
+		payoutmerchantaccountservice.totalincome(t);
+		//
+		return i;
+	}
+
+	// 充值成功
+	@Override
+	public Integer incomemanual(Merchantaccountorder mco) {
 		RLock lock = RedissonUtil.getLock(mco.getId());
 		User u = usermapper.get(SysUserContext.getUserId());
 		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
 		Assert.isTrue(isValid, "验证码错误！");
+		Integer i = 0;
 		try {
 			lock.lock();
 			Merchantaccountorder mao = mapper.get(mco.getId());
-			if (mao.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-				mao.setStatus(mco.getStatus());
-				mao.setImgurl(mco.getImgurl());
-				Integer i = mapper.put(mao);
-				if (i > 0) {
-					if (mco.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
-//						incomemerchantaccountservice.updateWithdrawamount(mao);
-					} else {
-//						incomemerchantaccountservice.turndownWithdrawamount(mao);
-					}
+			mao.setStatus(mco.getStatus());
+			i = mapper.put(mao);
+			if (i > 0) {
+				if (mco.getStatus() == DictionaryResource.ORDERSTATUS_52) {
+					payoutmerchantaccountservice.updateTotalincome(mao);
+				} else {
+					payoutmerchantaccountservice.cancleTotalincome(mao);
 				}
 			}
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
 		}
-
+		return i;
 	}
 
 	/**
-	 * 充值
+	 * 充值取消
 	 */
-//	@Override
-//	public Integer post(Merchantaccountorder t) {
-//		if (t.getAmount() <= 0) {
-//			throw new YtException("金额不能小于1");
-//		}
-//		Merchant m = null;
-//		if (t.getMerchantid() == null) {
-//			m = merchantmapper.getByUserId(SysUserContext.getUserId());
-//			t.setUserid(SysUserContext.getUserId());
-//		} else {
-//			m = merchantmapper.get(t.getMerchantid());
-//			t.setUserid(m.getUserid());
-//		}
-//		// 收入订单
-//		t.setUsdtval(t.getAmount());
-//		t.setMerchantid(m.getId());
-//		t.setUsername(m.getName());
-//		t.setNkname(m.getNikname());
-//		t.setMerchantcode(m.getCode());
-//		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
-//		t.setAmountreceived((t.getAmount() * (t.getExchange() + t.getMerchantexchange())));
-//		t.setType(DictionaryResource.ORDERTYPE_11);
-//		t.setOrdernum("MT" + StringUtil.getOrderNum());
-//		t.setRemark("商户充值￥：" + String.format("%.2f", t.getAmountreceived()));
-//		Integer i = mapper.post(t);
-//
-//		// 收入账户和记录
-//		merchantaccountservice.totalincome(t);
-//		//
-//		return i;
-//	}
+	@Override
+	public Integer incomecancle(Long id) {
+		RLock lock = RedissonUtil.getLock(id);
+		try {
+			lock.lock();
+			Merchantaccountorder mao = mapper.get(id);
+			mao.setStatus(DictionaryResource.ORDERSTATUS_53);
+			Integer i = mapper.put(mao);
+			//
+			payoutmerchantaccountservice.cancleTotalincome(mao);
+			return i;
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
+		return 0;
+	}
 
-//	// 代付充值成功
-//	@Override
-//	public void payoutmanual(Merchantaccountorder mco) {
-//		RLock lock = RedissonUtil.getLock(mco.getId());
-//		User u = usermapper.get(SysUserContext.getUserId());
-//		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
-//		Assert.isTrue(isValid, "验证码错误！");
-//		try {
-//			lock.lock();
-//			Merchantaccountorder mao = mapper.get(mco.getId());
-//			if (mao.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-//				mao.setStatus(mco.getStatus());
-//				Integer i = mapper.put(mao);
-//				if (i > 0) {
-//					if (mco.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
-//						//
-////						merchantaccountservice.updateTotalincome(mao);
-//						//
-//					} else {
-////						merchantaccountservice.turndownTotalincome(mao);
-//					}
-//				}
-//			}
-//		} catch (Exception e) {
-//		} finally {
-//			lock.unlock();
-//		}
-//	}
-//
-//	// 提现
-//	@Override
-//	public Integer save(Merchantaccountorder t) {
-//		if (t.getAmount() <= 0) {
-//			throw new YtException("金额不能小于1");
-//		}
-//		Merchant m = null;
-//		if (t.getMerchantid() == null) {
-//			m = merchantmapper.getByUserId(SysUserContext.getUserId());
-//			t.setUserid(SysUserContext.getUserId());
-//		} else {
-//			m = merchantmapper.get(t.getMerchantid());
-//			t.setUserid(m.getUserid());
-//		}
-//		Merchantaccountbank mab = merchantaccountbankmapper.get(Long.valueOf(t.getAccnumber()));
-//		t.setAccname(mab.getAccname());
-//		t.setAccnumber(mab.getAccnumber());
-//		// 支出订单
-//		t.setMerchantid(m.getId());
-//		t.setUsername(m.getName());
-//		t.setNkname(m.getNikname());
-//		t.setMerchantcode(m.getCode());
-//		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
-//		t.setExchange(t.getMerchantexchange());
-//		t.setAmountreceived((t.getAmount()));
-//		t.setUsdtval(t.getAmount() / t.getMerchantexchange());
-//		t.setType(DictionaryResource.ORDERTYPE_15);
-//		t.setOrdernum("MW" + StringUtil.getOrderNum());
-//		t.setRemark("商户代付提现￥：" + String.format("%.2f", t.getAmountreceived()));
-//		Integer i = mapper.post(t);
-//
-//		// 支出账户和记录
-//		merchantaccountservice.withdrawamount(t);
-//		//
-//		return i;
-//	}
-//
-//	/**
-//	 * app提现
-//	 */
-//	@Override
-//	public Integer appsave(Merchantaccountorder t) {
-//		if (t.getAmount() <= 0) {
-//			throw new YtException("金额不能小于1");
-//		}
-//		Merchant m = null;
-//		if (t.getMerchantid() == null) {
-//			m = merchantmapper.getByUserId(SysUserContext.getUserId());
-//			t.setUserid(SysUserContext.getUserId());
-//		} else {
-//			m = merchantmapper.get(t.getMerchantid());
-//			t.setUserid(m.getUserid());
-//		}
-//
-//		t.setAccname("App提现");
-//		// 直接提到usdt地址
-//		// 支出订单
-//		t.setMerchantid(m.getId());
-//		t.setUsername(m.getName());
-//		t.setNkname(m.getNikname());
-//		t.setMerchantcode(m.getCode());
-//		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
-//		t.setExchange(t.getMerchantexchange());
-//		t.setAmountreceived((t.getAmount()));
-//		t.setUsdtval(t.getAmount() / t.getMerchantexchange());
-//		t.setType(DictionaryResource.ORDERTYPE_15);
-//		t.setOrdernum("MW" + StringUtil.getOrderNum());
-//		t.setRemark("商户代付提现￥：" + String.format("%.2f", t.getAmountreceived()));
-//		Integer i = mapper.post(t);
-//
-//		// 支出账户和记录
-//		merchantaccountservice.withdrawamount(t);
-//		//
-//		return i;
-//	}
-//
-//	@Override
-//	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-//	public YtIPage<PayoutMerchantaccountorder> page(Map<String, Object> param) {
-//		int count = 0;
-//		if (YtPageBean.isPaging(param)) {
-//			count = mapper.countlist(param);
-//			if (count == 0) {
-//				return new YtPageBean<PayoutMerchantaccountorder>(Collections.emptyList());
-//			}
-//		}
-//		List<PayoutMerchantaccountorder> list = mapper.list(param);
-//		list.forEach(mco -> {
-//			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
-//		});
-//		return new YtPageBean<PayoutMerchantaccountorder>(param, list, count);
-//	}
-//
-//	@Override
-//	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-//	public PayoutMerchantaccountorder get(Long id) {
-//		PayoutMerchantaccountorder t = mapper.get(id);
-//		return t;
-//	}
-//
-//	/**
-//	 * 充值取消
-//	 */
-//	@Override
-//	public Integer cancle(Long id) {
-//		RLock lock = RedissonUtil.getLock(id);
-//		try {
-//			lock.lock();
-//			PayoutMerchantaccountorder mao = mapper.get(id);
-//			mao.setStatus(DictionaryResource.PAYOUTSTATUS_51);
-//			Integer i = mapper.put(mao);
-//			//
-//			merchantaccountservice.cancleTotalincome(mao);
-//			return i;
-//		} catch (Exception e) {
-//		} finally {
-//			lock.unlock();
-//		}
-//		return 0;
-//	}
-//
-////////////////////////////////////////////////////////////////提现处理
-//
-//	@Override
-//	public void withdrawmanual(PayoutMerchantaccountorder mco) {
-//		RLock lock = RedissonUtil.getLock(mco.getId());
-//		User u = usermapper.get(SysUserContext.getUserId());
-//		boolean isValid = GoogleAuthenticatorUtil.checkCode(u.getTwofactorcode(), Long.parseLong(mco.getRemark()), System.currentTimeMillis());
-//		Assert.isTrue(isValid, "验证码错误！");
-//		try {
-//			lock.lock();
-//			PayoutMerchantaccountorder mao = mapper.get(mco.getId());
-//			if (mao.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
-//				mao.setStatus(mco.getStatus());
-//				mao.setImgurl(mco.getImgurl());
-//				Integer i = mapper.put(mao);
-//				if (i > 0) {
-//					if (mco.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
-//						//
-//						merchantaccountservice.updateWithdrawamount(mao);
-//						//
-//					} else {
-//						merchantaccountservice.turndownWithdrawamount(mao);
-//					}
-//				}
-//			}
-//		} catch (Exception e) {
-//		} finally {
-//			lock.unlock();
-//		}
-//	}
-//
-//	/**
-//	 * 提现取消
-//	 */
-//	@Override
-//	public Integer cancleWithdraw(Long id) {
-//		RLock lock = RedissonUtil.getLock(id);
-//		try {
-//			lock.lock();
-//			PayoutMerchantaccountorder mao = mapper.get(id);
-//			mao.setStatus(DictionaryResource.PAYOUTSTATUS_51);
-//			Integer i = mapper.put(mao);
-//			//
-//			merchantaccountservice.cancleWithdrawamount(mao);
-//			return i;
-//		} catch (Exception e) {
-//		} finally {
-//			lock.unlock();
-//		}
-//		return 0;
-//	}
+	// 代收提现app
+	@Override
+	public Integer incomewithdrawapp(Merchantaccountorder t) {
+		if (t.getAmount() <= 0) {
+			throw new YtException("金额不能小于1");
+		}
+		Merchant m = null;
+		if (t.getMerchantid() == null) {
+			m = merchantmapper.getByUserId(SysUserContext.getUserId());
+			t.setUserid(SysUserContext.getUserId());
+		} else {
+			m = merchantmapper.get(t.getMerchantid());
+			t.setUserid(m.getUserid());
+		}
+		// 支出订单
+		t.setMerchantid(m.getId());
+		t.setNkname(m.getName());
+		t.setStatus(DictionaryResource.ORDERSTATUS_50);
+		t.setMerchantexchange(t.getExchange());
+		t.setAmountreceived((t.getAmount()));
+		t.setUsdtval(t.getAmount() / t.getExchange());
+		t.setType(DictionaryResource.ORDERTYPE_11);
+		t.setOrdernum("SHTX" + StringUtil.getOrderNum());
+		t.setRemark("商户代收提现￥：" + String.format("%.2f", t.getAmount()));
+		Integer i = mapper.post(t);
+
+		// 支出账户和记录
+//			incomemerchantaccountservice.withdrawamount(t);
+		return i;
+	}
+
 }

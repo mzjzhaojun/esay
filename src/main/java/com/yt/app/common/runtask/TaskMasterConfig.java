@@ -112,10 +112,10 @@ public class TaskMasterConfig {
 			Qrcode pqd = qrcodemapper.get(qd.getPid());
 			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, in.getQrcodeordernum(), in.getAmount());
 			if (atsc != null) {
-				in.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+				in.setStatus(DictionaryResource.ORDERSTATUS_54);
 				incomemapper.put(in);
 			} else {
-				in.setStatus(DictionaryResource.PAYOUTSTATUS_51);
+				in.setStatus(DictionaryResource.ORDERSTATUS_51);
 				incomemapper.put(in);
 			}
 		}
@@ -144,7 +144,7 @@ public class TaskMasterConfig {
 		for (Income p : list) {
 			if (p.getExpireddate().getTime() < new Date().getTime()) {
 				TenantIdContext.setTenantId(p.getTenant_id());
-				p.setStatus(DictionaryResource.PAYOUTSTATUS_53);
+				p.setStatus(DictionaryResource.ORDERSTATUS_53);
 				p.setRemark("超時取消代收资金￥：" + p.getAmount());
 				incomemapper.put(p);
 				qrcodeaccountservice.cancleTotalincome(p);
@@ -175,7 +175,7 @@ public class TaskMasterConfig {
 			if (p.getExpireddate().getTime() < new Date().getTime()) {
 
 				TenantIdContext.setTenantId(p.getTenant_id());
-				p.setStatus(DictionaryResource.PAYOUTSTATUS_53);
+				p.setStatus(DictionaryResource.ORDERSTATUS_53);
 				p.setRemark("超时充值兑换￥：" + p.getAmount());
 				tronmemberordermapper.put(p);
 				NumberUtil.removeExchangeFewAmount(p.getFewamount());

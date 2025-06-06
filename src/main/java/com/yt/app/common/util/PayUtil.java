@@ -1019,6 +1019,8 @@ public class PayUtil {
 			map.add("merchantorderid", ss.getMerchantorderid());
 			map.add("payamount", ss.getPayamount().toString());
 			map.add("status", ss.getStatus().toString());
+			map.add("remark", ss.getRemark());
+			map.add("imgurl", ss.getImgurl());
 			map.add("sign", signParams);
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();

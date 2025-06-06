@@ -45,7 +45,6 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("payout");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("payoutmerchantaccount");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("payoutmerchantaccountrecord");
-		MybatisPlusConfig.TENANT_ID_TABLE.add("payoutmerchantaccountorder");
 
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantaccountbank");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantcustomerbanks");
@@ -59,11 +58,6 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("systemaccount");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("systemaccountrecord");
 
-		MybatisPlusConfig.TENANT_ID_TABLE.add("exchange");
-		MybatisPlusConfig.TENANT_ID_TABLE.add("exchangemerchantaccount");
-		MybatisPlusConfig.TENANT_ID_TABLE.add("exchangemerchantaccountrecord");
-		MybatisPlusConfig.TENANT_ID_TABLE.add("exchangemerchantaccountorder");
-
 		MybatisPlusConfig.TENANT_ID_TABLE.add("qrcode");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("qrcodeaisle");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("qrcodeaisleqrcode");
@@ -74,7 +68,8 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("income");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("incomemerchantaccount");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("incomemerchantaccountrecord");
-		MybatisPlusConfig.TENANT_ID_TABLE.add("incomemerchantaccountorder");
+		
+		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantaccountorder");
 
 		// 报表
 		MybatisPlusConfig.TENANT_ID_TABLE.add("channelstatisticalreports");

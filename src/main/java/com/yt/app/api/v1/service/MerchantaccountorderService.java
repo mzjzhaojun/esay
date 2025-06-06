@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
-import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Merchantaccountorder;
 import com.yt.app.api.v1.vo.MerchantaccountorderVO;
 import com.yt.app.common.base.YtIBaseService;
@@ -22,18 +21,31 @@ public interface MerchantaccountorderService extends YtIBaseService<Merchantacco
 
 	ByteArrayOutputStream download(Map<String, Object> param) throws IOException;
 
-	// 充值
-	void incomemanual(Merchantaccountorder mco);
+	// 充值成功
+	Integer incomemanual(Merchantaccountorder mco);
+
+	// 取消充值
+	Integer incomecancle(Long id);
+
+	// 代付提现
+	Integer payoutwithdraw(Merchantaccountorder mco);
+
+	// 提现成功
+	Integer payoutmanual(Merchantaccountorder mco);
+
+	// 提现取消
+	Integer payoutcancleWithdraw(Long id);
+
+	// app提现
+	Integer incomewithdrawapp(Merchantaccountorder mco);
 
 	// 代收提现
 	Integer incomewithdraw(Merchantaccountorder mco);
 
-	Long incomewithdrawapp(Merchantaccountorder mco);
+	// 代收提现成功
+	Integer incomewithdrawmanual(Merchantaccountorder mco);
 
-	Integer success(Long id);
-
-	Integer incomecancleWithdraw(Long id);
-
-	void incomewithdrawmanual(Merchantaccountorder mco);
+	// 代收提现取消
+	Integer cancleincomewithdraw(Long id);
 
 }

@@ -47,7 +47,7 @@ public class MerchantOrderMessage implements UpdateMerchantMessageService {
 		String ordernum = update.getMessage().getText();
 		if (ordernum.matches(".*\\d+.*")) {
 			Income income = incomemapper.getByMerchantOrderNum(ordernum);
-			if (income != null && income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			if (income != null && income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 				Tgchannelgroup tgchannelgroup = tgchannelgroupmapper.getByChannelId(income.getQrcodeid());
 				if (tgchannelgroup != null) {
 					sendmessage.setChatId(tgchannelgroup.getTgid());

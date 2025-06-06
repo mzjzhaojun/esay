@@ -66,9 +66,9 @@ public class QrcodeaccountorderServiceImpl extends YtBaseServiceImpl<Qrcodeaccou
 	public Integer put(Qrcodeaccountorder t) {
 		Integer i = 0;
 		Income income = incomemapper.getByQrcodeOrderNum(t.getOrdernum());
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			Qrcodeaccountorder qrcodeaccountorder = mapper.get(t.getId());
-			income.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			income.setStatus(DictionaryResource.ORDERSTATUS_52);
 			if (income.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61)
 				income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 			//
@@ -78,12 +78,12 @@ public class QrcodeaccountorderServiceImpl extends YtBaseServiceImpl<Qrcodeaccou
 //
 //			Incomemerchantaccountorder incomemerchantaccountorder = incomemerchantaccountordermapper.getByOrderNum(income.getMerchantorderid());
 //			//
-//			incomemerchantaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+//			incomemerchantaccountorder.setStatus(DictionaryResource.ORDERSTATUS_52);
 //			incomemerchantaccountordermapper.put(incomemerchantaccountorder);
 //			//
 //			incomemerchantaccountservice.updateTotalincome(incomemerchantaccountorder);
 			//
-			qrcodeaccountorder.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			qrcodeaccountorder.setStatus(DictionaryResource.ORDERSTATUS_52);
 			i = mapper.put(qrcodeaccountorder);
 		}
 		Assert.equals(i, 1, ServiceConstant.UPDATE_FAIL_MSG);
@@ -120,7 +120,7 @@ public class QrcodeaccountorderServiceImpl extends YtBaseServiceImpl<Qrcodeaccou
 		t.setChannelid(c.getId());
 		t.setTenant_id(c.getTenant_id());
 		t.setMerchantname(c.getName());
-		t.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+		t.setStatus(DictionaryResource.ORDERSTATUS_52);
 		t.setCollection(0.00);
 		t.setAmount(amount);
 		t.setType("" + DictionaryResource.ORDERTYPE_11);

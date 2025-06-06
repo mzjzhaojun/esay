@@ -70,7 +70,67 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 
 	/**
 	 * 
-	 * 商户代收提现
+	 * 取消充值
+	 * 
+	 * @version 1.1
+	 */
+	@RequestMapping(value = "/cancle/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> cancle(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+		Object t = service.incomecancle(id);
+		return new YtResponseEncryptEntity<Object>(new YtBody(t));
+	}
+
+	/**
+	 * 
+	 * 提现
+	 * 
+	 * @version 1.1
+	 */
+	@RequestMapping(value = "/payoutwithdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> withdraw(YtRequestDecryptEntity<Merchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
+		Integer i = service.payoutwithdraw(YtRequestDecryptEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(i));
+	}
+
+	/**
+	 * 处理提现
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/payoutmanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> withdrawmanual(YtRequestDecryptEntity<Merchantaccountorder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		service.payoutmanual(requestEntity.getBody());
+		return new YtResponseEntity<Object>(new YtBody(1));
+	}
+
+	/**
+	 * 取消提现
+	 * 
+	 * @version 1.1
+	 */
+	@RequestMapping(value = "/canclewithdraw/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> canclewithdraw(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+		Integer t = service.payoutcancleWithdraw(id);
+		return new YtResponseEncryptEntity<Object>(new YtBody(t));
+	}
+
+	/**
+	 * app提现
+	 * 
+	 * @version 1.1
+	 */
+	@RequestMapping(value = "/appwithdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> appwithdraw(YtRequestDecryptEntity<Merchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
+		Integer i = service.incomewithdrawapp(YtRequestDecryptEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(i));
+	}
+
+	/**
+	 * 
+	 * 代收提现
 	 * 
 	 * @version 1.1
 	 */
@@ -81,36 +141,7 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 	}
 
 	/**
-	 * 
-	 * 商户代收提现
-	 * 
-	 * @version 1.1
-	 */
-	@RequestMapping(value = "/incomewithdrawapp", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> incomewithdrawapp(YtRequestDecryptEntity<Merchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
-		Long id = service.incomewithdrawapp(YtRequestDecryptEntity.getBody());
-		try {
-			Thread.sleep(300);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		Integer i = service.success(id);
-		return new YtResponseEncryptEntity<Object>(new YtBody(i));
-	}
-
-	/**
-	 * 取消提现
-	 * 
-	 * @version 1.1
-	 */
-	@RequestMapping(value = "/incomecanclewithdraw/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> incomecanclewithdraw(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
-		Integer t = service.incomecancleWithdraw(id);
-		return new YtResponseEncryptEntity<Object>(new YtBody(t));
-	}
-
-	/**
-	 * 处理代收提现
+	 * 代收处理提现
 	 * 
 	 * @param requestEntity
 	 * @param request
@@ -123,78 +154,15 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 		return new YtResponseEntity<Object>(new YtBody(1));
 	}
 
-//	/**
-//	 * app提现
-//	 * 
-//	 * @version 1.1
-//	 */
-//	@RequestMapping(value = "/appwithdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-//	public YtResponseEncryptEntity<Object> appwithdraw(YtRequestDecryptEntity<Merchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
-//		Integer i = service.appsave(YtRequestDecryptEntity.getBody());
-//		return new YtResponseEncryptEntity<Object>(new YtBody(i));
-//	}
-//
-//	/**
-//	 * 
-//	 * 取消充值
-//	 * 
-//	 * @version 1.1
-//	 */
-//	@RequestMapping(value = "/cancle/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-//	public YtResponseEncryptEntity<Object> cancle(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
-//		Object t = service.cancle(id);
-//		return new YtResponseEncryptEntity<Object>(new YtBody(t));
-//	}
-//
-//	/**
-//	 * 
-//	 * 提现
-//	 * 
-//	 * @version 1.1
-//	 */
-//	@RequestMapping(value = "/withdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-//	public YtResponseEncryptEntity<Object> withdraw(YtRequestDecryptEntity<Merchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
-//		Integer i = service.save(YtRequestDecryptEntity.getBody());
-//		return new YtResponseEncryptEntity<Object>(new YtBody(i));
-//	}
-//
-//	/**
-//	 * 取消提现
-//	 * 
-//	 * @version 1.1
-//	 */
-//	@RequestMapping(value = "/canclewithdraw/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-//	public YtResponseEncryptEntity<Object> canclewithdraw(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
-//		Integer t = service.cancleWithdraw(id);
-//		return new YtResponseEncryptEntity<Object>(new YtBody(t));
-//	}
-//
-//	/**
-//	 * 处理提现
-//	 * 
-//	 * @param requestEntity
-//	 * @param request
-//	 * @param response
-//	 * @return
-//	 */
-//	@RequestMapping(value = "/withdrawmanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-//	public YtResponseEntity<Object> withdrawmanual(YtRequestDecryptEntity<Merchantaccountorder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-//		service.withdrawmanual(requestEntity.getBody());
-//		return new YtResponseEntity<Object>(new YtBody(1));
-//	}
-//
-//	/**
-//	 * 处理充值
-//	 * 
-//	 * @param requestEntity
-//	 * @param request
-//	 * @param response
-//	 * @return
-//	 */
-//	@RequestMapping(value = "/payoutmanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-//	public YtResponseEntity<Object> payoutincomemanual(YtRequestDecryptEntity<Merchantaccountorder> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-//		service.incomemanual(requestEntity.getBody());
-//		return new YtResponseEntity<Object>(new YtBody(1));
-//	}
+	/**
+	 * 代收取消提现
+	 * 
+	 * @version 1.1
+	 */
+	@RequestMapping(value = "/cancleincomewithdraw/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> cancleincomewithdraw(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+		Integer t = service.cancleincomewithdraw(id);
+		return new YtResponseEncryptEntity<Object>(new YtBody(t));
+	}
 
 }

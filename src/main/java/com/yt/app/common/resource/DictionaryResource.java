@@ -71,19 +71,29 @@ public class DictionaryResource implements Serializable {
 	public static final Integer ORDERTYPE_11 = 11; // 支出
 	public static final Integer ORDERTYPE_12 = 12; // 拒绝
 	public static final Integer ORDERTYPE_13 = 13; // 取消
-
+	
+	
+	public static final Integer ORDERTYPE_20 = 20; // 商户充值
+	public static final Integer ORDERTYPE_21 = 21; // 代付商户提现
+	public static final Integer ORDERTYPE_22 = 22; // 代收商户提现
 
 	/**
 	 * 收入支出资金明细类型
 	 */
-	public static final Integer RECORDTYPE_30 = 30; // 收入待确认
-	public static final Integer RECORDTYPE_31 = 31; // 收入成功
-	public static final Integer RECORDTYPE_33 = 33; // 收入取消
+	public static final Integer RECORDTYPE_30 = 30; // 充值待确认
+	public static final Integer RECORDTYPE_31 = 31; // 充值成功
+	public static final Integer RECORDTYPE_33 = 33; // 充值取消
 	
-	public static final Integer RECORDTYPE_34 = 34; // 支出待确认
-	public static final Integer RECORDTYPE_35 = 35; // 支出成功
-	public static final Integer RECORDTYPE_37 = 37; // 支出取消
+	public static final Integer RECORDTYPE_34 = 34; // 代付待确认
+	public static final Integer RECORDTYPE_35 = 35; // 代付成功
+	public static final Integer RECORDTYPE_37 = 37; // 代付取消
 
+	
+	public static final Integer RECORDTYPE_32 = 32; // 提现待确认
+	public static final Integer RECORDTYPE_36 = 36; // 提现成功
+	public static final Integer RECORDTYPE_38 = 38; // 提现取消
+	
+	
 	/**
 	 * 银行卡类型
 	 */
@@ -94,12 +104,12 @@ public class DictionaryResource implements Serializable {
 	/**
 	 * 代付状态
 	 */
-	public static final Integer PAYOUTSTATUS_50 = 50; // 新增
-	public static final Integer PAYOUTSTATUS_51 = 51; // 待结算
-	public static final Integer PAYOUTSTATUS_52 = 52; // 成功
-	public static final Integer PAYOUTSTATUS_53 = 53; // 失败
-	public static final Integer PAYOUTSTATUS_54 = 54; // 已结算
-	public static final Integer PAYOUTSTATUS_55 = 55; // 已分账
+	public static final Integer ORDERSTATUS_50 = 50; // 新增
+	public static final Integer ORDERSTATUS_51 = 51; // 待结算
+	public static final Integer ORDERSTATUS_52 = 52; // 成功
+	public static final Integer ORDERSTATUS_53 = 53; // 失败
+	public static final Integer ORDERSTATUS_54 = 54; // 已结算
+	public static final Integer ORDERSTATUS_55 = 55; // 已分账
 
 	/**
 	 * 回调状态

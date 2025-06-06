@@ -68,7 +68,7 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 		t.setChannelname(m.getName());
 		t.setNkname(m.getNkname());
 		t.setChannelcode(m.getCode());
-		t.setStatus(DictionaryResource.PAYOUTSTATUS_50);
+		t.setStatus(DictionaryResource.ORDERSTATUS_50);
 		t.setAmountreceived((t.getAmount() * (t.getExchange() + t.getChannelexchange())));
 		t.setType(DictionaryResource.ORDERTYPE_10);
 		t.setUsdtval(t.getAmount());
@@ -116,7 +116,7 @@ public class ChannelaccountorderServiceImpl extends YtBaseServiceImpl<Channelacc
 		mao.setStatus(cco.getStatus());
 		Integer i = mapper.put(mao);
 		if (i > 0) {
-			if (cco.getStatus().equals(DictionaryResource.PAYOUTSTATUS_52)) {
+			if (cco.getStatus().equals(DictionaryResource.ORDERSTATUS_52)) {
 //				channelaccountservice.updateTotalincome(mao);
 			} else {
 //				channelaccountservice.turndownTotalincome(mao);

@@ -18,6 +18,17 @@ import com.yt.app.common.base.YtIBaseMapper;
  */
 
 public interface MerchantaccountorderMapper extends YtIBaseMapper<Merchantaccountorder> {
+	
+	
+	/**
+	 * get
+	 *
+	 * @param id id
+	 * @return Merchantaccountbank
+	 */
+	@YtRedisCacheAnnotation(classs = Merchantaccountorder.class)
+	public Merchantaccountorder get(Long id);
+	
 	/**
 	 * add
 	 * 

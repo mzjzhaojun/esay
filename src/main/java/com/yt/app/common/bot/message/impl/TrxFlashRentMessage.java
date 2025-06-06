@@ -62,7 +62,7 @@ public class TrxFlashRentMessage implements UpdateMessageService {
 			tronmemberorder.setTgid(tronmember.getTgid());
 			tronmemberorder.setOrdernum("E" + StringUtil.getOrderNum());
 			tronmemberorder.setType(DictionaryResource.EXCHANGE_TYPE_601);
-			tronmemberorder.setStatus(DictionaryResource.PAYOUTSTATUS_50);
+			tronmemberorder.setStatus(DictionaryResource.ORDERSTATUS_50);
 			tronmemberorder.setIncomeaddress(owneraddress);
 			tronmemberorder.setExpireddate(DateTimeUtil.addMinute(5));
 			i = tronmemberordermapper.post(tronmemberorder);

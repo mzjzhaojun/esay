@@ -199,7 +199,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		String returnstate = PayUtil.SendKFQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "kf通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			success(income);
 		}
 		TenantIdContext.remove();
@@ -219,7 +219,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		String returnstate = PayUtil.SendEgQuerySubmit(orderid, income.getAmount(), channel);
 		Assert.notNull(returnstate, "二狗通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			success(income);
 		}
 		TenantIdContext.remove();
@@ -239,7 +239,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		String returnstate = PayUtil.SendWdQuerySubmit(orderid, income.getAmount(), channel);
 		Assert.notNull(returnstate, "豌豆通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			success(income);
 		}
 		TenantIdContext.remove();
@@ -259,7 +259,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		String returnstate = PayUtil.SendRblQuerySubmit(orderid, income.getAmount(), channel);
 		Assert.notNull(returnstate, "日不落通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			success(income);
 		}
 		TenantIdContext.remove();
@@ -279,7 +279,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		String returnstate = PayUtil.SendFcQuerySubmit(orderid, income.getAmount(), channel);
 		Assert.notNull(returnstate, "翡翠通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			success(income);
 		}
 		TenantIdContext.remove();
@@ -299,7 +299,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		String returnstate = PayUtil.SendAklQuerySubmit(orderid, income.getAmount(), channel);
 		Assert.notNull(returnstate, "奥克兰通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			success(income);
 		}
 		TenantIdContext.remove();
@@ -319,7 +319,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		String returnstate = PayUtil.SendGzQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "公子通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			success(income);
 		}
 		TenantIdContext.remove();
@@ -339,7 +339,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		String returnstate = PayUtil.SendFhQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "飞黄运通通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			success(income);
 		}
 		TenantIdContext.remove();
@@ -359,7 +359,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		JSONObject returnstate = PayUtil.SendTongYuanQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "通源通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			success(income);
 		}
 		TenantIdContext.remove();
@@ -379,7 +379,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		JSONObject returnstate = PayUtil.SendOnePlusQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "oneplus通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			success(income);
 		}
 		TenantIdContext.remove();
@@ -399,7 +399,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		String returnstate = PayUtil.SendYSQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "易生通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			success(income);
 		}
 		TenantIdContext.remove();
@@ -419,7 +419,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		String returnstate = PayUtil.SendWjQuerySubmit(orderid, income.getAmount(), channel);
 		Assert.notNull(returnstate, "玩家通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			success(income);
 		}
 		TenantIdContext.remove();
@@ -439,7 +439,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		String returnstate = PayUtil.SendXSQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "新生通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			success(income);
 		}
 		TenantIdContext.remove();
@@ -459,7 +459,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		JSONObject returnstate = PayUtil.SendZSQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "张三通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			success(income);
 		}
 		TenantIdContext.remove();
@@ -479,7 +479,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 		JSONObject returnstate = PayUtil.SendALiQuerySubmit(orderid, channel);
 		Assert.notNull(returnstate, "阿力通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			success(income);
 		}
 		TenantIdContext.remove();
@@ -574,7 +574,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				income.setRealamount(Double.valueOf(StringUtil.getDouble(qs.getPay_amount())));
 			else
 				income.setRealamount(income.getAmount());
-			income.setStatus(DictionaryResource.PAYOUTSTATUS_50);
+			income.setStatus(DictionaryResource.ORDERSTATUS_50);
 			income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
 			income.setNotifyurl(qs.getPay_notifyurl());
 			income.setBackforwardurl(qs.getPay_callbackurl());
@@ -587,7 +587,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				qr.setPay_memberid(mc.getCode());
 				qr.setPay_orderid(qs.getPay_orderid());
 				qr.setPay_amount(qs.getPay_amount());
-				qr.setPay_aislecode(income.getOrdernum());
 				qr.setPay_viewurl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + "/esay/rest/v1/view/income/error");
 				String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
 				qr.setPay_md5sign(signresult);
@@ -857,7 +856,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		else
 			income.setRealamount(income.getAmount());
 
-		income.setStatus(DictionaryResource.PAYOUTSTATUS_50);
+		income.setStatus(DictionaryResource.ORDERSTATUS_50);
 		income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);
 		income.setNotifyurl(qs.getPay_notifyurl());
 		income.setBackforwardurl(qs.getPay_callbackurl());
@@ -900,7 +899,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	private void success(Income income) {
 		// 計算代收
-		income.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+		income.setStatus(DictionaryResource.ORDERSTATUS_52);
 		if (income.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61)
 			income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 		income.setSuccesstime(DateTimeUtil.getNow());
@@ -927,9 +926,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	// 自营三方回调
 	private void success(Income income, String trade_no) {
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			// 計算代收
-			income.setStatus(DictionaryResource.PAYOUTSTATUS_52);
+			income.setStatus(DictionaryResource.ORDERSTATUS_52);
 			if (trade_no != null)
 				income.setQrcodeordernum(trade_no);
 			if (income.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61)
@@ -994,7 +993,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			Qrcode pqd = qrcodemapper.get(qd.getPid());
 			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, in.getQrcodeordernum(), in.getAmount());
 			Assert.notNull(atsc, "结算失败!");
-			in.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+			in.setStatus(DictionaryResource.ORDERSTATUS_54);
 			mapper.put(in);
 		}
 	}
@@ -1008,7 +1007,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			Qrcode pqd = qrcodemapper.get(qd.getPid());
 			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, in.getQrcodeordernum(), in.getAmount());
 			Assert.notNull(atsc, "结算失败!");
-			in.setStatus(DictionaryResource.PAYOUTSTATUS_54);
+			in.setStatus(DictionaryResource.ORDERSTATUS_54);
 			mapper.put(in);
 		});
 	}
@@ -1068,7 +1067,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		TenantIdContext.setTenantId(income.getTenant_id());
 		String returnstate = SelfPayUtil.eplpaymentQuery(qrcodemapper.get(income.getQrcodeid()), outradeno, noncestr);
 		Assert.notNull(returnstate, "易票联通知反查订单失败!");
-		if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			success(income, null);
 		}
 		TenantIdContext.remove();
@@ -1083,7 +1082,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			TenantIdContext.setTenantId(income.getTenant_id());
 			String response = SelfPayUtil.huifupaymentQuery(qrcodemapper.get(income.getQrcodeid()), outradeno);
 			Assert.notNull(response, "汇付通知反查订单失败!");
-			if (income.getStatus().equals(DictionaryResource.PAYOUTSTATUS_50)) {
+			if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 				success(income, null);
 			}
 			TenantIdContext.remove();
@@ -1102,7 +1101,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		if (in == null)
 			return;
 		TenantIdContext.setTenantId(in.getTenant_id());
-		if (in.getStatus() == DictionaryResource.PAYOUTSTATUS_50) {
+		if (in.getStatus() == DictionaryResource.ORDERSTATUS_50) {
 			Qrcode qd = qrcodemapper.get(in.getQrcodeid());
 			Qrcode pqd = qrcodemapper.get(qd.getPid());
 			AlipayTradeQueryResponse atqr = SelfPayUtil.AlipayTradeWapQuery(pqd, trade_no);
@@ -1112,13 +1111,13 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				in.setExpireddate(DateTimeUtil.addMinute(expiredminute));
 				success(in, trade_no);
 			}
-		} else if (in.getStatus() == DictionaryResource.PAYOUTSTATUS_54) {
+		} else if (in.getStatus() == DictionaryResource.ORDERSTATUS_54) {
 			if (in.getDynamic()) {
 				Qrcode qd = qrcodemapper.get(in.getQrcodeid());
 				Qrcode pqd = qrcodemapper.get(qd.getPid());
 				AlipayTradeOrderSettleResponse atos = SelfPayUtil.AlipayTradeOrderSettle(pqd, in.getQrcodeordernum(), "li1850420@sina.com", in.getAmount() * 0.01);
 				Assert.notNull(atos, "分账失败!");
-				in.setStatus(DictionaryResource.PAYOUTSTATUS_55);
+				in.setStatus(DictionaryResource.ORDERSTATUS_55);
 				mapper.put(in);
 			}
 		}
