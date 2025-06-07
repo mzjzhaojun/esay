@@ -42,6 +42,7 @@ import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.common.bot.ChannelBot;
 import com.yt.app.common.bot.MerchantBot;
 import com.yt.app.api.v1.dbo.PaySubmitDTO;
+import com.yt.app.api.v1.dbo.SysQueryDTO;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Aisle;
 import com.yt.app.api.v1.entity.Aislechannel;
@@ -354,17 +355,35 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public PayResultVO query(String merchantordernum) {
-		Payout pt = mapper.getByMerchantOrdernum(merchantordernum);
+	public PayResultVO query(SysQueryDTO squery) {
+		log.info("查单:" + squery.toString());
+		Merchant mc = merchantmapper.getByCode(squery.getMerchantid());
+		if (mc == null) {
+			throw new YtException("商户不存在!");
+		}
+
+		if (!mc.getStatus()) {
+			throw new YtException("商户被冻结!");
+		}
+		String ip = AuthContext.getIp();
+		log.info(ip);
+		if (mc.getIpstatus()) {
+			if (ip == null || ip.equals("")) {
+				throw new YtException("非法请求,IP加白名单后重试!");
+			}
+			if (mc.getIpaddress() == null || mc.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求,IP加白名单后重试!");
+			}
+		}
+		Payout pt = mapper.getByMerchantOrdernum(squery.getMerchantorderid());
 		if (pt == null) {
 			throw new YtException("订单不存在!");
 		}
-		Merchant mc = merchantmapper.get(pt.getMerchantid());
 		PayResultVO srv = new PayResultVO();
 		srv.setOutorderid(pt.getOrdernum());
 		srv.setStatus(pt.getStatus());
 		srv.setMerchantid(pt.getMerchantcode());
-		srv.setMerchantorderid(merchantordernum);
+		srv.setMerchantorderid(squery.getMerchantorderid());
 		srv.setPayamount(pt.getAmount());
 		srv.setSign(PayUtil.Md5Notify(srv, mc.getAppkey()));
 		return srv;
@@ -373,38 +392,9 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	// 盘口提交订单
 	@Override
 	public PayResultVO submit(PaySubmitDTO ss) {
-
-		if (ss.getMerchantid().length() > 10) {
-			throw new YtException("商户号错误!");
-		}
-
-		Merchant mc = merchantmapper.getByCode(ss.getMerchantid());
-
-		if (mc == null) {
-			throw new YtException("商户不存在!");
-		}
-
-		if (!mc.getStatus()) {
-			throw new YtException("商户被冻结!");
-		}
-
-		PayoutMerchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
-		if (ma.getBalance() < ss.getPayamount() || ss.getPayamount() <= 0) {
-			throw new YtException("账户余额不足");
-		}
-
-		Boolean val = PayUtil.Md5Submit(ss, mc.getAppkey());
-		if (!val) {
-			throw new YtException("签名不正确!");
-		}
-
-		Payout pt = mapper.getByMerchantOrdernum(ss.getMerchantorderid());
-		if (pt != null) {
-			throw new YtException("已经存在的订单!");
-		}
-
+		Merchant mc = checkparam(ss);
 		// 下單
-		pt = new Payout();
+		Payout pt = new Payout();
 		pt.setAccname(ss.getBankowner());
 		pt.setAccnumer(ss.getBanknum());
 		pt.setBankcode(ss.getBankcode());
@@ -577,6 +567,48 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		//
 		mapper.post(t);
 		TenantIdContext.remove();
+	}
+
+	private Merchant checkparam(PaySubmitDTO ss) {
+		if (ss.getMerchantid().length() > 10) {
+			throw new YtException("商户号错误!");
+		}
+
+		Merchant mc = merchantmapper.getByCode(ss.getMerchantid());
+
+		if (mc == null) {
+			throw new YtException("商户不存在!");
+		}
+
+		if (!mc.getStatus()) {
+			throw new YtException("商户被冻结!");
+		}
+		String ip = AuthContext.getIp();
+		log.info(ip);
+		if (mc.getIpstatus()) {
+			if (ip == null || ip.equals("")) {
+				throw new YtException("非法请求,IP加白名单后重试!");
+			}
+			if (mc.getIpaddress() == null || mc.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求,IP加白名单后重试!");
+			}
+		}
+
+		PayoutMerchantaccount ma = merchantaccountmapper.getByUserId(mc.getUserid());
+		if (ma.getBalance() < ss.getPayamount() || ss.getPayamount() <= 0) {
+			throw new YtException("账户余额不足");
+		}
+
+		Boolean val = PayUtil.Md5Submit(ss, mc.getAppkey());
+		if (!val) {
+			throw new YtException("签名不正确!");
+		}
+
+		Payout pt = mapper.getByMerchantOrdernum(ss.getMerchantorderid());
+		if (pt != null) {
+			throw new YtException("已经存在的订单!");
+		}
+		return mc;
 	}
 
 	@Override
@@ -768,9 +800,25 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
 	public PayResultVO queryblance(String merchantid) {
-		Merchant mt = merchantmapper.getByCode(merchantid);
-		Assert.notNull(mt, "没有找到商户!");
-		PayoutMerchantaccount mtt = merchantaccountmapper.getByUserId(mt.getUserid());
+		Merchant mc = merchantmapper.getByCode(merchantid);
+		if (mc == null) {
+			throw new YtException("商户不存在!");
+		}
+
+		if (!mc.getStatus()) {
+			throw new YtException("商户被冻结!");
+		}
+		String ip = AuthContext.getIp();
+		log.info(ip);
+		if (mc.getIpstatus()) {
+			if (ip == null || ip.equals("")) {
+				throw new YtException("非法请求,IP加白名单后重试!");
+			}
+			if (mc.getIpaddress() == null || mc.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求,IP加白名单后重试!");
+			}
+		}
+		PayoutMerchantaccount mtt = merchantaccountmapper.getByUserId(mc.getUserid());
 		PayResultVO srv = new PayResultVO();
 		srv.setBalance(mtt.getBalance());
 		srv.setMerchantid(merchantid);

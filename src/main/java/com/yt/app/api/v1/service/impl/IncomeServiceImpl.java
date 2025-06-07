@@ -757,6 +757,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	@Override
 	public QueryQrcodeResultVO queryInCome(QrcodeSubmitDTO qs) {
+		log.info("查单:" + qs.toString());
 		// 验证
 		if (qs.getPay_memberid().length() > 10) {
 			throw new YtException("商户号错误!");

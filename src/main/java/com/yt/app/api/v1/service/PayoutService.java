@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.yt.app.api.v1.dbo.PaySubmitDTO;
+import com.yt.app.api.v1.dbo.SysQueryDTO;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.vo.PayoutVO;
 import com.yt.app.api.v1.vo.PayResultVO;
@@ -24,7 +25,7 @@ import com.yt.app.common.common.yt.YtIPage;
 public interface PayoutService extends YtIBaseService<Payout, Long> {
 
 	// 代付盘口下单查单
-	PayResultVO query(String ordernum);
+	PayResultVO query(SysQueryDTO squery);
 
 	// 查询余额
 	PayResultVO queryblance(String merchantid);
@@ -73,7 +74,7 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 
 	// 8g代付回调
 	void g8callback(Map<String, Object> params);
-	
+
 	// 环宇代付回调
 	void hycallback(String orderid);
 

@@ -559,7 +559,7 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/querypayout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEntity<Object> tyquery(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		PayResultVO pt = payoutservice.query(requestEntity.getBody().getMerchantorderid());
+		PayResultVO pt = payoutservice.query(requestEntity.getBody());
 		return new YtResponseEntity<Object>(new YtBody(pt));
 	}
 
