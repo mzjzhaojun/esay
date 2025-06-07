@@ -981,7 +981,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		if (in.getDynamic()) {
 			Qrcode qd = qrcodemapper.get(in.getQrcodeid());
 			Qrcode pqd = qrcodemapper.get(qd.getPid());
-			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, in.getQrcodeordernum(), in.getAmount());
+			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, in.getQrcodeordernum(), in.getRealamount());
 			Assert.notNull(atsc, "结算失败!");
 			in.setStatus(DictionaryResource.ORDERSTATUS_54);
 			mapper.put(in);
@@ -995,7 +995,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		list.forEach(in -> {
 			Qrcode qd = qrcodemapper.get(in.getQrcodeid());
 			Qrcode pqd = qrcodemapper.get(qd.getPid());
-			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, in.getQrcodeordernum(), in.getAmount());
+			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, in.getQrcodeordernum(), in.getRealamount());
 			Assert.notNull(atsc, "结算失败!");
 			in.setStatus(DictionaryResource.ORDERSTATUS_54);
 			mapper.put(in);
@@ -1112,15 +1112,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			}
 		}
 		TenantIdContext.remove();
-	}
-
-	@Override
-	public void settle(String tradeno) {
-		Qrcode pqd = qrcodemapper.get(1902349988894216192L);
-		AlipayTradeQueryResponse atqr = SelfPayUtil.AlipayTradeWapQuery(pqd, tradeno);
-
-		AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, tradeno, Double.valueOf(atqr.getTotalAmount()));
-		Assert.notNull(atsc, "结算失败!");
 	}
 
 }

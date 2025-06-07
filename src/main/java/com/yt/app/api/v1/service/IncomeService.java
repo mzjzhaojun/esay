@@ -94,8 +94,6 @@ public interface IncomeService extends YtIBaseService<Income, Long> {
 	// 确认结算
 	void settleconfirm(Income income);
 
-	void settle(String ordernum);
-
 	// 批量结算
 	void batchsettleconfirm(Map<String, Object> param);
 
