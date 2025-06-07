@@ -428,7 +428,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		sr.setMerchantorderid(ss.getMerchantorderid());
 		sr.setPayamount(ss.getPayamount());
 		sr.setOutorderid(pt.getOrdernum());
-		sr.setRemark(ss.getRemark());
 		sr.setSign(PayUtil.Md5QueryResult(sr, mc.getAppkey()));
 		// 返回给盘口订单号
 		return sr;

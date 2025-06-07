@@ -13,7 +13,7 @@ public class PaySubmitDTO {
 
 	String merchantid;
 	String merchantorderid;
-	Integer paytype;
+	String payaisle;
 	Double payamount;
 	String notifyurl;
 	String banknum;
@@ -21,8 +21,5 @@ public class PaySubmitDTO {
 	String bankname;
 	String bankowner;
 	String bankaddress;
-	String remark;
-	String merchantip;
-	String qrcode;
 	String sign;
 }
