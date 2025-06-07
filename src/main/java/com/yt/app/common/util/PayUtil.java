@@ -94,7 +94,7 @@ public class PayUtil {
 
 	// 盘口代付下单验证签名
 	public static boolean Md5Submit(PaySubmitDTO ss, String key) {
-		String signParams = "merchantid=" + ss.getMerchantid() + "&merchantorderid=" + ss.getMerchantorderid() + "&notifyurl=" + ss.getNotifyurl() + "&bankname=" + ss.getBankname() + "&banknum=" + ss.getBanknum() + "&bankowner=" + ss.getBankowner()
+		String signParams = "merchantid=" + ss.getMerchantid() + "&merchantorderid=" + ss.getMerchantorderid() + "&payaisle=" + ss.getPayaisle() +"&notifyurl=" + ss.getNotifyurl() + "&bankname=" + ss.getBankname() + "&banknum=" + ss.getBanknum() + "&bankowner=" + ss.getBankowner()
 				+ "&payamount=" + String.format("%.2f", ss.getPayamount()) + "&key=" + key;
 		String sign = MD5Utils.md5(signParams).toUpperCase();
 		log.info("盘口代付我方签名:" + signParams + "结果:" + sign + "对方签名:" + ss.getSign());

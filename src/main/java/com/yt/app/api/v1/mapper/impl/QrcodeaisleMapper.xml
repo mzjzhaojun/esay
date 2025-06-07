@@ -95,6 +95,14 @@
 		from qrcodeaisle
 		where id = #{id}
 	</select>
+	<!--getByCode -->
+	<select id="getByCode" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from qrcodeaisle
+		where code = #{code}
+	</select>
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">

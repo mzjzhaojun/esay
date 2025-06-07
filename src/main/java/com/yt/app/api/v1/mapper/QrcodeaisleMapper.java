@@ -95,4 +95,14 @@ public interface QrcodeaisleMapper extends YtIBaseMapper<Qrcodeaisle> {
 	 */
 	@YtRedisCacheAnnotation(classs = Qrcodeaisle.class)
 	public List<Qrcodeaisle> listByArrayId(long[] id);
+
+	/**
+	 * get
+	 *
+	 * @param id id
+	 * @return Qrcodeaisle
+	 */
+	@YtRedisCacheAnnotation(classs = Qrcodeaisle.class)
+	public Qrcodeaisle getByCode(String code);
+
 }

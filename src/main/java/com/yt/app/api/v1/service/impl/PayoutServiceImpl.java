@@ -21,8 +21,6 @@ import com.yt.app.api.v1.mapper.PayoutMerchantaccountMapper;
 import com.yt.app.api.v1.mapper.QrcodeMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper;
-import com.yt.app.api.v1.mapper.MerchantaisleMapper;
-import com.yt.app.api.v1.mapper.MerchantqrcodeaisleMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.ChannelaccountService;
@@ -53,8 +51,6 @@ import com.yt.app.api.v1.entity.PayoutMerchantaccount;
 import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Qrcodeaisle;
 import com.yt.app.api.v1.entity.Qrcodeaisleqrcode;
-import com.yt.app.api.v1.entity.Merchantaisle;
-import com.yt.app.api.v1.entity.Merchantqrcodeaisle;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.common.yt.YtIPage;
@@ -124,10 +120,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	private SystemaccountService systemaccountservice;
 	@Autowired
 	private PayoutMerchantaccountMapper merchantaccountmapper;
-	@Autowired
-	private MerchantaisleMapper merchantaislemapper;
-	@Autowired
-	private MerchantqrcodeaisleMapper merchantqrcodeaislemapper;
 	@Autowired
 	private MerchantcustomerbanksService merchantcustomerbanksservice;
 	@Autowired
@@ -421,7 +413,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		pt.setNotifyurl(ss.getNotifyurl());
 		pt.setBankname(ss.getBankname());
 		pt.setMerchantorderid(ss.getMerchantorderid());
-		addPayout(pt, mc);
+		addPayout(pt, mc, ss.getPayaisle());
 		// 返回
 		PayResultVO sr = new PayResultVO();
 		sr.setMerchantid(sr.getMerchantid());
@@ -433,9 +425,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		return sr;
 	}
 
-	public void addPayout(Payout t, Merchant m) {
+	public void addPayout(Payout t, Merchant m, String aislecode) {
 		TenantIdContext.setTenantId(m.getTenant_id());
-		///////////////////////////////////////////////////// 盘口录入代付订单/////////////////////////////////////////////////////
 		t.setUserid(m.getUserid());
 		t.setMerchantid(m.getId());
 		t.setMerchantcode(m.getCode());
@@ -447,12 +438,10 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
 		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61); // 盘口发起
 		t.setRemark("新增代付￥:" + String.format("%.2f", t.getAmount()));
-
-		List<Merchantaisle> listmc = merchantaislemapper.getByMid(m.getId());
-		if (listmc != null && listmc.size() > 0) {
-			t.setAisleid(listmc.get(0).getAisleid());
-			Aisle a = aislemapper.get(t.getAisleid());
-			t.setAislename(a.getName());
+		Aisle aisle = aislemapper.getByCode(aislecode);
+		if (aisle != null) {
+			t.setAisleid(aisle.getId());
+			t.setAislename(aisle.getName());
 			////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
 			List<Aislechannel> listac = aislechannelmapper.getByAisleId(t.getAisleid());
 			Assert.notEmpty(listac, "没有可用通道!");
@@ -516,12 +505,10 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			// 渠道余额
 			t.setChannelbalance(cl.getBalance() - t.getChannelpay());
 		} else {
-			List<Merchantqrcodeaisle> listmqa = merchantqrcodeaislemapper.getByMid(m.getId());
-			Assert.notEmpty(listmqa, "没有可用通道!");
-			////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
-			t.setAisleid(listmqa.get(0).getQrcodeaisleid());
-			Qrcodeaisle a = qrcodeaislemapper.get(t.getAisleid());
-			t.setAislename(a.getName());
+			Qrcodeaisle qa = qrcodeaislemapper.getByCode(aislecode);
+			Assert.notNull(qa, "没有可用通道!");
+			t.setAisleid(qa.getId());
+			t.setAislename(qa.getName());
 			List<Qrcodeaisleqrcode> listqaq = qrcodeaisleqrcodemapper.getByQrcodeAisleId(t.getAisleid());
 			long[] qaqids = listqaq.stream().mapToLong(qaq -> qaq.getQrcodelid()).distinct().toArray();
 			List<Qrcode> listqrcode = qrcodemapper.listByArrayId(qaqids);
