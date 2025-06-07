@@ -119,6 +119,10 @@ public class DictionaryResource implements Serializable {
 	public static final Integer PAYOUTNOTIFYSTATUS_63 = 63; // 已通知
 	public static final Integer PAYOUTNOTIFYSTATUS_64 = 64; // 通知失败
 	public static final Integer PAYOUTNOTIFYSTATUS_65 = 65; // 正在通知
+	
+	
+	public static final Integer MERCHANT_TYPE_IN = 72; // 商户
+	public static final Integer MERCHANT_TYPE_OUT = 70; // 商户
 
 	public static final Integer TGBOT_TYPE_M = 101; // 商户
 	public static final Integer TGBOT_TYPE_C = 102; // 运营

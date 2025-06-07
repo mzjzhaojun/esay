@@ -17,6 +17,7 @@ import com.yt.app.api.v1.service.QrcodeService;
 import com.yt.app.api.v1.service.SystemstatisticalreportsService;
 import com.yt.app.common.base.context.BeanContext;
 import com.yt.app.common.base.context.TenantIdContext;
+import com.yt.app.common.resource.DictionaryResource;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,8 +59,12 @@ public class StatisticsThread implements Runnable {
 		List<Merchant> listm = merchantmapper.list(new HashMap<String, Object>());
 		listm.forEach(m -> {
 			// 单日数据
-			if (m.getTodaycount() > 1)
-				merchantservice.updateDayValue(m, dateval);
+			if (m.getTodaycount() > 1) {
+				if (m.getType() == DictionaryResource.MERCHANT_TYPE_IN)
+					merchantservice.updateIncome(m, dateval);
+				else if (m.getType() == DictionaryResource.MERCHANT_TYPE_OUT)
+					merchantservice.updatePayout(m, dateval);
+			}
 		});
 		// 渠道
 		List<Channel> listc = channelmapper.list(new HashMap<String, Object>());

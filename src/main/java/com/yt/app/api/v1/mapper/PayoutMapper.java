@@ -2,7 +2,12 @@ package com.yt.app.api.v1.mapper;
 
 import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Payout;
+import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.api.v1.vo.PayoutVO;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
@@ -128,5 +133,24 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 	 */
 	@YtRedisCacheAnnotation(classs = Payout.class)
 	public List<Payout> selectAddlist();
+	
+	
+	/**
+	 * countMerchantOrder
+	 *
+	 * @param id id
+	 * @return Incomemerchantaccountorder
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public IncomeVO countMerchantOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
+
+	/**
+	 * countMerchantSuccessOrder
+	 *
+	 * @param id id
+	 * @return Incomemerchantaccountorder
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public IncomeVO countMerchantSuccessOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
 
 }

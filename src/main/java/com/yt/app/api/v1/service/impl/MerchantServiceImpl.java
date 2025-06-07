@@ -9,8 +9,10 @@ import com.yt.app.api.v1.mapper.AgentMapper;
 import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.IncomemerchantaccountMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
-import com.yt.app.api.v1.mapper.MerchantstatisticalreportsMapper;
+import com.yt.app.api.v1.mapper.IncomeMerchantstatisticalreportsMapper;
+import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.mapper.PayoutMerchantaccountMapper;
+import com.yt.app.api.v1.mapper.PayoutmerchantstatisticalreportsMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.vo.IncomeVO;
@@ -23,8 +25,9 @@ import com.yt.app.common.bot.MerchantBot;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Incomemerchantaccount;
 import com.yt.app.api.v1.entity.Merchant;
-import com.yt.app.api.v1.entity.Merchantstatisticalreports;
+import com.yt.app.api.v1.entity.IncomeMerchantstatisticalreports;
 import com.yt.app.api.v1.entity.PayoutMerchantaccount;
+import com.yt.app.api.v1.entity.Payoutmerchantstatisticalreports;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -56,6 +59,9 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	private IncomeMapper incomemapper;
 
 	@Autowired
+	private PayoutMapper payoutmapper;
+
+	@Autowired
 	private UserMapper usermapper;
 
 	@Autowired
@@ -68,7 +74,10 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 	private IncomemerchantaccountMapper incomemerchantaccountmapper;
 
 	@Autowired
-	private MerchantstatisticalreportsMapper merchantstatisticalreportsmapper;
+	private IncomeMerchantstatisticalreportsMapper merchantstatisticalreportsmapper;
+
+	@Autowired
+	private PayoutmerchantstatisticalreportsMapper payoutmerchantstatisticalreportsmapper;
 
 	@Autowired
 	private MerchantBot merchantbot;
@@ -235,13 +244,14 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 
 	@Override
 	@Transactional
-	public void updateDayValue(Merchant m, String date) {
+	public void updateIncome(Merchant m, String date) {
 		RLock lock = RedissonUtil.getLock(m.getId());
 		try {
 			lock.lock();
 			TenantIdContext.setTenantId(m.getTenant_id());
-			// 插入报表数据
-			Merchantstatisticalreports msr = new Merchantstatisticalreports();
+
+			// 代收
+			IncomeMerchantstatisticalreports msr = new IncomeMerchantstatisticalreports();
 			msr.setDateval(date);
 			msr.setName(m.getName());
 			msr.setBalance(m.getBalance());
@@ -272,11 +282,59 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 			merchantbot.statisticsMerchant(m);
 			// 清空每日数据
 			mapper.updatetodayvalue(m.getId());
+
 			TenantIdContext.remove();
 		} catch (Exception e) {
 		} finally {
 			lock.unlock();
 		}
+	}
 
+	@Override
+	@Transactional
+	public void updatePayout(Merchant m, String date) {
+		RLock lock = RedissonUtil.getLock(m.getId());
+		try {
+			lock.lock();
+			TenantIdContext.setTenantId(m.getTenant_id());
+
+			// 代收
+			Payoutmerchantstatisticalreports msr = new Payoutmerchantstatisticalreports();
+			msr.setDateval(date);
+			msr.setName(m.getName());
+			msr.setBalance(m.getBalance());
+			msr.setUserid(m.getUserid());
+			msr.setMerchantid(m.getId());
+			msr.setTodayincome(m.getTodaycount());
+			msr.setIncomecount(m.getCount());
+			// 查询每日统计数据
+			IncomeVO imaov = payoutmapper.countMerchantOrder(m.getId(), date);
+			msr.setTodayorder(imaov.getOrdercount());
+			msr.setTodayorderamount(imaov.getAmount());
+			msr.setTodaysuccessorderamount(imaov.getIncomeamount());
+
+			IncomeVO imaovsuccess = payoutmapper.countMerchantSuccessOrder(m.getId(), date);
+			msr.setSuccessorder(imaovsuccess.getOrdercount());
+			msr.setIncomeuserpaycount(imaovsuccess.getAmount());
+			msr.setIncomeuserpaysuccesscount(imaovsuccess.getIncomeamount());
+			try {
+				if (msr.getSuccessorder() > 0) {
+					double successRate = ((double) msr.getSuccessorder() / msr.getTodayorder()) * 100;
+					msr.setPayoutrate(successRate);
+				}
+			} catch (Exception e) {
+				msr.setPayoutrate(0.0);
+			}
+			payoutmerchantstatisticalreportsmapper.post(msr);
+			// 发送机器人数据
+			merchantbot.statisticsMerchant(m);
+			// 清空每日数据
+			mapper.updatetodayvalue(m.getId());
+
+			TenantIdContext.remove();
+		} catch (Exception e) {
+		} finally {
+			lock.unlock();
+		}
 	}
 }

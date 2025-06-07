@@ -308,6 +308,34 @@
 			</if>
 		</where>
 	</select>
+	
+	<select id="countMerchantOrder" resultMap="ResultMapVO">
+		SELECT
+		count(*) as ordercount,
+		sum(amount) as amount,
+		sum(merchantpay) as incomeamount
+		FROM
+		payout
+		WHERE
+		merchantid = #{userid}
+		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
+		AND create_time &lt; CONCAT(#{dateval} +INTERVAL 1 DAY,' 00:00:00')
+	</select>
+
+	<select id="countMerchantSuccessOrder" resultMap="ResultMapVO">
+		SELECT
+		count(*) as ordercount,
+		sum(amount) as amount,
+		sum(merchantpay) as incomeamount
+		FROM
+		payout
+		WHERE
+		merchantid = #{userid}
+		AND status = 52
+		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
+		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
+	</select>
+	
 	<!-- listByArrayId -->
 	<select id="listByArrayId" parameterType="java.util.HashMap"
 		resultMap="ResultMap">

@@ -18,7 +18,7 @@ import com.yt.app.common.base.BaseVO;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class MerchantstatisticalreportsVO extends BaseVO {
+public class IncomeMerchantstatisticalreportsVO extends BaseVO {
 
 	private static final long serialVersionUID = 1L;
 

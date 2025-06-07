@@ -18,7 +18,7 @@ import com.yt.app.common.base.YtBaseEntity;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Merchantstatisticalreports extends YtBaseEntity<Merchantstatisticalreports> {
+public class IncomeMerchantstatisticalreports extends YtBaseEntity<IncomeMerchantstatisticalreports> {
 
 	private static final long serialVersionUID = 1L;
 

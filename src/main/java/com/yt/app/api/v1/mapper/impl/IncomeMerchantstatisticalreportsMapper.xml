@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
-	namespace="com.yt.app.api.v1.mapper.MerchantstatisticalreportsMapper">
+	namespace="com.yt.app.api.v1.mapper.IncomeMerchantstatisticalreportsMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
 		id,tenant_id,userid,merchantid,todayincome,incomecount,incomeuserpaycount,incomeuserpaysuccesscount,name,balance,payoutrate,todayorder,successorder,todayorderamount,todaysuccessorderamount,dateval,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Merchantstatisticalreports">
+		type="com.yt.app.api.v1.entity.IncomeMerchantstatisticalreports">
 	</resultMap>
 	<!-- ResultMap -->
 	<resultMap id="ResultMapVO"
-		type="com.yt.app.api.v1.vo.MerchantstatisticalreportsVO">
+		type="com.yt.app.api.v1.vo.IncomeMerchantstatisticalreportsVO">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Merchantstatisticalreports">
+		parameterType="com.yt.app.api.v1.entity.IncomeMerchantstatisticalreports">
 		insert into
 		incomemerchantstatisticalreports(id,userid,merchantid,todayincome,incomecount,incomeuserpaycount,incomeuserpaysuccesscount,name,balance,payoutrate,todayorder,successorder,todayorderamount,todaysuccessorderamount,dateval,create_by,create_time,update_by,update_time,remark)
 		values
@@ -39,7 +39,7 @@
 	</delete>
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Merchantstatisticalreports">
+		parameterType="com.yt.app.api.v1.entity.IncomeMerchantstatisticalreports">
 		update incomemerchantstatisticalreports
 		<set>
 			<if test="tenant_id != null">

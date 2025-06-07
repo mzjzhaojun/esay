@@ -15,9 +15,9 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
 
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
-import com.yt.app.api.v1.service.MerchantstatisticalreportsService;
-import com.yt.app.api.v1.entity.Merchantstatisticalreports;
-import com.yt.app.api.v1.vo.MerchantstatisticalreportsVO;
+import com.yt.app.api.v1.service.IncomeMerchantstatisticalreportsService;
+import com.yt.app.api.v1.entity.IncomeMerchantstatisticalreports;
+import com.yt.app.api.v1.vo.IncomeMerchantstatisticalreportsVO;
 
 /**
  * @author yyds
@@ -27,14 +27,14 @@ import com.yt.app.api.v1.vo.MerchantstatisticalreportsVO;
 
 @RestController
 @RequestMapping("/rest/v1/merchantstatisticalreports")
-public class MerchantstatisticalreportsController extends YtBaseEncipherControllerImpl<Merchantstatisticalreports, Long> {
+public class IncomeMerchantstatisticalreportsController extends YtBaseEncipherControllerImpl<IncomeMerchantstatisticalreports, Long> {
 
 	@Autowired
-	private MerchantstatisticalreportsService service;
+	private IncomeMerchantstatisticalreportsService service;
 
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<MerchantstatisticalreportsVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		YtIPage<IncomeMerchantstatisticalreportsVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 }

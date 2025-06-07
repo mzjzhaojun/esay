@@ -20,7 +20,9 @@ public interface MerchantService extends YtIBaseService<Merchant, Long> {
 
 	Merchant getData();
 
-	void updateDayValue(Merchant c, String date);
+	void updateIncome(Merchant c, String date);
+	
+	void updatePayout(Merchant c, String date);
 
 	Merchant postMerchant(Merchant m);
 
