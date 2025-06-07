@@ -110,7 +110,7 @@ public class TaskMasterConfig {
 		for (Income in : list) {
 			Qrcode qd = qrcodemapper.get(in.getQrcodeid());
 			Qrcode pqd = qrcodemapper.get(qd.getPid());
-			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, in.getQrcodeordernum(), in.getAmount());
+			AlipayTradeSettleConfirmResponse atsc = SelfPayUtil.AlipayTradeSettleConfirm(pqd, in.getQrcodeordernum(), in.getRealamount());
 			if (atsc != null) {
 				in.setStatus(DictionaryResource.ORDERSTATUS_54);
 				incomemapper.put(in);

@@ -194,9 +194,6 @@ public class NumberUtil {
 	}
 
 	public static void main(String args[]) {
-		Random random = new Random();
-		double randomnum = random.nextInt(10);
-		randomnum = randomnum + random.nextDouble() * (0.90 - 0.01) + 0.01;
-		System.out.println(randomnum);
+		System.out.println(getOrderNo());
 	}
 }

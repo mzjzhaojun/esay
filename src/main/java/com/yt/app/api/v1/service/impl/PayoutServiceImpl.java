@@ -63,6 +63,7 @@ import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
+import com.yt.app.common.util.NumberUtil;
 import com.yt.app.common.util.PayUtil;
 import com.yt.app.common.util.PayoutProduct;
 import com.yt.app.common.util.RedisUtil;
@@ -865,7 +866,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		String code = wr.next();
 		Channel cl = listc.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
 		Assert.notNull(cl, "没有可用的渠道!");
-
+		String batchid = NumberUtil.getOrderNo();
 		for (int i = 1; i <= maxRow; i++) {
 			Row row = sheet.getRow(i);
 			if (row != null && row.getCell(0) != null) {
@@ -874,7 +875,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				importOrder(aisle, row.getCell(0).toString().replace(" ", ""), row.getCell(1).toString().replace(" ", ""), row.getCell(2).toString().replace(" ", ""), Double.valueOf(row.getCell(3).toString()), m, cl);
+				importOrder(batchid, aisle, row.getCell(0).toString().replace(" ", ""), row.getCell(1).toString().replace(" ", ""), row.getCell(2).toString().replace(" ", ""), Double.valueOf(row.getCell(3).toString()), m, cl);
 			}
 		}
 		return file.getOriginalFilename();
@@ -916,7 +917,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		String code = wr.next();
 		Qrcode qd = listqrcode.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
 		Assert.notNull(qd, "没有可用的渠道!");
-
+		String batchid = NumberUtil.getOrderNo();
 		for (int i = 1; i <= maxRow; i++) {
 			Row row = sheet.getRow(i);
 			if (row != null && row.getCell(0) != null) {
@@ -925,7 +926,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				Integer j = importOrderSelf(a, row.getCell(0).toString().replace(" ", ""), row.getCell(1).toString().replace(" ", ""), row.getCell(2).toString().replace(" ", ""), Double.valueOf(row.getCell(3).toString()), m, qd);
+				Integer j = importOrderSelf(batchid, a, row.getCell(0).toString().replace(" ", ""), row.getCell(1).toString().replace(" ", ""), row.getCell(2).toString().replace(" ", ""), Double.valueOf(row.getCell(3).toString()), m, qd);
 				if (j == 0)
 					break;
 			}
@@ -933,7 +934,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		return file.getOriginalFilename();
 	}
 
-	public synchronized Integer importOrder(Aisle al, String name, String cardno, String bankname, Double amount, Merchant m, Channel cl) {
+	public synchronized Integer importOrder(String batchid, Aisle al, String name, String cardno, String bankname, Double amount, Merchant m, Channel cl) {
 
 		Payout t = new Payout();
 		t.setAccname(name.replaceAll(" ", ""));
@@ -964,6 +965,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setType(DictionaryResource.ORDERTYPE_11);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
 		t.setMerchantorderid("outm" + StringUtil.getOrderNum());// 商户单号
+		t.setMerchantordernum(batchid);
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
@@ -1001,7 +1003,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		return mapper.post(t);
 	}
 
-	public synchronized Integer importOrderSelf(Qrcodeaisle a, String name, String cardno, String bankname, Double amount, Merchant m, Qrcode qd) {
+	public synchronized Integer importOrderSelf(String batchid, Qrcodeaisle a, String name, String cardno, String bankname, Double amount, Merchant m, Qrcode qd) {
 
 		Payout t = new Payout();
 		t.setAccname(name.replaceAll(" ", ""));
@@ -1022,6 +1024,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setType(DictionaryResource.ORDERTYPE_11);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
 		t.setMerchantorderid("outm" + StringUtil.getOrderNum());// 商户单号
+		t.setMerchantordernum(batchid);
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额

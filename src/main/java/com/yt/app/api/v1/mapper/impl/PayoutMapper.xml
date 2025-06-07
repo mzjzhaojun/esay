@@ -232,6 +232,9 @@
 			<if test="ordernum != null and ordernum != ''">
 				and ordernum = #{ordernum}
 			</if>
+			<if test="merchantordernum != null and merchantordernum != ''">
+				and merchantordernum = #{merchantordernum}
+			</if>
 			<if test="merchantorderid != null and merchantorderid != ''">
 				and merchantorderid = #{merchantorderid}
 			</if>
@@ -275,6 +278,9 @@
 			</if>
 			<if test="ordernum != null and ordernum != ''">
 				and ordernum = #{ordernum}
+			</if>
+			<if test="merchantordernum != null and merchantordernum != ''">
+				and merchantordernum = #{merchantordernum}
 			</if>
 			<if test="merchantorderid != null and merchantorderid != ''">
 				and merchantorderid = #{merchantorderid}

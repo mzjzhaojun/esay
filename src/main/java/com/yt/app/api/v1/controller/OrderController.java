@@ -55,6 +55,20 @@ public class OrderController {
 	private BlocklistService blocklistservice;
 
 	/**
+	 * 代付盘口查询余额
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/querybalance", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEntity<Object> query(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		PayResultVO prv = payoutservice.queryblance(requestEntity.getBody().getMerchantid());
+		return new YtResponseEntity<Object>(new YtBody(prv));
+	}
+
+	/**
 	 * html查询代收支付状态
 	 * 
 	 * @param id
@@ -571,19 +585,6 @@ public class OrderController {
 			lock.unlock();
 		}
 		return new YtResponseEntity<Object>(new YtBody(sr));
-	}
-
-	/**
-	 * 代付盘口查询余额
-	 * 
-	 * @param requestEntity
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "/querybalance", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEntity<Object> query(YtRequestEntity<SysQueryDTO> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		return new YtResponseEntity<Object>(new YtBody(100));
 	}
 
 	/**

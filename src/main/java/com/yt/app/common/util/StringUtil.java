@@ -514,7 +514,7 @@ public class StringUtil {
 	public static void main(String[] args) {
 		int i = 0;
 		while (i < 1000) {
-			System.out.println(getDouble("199.12"));
+			System.out.println(getUUID());
 			i++;
 		}
 	}
