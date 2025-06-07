@@ -116,6 +116,7 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 
 	/**
 	 * 代付通知
+	 * 
 	 * @return
 	 */
 	@YtRedisCacheAnnotation(classs = Payout.class)

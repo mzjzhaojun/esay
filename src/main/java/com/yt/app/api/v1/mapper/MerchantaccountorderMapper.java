@@ -18,8 +18,7 @@ import com.yt.app.common.base.YtIBaseMapper;
  */
 
 public interface MerchantaccountorderMapper extends YtIBaseMapper<Merchantaccountorder> {
-	
-	
+
 	/**
 	 * get
 	 *
@@ -28,7 +27,7 @@ public interface MerchantaccountorderMapper extends YtIBaseMapper<Merchantaccoun
 	 */
 	@YtRedisCacheAnnotation(classs = Merchantaccountorder.class)
 	public Merchantaccountorder get(Long id);
-	
+
 	/**
 	 * add
 	 * 
@@ -83,7 +82,6 @@ public interface MerchantaccountorderMapper extends YtIBaseMapper<Merchantaccoun
 	@YtRedisCacheAnnotation(classs = Merchantaccountorder.class)
 	public Integer countlist(Map<String, Object> param);
 
-
 	/**
 	 * map
 	 * 
@@ -92,7 +90,6 @@ public interface MerchantaccountorderMapper extends YtIBaseMapper<Merchantaccoun
 	 */
 	@YtRedisCacheAnnotation(classs = Merchantaccountorder.class)
 	public List<MerchantaccountorderVO> page(Map<String, Object> param);
-
 
 	/**
 	 * get

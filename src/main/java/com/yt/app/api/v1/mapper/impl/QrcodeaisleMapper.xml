@@ -96,7 +96,7 @@
 		where id = #{id}
 	</select>
 	<!--getByCode -->
-	<select id="getByCode" parameterType="java.lang.Long"
+	<select id="getByCode" parameterType="java.lang.String"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />

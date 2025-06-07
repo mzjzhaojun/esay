@@ -106,7 +106,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 			f.setFile_name(name);
 		f.setModifytime(new Date());
 		mapper.put(f);
-		f.setUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{id}", fl.getId() + ""));
+		f.setUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{id}", fl.getId() + ""));
 		return f;
 	}
 
@@ -139,11 +139,10 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 			f.setFile_name(name);
 		f.setModifytime(new Date());
 		mapper.put(f);
-		f.setUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{id}", fl.getId() + ""));
+		f.setUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{id}", fl.getId() + ""));
 		return f.getUrl();
 	}
-	
-	
+
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	public String addBase64String(String base64) {
@@ -167,9 +166,9 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 		path = sb.append(appConfig.getFilePath()).append(apath).toString();
 		java.io.File uploadfile = new java.io.File(path);
 		BufferedOutputStream bos = null;
-        FileOutputStream fos = null;
+		FileOutputStream fos = null;
 		BASE64Decoder decoder = new BASE64Decoder();
-        try {
+		try {
 			byte[] bfile = decoder.decodeBuffer(base64);
 			fos = new FileOutputStream(uploadfile);
 			bos = new BufferedOutputStream(fos);
@@ -179,18 +178,16 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		YtFile f = mapper.get(fl.getId());
 		if (!name.equals(""))
 			f.setFile_name(name);
 		f.setModifytime(new Date());
-		
+
 		mapper.put(f);
-		f.setUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{id}", fl.getId() + ""));
+		f.setUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{id}", fl.getId() + ""));
 		return f.getUrl();
 	}
-	
-	
 
 	@Override
 	@Transactional
@@ -299,7 +296,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 
 		f.setFile_name(filename);
 		f.setModifytime(new Date());
-		String curl = RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{file}", "file");
+		String curl = RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{file}", "file");
 		f.setUrl(curl.replace("{id}", fl.getId() + ""));
 		mapper.put(f);
 		return f;
@@ -423,7 +420,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 			f.setFile_name(name);
 		f.setModifytime(new Date());
 		mapper.put(f);
-		String curl = RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{file}", "file");
+		String curl = RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{file}", "file");
 		f.setUrl(curl.replace("{id}", fl.getId() + ""));
 		return f;
 	}
@@ -463,7 +460,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 			f.setFile_name(name);
 		f.setModifytime(new Date());
 		mapper.put(f);
-		f.setUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain")+RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{id}", fl.getId() + "/" + size));
+		f.setUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "fileuploadurl").replace("{id}", fl.getId() + "/" + size));
 		return f;
 	}
 

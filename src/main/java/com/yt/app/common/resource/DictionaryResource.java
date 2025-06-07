@@ -71,8 +71,7 @@ public class DictionaryResource implements Serializable {
 	public static final Integer ORDERTYPE_11 = 11; // 支出
 	public static final Integer ORDERTYPE_12 = 12; // 拒绝
 	public static final Integer ORDERTYPE_13 = 13; // 取消
-	
-	
+
 	public static final Integer ORDERTYPE_20 = 20; // 商户充值
 	public static final Integer ORDERTYPE_21 = 21; // 代付商户提现
 	public static final Integer ORDERTYPE_22 = 22; // 代收商户提现
@@ -84,17 +83,15 @@ public class DictionaryResource implements Serializable {
 	public static final Integer RECORDTYPE_30 = 30; // 充值待确认
 	public static final Integer RECORDTYPE_31 = 31; // 充值成功
 	public static final Integer RECORDTYPE_33 = 33; // 充值取消
-	
+
 	public static final Integer RECORDTYPE_34 = 34; // 代付待确认
 	public static final Integer RECORDTYPE_35 = 35; // 代付成功
 	public static final Integer RECORDTYPE_37 = 37; // 代付取消
 
-	
 	public static final Integer RECORDTYPE_32 = 32; // 提现待确认
 	public static final Integer RECORDTYPE_36 = 36; // 提现成功
 	public static final Integer RECORDTYPE_38 = 38; // 提现取消
-	
-	
+
 	/**
 	 * 银行卡类型
 	 */
@@ -122,7 +119,6 @@ public class DictionaryResource implements Serializable {
 	public static final Integer PAYOUTNOTIFYSTATUS_63 = 63; // 已通知
 	public static final Integer PAYOUTNOTIFYSTATUS_64 = 64; // 通知失败
 	public static final Integer PAYOUTNOTIFYSTATUS_65 = 65; // 正在通知
-
 
 	public static final Integer TGBOT_TYPE_M = 101; // 商户
 	public static final Integer TGBOT_TYPE_C = 102; // 运营

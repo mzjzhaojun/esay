@@ -122,8 +122,7 @@ public interface SysconfigMapper extends YtIBaseMapper<Sysconfig> {
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Sysconfig.class })
 	public Integer putUsdtToTrxExchange(Double value);
-	
-	
+
 	public List<TSysconfig> listSysconfig();
 
 }

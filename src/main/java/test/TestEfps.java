@@ -36,7 +36,6 @@ public class TestEfps {
 		BigDecimal decimal = new BigDecimal("1000000");
 		// 测试代码
 		long beginTime = System.currentTimeMillis();
-		
 
 //		String sub_url = URL + "/wallet/getaccount";
 //		String body = HttpRequest.post(sub_url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(map)).execute().body();
@@ -48,7 +47,7 @@ public class TestEfps {
 //			balance = b;
 //		}
 //		System.out.println(Double.valueOf(new BigDecimal(balance).divide(decimal, 6, RoundingMode.FLOOR).toString()));
-		
+
 		boolean str = SelfPayUtil.generalRequest("6220212545854555123");
 		System.out.println(str);
 		long time = System.currentTimeMillis() - beginTime;

@@ -175,8 +175,7 @@ public interface IncomeMapper extends YtIBaseMapper<Income> {
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Income.class })
 	public Integer updateBlock(Object t);
-	
-	
+
 	/**
 	 * countMerchantOrder
 	 *
@@ -194,8 +193,7 @@ public interface IncomeMapper extends YtIBaseMapper<Income> {
 	 */
 	@YtRedisCacheAnnotation(classs = Income.class)
 	public IncomeVO countMerchantSuccessOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
-	
-	
+
 	/**
 	 * countMerchantOrder
 	 *
@@ -213,9 +211,7 @@ public interface IncomeMapper extends YtIBaseMapper<Income> {
 	 */
 	@YtRedisCacheAnnotation(classs = Income.class)
 	public IncomeVO countChannelSuccessOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
-	
-	
-	
+
 	/**
 	 * countMerchantOrder
 	 *

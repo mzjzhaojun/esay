@@ -68,7 +68,7 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("income");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("incomemerchantaccount");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("incomemerchantaccountrecord");
-		
+
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantaccountorder");
 
 		// 报表

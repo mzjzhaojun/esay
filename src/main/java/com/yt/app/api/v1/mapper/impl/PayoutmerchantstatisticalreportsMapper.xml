@@ -1,46 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
-	namespace="com.yt.app.api.v1.mapper.MerchantstatisticalreportsMapper">
+	namespace="com.yt.app.api.v1.mapper.PayoutmerchantstatisticalreportsMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,merchantid,todayincome,incomecount,incomeuserpaycount,incomeuserpaysuccesscount,name,balance,payoutrate,todayorder,successorder,todayorderamount,todaysuccessorderamount,dateval,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,userid,merchantid,name,balance,todayincome,incomecount,todayorder,successorder,todayorderamount,todaysuccessorderamount,incomeuserpaycount,incomeuserpaysuccesscount,payoutrate,dateval,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Merchantstatisticalreports">
+		type="com.yt.app.api.v1.entity.Payoutmerchantstatisticalreports">
 	</resultMap>
 	<!-- ResultMap -->
 	<resultMap id="ResultMapVO"
-		type="com.yt.app.api.v1.vo.MerchantstatisticalreportsVO">
+		type="com.yt.app.api.v1.vo.PayoutmerchantstatisticalreportsVO">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Merchantstatisticalreports">
+		parameterType="com.yt.app.api.v1.entity.Payoutmerchantstatisticalreports">
 		insert into
-		incomemerchantstatisticalreports(id,userid,merchantid,todayincome,incomecount,incomeuserpaycount,incomeuserpaysuccesscount,name,balance,payoutrate,todayorder,successorder,todayorderamount,todaysuccessorderamount,dateval,create_by,create_time,update_by,update_time,remark)
+		payoutmerchantstatisticalreports(id,userid,merchantid,name,balance,todayincome,incomecount,todayorder,successorder,todayorderamount,todaysuccessorderamount,incomeuserpaycount,incomeuserpaysuccesscount,payoutrate,dateval,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{userid},#{merchantid},#{todayincome},#{incomecount},#{incomeuserpaycount},#{incomeuserpaysuccesscount},#{name},#{balance},#{payoutrate},#{todayorder},#{successorder},#{todayorderamount},#{todaysuccessorderamount},#{dateval},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{userid},#{merchantid},#{name},#{balance},#{todayincome},#{incomecount},#{todayorder},#{successorder},#{todayorderamount},#{todaysuccessorderamount},#{incomeuserpaycount},#{incomeuserpaysuccesscount},#{payoutrate},#{dateval},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		incomemerchantstatisticalreports(id,tenant_id,userid,merchantid,todayincome,incomecount,balance,todayorder,successorder,todayorderamount,todaysuccessorderamount,dateval,create_by,create_time,update_by,update_time,remark)
+		payoutmerchantstatisticalreports(id,tenant_id,userid,merchantid,name,balance,todayincome,incomecount,todayorder,successorder,todayorderamount,todaysuccessorderamount,incomeuserpaycount,incomeuserpaysuccesscount,payoutrate,dateval,create_by,create_time,update_by,update_time,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{userid},#{merchantid},#{todayincome},#{incomecount},#{balance},#{todayorder},#{successorder},#{todayorderamount},#{todaysuccessorderamount},#{dateval},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+			(#{id},#{tenant_id},#{userid},#{merchantid},#{name},#{balance},#{todayincome},#{incomecount},#{todayorder},#{successorder},#{todayorderamount},#{todaysuccessorderamount},#{incomeuserpaycount},#{incomeuserpaysuccesscount},#{payoutrate},#{dateval},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from incomemerchantstatisticalreports
+		delete from
+		payoutmerchantstatisticalreports
 		where id = #{id}
 	</delete>
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Merchantstatisticalreports">
-		update incomemerchantstatisticalreports
+		parameterType="com.yt.app.api.v1.entity.Payoutmerchantstatisticalreports">
+		update payoutmerchantstatisticalreports
 		<set>
 			<if test="tenant_id != null">
 				tenant_id= #{tenant_id},
@@ -51,14 +52,17 @@
 			<if test="merchantid != null">
 				merchantid= #{merchantid},
 			</if>
+			<if test="name != null">
+				name= #{name},
+			</if>
+			<if test="balance != null">
+				balance= #{balance},
+			</if>
 			<if test="todayincome != null">
 				todayincome= #{todayincome},
 			</if>
 			<if test="incomecount != null">
 				incomecount= #{incomecount},
-			</if>
-			<if test="balance != null">
-				balance= #{balance},
 			</if>
 			<if test="todayorder != null">
 				todayorder= #{todayorder},
@@ -71,6 +75,15 @@
 			</if>
 			<if test="todaysuccessorderamount != null">
 				todaysuccessorderamount= #{todaysuccessorderamount},
+			</if>
+			<if test="incomeuserpaycount != null">
+				incomeuserpaycount= #{incomeuserpaycount},
+			</if>
+			<if test="incomeuserpaysuccesscount != null">
+				incomeuserpaysuccesscount= #{incomeuserpaysuccesscount},
+			</if>
+			<if test="payoutrate != null">
+				payoutrate= #{payoutrate},
 			</if>
 			<if test="dateval != null">
 				dateval= #{dateval},
@@ -94,14 +107,14 @@
 				version= #{version}+1
 			</if>
 		</set>
-		where id = #{id} 
+		where id = #{id} and version = #{version}
 	</update>
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from incomemerchantstatisticalreports
+		from payoutmerchantstatisticalreports
 		where id = #{id}
 	</select>
 	<!-- getList -->
@@ -109,7 +122,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from incomemerchantstatisticalreports
+		from payoutmerchantstatisticalreports
 		<where>
 			1=1
 			<if test="stime != null and etime != ''">
@@ -122,7 +135,7 @@
 		resultMap="ResultMapVO">
 		select
 		<include refid="Base_Column_List" />
-		from incomemerchantstatisticalreports
+		from payoutmerchantstatisticalreports
 		<where>
 			1=1
 			<if test="userid != null and userid != ''">
@@ -142,7 +155,7 @@
 	<!-- getCount -->
 	<select id="countlist" parameterType="java.util.HashMap"
 		resultType="int">
-		select count(*) from incomemerchantstatisticalreports
+		select count(*) from payoutmerchantstatisticalreports
 		<where>
 			1=1
 			<if test="userid != null and userid != ''">
@@ -158,7 +171,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from incomemerchantstatisticalreports
+		from payoutmerchantstatisticalreports
 		<where>
 			1=1
 			<if test="array != null and array.length > 0">

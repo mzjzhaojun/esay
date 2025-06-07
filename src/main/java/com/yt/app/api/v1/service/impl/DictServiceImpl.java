@@ -35,7 +35,7 @@ import java.util.Map;
 public class DictServiceImpl extends YtBaseServiceImpl<Dict, Long> implements DictService {
 	@Autowired
 	private DictMapper mapper;
-	
+
 	@Autowired
 	private SysconfigMapper sysconfigmapper;
 
@@ -97,8 +97,8 @@ public class DictServiceImpl extends YtBaseServiceImpl<Dict, Long> implements Di
 				});
 			});
 		}
-		
-		List<TSysconfig> listtt= sysconfigmapper.listSysconfig();
+
+		List<TSysconfig> listtt = sysconfigmapper.listSysconfig();
 		listtt.forEach(tt -> {
 			RedisUtil.set(SystemConstant.CACHE_SYS_CONFIG_PREFIX + tt.getKeyn(), tt.getValuen());
 		});

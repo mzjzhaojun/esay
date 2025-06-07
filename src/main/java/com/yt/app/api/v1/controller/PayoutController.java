@@ -71,8 +71,7 @@ public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long>
 		Assert.notEquals(i, 0, "新增失败！");
 		return new YtResponseEncryptEntity<Object>(new YtBody(i));
 	}
-	
-	
+
 	/**
 	 * 
 	 * 
@@ -115,8 +114,7 @@ public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long>
 		}
 		return new YtResponseEntity<Object>(new YtBody(name));
 	}
-	
-	
+
 	/**
 	 * 批量上传代付渠道
 	 * 

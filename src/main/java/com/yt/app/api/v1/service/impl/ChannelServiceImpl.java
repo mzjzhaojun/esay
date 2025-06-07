@@ -52,10 +52,10 @@ import java.util.Map;
 public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> implements ChannelService {
 	@Autowired
 	private ChannelMapper mapper;
-	
+
 	@Autowired
 	private IncomeMapper incomemapper;
-	
+
 	@Autowired
 	private ChannelBot channelbot;
 

@@ -17,16 +17,16 @@ import com.yt.app.common.resource.DictionaryResource;
 import cn.hutool.json.JSONObject;
 
 public class IncomeProduct {
-	
-	public static Income getIncomeProduct(Income income,Channel channel) {
-		
+
+	public static Income getIncomeProduct(Income income, Channel channel) {
+
 		switch (channel.getName()) {
 		case DictionaryResource.ALISAISLE:
 			JSONObject dataali = PayUtil.SendALiSubmit(income, channel);
 			if (dataali != null) {
 				income.setResulturl(dataali.getStr("payurl"));
 				income.setQrcodeordernum(dataali.getStr("sysorderno"));
-			}else {
+			} else {
 				return null;
 			}
 			break;
@@ -35,7 +35,7 @@ public class IncomeProduct {
 			if (dataoneplus != null) {
 				income.setResulturl(dataoneplus.getStr("payData"));
 				income.setQrcodeordernum(dataoneplus.getStr("payOrderId"));
-			}else {
+			} else {
 				return null;
 			}
 			break;
@@ -44,7 +44,7 @@ public class IncomeProduct {
 			if (data != null) {
 				income.setResulturl(data.getStr("payData"));
 				income.setQrcodeordernum(data.getStr("payOrderId"));
-			}else {
+			} else {
 				return null;
 			}
 			break;
@@ -53,7 +53,7 @@ public class IncomeProduct {
 			if (zsjz != null) {
 				income.setResulturl(zsjz.getJSONObject("PayeeInfo").getStr("CashUrl"));
 				income.setQrcodeordernum(zsjz.getStr("OrderNo"));
-			}else {
+			} else {
 				return null;
 			}
 			break;
@@ -62,7 +62,7 @@ public class IncomeProduct {
 			if (xsjz != null) {
 				income.setResulturl(xsjz.getResult().getQrCode());
 				income.setQrcodeordernum(xsjz.getResult().getOrderCode());
-			}else {
+			} else {
 				return null;
 			}
 			break;
@@ -71,7 +71,7 @@ public class IncomeProduct {
 			if (syjz != null) {
 				income.setResulturl(syjz.getPayParams().getPayUrl());
 				income.setQrcodeordernum(syjz.getPayOrderId());
-			}else {
+			} else {
 				return null;
 			}
 			break;
@@ -80,7 +80,7 @@ public class IncomeProduct {
 			if (sfh != null) {
 				income.setResulturl(sfh.getPayParams().getPayJumpUrl());
 				income.setQrcodeordernum(sfh.getPayOrderId());
-			}else {
+			} else {
 				return null;
 			}
 			break;
@@ -88,7 +88,7 @@ public class IncomeProduct {
 			SysTdOrder seg = PayUtil.SendEgSubmit(income, channel);
 			if (seg != null) {
 				income.setResulturl(seg.getData().getPay_url());
-			}else {
+			} else {
 				return null;
 			}
 			break;
@@ -97,7 +97,7 @@ public class IncomeProduct {
 			if (sho != null) {
 				income.setResulturl(sho.getPay_url());
 				income.setQrcodeordernum(sho.getSys_order_no());
-			}else {
+			} else {
 				return null;
 			}
 			break;
@@ -106,7 +106,7 @@ public class IncomeProduct {
 			if (wd != null) {
 				income.setResulturl(wd.getData().getPayData());
 				income.setQrcodeordernum(wd.getData().getPayOrderId());
-			}else {
+			} else {
 				return null;
 			}
 			break;
@@ -115,7 +115,7 @@ public class IncomeProduct {
 			if (rbl != null) {
 				income.setResulturl(rbl.getData().getPayUrl());
 				income.setQrcodeordernum(rbl.getData().getTradeNo());
-			}else {
+			} else {
 				return null;
 			}
 			break;
@@ -123,7 +123,7 @@ public class IncomeProduct {
 			SysGzOrder gz = PayUtil.SendGzSubmit(income, channel);
 			if (gz != null) {
 				income.setResulturl(gz.getData().getPayUrl());
-			}else {
+			} else {
 				return null;
 			}
 			break;
@@ -132,7 +132,7 @@ public class IncomeProduct {
 			if (wj != null) {
 				income.setResulturl(wj.getData().getPayData());
 				income.setQrcodeordernum(wj.getData().getPayOrderId());
-			}else {
+			} else {
 				return null;
 			}
 			break;
@@ -141,7 +141,7 @@ public class IncomeProduct {
 			if (fc != null) {
 				income.setResulturl(fc.getData().getPayUrl());
 				income.setQrcodeordernum(fc.getData().getTradeNo());
-			}else {
+			} else {
 				return null;
 			}
 			break;
@@ -150,7 +150,7 @@ public class IncomeProduct {
 			if (akl != null) {
 				income.setResulturl(akl.getData().getPayUrl());
 				income.setQrcodeordernum(akl.getData().getTradeNo());
-			}else {
+			} else {
 				return null;
 			}
 			break;

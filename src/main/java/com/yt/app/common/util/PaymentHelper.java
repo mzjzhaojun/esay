@@ -69,8 +69,7 @@ public class PaymentHelper {
 		geteway = geteway + "/api/txs/pay/withdrawalToCardQuery";
 		return RemoteInvoker.invoke(request, geteway, signNO, privatekey);
 	}
-	
-	
+
 	/**
 	 * 单笔代付凭证
 	 * 
@@ -81,7 +80,6 @@ public class PaymentHelper {
 		geteway = geteway + "/api/txs-query/pay/withdrawalCertification";
 		return RemoteInvoker.invoke(request, geteway, signNO, privatekey);
 	}
-	
 
 	/**
 	 * 余额查询

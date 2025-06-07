@@ -51,7 +51,7 @@ import java.util.Map;
 public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> implements MerchantService {
 	@Autowired
 	private MerchantMapper mapper;
-	
+
 	@Autowired
 	private IncomeMapper incomemapper;
 
