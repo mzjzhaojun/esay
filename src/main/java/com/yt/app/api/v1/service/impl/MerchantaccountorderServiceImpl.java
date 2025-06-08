@@ -7,6 +7,8 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.MerchantaccountorderMapper;
+import com.yt.app.api.v1.mapper.PayoutMapper;
+import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
@@ -19,7 +21,9 @@ import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Merchantaccountorder;
 import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.User;
+import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.api.v1.vo.MerchantaccountorderVO;
+import com.yt.app.api.v1.vo.PayoutVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
@@ -48,6 +52,10 @@ import java.util.Map;
 public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchantaccountorder, Long> implements MerchantaccountorderService {
 	@Autowired
 	private MerchantaccountorderMapper mapper;
+	@Autowired
+	private IncomeMapper incomemapper;
+	@Autowired
+	private PayoutMapper payoutmapper;
 	@Autowired
 	private UserMapper usermapper;
 	@Autowired
@@ -81,10 +89,10 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 
 	@Override
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public ByteArrayOutputStream download(Map<String, Object> param) throws IOException {
+	public ByteArrayOutputStream downloadIncome(Map<String, Object> param) throws IOException {
 		SXSSFWorkbook workbook = new SXSSFWorkbook();
 		SXSSFSheet sheet = workbook.createSheet("Sheet");
-		List<MerchantaccountorderVO> list = mapper.page(param);
+		List<IncomeVO> list = incomemapper.page(param);
 		list.forEach(mco -> {
 			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
 			mco.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getType()));
@@ -112,7 +120,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		titleCell9.setCellValue("创建时间");
 		// 填充数据
 		for (int i = 0; i < list.size(); i++) {
-			MerchantaccountorderVO imao = list.get(i);
+			IncomeVO imao = list.get(i);
 			SXSSFRow row = sheet.createRow(i + 1);
 			SXSSFCell cell0 = row.createCell(0);
 			cell0.setCellValue(i + 1);
@@ -130,6 +138,68 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 			cell6.setCellValue(imao.getFewamount());
 			SXSSFCell cell7 = row.createCell(7);
 			cell7.setCellValue(imao.getIncomeamount());
+			SXSSFCell cell8 = row.createCell(8);
+			cell8.setCellValue(imao.getStatusname());
+			SXSSFCell cell9 = row.createCell(9);
+			cell9.setCellValue(DateTimeUtil.getDateTime(imao.getCreate_time(), DateTimeUtil.DEFAULT_DATETIME_FORMAT));
+		}
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		workbook.write(outputStream);
+		workbook.close();
+		return outputStream;
+	}
+
+	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+	public ByteArrayOutputStream downloadPayout(Map<String, Object> param) throws IOException {
+		SXSSFWorkbook workbook = new SXSSFWorkbook();
+		SXSSFSheet sheet = workbook.createSheet("Sheet");
+		List<PayoutVO> list = payoutmapper.page(param);
+		list.forEach(mco -> {
+			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
+			mco.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getType()));
+		});
+		SXSSFRow titleRow = sheet.createRow(0);
+		SXSSFCell titleCell0 = titleRow.createCell(0);
+		titleCell0.setCellValue("编号");
+		SXSSFCell titleCell1 = titleRow.createCell(1);
+		titleCell1.setCellValue("系统单号");
+		SXSSFCell titleCell2 = titleRow.createCell(2);
+		titleCell2.setCellValue("通道名称");
+		SXSSFCell titleCell3 = titleRow.createCell(3);
+		titleCell3.setCellValue("通道编码");
+		SXSSFCell titleCell4 = titleRow.createCell(4);
+		titleCell4.setCellValue("收款类型");
+		SXSSFCell titleCell5 = titleRow.createCell(5);
+		titleCell5.setCellValue("支付");
+		SXSSFCell titleCell6 = titleRow.createCell(6);
+		titleCell6.setCellValue("手续费");
+		SXSSFCell titleCell7 = titleRow.createCell(7);
+		titleCell7.setCellValue("金额");
+		SXSSFCell titleCell8 = titleRow.createCell(8);
+		titleCell8.setCellValue("订单状态");
+		SXSSFCell titleCell9 = titleRow.createCell(9);
+		titleCell9.setCellValue("创建时间");
+		// 填充数据
+		for (int i = 0; i < list.size(); i++) {
+			PayoutVO imao = list.get(i);
+			SXSSFRow row = sheet.createRow(i + 1);
+			SXSSFCell cell0 = row.createCell(0);
+			cell0.setCellValue(i + 1);
+			SXSSFCell cell1 = row.createCell(1);
+			cell1.setCellValue(imao.getOrdernum());
+			SXSSFCell cell2 = row.createCell(2);
+			cell2.setCellValue(imao.getAislename());
+			SXSSFCell cell3 = row.createCell(3);
+			cell3.setCellValue(imao.getAislename());
+			SXSSFCell cell4 = row.createCell(4);
+			cell4.setCellValue(imao.getTypename());
+			SXSSFCell cell5 = row.createCell(5);
+			cell5.setCellValue(imao.getMerchantpay());
+			SXSSFCell cell6 = row.createCell(6);
+			cell6.setCellValue(imao.getMerchantcost());
+			SXSSFCell cell7 = row.createCell(7);
+			cell7.setCellValue(imao.getAmount());
 			SXSSFCell cell8 = row.createCell(8);
 			cell8.setCellValue(imao.getStatusname());
 			SXSSFCell cell9 = row.createCell(9);

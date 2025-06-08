@@ -267,7 +267,6 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 
 		Merchant m = merchantmapper.get(ma.getMerchantid());
 		m.setUsdtbalance(ma.getBalance());
-		m.setCountorder(m.getCountorder() + 1);
 		merchantmapper.put(m);
 	}
 
@@ -464,16 +463,16 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 		// 余额
 		m.setUsdtbalance(ma.getBalance());
 		// 当日支出扣点
-		m.setTodayincomecount(m.getTodayincomecount() + pm.getAmount());
+		m.setTodayincomecount(m.getTodayincomecount() + pm.getMerchantpay());
 		// 总支出扣点
-		m.setIncomecount(m.getIncomecount() + pm.getAmount());
+		m.setIncomecount(m.getIncomecount() + pm.getMerchantpay());
 		// 手续费
 		m.setTodaycost(m.getTodaycost() + m.getOnecost());
 
 		merchantmapper.put(m);
 	}
 
-	// 待确认支出
+	// 待确认代付
 	@Override
 	public void withdrawamount(Payout t) {
 		RLock lock = RedissonUtil.getLock(t.getMerchantid());
@@ -506,7 +505,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 		}
 	}
 
-	// 提现成功
+	// 代付成功
 	@Override
 	public void updateWithdrawamount(Payout mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());
@@ -541,7 +540,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 		}
 	}
 
-	// 取消提现
+	// 取消代付
 	@Override
 	public void cancleWithdrawamount(Payout mao) {
 		RLock lock = RedissonUtil.getLock(mao.getMerchantid());

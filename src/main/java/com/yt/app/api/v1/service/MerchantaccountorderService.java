@@ -19,7 +19,9 @@ public interface MerchantaccountorderService extends YtIBaseService<Merchantacco
 
 	YtIPage<MerchantaccountorderVO> page(Map<String, Object> param);
 
-	ByteArrayOutputStream download(Map<String, Object> param) throws IOException;
+	ByteArrayOutputStream downloadIncome(Map<String, Object> param) throws IOException;
+	
+	ByteArrayOutputStream downloadPayout(Map<String, Object> param) throws IOException;
 
 	// 充值成功
 	Integer incomemanual(Merchantaccountorder mco);
