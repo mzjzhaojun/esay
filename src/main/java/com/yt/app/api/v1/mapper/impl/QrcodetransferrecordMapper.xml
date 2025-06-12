@@ -129,8 +129,11 @@
 		from qrcodetransferrecord
 		<where>
 			1=1
-			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+			<if test="payeename != null and payeename != ''">
+				and payeename= #{payeename}
+			</if>
+			<if test="payeeid != null and payeeid != ''">
+				and payeeid= #{payeeid}
 			</if>
 			<if test="orderBy != null and dir != null">
 				order by ${orderBy} ${dir}
@@ -146,8 +149,11 @@
 		select count(*) from qrcodetransferrecord
 		<where>
 			1=1
-			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+			<if test="payeename != null and payeename != ''">
+				and payeename= #{payeename}
+			</if>
+			<if test="payeeid != null and payeeid != ''">
+				and payeeid= #{payeeid}
 			</if>
 		</where>
 	</select>
