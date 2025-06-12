@@ -76,6 +76,7 @@ public class SystemMybatisPlusConfig {
 		MybatisPlusConfig.TENANT_ID_TABLE.add("merchantstatisticalreports");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("systemstatisticalreports");
 		MybatisPlusConfig.TENANT_ID_TABLE.add("qrcodestatisticalreports");
+		MybatisPlusConfig.TENANT_ID_TABLE.add("Payoutmerchantstatisticalreports");
 
 		// tgrame
 		MybatisPlusConfig.TENANT_ID_TABLE.add("tgbotgroup");

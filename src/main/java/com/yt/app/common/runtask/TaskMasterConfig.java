@@ -126,7 +126,8 @@ public class TaskMasterConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "30 59 23 * * ?")
+//	@Scheduled(cron = "30 59 23 * * ?")
+	@Scheduled(cron = "0/33 * * * * ?")
 	public void updateTodayValue() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		String date = DateTimeUtil.getDateTime(new Date(), DateTimeUtil.DEFAULT_DATE_FORMAT);

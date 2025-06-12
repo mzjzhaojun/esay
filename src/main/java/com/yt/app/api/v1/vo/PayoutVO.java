@@ -73,4 +73,10 @@ public class PayoutVO extends BaseVO {
 	java.util.Date create_time;
 	Long update_by;
 	java.util.Date update_time;
+	Double incomeamount;
+	Double merchantincomeamount;
+	Double channelincomeamount;
+
+	// 订单总数
+	Integer ordercount;
 }

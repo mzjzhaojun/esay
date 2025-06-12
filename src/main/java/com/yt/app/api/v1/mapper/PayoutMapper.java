@@ -133,8 +133,7 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 	 */
 	@YtRedisCacheAnnotation(classs = Payout.class)
 	public List<Payout> selectAddlist();
-	
-	
+
 	/**
 	 * countMerchantOrder
 	 *
@@ -142,7 +141,7 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 	 * @return Incomemerchantaccountorder
 	 */
 	@YtRedisCacheAnnotation(classs = Income.class)
-	public IncomeVO countMerchantOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
+	public PayoutVO countMerchantOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
 
 	/**
 	 * countMerchantSuccessOrder
@@ -151,6 +150,6 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 	 * @return Incomemerchantaccountorder
 	 */
 	@YtRedisCacheAnnotation(classs = Income.class)
-	public IncomeVO countMerchantSuccessOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
+	public PayoutVO countMerchantSuccessOrder(@Param("userid") Long userid, @Param("dateval") String dateval);
 
 }

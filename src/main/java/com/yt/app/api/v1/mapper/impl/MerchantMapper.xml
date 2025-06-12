@@ -13,9 +13,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Merchant">
 		insert into
-		merchant(id,name,nikname,code,remark,status,exchange,collection,type,onecost,downpoint,yesterdayrate,countorder,success,agentid,agentname,create_by,create_time,update_by,update_time,backpay,clearingtype,ipaddress,userid,appkey,apireusultip)
+		merchant(id,name,nikname,code,remark,status,exchange,collection,type,onecost,downpoint,agentid,agentname,create_by,create_time,update_by,update_time,backpay,clearingtype,ipaddress,userid,appkey,apireusultip)
 		values
-		(#{id},#{name},#{nikname},#{code},#{remark},#{status},#{exchange},#{collection},#{type},#{onecost},#{downpoint},#{yesterdayrate},#{countorder},#{success},#{agentid},#{agentname},#{create_by},#{create_time},#{update_by},#{update_time},#{backpay},#{clearingtype},#{ipaddress},#{userid},#{appkey},#{apireusultip})
+		(#{id},#{name},#{nikname},#{code},#{remark},#{status},#{exchange},#{collection},#{type},#{onecost},#{downpoint},#{agentid},#{agentname},#{create_by},#{create_time},#{update_by},#{update_time},#{backpay},#{clearingtype},#{ipaddress},#{userid},#{appkey},#{apireusultip})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">

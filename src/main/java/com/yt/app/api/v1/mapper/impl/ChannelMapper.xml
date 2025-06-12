@@ -13,9 +13,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Channel">
 		insert into
-		channel(id,userid,name,nkname,code,aislecode,status,type,exchange,collection,onecost,downpoint,yesterdayrate,countorder,success,min,max,weight,mtorder,ifordernum,firstmatch,firstmatchmoney,apiip,apikey,apireusultip,ipaddress,remark,create_by,create_time,update_by,update_time)
+		channel(id,userid,name,nkname,code,aislecode,status,type,exchange,collection,onecost,downpoint,min,max,weight,mtorder,ifordernum,firstmatch,firstmatchmoney,apiip,apikey,apireusultip,ipaddress,remark,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{userid},#{name},#{nkname},#{code},#{aislecode},#{status},#{type},#{exchange},#{collection},#{onecost},#{downpoint},#{yesterdayrate},#{countorder},#{success},#{min},#{max},#{weight},#{mtorder},#{ifordernum},#{firstmatch},#{firstmatchmoney},#{apiip},#{apikey},#{apireusultip},#{ipaddress},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{userid},#{name},#{nkname},#{code},#{aislecode},#{status},#{type},#{exchange},#{collection},#{onecost},#{downpoint},#{min},#{max},#{weight},#{mtorder},#{ifordernum},#{firstmatch},#{firstmatchmoney},#{apiip},#{apikey},#{apireusultip},#{ipaddress},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">

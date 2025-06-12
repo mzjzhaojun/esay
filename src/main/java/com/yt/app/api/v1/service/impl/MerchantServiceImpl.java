@@ -16,6 +16,7 @@ import com.yt.app.api.v1.mapper.PayoutmerchantstatisticalreportsMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.MerchantService;
 import com.yt.app.api.v1.vo.IncomeVO;
+import com.yt.app.api.v1.vo.PayoutVO;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.context.SysUserContext;
@@ -308,12 +309,12 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 			msr.setTodayincome(m.getTodaycount());
 			msr.setIncomecount(m.getCount());
 			// 查询每日统计数据
-			IncomeVO imaov = payoutmapper.countMerchantOrder(m.getId(), date);
+			PayoutVO imaov = payoutmapper.countMerchantOrder(m.getId(), date);
 			msr.setTodayorder(imaov.getOrdercount());
 			msr.setTodayorderamount(imaov.getAmount());
 			msr.setTodaysuccessorderamount(imaov.getIncomeamount());
 
-			IncomeVO imaovsuccess = payoutmapper.countMerchantSuccessOrder(m.getId(), date);
+			PayoutVO imaovsuccess = payoutmapper.countMerchantSuccessOrder(m.getId(), date);
 			msr.setSuccessorder(imaovsuccess.getOrdercount());
 			msr.setIncomeuserpaycount(imaovsuccess.getAmount());
 			msr.setIncomeuserpaysuccesscount(imaovsuccess.getIncomeamount());

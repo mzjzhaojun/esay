@@ -426,7 +426,10 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
-		t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61); // 盘口发起
+		if(t.getNotifyurl().equals("block"))
+			t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);//无需通知
+		else
+			t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);// 需要通知
 		t.setRemark("新增代付￥:" + String.format("%.2f", t.getAmount()));
 		Aisle aisle = aislemapper.getByCode(aislecode);
 		if (aisle != null) {
@@ -1105,6 +1108,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			} else {
 				t.setRemark(returndata.getStr("returnMsg"));
 				t.setChannelordernum(StringUtil.getOrderNum());
+				t.setStatus(DictionaryResource.ORDERSTATUS_53);
 			}
 			break;
 		}
