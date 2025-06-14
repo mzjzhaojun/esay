@@ -81,6 +81,12 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 	// 青蛙代付回调
 	void qwcallback(Map<String, String> params);
 
+	// 通银代付回调
+	void tycallback(Map<String, String> params);
+
+	// 飞兔代付回调
+	void ftcallback(Map<String, String> params);
+
 	// 易票联代付回调
 	void epfcallback(Map<String, Object> params);
 

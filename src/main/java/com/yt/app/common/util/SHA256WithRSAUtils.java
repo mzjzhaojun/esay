@@ -259,12 +259,13 @@ public class SHA256WithRSAUtils {
 		return resultDatas;
 	}
 
-//    public static void main(String[] args) {
-//        String privateKey="MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCKqgxszb4ObuoJ5U8Ddz2ytOFFc81fmniRFo+jvNtrOegMUpd9gBPvMEaBzdeJC74Cg/HsAE7f9u24APLi0oLYZCwthhs01xTIhAis8h7IYCSdWrcbn8gpB7apSe4Ud0dS6zkuRcDTVGsLNrzNOMKHfT8S13dtsqDyDBBhSpkBwe9TkeLQB8K5ZjDYJ8uTtsrcey95eNFe22r8qAhv562yUBTG0PjZpQmiJWD0T6URLLzNYEOXEzsVVZgPKBNWSVZvMjLg32eFv/2Mw+x83n44w39FLx6E347A5hVQYWbBLuHDyFUzW/endOmMSj1YJmGDhctgEK+UIA1bNbexYo33AgMBAAECggEAZlZ6NRLjYeOZ9xO17OjkMDAu0gNVX2mx8eKkwENx7QEfsXiDNayBCdanMsWofQydf13B/lt72u9zIooQuDaFOw8zS6XeDnFudU582KcY8OmEHF4HJewW3bFDrk1R2OjvStMvsGbqmQ2EsxIC5bMuXrChDFbZXayn+/vLWwKjShetqPkN2cRHcKWaASqOnWOAnpgHm5VuGu2ttaR5K14pmMq7a0TOaj7lDYyHelWejCfqFFiWfYLefNj3oFVAfiNxwsxj8q42xWwPZ/Xzhn8p0cInja//1AMuNLIadyC4r6VR7cOIKm4F7XwCTCRCSmPbhDu5pOEA//pERFTTNtE7gQKBgQDdzbujAJRqkn0WwPtbKE7ZxR2KFjc4fM1LyPyODz4tbXhtXtZeMcjjsKn8pTpzbgj+Cfmhz9X8sKAqdxe1WJTtkgg5zbvPQ8A+Q0Su19LZMfFCuC0RCp1SX/asl4XeQe6fQZCft3AG7RgA5HjHET0/7Mpwb3C7A/xBwMfn51T0+wKBgQCgCuy9NmpG2bG/MEz1gDojYe08yKOGgTLp6v/UZcn+U6Oit37/sFe0vU7n9NMtkCLdhf2mqF1cNCUv+rzHkvtgG8FaNlsuozOMXuTNCJ6nj/IypMOnU8vV9DL9zUq5cUnny7HKwCTuS8FYZTjI75GfDDwrxIhhzOIkh2leQD+iNQKBgDV1xOgA18ToEeZOFUdfa8HpVLlXqW+gBQtjIhxLaD0iyYfy99A0R6s5hX8zg+cWemxgkx6BLZ5+I9yYX8qB00N/kyP7hmzqc4eORxutQVDATNo78gDNgiW8o4Pt8YIkehNAhk84s3O36bUtXD7+1Lh3pkN7WLx6tW5TvNsUUtHJAoGBAIYOoJ8dpYgTccAkRVKfRhO9Q2tW5SMVtgAayJCxcrGGfdseuVKT8+OBb0b83KedxJaqVf3zqcBCLaQy80543/dxSFS4k0hNjDBYjG7yeXMCMG4bdYgDuQpOsyfFfoI3UyDGjva2XDj/W8UfhKFLiz8ekIhY56SEaikPBEPerW7BAoGBAIW+5xD7BH4Z/w+GNrA5WFWNNH02+32AD/k6W59GQ+ejrFzCa9/SPa/7WEbBjKNWnzYl9pcdA0lP3LGEbKzrm6Zy+6lCHI6Hx/o4PbHaKTQg2jAIJdEUrAOKR44rjIY41a8wtgilfZA4I4zDSvJMPkMYOItIXjFCwHTxLLfw0CJp";
+	public static void main(String[] args) {
+		String privateKey = "MIIBVwIBADANBgkqhkiG9w0BAQEFAASCAUEwggE9AgEAAkEA8FSS+i7P+uBSh6nn+rzj2f07eeBgovMb/o6NCo9ElzH21d0RKHuZjSptKDq5OADItq+6VE6s7V0DB4d6CwmViQIDAQABAkEAzjJyDE8/yGrQxG8Fhv6rq6t2bSITJ5vYB/b8kfPMEL92+fkZCkHgrk+XOqM6ptvqajEoh3c7eNlQw0UBsIirlQIhAPlucGKGLcSGmRGzQmYEAZaspUBRk+Iq57zb36b9e8aDAiEA9qjHoQmmDokw9nJ8lTWYzATz7FoGvgeSG9vM4UOtFgMCIQC7Jo8yjYTHoUo2iq72Rmk+uZlgMhVorFKmVL9x113IqwIhAIe3vn/hKzl8SzCPNfVzlCtN3lkCAAu3ZrFlc4nPDwG5AiEAlzLoOEX2FKfmO/Sw3mIatXBYHeqHVMObZSwEj2WG3dY=";
 //        String publicKey="MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiqoMbM2+Dm7qCeVPA3c9srThRXPNX5p4kRaPo7zbaznoDFKXfYAT7zBGgc3XiQu+AoPx7ABO3/btuADy4tKC2GQsLYYbNNcUyIQIrPIeyGAknVq3G5/IKQe2qUnuFHdHUus5LkXA01RrCza8zTjCh30/Etd3bbKg8gwQYUqZAcHvU5Hi0AfCuWYw2CfLk7bK3HsveXjRXttq/KgIb+etslAUxtD42aUJoiVg9E+lESy8zWBDlxM7FVWYDygTVklWbzIy4N9nhb/9jMPsfN5+OMN/RS8ehN+OwOYVUGFmwS7hw8hVM1v3p3TpjEo9WCZhg4XLYBCvlCANWzW3sWKN9wIDAQAB";
-//        System.out.println("签名:"+buildRSASignByPrivateKey("ABCabc123测试", privateKey));
+		String str = "bizContent={\"accountBookId\":\"191578888864792576\",\"orderId\":\"out2506131959505040\",\"orderAmount\":\"111.00\",\"title\":\"title\",\"payee\":{\"identityType\":\"BANKCARD\",\"identity\":\"62121231\",\"name\":\"测试\",\"accountType\":\"2\"}}&mchId=2800250612119097&signType=RSA&timestamp=2025-06-13 19:59:50&version=1.0";
+		System.out.println(buildRSASignByPrivateKey(str, privateKey));
 //        System.out.println("校验:"+buildRSAverifyByPublicKey("ABCabc123测试",publicKey,buildRSASignByPrivateKey("ABCabc123测试", privateKey)));
 //
-//    }
+	}
 
 }

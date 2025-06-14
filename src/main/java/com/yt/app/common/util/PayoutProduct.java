@@ -11,6 +11,20 @@ public class PayoutProduct {
 		// 获取渠道单号
 		boolean flage = true;
 		switch (cl.getName()) {
+		case DictionaryResource.DFFTAISLE:
+			String orderFT = PayUtil.SendFTSubmit(t, cl);
+			if (orderFT != null) {
+				flage = false;
+				t.setChannelordernum(orderFT);
+			}
+			break;
+		case DictionaryResource.DFTYAISLE:
+			String orderTY = PayUtil.SendTYSubmit(t, cl);
+			if (orderTY != null) {
+				flage = false;
+				t.setChannelordernum(orderTY);
+			}
+			break;
 		case DictionaryResource.DFHYAISLE:
 			String orderflage = PayUtil.SendHYSubmit(t, cl);
 			if (orderflage != null) {

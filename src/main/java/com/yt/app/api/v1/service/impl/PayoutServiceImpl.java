@@ -153,7 +153,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setNotifyurl(m.getApireusultip());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
-		t.setType(DictionaryResource.ORDERTYPE_11);
+		t.setType(DictionaryResource.ORDERTYPE_18);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
 		t.setMerchantorderid("outm" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantcost(m.getOnecost());// 手续费
@@ -267,7 +267,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setNotifyurl(m.getApireusultip());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
-		t.setType(DictionaryResource.ORDERTYPE_11);
+		t.setType(DictionaryResource.ORDERTYPE_18);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
 		t.setMerchantorderid("outm" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantcost(m.getOnecost());// 手续费
@@ -285,7 +285,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		List<Qrcode> listqrcode = qrcodemapper.listByArrayId(qaqids);
 		Double amount = Double.valueOf(t.getAmount());
 		// 小于设置限额
-		List<Qrcode> listcmm = listqrcode.stream().filter(c -> c.getMax() >= amount && c.getMin() <= amount && (c.getTodayincome() + amount) < c.getLimits() && c.getStatus()).collect(Collectors.toList());
+		List<Qrcode> listcmm = listqrcode.stream().filter(c -> c.getMax() >= amount && c.getMin() <= amount && c.getStatus()).collect(Collectors.toList());
 		Assert.notEmpty(listcmm, "代付金额超出限额");
 		List<Qrcode> listcf = listcmm.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 		Qrcode qd = null;
@@ -421,13 +421,13 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantid(m.getId());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
-		t.setType(DictionaryResource.ORDERTYPE_11);
+		t.setType(DictionaryResource.ORDERTYPE_18);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
-		if(t.getNotifyurl().equals("block"))
-			t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);//无需通知
+		if (t.getNotifyurl().equals("block"))
+			t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_60);// 无需通知
 		else
 			t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_61);// 需要通知
 		t.setRemark("新增代付￥:" + String.format("%.2f", t.getAmount()));
@@ -507,7 +507,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			List<Qrcode> listqrcode = qrcodemapper.listByArrayId(qaqids);
 			Double amount = Double.valueOf(t.getAmount());
 			// 小于设置限额
-			List<Qrcode> listcmm = listqrcode.stream().filter(c -> c.getMax() >= amount && c.getMin() <= amount && (c.getTodayincome() + amount) < c.getLimits() && c.getStatus()).collect(Collectors.toList());
+			List<Qrcode> listcmm = listqrcode.stream().filter(c -> c.getMax() >= amount && c.getMin() <= amount && c.getStatus()).collect(Collectors.toList());
 			Assert.notEmpty(listcmm, "代付金额超出限额");
 			List<Qrcode> listcf = listcmm.stream().filter(c -> c.getFirstmatch() == true).collect(Collectors.toList());
 			Qrcode qd = null;
@@ -999,7 +999,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setNotifyurl(m.getApireusultip());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
-		t.setType(DictionaryResource.ORDERTYPE_11);
+		t.setType(DictionaryResource.ORDERTYPE_18);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
 		t.setMerchantorderid("outm" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantordernum(batchid);
@@ -1058,7 +1058,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setNotifyurl(m.getApireusultip());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
-		t.setType(DictionaryResource.ORDERTYPE_11);
+		t.setType(DictionaryResource.ORDERTYPE_18);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
 		t.setMerchantorderid("outm" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantordernum(batchid);
@@ -1109,6 +1109,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				t.setRemark(returndata.getStr("returnMsg"));
 				t.setChannelordernum(StringUtil.getOrderNum());
 				t.setStatus(DictionaryResource.ORDERSTATUS_53);
+				t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 			}
 			break;
 		}
@@ -1396,6 +1397,60 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (returnstate == 2) {
 				paySuccess(pt);
 			} else if (returnstate == 3) {
+				payFail(pt);
+			}
+			SysUserContext.remove();
+			TenantIdContext.remove();
+		}
+	}
+
+	@Override
+	public void tycallback(Map<String, String> params) {
+		String orderid = params.get("orderId").toString();
+		String status = params.get("status").toString();
+		log.info("通银通知返回消息：orderid" + orderid + " status:" + status);
+		Payout pt = mapper.getByOrdernum(orderid);
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			Channel channel = channelmapper.get(pt.getChannelid());
+			String ip = AuthContext.getIp();
+			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求!");
+			}
+			// 查询渠道是否真实成功
+			String returnstate = PayUtil.SendTYSelectOrder(pt.getOrdernum(), channel);
+			Assert.notNull(returnstate, "通银代付通知反查订单失败!");
+			if (returnstate.equals("SUCCESS")) {
+				paySuccess(pt);
+			} else if (returnstate.equals("FAIL")) {
+				payFail(pt);
+			}
+			SysUserContext.remove();
+			TenantIdContext.remove();
+		}
+	}
+
+	@Override
+	public void ftcallback(Map<String, String> params) {
+		String orderid = params.get("merchantorderid").toString();
+		String status = params.get("status").toString();
+		log.info("飞兔通知返回消息：orderid" + orderid + " status:" + status);
+		Payout pt = mapper.getByOrdernum(orderid);
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			Channel channel = channelmapper.get(pt.getChannelid());
+			String ip = AuthContext.getIp();
+			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求!");
+			}
+			// 查询渠道是否真实成功
+			Integer returnstate = PayUtil.SendFTSelectOrder(pt.getOrdernum(), channel);
+			Assert.notNull(returnstate, "飞兔代付通知反查订单失败!");
+			if (returnstate == 52) {
+				paySuccess(pt);
+			} else if (returnstate == 53) {
 				payFail(pt);
 			}
 			SysUserContext.remove();

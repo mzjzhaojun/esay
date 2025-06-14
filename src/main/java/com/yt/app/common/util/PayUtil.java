@@ -22,7 +22,9 @@ import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Payout;
+import com.yt.app.api.v1.vo.BizContentVO;
 import com.yt.app.api.v1.vo.PayResultVO;
+import com.yt.app.api.v1.vo.PayeeVO;
 import com.yt.app.api.v1.vo.QrcodeResultVO;
 import com.yt.app.api.v1.vo.QueryQrcodeResultVO;
 import com.yt.app.api.v1.vo.SyYsOrder;
@@ -1000,6 +1002,165 @@ public class PayUtil {
 			}
 		} catch (RestClientException e) {
 			log.info("环宇代付查单返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// 通银代付对接
+	public static String SendTYSubmit(Payout pt, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("mchId", cl.getCode());
+			map.put("timestamp", DateTimeUtil.getDateTime());
+			BizContentVO bcv = new BizContentVO();
+			bcv.setAccountBookId(cl.getAislecode());
+			bcv.setOrderId(pt.getOrdernum());
+			bcv.setOrderAmount(String.format("%.2f", pt.getAmount()));
+			PayeeVO payee = new PayeeVO();
+			payee.setAccountType("2");
+			payee.setIdentityType("BANKCARD");
+			payee.setIdentity(pt.getAccnumer());
+			payee.setName(pt.getAccname());
+			bcv.setPayee(payee);
+			bcv.setTitle("title");
+			bcv.setNotifyUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + cl.getApireusultip());
+			map.put("bizContent", JSONUtil.toJsonStr(bcv));
+			map.put("signType", "RSA");
+			map.put("version", "1.0");
+
+			Map<String, String> sortMap = new TreeMap<>(map);
+			StringBuffer sb = new StringBuffer();
+			Iterator<String> iterator = sortMap.keySet().iterator();
+			while (iterator.hasNext()) {
+				String key = iterator.next();
+				String val = sortMap.get(key);
+				sb.append(key).append("=").append(val).append("&");
+			}
+			String signcontent = sb.toString().substring(0, sb.toString().length() - 1);
+			System.out.println(signcontent);
+			// 生成待签名串
+			String sign = SHA256WithRSAUtils.buildRSASignByPrivateKey(signcontent, cl.getApikey());
+
+			map.put("sign", sign);
+			log.info("sign" + "==" + sign);
+			HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<JSONObject> sov = resttemplate.exchange(cl.getApiip() + "/dt/transfer", HttpMethod.POST, httpEntity, JSONObject.class);
+			JSONObject data = sov.getBody();
+			log.info(" 通银返回消息：" + data);
+			if (data.getStr("message").equals("SUCCESS")) {
+				return data.getStr("transactionId");
+			}
+		} catch (RestClientException e) {
+			log.info(" 通银返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// 通银代付查单
+	public static String SendTYSelectOrder(String orderid, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("mchId", cl.getCode());
+			map.put("timestamp", DateTimeUtil.getDateTime());
+			BizContentVO bcv = new BizContentVO();
+			bcv.setOrderId(orderid);
+			map.put("bizContent", JSONUtil.toJsonStr(bcv));
+			map.put("signType", "RSA");
+			map.put("version", "1.0");
+
+			Map<String, String> sortMap = new TreeMap<>(map);
+			StringBuffer sb = new StringBuffer();
+			Iterator<String> iterator = sortMap.keySet().iterator();
+			while (iterator.hasNext()) {
+				String key = iterator.next();
+				String val = sortMap.get(key);
+				sb.append(key).append("=").append(val).append("&");
+			}
+			String signcontent = sb.toString().substring(0, sb.toString().length() - 1);
+			System.out.println(signcontent);
+			// 生成待签名串
+			String sign = SHA256WithRSAUtils.buildRSASignByPrivateKey(sb.toString(), cl.getApikey());
+
+			map.put("sign", sign);
+			log.info("sign" + "==" + sign);
+			HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<JSONObject> sov = resttemplate.exchange(cl.getApiip() + "/dt/transfer/query", HttpMethod.POST, httpEntity, JSONObject.class);
+			JSONObject data = sov.getBody();
+			log.info(" 通银返回消息：" + data);
+			if (data.getStr("message").equals("SUCCESS")) {
+				return data.getStr("status");
+			}
+
+		} catch (RestClientException e) {
+			log.info("通银查单返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// 飞兔代付
+	public static String SendFTSubmit(Payout pt, Channel cl) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String notifyurl = RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + cl.getApireusultip().toString();
+		map.put("merchantid", cl.getCode().toString());
+		map.put("merchantorderid", pt.getOrdernum().toString());
+		map.put("payaisle", cl.getAislecode().toString());
+		map.put("payamount", String.format("%.2f", pt.getAmount()));
+		map.put("notifyurl", notifyurl);
+		map.put("bankowner", pt.getAccname());
+		map.put("banknum", pt.getAccnumer());
+		map.put("bankname", pt.getBankname());
+
+		String signParams = "merchantid=" + cl.getCode() + "&merchantorderid=" + pt.getOrdernum() + "&payaisle=" + cl.getAislecode() + "&notifyurl=" + notifyurl + "&bankname=" + pt.getBankname() + "&banknum=" + pt.getAccnumer() + "&bankowner="
+				+ pt.getAccname() + "&payamount=" + String.format("%.2f", pt.getAmount()) + "&key=" + cl.getApikey();
+
+		String sign = MD5Utils.md5(signParams);
+		map.put("sign", sign.toUpperCase());
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+		RestTemplate resttemplate = new RestTemplate();
+		//
+		ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/esay/rest/v1/order/submitpayout", httpEntity, JSONObject.class);
+		Integer retCode = sov.getBody().getInt("code");
+		log.info("飞兔代付创建订单：" + sov.getBody());
+		if (retCode == 200) {
+			return sov.getBody().getJSONObject("body").getStr("outorderid");
+		}
+		return null;
+	}
+
+	// 飞兔代付查单
+	public static Integer SendFTSelectOrder(String orderid, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("merchantid", cl.getCode());
+			map.put("merchantorderid", orderid);
+
+			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<JSONObject> sov = resttemplate.postForEntity(cl.getApiip() + "/esay/rest/v1/order/querypayout", httpEntity, JSONObject.class);
+			Integer retCode = sov.getBody().getInt("code");
+			log.info("飞兔代付创建订单：" + sov.getBody());
+			if (retCode == 200) {
+				return sov.getBody().getJSONObject("body").getInt("status");
+			}
+		} catch (RestClientException e) {
+			log.info("飞兔代付查单返回消息：" + e.getMessage());
 		}
 		return null;
 	}
