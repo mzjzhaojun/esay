@@ -159,8 +159,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			t.setType(DictionaryResource.ORDERTYPE_19);
 		else
 			t.setType(DictionaryResource.ORDERTYPE_18);
-		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
-		t.setMerchantorderid("outm" + StringUtil.getOrderNum());// 商户单号
+		t.setOrdernum("OUT" + StringUtil.getOrderNum());// 系统单号
+		t.setMerchantorderid("OUTM" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantordernum(NumberUtil.getOrderNo());
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
@@ -274,8 +274,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
 		t.setType(DictionaryResource.ORDERTYPE_18);
-		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
-		t.setMerchantorderid("outm" + StringUtil.getOrderNum());// 商户单号
+		t.setOrdernum("OUT" + StringUtil.getOrderNum());// 系统单号
+		t.setMerchantorderid("OUTM" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantordernum(NumberUtil.getOrderNo());
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
@@ -428,8 +428,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantid(m.getId());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
-		t.setType(DictionaryResource.ORDERTYPE_18);
-		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
+		t.setType(DictionaryResource.ORDERTYPE_19);
+		t.setOrdernum("OUT" + StringUtil.getOrderNum());// 系统单号
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
@@ -442,6 +442,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		if (aisle != null) {
 			t.setAisleid(aisle.getId());
 			t.setAislename(aisle.getName());
+			if (aisle.getType() == DictionaryResource.BANK_TYPE_121)
+				t.setType(DictionaryResource.ORDERTYPE_18);
 			////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
 			List<Aislechannel> listac = aislechannelmapper.getByAisleId(t.getAisleid());
 			Assert.notEmpty(listac, "没有可用通道!");
@@ -509,6 +511,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			Assert.notNull(qa, "没有可用通道!");
 			t.setAisleid(qa.getId());
 			t.setAislename(qa.getName());
+			if (qa.getType() == DictionaryResource.BANK_TYPE_121)
+				t.setType(DictionaryResource.ORDERTYPE_18);
 			List<Qrcodeaisleqrcode> listqaq = qrcodeaisleqrcodemapper.getByQrcodeAisleId(t.getAisleid());
 			long[] qaqids = listqaq.stream().mapToLong(qaq -> qaq.getQrcodelid()).distinct().toArray();
 			List<Qrcode> listqrcode = qrcodemapper.listByArrayId(qaqids);
@@ -1008,8 +1012,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
 		t.setType(DictionaryResource.ORDERTYPE_18);
-		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
-		t.setMerchantorderid("outm" + StringUtil.getOrderNum());// 商户单号
+		t.setOrdernum("OUT" + StringUtil.getOrderNum());// 系统单号
+		t.setMerchantorderid("OUTM" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantordernum(batchid);
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
@@ -1067,8 +1071,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
 		t.setType(DictionaryResource.ORDERTYPE_18);
-		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
-		t.setMerchantorderid("outm" + StringUtil.getOrderNum());// 商户单号
+		t.setOrdernum("OUT" + StringUtil.getOrderNum());// 系统单号
+		t.setMerchantorderid("OUTM" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantordernum(batchid);
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
@@ -1434,7 +1438,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 					if (returnstate.getStr("status").equals("SUCCEED")) {
 						paySuccess(pt);
 					} else if (returnstate.getStr("status").equals("FAILED")) {
-						payFail(pt, "失败");
+						payFail(pt, returnstate.getStr("failMsg"));
 					}
 				}
 			}

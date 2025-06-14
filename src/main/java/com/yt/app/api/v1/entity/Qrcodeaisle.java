@@ -29,7 +29,7 @@ public class Qrcodeaisle extends YtBaseEntity<Qrcodeaisle> {
 	String nikname;
 	String code;
 	Boolean status;
-	String type;
+	Integer type;
 	Boolean dynamic;
 	Integer qrcodecount;
 	String remark;
