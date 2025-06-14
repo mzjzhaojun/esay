@@ -72,7 +72,9 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayOutputStream;
@@ -153,9 +155,13 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setNotifyurl(m.getApireusultip());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
-		t.setType(DictionaryResource.ORDERTYPE_18);
+		if (t.getBankname().equals("支付宝"))
+			t.setType(DictionaryResource.ORDERTYPE_19);
+		else
+			t.setType(DictionaryResource.ORDERTYPE_18);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
 		t.setMerchantorderid("outm" + StringUtil.getOrderNum());// 商户单号
+		t.setMerchantordernum(NumberUtil.getOrderNo());
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
@@ -270,6 +276,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setType(DictionaryResource.ORDERTYPE_18);
 		t.setOrdernum("out" + StringUtil.getOrderNum());// 系统单号
 		t.setMerchantorderid("outm" + StringUtil.getOrderNum());// 商户单号
+		t.setMerchantordernum(NumberUtil.getOrderNo());
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
@@ -375,7 +382,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				throw new YtException("非法请求,IP加白名单后重试!");
 			}
 		}
-		Payout pt = mapper.getByMerchantOrdernum(squery.getMerchantorderid());
+		Payout pt = mapper.getByMerchantOrderId(squery.getMerchantorderid());
 		if (pt == null) {
 			throw new YtException("订单不存在!");
 		}
@@ -607,7 +614,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			throw new YtException("签名不正确!");
 		}
 
-		Payout pt = mapper.getByMerchantOrdernum(ss.getMerchantorderid());
+		Payout pt = mapper.getByMerchantOrderId(ss.getMerchantorderid());
 		if (pt != null) {
 			throw new YtException("已经存在的订单!");
 		}
@@ -684,7 +691,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	 * 回调失败
 	 * 
 	 */
-	public void payFail(Payout pt) {
+	public void payFail(Payout pt, String msg) {
 		Payout t = mapper.get(pt.getId());
 		if (t.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
 			// 计算商户订单/////////////////////////////////////////////////////
@@ -703,6 +710,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (t.getNotifystatus().equals(DictionaryResource.PAYOUTNOTIFYSTATUS_61)) {
 				t.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
 			}
+			t.setRemark(msg);
 			t.setSuccesstime(DateTimeUtil.getNow());
 			t.setBacklong(DateTimeUtil.diffDays(t.getSuccesstime(), t.getCreate_time()));
 			int i = mapper.put(t);
@@ -849,7 +857,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 						paySuccess(pt);
 					}
 				} else if (sto != null && (sto.getPay_message() == -2 || sto.getPay_message() == -3) && so.getPay_message() == -2) {
-					payFail(pt);
+					payFail(pt, "失败");
 				}
 			}
 		}
@@ -1136,7 +1144,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				pt.setImgurl(data.getData().getAttachments());
 				paySuccess(pt);
 			} else if (data.getData().getStatus() == 16) {
-				payFail(pt);
+				payFail(pt, "失败");
 			}
 			SysUserContext.remove();
 			TenantIdContext.remove();
@@ -1163,7 +1171,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (returnstate == 4) {
 				paySuccess(pt);
 			} else if (returnstate == 16) {
-				payFail(pt);
+				payFail(pt, "失败");
 			}
 			SysUserContext.remove();
 			TenantIdContext.remove();
@@ -1190,7 +1198,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (returnstate == 2) {
 				paySuccess(pt);
 			} else if (returnstate == 3) {
-				payFail(pt);
+				payFail(pt, "失败");
 			}
 			SysUserContext.remove();
 			TenantIdContext.remove();
@@ -1207,7 +1215,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	@Override
 	public Integer fail(Long id) {
 		Payout pt = mapper.get(id);
-		payFail(pt);
+		payFail(pt, "失败");
 		return 1;
 	}
 
@@ -1231,7 +1239,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (returnstate.equals("2")) {
 				paySuccess(pt);
 			} else if (returnstate.equals("3")) {
-				payFail(pt);
+				payFail(pt, "失败");
 			}
 			SysUserContext.remove();
 			TenantIdContext.remove();
@@ -1259,7 +1267,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (returnstate == 1) {
 				paySuccess(pt);
 			} else if (returnstate == 2) {
-				payFail(pt);
+				payFail(pt, "失败");
 			}
 			SysUserContext.remove();
 			TenantIdContext.remove();
@@ -1286,7 +1294,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (returnstate == 1) {
 				paySuccess(pt);
 			} else if (returnstate == 2) {
-				payFail(pt);
+				payFail(pt, "失败");
 			}
 			SysUserContext.remove();
 			TenantIdContext.remove();
@@ -1343,7 +1351,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (returnstate.equals("100")) {
 				paySuccess(pt);
 			} else if (returnstate.equals("-90")) {
-				payFail(pt);
+				payFail(pt, "失败");
 			}
 			SysUserContext.remove();
 			TenantIdContext.remove();
@@ -1370,7 +1378,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (returnstate == 2) {
 				paySuccess(pt);
 			} else if (returnstate == 3) {
-				payFail(pt);
+				payFail(pt, "失败");
 			}
 			SysUserContext.remove();
 			TenantIdContext.remove();
@@ -1397,7 +1405,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (returnstate == 2) {
 				paySuccess(pt);
 			} else if (returnstate == 3) {
-				payFail(pt);
+				payFail(pt, "失败");
 			}
 			SysUserContext.remove();
 			TenantIdContext.remove();
@@ -1406,10 +1414,10 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 	@Override
 	public void tycallback(Map<String, String> params) {
-		String orderid = params.get("orderId").toString();
+		String orderid = params.get("externalBatchOrderId").toString();
 		String status = params.get("status").toString();
 		log.info("通银通知返回消息：orderid" + orderid + " status:" + status);
-		Payout pt = mapper.getByOrdernum(orderid);
+		Payout pt = mapper.getByMerchantOrdernum(orderid);
 		if (pt != null) {
 			SysUserContext.setUserId(pt.getUserid());
 			TenantIdContext.setTenantId(pt.getTenant_id());
@@ -1418,13 +1426,17 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
 				throw new YtException("非法请求!");
 			}
-			// 查询渠道是否真实成功
-			String returnstate = PayUtil.SendTYSelectOrder(pt.getOrdernum(), channel);
-			Assert.notNull(returnstate, "通银代付通知反查订单失败!");
-			if (returnstate.equals("SUCCESS")) {
-				paySuccess(pt);
-			} else if (returnstate.equals("FAIL")) {
-				payFail(pt);
+			if (status.equals("FINISHED")) {
+				// 查询渠道是否真实成功
+				JSONArray arrays = JSONUtil.parseArray(params.get("transList"));
+				for (int i = 0; i < arrays.size(); i++) {
+					JSONObject returnstate = JSONUtil.parseObj(arrays.get(i));
+					if (returnstate.getStr("status").equals("SUCCEED")) {
+						paySuccess(pt);
+					} else if (returnstate.getStr("status").equals("FAILED")) {
+						payFail(pt, "失败");
+					}
+				}
 			}
 			SysUserContext.remove();
 			TenantIdContext.remove();
@@ -1451,7 +1463,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (returnstate == 52) {
 				paySuccess(pt);
 			} else if (returnstate == 53) {
-				payFail(pt);
+				payFail(pt, "失败");
 			}
 			SysUserContext.remove();
 			TenantIdContext.remove();
@@ -1478,7 +1490,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (returnstate.equals("SUCCESS")) {
 				paySuccess(pt);
 			} else if (returnstate.equals("FAIL")) {
-				payFail(pt);
+				payFail(pt, "失败");
 			}
 			SysUserContext.remove();
 			TenantIdContext.remove();
@@ -1503,7 +1515,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			if (returnstate.equals("成功")) {
 				paySuccess(pt);
 			} else if (returnstate.equals("失败")) {
-				payFail(pt);
+				payFail(pt, "失败");
 			}
 			SysUserContext.remove();
 			TenantIdContext.remove();

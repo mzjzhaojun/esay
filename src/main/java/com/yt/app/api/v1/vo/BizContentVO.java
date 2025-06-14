@@ -1,5 +1,7 @@
 package com.yt.app.api.v1.vo;
 
+import java.util.List;
+
 import com.yt.app.common.base.BaseVO;
 
 import lombok.AllArgsConstructor;
@@ -18,11 +20,7 @@ public class BizContentVO extends BaseVO {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
 	String accountBookId;
-	String orderId;
-	String orderAmount;
-	String title;
-	String notifyUrl;
-	PayeeVO payee;
+	String externalBatchOrderId;
+	List<TransListVO> transList;
 }

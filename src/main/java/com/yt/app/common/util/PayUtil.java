@@ -1,8 +1,10 @@
 package com.yt.app.common.util;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -32,7 +34,9 @@ import com.yt.app.api.v1.vo.SysFcOrder;
 import com.yt.app.api.v1.vo.SysFcQuery;
 import com.yt.app.api.v1.vo.SysFhOrder;
 import com.yt.app.api.v1.vo.SysYSQuery;
+import com.yt.app.api.v1.vo.TransListVO;
 import com.yt.app.common.base.constant.SystemConstant;
+import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.api.v1.vo.SysGzOrder;
 import com.yt.app.api.v1.vo.SysGzQuery;
 import com.yt.app.api.v1.vo.SysHsOrder;
@@ -51,6 +55,7 @@ import com.yt.app.api.v1.vo.SysXSOrder;
 import com.yt.app.api.v1.vo.SysTdQuery;
 import com.yt.app.api.v1.vo.SysTdOrder;
 
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 
@@ -123,7 +128,7 @@ public class PayUtil {
 	public static String SendTxSubmit(Payout pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 		String signParams = "merchant_id=" + cl.getCode() + "&merchant_order_id=" + pt.getOrdernum() + "&pay_type=912&pay_amt=" + String.format("%.2f", pt.getAmount()) + "&notify_url="
 				+ RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + cl.getApireusultip() + "&return_url=" + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + cl.getApireusultip() + "&bank_code=" + pt.getBankcode()
 				+ "&bank_num=" + pt.getAccnumer() + "&bank_owner=" + pt.getAccname() + "&bank_address=" + pt.getBankaddress() + "&remark=payout&key=" + cl.getApikey();
@@ -162,7 +167,7 @@ public class PayUtil {
 	public static SysTyOrder SendTxSelectOrder(String ordernum, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 
 		String signParams = "merchant_id=" + cl.getCode() + "&merchant_order_id=" + ordernum + "&key=" + cl.getApikey();
 
@@ -189,7 +194,7 @@ public class PayUtil {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 
 		String signParams = "merchant_id=" + cl.getCode() + "&key=" + cl.getApikey();
 
@@ -208,7 +213,7 @@ public class PayUtil {
 	public static String SendSnSubmit(Payout pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 		Long time = System.currentTimeMillis() / 1000;
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("AccessKey", cl.getCode());
@@ -249,7 +254,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, String> map = new HashMap<String, String>();
 			Long time = System.currentTimeMillis() / 1000;
 			map.put("AccessKey", cl.getCode());
@@ -285,7 +290,7 @@ public class PayUtil {
 	public static String SendSSSubmit(Payout pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 		Long time = System.currentTimeMillis() / 1000;
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("AccessKey", cl.getCode());
@@ -326,7 +331,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, String> map = new HashMap<String, String>();
 			Long time = System.currentTimeMillis() / 1000;
 			map.put("AccessKey", cl.getCode());
@@ -362,7 +367,7 @@ public class PayUtil {
 	public static String SendYSSubmit(Payout pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add("mchId", cl.getCode());
 		map.add("mchOrderNo", pt.getOrdernum());
@@ -403,7 +408,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			map.add("mchId", cl.getCode());
 			map.add("mchOrderNo", orderid);
@@ -440,7 +445,7 @@ public class PayUtil {
 	public static String SendXRSubmit(Payout pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		String dtime = DateTimeUtil.getDateTime("yyyyMMddHHmmss");
 		map.add("mchId", cl.getCode());
@@ -479,7 +484,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			String dtime = DateTimeUtil.getDateTime("yyyyMMddHHmmss");
 			map.add("mchId", cl.getCode());
@@ -511,7 +516,7 @@ public class PayUtil {
 	public static String SendSXSubmit(Payout pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 		Long time = System.currentTimeMillis() / 1000;
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("app_id", cl.getCode().toString());
@@ -551,7 +556,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, Object> map = new HashMap<String, Object>();
 			Long time = System.currentTimeMillis() / 1000;
 			map.put("app_id", cl.getCode());
@@ -586,7 +591,7 @@ public class PayUtil {
 	public static String SendLJSubmit(Payout pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 		Long time = System.currentTimeMillis() / 1000;
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("app_id", cl.getCode().toString());
@@ -626,7 +631,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, Object> map = new HashMap<String, Object>();
 			Long time = System.currentTimeMillis() / 1000;
 			map.put("app_id", cl.getCode());
@@ -661,7 +666,7 @@ public class PayUtil {
 	public static String SendHYTSubmit(Payout pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add("MerchantId", cl.getCode());
 		map.add("MerchantUniqueOrderId", pt.getOrdernum());
@@ -696,7 +701,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("MerchantId", cl.getCode());
 			map.add("MerchantUniqueOrderId", orderid);
@@ -726,7 +731,7 @@ public class PayUtil {
 	public static String SendXJSubmit(Payout pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 		Long time = System.currentTimeMillis();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("mchId", cl.getCode().toString());
@@ -767,7 +772,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, Object> map = new HashMap<String, Object>();
 			Long time = System.currentTimeMillis();
 			map.put("mchId", cl.getCode());
@@ -803,7 +808,7 @@ public class PayUtil {
 	public static String SendQWSubmit(Payout pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add("mchId", cl.getCode().toString());
 		map.add("mchOrderNo", pt.getOrdernum().toString());
@@ -844,7 +849,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			map.add("mchId", cl.getCode());
 			map.add("mchOrderNo", orderid);
@@ -879,7 +884,7 @@ public class PayUtil {
 	public static String Send8GSubmit(Payout pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 		Long time = System.currentTimeMillis();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("merchantNo", cl.getCode().toString());
@@ -919,7 +924,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("merchantNo", cl.getCode());
 			map.put("merchantOrderNo", orderid);
@@ -953,7 +958,7 @@ public class PayUtil {
 	public static String SendHYSubmit(Payout pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add("orderid", pt.getOrdernum().toString());
 		map.add("money", String.format("%.2f", pt.getAmount()));
@@ -983,7 +988,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			map.add("orderid", orderid);
 			String signContent = cl.getApikey() + orderid;
@@ -1011,22 +1016,30 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, String> map = new HashMap<String, String>();
-			map.put("mchId", cl.getCode());
-			map.put("timestamp", DateTimeUtil.getDateTime());
 			BizContentVO bcv = new BizContentVO();
 			bcv.setAccountBookId(cl.getAislecode());
-			bcv.setOrderId(pt.getOrdernum());
-			bcv.setOrderAmount(String.format("%.2f", pt.getAmount()));
+			bcv.setExternalBatchOrderId(pt.getMerchantordernum());
+			List<TransListVO> listpv = new ArrayList<TransListVO>();
+			TransListVO tlv = new TransListVO();
 			PayeeVO payee = new PayeeVO();
-			payee.setAccountType("2");
-			payee.setIdentityType("BANKCARD");
 			payee.setIdentity(pt.getAccnumer());
 			payee.setName(pt.getAccname());
-			bcv.setPayee(payee);
-			bcv.setTitle("title");
-			bcv.setNotifyUrl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + cl.getApireusultip());
+			tlv.setExternalOrderId(pt.getOrdernum());
+			tlv.setType("A");
+			if (pt.getType().equals(DictionaryResource.ORDERTYPE_18)) {
+				tlv.setType("B");
+				payee.setBankcardExt(pt.getBankname());
+			}
+			tlv.setTransAmount(String.format("%.2f", pt.getAmount()));
+			tlv.setOrderTitle("佣金");
+			tlv.setPayeeInfo(payee);
+			listpv.add(tlv);
+			bcv.setTransList(listpv);
+			map.put("mchId", cl.getCode());
+			map.put("timestamp", DateTimeUtil.getDateTime());
+			map.put("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + cl.getApireusultip());
 			map.put("bizContent", JSONUtil.toJsonStr(bcv));
 			map.put("signType", "RSA");
 			map.put("version", "1.0");
@@ -1049,11 +1062,11 @@ public class PayUtil {
 			HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
 			//
-			ResponseEntity<JSONObject> sov = resttemplate.exchange(cl.getApiip() + "/dt/transfer", HttpMethod.POST, httpEntity, JSONObject.class);
+			ResponseEntity<JSONObject> sov = resttemplate.exchange(cl.getApiip() + "/secTrans/batchTransfer/create", HttpMethod.POST, httpEntity, JSONObject.class);
 			JSONObject data = sov.getBody();
 			log.info(" 通银返回消息：" + data);
 			if (data.getStr("message").equals("SUCCESS")) {
-				return data.getStr("transactionId");
+				return data.getStr("batchOrderId");
 			}
 		} catch (RestClientException e) {
 			log.info(" 通银返回消息：" + e.getMessage());
@@ -1062,16 +1075,16 @@ public class PayUtil {
 	}
 
 	// 通银代付查单
-	public static String SendTYSelectOrder(String orderid, Channel cl) {
+	public static JSONArray SendTYSelectOrder(String orderid, Channel cl) {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, String> map = new HashMap<String, String>();
+			BizContentVO bcv = new BizContentVO();
+			bcv.setExternalBatchOrderId(orderid);
 			map.put("mchId", cl.getCode());
 			map.put("timestamp", DateTimeUtil.getDateTime());
-			BizContentVO bcv = new BizContentVO();
-			bcv.setOrderId(orderid);
 			map.put("bizContent", JSONUtil.toJsonStr(bcv));
 			map.put("signType", "RSA");
 			map.put("version", "1.0");
@@ -1094,11 +1107,11 @@ public class PayUtil {
 			HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
 			//
-			ResponseEntity<JSONObject> sov = resttemplate.exchange(cl.getApiip() + "/dt/transfer/query", HttpMethod.POST, httpEntity, JSONObject.class);
+			ResponseEntity<JSONObject> sov = resttemplate.exchange(cl.getApiip() + "/secTrans/batchTransfer/query", HttpMethod.POST, httpEntity, JSONObject.class);
 			JSONObject data = sov.getBody();
 			log.info(" 通银返回消息：" + data);
 			if (data.getStr("message").equals("SUCCESS")) {
-				return data.getStr("status");
+				return data.getJSONArray("transList");
 			}
 
 		} catch (RestClientException e) {
@@ -1111,7 +1124,7 @@ public class PayUtil {
 	public static String SendFTSubmit(Payout pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 		Map<String, Object> map = new HashMap<String, Object>();
 		String notifyurl = RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + cl.getApireusultip().toString();
 		map.put("merchantid", cl.getCode().toString());
@@ -1145,7 +1158,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("merchantid", cl.getCode());
 			map.put("merchantorderid", orderid);
@@ -1171,7 +1184,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			// 签名
 			String signParams = Md5Notify(ss, key);
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
@@ -1210,7 +1223,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			// 签名
 			String signParams = SignMd5QueryResultQrocde(ss, key);
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
@@ -1264,7 +1277,7 @@ public class PayUtil {
 	public static SysHsOrder SendKFSubmit(Income pt, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add("memberid", cl.getCode());
 		map.add("appid", cl.getApikey());
@@ -1304,7 +1317,7 @@ public class PayUtil {
 	public static String SendKFQuerySubmit(String orderid, Channel cl) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add("memberid", cl.getCode());
 		map.add("appid", cl.getApikey());
@@ -1338,7 +1351,7 @@ public class PayUtil {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+		//
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add("mchid", cl.getCode());
 		map.add("sign_type", "RSA2");
@@ -1412,7 +1425,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			String datetime = DateTimeUtil.getDateTime();
 			map.add("pay_memberid", cl.getCode());
@@ -1450,7 +1463,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			map.add("pay_memberid", cl.getCode());
 			map.add("pay_orderid", orderid);
@@ -1480,7 +1493,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.add("mchNo", cl.getCode());
@@ -1517,7 +1530,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.add("mchNo", cl.getCode());
@@ -1550,7 +1563,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.add("mchNo", cl.getCode());
@@ -1579,7 +1592,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, Object> map = new HashMap<String, Object>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.put("mchId", cl.getCode());
@@ -1618,7 +1631,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, Object> map = new HashMap<String, Object>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.put("mchId", cl.getCode());
@@ -1650,7 +1663,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, Object> map = new HashMap<String, Object>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.put("mchId", cl.getCode());
@@ -1679,7 +1692,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("merchantId", cl.getCode());
 			map.put("orderId", pt.getOrdernum());
@@ -1717,7 +1730,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("merchantId", cl.getCode());
 			map.put("orderId", orderid);
@@ -1752,7 +1765,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("merchantId", cl.getCode());
 			TreeMap<String, String> sortedMap = new TreeMap<>(map);
@@ -1785,7 +1798,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.add("mchNo", cl.getCode());
@@ -1822,7 +1835,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.add("mchNo", cl.getCode());
@@ -1855,7 +1868,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.add("mchNo", cl.getCode());
@@ -1884,7 +1897,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, Object> map = new HashMap<String, Object>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.put("mchId", cl.getCode());
@@ -1923,7 +1936,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, Object> map = new HashMap<String, Object>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.put("mchId", cl.getCode());
@@ -1955,7 +1968,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, Object> map = new HashMap<String, Object>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.put("mchId", cl.getCode());
@@ -1984,7 +1997,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, Object> map = new HashMap<String, Object>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.put("mchId", cl.getCode());
@@ -2023,7 +2036,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, Object> map = new HashMap<String, Object>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.put("mchId", cl.getCode());
@@ -2055,7 +2068,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, Object> map = new HashMap<String, Object>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.put("mchId", cl.getCode());
@@ -2084,7 +2097,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.add("mchId", cl.getCode());
@@ -2129,7 +2142,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			map.add("mchId", cl.getCode());
 			map.add("appId", cl.getRemark());
@@ -2166,7 +2179,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.add("mchId", cl.getCode());
@@ -2210,7 +2223,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			map.add("mchId", cl.getCode());
 			map.add("appId", cl.getRemark());
@@ -2247,7 +2260,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			Long time = DateTimeUtil.getNow().getTime();
 			map.add("customerCode", cl.getCode());
@@ -2285,7 +2298,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			map.add("customerCode", cl.getCode());
 			map.add("version", "3.0");
@@ -2319,7 +2332,7 @@ public class PayUtil {
 			HttpHeaders headers = new HttpHeaders();
 
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, String> map = new HashMap<String, String>();
 			Long time = System.currentTimeMillis() / 1000;
 			map.put("AccessKey", cl.getCode());
@@ -2358,7 +2371,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Long time = System.currentTimeMillis() / 1000;
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("AccessKey", cl.getCode());
@@ -2393,7 +2406,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("mchNo", cl.getCode());
 			map.add("appId", cl.getRemark());
@@ -2442,7 +2455,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("mchNo", cl.getCode());
 			map.add("appId", cl.getRemark());
@@ -2482,7 +2495,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("mchNo", cl.getCode());
 			map.add("appId", cl.getRemark());
@@ -2531,7 +2544,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("mchNo", cl.getCode());
 			map.add("appId", cl.getRemark());
@@ -2571,7 +2584,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("merId", cl.getCode());
 			map.put("channel", pt.getQrcodecode());
@@ -2620,7 +2633,7 @@ public class PayUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+			//
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("merId", cl.getCode());
 			map.put("orderId", orderid);

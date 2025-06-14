@@ -102,7 +102,7 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 	public List<Payout> listByArrayId(long[] id);
 
 	/**
-	 * get
+	 * getByMerchantOrdernum
 	 *
 	 * @param id id
 	 * @return Payout
@@ -110,6 +110,15 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 	@YtRedisCacheAnnotation(classs = Payout.class)
 	public Payout getByMerchantOrdernum(String channelordernum);
 
+	/**
+	 * getByMerchantOrderId
+	 *
+	 * @param id id
+	 * @return Payout
+	 */
+	@YtRedisCacheAnnotation(classs = Payout.class)
+	public Payout getByMerchantOrderId(String merchantorderid);
+	
 	/**
 	 * get
 	 *

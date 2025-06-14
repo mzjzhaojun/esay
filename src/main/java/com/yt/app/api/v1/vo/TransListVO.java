@@ -13,14 +13,15 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class PayeeVO extends BaseVO {
+public class TransListVO extends BaseVO {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	String identity;
-	String name;
-	String bankcardExt;
-	String accountType;
+	String externalOrderId;
+	String type;
+	String transAmount;
+	String orderTitle;
+	PayeeVO payeeInfo;
 }

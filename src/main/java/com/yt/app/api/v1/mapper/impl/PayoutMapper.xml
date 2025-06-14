@@ -163,6 +163,15 @@
 		select
 		<include refid="Base_Column_List" />
 		from payout
+		where merchantordernum= #{merchantordernum}
+	</select>
+	
+	<!--getByChannelOrdernum -->
+	<select id="getByMerchantOrderId"
+		parameterType="java.lang.String" resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from payout
 		where merchantorderid= #{merchantorderid}
 	</select>
 
