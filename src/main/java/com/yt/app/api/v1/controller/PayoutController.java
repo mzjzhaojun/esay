@@ -186,5 +186,32 @@ public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long>
 		Integer i = service.fail(id);
 		return new YtResponseEntity<Object>(new YtBody(i));
 	}
+	
+	
+	/**
+	 * 申請回單
+	 * 
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/handleCertificate/{id}", method = RequestMethod.GET)
+	public YtResponseEntity<Object> handleCertificate(@PathVariable Long id, HttpServletRequest request) {
+		Integer i = service.handleCertificate(id);
+		return new YtResponseEntity<Object>(new YtBody(i));
+	}
+
+	/**
+	 * 下载回單
+	 * 
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/handleCertificateDownload/{id}", method = RequestMethod.GET)
+	public YtResponseEntity<Object> handleCertificateDownload(@PathVariable Long id, HttpServletRequest request) {
+		Integer i = service.handleCertificateDownload(id);
+		return new YtResponseEntity<Object>(new YtBody(i));
+	}
 
 }

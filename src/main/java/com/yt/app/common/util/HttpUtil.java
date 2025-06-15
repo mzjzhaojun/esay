@@ -10,13 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HttpUtil {
 
-	private static void debug(String msg, Object... args) {
-		if ("debug".equalsIgnoreCase(System.getProperty("sdk.mode"))) {
-			msg = String.format(msg, args);
-			System.out.println(msg);
-		}
-	}
-
 	/**
 	 * post请求（用于请求json格式的参数）
 	 * 
@@ -52,7 +45,6 @@ public class HttpUtil {
 		if (content != null && !content.equals("") && sign != null && !sign.equals("")) {
 
 			boolean result = EplRsaUtils.vertify(EplRsaUtils.getPublicKey(publicKey), content, sign);
-			debug("验签结果:" + result);
 			if (result) {
 				flag = true;
 			}

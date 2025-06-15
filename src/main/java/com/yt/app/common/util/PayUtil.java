@@ -24,6 +24,7 @@ import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Payout;
+import com.yt.app.api.v1.vo.BankcardExtVO;
 import com.yt.app.api.v1.vo.BizContentVO;
 import com.yt.app.api.v1.vo.PayResultVO;
 import com.yt.app.api.v1.vo.PayeeVO;
@@ -752,7 +753,6 @@ public class PayUtil {
 		}
 		signContent = signContent.substring(0, signContent.length() - 1);
 		signContent = signContent + "&key=" + cl.getApikey();
-		System.out.println(signContent);
 		String sign = MD5Utils.md5(signContent);
 		map.put("sign", sign);
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
@@ -829,7 +829,6 @@ public class PayUtil {
 		}
 		signContent = signContent.substring(0, signContent.length() - 1);
 		signContent = signContent.replaceAll("\\[", "").replaceAll("\\]", "") + "&key=" + cl.getApikey();
-		System.out.println(signContent);
 		String sign = MD5Utils.md5(signContent);
 		map.add("sign", sign.toUpperCase());
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
@@ -904,7 +903,6 @@ public class PayUtil {
 		}
 		signContent = signContent.substring(0, signContent.length() - 1);
 		signContent = signContent + "&key=" + cl.getApikey();
-		System.out.println(signContent);
 		String sign = MD5Utils.md5(signContent);
 		map.put("sign", sign);
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
@@ -968,7 +966,6 @@ public class PayUtil {
 		map.add("bank", pt.getBankname());
 
 		String signContent = cl.getApikey() + pt.getOrdernum().toString();
-		System.out.println(signContent);
 		String sign = MD5Utils.md5(signContent);
 		map.add("sign", sign.toLowerCase());
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
@@ -992,7 +989,6 @@ public class PayUtil {
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			map.add("orderid", orderid);
 			String signContent = cl.getApikey() + orderid;
-			System.out.println(signContent);
 			String sign = MD5Utils.md5(signContent);
 			map.add("sign", sign.toLowerCase());
 
@@ -1030,7 +1026,9 @@ public class PayUtil {
 			tlv.setType("A");
 			if (pt.getType().equals(DictionaryResource.ORDERTYPE_18)) {
 				tlv.setType("B");
-				payee.setBankcardExt(pt.getBankname());
+				BankcardExtVO bev = new BankcardExtVO();
+				bev.setAccountType("2");
+				payee.setBankcardExt(bev);
 			}
 			tlv.setTransAmount(String.format("%.2f", pt.getAmount()));
 			tlv.setOrderTitle("佣金");
@@ -1053,7 +1051,6 @@ public class PayUtil {
 				sb.append(key).append("=").append(val).append("&");
 			}
 			String signcontent = sb.toString().substring(0, sb.toString().length() - 1);
-			System.out.println(signcontent);
 			// 生成待签名串
 			String sign = SHA256WithRSAUtils.buildRSASignByPrivateKey(signcontent, cl.getApikey());
 
@@ -1098,9 +1095,8 @@ public class PayUtil {
 				sb.append(key).append("=").append(val).append("&");
 			}
 			String signcontent = sb.toString().substring(0, sb.toString().length() - 1);
-			System.out.println(signcontent);
 			// 生成待签名串
-			String sign = SHA256WithRSAUtils.buildRSASignByPrivateKey(sb.toString(), cl.getApikey());
+			String sign = SHA256WithRSAUtils.buildRSASignByPrivateKey(signcontent, cl.getApikey());
 
 			map.put("sign", sign);
 			log.info("sign" + "==" + sign);
@@ -2668,6 +2664,95 @@ public class PayUtil {
 
 		} catch (RestClientException e) {
 			log.info("阿力查单返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 申請回单/////////////////////////////////////////////////
+	// 通银代付申请回单
+	public static String SendTYPayCertificate(String orderid, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			//
+			Map<String, String> map = new HashMap<String, String>();
+			BizContentVO bcv = new BizContentVO();
+			bcv.setExternalOrderId(orderid);
+			map.put("mchId", cl.getCode());
+			map.put("timestamp", DateTimeUtil.getDateTime());
+			map.put("bizContent", JSONUtil.toJsonStr(bcv));
+			map.put("signType", "RSA");
+			map.put("version", "1.0");
+
+			Map<String, String> sortMap = new TreeMap<>(map);
+			StringBuffer sb = new StringBuffer();
+			Iterator<String> iterator = sortMap.keySet().iterator();
+			while (iterator.hasNext()) {
+				String key = iterator.next();
+				String val = sortMap.get(key);
+				sb.append(key).append("=").append(val).append("&");
+			}
+			String signcontent = sb.toString().substring(0, sb.toString().length() - 1);
+			// 生成待签名串
+			String sign = SHA256WithRSAUtils.buildRSASignByPrivateKey(signcontent, cl.getApikey());
+
+			map.put("sign", sign);
+			log.info("sign" + "==" + sign);
+			HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<JSONObject> sov = resttemplate.exchange(cl.getApiip() + "/secTrans/transfer/receipt/apply", HttpMethod.POST, httpEntity, JSONObject.class);
+			JSONObject data = sov.getBody();
+			log.info(" 通银申请回单返回消息：" + data);
+			if (data.getStr("message").equals("SUCCESS")) {
+				return data.getStr("message");
+			}
+		} catch (RestClientException e) {
+			log.info("通银申请回单返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// 通银代付申请回单
+	public static String SendTYPayCertificateDownload(String orderid, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			//
+			Map<String, String> map = new HashMap<String, String>();
+			BizContentVO bcv = new BizContentVO();
+			bcv.setExternalOrderId(orderid);
+			map.put("mchId", cl.getCode());
+			map.put("timestamp", DateTimeUtil.getDateTime());
+			map.put("bizContent", JSONUtil.toJsonStr(bcv));
+			map.put("signType", "RSA");
+			map.put("version", "1.0");
+
+			Map<String, String> sortMap = new TreeMap<>(map);
+			StringBuffer sb = new StringBuffer();
+			Iterator<String> iterator = sortMap.keySet().iterator();
+			while (iterator.hasNext()) {
+				String key = iterator.next();
+				String val = sortMap.get(key);
+				sb.append(key).append("=").append(val).append("&");
+			}
+			String signcontent = sb.toString().substring(0, sb.toString().length() - 1);
+			// 生成待签名串
+			String sign = SHA256WithRSAUtils.buildRSASignByPrivateKey(signcontent, cl.getApikey());
+
+			map.put("sign", sign);
+			log.info("sign" + "==" + sign);
+			HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<JSONObject> sov = resttemplate.exchange(cl.getApiip() + "/secTrans/transfer/receipt/download", HttpMethod.POST, httpEntity, JSONObject.class);
+			JSONObject data = sov.getBody();
+			log.info(" 通银下载回单返回消息：" + data);
+			if (data.getStr("message").equals("SUCCESS")) {
+				return data.getStr("downloadUrl");
+			}
+		} catch (RestClientException e) {
+			log.info("通银下载回单返回消息：" + e.getMessage());
 		}
 		return null;
 	}

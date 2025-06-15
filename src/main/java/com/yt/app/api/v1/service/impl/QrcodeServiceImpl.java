@@ -146,7 +146,6 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	@Override
 	public String paytesteplcafrom(Map<String, Object> params) {
 		Qrcode pqrcode = mapper.get(Long.valueOf(params.get("id").toString()));
-		System.out.println(params.get("smsno").toString() + "ceee" + params.get("smscode").toString());
 		JSONObject jsonObject = SelfPayUtil.eplprotocolPayPre(pqrcode, StringUtil.getOrderNum(), params.get("menmberid").toString(), params.get("smsno").toString(), params.get("smscode").toString(),
 				Long.valueOf(String.format("%.2f", params.get("amount")).replace(".", "")));
 		if (!jsonObject.getStr("returnCode").equals("0000")) {

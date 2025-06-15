@@ -102,6 +102,12 @@ public interface PayoutService extends YtIBaseService<Payout, Long> {
 	// 失敗
 	Integer fail(Long id);
 
+	// 回单
+	Integer handleCertificate(Long id);
+
+	// 下载回单
+	Integer handleCertificateDownload(Long id);
+
 	// 下载
 	ByteArrayOutputStream download(Map<String, Object> param) throws IOException;
 }

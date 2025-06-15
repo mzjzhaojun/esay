@@ -3,6 +3,7 @@
  */
 package com.yt.app.common.util;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,6 +29,8 @@ import org.apache.commons.lang.StringUtils;
 
 import com.yt.app.api.v1.entity.YtFile;
 import com.yt.app.common.config.YtConfig;
+
+import sun.misc.BASE64Encoder;
 
 /**
  * 文件处理
@@ -649,5 +653,14 @@ public class FileUtil {
 			}
 		}
 		return hpath;
+	}
+
+	public static String bufferedImageToBase64(BufferedImage bufferedImage) throws IOException {
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		ImageIO.write(bufferedImage, "PNG", os);
+		byte[] bytes = os.toByteArray();// 转换成字节
+		BASE64Encoder encoder = new BASE64Encoder();
+		String base64 = encoder.encodeBuffer(bytes).trim().replaceAll("\n", "").replaceAll("\r", "");// 转换成base64串//删除 \r\n
+		return base64;
 	}
 }

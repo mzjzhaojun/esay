@@ -21,6 +21,5 @@ public class PayeeVO extends BaseVO {
 
 	String identity;
 	String name;
-	String bankcardExt;
-	String accountType;
+	BankcardExtVO bankcardExt;
 }

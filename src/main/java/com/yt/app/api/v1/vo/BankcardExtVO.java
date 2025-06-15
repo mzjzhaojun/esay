@@ -1,7 +1,5 @@
 package com.yt.app.api.v1.vo;
 
-import java.util.List;
-
 import com.yt.app.common.base.BaseVO;
 
 import lombok.AllArgsConstructor;
@@ -15,14 +13,11 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class BizContentVO extends BaseVO {
+public class BankcardExtVO extends BaseVO {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	String accountBookId;
-	String batchOrderId;
-	String externalOrderId;
-	String externalBatchOrderId;
-	List<TransListVO> transList;
+
+	String accountType;
 }

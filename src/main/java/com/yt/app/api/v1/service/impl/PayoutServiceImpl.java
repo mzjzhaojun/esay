@@ -1,5 +1,7 @@
 package com.yt.app.api.v1.service.impl;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -60,6 +62,7 @@ import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
+import com.yt.app.common.util.FileUtil;
 import com.yt.app.common.util.NumberUtil;
 import com.yt.app.common.util.PayUtil;
 import com.yt.app.common.util.PayoutProduct;
@@ -72,13 +75,20 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -131,6 +141,81 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	private FileService fileservice;
 	@Autowired
 	private MerchantBot merchantbot;
+
+	@Override
+	public Integer success(Long id) {
+		Payout pt = mapper.get(id);
+		paySuccess(pt);
+		return 1;
+	}
+
+	@Override
+	public Integer fail(Long id) {
+		Payout pt = mapper.get(id);
+		payFail(pt, "失败");
+		return 1;
+	}
+
+	@Override
+	public Integer handleCertificate(Long id) {
+		Payout pt = mapper.get(id);
+		Channel channel = channelmapper.get(pt.getChannelid());
+		// 申请回单
+		String rstate = PayUtil.SendTYPayCertificate(pt.getOrdernum(), channel);
+		if (rstate == null) {
+			pt.setStatus(DictionaryResource.ORDERSTATUS_56);
+		} else {
+			pt.setStatus(DictionaryResource.ORDERSTATUS_57);
+		}
+		return mapper.put(pt);
+	}
+
+	@Override
+	public Integer handleCertificateDownload(Long id) {
+		Payout pt = mapper.get(id);
+		Channel channel = channelmapper.get(pt.getChannelid());
+		// 申请回单
+		String imgurl = PayUtil.SendTYPayCertificateDownload(pt.getOrdernum(), channel);
+		Assert.notNull(imgurl, "下载回单失败!");
+		try {
+			URL url = new URL(imgurl);
+			URLConnection urlConnection = url.openConnection();
+			try (PDDocument document = PDDocument.load(urlConnection.getInputStream())) {
+				PDFRenderer renderer = new PDFRenderer(document);
+				BufferedImage bufferedimage = renderer.renderImageWithDPI(0, 500); // DPI can be adjusted
+				String returnspayimg = FileUtil.bufferedImageToBase64(bufferedimage);
+				String resurl = fileservice.addBase64String(returnspayimg);
+				pt.setImgurl(resurl);
+				pt.setStatus(DictionaryResource.ORDERSTATUS_58);
+				return mapper.put(pt);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	@Override
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
+	public YtIPage<PayoutVO> page(Map<String, Object> param) {
+		int count = 0;
+		if (YtPageBean.isPaging(param)) {
+			count = mapper.countlist(param);
+			if (count == 0) {
+				return new YtPageBean<PayoutVO>(Collections.emptyList());
+			}
+		}
+		List<PayoutVO> list = mapper.page(param);
+		list.forEach(mco -> {
+			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
+			mco.setNotifystatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getNotifystatus()));
+		});
+		return new YtPageBean<PayoutVO>(param, list, count);
+	}
 
 	/**
 	 * 本地提交
@@ -623,24 +708,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			throw new YtException("已经存在的订单!");
 		}
 		return mc;
-	}
-
-	@Override
-	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)
-	public YtIPage<PayoutVO> page(Map<String, Object> param) {
-		int count = 0;
-		if (YtPageBean.isPaging(param)) {
-			count = mapper.countlist(param);
-			if (count == 0) {
-				return new YtPageBean<PayoutVO>(Collections.emptyList());
-			}
-		}
-		List<PayoutVO> list = mapper.page(param);
-		list.forEach(mco -> {
-			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
-			mco.setNotifystatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getNotifystatus()));
-		});
-		return new YtPageBean<PayoutVO>(param, list, count);
 	}
 
 	/***
@@ -1210,20 +1277,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
-	public Integer success(Long id) {
-		Payout pt = mapper.get(id);
-		paySuccess(pt);
-		return 1;
-	}
-
-	@Override
-	public Integer fail(Long id) {
-		Payout pt = mapper.get(id);
-		payFail(pt, "失败");
-		return 1;
-	}
-
-	@Override
 	public void xrcallback(Map<String, String> params) {
 		String orderid = params.get("mchOrderNo").toString();
 		String status = params.get("status").toString();
@@ -1431,6 +1484,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 				throw new YtException("非法请求!");
 			}
 			if (status.equals("FINISHED")) {
+//				PayUtil.SendTYSelectOrder(orderid, channel);
 				// 查询渠道是否真实成功
 				JSONArray arrays = JSONUtil.parseArray(params.get("transList"));
 				for (int i = 0; i < arrays.size(); i++) {

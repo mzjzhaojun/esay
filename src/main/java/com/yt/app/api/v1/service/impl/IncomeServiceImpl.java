@@ -1052,7 +1052,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println(params);
 		String outradeno = params.get("outTradeNo").toString();
 		String noncestr = params.get("nonceStr").toString();
 		log.info("易票联通知返回消息：outradeno" + outradeno + " noncestr:" + noncestr);

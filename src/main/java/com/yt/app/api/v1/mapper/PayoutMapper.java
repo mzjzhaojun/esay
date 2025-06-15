@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Param;
 
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Payout;
-import com.yt.app.api.v1.vo.IncomeVO;
 import com.yt.app.api.v1.vo.PayoutVO;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
 import com.yt.app.common.annotation.YtRedisCacheEvictAnnotation;
