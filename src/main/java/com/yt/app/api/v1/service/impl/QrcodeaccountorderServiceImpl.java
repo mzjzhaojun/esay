@@ -4,28 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
-import com.yt.app.api.v1.mapper.IncomeMapper;
-import com.yt.app.api.v1.mapper.MerchantaccountorderMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountorderMapper;
-import com.yt.app.api.v1.service.IncomemerchantaccountService;
-import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.api.v1.service.QrcodeaccountorderService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
-import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
-import com.yt.app.api.v1.entity.Channel;
-import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Qrcodeaccountorder;
 import com.yt.app.api.v1.vo.QrcodeaccountorderVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
 import com.yt.app.common.enums.YtDataSourceEnum;
-import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.RedisUtil;
-import com.yt.app.common.util.StringUtil;
-
-import cn.hutool.core.lang.Assert;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,51 +31,10 @@ public class QrcodeaccountorderServiceImpl extends YtBaseServiceImpl<Qrcodeaccou
 	@Autowired
 	private QrcodeaccountorderMapper mapper;
 
-	@Autowired
-	private MerchantaccountorderMapper merchantaccountordermapper;
-
-	@Autowired
-	private IncomeMapper incomemapper;
-
-	@Autowired
-	private QrcodeaccountService qrcodeaccountservice;
-
-	@Autowired
-	private IncomemerchantaccountService incomemerchantaccountservice;
-
 	@Override
 	@Transactional
 	public Integer post(Qrcodeaccountorder t) {
 		Integer i = mapper.post(t);
-		return i;
-	}
-
-	@Override
-	@Transactional
-	public Integer put(Qrcodeaccountorder t) {
-		Integer i = 0;
-		Income income = incomemapper.getByQrcodeOrderNum(t.getOrdernum());
-		if (income.getStatus().equals(DictionaryResource.ORDERSTATUS_50)) {
-			Qrcodeaccountorder qrcodeaccountorder = mapper.get(t.getId());
-			income.setStatus(DictionaryResource.ORDERSTATUS_52);
-			if (income.getNotifystatus() == DictionaryResource.PAYOUTNOTIFYSTATUS_61)
-				income.setNotifystatus(DictionaryResource.PAYOUTNOTIFYSTATUS_62);
-			//
-			incomemapper.put(income);
-			//
-//			qrcodeaccountservice.updateTotalincome(qrcodeaccountorder);
-//
-//			Incomemerchantaccountorder incomemerchantaccountorder = incomemerchantaccountordermapper.getByOrderNum(income.getMerchantorderid());
-//			//
-//			incomemerchantaccountorder.setStatus(DictionaryResource.ORDERSTATUS_52);
-//			incomemerchantaccountordermapper.put(incomemerchantaccountorder);
-//			//
-//			incomemerchantaccountservice.updateTotalincome(incomemerchantaccountorder);
-			//
-			qrcodeaccountorder.setStatus(DictionaryResource.ORDERSTATUS_52);
-			i = mapper.put(qrcodeaccountorder);
-		}
-		Assert.equals(i, 1, ServiceConstant.UPDATE_FAIL_MSG);
 		return i;
 	}
 
@@ -110,26 +58,5 @@ public class QrcodeaccountorderServiceImpl extends YtBaseServiceImpl<Qrcodeaccou
 			mco.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getType()));
 		});
 		return new YtPageBean<QrcodeaccountorderVO>(param, list, count);
-	}
-
-	@Override
-	public void incomewithdrawTelegram(Channel c, double amount) {
-		Qrcodeaccountorder t = new Qrcodeaccountorder();
-		t.setUserid(c.getUserid());
-		// 支出订单
-		t.setChannelid(c.getId());
-		t.setTenant_id(c.getTenant_id());
-		t.setMerchantname(c.getName());
-		t.setStatus(DictionaryResource.ORDERSTATUS_52);
-		t.setCollection(0.00);
-		t.setAmount(amount);
-		t.setType("" + DictionaryResource.ORDERTYPE_11);
-		t.setOrdernum("QDTX" + StringUtil.getOrderNum());
-		t.setRemark("自营渠道提现￥：" + String.format("%.2f", amount));
-		mapper.add(t);
-
-//		qrcodeaccountservice.withdrawamount(t);
-//
-//		qrcodeaccountservice.updateWithdrawamount(t);
 	}
 }

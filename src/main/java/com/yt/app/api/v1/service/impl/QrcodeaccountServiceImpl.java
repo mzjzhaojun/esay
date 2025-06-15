@@ -128,7 +128,7 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			maaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出金额
 
-			maaj.setRemark("码商代收人民币￥：" + String.format("%.2f", t.getAmount()));
+			maaj.setRemark("自营代收人民币￥：" + String.format("%.2f", t.getAmount()));
 			qrcodeaccountrecordmapper.post(maaj);
 			//
 			setToincomeamount(ma, t);
@@ -163,7 +163,7 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			maaj.setPosttoincomeamount(mao.getAmount());// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("码商代收成功￥：" + String.format("%.2f", mao.getAmount()));
+			maaj.setRemark("自营代收成功￥：" + String.format("%.2f", mao.getAmount()));
 			qrcodeaccountrecordmapper.post(maaj);
 			//
 			scuccessTotalincome(t, mao);
@@ -198,7 +198,7 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("超时支付,取消订单：" + String.format("%.2f", mao.getAmount()));
+			maaj.setRemark("自营代收取消订单：" + String.format("%.2f", mao.getAmount()));
 			qrcodeaccountrecordmapper.post(maaj);
 			//
 			cancelToincomeamount(t, mao);
@@ -260,7 +260,7 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			aaaj.setPosttoincomeamount(0.00);// 待确认收入
 			aaaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			aaaj.setPosttowithdrawamount(0.00);// 待确认支出
-			aaaj.setRemark("待确认支出￥：" + String.format("%.2f", t.getAmount()));
+			aaaj.setRemark("自营待确认支出￥：" + String.format("%.2f", t.getAmount()));
 			//
 			qrcodeaccountrecordmapper.post(aaaj);
 
@@ -296,7 +296,7 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 			aaaj.setPosttoincomeamount(0.00);// 待确认收入
 			aaaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmount());// 总支出
 			aaaj.setPosttowithdrawamount(mao.getAmount());// 待确认支出
-			aaaj.setRemark("成功支出￥：" + String.format("%.2f", mao.getAmount()));
+			aaaj.setRemark("自营成功支出￥：" + String.format("%.2f", mao.getAmount()));
 			//
 			successWithdrawamount(t, mao);
 		} catch (Exception e) {

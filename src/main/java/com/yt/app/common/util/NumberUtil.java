@@ -104,13 +104,13 @@ public class NumberUtil {
 	 * @return
 	 */
 	public static synchronized String getOrderNo() {
-		String str = new SimpleDateFormat("MMddHHmm").format(new Date());
+		String str = new SimpleDateFormat("YYMMddHHmm").format(new Date());
 		if (date == null || !date.equals(str)) {
 			date = str;
 			orderNum = 0l;
 		}
 		orderNum++;
-		long orderNo = Long.parseLong((date)) * 1000;
+		long orderNo = Long.parseLong((date)) * 100;
 		orderNo += orderNum;
 		return orderNo + "";
 	}
