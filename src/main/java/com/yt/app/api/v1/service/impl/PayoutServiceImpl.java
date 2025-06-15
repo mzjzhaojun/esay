@@ -30,6 +30,7 @@ import com.yt.app.api.v1.service.FileService;
 import com.yt.app.api.v1.service.PayoutMerchantaccountService;
 import com.yt.app.api.v1.service.MerchantcustomerbanksService;
 import com.yt.app.api.v1.service.PayoutService;
+import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.api.v1.vo.PayoutVO;
 import com.yt.app.api.v1.vo.SysSnOrder;
@@ -126,6 +127,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	private AgentaccountService agentaccountservice;
 	@Autowired
 	private ChannelaccountService channelaccountservice;
+	@Autowired
+	private QrcodeaccountService qrcodeaccountservice;
 	@Autowired
 	private SystemaccountService systemaccountservice;
 	@Autowired
@@ -422,6 +425,8 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 
 		payoutmerchantaccountservice.withdrawamount(t);
 
+		qrcodeaccountservice.withdrawamount(t);
+
 		///////////////////////////////////////////////////// 计算代理订单/////////////////////////////////////////////////////
 		if (m.getAgentid() != null) {
 			Agent ag = agentmapper.get(m.getAgentid());
@@ -589,6 +594,10 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			}
 			// 渠道余额
 			t.setChannelbalance(cl.getBalance() - t.getChannelpay());
+			///////////////////////////////////////////////////// 计算商户订单/////////////////////////////////////////////////////
+			payoutmerchantaccountservice.withdrawamount(t);
+
+			channelaccountservice.withdrawamount(t);
 		} else {
 			Qrcodeaisle qa = qrcodeaislemapper.getByCode(aislecode);
 			Assert.notNull(qa, "没有可用通道!");
@@ -646,10 +655,11 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			RedisUtil.setEx(SystemConstant.CACHE_SYS_PAYOUT_EXIST + t.getOrdernum(), t.getOrdernum(), 60, TimeUnit.SECONDS);
 			// 获取渠道单号
 			getQrcodelOrderNo(t, qd);
-		}
+			///////////////////////////////////////////////////// 计算商户订单/////////////////////////////////////////////////////
+			payoutmerchantaccountservice.withdrawamount(t);
 
-		///////////////////////////////////////////////////// 计算商户订单/////////////////////////////////////////////////////
-		payoutmerchantaccountservice.withdrawamount(t);
+			qrcodeaccountservice.withdrawamount(t);
+		}
 
 		///////////////////////////////////////////////////// 计算代理订单
 		if (m.getAgentid() != null) {

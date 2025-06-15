@@ -2,7 +2,6 @@ package com.yt.app.api.v1.service;
 
 import java.util.Map;
 
-import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Qrcodetransferrecord;
 import com.yt.app.api.v1.vo.QrcodeVO;
@@ -43,12 +42,6 @@ public interface QrcodeService extends YtIBaseService<Qrcode, Long> {
 	 */
 	String paytesteplcafrom(Map<String, Object> params);
 
-	/**
-	 * 代收成功
-	 * 
-	 * @param mao
-	 */
-	void updateTotalincome(Income mao);
 
 	/**
 	 * 统计

@@ -96,6 +96,10 @@ public class DictionaryResource implements Serializable {
 	public static final Integer RECORDTYPE_36 = 36; // 提现成功
 	public static final Integer RECORDTYPE_38 = 38; // 提现取消
 
+	public static final Integer RECORDTYPE_39 = 39; // 代收待确认
+	public static final Integer RECORDTYPE_46 = 46; // 代收成功
+	public static final Integer RECORDTYPE_47 = 47; // 代收取消
+
 	/**
 	 * 银行卡类型
 	 */
@@ -112,9 +116,9 @@ public class DictionaryResource implements Serializable {
 	public static final Integer ORDERSTATUS_53 = 53; // 失败
 	public static final Integer ORDERSTATUS_54 = 54; // 已结算
 	public static final Integer ORDERSTATUS_55 = 55; // 已分账
-	public static final Integer ORDERSTATUS_56 = 56; //申请回单失败
-	public static final Integer ORDERSTATUS_57 = 57; //申请回单成功
-	public static final Integer ORDERSTATUS_58 = 58; //下載回单成功
+	public static final Integer ORDERSTATUS_56 = 56; // 申请回单失败
+	public static final Integer ORDERSTATUS_57 = 57; // 申请回单成功
+	public static final Integer ORDERSTATUS_58 = 58; // 下載回单成功
 
 	/**
 	 * 回调状态

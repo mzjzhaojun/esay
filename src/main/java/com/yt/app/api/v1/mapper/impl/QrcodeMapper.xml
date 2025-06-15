@@ -313,7 +313,8 @@
 		yestodayincome=#{todayincome},
 		todaybalance = 0,
 		todayorder = 0,
-		todayincome = 0
+		todayincome = 0,
+		ordersum = 0
 		where id = #{id}
 	</update>
 </mapper>

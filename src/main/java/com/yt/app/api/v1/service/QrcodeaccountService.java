@@ -3,6 +3,7 @@ package com.yt.app.api.v1.service;
 import java.util.Map;
 
 import com.yt.app.api.v1.entity.Income;
+import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Qrcodeaccount;
 import com.yt.app.api.v1.vo.QrcodeaccountVO;
 import com.yt.app.common.base.YtIBaseService;
@@ -43,14 +44,14 @@ public interface QrcodeaccountService extends YtIBaseService<Qrcodeaccount, Long
 	 * 
 	 * @param t
 	 */
-	void withdrawamount(Income t);
+	void withdrawamount(Payout t);
 
 	/**
 	 * 确认支出
 	 * 
 	 * @param mao
 	 */
-	void updateWithdrawamount(Income mao);
+	void updateWithdrawamount(Payout mao);
 
 	/**
 	 * 

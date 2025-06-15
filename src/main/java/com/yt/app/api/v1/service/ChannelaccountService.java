@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.yt.app.api.v1.entity.Channelaccount;
 import com.yt.app.api.v1.entity.Channelaccountorder;
+import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.common.base.YtIBaseService;
 import com.yt.app.common.common.yt.YtIPage;
@@ -24,6 +25,13 @@ public interface ChannelaccountService extends YtIBaseService<Channelaccount, Lo
 	void updateTotalincome(Channelaccountorder t);
 
 	void cancleTotalincome(Channelaccountorder t);
+
+	// 收入
+	void totalincome(Income t);
+
+	void updateTotalincome(Income t);
+
+	void cancleTotalincome(Income t);
 
 	// 支出
 	void withdrawamount(Payout t);

@@ -2,7 +2,6 @@ package com.yt.app.api.v1.service.impl;
 
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -154,28 +153,6 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 		return jsonObject.getStr("outTradeNo");
 	}
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	private void scuccessTotalincome(Income qo) {
-		Qrcode m = mapper.get(qo.getQrcodeid());
-		m.setTodayorder(m.getTodayorder() + 1);
-		m.setOrdersum(m.getOrdersum() + 1);
-		m.setTodayincome(m.getTodayincome() + qo.getAmount());
-		m.setIncomesum(m.getIncomesum() + qo.getAmount());
-		m.setTodaybalance(m.getTodaybalance() + qo.getIncomeamount());
-		mapper.put(m);
-	}
-
-	@Override
-	public void updateTotalincome(Income mao) {
-		RLock lock = RedissonUtil.getLock(mao.getQrcodeid());
-		try {
-			lock.lock();
-			scuccessTotalincome(mao);
-		} catch (Exception e) {
-		} finally {
-			lock.unlock();
-		}
-	}
 
 	@Override
 	public void updateDayValue(Qrcode c, String date) {

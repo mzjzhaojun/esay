@@ -19,9 +19,9 @@ import com.yt.app.api.v1.mapper.QrcodeaisleMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper;
 import com.yt.app.api.v1.mapper.QrcodpaymemberMapper;
 import com.yt.app.api.v1.service.AgentaccountService;
+import com.yt.app.api.v1.service.ChannelaccountService;
 import com.yt.app.api.v1.service.IncomeService;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
-import com.yt.app.api.v1.service.QrcodeService;
 import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
@@ -117,7 +117,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	@Autowired
 	private QrcodeaccountService qrcodeaccountservice;
 	@Autowired
-	private QrcodeService qrcodeservice;
+	private ChannelaccountService channelaccountservice;
 	@Autowired
 	private SystemaccountService systemaccountservice;
 	@Autowired
@@ -856,7 +856,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	// 上游渠道下单
 	private QrcodeResultVO addOtherOrder(Income income, Channel channel, Aisle qas, Merchant mc, QrcodeSubmitDTO qs) {
-		qrcodeaccountservice.totalincome(income);
+		channelaccountservice.totalincome(income);
 		// 添加商戶订单
 		incomemerchantaccountservice.totalincome(income);
 
@@ -865,7 +865,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qr.setPay_orderid(qs.getPay_orderid());
 		qr.setPay_amount(qs.getPay_amount());
 		qr.setPay_aislecode(qs.getPay_aislecode());
-//		qr.setPay_outordernum(income.getOrdernum());
 		qr.setPay_viewurl(income.getResulturl());
 		String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
 		qr.setPay_md5sign(signresult);
@@ -883,7 +882,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qr.setPay_orderid(qs.getPay_orderid());
 		qr.setPay_amount(qs.getPay_amount());
 		qr.setPay_aislecode(qs.getPay_aislecode());
-//		qr.setPay_outordernum(income.getOrdernum());
 		qr.setPay_viewurl(income.getQrcode());
 		String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
 		qr.setPay_md5sign(signresult);
@@ -908,7 +906,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		}
 
 		// 计算渠道收入
-		qrcodeaccountservice.updateTotalincome(income);
+		channelaccountservice.updateTotalincome(income);
 		//
 		// 计算商户收入
 		incomemerchantaccountservice.updateTotalincome(income);
@@ -939,8 +937,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			mapper.put(income);
 			// 计算渠道收入
 			qrcodeaccountservice.updateTotalincome(income);
-			// 计算碼商收入金额
-			qrcodeservice.updateTotalincome(income);
 			//
 			// 计算商户收入
 			incomemerchantaccountservice.updateTotalincome(income);
