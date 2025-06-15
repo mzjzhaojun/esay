@@ -110,7 +110,7 @@ public class NumberUtil {
 			orderNum = 0l;
 		}
 		orderNum++;
-		long orderNo = Long.parseLong((date)) * 100;
+		long orderNo = Long.parseLong((date)) * 1000;
 		orderNo += orderNum;
 		return orderNo + "";
 	}

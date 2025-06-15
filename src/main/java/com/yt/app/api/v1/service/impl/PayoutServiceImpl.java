@@ -512,6 +512,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantname(m.getName());
 		t.setType(DictionaryResource.ORDERTYPE_19);
 		t.setOrdernum("OUT" + StringUtil.getOrderNum());// 系统单号
+		t.setMerchantordernum(NumberUtil.getOrderNo());
 		t.setMerchantcost(m.getOnecost());// 手续费
 		t.setMerchantdeal(t.getAmount() * (m.getExchange() / 1000));// 交易费
 		t.setMerchantpay(t.getAmount() + t.getMerchantcost() + t.getMerchantdeal());// 商户支付总额
