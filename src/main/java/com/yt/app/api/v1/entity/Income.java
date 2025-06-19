@@ -24,11 +24,9 @@ public class Income extends YtBaseEntity<Income> {
 
 	Long id;
 	Long tenant_id;
-	Long merchantuserid;
 	String ordernum;
 	Long merchantid;
 	String merchantname;
-	String merchantcode;
 	Long channelid;
 	String merchantorderid;
 	String backforwardurl;
@@ -44,7 +42,9 @@ public class Income extends YtBaseEntity<Income> {
 	String qrcodecode;
 	String qrcodename;
 	String qrcodeordernum;
-	Long qrcodeuserid;
+	String mobile;
+	String accnumer;
+	String accname;
 	Double amount;
 	Double collection;
 	Double exchange;

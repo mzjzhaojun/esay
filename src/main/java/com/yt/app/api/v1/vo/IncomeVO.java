@@ -24,11 +24,12 @@ public class IncomeVO extends BaseVO {
 
 	Long id;
 	Long tenant_id;
-	Long merchantuserid;
+	String accnumer;
+	String accname;
+	String mobile;
 	String ordernum;
 	Long merchantid;
 	String merchantname;
-	String merchantcode;
 	Long channelid;
 	String backforwardurl;
 	java.util.Date expireddate;
@@ -43,7 +44,6 @@ public class IncomeVO extends BaseVO {
 	String qrcodecode;
 	String qrcodeaislecode;
 	String qrcodeordernum;
-	String qrcodeuserid;
 	Double amount;
 	Double collection;
 	Double exchange;

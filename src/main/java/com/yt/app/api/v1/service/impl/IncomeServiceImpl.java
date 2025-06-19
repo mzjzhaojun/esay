@@ -538,12 +538,10 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 			Income income = new Income();
 			// 商戶
-			income.setMerchantuserid(mc.getUserid());
 			income.setOrdernum("IN" + StringUtil.getOrderNum());
 			income.setMerchantorderid(qs.getPay_orderid());
 			income.setChannelid(channel.getId());
 			income.setChannelname(channel.getName());
-			income.setMerchantcode(mc.getCode());
 			income.setMerchantname(mc.getName());
 			income.setMerchantid(mc.getId());
 			income.setExpireddate(DateTimeUtil.addMinute(channel.getMtorder()));// 默认30分钟
@@ -556,7 +554,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			income.setQrcodeid(channel.getId());
 			income.setQrcodecode(channel.getAislecode());
 			income.setQrcodename(channel.getName());
-			income.setQrcodeuserid(channel.getUserid());
 			income.setDynamic(false);
 			// 随机数
 			income.setAmount(Double.valueOf(qs.getPay_amount()));
@@ -820,12 +817,10 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 	private Income addIncome(Channel channel, Qrcodeaisle qas, Merchant mc, QrcodeSubmitDTO qs, Qrcode qd) {
 		Income income = new Income();
 		// 商戶
-		income.setMerchantuserid(mc.getUserid());
 		income.setOrdernum("IN" + StringUtil.getOrderNum());
 		income.setMerchantorderid(qs.getPay_orderid());
 		income.setChannelid(channel.getId());
 		income.setChannelname(channel.getName());
-		income.setMerchantcode(mc.getCode());
 		income.setMerchantname(mc.getName());
 		income.setMerchantid(mc.getId());
 		income.setExpireddate(DateTimeUtil.addMinute(qd.getExpireminute()));
@@ -835,7 +830,6 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		income.setQrcodeaislename(qas.getName());
 		income.setQrcodeaislecode(qas.getCode());
 		// 收款产品
-		income.setQrcodeuserid(qd.getUserid());
 		income.setQrcodeid(qd.getId());
 		income.setQrcodename(qd.getName());
 		income.setQrcodecode(qd.getCode());
@@ -873,7 +867,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	// 添加qrcode订单
 	private QrcodeResultVO addOtherOrderMqd(Income income, Channel channel, Qrcodeaisle qas, Merchant mc, QrcodeSubmitDTO qs) {
-		//更新自营数据
+		// 更新自营数据
 		qrcodeaccountservice.totalincome(income);
 		// 更新商户数据
 		incomemerchantaccountservice.totalincome(income);
@@ -1023,6 +1017,10 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				qrcodpaymember.setMemberid(in.getOrdernum());
 				qrcodpaymembermapper.post(qrcodpaymember);
 			}
+			in.setAccname(params.get("name").toString());
+			in.setAccnumer(params.get("cardno").toString());
+			in.setMobile(params.get("mobile").toString());
+			mapper.put(in);
 		} else {
 			throw new YtException(jsonObject.getStr("returnMsg"));
 		}

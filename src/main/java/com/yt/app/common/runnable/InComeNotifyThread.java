@@ -29,7 +29,7 @@ public class InComeNotifyThread implements Runnable {
 		Income income = mapper.get(id);
 		Merchant merchant = merchantmapper.get(income.getMerchantid());
 		QueryQrcodeResultVO qqr = new QueryQrcodeResultVO();
-		qqr.setPay_memberid(income.getMerchantcode());
+		qqr.setPay_memberid(merchant.getCode());
 		qqr.setPay_orderid(income.getMerchantorderid());
 		qqr.setPay_amount(income.getAmount().toString());
 		qqr.setPay_code(income.getStatus());

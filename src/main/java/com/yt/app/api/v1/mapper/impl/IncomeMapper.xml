@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.IncomeMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,merchantuserid,ordernum,qrcodecode,merchantid,merchantname,merchantcode,channelid,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislecode,qrcodeaislename,agentid,channelname,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,collection,exchange,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,dynamic,resulturl,fewamount,notifyurl,notifystatus,incomeamount,merchantincomeamount,channelincomeamount,inipaddress,blockaddress,remark,version
+		id,tenant_id,accname,ordernum,qrcodecode,merchantid,merchantname,mobile,channelid,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislecode,qrcodeaislename,agentid,channelname,agentincome,qrcodeid,qrcodename,qrcodeordernum,accnumer,amount,collection,exchange,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,dynamic,resulturl,fewamount,notifyurl,notifystatus,incomeamount,merchantincomeamount,channelincomeamount,inipaddress,blockaddress,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -17,18 +17,18 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Income">
 		insert into
-		income(id,merchantuserid,ordernum,qrcodecode,merchantid,merchantname,merchantcode,channelid,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislecode,qrcodeaislename,agentid,channelname,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,collection,exchange,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,dynamic,resulturl,fewamount,notifyurl,notifystatus,incomeamount,merchantincomeamount,channelincomeamount,inipaddress,remark)
+		income(id,accname,ordernum,qrcodecode,merchantid,merchantname,mobile,channelid,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislecode,qrcodeaislename,agentid,channelname,agentincome,qrcodeid,qrcodename,qrcodeordernum,accnumer,amount,collection,exchange,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,dynamic,resulturl,fewamount,notifyurl,notifystatus,incomeamount,merchantincomeamount,channelincomeamount,inipaddress,remark)
 		values
-		(#{id},#{merchantuserid},#{ordernum},#{qrcodecode},#{merchantid},#{merchantname},#{merchantcode},#{channelid},#{merchantorderid},#{backforwardurl},#{expireddate},#{expiredminute},#{qrcodeaisleid},#{qrcodeaislecode},#{qrcodeaislename},#{agentid},#{channelname},#{agentincome},#{qrcodeid},#{qrcodename},#{qrcodeordernum},#{qrcodeuserid},#{amount},#{collection},#{exchange},#{realamount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{qrcode},#{type},#{dynamic},#{resulturl},#{fewamount},#{notifyurl},#{notifystatus},#{incomeamount},#{merchantincomeamount},#{channelincomeamount},#{inipaddress},#{remark})
+		(#{id},#{accname},#{ordernum},#{qrcodecode},#{merchantid},#{merchantname},#{mobile},#{channelid},#{merchantorderid},#{backforwardurl},#{expireddate},#{expiredminute},#{qrcodeaisleid},#{qrcodeaislecode},#{qrcodeaislename},#{agentid},#{channelname},#{agentincome},#{qrcodeid},#{qrcodename},#{qrcodeordernum},#{accnumer},#{amount},#{collection},#{exchange},#{realamount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{qrcode},#{type},#{dynamic},#{resulturl},#{fewamount},#{notifyurl},#{notifystatus},#{incomeamount},#{merchantincomeamount},#{channelincomeamount},#{inipaddress},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		income(id,tenant_id,merchantuserid,ordernum,merchantid,merchantname,merchantcode,channelid,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislename,agentid,channelname,agentincome,qrcodeid,qrcodename,qrcodeordernum,qrcodeuserid,amount,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,resulturl,fewamount,notifyurl,notifystatus,remark)
+		income(id,tenant_id,accname,ordernum,merchantid,merchantname,mobile,channelid,merchantorderid,backforwardurl,expireddate,expiredminute,qrcodeaisleid,qrcodeaislename,agentid,channelname,agentincome,qrcodeid,qrcodename,qrcodeordernum,accnumer,amount,realamount,status,successtime,backlong,create_by,create_time,update_by,update_time,qrcode,type,resulturl,fewamount,notifyurl,notifystatus,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{merchantuserid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{channelid},#{merchantorderid},#{backforwardurl},#{expireddate},#{expiredminute},#{qrcodeaisleid},#{qrcodeaislename},#{agentid},#{channelname},#{agentincome},#{qrcodeid},#{qrcodename},#{qrcodeordernum},#{qrcodeuserid},#{amount},#{realamount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{qrcode},#{type},#{resulturl},#{fewamount},#{notifyurl},#{notifystatus},#{remark})
+			(#{id},#{tenant_id},#{accname},#{ordernum},#{merchantid},#{merchantname},#{mobile},#{channelid},#{merchantorderid},#{backforwardurl},#{expireddate},#{expiredminute},#{qrcodeaisleid},#{qrcodeaislename},#{agentid},#{channelname},#{agentincome},#{qrcodeid},#{qrcodename},#{qrcodeordernum},#{accnumer},#{amount},#{realamount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{qrcode},#{type},#{resulturl},#{fewamount},#{notifyurl},#{notifystatus},#{remark})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -44,8 +44,8 @@
 			<if test="tenant_id != null">
 				tenant_id= #{tenant_id},
 			</if>
-			<if test="merchantuserid != null">
-				merchantuserid= #{merchantuserid},
+			<if test="accname != null">
+				accname= #{accname},
 			</if>
 			<if test="ordernum != null">
 				ordernum= #{ordernum},
@@ -56,8 +56,8 @@
 			<if test="merchantname != null">
 				merchantname= #{merchantname},
 			</if>
-			<if test="merchantcode != null">
-				merchantcode= #{merchantcode},
+			<if test="mobile != null">
+				mobile= #{mobile},
 			</if>
 			<if test="channelid != null">
 				channelid= #{channelid},
@@ -98,8 +98,8 @@
 			<if test="qrcodeordernum != null">
 				qrcodeordernum= #{qrcodeordernum},
 			</if>
-			<if test="qrcodeuserid != null">
-				qrcodeuserid= #{qrcodeuserid},
+			<if test="accnumer != null">
+				accnumer= #{accnumer},
 			</if>
 			<if test="amount != null">
 				amount= #{amount},
