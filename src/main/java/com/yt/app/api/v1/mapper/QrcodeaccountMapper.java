@@ -68,7 +68,7 @@ public interface QrcodeaccountMapper extends YtIBaseMapper<Qrcodeaccount> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Qrcodeaccount.class })
-	public Integer deleteByUserId(Long userid);
+	public Integer deleteByQrcodeId(Long qrcodeid);
 
 	/**
 	 * listcount
@@ -105,15 +105,6 @@ public interface QrcodeaccountMapper extends YtIBaseMapper<Qrcodeaccount> {
 	 */
 	@YtRedisCacheAnnotation(classs = Qrcodeaccount.class)
 	public List<Qrcodeaccount> listByArrayId(long[] id);
-
-	/**
-	 * getByUserId
-	 *
-	 * @param id id
-	 * @return Merchantaccount
-	 */
-	@YtRedisCacheAnnotation(classs = Qrcodeaccount.class)
-	public Qrcodeaccount getByUserId(Long userid);
 
 	/**
 	 * getByQrcodeId

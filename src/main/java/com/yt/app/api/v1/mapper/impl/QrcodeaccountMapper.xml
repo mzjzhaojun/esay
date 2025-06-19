@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.QrcodeaccountMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,userid,channelid,totalincome,toincomeamount,withdrawamount,towithdrawamount,balance,create_by,create_time,update_by,update_time,remark,version
+		id,tenant_id,userid,qrcodelid,totalincome,toincomeamount,withdrawamount,towithdrawamount,balance,create_by,create_time,update_by,update_time,remark,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -17,18 +17,18 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Qrcodeaccount">
 		insert into
-		qrcodeaccount(id,userid,channelid,create_by,create_time,update_by,update_time,remark)
+		qrcodeaccount(id,userid,qrcodelid,create_by,create_time,update_by,update_time,remark)
 		values
-		(#{id},#{userid},#{channelid},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		(#{id},#{userid},#{qrcodelid},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		qrcodeaccount(id,tenant_id,userid,channelid,totalincome,toincomeamount,withdrawamount,towithdrawamount,balance,create_by,create_time,update_by,update_time,remark)
+		qrcodeaccount(id,tenant_id,userid,qrcodelid,totalincome,toincomeamount,withdrawamount,towithdrawamount,balance,create_by,create_time,update_by,update_time,remark)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{userid},#{channelid},#{totalincome},#{toincomeamount},#{withdrawamount},#{towithdrawamount},#{balance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+			(#{id},#{tenant_id},#{userid},#{qrcodelid},#{totalincome},#{toincomeamount},#{withdrawamount},#{towithdrawamount},#{balance},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -36,10 +36,10 @@
 		delete from qrcodeaccount
 		where id = #{id}
 	</delete>
-	<!-- deleteByUserId -->
-	<delete id="deleteByUserId" parameterType="java.lang.Long">
+	<!-- deleteByQrcodeId -->
+	<delete id="deleteByQrcodeId" parameterType="java.lang.Long">
 		delete from qrcodeaccount
-		where userid = #{userid}
+		where qrcodelid = #{qrcodelid}
 	</delete>
 	<!-- update -->
 	<update id="put"
@@ -52,8 +52,8 @@
 			<if test="userid != null">
 				userid= #{userid},
 			</if>
-			<if test="channelid != null">
-				channelid= #{channelid},
+			<if test="qrcodelid != null">
+				qrcodelid= #{qrcodelid},
 			</if>
 			<if test="totalincome != null">
 				totalincome= #{totalincome},
@@ -100,22 +100,13 @@
 		where id = #{id}
 	</select>
 
-	<!--getByUserId -->
-	<select id="getByUserId" parameterType="java.lang.Long"
-		resultMap="ResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from qrcodeaccount
-		where userid = #{userid}
-	</select>
-	
 	<!--getByQrcodeId -->
 	<select id="getByQrcodeId" parameterType="java.lang.Long"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from qrcodeaccount
-		where channelid = #{channelid}
+		where qrcodelid = #{qrcodelid}
 	</select>
 	
 	<!-- getList -->

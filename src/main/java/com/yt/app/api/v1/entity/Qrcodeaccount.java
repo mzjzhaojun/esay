@@ -25,7 +25,7 @@ public class Qrcodeaccount extends YtBaseEntity<Qrcodeaccount> {
 	Long id;
 	Long tenant_id;
 	Long userid;
-	Long channelid;
+	Long qrcodelid;
 	Double totalincome;
 	Double toincomeamount;
 	Double withdrawamount;

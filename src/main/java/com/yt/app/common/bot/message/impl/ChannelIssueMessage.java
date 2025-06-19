@@ -6,10 +6,10 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import com.yt.app.api.v1.entity.Channel;
-import com.yt.app.api.v1.entity.Qrcodeaccount;
+import com.yt.app.api.v1.entity.Channelaccount;
 import com.yt.app.api.v1.entity.Tgchannelgroup;
 import com.yt.app.api.v1.mapper.ChannelMapper;
-import com.yt.app.api.v1.mapper.QrcodeaccountMapper;
+import com.yt.app.api.v1.mapper.ChannelaccountMapper;
 import com.yt.app.common.bot.message.UpdateChannelMessageService;
 import com.yt.app.common.util.DateTimeUtil;
 
@@ -21,12 +21,11 @@ import com.yt.app.common.util.DateTimeUtil;
  */
 @Component
 public class ChannelIssueMessage implements UpdateChannelMessageService {
-
-	@Autowired
-	private QrcodeaccountMapper qrcodeaccountmapper;
-
 	@Autowired
 	private ChannelMapper channelmapper;
+
+	@Autowired
+	private ChannelaccountMapper channelaccountmapper;
 
 	@Override
 	public SendMessage getUpdate(Update update, Tgchannelgroup tcg) {
@@ -44,7 +43,7 @@ public class ChannelIssueMessage implements UpdateChannelMessageService {
 						if (c.getName().equals(merchantname)) {
 //							qrcodeaccountorderservice.incomewithdrawTelegram(c, Double.valueOf(text[2]));
 						}
-						Qrcodeaccount qrcodeaccount = qrcodeaccountmapper.getByUserId(c.getUserid());
+						Channelaccount qrcodeaccount = channelaccountmapper.getByUserId(c.getUserid());
 						msg.append("\r\n渠道：*" + c.getName() + "*\r\n\r\n今日收入：" + c.getTodaycount() + " \r\n总共下发：" + qrcodeaccount.getWithdrawamount() + "\r\n总共收入：" + qrcodeaccount.getTotalincome() + " \r\n可用余额：" + qrcodeaccount.getBalance()
 								+ "\r\n  \r\n*" + DateTimeUtil.getDateTime() + "*");
 					}

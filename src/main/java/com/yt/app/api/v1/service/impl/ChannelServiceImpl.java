@@ -10,7 +10,6 @@ import com.yt.app.api.v1.mapper.ChannelMapper;
 import com.yt.app.api.v1.mapper.ChannelaccountMapper;
 import com.yt.app.api.v1.mapper.ChannelstatisticalreportsMapper;
 import com.yt.app.api.v1.mapper.IncomeMapper;
-import com.yt.app.api.v1.mapper.QrcodeaccountMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.ChannelService;
 import com.yt.app.api.v1.vo.IncomeVO;
@@ -26,7 +25,6 @@ import com.yt.app.api.v1.entity.Aislechannel;
 import com.yt.app.api.v1.entity.Channel;
 import com.yt.app.api.v1.entity.Channelaccount;
 import com.yt.app.api.v1.entity.Channelstatisticalreports;
-import com.yt.app.api.v1.entity.Qrcodeaccount;
 import com.yt.app.api.v1.entity.User;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
@@ -69,9 +67,6 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	private ChannelaccountMapper channelaccountmapper;
 
 	@Autowired
-	private QrcodeaccountMapper qrcodeaccountmapper;
-
-	@Autowired
 	private ChannelstatisticalreportsMapper channelstatisticalreportsmapper;
 
 	@Override
@@ -100,16 +95,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 		sm.setChannelid(t.getId());
 		sm.setBalance(0.00);
 		channelaccountmapper.post(sm);
-
-		Qrcodeaccount qa = new Qrcodeaccount();
-		qa.setTotalincome(0.00);
-		qa.setWithdrawamount(0.00);
-		qa.setTowithdrawamount(0.00);
-		qa.setToincomeamount(0.00);
-		qa.setUserid(u.getId());
-		qa.setChannelid(t.getId());
-		qa.setBalance(0.00);
-		qrcodeaccountmapper.post(qa);
+		
 		return i;
 	}
 
@@ -151,7 +137,6 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	public Integer delete(Long id) {
 		Channel t = mapper.get(id);
 		channelaccountmapper.deleteByUserId(t.getUserid());
-		qrcodeaccountmapper.deleteByUserId(t.getUserid());
 		usermapper.delete(t.getUserid());
 		return mapper.delete(id);
 	}

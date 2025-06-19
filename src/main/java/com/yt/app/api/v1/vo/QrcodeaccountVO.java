@@ -25,7 +25,7 @@ public class QrcodeaccountVO extends BaseVO {
 	Long id;
 	Long tenant_id;
 	Long userid;
-	Long channelid;
+	Long qrcodelid;
 	Object totalincome;
 	Object toincomeamount;
 	Object withdrawamount;

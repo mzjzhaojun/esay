@@ -873,8 +873,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 
 	// 添加qrcode订单
 	private QrcodeResultVO addOtherOrderMqd(Income income, Channel channel, Qrcodeaisle qas, Merchant mc, QrcodeSubmitDTO qs) {
+		//更新自营数据
 		qrcodeaccountservice.totalincome(income);
-		// 添加商戶订单
+		// 更新商户数据
 		incomemerchantaccountservice.totalincome(income);
 
 		QrcodeResultVO qr = new QrcodeResultVO();

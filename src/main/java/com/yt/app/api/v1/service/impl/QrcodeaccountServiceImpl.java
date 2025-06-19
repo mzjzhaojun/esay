@@ -11,7 +11,6 @@ import com.yt.app.api.v1.mapper.QrcodeaccountMapper;
 import com.yt.app.api.v1.mapper.QrcodeaccountrecordMapper;
 import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
-import com.yt.app.common.base.context.SysUserContext;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Payout;
@@ -308,9 +307,4 @@ public class QrcodeaccountServiceImpl extends YtBaseServiceImpl<Qrcodeaccount, L
 		}
 	}
 
-	@Override
-	public Qrcodeaccount getData() {
-		Qrcodeaccount t = mapper.getByUserId(SysUserContext.getUserId());
-		return t;
-	}
 }

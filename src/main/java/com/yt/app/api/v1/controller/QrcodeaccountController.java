@@ -38,14 +38,4 @@ public class QrcodeaccountController extends YtBaseEncipherControllerImpl<Qrcode
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
-	/**
-	 * 
-	 * 
-	 * @version 1.1
-	 */
-	@RequestMapping(value = "/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> data(HttpServletRequest request, HttpServletResponse response) {
-		Qrcodeaccount t = service.getData();
-		return new YtResponseEncryptEntity<Object>(new YtBody(t));
-	}
 }

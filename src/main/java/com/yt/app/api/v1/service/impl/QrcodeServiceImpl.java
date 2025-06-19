@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.QrcodeMapper;
+import com.yt.app.api.v1.mapper.QrcodeaccountMapper;
 import com.yt.app.api.v1.mapper.QrcodeaisleqrcodeMapper;
 import com.yt.app.api.v1.mapper.QrcodestatisticalreportsMapper;
 import com.yt.app.api.v1.mapper.QrcodetransferrecordMapper;
@@ -25,6 +26,7 @@ import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.alipay.api.response.AntMerchantExpandIndirectZftDeleteResponse;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Qrcode;
+import com.yt.app.api.v1.entity.Qrcodeaccount;
 import com.yt.app.api.v1.entity.Qrcodeaisleqrcode;
 import com.yt.app.api.v1.entity.Qrcodestatisticalreports;
 import com.yt.app.api.v1.entity.Qrcodetransferrecord;
@@ -67,6 +69,9 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	private QrcodeMapper qrcodemapper;
 
 	@Autowired
+	private QrcodeaccountMapper qrcodeaccountmapper;
+
+	@Autowired
 	private QrcodeaisleqrcodeMapper qrcodeaisleqrcodemapper;
 
 	@Autowired
@@ -80,6 +85,17 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 	public Integer post(Qrcode t) {
 		t.setUserid(SysUserContext.getUserId());
 		Integer i = mapper.post(t);
+
+		Qrcodeaccount qa = new Qrcodeaccount();
+		qa.setTotalincome(0.00);
+		qa.setWithdrawamount(0.00);
+		qa.setTowithdrawamount(0.00);
+		qa.setToincomeamount(0.00);
+		qa.setUserid(t.getUserid());
+		qa.setQrcodelid(t.getId());
+		qa.setBalance(0.00);
+		qrcodeaccountmapper.post(qa);
+
 		return i;
 	}
 
@@ -96,6 +112,7 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 		// 删除关联表
 		Integer i = mapper.delete(id);
 		Assert.equals(i, 1, ServiceConstant.DELETE_FAIL_MSG);
+		qrcodeaccountmapper.deleteByQrcodeId(id);
 		qrcodeaisleqrcodemapper.deleteByQrcodelId(id);
 		return i;
 	}
@@ -152,7 +169,6 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 		}
 		return jsonObject.getStr("outTradeNo");
 	}
-
 
 	@Override
 	public void updateDayValue(Qrcode c, String date) {

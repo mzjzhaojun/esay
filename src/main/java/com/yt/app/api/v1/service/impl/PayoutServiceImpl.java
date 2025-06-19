@@ -497,6 +497,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		pt.setNotifyurl(ss.getNotifyurl());
 		pt.setBankname(ss.getBankname());
 		pt.setMerchantorderid(ss.getMerchantorderid());
+		pt.setType(Integer.parseInt(ss.getPaytype()));
 		addPayout(pt, mc, ss.getPayaisle());
 		// 返回
 		PayResultVO sr = new PayResultVO();
@@ -515,7 +516,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setMerchantid(m.getId());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
-		t.setType(DictionaryResource.ORDERTYPE_19);
 		t.setOrdernum("OUT" + StringUtil.getOrderNum());// 系统单号
 		t.setMerchantordernum(NumberUtil.getOrderNo());
 		t.setMerchantcost(m.getOnecost());// 手续费
@@ -530,8 +530,6 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		if (aisle != null) {
 			t.setAisleid(aisle.getId());
 			t.setAislename(aisle.getName());
-			if (aisle.getType() == DictionaryResource.BANK_TYPE_121)
-				t.setType(DictionaryResource.ORDERTYPE_18);
 			////////////////////////////////////////////////////// 计算渠道渠道/////////////////////////////////////
 			List<Aislechannel> listac = aislechannelmapper.getByAisleId(t.getAisleid());
 			Assert.notEmpty(listac, "没有可用通道!");

@@ -119,7 +119,8 @@
 		c.dynamic dynamic,
 		c.smid smid,
 		c.expireminute expireminute,
-		c.remark remark
+		c.remark remark,
+		c.weight weight
 		FROM
 		qrcodeaisleqrcode ac
 		JOIN qrcodeaisle ae
@@ -146,7 +147,8 @@
 		c.dynamic dynamic,
 		c.smid smid,
 		c.expireminute expireminute,
-		c.remark remark
+		c.remark remark,
+		c.weight weight
 		FROM
 		qrcodeaisleqrcode ac
 		JOIN qrcodeaisle ae

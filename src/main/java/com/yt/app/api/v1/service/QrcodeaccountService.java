@@ -53,9 +53,4 @@ public interface QrcodeaccountService extends YtIBaseService<Qrcodeaccount, Long
 	 */
 	void updateWithdrawamount(Payout mao);
 
-	/**
-	 * 
-	 * @return
-	 */
-	Qrcodeaccount getData();
 }
