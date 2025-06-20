@@ -24,37 +24,37 @@ public class DictionaryResource implements Serializable {
 	public static final String ERROR = "20000"; // 系统异常
 
 	// 代收
-	public static final String KFAISLE = "KF"; // KF
-	public static final String EGAISLE = "二狗"; // 二狗
-	public static final String WDAISLE = "豌豆"; // WDAISLE
-	public static final String RBLAISLE = "日不落"; // WDAISLE
-	public static final String GZAISLE = "公子"; // WDAISLE
-	public static final String WJAISLE = "玩家"; // WJAISLE
-	public static final String FCAISLE = "翡翠"; // FCAISLE
-	public static final String AKLAISLE = "奥克兰"; // AKLAISLE
-	public static final String FHLAISLE = "飞黄运通"; // 飞黄运通
-	public static final String YSAISLE = "易生"; // 易生
-	public static final String XSAISLE = "新生"; // 新生
-	public static final String ZSAISLE = "张三";// 张三
-	public static final String TONGYUSNAISLE = "通源";// 通源
-	public static final String ONEPLUSAISLE = "oneplus";// oneplus
-	public static final String ALISAISLE = "阿力";// 阿力
+	public static final String KFAISLE = "KF";
+	public static final String EGAISLE = "二狗";
+	public static final String WDAISLE = "豌豆";
+	public static final String RBLAISLE = "日不落";
+	public static final String GZAISLE = "公子";
+	public static final String WJAISLE = "玩家";
+	public static final String FCAISLE = "翡翠";
+	public static final String AKLAISLE = "奥克兰";
+	public static final String FHLAISLE = "飞黄运通";
+	public static final String YSAISLE = "易生";
+	public static final String XSAISLE = "新生";
+	public static final String ZSAISLE = "张三";
+	public static final String TONGYUSNAISLE = "通源";
+	public static final String ONEPLUSAISLE = "oneplus";
+	public static final String ALISAISLE = "阿力";
 
 	// 代付
-	public static final String DFSNAISLE = "十年"; //
-	public static final String DFSSAISLE = "盛世"; //
-	public static final String DFTXAISLE = "天下"; //
-	public static final String DFYSAISLE = "易生"; //
-	public static final String DFXRAISLE = "旭日"; //
-	public static final String DFSXAISLE = "守信"; //
-	public static final String DFLJAISLE = "灵境"; //
-	public static final String DFHYTAISLE = "HYT"; //
-	public static final String DFXJAISLE = "仙剑"; //
-	public static final String DFQWAISLE = "青蛙"; //
-	public static final String DF8GAISLE = "8G"; //
-	public static final String DFHYAISLE = "环宇"; //
-	public static final String DFTYAISLE = "通银"; //
-	public static final String DFFTAISLE = "飞兔"; //
+	public static final String DFSNAISLE = "十年"; 
+	public static final String DFSSAISLE = "盛世"; 
+	public static final String DFTXAISLE = "天下"; 
+	public static final String DFYSAISLE = "易生"; 
+	public static final String DFXRAISLE = "旭日"; 
+	public static final String DFSXAISLE = "守信"; 
+	public static final String DFLJAISLE = "灵境"; 
+	public static final String DFHYTAISLE = "HYT"; 
+	public static final String DFXJAISLE = "仙剑"; 
+	public static final String DFQWAISLE = "青蛙"; 
+	public static final String DF8GAISLE = "8G"; 
+	public static final String DFHYAISLE = "环宇"; 
+	public static final String DFTYAISLE = "通银"; 
+	public static final String DFFTAISLE = "飞兔"; 
 	/**
 	 * 账户类型
 	 */

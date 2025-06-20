@@ -2668,6 +2668,94 @@ public class PayUtil {
 		return null;
 	}
 
+	// 福铁科技代收对接
+	public static JSONObject SendFUTIESubmit(Income pt, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			//
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("p0_Cmd", "PreCreate");
+			map.add("p1_Account", cl.getCode());
+			map.add("p2_Amt", String.format("%.2f", pt.getRealamount()));
+			map.add("p3_ProductCode", pt.getQrcodecode());
+			map.add("p4_subject", pt.getMerchantname());
+			map.add("p7_plat", "2000");
+			map.add("p9_Notify_Url", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + cl.getApireusultip());
+			map.add("p11_MerOrderNo", pt.getOrdernum());
+			String signContent = "p0_Cmd=PreCreate&p1_Account=" + cl.getCode() + "&p2_Amt=" + String.format("%.2f", pt.getRealamount()) + "&p3_ProductCode=" + pt.getQrcodecode() + "&p4_subject=" + pt.getMerchantname() + "&p7_plat=2000&p9_Notify_Url="
+					+ RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + cl.getApireusultip() + "&p11_MerOrderNo=" + pt.getOrdernum() + "&key=" + cl.getApikey();
+			String sign = MD5Utils.md5(signContent);
+
+			map.add("hmac", sign);
+			log.info(signContent + "sign:" + sign);
+			HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<String> sov = resttemplate.exchange(cl.getApiip() + "/Api/ApiHandler.ashx", HttpMethod.POST, httpEntity, String.class);
+			System.out.println(sov);
+//			Integer code = sov.getBody().getInt("Result");
+//			JSONObject data = sov.getBody().getJSONObject("data");
+//			log.info("福铁科技返回消息：" + data);
+//			if (code == 100) {
+//				return data;
+//			}
+		} catch (RestClientException e) {
+			log.info("福铁科技返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// 福铁科技代收查单
+	public static JSONObject SendFUTIEQuerySubmit(String orderid, Channel cl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			//
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("mchNo", cl.getCode());
+			map.add("appId", cl.getRemark());
+//			map.add("wayCode", pt.getQrcodecode());
+//			map.add("mchOrderNo", pt.getOrdernum());
+//			map.add("currency", "CNY");
+//			map.add("subject", DateTimeUtil.getNow().getTime());
+//			map.add("amount", Integer.parseInt(String.format("%.2f", pt.getRealamount()).replace(".", "")));
+//			map.add("notifyUrl", RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + cl.getApireusultip());
+//			map.add("clientIp", "127.0.0.1");
+//			map.add("signType", "MD5");
+//			map.add("divisionMode", 1);
+			map.add("version", "1.0");
+			map.add("body", DateTimeUtil.getNow().getTime());
+			map.add("reqTime", DateTimeUtil.getNow().getTime());
+
+			TreeMap<String, Object> sortedMap = new TreeMap<>(map);
+			String signContent = "";
+			for (String key : sortedMap.keySet()) {
+				signContent = signContent + key + "=" + map.getFirst(key) + "&";
+			}
+
+			signContent = signContent.substring(0, signContent.length() - 1);
+			signContent = signContent + "&key=" + cl.getApikey();
+			String sign = MD5Utils.md5(signContent);
+
+			map.add("sign", sign.toUpperCase());
+			log.info(signContent + "==" + sign.toUpperCase());
+			HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+			RestTemplate resttemplate = new RestTemplate();
+			//
+			ResponseEntity<JSONObject> sov = resttemplate.exchange(cl.getApiip() + "/api/pay/unifiedOrder", HttpMethod.POST, httpEntity, JSONObject.class);
+			JSONObject data = sov.getBody().getJSONObject("data");
+			log.info("福铁科技查单返回消息：" + data);
+			if (data.getInt("status") != null && data.getInt("status") == 1) {
+				return data;
+			}
+
+		} catch (RestClientException e) {
+			log.info("福铁科技查单返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 申請回单/////////////////////////////////////////////////
 	// 通银代付申请回单
 	public static String SendTYPayCertificate(String orderid, Channel cl) {
