@@ -1084,7 +1084,10 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		t.setNotifyurl(m.getApireusultip());
 		t.setMerchantcode(m.getCode());
 		t.setMerchantname(m.getName());
-		t.setType(DictionaryResource.ORDERTYPE_18);
+		if (t.getBankname().equals("支付宝"))
+			t.setType(DictionaryResource.ORDERTYPE_19);
+		else
+			t.setType(DictionaryResource.ORDERTYPE_18);
 		t.setOrdernum("OUT" + StringUtil.getOrderNum());// 系统单号
 		t.setMerchantorderid("OUTM" + StringUtil.getOrderNum());// 商户单号
 		t.setMerchantordernum(batchid);

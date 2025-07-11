@@ -64,6 +64,7 @@ public class ChannelBot extends TelegramLongPollingBot {
 	@Override
 	public void onUpdateReceived(Update update) {
 		Long chatid = update.hasMessage() ? update.getMessage().getChat().getId() : null;
+		log.info("Update: {}", update);
 		if (chatid == null) {
 			log.info("There isn't object Message or CallbackQuery! Update: {}", update);
 			return;

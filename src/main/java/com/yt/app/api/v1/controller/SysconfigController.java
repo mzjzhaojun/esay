@@ -17,6 +17,7 @@ import com.yt.app.common.util.RequestUtil;
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
 import com.yt.app.api.v1.service.SysconfigService;
 import com.yt.app.api.v1.entity.Sysconfig;
+import com.yt.app.api.v1.entity.Sysokx;
 
 /**
  * @author yyds
@@ -25,7 +26,7 @@ import com.yt.app.api.v1.entity.Sysconfig;
  */
 
 @RestController
-@RequestMapping("/rest/v1/payconfig")
+@RequestMapping("/rest/v1/sysconfig")
 public class SysconfigController extends YtBaseEncipherControllerImpl<Sysconfig, Long> {
 
 	@Autowired
@@ -38,14 +39,9 @@ public class SysconfigController extends YtBaseEncipherControllerImpl<Sysconfig,
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
 
-	/**
-	 * 
-	 * 
-	 * @version 1.1
-	 */
-	@RequestMapping(value = "/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public YtResponseEncryptEntity<Object> data(HttpServletRequest request, HttpServletResponse response) {
-		Sysconfig t = service.getUsdtExchangeData();
-		return new YtResponseEncryptEntity<Object>(new YtBody(t));
+	@RequestMapping(value = "/exchange", method = RequestMethod.GET)
+	public YtResponseEncryptEntity<Object> exchange(HttpServletRequest request, HttpServletResponse response) {
+		Sysokx sysconfig = service.getDataTopOne();
+		return new YtResponseEncryptEntity<Object>(new YtBody(sysconfig));
 	}
 }

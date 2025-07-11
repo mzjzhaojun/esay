@@ -8,9 +8,7 @@ import com.yt.app.api.v1.mapper.AgentMapper;
 import com.yt.app.api.v1.mapper.AgentaccountbankMapper;
 import com.yt.app.api.v1.mapper.AgentaccountorderMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
-import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.AgentaccountorderService;
-import com.yt.app.api.v1.service.SystemaccountService;
 import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.SysUserContext;
@@ -54,12 +52,12 @@ public class AgentaccountorderServiceImpl extends YtBaseServiceImpl<Agentaccount
 
 	@Autowired
 	private AgentaccountbankMapper agentaccountbankmapper;
-
-	@Autowired
-	private AgentaccountService agentaccountservice;
-
-	@Autowired
-	private SystemaccountService systemaccountservice;
+//
+//	@Autowired
+//	private AgentaccountService agentaccountservice;
+//
+//	@Autowired
+//	private SystemaccountService systemaccountservice;
 
 	@Override
 	@Transactional

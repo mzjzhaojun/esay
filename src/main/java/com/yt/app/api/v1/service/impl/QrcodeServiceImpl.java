@@ -226,7 +226,8 @@ public class QrcodeServiceImpl extends YtBaseServiceImpl<Qrcode, Long> implement
 
 	@Override
 	public void merchantexpandindirectzftdelete(Qrcode qrcode) {
-		AntMerchantExpandIndirectZftDeleteResponse afaqr = SelfPayUtil.AntMerchantExpandIndirectZftDelete(qrcode);
+		Qrcode pqrcode = mapper.get(qrcode.getPid());
+		AntMerchantExpandIndirectZftDeleteResponse afaqr = SelfPayUtil.AntMerchantExpandIndirectZftDelete(pqrcode,qrcode);
 		Assert.notNull(afaqr, "清退失败!");
 	}
 

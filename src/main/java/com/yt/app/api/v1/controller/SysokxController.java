@@ -37,4 +37,5 @@ public class SysokxController extends YtBaseEncipherControllerImpl<Sysokx, Long>
 		YtIPage<SysokxVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
+	
 }

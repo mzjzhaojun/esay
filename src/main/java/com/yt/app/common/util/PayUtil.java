@@ -1016,7 +1016,7 @@ public class PayUtil {
 			Map<String, String> map = new HashMap<String, String>();
 			BizContentVO bcv = new BizContentVO();
 			bcv.setAccountBookId(cl.getAislecode());
-			bcv.setExternalBatchOrderId(pt.getMerchantordernum());
+			bcv.setExternalBatchOrderId(pt.getOrdernum());
 			List<TransListVO> listpv = new ArrayList<TransListVO>();
 			TransListVO tlv = new TransListVO();
 			PayeeVO payee = new PayeeVO();

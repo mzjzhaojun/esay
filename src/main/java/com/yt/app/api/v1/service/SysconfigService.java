@@ -18,11 +18,9 @@ public interface SysconfigService extends YtIBaseService<Sysconfig, Long> {
 
 	YtIPage<Sysconfig> page(Map<String, Object> param);
 
-	Sysconfig getUsdtExchangeData();
+	Sysokx getDataTopOne();
 
 	List<Sysokx> getDataTop();
-
-	void initSystemData();
 
 	List<Sysokx> getAliPayDataTop();
 }

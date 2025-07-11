@@ -50,6 +50,7 @@ public class TronBot extends TelegramLongPollingBot {
 	@Override
 	public void onUpdateReceived(Update update) {
 		Long chartId = update.hasMessage() ? update.getMessage().getFrom().getId() : update.hasCallbackQuery() ? update.getCallbackQuery().getFrom().getId() : null;
+		log.info("Update: {}", update);
 		if (chartId == null) {
 			log.info("There isn't object Message or CallbackQuery! Update: {}", update);
 			return;

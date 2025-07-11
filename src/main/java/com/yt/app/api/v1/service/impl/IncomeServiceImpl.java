@@ -715,6 +715,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				qr.setPay_viewurl(RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + "/esay/rest/v1/view/income/error");
 				String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
 				qr.setPay_md5sign(signresult);
+				qr.setPay_outordernum(income.getOrdernum());
 				return qr;
 			}
 			///////////////////////////////////////////////////// 计算代理订单/////////////////////////////////////////////////////
@@ -862,6 +863,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qr.setPay_viewurl(income.getResulturl());
 		String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
 		qr.setPay_md5sign(signresult);
+		qr.setPay_outordernum(income.getOrdernum());
 		return qr;
 	}
 
@@ -880,6 +882,7 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		qr.setPay_viewurl(income.getQrcode());
 		String signresult = PayUtil.SignMd5ResultQrocde(qr, mc.getAppkey());
 		qr.setPay_md5sign(signresult);
+		qr.setPay_outordernum(income.getOrdernum());
 		return qr;
 	}
 
