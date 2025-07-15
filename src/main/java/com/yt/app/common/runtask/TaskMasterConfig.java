@@ -22,7 +22,6 @@ import com.yt.app.api.v1.service.IncomemerchantaccountService;
 import com.yt.app.api.v1.service.QrcodeaccountService;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.TenantIdContext;
-import com.yt.app.common.bot.TronBot;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.runnable.InComeNotifyThread;
 import com.yt.app.common.runnable.PayoutNotifyThread;
@@ -58,9 +57,6 @@ public class TaskMasterConfig {
 
 	@Autowired
 	private TronmemberorderMapper tronmemberordermapper;
-
-	@Autowired
-	private TronBot tronbot;
 
 	/**
 	 * 查询代付需要通知
@@ -179,7 +175,6 @@ public class TaskMasterConfig {
 				p.setRemark("超时充值兑换￥：" + p.getAmount());
 				tronmemberordermapper.put(p);
 				NumberUtil.removeExchangeFewAmount(p.getFewamount());
-				tronbot.notifyMermberCancel(p.getTgid(), p.getOrdernum(), p.getAmount());
 				TenantIdContext.remove();
 			}
 		}

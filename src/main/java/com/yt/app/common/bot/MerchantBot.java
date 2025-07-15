@@ -58,12 +58,12 @@ public class MerchantBot extends TelegramLongPollingBot {
 
 	@Override
 	public String getBotUsername() {
-		return "@FlyRabbitMBot";
+		return "兔子商户";
 	}
 
 	@Override
 	public String getBotToken() {
-		return "7472319600:AAGY998sxdVqHNiOVdW3OE6mnEj3KczMxto";
+		return "7898262980:AAFaEfXC3mKUaI2BlYhh8wRy5TiVhEaKuZw";
 	}
 
 	@Override
