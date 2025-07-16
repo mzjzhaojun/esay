@@ -38,10 +38,6 @@ public class Payoutmerchantstatisticalreports extends YtBaseEntity<Payoutmerchan
 	Object incomeuserpaysuccesscount;
 	Object payoutrate;
 	String dateval;
-	Long create_by;
-	java.util.Date create_time;
-	Long update_by;
-	java.util.Date update_time;
 	String remark;
 	Integer version;
 }

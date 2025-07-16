@@ -381,7 +381,7 @@
 		FROM
 		income
 		WHERE
-		status = 52
+		status = status in (52,54,55)
 		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
 		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
 	</select>
@@ -408,7 +408,7 @@
 		income
 		WHERE
 		merchantid = #{userid}
-		AND status = 52
+		AND status in (52,54,55)
 		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
 		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
 	</select>
@@ -436,7 +436,7 @@
 		income
 		WHERE
 		channelid = #{userid}
-		AND status = 52
+		AND status in (52,54,55)
 		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
 		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
 	</select>
@@ -464,7 +464,7 @@
 		income
 		WHERE
 		qrcodeid = #{userid}
-		AND status = 52
+		AND status in (52,54,55)
 		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
 		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
 	</select>
