@@ -1483,7 +1483,7 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 		String orderid = params.get("externalBatchOrderId").toString();
 		String status = params.get("status").toString();
 		log.info("通银通知返回消息：orderid" + orderid + " status:" + status);
-		Payout pt = mapper.getByMerchantOrdernum(orderid);
+		Payout pt = mapper.getByOrdernum(orderid);
 		if (pt != null) {
 			SysUserContext.setUserId(pt.getUserid());
 			TenantIdContext.setTenantId(pt.getTenant_id());
