@@ -381,7 +381,7 @@
 		FROM
 		income
 		WHERE
-		status = status in (52,54,55)
+		status in (52,54,55)
 		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
 		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
 	</select>
