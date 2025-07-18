@@ -17,7 +17,7 @@ import org.springframework.web.filter.GenericFilterBean;
 
 import com.yt.app.common.config.YtConfig;
 
-@Profile("master")
+@Profile("dev")
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class YtGenericFilter extends GenericFilterBean {
