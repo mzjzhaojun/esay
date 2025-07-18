@@ -91,6 +91,26 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 	@YtRedisCacheAnnotation(classs = Payout.class)
 	public List<PayoutVO> page(Map<String, Object> param);
 
+	
+	/**
+	 * countSuccess
+	 * 
+	 * @param param map
+	 * @return mapIncome
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public PayoutVO countSuccess(Map<String, Object> param);
+
+	/**
+	 * countSuccess
+	 * 
+	 * @param param map
+	 * @return mapIncome
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public PayoutVO countAll(Map<String, Object> param);
+	
+	
 	/**
 	 * listbyids
 	 * 

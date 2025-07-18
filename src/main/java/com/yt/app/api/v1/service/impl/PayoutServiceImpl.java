@@ -214,7 +214,9 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			mco.setStatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getStatus()));
 			mco.setNotifystatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getNotifystatus()));
 		});
-		return new YtPageBean<PayoutVO>(param, list, count);
+		PayoutVO invos = mapper.countSuccess(param);
+		PayoutVO invoa = mapper.countAll(param);
+		return new YtPageBean<PayoutVO>(param, list, count, invos.getOrdercount() == null ? 0 : invos.getOrdercount(), invos.getAmount() == null ? 0 : invos.getAmount(), invoa.getAmount() == null ? 0 : invoa.getAmount());
 	}
 
 	/**

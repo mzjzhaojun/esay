@@ -321,6 +321,95 @@
 		</where>
 	</select>
 	
+	<select id="countAll" parameterType="java.util.HashMap"
+		resultMap="ResultMapVO">
+		select 
+		count(*) as ordercount,
+		sum(amount) as amount
+		from payout
+		<where>
+			1=1
+			<if test="userid != null and userid != ''">
+				and userid = #{userid}
+			</if>
+			<if test="ordernum != null and ordernum != ''">
+				and ordernum = #{ordernum}
+			</if>
+			<if test="merchantordernum != null and merchantordernum != ''">
+				and merchantordernum = #{merchantordernum}
+			</if>
+			<if test="merchantorderid != null and merchantorderid != ''">
+				and merchantorderid = #{merchantorderid}
+			</if>
+			<if test="merchantname != null and merchantname != ''">
+				and merchantname = #{merchantname}
+			</if>
+			<if test="status != null and status != ''">
+				and status = #{status}
+			</if>
+			<if test="amount != null and amount != ''">
+				and amount = #{amount}
+			</if>
+			<if test="aislename != null and aislename != ''">
+				and aislename = #{aislename}
+			</if>
+			<if test="accnumer != null and accnumer != ''">
+				and accnumer = #{accnumer}
+			</if>
+			<if test="accname != null and accname != ''">
+				and accname = #{accname}
+			</if>
+			<if test="stime != null and etime != ''">
+				and create_time BETWEEN  #{stime} AND  #{etime}
+			</if>
+		</where>
+	</select>
+	
+	
+	<select id="countSuccess" parameterType="java.util.HashMap"
+		resultMap="ResultMapVO">
+		select 
+		count(*) as ordercount,
+		sum(amount) as amount
+		from payout
+		<where>
+			status in (52,57,58)
+			<if test="userid != null and userid != ''">
+				and userid = #{userid}
+			</if>
+			<if test="ordernum != null and ordernum != ''">
+				and ordernum = #{ordernum}
+			</if>
+			<if test="merchantordernum != null and merchantordernum != ''">
+				and merchantordernum = #{merchantordernum}
+			</if>
+			<if test="merchantorderid != null and merchantorderid != ''">
+				and merchantorderid = #{merchantorderid}
+			</if>
+			<if test="merchantname != null and merchantname != ''">
+				and merchantname = #{merchantname}
+			</if>
+			<if test="status != null and status != ''">
+				and status = #{status}
+			</if>
+			<if test="amount != null and amount != ''">
+				and amount = #{amount}
+			</if>
+			<if test="aislename != null and aislename != ''">
+				and aislename = #{aislename}
+			</if>
+			<if test="accnumer != null and accnumer != ''">
+				and accnumer = #{accnumer}
+			</if>
+			<if test="accname != null and accname != ''">
+				and accname = #{accname}
+			</if>
+			<if test="stime != null and etime != ''">
+				and create_time BETWEEN  #{stime} AND  #{etime}
+			</if>
+		</where>
+	</select>
+	
 	<select id="countMerchantOrder" resultMap="ResultMapVO">
 		SELECT
 		count(*) as ordercount,

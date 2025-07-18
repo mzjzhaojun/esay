@@ -28,6 +28,12 @@ public class YtPageBean<T> implements YtIPage<T>, Serializable {
 
 	private int totalCount = 0;
 
+	private int success = 0;
+
+	private double amout = 0;
+
+	private double successAmout = 0;
+
 	public YtPageBean(Object elements) {
 		this.values = elements;
 	}
@@ -39,6 +45,18 @@ public class YtPageBean<T> implements YtIPage<T>, Serializable {
 			elements = new ArrayList<>();
 		this.values = elements;
 		this.totalCount = totalCount;
+	}
+
+	public YtPageBean(Map<String, Object> param, List<T> elements, int totalCount, int success, double successAmout, double amout) {
+		this.pageNo = param.get(YtPageBeanEnum.PAGENO.getValue()) == null ? 0 : Integer.parseInt(param.get(YtPageBeanEnum.PAGENO.getValue()).toString());
+		this.pageSize = param.get(YtPageBeanEnum.PAGESIZE.getValue()) == null ? 0 : Integer.parseInt(param.get(YtPageBeanEnum.PAGESIZE.getValue()).toString());
+		if (elements == null)
+			elements = new ArrayList<>();
+		this.values = elements;
+		this.totalCount = totalCount;
+		this.success = success;
+		this.successAmout = successAmout;
+		this.amout = amout;
 	}
 
 	public YtPageBean(List<T> elements) {
@@ -104,5 +122,20 @@ public class YtPageBean<T> implements YtIPage<T>, Serializable {
 		if (totalCount == 0)
 			return totalCount;
 		return (totalCount + pageSize - 1) / pageSize;
+	}
+
+	@Override
+	public int getSuccess() {
+		return success;
+	}
+
+	@Override
+	public double getSuccessAmout() {
+		return successAmout;
+	}
+
+	@Override
+	public double getAmout() {
+		return amout;
 	}
 }

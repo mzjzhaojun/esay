@@ -91,6 +91,24 @@ public interface IncomeMapper extends YtIBaseMapper<Income> {
 	public List<IncomeVO> page(Map<String, Object> param);
 
 	/**
+	 * countSuccess
+	 * 
+	 * @param param map
+	 * @return mapIncome
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public IncomeVO countSuccess(Map<String, Object> param);
+
+	/**
+	 * countSuccess
+	 * 
+	 * @param param map
+	 * @return mapIncome
+	 */
+	@YtRedisCacheAnnotation(classs = Income.class)
+	public IncomeVO countAll(Map<String, Object> param);
+
+	/**
 	 * listbyids
 	 * 
 	 * @param id long[]ids

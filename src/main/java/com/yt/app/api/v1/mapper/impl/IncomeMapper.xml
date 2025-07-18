@@ -155,9 +155,10 @@
 		</set>
 		where id = #{id}
 	</update>
-	
+
 	<!-- update -->
-	<update id="updateBlock" parameterType="com.yt.app.api.v1.entity.Income">
+	<update id="updateBlock"
+		parameterType="com.yt.app.api.v1.entity.Income">
 		update income
 		<set>
 			<if test="blockaddress != null">
@@ -167,9 +168,9 @@
 				inipaddress= #{inipaddress}
 			</if>
 		</set>
-		where id = #{id} 
+		where id = #{id}
 	</update>
-	
+
 	<!--getById -->
 	<select id="get" parameterType="java.lang.Long"
 		resultMap="ResultMap">
@@ -213,7 +214,7 @@
 			<if test="name != null and name != ''">
 				and name LIKE CONCAT( '%', #{name} , '%' )
 			</if>
-				order by create_time desc LIMIT 1,20
+			order by create_time desc LIMIT 1,20
 		</where>
 	</select>
 	<!-- getMap -->
@@ -228,7 +229,8 @@
 				and ordernum = #{ordernum}
 			</if>
 			<if test="merchantorderid != null and merchantorderid != ''">
-				and merchantorderid = #{merchantorderid}  or ordernum = #{merchantorderid}
+				and merchantorderid = #{merchantorderid} or ordernum =
+				#{merchantorderid}
 			</if>
 			<if test="qrcodeordernum != null and qrcodeordernum != ''">
 				and qrcodeordernum = #{qrcodeordernum}
@@ -255,13 +257,15 @@
 				and create_time LIKE CONCAT(#{dateval} , '%')
 			</if>
 			<if test="qrcodeaislename != null and qrcodeaislename != ''">
-				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename} , '%' )
+				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename}
+				, '%' )
 			</if>
 			<if test="merchantname != null and merchantname != ''">
-				and merchantname LIKE CONCAT( '%', #{merchantname} , '%' )
+				and merchantname LIKE CONCAT( '%', #{merchantname} , '%'
+				)
 			</if>
 			<if test="stime != null and etime != ''">
-				and create_time BETWEEN  #{stime} AND  #{etime}
+				and create_time BETWEEN #{stime} AND #{etime}
 			</if>
 			<if test="orderBy != null and dir!= null">
 				order by ${orderBy} ${dir}
@@ -281,7 +285,8 @@
 				and ordernum = #{ordernum}
 			</if>
 			<if test="merchantorderid != null and merchantorderid != ''">
-				and merchantorderid = #{merchantorderid}  or ordernum = #{merchantorderid}
+				and merchantorderid = #{merchantorderid} or ordernum =
+				#{merchantorderid}
 			</if>
 			<if test="qrcodeordernum != null and qrcodeordernum != ''">
 				and qrcodeordernum = #{qrcodeordernum}
@@ -302,13 +307,103 @@
 				and status = #{status}
 			</if>
 			<if test="qrcodeaislename != null and qrcodeaislename != ''">
-				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename} , '%' )
+				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename}
+				, '%' )
 			</if>
 			<if test="merchantname != null and merchantname != ''">
-				and merchantname LIKE CONCAT( '%', #{merchantname} , '%' )
+				and merchantname LIKE CONCAT( '%', #{merchantname} , '%'
+				)
 			</if>
 			<if test="stime != null and etime != ''">
-				and create_time BETWEEN  #{stime} AND  #{etime}
+				and create_time BETWEEN #{stime} AND #{etime}
+			</if>
+		</where>
+	</select>
+	<select id="countSuccess" parameterType="java.util.HashMap"
+		resultMap="ResultMapVO">
+		SELECT
+		count(*) as ordercount,
+		sum(amount) as amount
+		FROM
+		income
+		<where>
+			status in (52,54,55)
+			<if test="ordernum != null and ordernum != ''">
+				and ordernum = #{ordernum}
+			</if>
+			<if test="merchantorderid != null and merchantorderid != ''">
+				and merchantorderid = #{merchantorderid} or ordernum =
+				#{merchantorderid}
+			</if>
+			<if test="qrcodeordernum != null and qrcodeordernum != ''">
+				and qrcodeordernum = #{qrcodeordernum}
+			</if>
+			<if test="qrcodeaislecode != null and qrcodeaislecode != ''">
+				and qrcodeaislecode = #{qrcodeaislecode}
+			</if>
+			<if test="qrcodecode != null and qrcodecode != ''">
+				and qrcodecode = #{qrcodecode}
+			</if>
+			<if test="qrcodename != null and qrcodename != ''">
+				and qrcodename = #{qrcodename}
+			</if>
+			<if test="amount != null and amount != ''">
+				and amount = #{amount}
+			</if>
+			<if test="qrcodeaislename != null and qrcodeaislename != ''">
+				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename}
+				, '%' )
+			</if>
+			<if test="merchantname != null and merchantname != ''">
+				and merchantname LIKE CONCAT( '%', #{merchantname} , '%'
+				)
+			</if>
+			<if test="stime != null and etime != ''">
+				and create_time BETWEEN #{stime} AND #{etime}
+			</if>
+		</where>
+	</select>
+	<select id="countAll" parameterType="java.util.HashMap"
+		resultMap="ResultMapVO">
+		SELECT
+		count(*) as ordercount,
+		sum(amount) as amount
+		FROM
+		income
+		<where>
+			1 = 1
+			<if test="ordernum != null and ordernum != ''">
+				and ordernum = #{ordernum}
+			</if>
+			<if test="merchantorderid != null and merchantorderid != ''">
+				and merchantorderid = #{merchantorderid} or ordernum =
+				#{merchantorderid}
+			</if>
+			<if test="qrcodeordernum != null and qrcodeordernum != ''">
+				and qrcodeordernum = #{qrcodeordernum}
+			</if>
+			<if test="qrcodeaislecode != null and qrcodeaislecode != ''">
+				and qrcodeaislecode = #{qrcodeaislecode}
+			</if>
+			<if test="qrcodecode != null and qrcodecode != ''">
+				and qrcodecode = #{qrcodecode}
+			</if>
+			<if test="qrcodename != null and qrcodename != ''">
+				and qrcodename = #{qrcodename}
+			</if>
+			<if test="amount != null and amount != ''">
+				and amount = #{amount}
+			</if>
+			<if test="qrcodeaislename != null and qrcodeaislename != ''">
+				and qrcodeaislename LIKE CONCAT( '%', #{qrcodeaislename}
+				, '%' )
+			</if>
+			<if test="merchantname != null and merchantname != ''">
+				and merchantname LIKE CONCAT( '%', #{merchantname} , '%'
+				)
+			</if>
+			<if test="stime != null and etime != ''">
+				and create_time BETWEEN #{stime} AND #{etime}
 			</if>
 		</where>
 	</select>
@@ -349,123 +444,156 @@
 			notifystatus = 62
 		</where>
 	</select>
-	
+
 	<!-- selectOrderSettlelist -->
-	<select id="selectOrderSettlelist" parameterType="java.util.HashMap"
-		resultMap="ResultMap">
+	<select id="selectOrderSettlelist"
+		parameterType="java.util.HashMap" resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from income
 		<where>
-			status = 52 and dynamic = 1 and expireddate  &lt; NOW()
+			status = 52 and dynamic = 1 and expireddate &lt; NOW()
 		</where>
 	</select>
-	
-	<select id="countOrder"  resultMap="ResultMapVO" >
+
+	<select id="countOrder" resultMap="ResultMapVO">
 		SELECT
-		count(*)  as ordercount,
+		count(*)
+		as ordercount,
 		sum(amount) as amount,
 		sum(incomeamount) as incomeamount
 		FROM
 		income
 		WHERE
 		create_time >= CONCAT(#{dateval}, ' 00:00:00')
-		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
+		AND
+		create_time &lt;
+		CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
 	</select>
-	
-	<select id="countSuccessOrder"  resultMap="ResultMapVO" >
+
+	<select id="countSuccessOrder" resultMap="ResultMapVO">
 		SELECT
-		count(*) as ordercount,
+		count(*) as
+		ordercount,
 		sum(amount) as amount,
-		sum(incomeamount) as incomeamount
+		sum(incomeamount) as
+		incomeamount
 		FROM
 		income
 		WHERE
 		status in (52,54,55)
-		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
-		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
+		AND create_time >=
+		CONCAT(#{dateval}, '
+		00:00:00')
+		AND create_time &lt; CONCAT(#{dateval}
+		+ INTERVAL 1 DAY,'
+		00:00:00')
 	</select>
-	
+
 	<select id="countMerchantOrder" resultMap="ResultMapVO">
 		SELECT
-		count(*) as ordercount,
+		count(*) as
+		ordercount,
 		sum(amount) as amount,
-		sum(merchantincomeamount) as incomeamount
+		sum(merchantincomeamount) as
+		incomeamount
 		FROM
 		income
 		WHERE
 		merchantid = #{userid}
-		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
-		AND create_time &lt; CONCAT(#{dateval} +INTERVAL 1 DAY,' 00:00:00')
+		AND create_time >=
+		CONCAT(#{dateval}, ' 00:00:00')
+		AND create_time &lt; CONCAT(#{dateval}
+		+INTERVAL 1 DAY,' 00:00:00')
 	</select>
 
 	<select id="countMerchantSuccessOrder" resultMap="ResultMapVO">
 		SELECT
-		count(*) as ordercount,
+		count(*)
+		as ordercount,
 		sum(amount) as amount,
-		sum(merchantincomeamount) as incomeamount
+		sum(merchantincomeamount) as
+		incomeamount
 		FROM
 		income
 		WHERE
 		merchantid = #{userid}
-		AND status in (52,54,55)
+		AND status in
+		(52,54,55)
 		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
-		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
+		AND
+		create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
 	</select>
-	
-	
+
+
 	<select id="countChannelOrder" resultMap="ResultMapVO">
 		SELECT
-		count(*) as ordercount,
+		count(*) as
+		ordercount,
 		sum(amount) as amount,
-		sum(merchantincomeamount) as incomeamount
+		sum(merchantincomeamount) as
+		incomeamount
 		FROM
 		income
 		WHERE
 		channelid = #{userid}
-		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
-		AND create_time &lt; CONCAT(#{dateval} +INTERVAL 1 DAY,' 00:00:00')
+		AND create_time >=
+		CONCAT(#{dateval}, ' 00:00:00')
+		AND create_time &lt; CONCAT(#{dateval}
+		+INTERVAL 1 DAY,' 00:00:00')
 	</select>
 
 	<select id="countChannelSuccessOrder" resultMap="ResultMapVO">
 		SELECT
-		count(*) as ordercount,
+		count(*)
+		as ordercount,
 		sum(amount) as amount,
-		sum(merchantincomeamount) as incomeamount
+		sum(merchantincomeamount) as
+		incomeamount
 		FROM
 		income
 		WHERE
 		channelid = #{userid}
-		AND status in (52,54,55)
+		AND status in
+		(52,54,55)
 		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
-		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
+		AND
+		create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
 	</select>
-	
-	
+
+
 	<select id="countQrcodeOrder" resultMap="ResultMapVO">
 		SELECT
-		count(*) as ordercount,
+		count(*) as
+		ordercount,
 		sum(amount) as amount,
-		sum(merchantincomeamount) as incomeamount
+		sum(merchantincomeamount) as
+		incomeamount
 		FROM
 		income
 		WHERE
 		qrcodeid = #{userid}
-		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
-		AND create_time &lt; CONCAT(#{dateval} +INTERVAL 1 DAY,' 00:00:00')
+		AND create_time >=
+		CONCAT(#{dateval}, ' 00:00:00')
+		AND create_time &lt; CONCAT(#{dateval}
+		+INTERVAL 1 DAY,' 00:00:00')
 	</select>
 
 	<select id="countQrcodeSuccessOrder" resultMap="ResultMapVO">
 		SELECT
-		count(*) as ordercount,
+		count(*) as
+		ordercount,
 		sum(amount) as amount,
-		sum(merchantincomeamount) as incomeamount
+		sum(merchantincomeamount) as
+		incomeamount
 		FROM
 		income
 		WHERE
 		qrcodeid = #{userid}
-		AND status in (52,54,55)
+		AND status in
+		(52,54,55)
 		AND create_time >= CONCAT(#{dateval}, ' 00:00:00')
-		AND create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
+		AND
+		create_time &lt; CONCAT(#{dateval} + INTERVAL 1 DAY,' 00:00:00')
 	</select>
 </mapper>

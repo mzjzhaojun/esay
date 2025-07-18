@@ -166,7 +166,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 			mco.setNotifystatusname(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getNotifystatus()));
 			mco.setTypename(RedisUtil.get(SystemConstant.CACHE_SYS_DICT_PREFIX + mco.getType()));
 		});
-		return new YtPageBean<IncomeVO>(param, list, count);
+		IncomeVO invos = mapper.countSuccess(param);
+		IncomeVO invoa = mapper.countAll(param);
+		return new YtPageBean<IncomeVO>(param, list, count, invos.getOrdercount() == null ? 0 : invos.getOrdercount(), invos.getAmount() == null ? 0 : invos.getAmount(), invoa.getAmount() == null ? 0 : invoa.getAmount());
 	}
 
 	@Override
