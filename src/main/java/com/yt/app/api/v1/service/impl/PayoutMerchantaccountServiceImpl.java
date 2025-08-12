@@ -422,7 +422,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void setPretowithdrawamount(PayoutMerchantaccount ma, Payout maaj) {
 		// 待支出金额
-		ma.setTowithdrawamount(ma.getTowithdrawamount() + maaj.getAmount());
+		ma.setTowithdrawamount(ma.getTowithdrawamount() + maaj.getMerchantpay());
 		ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
 		mapper.put(ma);
 
@@ -435,7 +435,7 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void cancelPretowithdrawamount(PayoutMerchantaccount ma, Payout maaj) {
 		// 待支出金额
-		ma.setTowithdrawamount(ma.getTowithdrawamount() - maaj.getAmount());
+		ma.setTowithdrawamount(ma.getTowithdrawamount() - maaj.getMerchantpay());
 		ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
 		mapper.put(ma);
 
@@ -447,17 +447,17 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void successWithdrawamount(PayoutMerchantaccount ma, Payout pm) {
 		// 总支出金额更新
-		ma.setWithdrawamount(ma.getWithdrawamount() + pm.getAmount());
+		ma.setWithdrawamount(ma.getWithdrawamount() + pm.getMerchantpay());
 		// 待支出减掉
-		ma.setTowithdrawamount(ma.getTowithdrawamount() - pm.getAmount());
+		ma.setTowithdrawamount(ma.getTowithdrawamount() - pm.getMerchantpay());
 		ma.setBalance(ma.getTotalincome() - ma.getWithdrawamount() - ma.getTowithdrawamount());
 		mapper.put(ma);
 
 		Merchant m = merchantmapper.get(ma.getMerchantid());
 		// 总支出
-		m.setCount(m.getCount() + pm.getAmount());
+		m.setCount(m.getCount() + pm.getMerchantpay());
 		// 当日支出
-		m.setTodaycount(m.getTodaycount() + pm.getAmount());
+		m.setTodaycount(m.getTodaycount() + pm.getMerchantpay());
 		// 代付成功订单
 		m.setSuccess(m.getSuccess() + 1);
 		// 余额
@@ -489,13 +489,13 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 			maaj.setPretotalincome(ma.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(ma.getToincomeamount());// 待确认收入
 			maaj.setPrewithdrawamount(ma.getWithdrawamount());// 总支出
-			maaj.setPretowithdrawamount(ma.getTowithdrawamount() + t.getAmount());// 待确认支出
+			maaj.setPretowithdrawamount(ma.getTowithdrawamount() + t.getMerchantpay());// 待确认支出
 			// 变更后
 			maaj.setPosttotalincome(ma.getTotalincome());// 总收入
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(ma.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("新代付￥：" + String.format("%.2f", t.getAmount()));
+			maaj.setRemark("新代付￥：" + String.format("%.2f", t.getMerchantpay()));
 			merchantaccountapplyjournalmapper.post(maaj);
 			//
 			setPretowithdrawamount(ma, t);
@@ -524,13 +524,13 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
 			maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			maaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmount());// 待确认支出
+			maaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getMerchantpay());// 待确认支出
 			// 变更后
 			maaj.setPosttotalincome(t.getTotalincome());// 总收入
 			maaj.setPosttoincomeamount(0.00);// 确认收入
-			maaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getAmount());// 总支出
-			maaj.setPosttowithdrawamount(mao.getAmount());// 确认支出
-			maaj.setRemark("代付成功￥：" + String.format("%.2f", mao.getAmount()));
+			maaj.setPostwithdrawamount(t.getWithdrawamount() + mao.getMerchantpay());// 总支出
+			maaj.setPosttowithdrawamount(mao.getMerchantpay());// 确认支出
+			maaj.setRemark("代付成功￥：" + String.format("%.2f", mao.getMerchantpay()));
 			merchantaccountapplyjournalmapper.post(maaj);
 			//
 			successWithdrawamount(t, mao);
@@ -559,13 +559,13 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 			maaj.setPretotalincome(t.getTotalincome());// 总收入
 			maaj.setPretoincomeamount(t.getToincomeamount());// 待确认收入
 			maaj.setPrewithdrawamount(t.getWithdrawamount());// 总支出
-			maaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getAmount());// 待确认支出
+			maaj.setPretowithdrawamount(t.getTowithdrawamount() - mao.getMerchantpay());// 待确认支出
 			// 变更后
 			maaj.setPosttotalincome(t.getTotalincome());// 总收入
 			maaj.setPosttoincomeamount(0.00);// 确认收入
 			maaj.setPostwithdrawamount(t.getWithdrawamount());// 总支出
 			maaj.setPosttowithdrawamount(0.00);// 确认支出
-			maaj.setRemark("取消代付￥：" + String.format("%.2f", mao.getAmount()));
+			maaj.setRemark("取消代付￥：" + String.format("%.2f", mao.getMerchantpay()));
 			merchantaccountapplyjournalmapper.post(maaj);
 			//
 			cancelPretowithdrawamount(t, mao);
