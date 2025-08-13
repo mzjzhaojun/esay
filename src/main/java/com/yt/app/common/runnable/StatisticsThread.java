@@ -60,10 +60,10 @@ public class StatisticsThread implements Runnable {
 		listm.forEach(m -> {
 			// 单日数据
 			if (m.getTodaycount() > 1) {
-				//代收
+				// 代收
 				if (m.getType() == DictionaryResource.MERCHANT_TYPE_IN)
 					merchantservice.updateIncome(m, dateval);
-				//代付
+				// 代付
 				else if (m.getType() == DictionaryResource.MERCHANT_TYPE_OUT)
 					merchantservice.updatePayout(m, dateval);
 			}

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yt.app.api.v1.mapper.CrownagentMapper">
+	<!-- Base_Column_List -->
+	<sql id="Base_Column_List">
+		id,tenant_id,name,nikname,code,status,type,level,channelid,cookie,username,password,email,domian,uid,ver,selmaxid,origin,create_by,create_time,update_by,update_time,remark,version
+	</sql>
+	<!-- ResultMap -->
+	<resultMap id="ResultMap"
+		type="com.yt.app.api.v1.entity.Crownagent">
+	</resultMap>
+	<!-- ResultMap -->
+	<resultMap id="ResultMapVO"
+		type="com.yt.app.api.v1.vo.CrownagentVO">
+	</resultMap>
+	<!-- add -->
+	<insert id="post"
+		parameterType="com.yt.app.api.v1.entity.Crownagent">
+		insert into
+		crownagent(id,name,nikname,code,status,type,level,channelid,cookie,username,password,email,domian,uid,ver,selmaxid,origin,create_by,create_time,update_by,update_time,remark)
+		values
+		(#{id},#{name},#{nikname},#{code},#{status},#{type},#{level},#{channelid},#{cookie},#{username},#{password},#{email},#{domian},#{uid},#{ver},#{selmaxid},#{origin},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+	</insert>
+	<!-- batchSava -->
+	<insert id="batchSava" parameterType="java.util.List">
+		insert into
+		crownagent(id,tenant_id,name,nikname,code,status,type,level,channelid,cookie,username,password,email,domian,uid,ver,selmaxid,origin,create_by,create_time,update_by,update_time,remark)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{id},#{tenant_id},#{name},#{nikname},#{code},#{status},#{type},#{level},#{channelid},#{cookie},#{username},#{password},#{email},#{domian},#{uid},#{ver},#{selmaxid},#{origin},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
+		</foreach>
+	</insert>
+	<!-- deleteById -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from crownagent
+		where id = #{id}
+	</delete>
+	<!-- update -->
+	<update id="put"
+		parameterType="com.yt.app.api.v1.entity.Crownagent">
+		update crownagent
+		<set>
+			<if test="tenant_id != null">
+				tenant_id= #{tenant_id},
+			</if>
+			<if test="name != null">
+				name= #{name},
+			</if>
+			<if test="nikname != null">
+				nikname= #{nikname},
+			</if>
+			<if test="code != null">
+				code= #{code},
+			</if>
+			<if test="status != null">
+				status= #{status},
+			</if>
+			<if test="type != null">
+				type= #{type},
+			</if>
+			<if test="level != null">
+				level= #{level},
+			</if>
+			<if test="channelid != null">
+				channelid= #{channelid},
+			</if>
+			<if test="cookie != null">
+				cookie= #{cookie},
+			</if>
+			<if test="username != null">
+				username= #{username},
+			</if>
+			<if test="password != null">
+				password= #{password},
+			</if>
+			<if test="email != null">
+				email= #{email},
+			</if>
+			<if test="domian != null">
+				domian= #{domian},
+			</if>
+			<if test="uid != null">
+				uid= #{uid},
+			</if>
+			<if test="ver != null">
+				ver= #{ver},
+			</if>
+			<if test="selmaxid != null">
+				selmaxid= #{selmaxid},
+			</if>
+			<if test="origin != null">
+				origin= #{origin},
+			</if>
+			<if test="create_by != null">
+				create_by= #{create_by},
+			</if>
+			<if test="create_time != null">
+				create_time= #{create_time},
+			</if>
+			<if test="update_by != null">
+				update_by= #{update_by},
+			</if>
+			<if test="update_time != null">
+				update_time= #{update_time},
+			</if>
+			<if test="remark != null">
+				remark= #{remark},
+			</if>
+			<if test="version != null">
+				version= #{version}+1
+			</if>
+		</set>
+		where id = #{id} and version = #{version}
+	</update>
+	<!--getById -->
+	<select id="get" parameterType="java.lang.Long"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from crownagent
+		where id = #{id}
+	</select>
+	<!-- getList -->
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from crownagent
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	<!-- getMap -->
+	<select id="page" parameterType="java.util.HashMap"
+		resultMap="ResultMapVO">
+		select
+		<include refid="Base_Column_List" />
+		from crownagent
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="orderBy != null and dir != null">
+				order by ${orderBy} ${dir}
+			</if>
+			<if test="pageStart != null and pageEnd != null">
+				LIMIT #{pageStart},#{pageEnd}
+			</if>
+		</where>
+	</select>
+	<!-- getCount -->
+	<select id="countlist" parameterType="java.util.HashMap"
+		resultType="int">
+		select count(*) from crownagent
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	<!-- listByArrayId -->
+	<select id="listByArrayId" parameterType="java.util.HashMap"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from crownagent
+		<where>
+			1=1
+			<if test="array != null and array.length > 0">
+				and id in
+				<foreach item="item" index="index" collection="array"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+</mapper>

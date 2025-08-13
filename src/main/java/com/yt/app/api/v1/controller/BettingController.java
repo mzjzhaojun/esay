@@ -15,27 +15,26 @@ import com.yt.app.common.common.yt.YtBody;
 import com.yt.app.common.util.RequestUtil;
 
 import com.yt.app.common.base.impl.YtBaseEncipherControllerImpl;
-import com.yt.app.api.v1.service.SysokxService;
-import com.yt.app.api.v1.entity.Sysokx;
-import com.yt.app.api.v1.vo.SysokxVO;
+import com.yt.app.api.v1.service.BettingService;
+import com.yt.app.api.v1.entity.Betting;
+import com.yt.app.api.v1.vo.BettingVO;
 
 /**
  * @author yyds
  * 
- * @version v1 @createdate2025-04-30 13:30:55
+ * @version v1 @createdate2025-08-12 22:27:16
  */
 
 @RestController
-@RequestMapping("/rest/v1/sysokx")
-public class SysokxController extends YtBaseEncipherControllerImpl<Sysokx, Long> {
+@RequestMapping("/rest/v1/betting")
+public class BettingController extends YtBaseEncipherControllerImpl<Betting, Long> {
 
 	@Autowired
-	private SysokxService service;
+	private BettingService service;
 
 	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> page(YtRequestDecryptEntity<Object> requestEntity, HttpServletRequest request, HttpServletResponse response) {
-		YtIPage<SysokxVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
+		YtIPage<BettingVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
-
 }

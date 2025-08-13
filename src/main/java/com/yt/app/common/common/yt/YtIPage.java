@@ -21,11 +21,11 @@ public interface YtIPage<T> extends Serializable {
 	int getCurrent();
 
 	int getPages();
-	
+
 	int getSuccess();
-	
+
 	double getSuccessAmout();
-	
+
 	double getAmout();
 
 	Object getRecords();

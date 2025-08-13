@@ -91,7 +91,6 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 	@YtRedisCacheAnnotation(classs = Payout.class)
 	public List<PayoutVO> page(Map<String, Object> param);
 
-	
 	/**
 	 * countSuccess
 	 * 
@@ -109,8 +108,7 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 	 */
 	@YtRedisCacheAnnotation(classs = Income.class)
 	public PayoutVO countAll(Map<String, Object> param);
-	
-	
+
 	/**
 	 * listbyids
 	 * 
@@ -137,7 +135,7 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 	 */
 	@YtRedisCacheAnnotation(classs = Payout.class)
 	public Payout getByMerchantOrderId(String merchantorderid);
-	
+
 	/**
 	 * get
 	 *

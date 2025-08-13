@@ -370,7 +370,7 @@ public class SelfPayUtil {
 	 * @param amount
 	 * @return
 	 */
-	public static AntMerchantExpandIndirectZftDeleteResponse AntMerchantExpandIndirectZftDelete(Qrcode pqrcode,Qrcode qrcode) {
+	public static AntMerchantExpandIndirectZftDeleteResponse AntMerchantExpandIndirectZftDelete(Qrcode pqrcode, Qrcode qrcode) {
 		try {
 			AlipayClient alipayClient = new DefaultAlipayClient(getAlipayConfig(pqrcode));
 			AntMerchantExpandIndirectZftDeleteRequest request = new AntMerchantExpandIndirectZftDeleteRequest();

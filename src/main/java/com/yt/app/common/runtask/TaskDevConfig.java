@@ -11,14 +11,14 @@ import com.yt.app.common.runnable.TronGetAddressThread;
 @Profile("dev")
 @Component
 public class TaskDevConfig implements CommandLineRunner {
-	
+
 	@Autowired
 	private ThreadPoolTaskExecutor threadpooltaskexecutor;
-	
-    @Override
-    public void run(String... args) throws Exception {
-    	System.out.println("================》》》》》》》》》》》》》》》》");
-    	TronGetAddressThread t1 = new TronGetAddressThread();
+
+	@Override
+	public void run(String... args) throws Exception {
+		System.out.println("================》》》》》》》》》》》》》》》》");
+		TronGetAddressThread t1 = new TronGetAddressThread();
 		threadpooltaskexecutor.execute(t1);
 		TronGetAddressThread t2 = new TronGetAddressThread();
 		threadpooltaskexecutor.execute(t2);
@@ -34,5 +34,5 @@ public class TaskDevConfig implements CommandLineRunner {
 		threadpooltaskexecutor.execute(t7);
 		TronGetAddressThread t8 = new TronGetAddressThread();
 		threadpooltaskexecutor.execute(t8);
-    }
+	}
 }

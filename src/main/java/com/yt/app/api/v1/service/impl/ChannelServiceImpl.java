@@ -95,7 +95,7 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 		sm.setChannelid(t.getId());
 		sm.setBalance(0.00);
 		channelaccountmapper.post(sm);
-		
+
 		return i;
 	}
 

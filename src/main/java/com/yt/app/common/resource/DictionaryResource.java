@@ -41,20 +41,20 @@ public class DictionaryResource implements Serializable {
 	public static final String ALISAISLE = "阿力";
 
 	// 代付
-	public static final String DFSNAISLE = "十年"; 
-	public static final String DFSSAISLE = "盛世"; 
-	public static final String DFTXAISLE = "天下"; 
-	public static final String DFYSAISLE = "易生"; 
-	public static final String DFXRAISLE = "旭日"; 
-	public static final String DFSXAISLE = "守信"; 
-	public static final String DFLJAISLE = "灵境"; 
-	public static final String DFHYTAISLE = "HYT"; 
-	public static final String DFXJAISLE = "仙剑"; 
-	public static final String DFQWAISLE = "青蛙"; 
-	public static final String DF8GAISLE = "8G"; 
-	public static final String DFHYAISLE = "环宇"; 
-	public static final String DFTYAISLE = "通银"; 
-	public static final String DFFTAISLE = "飞兔"; 
+	public static final String DFSNAISLE = "十年";
+	public static final String DFSSAISLE = "盛世";
+	public static final String DFTXAISLE = "天下";
+	public static final String DFYSAISLE = "易生";
+	public static final String DFXRAISLE = "旭日";
+	public static final String DFSXAISLE = "守信";
+	public static final String DFLJAISLE = "灵境";
+	public static final String DFHYTAISLE = "HYT";
+	public static final String DFXJAISLE = "仙剑";
+	public static final String DFQWAISLE = "青蛙";
+	public static final String DF8GAISLE = "8G";
+	public static final String DFHYAISLE = "环宇";
+	public static final String DFTYAISLE = "通银";
+	public static final String DFFTAISLE = "飞兔";
 	/**
 	 * 账户类型
 	 */

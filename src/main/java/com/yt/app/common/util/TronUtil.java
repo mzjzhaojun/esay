@@ -70,7 +70,6 @@ public class TronUtil {
 		return String.format("%0" + (bytes.length << 1) + "X", bi);
 	}
 
-
 	/**
 	 * Calculates the SHA-256 hash of the given bytes.
 	 *
@@ -142,7 +141,7 @@ public class TronUtil {
 		return preFixbyte == addressPreFixByte;
 		// Other rule;
 	}
-	
+
 	/**
 	 * 转换成hex地址
 	 *

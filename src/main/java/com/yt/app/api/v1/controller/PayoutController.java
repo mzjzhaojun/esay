@@ -186,8 +186,7 @@ public class PayoutController extends YtBaseEncipherControllerImpl<Payout, Long>
 		Integer i = service.fail(id);
 		return new YtResponseEntity<Object>(new YtBody(i));
 	}
-	
-	
+
 	/**
 	 * 申請回單
 	 * 

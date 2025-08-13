@@ -42,7 +42,6 @@ public interface QrcodeService extends YtIBaseService<Qrcode, Long> {
 	 */
 	String paytesteplcafrom(Map<String, Object> params);
 
-
 	/**
 	 * 统计
 	 * 
