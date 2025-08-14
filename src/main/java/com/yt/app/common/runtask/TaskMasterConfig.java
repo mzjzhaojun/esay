@@ -1,6 +1,7 @@
 package com.yt.app.common.runtask;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,12 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.alipay.api.response.AlipayTradeSettleConfirmResponse;
+import com.yt.app.api.v1.entity.Crownagent;
 import com.yt.app.api.v1.entity.Income;
 import com.yt.app.api.v1.entity.Payout;
 import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Tronmemberorder;
+import com.yt.app.api.v1.mapper.CrownagentMapper;
 import com.yt.app.api.v1.mapper.IncomeMapper;
 import com.yt.app.api.v1.mapper.PayoutMapper;
 import com.yt.app.api.v1.mapper.QrcodeMapper;
@@ -26,6 +29,7 @@ import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.runnable.InComeNotifyThread;
 import com.yt.app.common.runnable.PayoutNotifyThread;
 import com.yt.app.common.runnable.StatisticsThread;
+import com.yt.app.common.runnable.SynchronousBettingThread;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.NumberUtil;
 import com.yt.app.common.util.RedisUtil;
@@ -58,6 +62,9 @@ public class TaskMasterConfig {
 	@Autowired
 	private TronmemberorderMapper tronmemberordermapper;
 
+	@Autowired
+	private CrownagentMapper crownagentmapper;
+
 	/**
 	 * 查询代付需要通知
 	 * 
@@ -73,6 +80,21 @@ public class TaskMasterConfig {
 				PayoutNotifyThread nf = new PayoutNotifyThread(p.getId());
 				threadpooltaskexecutor.execute(nf);
 			}
+		}
+	}
+
+	/**
+	 * 查询足球注单
+	 * 
+	 * @throws InterruptedException
+	 */
+	@Scheduled(cron = "0/10 * * * * ?")
+	public void SynchronousBetting() throws InterruptedException {
+		TenantIdContext.removeFlag();
+		List<Crownagent> list = crownagentmapper.list(new HashMap<String, Object>());
+		for (Crownagent c : list) {
+			SynchronousBettingThread sf = new SynchronousBettingThread(c);
+			threadpooltaskexecutor.execute(sf);
 		}
 	}
 

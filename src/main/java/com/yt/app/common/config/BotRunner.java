@@ -9,9 +9,11 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
+import com.yt.app.common.bot.BookAccountBot;
 import com.yt.app.common.bot.ChannelBot;
 import com.yt.app.common.bot.MerchantBot;
 import com.yt.app.common.bot.MessageBot;
+import com.yt.app.common.bot.TronBot;
 
 /**
  * <p>
@@ -37,6 +39,12 @@ public class BotRunner implements CommandLineRunner {
 
 	@Autowired
 	private MessageBot messagebot;
+	
+	@Autowired
+	private BookAccountBot bookaccountbot;
+
+	@Autowired
+	private TronBot tronbot;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -49,6 +57,8 @@ public class BotRunner implements CommandLineRunner {
 		botsApi.registerBot(merchantbot);
 		botsApi.registerBot(channelbot);
 		botsApi.registerBot(messagebot);
+		botsApi.registerBot(bookaccountbot);
+		botsApi.registerBot(tronbot);
 		log.info("bot end...");
 	}
 

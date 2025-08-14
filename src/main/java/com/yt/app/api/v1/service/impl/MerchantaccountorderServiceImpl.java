@@ -388,6 +388,58 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		return i;
 	}
 
+	/**
+	 * app充值
+	 */
+	@Override
+	public Integer incomemanualapp(Merchantaccountorder t) {
+		if (t.getAmount() <= 0) {
+			throw new YtException("金额不能小于1");
+		}
+		Merchant m = null;
+		if (t.getMerchantid() == null) {
+			m = merchantmapper.getByUserId(SysUserContext.getUserId());
+			t.setUserid(SysUserContext.getUserId());
+		} else {
+			m = merchantmapper.get(t.getMerchantid());
+			t.setUserid(m.getUserid());
+		}
+		// 收入订单
+		t.setUsdtval(t.getAmount());
+		t.setMerchantid(m.getId());
+		t.setUsername(m.getName());
+		t.setNkname(m.getNikname());
+		t.setMerchantcode(m.getCode());
+		t.setStatus(DictionaryResource.ORDERSTATUS_50);
+		t.setAmountreceived((t.getAmount() * (t.getExchange() + t.getMerchantexchange())));
+		t.setType(DictionaryResource.ORDERTYPE_20);
+		t.setOrdernum("MT" + StringUtil.getOrderNum());
+		t.setRemark("商户充值￥：" + String.format("%.2f", t.getAmountreceived()));
+		Integer i = mapper.post(t);
+
+		// 收入账户和记录
+		payoutmerchantaccountservice.totalincome(t);
+		//
+		successmanualapp(t);
+		return i;
+	}
+
+	// app充值成功
+	public Integer successmanualapp(Merchantaccountorder mco) {
+		Integer i = 0;
+		Merchantaccountorder mao = mapper.get(mco.getId());
+		mao.setStatus(DictionaryResource.ORDERSTATUS_52);
+		i = mapper.put(mao);
+		if (i > 0) {
+			if (mao.getStatus() == DictionaryResource.ORDERSTATUS_52) {
+				payoutmerchantaccountservice.updateTotalincome(mao);
+			} else {
+				payoutmerchantaccountservice.cancleTotalincome(mao);
+			}
+		}
+		return i;
+	}
+
 	// 充值成功
 	@Override
 	public Integer incomemanual(Merchantaccountorder mco) {

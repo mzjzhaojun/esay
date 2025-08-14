@@ -37,4 +37,10 @@ public class CrownagentController extends YtBaseEncipherControllerImpl<Crownagen
 		YtIPage<CrownagentVO> pagebean = service.page(RequestUtil.requestDecryptEntityToParamMap(requestEntity));
 		return new YtResponseEncryptEntity<Object>(new YtBody(pagebean));
 	}
+
+	@RequestMapping(value = "/login", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> login(YtRequestDecryptEntity<Crownagent> requestEntity, HttpServletRequest request, HttpServletResponse response) {
+		Integer i = service.login(requestEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(i));
+	}
 }

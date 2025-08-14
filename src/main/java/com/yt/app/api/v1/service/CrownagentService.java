@@ -15,4 +15,7 @@ import com.yt.app.common.common.yt.YtIPage;
 
 public interface CrownagentService extends YtIBaseService<Crownagent, Long> {
 	YtIPage<CrownagentVO> page(Map<String, Object> param);
+	
+	//更新登录
+	Integer login(Crownagent t);
 }

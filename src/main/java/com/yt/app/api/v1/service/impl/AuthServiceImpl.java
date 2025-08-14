@@ -172,6 +172,8 @@ public class AuthServiceImpl implements AuthService {
 		String ip = AuthContext.getIp();
 		log.info(ip);
 		boolean isValid = false;
+		if (ip == null)
+			return RsaUtil.getPublicKey();
 		if (!AuthUtil.isMobileDevice(request.getHeader("User-Agent"))) {
 			// 判断ip 是否在配置内
 			List<Merchant> listm = merchantmapper.getListAll(new HashMap<String, Object>());

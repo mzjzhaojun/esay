@@ -129,6 +129,17 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 	 * 
 	 * @version 1.1
 	 */
+	@RequestMapping(value = "/appmanual", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public YtResponseEncryptEntity<Object> appmanual(YtRequestDecryptEntity<Merchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
+		Integer i = service.incomemanualapp(YtRequestDecryptEntity.getBody());
+		return new YtResponseEncryptEntity<Object>(new YtBody(i));
+	}
+
+	/**
+	 * app提现
+	 * 
+	 * @version 1.1
+	 */
 	@RequestMapping(value = "/appwithdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public YtResponseEncryptEntity<Object> appwithdraw(YtRequestDecryptEntity<Merchantaccountorder> YtRequestDecryptEntity, HttpServletRequest request, HttpServletResponse response) {
 		Integer i = service.incomewithdrawapp(YtRequestDecryptEntity.getBody());

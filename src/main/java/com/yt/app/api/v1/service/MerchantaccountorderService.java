@@ -37,6 +37,9 @@ public interface MerchantaccountorderService extends YtIBaseService<Merchantacco
 
 	// 提现取消
 	Integer payoutcancleWithdraw(Long id);
+	
+	// app充值
+	Integer incomemanualapp(Merchantaccountorder mco);
 
 	// app提现
 	Integer incomewithdrawapp(Merchantaccountorder mco);
