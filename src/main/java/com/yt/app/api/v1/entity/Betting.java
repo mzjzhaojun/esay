@@ -39,6 +39,8 @@ public class Betting extends YtBaseEntity<Betting> {
 	String gold;
 	String aresult;
 	String inradio;
+	String date;
+	String time;
 	String remark;
 	Integer version;
 }

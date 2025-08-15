@@ -1,6 +1,7 @@
 package com.yt.app.api.v1.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.CrownagentMapper;
@@ -11,8 +12,11 @@ import com.yt.app.api.v1.entity.Crownagent;
 import com.yt.app.api.v1.vo.CrownagentVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.util.FootBallUtil;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -53,10 +57,20 @@ public class CrownagentServiceImpl extends YtBaseServiceImpl<Crownagent, Long> i
 	}
 
 	@Override
-	public Integer login(Crownagent t) {
-		
-		
-		
+	public Integer login(Crownagent ct) {
+		Crownagent t = mapper.get(ct.getId());
+		ResponseEntity<String> str = FootBallUtil.LoginFootBall(t.getDomian(), t.getUsername(), t.getPassword(), t.getVer(), t.getOrigin());
+		if (str.getStatusCodeValue() == 200) {
+			t.setCookie(str.getHeaders().getFirst("Set-Cookie"));
+			JSONObject data = JSONUtil.parseObj(str.getBody());
+			if (data.getInt("code") == 102) {
+				t.setUid(data.getStr("uid"));
+			}
+			t.setSelmaxid("10");
+			t.setStatus(true);
+		} else {
+			t.setStatus(false);
+		}
 		Integer i = mapper.put(t);
 		Assert.equals(i, 1, ServiceConstant.UPDATE_FAIL_MSG);
 		return i;

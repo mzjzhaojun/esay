@@ -7,11 +7,13 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import com.yt.app.api.v1.entity.Tgmessagegroup;
-import com.yt.app.api.v1.mapper.TgmessagegroupMapper;
+import com.yt.app.api.v1.entity.Betting;
+import com.yt.app.api.v1.entity.Crownagent;
+import com.yt.app.api.v1.entity.Tgfootballgroup;
+import com.yt.app.api.v1.mapper.TgfootballgroupMapper;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.message.impl.ExchangeMessage;
-import com.yt.app.common.bot.message.impl.M2CMessage;
+import com.yt.app.common.bot.message.impl.NotifyFootballMessage;
 import com.yt.app.common.bot.message.impl.StartMessage;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,28 +21,28 @@ import lombok.extern.slf4j.Slf4j;
 @SuppressWarnings("deprecation")
 @Slf4j
 @Component
-public class MessageBot extends TelegramLongPollingBot {
+public class FootBallBot extends TelegramLongPollingBot {
 
 	@Autowired
-	private TgmessagegroupMapper tgmessagegroupmapper;
+	private TgfootballgroupMapper tgfootballgroupmapper;
 
 	@Autowired
 	private ExchangeMessage exchangemessage;
 
 	@Autowired
-	private M2CMessage m2cmessage;
+	private NotifyFootballMessage notifyfootballmessage;
 
 	@Autowired
 	private StartMessage startmessage;
 
 	@Override
 	public String getBotUsername() {
-		return " @feitumsgbot";
+		return " @footballmsgBot";
 	}
 
 	@Override
 	public String getBotToken() {
-		return "7896578980:AAEhDiJk11-kfyQELElassFuIMD-PLXkNAw";
+		return "8334925725:AAFUFW80UH1iQqux-xUXlmNk-GtTBtKiDtI";
 	}
 
 	@Override
@@ -53,15 +55,15 @@ public class MessageBot extends TelegramLongPollingBot {
 		}
 		try {
 			TenantIdContext.removeFlag();
-			Tgmessagegroup tmg = tgmessagegroupmapper.getByTgcGroupId(chatid);
+			Tgfootballgroup tmg = tgfootballgroupmapper.getByTgGroupId(chatid);
 			if (tmg == null) {
-				tmg = tgmessagegroupmapper.getByTgmGroupId(chatid);
+				tmg = tgfootballgroupmapper.getByTgGroupId(chatid);
 				if (tmg == null) {
-					tmg = new Tgmessagegroup();
-					tmg.setTgmid(chatid);
+					tmg = new Tgfootballgroup();
+					tmg.setTgid(chatid);
 					tmg.setStatus(true);
 					tmg.setTggroupname(update.getMessage().getChat().getTitle());
-					tgmessagegroupmapper.post(tmg);
+					tgfootballgroupmapper.post(tmg);
 					execute(startmessage.getUpdate(update));
 				}
 			}
@@ -70,12 +72,6 @@ public class MessageBot extends TelegramLongPollingBot {
 					execute(exchangemessage.getUpdate(update));
 				} else if (update.getMessage().getText().toUpperCase().equals("UA")) {
 					execute(exchangemessage.getAliUpdate(update));
-				} else if (update.getMessage().getText().equals("p") && update.getMessage().getReplyToMessage() != null) {
-					SendMessage smg = m2cmessage.getReplyUpdate(update, tmg);
-					if (update.getMessage().getReplyToMessage().hasPhoto()) {
-						execute(m2cmessage.getUpdateSendPhoto(update, smg.getChatId()));
-					}
-					execute(smg);
 				}
 			} else if (update.hasCallbackQuery()) {
 			} else if (update.hasMessage() && update.getMessage().hasPhoto()) {
@@ -91,4 +87,16 @@ public class MessageBot extends TelegramLongPollingBot {
 			throw new RuntimeException(e);
 		}
 	}
+
+	public void notifyFootBall(Crownagent ct, Betting bt) {
+		try {
+			SendMessage sm = notifyfootballmessage.getNotifyUpdate(ct, bt);
+			if (sm != null) {
+				execute(sm);
+			}
+		} catch (TelegramApiException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

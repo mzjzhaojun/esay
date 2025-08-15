@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.BettingMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,wagerstype,tid,teamc,teamh,site,showtextordertypeioratio,showtextleague,ordertype,numc,numh,name,gt,gold,aresult,inradio,remark,create_by,create_time,update_by,update_time,version
+		id,tenant_id,wagerstype,tid,teamc,teamh,site,showtextordertypeioratio,showtextleague,ordertype,numc,numh,name,gt,gold,aresult,inradio,date,time,remark,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -17,9 +17,9 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Betting">
 		insert into
-		betting(id,wagerstype,tid,teamc,teamh,site,showtextordertypeioratio,showtextleague,ordertype,numc,numh,name,gt,gold,aresult,inradio,remark,create_by,create_time,update_by,update_time)
+		betting(id,wagerstype,tid,teamc,teamh,site,showtextordertypeioratio,showtextleague,ordertype,numc,numh,name,gt,gold,aresult,inradio,date,time,remark,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{wagerstype},#{tid},#{teamc},#{teamh},#{site},#{showtextordertypeioratio},#{showtextleague},#{ordertype},#{numc},#{numh},#{name},#{gt},#{gold},#{aresult},#{inradio},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{wagerstype},#{tid},#{teamc},#{teamh},#{site},#{showtextordertypeioratio},#{showtextleague},#{ordertype},#{numc},#{numh},#{name},#{gt},#{gold},#{aresult},#{inradio},#{date},#{time},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
@@ -118,6 +118,15 @@
 		from betting
 		where id = #{id}
 	</select>
+	<!--getByTid -->
+	<select id="getByTid" parameterType="java.lang.String"
+		resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from betting
+		where tid = #{tid}
+	</select>
+	
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">

@@ -11,40 +11,41 @@ import com.yt.app.common.base.BaseVO;
 /**
  * @author zj default
  * 
- * @version v1 @createdate2025-08-12 22:27:16
+ * @version v1 @createdate2025-08-15 17:34:22
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class BettingVO extends BaseVO {
+public class TgfootballgroupVO extends BaseVO {
 
 	private static final long serialVersionUID = 1L;
 
 	Long id;
 	Long tenant_id;
-	String wagerstype;
-	String tid;
-	String teamc;
-	String teamh;
-	String site;
-	String showtextordertypeioratio;
-	String showtextleague;
-	String ordertype;
-	String numc;
-	String numh;
-	String name;
-	String gt;
-	String gold;
-	String aresult;
-	String inradio;
-	String date;
-	String time;
-	String remark;
+	Object crownagentid;
+	String crownagentname;
+	String crownagentcode;
+	Boolean status;
+	Long tgid;
+	String tggroupname;
+	String adminmangers;
+	String mangers;
+	String customermangers;
+	Object cost;
+	Object realtimeexchange;
+	Object costcount;
+	Object usdcount;
+	Object count;
+	Integer todaycountorder;
+	Integer countorder;
+	Object todayusdcount;
+	Object todaycount;
 	Long create_by;
 	java.util.Date create_time;
 	Long update_by;
 	java.util.Date update_time;
-	Integer version;
+	String remark;
+	String version;
 }

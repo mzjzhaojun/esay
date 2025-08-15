@@ -13,20 +13,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FootBallUtil {
 
-	public static String LoginFootBall(String url, String username, String password, String ver) {
+	public static ResponseEntity<String> LoginFootBall(String url, String username, String password, String ver, String origin) {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.add("Accept", "*/*");
-			headers.add("Accept-Encoding", "gzip, deflate, br, zstd");
 			headers.add("Accept-Language", "zh-CN,zh;q=0.9");
 			headers.add("Connection", "keep-alive");
 			headers.add("Content-Length", "139");
 			headers.add("Content-Type", "application/x-www-form-urlencoded");
 			headers.add("Host", "ag.hga027.com");
 			headers.add("Cookie",
-					"LPVID=FjOWY5NjAwY2E5NjBlZDll; isclick=mem_user=chggzq2*mem_user=chggzq3*ag_user=hhg12345*; ag_12115260_v=I%16%DBO%FFy%CA%81%FF%D5y%18%3A%23%CEQ%E5%BA%F7%0E%87s%11-%16lw%F7%BE%2AI%9C; protocolstr=https; LPVID=FjOWY5NjAwY2E5NjBlZDll; LPSID-9137304=zj2v-MZUQnKA3tZj_tt5iA; ag_12057338_v=Y%98%21%B8%90N%17%DE-f%3B%F2%81v%7C%943G%84%8E%FA%D3%CE5R%E1O%9D%81%86W%C0");
-			headers.add("Origin", "https://ag.hga027.com");
-			headers.add("Referer", "https://ag.hga027.com/");
+					"LPVID=FjOWY5NjAwY2E5NjBlZDll; isclick=mem_user=cxcx1122a*ag_user=xykto408*mem_user=chggzq2*mem_user=chggzq3*ag_user=hhg12345*; protocolstr=https; LPVID=FjOWY5NjAwY2E5NjBlZDll; ag_12057338_v=%85%9As%8B%B4%D7k%95%86%90H%FD%16c%81%DB%09%0A%C8p%3B%D5%A5%FE%D1G%A3Q%9CK%CCq; LPSID-9137304=gUOHYR0TTr6SzvhY3rEp0g");
+			headers.add("Origin", origin);
+			headers.add("Referer", origin + "/");
 			headers.add("Sec-Ch-Ua", "Not)A;Brand';v='8', 'Chromium';v='138', 'Google Chrome';v='138'");
 			headers.add("Sec-Ch-Ua-Mobile", "?0");
 			headers.add("Sec-Ch-Ua-Platform", "'Windows'");
@@ -47,14 +46,13 @@ public class FootBallUtil {
 			map.add("langx", "zh-cn");
 			map.add("auto", "GEACDI");
 			map.add("blackbox", "");
-			
 
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 			RestTemplate resttemplate = new RestTemplate();
 
-			ResponseEntity<String> str = resttemplate.exchange("https://ag.hga027.com/transform.php?ver=version-08-07", HttpMethod.POST, httpEntity, String.class);
-
-			log.info(str.getBody());
+			ResponseEntity<String> str = resttemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
+			log.info("正确返回消息：" +  str.getBody());
+			return str;
 		} catch (Exception e) {
 			log.info("错误返回消息：" + e.getMessage());
 		}
@@ -65,7 +63,6 @@ public class FootBallUtil {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.add("Accept", "*/*");
-			headers.add("Accept-Encoding", "gzip, deflate, br, zstd");
 			headers.add("Accept-Language", "zh-CN,zh;q=0.9");
 			headers.add("Connection", "keep-alive");
 			headers.add("Content-Length", "139");
@@ -98,8 +95,7 @@ public class FootBallUtil {
 
 			ResponseEntity<String> str = resttemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
 
-			log.info(" 返回消息：" + str.getBody());
-
+			log.info("正确返回消息：" + str.getBody());
 			return str;
 		} catch (Exception e) {
 			log.info("错误返回消息：" + e.getMessage());
@@ -109,8 +105,9 @@ public class FootBallUtil {
 
 	public static void main(String[] args) {
 		System.setProperty("java.net.preferIPv4Stack", "true");
-		LoginFootBall("https://ag.hga027.com/transform.php?ver=version-08-07", "hhg12345a", "Aabb1188", "version-08-07");
-//		SendFootBall("https://ag.hga027.com/transform.php?ver=version-08-07", "4effbf0bm12057338l767205309xw", "1054831",
-//				"LPVID=FjOWY5NjAwY2E5NjBlZDll; isclick=mem_user=chggzq2*mem_user=chggzq3*ag_user=hhg12345*; ag_12115260_v=I%16%DBO%FFy%CA%81%FF%D5y%18%3A%23%CEQ%E5%BA%F7%0E%87s%11-%16lw%F7%BE%2AI%9C; protocolstr=https; ag_12057338_v=%F5yw%EA%D2%D3%DD%9Bq%B5%3A%C7%17%8C%00e%BD%95%8A%89o%01%BE%82p%84%BCm%09%EF%D72; LPVID=FjOWY5NjAwY2E5NjBlZDll; LPSID-9137304=Zyn0aM4ERqWxUdcs1E26kA");
+//		LoginFootBall("https://ag.hga027.com/transform.php?ver=version-08-07", "hhg12345a", "Aabb1188", "version-08-07");
+//		LoginFootBall("https://ag.hga027.com/transform.php?ver=version-08-07", "asd4447772", "Qwer1234", "version-08-07", "https://ag.hga027.com");
+		SendFootBall("https://ag.hga027.com/transform.php?ver=version-08-07", "649c4c66m12057338l767540488xw", "400063",
+				"LPVID=FjOWY5NjAwY2E5NjBlZDll; isclick=mem_user=cxcx1122a*ag_user=xykto408*mem_user=chggzq2*mem_user=chggzq3*ag_user=hhg12345*; protocolstr=https; LPVID=FjOWY5NjAwY2E5NjBlZDll; ag_12057338_v=eE%F9%12%40%F2%2B%95q%DD%DA%B4%FB%10%7B%D3%88%10%CAN%A5%1A3%95%9A%00%C0%D5%04%94%28%7E; LPSID-9137304=FYa2we2DTi-dILJUKDZj9w");
 	}
 }

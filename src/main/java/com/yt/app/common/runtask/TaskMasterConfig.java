@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
@@ -31,9 +32,13 @@ import com.yt.app.common.runnable.PayoutNotifyThread;
 import com.yt.app.common.runnable.StatisticsThread;
 import com.yt.app.common.runnable.SynchronousBettingThread;
 import com.yt.app.common.util.DateTimeUtil;
+import com.yt.app.common.util.FootBallUtil;
 import com.yt.app.common.util.NumberUtil;
 import com.yt.app.common.util.RedisUtil;
 import com.yt.app.common.util.SelfPayUtil;
+
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 
 @Component
 public class TaskMasterConfig {
@@ -95,6 +100,34 @@ public class TaskMasterConfig {
 		for (Crownagent c : list) {
 			SynchronousBettingThread sf = new SynchronousBettingThread(c);
 			threadpooltaskexecutor.execute(sf);
+		}
+	}
+
+	/**
+	 * 掉线重新登录
+	 * 
+	 * @throws InterruptedException
+	 */
+	@Scheduled(cron = "0/50 * * * * ?")
+	public void SynchronousFootballLogin() throws InterruptedException {
+		TenantIdContext.removeFlag();
+		List<Crownagent> list = crownagentmapper.list(new HashMap<String, Object>());
+		for (int i = 0; i < list.size(); i++) {
+			Crownagent t = list.get(i);
+			if (!t.getStatus()) {
+				ResponseEntity<String> str = FootBallUtil.LoginFootBall(t.getDomian(), t.getUsername(), t.getPassword(), t.getVer(), t.getOrigin());
+				if (str.getStatusCodeValue() == 200) {
+					t.setCookie(str.getHeaders().getFirst("Set-Cookie"));
+					JSONObject data = JSONUtil.parseObj(str.getBody());
+					if (data.getInt("code") == 102) {
+						t.setUid(data.getStr("uid"));
+					}
+					t.setStatus(true);
+				} else {
+					t.setStatus(false);
+				}
+				crownagentmapper.put(t);
+			}
 		}
 	}
 

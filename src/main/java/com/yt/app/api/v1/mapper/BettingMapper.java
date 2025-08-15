@@ -52,6 +52,15 @@ public interface BettingMapper extends YtIBaseMapper<Betting> {
 	public Betting get(Long id);
 
 	/**
+	 * getbyTid
+	 *
+	 * @param id id
+	 * @return Betting
+	 */
+	@YtRedisCacheAnnotation(classs = Betting.class)
+	public Betting getByTid(String tid);
+
+	/**
 	 * delete
 	 *
 	 * @param id id
