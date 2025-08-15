@@ -18,8 +18,8 @@ public class SynchronousBettingThread implements Runnable {
 
 	@Override
 	public void run() {
-//		ResponseEntity<String> str = FootBallUtil.SendFootBall("https://ag.hga027.com/transform.php?ver=version-08-07", crownagent.getUid(), crownagent.getSelmaxid(), crownagent.getCookie());
-//		log.info(str.getBody());
+		ResponseEntity<String> str = FootBallUtil.SendFootBall("https://ag.hga027.com/transform.php?ver=version-08-07", crownagent.getUid(), crownagent.getSelmaxid(), crownagent.getCookie());
+		log.info(str.getBody());
 	}
 
 }

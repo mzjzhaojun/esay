@@ -27,7 +27,6 @@ public class AppRun extends SpringBootServletInitializer {
 	}
 
 	public static void main(String[] args) throws Exception {
-		System.setProperty("java.net.preferIPv4Stack", "true");
 		SpringApplication.run(new Class[] { AppRun.class }, args);
 	}
 }
