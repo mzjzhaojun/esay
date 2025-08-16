@@ -3,7 +3,7 @@
 <mapper namespace="com.yt.app.api.v1.mapper.BettingMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,wagerstype,tid,teamc,teamh,site,showtextordertypeioratio,showtextleague,ordertype,numc,numh,name,gt,gold,aresult,inradio,date,time,remark,create_by,create_time,update_by,update_time,version
+		id,tenant_id,wagerstype,tid,teamc,teamh,site,showtextordertypeioratio,showtextleague,oddftype,numc,numh,name,gt,gold,ordertype,ordercon,date,time,remark,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
@@ -17,18 +17,18 @@
 	<insert id="post"
 		parameterType="com.yt.app.api.v1.entity.Betting">
 		insert into
-		betting(id,wagerstype,tid,teamc,teamh,site,showtextordertypeioratio,showtextleague,ordertype,numc,numh,name,gt,gold,aresult,inradio,date,time,remark,create_by,create_time,update_by,update_time)
+		betting(id,wagerstype,tid,teamc,teamh,site,showtextordertypeioratio,showtextleague,oddftype,numc,numh,name,gt,gold,ordertype,ordercon,date,time,remark,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{wagerstype},#{tid},#{teamc},#{teamh},#{site},#{showtextordertypeioratio},#{showtextleague},#{ordertype},#{numc},#{numh},#{name},#{gt},#{gold},#{aresult},#{inradio},#{date},#{time},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{wagerstype},#{tid},#{teamc},#{teamh},#{site},#{showtextordertypeioratio},#{showtextleague},#{oddftype},#{numc},#{numh},#{name},#{gt},#{gold},#{ordertype},#{ordercon},#{date},#{time},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		betting(id,tenant_id,wagerstype,tid,teamc,teamh,site,showtextordertypeioratio,showtextleague,ordertype,numc,numh,name,gt,gold,aresult,inradio,remark,create_by,create_time,update_by,update_time)
+		betting(id,tenant_id,wagerstype,tid,teamc,teamh,site,showtextordertypeioratio,showtextleague,oddftype,numc,numh,name,gt,gold,ordertype,ordercon,remark,create_by,create_time,update_by,update_time)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{wagerstype},#{tid},#{teamc},#{teamh},#{site},#{showtextordertypeioratio},#{showtextleague},#{ordertype},#{numc},#{numh},#{name},#{gt},#{gold},#{aresult},#{inradio},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+			(#{id},#{tenant_id},#{wagerstype},#{tid},#{teamc},#{teamh},#{site},#{showtextordertypeioratio},#{showtextleague},#{oddftype},#{numc},#{numh},#{name},#{gt},#{gold},#{ordertype},#{ordercon},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
@@ -65,8 +65,8 @@
 			<if test="showtextleague != null">
 				showtextleague= #{showtextleague},
 			</if>
-			<if test="ordertype != null">
-				ordertype= #{ordertype},
+			<if test="oddftype != null">
+				oddftype= #{oddftype},
 			</if>
 			<if test="numc != null">
 				numc= #{numc},
@@ -83,11 +83,11 @@
 			<if test="gold != null">
 				gold= #{gold},
 			</if>
-			<if test="aresult != null">
-				aresult= #{aresult},
+			<if test="ordertype != null">
+				ordertype= #{ordertype},
 			</if>
-			<if test="inradio != null">
-				inradio= #{inradio},
+			<if test="ordercon != null">
+				ordercon= #{ordercon},
 			</if>
 			<if test="remark != null">
 				remark= #{remark},

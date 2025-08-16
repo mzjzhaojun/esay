@@ -44,25 +44,28 @@ public class SynchronousBettingThread implements Runnable {
 						Betting sbt = bettingmapper.getByTid(betting.getStr("TID"));
 						if (sbt == null) {
 							bt = new Betting();
-							bt.setWagerstype(betting.getStr("WAGERSTYPE"));
+							String wt = betting.getStr("WAGERSTYPE");
+							String mwt = wt.substring(0, wt.length() - 4);
+							bt.setWagerstype(mwt);
 							bt.setTid(betting.getStr("TID"));
 							bt.setTeamc(betting.getStr("TEAM_C"));
 							bt.setTeamh(betting.getStr("TEAM_H"));
 							bt.setSite(betting.getStr("SITE"));
 							String show = betting.getStr("SHOWTEXT_ORDER_TYPE_IORATIO");
 							String mshow = show.substring(show.indexOf("@"), show.indexOf("@") + 27);
-							bt.setShowtextordertypeioratio("@" + mshow.substring(mshow.indexOf(">")));
+							int ind = mshow.indexOf(">") + 1;
+							bt.setShowtextordertypeioratio("@" + mshow.substring(ind));
 							bt.setShowtextleague(betting.getStr("SHOWTEXT_LEAGUE"));
-							bt.setOrdertype(betting.getStr("ODDF_TYPE"));
+							bt.setOddftype(betting.getStr("ODDF_TYPE"));
 							bt.setNumc(betting.getStr("NUM_C"));
 							bt.setNumh(betting.getStr("NUM_H"));
 							bt.setGt(betting.getStr("GT"));
 							bt.setGold(betting.getStr("GOLD"));
-							bt.setAresult(betting.getStr("ARESULT"));
+							bt.setOrdertype(betting.getStr("ORDER_TYPE"));
 							bt.setTime(betting.getStr("TIME"));
 							bt.setDate(betting.getStr("DATE"));
-							bt.setName(betting.getStr("TNAME"));
-							bt.setInradio(betting.getStr("IN_RADIO"));
+							bt.setName(betting.getStr("NAME0"));
+							bt.setOrdercon(betting.getStr("ORDER_CON"));
 							bettingmapper.post(bt);
 							footballbot.notifyFootBall(crownagent, bt);
 						}

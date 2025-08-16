@@ -35,8 +35,9 @@ public class NotifyFootballMessage implements UpdateMessageService {
 		Tgfootballgroup tcg = tgfootballgroupmapper.getByTgGroupId(ct.getChannelid());
 		if (tcg != null) {
 			sendMessage.setChatId(tcg.getTgid());
-			sendMessage.setText("会员:*" + ct.getName() + "*\r\n联赛: *" + bt.getShowtextleague() + "*\r\n盘口: *" + bt.getOrdertype() + "*\r\nGT: *" + bt.getGt() + "*\r\n类型: *" + bt.getWagerstype() + "*\r\n对阵: *" + bt.getTeamc() + " VS " + bt.getTeamh()
-					+ "*\r\n水位: *" + bt.getShowtextordertypeioratio() + "*\r\n注额: *" + bt.getGold() + "*\r\n日期: *" + bt.getTime() + " " + bt.getDate() + "*");
+			sendMessage.setText("代理:*" + ct.getName() + "*\r\n联赛: *" + "会员:*" + bt.getName() + "*\r\n联赛: *" + bt.getShowtextleague() + "*\r\n盘口: *" + bt.getOddftype() + "*\r\nGT: *" + bt.getGt() + "*\r\n类型: *" + bt.getWagerstype() + "*\r\n规则: *"
+					+ bt.getOrdertype() + " " + bt.getOrdercon() + "*\r\n对阵: *" + bt.getTeamh() + " VS " + bt.getTeamc() + "*\r\n水位: *" + bt.getShowtextordertypeioratio() + "*\r\n注额: *" + bt.getGold() + "*\r\n日期: *" + bt.getTime() + " "
+					+ bt.getDate() + "*");
 			sendMessage.enableMarkdown(true);
 		} else {
 			return null;

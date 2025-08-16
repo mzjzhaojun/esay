@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * 
  * @author dell
  *
- */
+ */ 
 @SpringBootApplication
 @EnableScheduling
 @EnableTransactionManagement
@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class AppRun extends SpringBootServletInitializer {
 
 	@Override
+	
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(AppRun.class);
 	}

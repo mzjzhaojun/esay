@@ -31,14 +31,14 @@ public class Betting extends YtBaseEntity<Betting> {
 	String site;
 	String showtextordertypeioratio;
 	String showtextleague;
-	String ordertype;
+	String oddftype;
 	String numc;
 	String numh;
 	String name;
 	String gt;
 	String gold;
-	String aresult;
-	String inradio;
+	String ordertype;
+	String ordercon;
 	String date;
 	String time;
 	String remark;
