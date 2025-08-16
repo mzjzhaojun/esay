@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class AppRun extends SpringBootServletInitializer {
 
 	@Override
-	
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(AppRun.class);
 	}
