@@ -28,8 +28,9 @@ public class CrownagentVO extends BaseVO {
 	String nikname;
 	String code;
 	Boolean status;
+	Boolean synchronous;
 	String type;
-	Integer level;
+	String channelname;
 	Long channelid;
 	String cookie;
 	String username;

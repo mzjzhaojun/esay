@@ -114,7 +114,7 @@ public class TaskMasterConfig {
 		List<Crownagent> list = crownagentmapper.list(new HashMap<String, Object>());
 		for (int i = 0; i < list.size(); i++) {
 			Crownagent t = list.get(i);
-			if (!t.getStatus()) {
+			if (t.getSynchronous() && !t.getStatus()) {
 				ResponseEntity<String> str = FootBallUtil.LoginFootBall(t.getDomian(), t.getUsername(), t.getPassword(), t.getVer(), t.getOrigin());
 				if (str.getStatusCodeValue() == 200) {
 					t.setCookie(str.getHeaders().getFirst("Set-Cookie"));

@@ -28,8 +28,9 @@ public class Crownagent extends YtBaseEntity<Crownagent> {
 	String nikname;
 	String code;
 	Boolean status;
+	Boolean synchronous;
 	String type;
-	Integer level;
+	String channelname;
 	Long channelid;
 	String cookie;
 	String username;

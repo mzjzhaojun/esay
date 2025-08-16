@@ -5,13 +5,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.yt.app.api.v1.mapper.CrownagentMapper;
+import com.yt.app.api.v1.mapper.TgfootballgroupMapper;
 import com.yt.app.api.v1.service.CrownagentService;
+import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.impl.YtBaseServiceImpl;
 import com.yt.app.api.v1.entity.Crownagent;
 import com.yt.app.api.v1.vo.CrownagentVO;
 import com.yt.app.common.common.yt.YtIPage;
 import com.yt.app.common.common.yt.YtPageBean;
+import com.yt.app.common.enums.YtDataSourceEnum;
 import com.yt.app.common.util.FootBallUtil;
 
 import cn.hutool.core.lang.Assert;
@@ -32,6 +35,9 @@ import java.util.Map;
 public class CrownagentServiceImpl extends YtBaseServiceImpl<Crownagent, Long> implements CrownagentService {
 	@Autowired
 	private CrownagentMapper mapper;
+
+	@Autowired
+	private TgfootballgroupMapper tgfootballgroupmapper;
 
 	@Override
 	@Transactional
@@ -54,6 +60,17 @@ public class CrownagentServiceImpl extends YtBaseServiceImpl<Crownagent, Long> i
 		}
 		List<CrownagentVO> list = mapper.page(param);
 		return new YtPageBean<CrownagentVO>(param, list, count);
+	}
+
+	@Override
+	@Transactional
+	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
+	public Integer put(Crownagent t) {
+		if (t.getChannelid() != null)
+			t.setChannelname(tgfootballgroupmapper.getByTgGroupId(t.getChannelid()).getTggroupname());
+		Integer i = mapper.put(t);
+		Assert.equals(i, 1, ServiceConstant.UPDATE_FAIL_MSG);
+		return i;
 	}
 
 	@Override

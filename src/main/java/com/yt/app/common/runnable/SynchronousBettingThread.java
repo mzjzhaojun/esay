@@ -36,8 +36,11 @@ public class SynchronousBettingThread implements Runnable {
 				if (data.getInt("code") == null) {
 					// 处理数据
 					JSONArray array = data.getJSONArray("wagers");
-					crownagent.setSelmaxid(data.getStr("maxid"));
-					mapper.put(crownagent);
+					String maxid = data.getStr("maxid");
+					if (!maxid.equals(crownagent.getSelmaxid())) {
+						crownagent.setSelmaxid(maxid);
+						mapper.put(crownagent);
+					}
 					Betting bt = null;
 					for (int i = 0; i < array.size(); i++) {
 						JSONObject betting = array.getJSONObject(i);
