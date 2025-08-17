@@ -108,7 +108,7 @@ public class TaskMasterConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Scheduled(cron = "0/50 * * * * ?")
+	@Scheduled(cron = "0 0/2 * * * ?")
 	public void SynchronousFootballLogin() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Crownagent> list = crownagentmapper.list(new HashMap<String, Object>());
