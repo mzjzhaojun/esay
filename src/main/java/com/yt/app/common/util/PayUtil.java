@@ -1174,6 +1174,69 @@ public class PayUtil {
 		return null;
 	}
 
+	// 捷欧代付对接
+	public static JSONObject SendJOSubmit(Payout pt, Channel cl) {
+		try {
+			long timestamp = System.currentTimeMillis();
+			Map<String, String> headers = new HashMap<>(6);
+			headers.put("client-type", "1");
+			headers.put("client-version", "1.0.0");
+			headers.put("api-secret", cl.getPrivatersa());
+			headers.put("api-key", cl.getApikey());
+			headers.put("access-timestamp", String.valueOf(timestamp));
+			headers.put("Content-Type", "application/json");
+
+			// 拼接字符串,签名开头保留，${} 全替换为header参数
+			headers.put("access-sign", JoUtil.getSign("pay_open_api_yA7Ib3lN79SCM${clientType}${clientVersion}${apiKey}${apiSecret}${timestamp}", timestamp));
+			// 开始请求API接口
+			Map<String, Object> param = new HashMap<>();
+			param.put("orderCode", pt.getOrdernum());
+			param.put("withdrawType", "2");
+			if (pt.getType().equals(DictionaryResource.ORDERTYPE_18)) {
+				param.put("withdrawType", "1");
+			}
+			param.put("cardNo", pt.getAccnumer());
+			param.put("name", pt.getAccname());
+			param.put("remark", "佣金");
+			param.put("money", String.format("%.2f", pt.getAmount()));
+			param.put("appConfigId", cl.getCode());
+			String results = HttpUtils.post(cl.getApiip() + "/v1/safe/withdraw", headers, param);
+			// 返回结果JSON字符串
+			log.info(" 捷欧返回消息：" + results);
+			return JSONUtil.parseObj(results);
+		} catch (RestClientException e) {
+			log.info(" 捷欧返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
+	// 捷欧代付查单
+	public static JSONObject SendJOSelectOrder(String orderid, Channel cl) {
+		try {
+			long timestamp = System.currentTimeMillis();
+			Map<String, String> headers = new HashMap<>(6);
+			headers.put("client-type", "1");
+			headers.put("client-version", "1.0.0");
+			headers.put("api-secret", cl.getPrivatersa());
+			headers.put("api-key", cl.getApikey());
+			headers.put("access-timestamp", String.valueOf(timestamp));
+			headers.put("Content-Type", "application/json");
+
+			// 拼接字符串,签名开头保留，${} 全替换为header参数
+			headers.put("access-sign", JoUtil.getSign("pay_open_api_yA7Ib3lN79SCM${clientType}${clientVersion}${apiKey}${apiSecret}${timestamp}", timestamp));
+			// 开始请求API接口
+			Map<String, String> param = new HashMap<>();
+			param.put("orderCode", orderid);
+			String results = HttpUtils.get(cl.getApiip() + "/v1/safe/query", headers, param);
+			// 返回结果JSON字符串
+			log.info(" 捷欧查单返回消息：" + results);
+			return JSONUtil.parseObj(results);
+		} catch (RestClientException e) {
+			log.info(" 捷欧查单返回消息：" + e.getMessage());
+		}
+		return null;
+	}
+
 	// 代付盘口通知
 	public static String SendPayoutNotify(String url, PayResultVO ss, String key) {
 

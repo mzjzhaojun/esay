@@ -47,9 +47,7 @@ public class SynchronousBettingThread implements Runnable {
 						Betting sbt = bettingmapper.getByTid(betting.getStr("TID"));
 						if (sbt == null) {
 							bt = new Betting();
-							String wt = betting.getStr("WAGERSTYPE");
-							String mwt = wt.substring(0, wt.length() - 4);
-							bt.setWagerstype(mwt);
+							bt.setWagerstype(betting.getStr("WAGERSTYPE"));
 							bt.setTid(betting.getStr("TID"));
 							bt.setTeamc(betting.getStr("TEAM_C"));
 							bt.setTeamh(betting.getStr("TEAM_H"));
@@ -58,7 +56,7 @@ public class SynchronousBettingThread implements Runnable {
 							String mshow = show.substring(show.indexOf("@"), show.indexOf("@") + 27);
 							int ind = mshow.indexOf(">") + 1;
 							bt.setShowtextordertypeioratio("@" + mshow.substring(ind));
-							bt.setShowtextleague(betting.getStr("SHOWTEXT_LEAGUE"));
+							bt.setShowtextleague(betting.getStr("SHOWTEXT_LEAGUE").replace("<br>", ""));
 							bt.setOddftype(betting.getStr("ODDF_TYPE"));
 							bt.setNumc(betting.getStr("NUM_C"));
 							bt.setNumh(betting.getStr("NUM_H"));

@@ -6,9 +6,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-
-import cn.hutool.json.JSONObject;
 
 public class JoUtil {
 	// 初始化需要用到的参数
@@ -16,7 +15,7 @@ public class JoUtil {
 	private static final String CLIENT_VERSION = "1.0.0";
 	private static final String API_SECRET = "af7ce51cac2c38466ad835480ba796b8";
 	private static final String API_KEY = "jo_pay_JYhmAlbDORI2J6HWOktwdr70B";
-	private static final String STRING_KEY = "open_api_vf12kwQ75v7xd333${clientType}${clientVersion}${apiKey}${apiSecret}${timestamp}";
+	private static final String STRING_KEY = "pay_open_api_yA7Ib3lN79SCM${clientType}${clientVersion}${apiKey}${apiSecret}${timestamp}";
 	private static final String URL = "https://pay.new.jieoukeji.cn/jo-pay-open-api";
 	private static final String PATH = "/v1/bank/info";// 示例接口：获取银行卡信息
 	private static final Pattern VALUE_PATTERN = Pattern.compile("\\$\\{([^}]*)\\}");
@@ -39,7 +38,7 @@ public class JoUtil {
 		headers.put("access-sign", getSign(STRING_KEY, timestamp));
 		// 开始请求API接口
 		Map<String, String> param = new HashMap<>();
-		param.put("cardNo", "123546345674573457");
+		param.put("cardNo", "6217003320101977638");
 		try {
 			String results = HttpUtils.get(URL + PATH, headers, param);
 			// 返回结果JSON字符串
@@ -58,13 +57,15 @@ public class JoUtil {
 	 */
 	public static String getSign(String format, long timestamp) {
 		JSONObject dataSign = new JSONObject();
-		dataSign.append("clientType", CLIENT_TYPE);
-		dataSign.append("clientVersion", CLIENT_VERSION);
-		dataSign.append("apiSecret", API_SECRET);
-		dataSign.append("apiKey", API_KEY);
-		dataSign.append("timestamp", timestamp);
+		dataSign.put("clientType", CLIENT_TYPE);
+		dataSign.put("clientVersion", CLIENT_VERSION);
+		dataSign.put("apiSecret", API_SECRET);
+		dataSign.put("apiKey", API_KEY);
+		dataSign.put("timestamp", timestamp);
 		String formatData = getFormatData(dataSign, format);
-		return md5(formatData);
+		String str = md5(formatData);
+		System.out.println(formatData + "===" + str);
+		return str;
 	}
 
 	/**
@@ -81,7 +82,7 @@ public class JoUtil {
 				String sign = matcher.group();
 				String key = matcher.group(1);
 				if (ObjectUtils.isNotEmpty(key)) {
-					format = format.replace(sign, data.containsKey(key) && ObjectUtils.isNotEmpty(data.getStr(key)) && !"null".equalsIgnoreCase(data.getStr(key)) ? data.getStr(key) : "");
+					format = format.replace(sign, data.containsKey(key) && ObjectUtils.isNotEmpty(data.getString(key)) && !"null".equalsIgnoreCase(data.getString(key)) ? data.getString(key) : "");
 				} else {
 					format = format.replace(sign, "");
 				}

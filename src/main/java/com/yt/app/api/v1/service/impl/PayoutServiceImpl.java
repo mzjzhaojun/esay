@@ -1513,6 +1513,33 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 	}
 
 	@Override
+	public void jocallback(Map<String, String> params) {
+		String orderid = params.get("orderCode").toString();
+		String status = params.get("status").toString();
+		log.info("捷哦通知返回消息：orderid" + orderid + " status:" + status);
+		Payout pt = mapper.getByOrdernum(orderid);
+		if (pt != null) {
+			SysUserContext.setUserId(pt.getUserid());
+			TenantIdContext.setTenantId(pt.getTenant_id());
+			Channel channel = channelmapper.get(pt.getChannelid());
+			String ip = AuthContext.getIp();
+			if (channel.getIpaddress() == null || channel.getIpaddress().indexOf(ip) == -1) {
+				throw new YtException("非法请求!");
+			}
+			JSONObject data = PayUtil.SendJOSelectOrder(orderid, channel);
+			// 查询渠道是否真实成功
+			JSONObject result = data.getJSONObject("result");
+			if (result.getInt("orderStatus")==1) {
+				paySuccess(pt);
+			} else if (result.getInt("orderStatus")==4) {
+				payFail(pt, data.getStr("message"));
+			}
+			SysUserContext.remove();
+			TenantIdContext.remove();
+		}
+	}
+
+	@Override
 	public void ftcallback(Map<String, String> params) {
 		String orderid = params.get("merchantorderid").toString();
 		String status = params.get("status").toString();
