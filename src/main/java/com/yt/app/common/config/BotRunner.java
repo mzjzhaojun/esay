@@ -12,7 +12,6 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import com.yt.app.common.bot.ChannelBot;
 import com.yt.app.common.bot.FootBallBot;
 import com.yt.app.common.bot.MerchantBot;
-import com.yt.app.common.bot.MessageBot;
 
 /**
  * <p>
@@ -37,9 +36,6 @@ public class BotRunner implements CommandLineRunner {
 	private ChannelBot channelbot;
 
 	@Autowired
-	private MessageBot messagebot;
-	
-	@Autowired
 	private FootBallBot footballbot;
 
 	@Override
@@ -52,9 +48,7 @@ public class BotRunner implements CommandLineRunner {
 		// 注册机器人
 		botsApi.registerBot(merchantbot);
 		botsApi.registerBot(channelbot);
-		botsApi.registerBot(messagebot);
 		botsApi.registerBot(footballbot);
-//		botsApi.registerBot(tronbot);
 		log.info("bot end...");
 	}
 
