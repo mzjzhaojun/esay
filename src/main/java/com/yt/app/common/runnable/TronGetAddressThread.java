@@ -23,10 +23,10 @@ public class TronGetAddressThread implements Runnable {
 				List<String> listaddress = TronUtil.generateAddress(liststringcode);
 				if (listaddress != null) {
 					String address = listaddress.get(2);
-					String endchar = address.substring(address.length() - 1);
-					String startchar = address.substring(address.length() - 7, address.length() - 1);
-					String sixchar = endchar + endchar + endchar + endchar + endchar + endchar;
-					if (sixchar.equalsIgnoreCase(startchar)) {
+					String endchar = "" + address.charAt(address.length() - 1);
+					String chars = endchar.toLowerCase();
+					String sixchar = chars + chars + chars + chars + chars + chars;
+					if (address.toLowerCase().endsWith(sixchar)) {
 						Tronaddress t = new Tronaddress();
 						t.setAddress(address);
 						t.setPrivatekey(listaddress.get(0));

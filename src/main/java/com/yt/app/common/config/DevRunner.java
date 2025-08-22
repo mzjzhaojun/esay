@@ -19,10 +19,10 @@ public class DevRunner implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		TronGetAddressThread t1 = new TronGetAddressThread();
 		threadpooltaskexecutor.execute(t1);
-//		TronGetAddressThread t2 = new TronGetAddressThread();
-//		threadpooltaskexecutor.execute(t2);
-//		TronGetAddressThread t3 = new TronGetAddressThread();
-//		threadpooltaskexecutor.execute(t3);
+		TronGetAddressThread t2 = new TronGetAddressThread();
+		threadpooltaskexecutor.execute(t2);
+		TronGetAddressThread t3 = new TronGetAddressThread();
+		threadpooltaskexecutor.execute(t3);
 //		TronGetAddressThread t4 = new TronGetAddressThread();
 //		threadpooltaskexecutor.execute(t4);
 //		TronGetAddressThread t5 = new TronGetAddressThread();
@@ -33,5 +33,9 @@ public class DevRunner implements CommandLineRunner {
 //		threadpooltaskexecutor.execute(t7);
 //		TronGetAddressThread t8 = new TronGetAddressThread();
 //		threadpooltaskexecutor.execute(t8);
+//		TronGetAddressThread t9 = new TronGetAddressThread();
+//		threadpooltaskexecutor.execute(t9);
+//		TronGetAddressThread t10 = new TronGetAddressThread();
+//		threadpooltaskexecutor.execute(t10);
 	}
 }
