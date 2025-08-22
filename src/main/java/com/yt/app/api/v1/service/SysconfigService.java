@@ -23,4 +23,6 @@ public interface SysconfigService extends YtIBaseService<Sysconfig, Long> {
 	List<Sysokx> getDataTop();
 
 	List<Sysokx> getAliPayDataTop();
+	
+	void initSystemData();
 }

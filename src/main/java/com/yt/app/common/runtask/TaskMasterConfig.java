@@ -24,6 +24,7 @@ import com.yt.app.api.v1.mapper.TronmemberorderMapper;
 import com.yt.app.api.v1.service.AgentaccountService;
 import com.yt.app.api.v1.service.IncomemerchantaccountService;
 import com.yt.app.api.v1.service.QrcodeaccountService;
+import com.yt.app.api.v1.service.SysconfigService;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.resource.DictionaryResource;
@@ -39,7 +40,9 @@ import com.yt.app.common.util.SelfPayUtil;
 
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class TaskMasterConfig {
 
@@ -69,6 +72,21 @@ public class TaskMasterConfig {
 
 	@Autowired
 	private CrownagentMapper crownagentmapper;
+	
+	@Autowired
+	private SysconfigService sysconfigservice;
+	
+	/**
+	 * 更新实时汇率
+	 * 
+	 * @throws InterruptedException
+	 */
+	@Scheduled(cron = "0/30 * * * * ?")
+	public void getOKXExchange() throws InterruptedException {
+		log.info("开始查询汇率》》》》》》》》》》");
+		sysconfigservice.initSystemData();
+		log.info("结束查询汇率》》》》》》》》》》");
+	}
 
 	/**
 	 * 查询代付需要通知
@@ -93,7 +111,7 @@ public class TaskMasterConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	//@Scheduled(cron = "0/10 * * * * ?")
+	@Scheduled(cron = "0/10 * * * * ?")
 	public void SynchronousBetting() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Crownagent> list = crownagentmapper.list(new HashMap<String, Object>());
@@ -108,7 +126,7 @@ public class TaskMasterConfig {
 	 * 
 	 * @throws InterruptedException
 	 */
-	//@Scheduled(cron = "0 0/2 * * * ?")
+	@Scheduled(cron = "0 0/2 * * * ?")
 	public void SynchronousFootballLogin() throws InterruptedException {
 		TenantIdContext.removeFlag();
 		List<Crownagent> list = crownagentmapper.list(new HashMap<String, Object>());
