@@ -203,10 +203,8 @@ public class Base64 {
 	}
 
 	public static void main(String[] args) {
-		String data = "中华人民共和国";
-		byte[] result = Base64.encode(data.getBytes());
-		System.out.println(data);
-		System.out.println(new String(result));
-		System.out.println(new String(Base64.decode(new String(result))));
+		String textteam = "<tt class=\"word_blue\">(2 - 0)<\\/tt><\\/li>";
+		Integer i = textteam.indexOf("(");
+		System.out.println(textteam.substring(i, i+7));
 	}
 }

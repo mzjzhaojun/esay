@@ -236,7 +236,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		t.setUsdtval(t.getAmount() / t.getExchange());
 		t.setType(DictionaryResource.ORDERTYPE_22);
 		t.setOrdernum("SHTX" + StringUtil.getOrderNum());
-		t.setRemark("商户提现￥：" + String.format("%.2f", t.getAmount()));
+		t.setRemark("商户代收提现￥：" + String.format("%.2f", t.getAmount()));
 		Integer i = mapper.post(t);
 
 		// 支出账户和记录
@@ -307,7 +307,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		t.setUsdtval(t.getAmount() / t.getExchange());
 		t.setType(DictionaryResource.ORDERTYPE_21);
 		t.setOrdernum("SHTX" + StringUtil.getOrderNum());
-		t.setRemark("商户提现￥：" + String.format("%.2f", t.getAmount()));
+		t.setRemark("商户代付提现￥：" + String.format("%.2f", t.getAmount()));
 		Integer i = mapper.post(t);
 
 		// 支出账户和记录
@@ -389,7 +389,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 	}
 
 	/**
-	 * app充值
+	 * 代付app充值
 	 */
 	@Override
 	public Integer incomemanualapp(Merchantaccountorder t) {
@@ -414,7 +414,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		t.setAmountreceived((t.getAmount() * (t.getExchange() + t.getMerchantexchange())));
 		t.setType(DictionaryResource.ORDERTYPE_20);
 		t.setOrdernum("MT" + StringUtil.getOrderNum());
-		t.setRemark("商户充值￥：" + String.format("%.2f", t.getAmountreceived()));
+		t.setRemark("商户APP充值￥：" + String.format("%.2f", t.getAmountreceived()));
 		Integer i = mapper.post(t);
 
 		// 收入账户和记录
@@ -424,7 +424,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		return i;
 	}
 
-	// app充值成功
+	// 代付app充值成功
 	public Integer successmanualapp(Merchantaccountorder mco) {
 		Integer i = 0;
 		Merchantaccountorder mao = mapper.get(mco.getId());
@@ -440,7 +440,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		return i;
 	}
 
-	// 充值成功
+	// 代付充值成功
 	@Override
 	public Integer incomemanual(Merchantaccountorder mco) {
 		User u = usermapper.get(SysUserContext.getUserId());
@@ -473,7 +473,7 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		return i;
 	}
 
-	// 代收提现app
+	// 代付提现app
 	@Override
 	public Integer incomewithdrawapp(Merchantaccountorder t) {
 		if (t.getAmount() <= 0) {
@@ -489,18 +489,39 @@ public class MerchantaccountorderServiceImpl extends YtBaseServiceImpl<Merchanta
 		}
 		// 支出订单
 		t.setMerchantid(m.getId());
-		t.setNkname(m.getName());
+		t.setUsername(m.getName());
+		t.setNkname(m.getNikname());
+		t.setMerchantcode(m.getCode());
 		t.setStatus(DictionaryResource.ORDERSTATUS_50);
 		t.setMerchantexchange(t.getExchange());
 		t.setAmountreceived((t.getAmount()));
 		t.setUsdtval(t.getAmount() / t.getExchange());
-		t.setType(DictionaryResource.ORDERTYPE_11);
+		t.setType(DictionaryResource.ORDERTYPE_21);
 		t.setOrdernum("SHTX" + StringUtil.getOrderNum());
-		t.setRemark("商户代收提现￥：" + String.format("%.2f", t.getAmount()));
+		t.setRemark("商户代付APP提现￥：" + String.format("%.2f", t.getAmount()));
 		Integer i = mapper.post(t);
 
 		// 支出账户和记录
-//			incomemerchantaccountservice.withdrawamount(t);
+		payoutmerchantaccountservice.updateWithdrawamount(t);
+
+		//
+		successWithdrawamountapp(t);
+		return i;
+	}
+
+	// 代付app充值成功
+	public Integer successWithdrawamountapp(Merchantaccountorder mco) {
+		Integer i = 0;
+		Merchantaccountorder mao = mapper.get(mco.getId());
+		mao.setStatus(DictionaryResource.ORDERSTATUS_52);
+		i = mapper.put(mao);
+		if (i > 0) {
+			if (mco.getStatus().equals(DictionaryResource.ORDERSTATUS_52)) {
+				payoutmerchantaccountservice.updateWithdrawamount(mao);
+			} else {
+				payoutmerchantaccountservice.cancleWithdrawamount(mao);
+			}
+		}
 		return i;
 	}
 

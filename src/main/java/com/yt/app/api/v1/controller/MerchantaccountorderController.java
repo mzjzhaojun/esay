@@ -89,7 +89,7 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 
 	/**
 	 * 
-	 * 提现
+	 *代付提现
 	 * 
 	 * @version 1.1
 	 */
@@ -100,7 +100,7 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 	}
 
 	/**
-	 * 处理提现
+	 * 处理代付提现
 	 * 
 	 * @param requestEntity
 	 * @param request
@@ -114,7 +114,7 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 	}
 
 	/**
-	 * 取消提现
+	 * 取消代付提现
 	 * 
 	 * @version 1.1
 	 */
@@ -125,7 +125,7 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 	}
 
 	/**
-	 * app提现
+	 * app充值
 	 * 
 	 * @version 1.1
 	 */

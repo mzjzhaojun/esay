@@ -136,16 +136,6 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 
 		// 余额
 		a.setUsdtbalance(t.getBalance());
-//		// 成功订单总数
-//		a.setSuccess(a.getSuccess() + 1);
-//		// 总入款金额
-//		a.setCount(a.getCount() + pm.getAmount());
-//		// 当日入款金额
-//		a.setTodaycount(a.getTodaycount() + pm.getAmount());
-//		// 总入款扣点后
-//		a.setIncomecount(a.getIncomecount() + pm.getAmount());
-//		// 当日入款扣点后
-//		a.setTodayincomecount(a.getTodayincomecount() + pm.getAmount());
 
 		merchantmapper.put(a);
 	}
@@ -295,19 +285,6 @@ public class PayoutMerchantaccountServiceImpl extends YtBaseServiceImpl<PayoutMe
 
 		// 余额
 		m.setUsdtbalance(ma.getBalance());
-
-//		// 总支出
-//		m.setCount(m.getCount() + pm.getAmountreceived());
-//		// 当日支出
-//		m.setTodaycount(m.getTodaycount() + pm.getAmountreceived());
-//		// 代付成功订单
-//		m.setSuccess(m.getSuccess() + 1);
-//		// 当日支出扣点
-//		m.setTodayincomecount(m.getTodayincomecount() + pm.getAmountreceived());
-//		// 总支出扣点
-//		m.setIncomecount(m.getIncomecount() + pm.getAmountreceived());
-//		// 手续费
-//		m.setTodaycost(m.getTodaycost() + m.getOnecost());
 
 		merchantmapper.put(m);
 	}

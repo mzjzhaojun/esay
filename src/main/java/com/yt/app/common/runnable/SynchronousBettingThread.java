@@ -67,6 +67,13 @@ public class SynchronousBettingThread implements Runnable {
 							bt.setDate(betting.getStr("DATE"));
 							bt.setName(betting.getStr("NAME0"));
 							bt.setOrdercon(betting.getStr("ORDER_CON"));
+							String textteam = betting.getStr("SHOWTEXT_TEAM");
+							Integer indc = textteam.indexOf("(");
+							if (indc != -1) {
+								bt.setRemark(textteam.substring(indc, indc + 7));
+							}else {
+								bt.setRemark("无");
+							}
 							bettingmapper.post(bt);
 							footballbot.notifyFootBall(crownagent, bt);
 						}
