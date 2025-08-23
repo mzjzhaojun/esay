@@ -310,10 +310,7 @@ public class BookAccountBot extends TelegramLongPollingBot {
 		sb.append("*费率*：" + tbg.getCost() + "%\n");
 		sb.append("*汇率*：" + (tbg.getTmexchange() == true ? "实时" : tbg.getExchange()) + "\n");
 		sb.append("\n");
-		sb.append("*总入款*：" + countincome + "\n");
-		if (liswithdraw.size() > 0) {
-			sb.append("*总减款*：" + counwithdeaw + "\n");
-		}
+		sb.append("*总入款*：" + (countincome - counwithdeaw) + "\n");
 		sb.append("*应下发*：" + String.format("%.2f", (countusdt - outusdt)) + " U\n");
 		sb.append("*已下发*：" + String.format("%.2f", usdt) + " U\n");
 		sb.append("*未下发*：" + String.format("%.2f", (countusdt - outusdt - usdt)) + " U\n");
@@ -361,10 +358,7 @@ public class BookAccountBot extends TelegramLongPollingBot {
 		sb.append("*费率*：" + tbg.getCost() + "%\n");
 		sb.append("*汇率*：" + (tbg.getTmexchange() == true ? "实时" : tbg.getExchange()) + "\n");
 		sb.append("\n");
-		sb.append("*总入款*：" + countincome + "\n");
-		if (liswithdraw.size() > 0) {
-			sb.append("*总减款*：" + counwithdeaw + "\n");
-		}
+		sb.append("*总入款*：" + (countincome - counwithdeaw) + "\n");
 		sb.append("*应下发*：" + String.format("%.2f", (countusdt - outusdt)) + " U\n");
 		sb.append("*已下发*：" + String.format("%.2f", usdt) + " U\n");
 		sb.append("*未下发*：" + String.format("%.2f", (countusdt - outusdt - usdt)) + " U\n");
