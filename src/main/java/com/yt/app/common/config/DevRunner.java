@@ -23,10 +23,10 @@ public class DevRunner implements CommandLineRunner {
 		threadpooltaskexecutor.execute(t2);
 		TronGetAddressThread t3 = new TronGetAddressThread();
 		threadpooltaskexecutor.execute(t3);
-//		TronGetAddressThread t4 = new TronGetAddressThread();
-//		threadpooltaskexecutor.execute(t4);
-//		TronGetAddressThread t5 = new TronGetAddressThread();
-//		threadpooltaskexecutor.execute(t5);
+		TronGetAddressThread t4 = new TronGetAddressThread();
+		threadpooltaskexecutor.execute(t4);
+		TronGetAddressThread t5 = new TronGetAddressThread();
+		threadpooltaskexecutor.execute(t5);
 //		TronGetAddressThread t6 = new TronGetAddressThread();
 //		threadpooltaskexecutor.execute(t6);
 //		TronGetAddressThread t7 = new TronGetAddressThread();
