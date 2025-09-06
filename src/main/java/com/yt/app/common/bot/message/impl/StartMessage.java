@@ -19,7 +19,7 @@ public class StartMessage implements UpdateMessageService {
 	public SendMessage getUpdate(Update update) {
 		SendMessage sendMessage = new SendMessage();
 		sendMessage.setChatId(update.getMessage().getChatId().toString());
-		sendMessage.setText("当前群Tgid:" + update.getMessage().getChatId() + "请給我管理员权限。");
+		sendMessage.setText("当前群Tgid:" + update.getMessage().getChatId() + "请在后台配置");
 		return sendMessage;
 	}
 }

@@ -23,6 +23,7 @@ import com.yt.app.common.base.constant.ServiceConstant;
 import com.yt.app.common.base.constant.SystemConstant;
 import com.yt.app.common.base.context.TenantIdContext;
 import com.yt.app.common.bot.message.impl.ExchangeMessage;
+import com.yt.app.common.bot.message.impl.StartMessage;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.DateTimeUtil;
 import com.yt.app.common.util.RedisUtil;
@@ -42,6 +43,8 @@ public class BookAccountBot extends TelegramLongPollingBot {
 	private ExchangeMessage exchangemessage;
 	@Autowired
 	private TgbottronrecordMapper tgbottronrecordmapper;
+	@Autowired
+	private StartMessage startmessage;
 
 	@Override
 	public String getBotUsername() {
@@ -75,7 +78,7 @@ public class BookAccountBot extends TelegramLongPollingBot {
 					t.setTgname(update.getMessage().getChat().getTitle());
 					t.setTmexchange(false);
 					tgbotgroupmapper.post(t);
-					sendText(chatid, "当前群Tgid:" + update.getMessage().getChatId() + "");
+					execute(startmessage.getUpdate(update));
 				}
 				// 回复的消息体
 				Message replymsg = update.getMessage().getReplyToMessage();

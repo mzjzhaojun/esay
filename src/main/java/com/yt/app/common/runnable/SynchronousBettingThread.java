@@ -71,11 +71,12 @@ public class SynchronousBettingThread implements Runnable {
 							Integer indc = textteam.indexOf("(");
 							if (indc != -1) {
 								bt.setRemark(textteam.substring(indc, indc + 7));
-							}else {
+							} else {
 								bt.setRemark("无");
 							}
 							bettingmapper.post(bt);
-							footballbot.notifyFootBall(crownagent, bt);
+							if (crownagent.getChannelid() != null && bt.getGt().equals("足球"))
+								footballbot.notifyFootBall(crownagent, bt);
 						}
 					}
 				} else {
