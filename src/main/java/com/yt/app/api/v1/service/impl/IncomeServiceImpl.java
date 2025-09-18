@@ -33,7 +33,6 @@ import com.yt.app.common.bot.ChannelBot;
 import com.alipay.api.response.AlipayTradeOrderSettleResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.response.AlipayTradeSettleConfirmResponse;
-import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.yt.app.api.v1.dbo.QrcodeSubmitDTO;
 import com.yt.app.api.v1.entity.Agent;
 import com.yt.app.api.v1.entity.Aisle;
@@ -666,48 +665,13 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 				qd = listqrcode.stream().filter(c -> c.getCode() == code).collect(Collectors.toList()).get(0);
 				Assert.notNull(qd, "没有可用的渠道!");
 			}
-			boolean flage = true;
 			// 开始业务
 			Channel channel = channelmapper.getByUserId(qd.getUserid());
 			Income income = addIncome(channel, qas, mc, qs, qd);
 			String urlview = RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "domain") + RedisUtil.get(SystemConstant.CACHE_SYS_CONFIG_PREFIX + "payviewurl");
-			// 直付通手机H5
-			if (qd.getCode().equals(DictionaryResource.PRODUCT_ZFTWAP)) {
-				Qrcode pqd = qrcodemapper.get(qd.getPid());
-				AlipayTradeWapPayResponse response = SelfPayUtil.AlipayTradeWapPay(pqd, qd, income.getOrdernum(), income.getRealamount());
-				if (response != null) {
-					flage = false;
-					String pageRedirectionData = response.getBody();
-					income.setQrcode(urlview.replace("{id}", income.getOrdernum() + ""));
-					income.setQrcodeordernum("inqd" + StringUtil.getOrderNum());
-					income.setResulturl(pageRedirectionData);
-					if (qd.getPid() != null) {
-						income.setDynamic(true);
-					}
-				}
-			} else if (qd.getCode().equals(DictionaryResource.PRODUCT_YPLWAP)) {
-				flage = false;
-				// 随机数
-				income.setAmount(Double.valueOf(qs.getPay_amount()));
-				if (mc.getClearingtype())
-					income.setRealamount(Double.valueOf(StringUtil.getInt(qs.getPay_amount())));
-				else
-					income.setRealamount(income.getAmount());
-				income.setQrcode(urlview.replace("{id}", income.getOrdernum() + ""));
-				income.setResulturl(income.getQrcode());
-				income.setQrcodeordernum("inqd" + StringUtil.getOrderNum());
-			} else if (qd.getCode().equals(DictionaryResource.PRODUCT_HUIFUTXWAP)) {
-				Map<String, Object> response = SelfPayUtil.quickbuckle(qd, income.getOrdernum(), income.getRealamount(), income.getBackforwardurl());
-				if (response != null) {
-					flage = false;
-					String outradeno = response.get("hf_seq_id").toString();
-					String form_url = response.get("form_url").toString();
-					income.setQrcode(urlview.replace("{id}", income.getOrdernum() + ""));
-					income.setResulturl(form_url);
-					income.setQrcodeordernum(outradeno);
-				}
-			}
-			if (flage) {
+			income.setQrcode(urlview.replace("{id}", income.getOrdernum() + ""));
+			Qrcode pqd = qrcodemapper.get(qd.getPid());
+			if (SelfPayUtil.getIncomeBySelfPay(qd, pqd, income, mc, qs.getPay_amount())) {
 				channelbot.notifyChannel(channel);
 				QrcodeResultVO qr = new QrcodeResultVO();
 				qr.setPay_memberid(mc.getCode());
@@ -1001,6 +965,9 @@ public class IncomeServiceImpl extends YtBaseServiceImpl<Income, Long> implement
 		});
 	}
 
+	/**
+	 * 易票联四要素下单
+	 */
 	@Override
 	public void sumbmitcheck(Map<String, Object> params) {
 		Income in = mapper.getByOrderNum(params.get("orderid").toString());

@@ -59,13 +59,20 @@ import com.alipay.api.response.AlipayTradeRoyaltyRelationUnbindResponse;
 import com.alipay.api.response.AlipayTradeSettleConfirmResponse;
 import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.alipay.api.response.AntMerchantExpandIndirectZftDeleteResponse;
+import com.huifu.bspay.sdk.opps.client.BasePayClient;
 import com.huifu.bspay.sdk.opps.core.BasePay;
 import com.huifu.bspay.sdk.opps.core.config.MerConfig;
 import com.huifu.bspay.sdk.opps.core.exception.BasePayException;
 import com.huifu.bspay.sdk.opps.core.net.BasePayRequest;
+import com.huifu.bspay.sdk.opps.core.request.V2TradePaymentJspayRequest;
+import com.huifu.bspay.sdk.opps.core.utils.DateTools;
+import com.huifu.bspay.sdk.opps.core.utils.SequenceTools;
+import com.yt.app.api.v1.entity.Income;
+import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Qrcode;
 import com.yt.app.api.v1.entity.Qrcodetransferrecord;
 import com.yt.app.common.base.constant.SystemConstant;
+import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.bo.OrderGoods;
 import com.yt.app.common.util.bo.OrderInfo;
 import com.yt.app.common.util.bo.PaymentQueryRequest;
@@ -80,6 +87,56 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SelfPayUtil {
+
+	public static boolean getIncomeBySelfPay(Qrcode qd, Qrcode pqd, Income income, Merchant mc, String payamount) {
+		boolean flage = true;
+		// 直付通手机H5
+		if (qd.getCode().equals(DictionaryResource.PRODUCT_ZFTWAP)) {
+
+			AlipayTradeWapPayResponse response = AlipayTradeWapPay(pqd, qd, income.getOrdernum(), income.getRealamount());
+			if (response != null) {
+				flage = false;
+				String pageRedirectionData = response.getBody();
+				income.setQrcodeordernum("inqd" + StringUtil.getOrderNum());
+				income.setResulturl(pageRedirectionData);
+				if (qd.getPid() != null) {
+					income.setDynamic(true);
+				}
+			}
+			// 易票联
+		} else if (qd.getCode().equals(DictionaryResource.PRODUCT_YPLWAP)) {
+			flage = false;
+			// 随机数
+			income.setAmount(Double.valueOf(payamount));
+			if (mc.getClearingtype())
+				income.setRealamount(Double.valueOf(StringUtil.getInt(payamount)));
+			else
+				income.setRealamount(income.getAmount());
+			income.setResulturl(income.getQrcode());
+			income.setQrcodeordernum("inqd" + StringUtil.getOrderNum());
+			// 汇付天下快捷
+		} else if (qd.getCode().equals(DictionaryResource.PRODUCT_HUIFUTXWAP)) {
+			Map<String, Object> response = quickbuckle(qd, income.getOrdernum(), income.getRealamount(), income.getBackforwardurl());
+			if (response != null) {
+				flage = false;
+				String outradeno = response.get("hf_seq_id").toString();
+				String form_url = response.get("form_url").toString();
+				income.setResulturl(form_url);
+				income.setQrcodeordernum(outradeno);
+			}
+			// 汇付天下支付宝
+		} else if (qd.getCode().equals(DictionaryResource.PRODUCT_HUIFUTXAIPAY)) {
+			Map<String, Object> response = quickbucklealipay(qd, income.getOrdernum(), income.getRealamount(), income.getBackforwardurl());
+			if (response != null) {
+				flage = false;
+				String outradeno = response.get("hf_seq_id").toString();
+				String form_url = response.get("form_url").toString();
+				income.setResulturl(form_url);
+				income.setQrcodeordernum(outradeno);
+			}
+		}
+		return flage;
+	}
 
 	private static AlipayConfig getAlipayConfig(Qrcode qrcode) {
 		AlipayConfig alipayConfig = new AlipayConfig();
@@ -814,7 +871,7 @@ public class SelfPayUtil {
 	}
 
 	/**
-	 * 汇付下单
+	 * 汇付下单快捷
 	 * 
 	 * @param qrcode
 	 * @return
@@ -869,7 +926,7 @@ public class SelfPayUtil {
 	}
 
 	/**
-	 * 交易结果查询
+	 * 汇付快捷交易结果查询
 	 */
 	public static String huifupaymentQuery(Qrcode qrcode, String outradeno) {
 		MerConfig merConfig = new MerConfig();
@@ -892,6 +949,82 @@ public class SelfPayUtil {
 			paramsInfo.put("pay_type", "QUICK_PAY");
 			// 3. 发起API调用
 			Map<String, Object> response = BasePayRequest.requestBasePay("v2/trade/onlinepayment/query", paramsInfo, null, false);
+			if (response.get("trans_stat").toString().equals("S")) {
+				return response.get("trans_stat").toString();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 汇付下单支付宝
+	 * 
+	 * @param qrcode
+	 * @return
+	 */
+	public static Map<String, Object> quickbucklealipay(Qrcode qrcode, String ordernum, Double amount, String backurl) {
+
+		// 1. 数据初始化，填入对应的商户配置
+		MerConfig merConfig = new MerConfig();
+		merConfig.setProcutId(qrcode.getSmid());
+		merConfig.setSysId(qrcode.getAppid());
+		merConfig.setRsaPrivateKey(qrcode.getAppprivatekey());
+		merConfig.setRsaPublicKey(qrcode.getApppublickey());
+		try {
+			BasePay.initWithMerConfig(merConfig);
+
+			// 2.组装请求参数
+			V2TradePaymentJspayRequest request = new V2TradePaymentJspayRequest();
+			// 请求日期
+			request.setReqDate(DateTools.getCurrentDateYYYYMMDD());
+			// 请求流水号
+			request.setReqSeqId(SequenceTools.getReqSeqId32());
+			// 商户号
+			request.setHuifuId(qrcode.getAppid());
+			// 交易类型
+			request.setTradeType("A_NATIVE");
+			// 交易金额
+			request.setTransAmt("0.10");
+			// 商品描述
+			request.setGoodsDesc("商品");
+
+			// 3. 发起API调用
+			Map<String, Object> response = BasePayClient.request(request, false);
+			System.out.println("返回数据:" + response);
+
+			return response;
+		} catch (BasePayException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 汇付支付宝交易结果查询
+	 */
+	public static String huifualipaymentQuery(Qrcode qrcode, String outradeno) {
+		MerConfig merConfig = new MerConfig();
+		merConfig.setProcutId(qrcode.getSmid());
+		merConfig.setSysId(qrcode.getAppid());
+		merConfig.setRsaPrivateKey(qrcode.getAppprivatekey());
+		merConfig.setRsaPublicKey(qrcode.getApppublickey());
+		try {
+			BasePay.initWithMerConfig(merConfig);
+			String date = DateUtil.format(DateUtil.YMD, new Date());
+
+			// 2.组装请求参数
+			Map<String, Object> paramsInfo = new HashMap<>();
+			// 商户号
+			paramsInfo.put("huifu_id", qrcode.getAppid());
+			// 原交易请求日期
+			paramsInfo.put("org_req_date", date);
+			paramsInfo.put("org_req_seq_id", outradeno);
+			// 3. 发起API调用
+			Map<String, Object> response = BasePayRequest.requestBasePay("v3/trade/payment/scanpay/query", paramsInfo, null, false);
 			if (response.get("trans_stat").toString().equals("S")) {
 				return response.get("trans_stat").toString();
 			}

@@ -160,8 +160,9 @@ public class DictionaryResource implements Serializable {
 	public static final Integer PROJECT_TYPE_502 = 502;// 支付宝直付通手机网站支付
 	public static final String PRODUCT_HUIFUTXWAP = "HUIFUTX";
 	public static final Integer PROJECT_TYPE_503 = 503;
-
+	public static final String PRODUCT_HUIFUTXAIPAY = "HUIFUTXAIPAY";
 	public static final Integer PROJECT_TYPE_504 = 504;
+
 	public static final Integer PROJECT_TYPE_505 = 505;
 	public static final Integer PROJECT_TYPE_506 = 506;
 	public static final Integer PROJECT_TYPE_507 = 507;
