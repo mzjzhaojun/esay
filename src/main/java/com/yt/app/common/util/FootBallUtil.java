@@ -51,7 +51,7 @@ public class FootBallUtil {
 			RestTemplate resttemplate = new RestTemplate();
 
 			ResponseEntity<String> str = resttemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
-			log.info("正确返回消息：" +  str.getBody());
+			log.info("正确返回消息：" + str.getBody());
 			return str;
 		} catch (Exception e) {
 			log.info("错误返回消息：" + e.getMessage());

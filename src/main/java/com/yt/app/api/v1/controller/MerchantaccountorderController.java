@@ -89,7 +89,7 @@ public class MerchantaccountorderController extends YtBaseEncipherControllerImpl
 
 	/**
 	 * 
-	 *代付提现
+	 * 代付提现
 	 * 
 	 * @version 1.1
 	 */

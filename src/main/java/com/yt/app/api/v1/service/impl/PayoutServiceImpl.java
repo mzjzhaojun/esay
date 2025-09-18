@@ -1529,9 +1529,9 @@ public class PayoutServiceImpl extends YtBaseServiceImpl<Payout, Long> implement
 			JSONObject data = PayUtil.SendJOSelectOrder(orderid, channel);
 			// 查询渠道是否真实成功
 			JSONObject result = data.getJSONObject("result");
-			if (result.getInt("orderStatus")==1) {
+			if (result.getInt("orderStatus") == 1) {
 				paySuccess(pt);
-			} else if (result.getInt("orderStatus")==4) {
+			} else if (result.getInt("orderStatus") == 4) {
 				payFail(pt, data.getStr("message"));
 			}
 			SysUserContext.remove();

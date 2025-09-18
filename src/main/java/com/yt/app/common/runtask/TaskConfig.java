@@ -31,7 +31,6 @@ import com.yt.app.common.util.NumberUtil;
 import com.yt.app.common.util.RedisUtil;
 import com.yt.app.common.util.SelfPayUtil;
 
-
 @Component
 public class TaskConfig {
 
@@ -58,7 +57,6 @@ public class TaskConfig {
 
 	@Autowired
 	private TronmemberorderMapper tronmemberordermapper;
-
 
 	/**
 	 * 查询代付需要通知

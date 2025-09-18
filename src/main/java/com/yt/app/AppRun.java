@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * 
  * @author dell
  *
- */ 
+ */
 @SpringBootApplication
 @EnableScheduling
 @EnableTransactionManagement
@@ -28,6 +28,6 @@ public class AppRun extends SpringBootServletInitializer {
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(new Class[] { AppRun.class }, args);
-//		YtAutoCode.u().p(Arrays.asList("tgfootballgroup"));
+//		YtAutoCode.u().p(Arrays.asList("tgmessagegrouprecord"));
 	}
 }

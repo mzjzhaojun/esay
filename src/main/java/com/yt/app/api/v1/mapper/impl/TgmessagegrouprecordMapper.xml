@@ -1,93 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yt.app.api.v1.mapper.BettingMapper">
+<mapper
+	namespace="com.yt.app.api.v1.mapper.TgmessagegrouprecordMapper">
 	<!-- Base_Column_List -->
 	<sql id="Base_Column_List">
-		id,tenant_id,wagerstype,tid,teamc,teamh,site,showtextordertypeioratio,showtextleague,oddftype,numc,numh,agname,name,gt,gold,ordertype,ordercon,date,time,remark,create_by,create_time,update_by,update_time,version
+		id,mid,cid,chatid,mmanger,cmanger,mreplyid,creplyid,name,qrcode,exchange,amount,usd,status,optionname,confirmname,remark,create_by,create_time,update_by,update_time,version
 	</sql>
 	<!-- ResultMap -->
 	<resultMap id="ResultMap"
-		type="com.yt.app.api.v1.entity.Betting">
+		type="com.yt.app.api.v1.entity.Tgmessagegrouprecord">
 	</resultMap>
 	<!-- ResultMap -->
 	<resultMap id="ResultMapVO"
-		type="com.yt.app.api.v1.vo.BettingVO">
+		type="com.yt.app.api.v1.vo.TgmessagegrouprecordVO">
 	</resultMap>
 	<!-- add -->
 	<insert id="post"
-		parameterType="com.yt.app.api.v1.entity.Betting">
+		parameterType="com.yt.app.api.v1.entity.Tgmessagegrouprecord">
 		insert into
-		betting(id,wagerstype,tid,teamc,teamh,site,showtextordertypeioratio,showtextleague,oddftype,numc,numh,agname,name,gt,gold,ordertype,ordercon,date,time,remark,create_by,create_time,update_by,update_time)
+		tgmessagegrouprecord(id,mid,cid,chatid,mmanger,cmanger,mreplyid,creplyid,name,qrcode,exchange,amount,usd,status,optionname,confirmname,remark,create_by,create_time,update_by,update_time)
 		values
-		(#{id},#{wagerstype},#{tid},#{teamc},#{teamh},#{site},#{showtextordertypeioratio},#{showtextleague},#{oddftype},#{numc},#{numh},#{agname},#{name},#{gt},#{gold},#{ordertype},#{ordercon},#{date},#{time},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+		(#{id},#{mid},#{cid},#{chatid},#{mmanger},#{cmanger},#{mreplyid},#{creplyid},#{name},#{qrcode},#{exchange},#{amount},#{usd},#{status},#{optionname},#{confirmname},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 	</insert>
 	<!-- batchSava -->
 	<insert id="batchSava" parameterType="java.util.List">
 		insert into
-		betting(id,tenant_id,wagerstype,tid,teamc,teamh,site,showtextordertypeioratio,showtextleague,oddftype,numc,numh,name,gt,gold,ordertype,ordercon,remark,create_by,create_time,update_by,update_time)
+		tgmessagegrouprecord(id,mid,cid,chatid,mmanger,cmanger,mreplyid,creplyid,name,qrcode,exchange,amount,usd,status,optionname,confirmname,remark,create_by,create_time,update_by,update_time)
 		values
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{id},#{tenant_id},#{wagerstype},#{tid},#{teamc},#{teamh},#{site},#{showtextordertypeioratio},#{showtextleague},#{oddftype},#{numc},#{numh},#{name},#{gt},#{gold},#{ordertype},#{ordercon},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
+			(#{id},#{mid},#{cid},#{chatid},#{mmanger},#{cmanger},#{mreplyid},#{creplyid},#{name},#{qrcode},#{exchange},#{amount},#{usd},#{status},#{optionname},#{confirmname},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from betting
+		delete from tgmessagegrouprecord
 		where id = #{id}
 	</delete>
 	<!-- update -->
 	<update id="put"
-		parameterType="com.yt.app.api.v1.entity.Betting">
-		update betting
+		parameterType="com.yt.app.api.v1.entity.Tgmessagegrouprecord">
+		update tgmessagegrouprecord
 		<set>
-			<if test="tenant_id != null">
-				tenant_id= #{tenant_id},
+			<if test="mid != null">
+				mid= #{mid},
 			</if>
-			<if test="wagerstype != null">
-				wagerstype= #{wagerstype},
+			<if test="cid != null">
+				cid= #{cid},
 			</if>
-			<if test="tid != null">
-				tid= #{tid},
+			<if test="chatid != null">
+				chatid= #{chatid},
 			</if>
-			<if test="teamc != null">
-				teamc= #{teamc},
+			<if test="mmanger != null">
+				mmanger= #{mmanger},
 			</if>
-			<if test="teamh != null">
-				teamh= #{teamh},
+			<if test="cmanger != null">
+				cmanger= #{cmanger},
 			</if>
-			<if test="site != null">
-				site= #{site},
+			<if test="mreplyid != null">
+				mreplyid= #{mreplyid},
 			</if>
-			<if test="showtextordertypeioratio != null">
-				showtextordertypeioratio= #{showtextordertypeioratio},
-			</if>
-			<if test="showtextleague != null">
-				showtextleague= #{showtextleague},
-			</if>
-			<if test="oddftype != null">
-				oddftype= #{oddftype},
-			</if>
-			<if test="numc != null">
-				numc= #{numc},
-			</if>
-			<if test="numh != null">
-				numh= #{numh},
+			<if test="creplyid != null">
+				creplyid= #{creplyid},
 			</if>
 			<if test="name != null">
 				name= #{name},
 			</if>
-			<if test="gt != null">
-				gt= #{gt},
+			<if test="qrcode != null">
+				qrcode= #{qrcode},
 			</if>
-			<if test="gold != null">
-				gold= #{gold},
+			<if test="exchange != null">
+				exchange= #{exchange},
 			</if>
-			<if test="ordertype != null">
-				ordertype= #{ordertype},
+			<if test="amount != null">
+				amount= #{amount},
 			</if>
-			<if test="ordercon != null">
-				ordercon= #{ordercon},
+			<if test="usd != null">
+				usd= #{usd},
+			</if>
+			<if test="status != null">
+				status= #{status},
+			</if>
+			<if test="optionname != null">
+				optionname= #{optionname},
+			</if>
+			<if test="confirmname != null">
+				confirmname= #{confirmname},
 			</if>
 			<if test="remark != null">
 				remark= #{remark},
@@ -115,24 +113,15 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from betting
+		from tgmessagegrouprecord
 		where id = #{id}
 	</select>
-	<!--getByTid -->
-	<select id="getByTid" parameterType="java.lang.String"
-		resultMap="ResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from betting
-		where tid = #{tid}
-	</select>
-	
 	<!-- getList -->
 	<select id="list" parameterType="java.util.HashMap"
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from betting
+		from tgmessagegrouprecord
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -145,7 +134,7 @@
 		resultMap="ResultMapVO">
 		select
 		<include refid="Base_Column_List" />
-		from betting
+		from tgmessagegrouprecord
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -162,7 +151,7 @@
 	<!-- getCount -->
 	<select id="countlist" parameterType="java.util.HashMap"
 		resultType="int">
-		select count(*) from betting
+		select count(*) from tgmessagegrouprecord
 		<where>
 			1=1
 			<if test="name != null and name != ''">
@@ -175,7 +164,7 @@
 		resultMap="ResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from betting
+		from tgmessagegrouprecord
 		<where>
 			1=1
 			<if test="array != null and array.length > 0">

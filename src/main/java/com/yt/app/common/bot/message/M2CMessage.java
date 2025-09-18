@@ -81,7 +81,7 @@ public class M2CMessage implements UpdateMessageService {
 		SendPhoto sendphoto = new SendPhoto();
 		sendphoto.setChatId(chatid);
 		try {
-			PhotoSize photo = update.getMessage().getPhoto().get( update.getMessage().getPhoto().size() - 1);
+			PhotoSize photo = update.getMessage().getPhoto().get(update.getMessage().getPhoto().size() - 1);
 			GetFile getFile = new GetFile();
 			getFile.setFileId(photo.getFileId());
 			String filePath = messagebot.execute(getFile).getFileUrl(messagebot.getBotToken());

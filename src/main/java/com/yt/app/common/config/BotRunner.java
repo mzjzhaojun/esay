@@ -40,7 +40,7 @@ public class BotRunner implements CommandLineRunner {
 
 	@Autowired
 	private FootBallBot footballbot;
-	
+
 	@Autowired
 	private BookAccountBot bookaccountbot;
 

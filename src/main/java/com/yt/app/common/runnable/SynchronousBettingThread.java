@@ -47,6 +47,7 @@ public class SynchronousBettingThread implements Runnable {
 						Betting sbt = bettingmapper.getByTid(betting.getStr("TID"));
 						if (sbt == null) {
 							bt = new Betting();
+							bt.setAgname(crownagent.getName());
 							bt.setWagerstype(betting.getStr("WAGERSTYPE"));
 							bt.setTid(betting.getStr("TID"));
 							bt.setTeamc(betting.getStr("TEAM_C"));

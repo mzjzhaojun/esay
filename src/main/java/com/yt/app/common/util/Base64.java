@@ -205,6 +205,6 @@ public class Base64 {
 	public static void main(String[] args) {
 		String textteam = "<tt class=\"word_blue\">(2 - 0)<\\/tt><\\/li>";
 		Integer i = textteam.indexOf("(");
-		System.out.println(textteam.substring(i, i+7));
+		System.out.println(textteam.substring(i, i + 7));
 	}
 }
