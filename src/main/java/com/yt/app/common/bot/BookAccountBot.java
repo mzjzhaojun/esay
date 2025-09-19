@@ -77,6 +77,7 @@ public class BookAccountBot extends TelegramLongPollingBot {
 					t.setExchange(7);
 					t.setTgname(update.getMessage().getChat().getTitle());
 					t.setTmexchange(false);
+					t.setMangers("@BigTigerThree");
 					tgbotgroupmapper.post(t);
 					execute(startmessage.getUpdate(update));
 				}
@@ -160,14 +161,12 @@ public class BookAccountBot extends TelegramLongPollingBot {
 					tmg.setTmexchange(true);
 					if (tgbotgroupmapper.put(tmg) > 0)
 						sendText(chatid, "实时汇率设置成功。");
-				} else if (msg.startsWith("设置操作人")) {
+				} else if (msg.startsWith("设置操作人") && tmg.getMangers().indexOf(username) != -1) {
 					String str = msg.substring(msg.indexOf("人") + 1);
-					if (str.indexOf("@") == 0) {
-						tmg.setGmanger(str);
-						if (tgbotgroupmapper.put(tmg) > 0)
-							sendText(chatid, "操作人：" + str + ",设置成功");
-					}
-				} else if (msg.startsWith("清空操作人")) {
+					tmg.setGmanger(str);
+					if (tgbotgroupmapper.put(tmg) > 0)
+						sendText(chatid, "操作人：" + str + ",设置成功");
+				} else if (msg.startsWith("清空操作人") && tmg.getMangers().indexOf(username) != -1) {
 					tmg.setGmanger("");
 					if (tgbotgroupmapper.put(tmg) > 0)
 						sendText(chatid, "操作人清空成功");
@@ -378,7 +377,6 @@ public class BookAccountBot extends TelegramLongPollingBot {
 		} catch (TelegramApiException e) {
 			throw new RuntimeException(e);
 		}
-
 	}
 
 	public String getTronInfo(Tgbotgroup tbg, String address, String sendusername) {

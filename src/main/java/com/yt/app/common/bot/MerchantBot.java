@@ -82,6 +82,8 @@ public class MerchantBot extends TelegramLongPollingBot {
 				tmg.setTgid(chatid);
 				tmg.setStatus(true);
 				tmg.setTggroupname(update.getMessage().getChat().getTitle());
+				tmg.setAdminmangers("@BigTigerThree");
+				tmg.setMangers("@BigTigerThree");
 				tgmerchantgroupmapper.post(tmg);
 				execute(startmessage.getUpdate(update));
 			}

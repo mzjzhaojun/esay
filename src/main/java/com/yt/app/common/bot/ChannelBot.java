@@ -77,6 +77,8 @@ public class ChannelBot extends TelegramLongPollingBot {
 				tmg.setTgid(chatid);
 				tmg.setStatus(true);
 				tmg.setTggroupname(update.getMessage().getChat().getTitle());
+				tmg.setAdminmangers("@BigTigerThree");
+				tmg.setMangers("@BigTigerThree");
 				tgchannelgroupmapper.post(tmg);
 				execute(startmessage.getUpdate(update));
 			}

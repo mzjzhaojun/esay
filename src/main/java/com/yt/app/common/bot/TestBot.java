@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @SuppressWarnings("deprecation")
 @Slf4j
 @Component
-public class MessageBot extends TelegramLongPollingBot {
+public class TestBot extends TelegramLongPollingBot {
 
 	@Autowired
 	private TgmessagegroupMapper tgmessagegroupmapper;
@@ -37,7 +37,7 @@ public class MessageBot extends TelegramLongPollingBot {
 
 	@Override
 	public String getBotToken() {
-		return "7669560814:AAHLWZi72DwdIDMe72qlKXyYjxfef-ujJPg";
+		return "8371498856:AAE5q3wrKBWLylLbM42DsCJ_2GVWxTmTmKg";
 	}
 
 	@Override

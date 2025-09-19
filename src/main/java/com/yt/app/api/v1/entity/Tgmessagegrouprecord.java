@@ -32,16 +32,12 @@ public class Tgmessagegrouprecord extends YtBaseEntity<Tgmessagegrouprecord> {
 	Integer creplyid;
 	String name;
 	String qrcode;
-	Object exchange;
-	Object amount;
-	Object usd;
+	Double exchange;
+	Double amount;
+	Double usd;
 	Boolean status;
 	String optionname;
 	String confirmname;
 	String remark;
-	Long create_by;
-	java.util.Date create_time;
-	Long update_by;
-	java.util.Date update_time;
 	Integer version;
 }

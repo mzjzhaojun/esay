@@ -2,6 +2,9 @@ package com.yt.app.api.v1.mapper;
 
 import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.yt.app.api.v1.entity.Tgmessagegrouprecord;
 import com.yt.app.api.v1.vo.TgmessagegrouprecordVO;
 import com.yt.app.common.annotation.YtRedisCacheAnnotation;
@@ -95,4 +98,22 @@ public interface TgmessagegrouprecordMapper extends YtIBaseMapper<Tgmessagegroup
 	 */
 	@YtRedisCacheAnnotation(classs = Tgmessagegrouprecord.class)
 	public List<Tgmessagegrouprecord> listByArrayId(long[] id);
+
+	/**
+	 * get
+	 *
+	 * @param id id
+	 * @return Tgmessagegrouprecord
+	 */
+	@YtRedisCacheAnnotation(classs = Tgmessagegrouprecord.class)
+	public Tgmessagegrouprecord getCidReplyid(@Param("cid") String cid, @Param("creplyid") Integer creplyid);
+
+	/**
+	 * get
+	 *
+	 * @param id id
+	 * @return Tgmessagegrouprecord
+	 */
+	@YtRedisCacheAnnotation(classs = Tgmessagegrouprecord.class)
+	public Tgmessagegrouprecord getMidReplyid(@Param("mid") String mid, @Param("mreplyid") Integer mreplyid);
 }

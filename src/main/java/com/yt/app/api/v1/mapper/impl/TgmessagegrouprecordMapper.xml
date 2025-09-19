@@ -34,7 +34,8 @@
 	</insert>
 	<!-- deleteById -->
 	<delete id="delete" parameterType="java.lang.Long">
-		delete from tgmessagegrouprecord
+		delete from
+		tgmessagegrouprecord
 		where id = #{id}
 	</delete>
 	<!-- update -->
@@ -125,7 +126,7 @@
 		<where>
 			1=1
 			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+				AND name LIKE CONCAT( '%', #{name} , '%' )
 			</if>
 		</where>
 	</select>
@@ -138,7 +139,7 @@
 		<where>
 			1=1
 			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+				AND name LIKE CONCAT( '%', #{name} , '%' )
 			</if>
 			<if test="orderBy != null and dir != null">
 				order by ${orderBy} ${dir}
@@ -155,10 +156,27 @@
 		<where>
 			1=1
 			<if test="name != null and name != ''">
-				and name like "%"#{name}"%"
+				AND name LIKE CONCAT( '%', #{name} , '%' )
 			</if>
 		</where>
 	</select>
+
+	<!--getCidReplyid -->
+	<select id="getCidReplyid" resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmessagegrouprecord
+		where cid = #{cid} and creplyid = #{creplyid}
+	</select>
+	
+	<!--getMidReplyid -->
+	<select id="getMidReplyid" resultMap="ResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tgmessagegrouprecord
+		where mid = #{mid} and mreplyid = #{mreplyid}
+	</select>
+
 	<!-- listByArrayId -->
 	<select id="listByArrayId" parameterType="java.util.HashMap"
 		resultMap="ResultMap">

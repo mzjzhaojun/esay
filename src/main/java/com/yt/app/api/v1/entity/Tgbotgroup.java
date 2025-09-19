@@ -26,6 +26,7 @@ public class Tgbotgroup extends YtBaseEntity<Tgbotgroup> {
 	Long tenant_id;
 	Long tgid;
 	String tgname;
+	String mangers;
 	String gmanger;
 	String xmanger;
 	Boolean tmexchange;

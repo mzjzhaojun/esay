@@ -32,9 +32,9 @@ public class TgmessagegrouprecordVO extends BaseVO {
 	Integer creplyid;
 	String name;
 	String qrcode;
-	Object exchange;
-	Object amount;
-	Object usd;
+	Double exchange;
+	Double amount;
+	Double usd;
 	Boolean status;
 	String optionname;
 	String confirmname;
