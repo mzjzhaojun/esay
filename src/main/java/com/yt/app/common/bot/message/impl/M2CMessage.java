@@ -44,6 +44,28 @@ public class M2CMessage implements UpdateMessageService {
 		return sendmessage;
 	}
 
+	public SendMessage getReplyChannelUpdate(Update update, Tgmessagegroup tmg) {
+		SendMessage sendmessage = new SendMessage();
+		Long chatid = update.getMessage().getChatId();
+		String username = update.getMessage().getFrom().getUserName();
+		if (tmg.getAdminmangers().indexOf(username) != -1 || tmg.getCustomermangers().indexOf(username) != -1) {
+			if (chatid.longValue() == tmg.getTgmid()) {
+				sendmessage.setChatId(tmg.getTgcid());
+			} else {
+				sendmessage.setChatId(tmg.getTgmid());
+			}
+			if (update.getMessage().getText() != null) {
+				sendmessage.setText(update.getMessage().getText());
+			} else {
+				sendmessage.setText("c");
+			}
+			if (update.getMessage().getText() != null && update.getMessage().getText().startsWith("+")) {
+				sendmessage.setText(update.getMessage().getText());
+			}
+		}
+		return sendmessage;
+	}
+
 	public SendMessage getReplyUpdate(Update update, Tgmessagegroup tmg) {
 		SendMessage sendmessage = new SendMessage();
 		Long chatid = update.getMessage().getChatId();
@@ -80,6 +102,7 @@ public class M2CMessage implements UpdateMessageService {
 			tmgr.setAmount(Double.valueOf(reecaption.split(" ")[0]));
 			tmgr.setStatus(false);
 			tmgr.setOptionname(username);
+			tmgr.setRemark(reecaption);
 			tgmessagegrouprecordmapper.post(tmgr);
 		}
 	}
@@ -112,10 +135,11 @@ public class M2CMessage implements UpdateMessageService {
 			param.put("name", name);
 			List<Tgmessagegrouprecord> list = tgmessagegrouprecordmapper.list(param);
 			StringBuffer msg = new StringBuffer();
+			msg.append("\r\n姓名：" + name + "\r\n订单数：" + list.size() + " \r\n");
 			for (Tgmessagegrouprecord tmgr : list) {
 				String statuss = tmgr.getStatus() ? "成功" : "失败";
 				String datetime = DateTimeUtil.getDateTime(tmgr.getCreate_time(), DateTimeUtil.DEFAULT_DATETIME_FORMAT);
-				msg.append("\r\n姓名：" + name + "\r\n日期：" + datetime + " \r\n金额：" + tmgr.getAmount() + "\r\n状态：" + statuss + "\r\n");
+				msg.append(" \r\n金额：" + tmgr.getAmount() + "\r\n状态：" + statuss + "\r\n日期：" + datetime + "\r\n");
 			}
 			sendmessage.setText(msg.toString());
 		} else {
@@ -128,7 +152,6 @@ public class M2CMessage implements UpdateMessageService {
 		SendPhoto sendphoto = new SendPhoto();
 		sendphoto.setChatId(chatid);
 		try {
-
 			PhotoSize photo = update.getMessage().getReplyToMessage().getPhoto().get(update.getMessage().getReplyToMessage().getPhoto().size() - 1);
 			GetFile getFile = new GetFile();
 			getFile.setFileId(photo.getFileId());

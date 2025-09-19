@@ -67,7 +67,7 @@ public class TestBot extends TelegramLongPollingBot {
 				}
 			}
 			if (update.hasMessage()) {
-				String msg = update.getMessage().getText();
+				String msg = update.getMessage().getText().replaceAll(" ", "");
 				String username = update.getMessage().getFrom().getUserName();
 				if (msg != null && msg.toLowerCase().equals("c") && update.getMessage().getReplyToMessage() != null) {
 					SendMessage smg = m2cmessage.getReplyUpdate(update, tmg);
@@ -94,13 +94,22 @@ public class TestBot extends TelegramLongPollingBot {
 				} else if (!flagec && msg != null && msg.toLowerCase().startsWith("ss")) {
 					SendMessage smg = m2cmessage.getReplyRecordSuccessListUpdate(update, tmg);
 					execute(smg);
-				} else if (msg.startsWith("设置操作人") && tmg.getAdminmangers().indexOf(username) != -1) {
+				} else if (msg != null && !flagec && msg.startsWith("设置操作人") && tmg.getAdminmangers().indexOf(username) != -1) {
 					String str = msg.substring(msg.indexOf("人") + 1);
 					tmg.setMangers(str);
 					if (tgmessagegroupmapper.put(tmg) > 0)
 						sendText(chatid, "操作人：" + str + ",设置成功");
-				} else if (msg.startsWith("清空操作人") && tmg.getAdminmangers().indexOf(username) != -1) {
+				} else if (msg != null && !flagec && msg.startsWith("清空操作人") && tmg.getAdminmangers().indexOf(username) != -1) {
 					tmg.setMangers("No");
+					if (tgmessagegroupmapper.put(tmg) > 0)
+						sendText(chatid, "操作人清空成功");
+				} else if (msg != null && flagec && msg.startsWith("设置操作人") && tmg.getAdminmangers().indexOf(username) != -1) {
+					String str = msg.substring(msg.indexOf("人") + 1);
+					tmg.setCustomermangers(str);
+					if (tgmessagegroupmapper.put(tmg) > 0)
+						sendText(chatid, "操作人：" + str + ",设置成功");
+				} else if (msg != null && flagec && msg.startsWith("清空操作人") && tmg.getAdminmangers().indexOf(username) != -1) {
+					tmg.setCustomermangers("No");
 					if (tgmessagegroupmapper.put(tmg) > 0)
 						sendText(chatid, "操作人清空成功");
 				}

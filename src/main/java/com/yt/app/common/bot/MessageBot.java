@@ -83,24 +83,33 @@ public class MessageBot extends TelegramLongPollingBot {
 					}
 					execute(smg);
 				} else if (flagec && msg != null && msg.startsWith("+") && update.getMessage().getReplyToMessage() != null) {
-					SendMessage smg = m2cmessage.getReplyUpdate(update, tmg);
+					SendMessage smg = m2cmessage.getReplyChannelUpdate(update, tmg);
 					if (update.getMessage().getReplyToMessage().hasPhoto()) {
 						execute(m2cmessage.getUpdateSendRplPhoto(update, smg.getChatId()));
 					}
 					execute(smg);
-				} else if (!flagec && msg != null && msg.startsWith("+") && update.getMessage().getReplyToMessage() != null) {
+				} else if (!flagec && update.getMessage().getCaption() != null && update.getMessage().getCaption().startsWith("+") && update.getMessage().getReplyToMessage() != null) {
 					SendMessage smg = m2cmessage.getReplyRecordSuccessUpdate(update, tmg);
 					execute(smg);
 				} else if (!flagec && msg != null && msg.toLowerCase().startsWith("ss")) {
 					SendMessage smg = m2cmessage.getReplyRecordSuccessListUpdate(update, tmg);
 					execute(smg);
-				} else if (msg.startsWith("设置操作人") && tmg.getAdminmangers().indexOf(username) != -1) {
+				} else if (msg != null && !flagec && msg.startsWith("设置操作人") && tmg.getAdminmangers().indexOf(username) != -1) {
 					String str = msg.substring(msg.indexOf("人") + 1);
 					tmg.setMangers(str);
 					if (tgmessagegroupmapper.put(tmg) > 0)
 						sendText(chatid, "操作人：" + str + ",设置成功");
-				} else if (msg.startsWith("清空操作人") && tmg.getAdminmangers().indexOf(username) != -1) {
+				} else if (msg != null && !flagec && msg.startsWith("清空操作人") && tmg.getAdminmangers().indexOf(username) != -1) {
 					tmg.setMangers("No");
+					if (tgmessagegroupmapper.put(tmg) > 0)
+						sendText(chatid, "操作人清空成功");
+				} else if (msg != null && flagec && msg.startsWith("设置操作人") && tmg.getAdminmangers().indexOf(username) != -1) {
+					String str = msg.substring(msg.indexOf("人") + 1);
+					tmg.setCustomermangers(str);
+					if (tgmessagegroupmapper.put(tmg) > 0)
+						sendText(chatid, "操作人：" + str + ",设置成功");
+				} else if (msg != null && flagec && msg.startsWith("清空操作人") && tmg.getAdminmangers().indexOf(username) != -1) {
+					tmg.setCustomermangers("No");
 					if (tgmessagegroupmapper.put(tmg) > 0)
 						sendText(chatid, "操作人清空成功");
 				}

@@ -512,10 +512,9 @@ public class StringUtil {
 	}
 
 	public static void main(String[] args) {
-		int i = 0;
-		while (i < 1000) {
-			System.out.println(getUUID());
-			i++;
-		}
+		String str = "10000      文巧玲";
+		str = str.replaceAll("  ", " ");
+		System.out.println(str.split(" ")[0]);
+		System.out.println(str.split(" ")[1]);
 	}
 }
