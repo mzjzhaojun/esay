@@ -57,7 +57,7 @@ public interface LogsMapper extends YtIBaseMapper<Logs> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Logs.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

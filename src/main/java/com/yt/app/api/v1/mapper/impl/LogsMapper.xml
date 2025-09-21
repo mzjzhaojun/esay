@@ -27,8 +27,8 @@
 			(#{id},#{optname},#{optdate},#{type},#{method},#{requesturl},#{requestparams},#{requestip},#{time})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from t_sys_logs
 		where id
 		= #{id}

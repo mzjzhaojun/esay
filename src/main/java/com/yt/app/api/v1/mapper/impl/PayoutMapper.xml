@@ -33,8 +33,8 @@
 			(#{id},#{tenant_id},#{userid},#{ordernum},#{merchantid},#{merchantname},#{merchantcode},#{merchantordernum},#{merchantcost},#{merchantdeal},#{merchantpay},#{aisleid},#{aislename},#{agentid},#{agentordernum},#{agentincome},#{channelid},#{channelname},#{channelordernum},#{channelcost},#{channeldeal},#{channelpay},#{accname},#{accnumer},#{bankaddress},#{amount},#{status},#{successtime},#{backlong},#{create_by},#{create_time},#{update_by},#{update_time},#{imgurl},#{income})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from payout
 		where id =
 		#{id}

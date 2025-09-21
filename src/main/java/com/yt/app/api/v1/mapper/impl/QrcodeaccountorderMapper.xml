@@ -41,8 +41,8 @@
 			(#{id},#{tenant_id},#{userid},#{qrcodeaislecode},#{qrcodeaisleid},#{qrcodeaislename},#{qrcodename},#{qrcodeid},#{qrcodecode},#{ordernum},#{type},#{fewamount},#{expireddate},#{amount},#{realamount},#{resulturl},#{merchantname},#{qrocde},#{status},#{remark},#{channelid},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from qrcodeaccountorder
 		where id = #{id}
 	</delete>

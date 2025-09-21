@@ -114,8 +114,8 @@ public class AgentServiceImpl extends YtBaseServiceImpl<Agent, Long> implements 
 	@Transactional
 	public Integer delete(Long id) {
 		Agent t = mapper.get(id);
-		usermapper.delete(t.getUserid());
-		return mapper.delete(id);
+		usermapper.delById(t.getUserid());
+		return mapper.delById(id);
 	}
 
 }

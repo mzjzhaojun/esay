@@ -60,7 +60,7 @@ public interface QrcodeMapper extends YtIBaseMapper<Qrcode> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Qrcode.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

@@ -60,7 +60,7 @@ public interface SysokxMapper extends YtIBaseMapper<Sysokx> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Sysokx.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * deleteAll

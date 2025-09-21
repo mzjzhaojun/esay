@@ -58,7 +58,7 @@ public interface QrcodestatisticalreportsMapper extends YtIBaseMapper<Qrcodestat
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Qrcodestatisticalreports.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

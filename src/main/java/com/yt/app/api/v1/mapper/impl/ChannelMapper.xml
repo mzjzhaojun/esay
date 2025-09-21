@@ -27,8 +27,8 @@
 			(#{id},#{name},#{nkname},#{code},#{status},#{balance},#{exchange},#{onecost},#{downpoint},#{yesterdayrate},#{min},#{max},#{weight},#{mtorder},#{ifordernum},#{firstmatch},#{firstmatchmoney},#{apiip},#{apikey},#{apireusultip},#{tenant_id},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from channel
 		where id =
 		#{id}

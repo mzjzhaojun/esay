@@ -89,7 +89,7 @@ public class UserroleServiceImpl extends YtBaseServiceImpl<Userrole, Long> imple
 		List<Long> removeRoleIdList = reRoleIdListOld.stream().filter(oldRoleId -> !roleIdList.contains(oldRoleId)).collect(Collectors.toList());
 		if (CollUtil.isNotEmpty(removeRoleIdList)) {
 			// 删除角色关联的菜单权限信息
-			this.sysUserRoleMapper.delete(new LambdaQueryWrapper<Userrole>().eq(Userrole::getUser_id, userId).in(Userrole::getRole_id, removeRoleIdList));
+			this.sysUserRoleMapper.deleteById(new LambdaQueryWrapper<Userrole>().eq(Userrole::getUser_id, userId).in(Userrole::getRole_id, removeRoleIdList));
 		}
 
 		// 3、再新增角色
@@ -129,6 +129,6 @@ public class UserroleServiceImpl extends YtBaseServiceImpl<Userrole, Long> imple
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void delByUserId(Long userId) {
-		this.sysUserRoleMapper.delete(new LambdaUpdateWrapper<Userrole>().eq(Userrole::getUser_id, userId));
+		this.sysUserRoleMapper.deleteById(new LambdaUpdateWrapper<Userrole>().eq(Userrole::getUser_id, userId));
 	}
 }

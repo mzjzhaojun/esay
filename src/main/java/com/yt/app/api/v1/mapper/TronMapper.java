@@ -58,7 +58,7 @@ public interface TronMapper extends YtIBaseMapper<Tron> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Tron.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

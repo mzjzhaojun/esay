@@ -97,7 +97,7 @@ public class RoleServiceImpl extends YtBaseServiceImpl<Role, Long> implements Ro
 		this.sysrolemenumapper.delByRoleId(id);
 		this.sysrolescopemapper.delByRoleId(id);
 
-		return sysRoleMapper.delete(id);
+		return sysRoleMapper.delById(id);
 	}
 
 	@Override

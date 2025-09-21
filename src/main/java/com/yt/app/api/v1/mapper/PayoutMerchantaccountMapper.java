@@ -57,7 +57,7 @@ public interface PayoutMerchantaccountMapper extends YtIBaseMapper<PayoutMerchan
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { PayoutMerchantaccount.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * delete

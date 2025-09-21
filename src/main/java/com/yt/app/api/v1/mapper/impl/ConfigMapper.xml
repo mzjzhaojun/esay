@@ -28,8 +28,8 @@
 			(#{id},#{key},#{value},#{remark},#{type},#{create_by},#{create_time},#{update_by},#{update_time},#{is_deleted})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from t_sys_config
 		where
 		id = #{id}

@@ -32,12 +32,12 @@
 			(#{id},#{tenant_id},#{tgid},#{tgname},#{gmanger},#{xmanger},#{tmexchange},#{exchange},#{cost},#{status},#{amount},#{withdrawusdt},#{type},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from tgbotgrouprecord
 		where id = #{id}
 	</delete>
-	<!-- deleteById -->
+	<!-- delById -->
 	<delete id="deleteByTgid" parameterType="java.lang.Long">
 		delete from tgbotgrouprecord
 		where tgid = #{tgid} AND create_time BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59')

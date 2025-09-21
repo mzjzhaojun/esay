@@ -62,7 +62,7 @@ public interface TgbottronrecordMapper extends YtIBaseMapper<Tgbottronrecord> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Tgbottronrecord.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

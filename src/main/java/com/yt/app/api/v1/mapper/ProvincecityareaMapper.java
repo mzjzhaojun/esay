@@ -59,7 +59,7 @@ public interface ProvincecityareaMapper extends YtIBaseMapper<Provincecityarea> 
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Provincecityarea.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

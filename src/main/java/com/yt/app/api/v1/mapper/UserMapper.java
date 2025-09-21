@@ -69,7 +69,7 @@ public interface UserMapper extends YtIBaseMapper<User> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { User.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

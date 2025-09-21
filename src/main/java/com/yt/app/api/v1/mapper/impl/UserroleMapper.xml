@@ -35,13 +35,13 @@
 			(#{id},#{user_id},#{role_id},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from t_sys_user_role
 		where id = #{id}
 	</delete>
 
-	<!-- deleteById -->
+	<!-- delById -->
 	<delete id="deleteabyUid" parameterType="java.lang.Long">
 		delete from
 		t_sys_user_role

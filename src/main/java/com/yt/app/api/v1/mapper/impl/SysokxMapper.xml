@@ -31,14 +31,14 @@
 			(#{id},#{name},#{price},#{type},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from sysokx
 		where id =
 		#{id}
 	</delete>
 
-	<!-- deleteById -->
+	<!-- delById -->
 	<delete id="deleteAll">
 		delete from sysokx where version != 1
 	</delete>

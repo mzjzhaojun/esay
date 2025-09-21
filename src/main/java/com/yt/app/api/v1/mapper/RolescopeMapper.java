@@ -62,7 +62,7 @@ public interface RolescopeMapper extends YtIBaseMapper<Rolescope> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Rolescope.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

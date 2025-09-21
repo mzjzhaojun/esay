@@ -36,8 +36,8 @@
 			(#{id},#{tenant_id},#{merchantid},#{merchantname},#{merchantcode},#{status},#{tgid},#{tggroupname},#{adminmangers},#{mangers},#{customermangers},#{cost},#{realtimeexchange},#{costcount},#{usdcount},#{todaycountorder},#{countorder},#{todaycount},#{count},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from tgmerchantgroup
 		where id = #{id}
 	</delete>

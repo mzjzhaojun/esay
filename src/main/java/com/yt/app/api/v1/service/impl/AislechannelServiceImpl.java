@@ -62,7 +62,7 @@ public class AislechannelServiceImpl extends YtBaseServiceImpl<Aislechannel, Lon
 		Aisle as = aislemapper.get(t.getAisleid());
 		as.setChannelcount(as.getChannelcount() - 1);
 		aislemapper.put(as);
-		return mapper.delete(id);
+		return mapper.delById(id);
 	}
 
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.SLAVE)

@@ -59,7 +59,7 @@ public interface TgmerchantgroupMapper extends YtIBaseMapper<Tgmerchantgroup> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Tgmerchantgroup.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

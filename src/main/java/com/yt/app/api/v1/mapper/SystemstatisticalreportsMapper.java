@@ -58,7 +58,7 @@ public interface SystemstatisticalreportsMapper extends YtIBaseMapper<Systemstat
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Systemstatisticalreports.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

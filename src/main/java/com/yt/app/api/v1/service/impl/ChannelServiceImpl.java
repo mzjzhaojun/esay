@@ -137,8 +137,8 @@ public class ChannelServiceImpl extends YtBaseServiceImpl<Channel, Long> impleme
 	public Integer delete(Long id) {
 		Channel t = mapper.get(id);
 		channelaccountmapper.deleteByUserId(t.getUserid());
-		usermapper.delete(t.getUserid());
-		return mapper.delete(id);
+		usermapper.delById(t.getUserid());
+		return mapper.delById(id);
 	}
 
 	@Override

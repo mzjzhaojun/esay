@@ -57,7 +57,7 @@ public interface TgchannelgroupMapper extends YtIBaseMapper<Tgchannelgroup> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Tgchannelgroup.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

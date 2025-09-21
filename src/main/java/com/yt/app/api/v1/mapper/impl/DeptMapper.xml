@@ -27,8 +27,8 @@
 			(#{id},#{parent_id},#{name},#{sort},#{leader_user_id},#{phone},#{email},#{status},#{province_name},#{city_name},#{area_name},#{address},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{is_deleted})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from t_sys_dept
 		where id
 		= #{id}

@@ -57,7 +57,7 @@ public interface AgentaccountMapper extends YtIBaseMapper<Agentaccount> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Agentaccount.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

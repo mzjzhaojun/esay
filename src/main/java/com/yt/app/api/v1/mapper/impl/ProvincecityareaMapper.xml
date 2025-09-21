@@ -29,8 +29,8 @@
 			(#{id},#{parent_id},#{parent_code},#{name},#{code},#{type},#{is_shop})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from
 		t_sys_province_city_area
 		where id = #{id}

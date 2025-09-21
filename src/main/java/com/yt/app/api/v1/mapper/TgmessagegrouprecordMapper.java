@@ -61,7 +61,7 @@ public interface TgmessagegrouprecordMapper extends YtIBaseMapper<Tgmessagegroup
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Tgmessagegrouprecord.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

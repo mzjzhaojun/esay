@@ -98,7 +98,7 @@ public class RolemenuServiceImpl extends YtBaseServiceImpl<Rolemenu, Long> imple
 		List<Long> removeMenuIdList = roleReMenuIdListOld.stream().filter(oldMenuId -> !menuIdList.contains(oldMenuId)).collect(Collectors.toList());
 		if (CollUtil.isNotEmpty(removeMenuIdList)) {
 			// 删除角色关联的菜单权限信息
-			this.sysRoleMenuMapper.delete(new LambdaQueryWrapper<Rolemenu>().eq(Rolemenu::getRole_id, roleId).in(Rolemenu::getMenu_id, removeMenuIdList));
+			this.sysRoleMenuMapper.deleteById(new LambdaQueryWrapper<Rolemenu>().eq(Rolemenu::getRole_id, roleId).in(Rolemenu::getMenu_id, removeMenuIdList));
 		}
 
 		// 3、再保存角色关联的菜单权限信息
@@ -110,7 +110,7 @@ public class RolemenuServiceImpl extends YtBaseServiceImpl<Rolemenu, Long> imple
 	@Override
 	@Transactional
 	public void delByRoleId(Long roleId) {
-		this.sysRoleMenuMapper.delete(new LambdaQueryWrapper<Rolemenu>().eq(Rolemenu::getRole_id, roleId));
+		this.sysRoleMenuMapper.deleteById(new LambdaQueryWrapper<Rolemenu>().eq(Rolemenu::getRole_id, roleId));
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public class RolemenuServiceImpl extends YtBaseServiceImpl<Rolemenu, Long> imple
 		if (CollUtil.isEmpty(delMenuIdList)) {
 			return;
 		}
-		this.sysRoleMenuMapper.delete(new LambdaQueryWrapper<Rolemenu>().in(Rolemenu::getMenu_id, delMenuIdList).notIn(Rolemenu::getRole_id, AppConstant.NOT_DEL_MENU_EXCLUDE_ROLE_ID_LIST));
+		this.sysRoleMenuMapper.deleteById(new LambdaQueryWrapper<Rolemenu>().in(Rolemenu::getMenu_id, delMenuIdList).notIn(Rolemenu::getRole_id, AppConstant.NOT_DEL_MENU_EXCLUDE_ROLE_ID_LIST));
 	}
 
 	@Override

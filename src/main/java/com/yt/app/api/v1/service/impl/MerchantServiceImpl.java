@@ -208,8 +208,8 @@ public class MerchantServiceImpl extends YtBaseServiceImpl<Merchant, Long> imple
 		Merchant t = mapper.get(id);
 		payoutmerchantaccountmapper.deleteByUserId(t.getUserid());
 		incomemerchantaccountmapper.deleteByUserId(t.getUserid());
-		usermapper.delete(t.getUserid());
-		return mapper.delete(id);
+		usermapper.delById(t.getUserid());
+		return mapper.delById(id);
 	}
 
 	@Override

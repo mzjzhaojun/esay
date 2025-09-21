@@ -335,8 +335,8 @@ public class YtAutoCode {
 					this.L.write("</foreach>\r\n");
 					this.L.write("</insert>\r\n");
 
-					this.L.write("<!-- deleteById -->\r\n");
-					this.L.write("<delete id=\"delete\" parameterType=\"java.lang.Long\">\r\n");
+					this.L.write("<!-- delById -->\r\n");
+					this.L.write("<delete id=\"delById\" parameterType=\"java.lang.Long\">\r\n");
 					this.L.write("delete from " + tb + "\r\n");
 					this.L.write("where id = #{id}\r\n");
 					this.L.write("</delete>\r\n");
@@ -496,7 +496,7 @@ public class YtAutoCode {
 					this.L.write("* @return count\r\n");
 					this.L.write("*/\r\n");
 					this.L.write("@YtRedisCacheEvictAnnotation(classs = { " + bt + ".class})\r\n");
-					this.L.write("public Integer delete(Long id);\r\n");
+					this.L.write("public Integer delById(Long id);\r\n");
 					this.L.write("\r\n");
 					this.L.write("/**\r\n");
 					this.L.write("* listcount\r\n");

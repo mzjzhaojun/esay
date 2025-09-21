@@ -58,7 +58,7 @@ public interface QrcodeaisleMapper extends YtIBaseMapper<Qrcodeaisle> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Qrcodeaisle.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

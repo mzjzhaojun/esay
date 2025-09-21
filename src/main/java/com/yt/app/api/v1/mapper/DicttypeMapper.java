@@ -57,7 +57,7 @@ public interface DicttypeMapper extends YtIBaseMapper<Dicttype> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Dicttype.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

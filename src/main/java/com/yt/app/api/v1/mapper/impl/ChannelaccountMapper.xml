@@ -32,8 +32,8 @@
 		delete from channelaccount
 		where userid = #{userid}
 	</delete>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from channelaccount
 		where id = #{id}
 	</delete>

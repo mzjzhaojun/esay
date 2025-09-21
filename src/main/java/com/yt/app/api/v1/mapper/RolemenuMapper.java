@@ -63,7 +63,7 @@ public interface RolemenuMapper extends YtIBaseMapper<Rolemenu> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Rolemenu.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

@@ -61,7 +61,7 @@ public interface TgmerchantchannelmsgMapper extends YtIBaseMapper<Tgmerchantchan
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Tgmerchantchannelmsg.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

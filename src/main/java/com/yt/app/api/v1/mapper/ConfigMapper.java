@@ -57,7 +57,7 @@ public interface ConfigMapper extends YtIBaseMapper<Config> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Config.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

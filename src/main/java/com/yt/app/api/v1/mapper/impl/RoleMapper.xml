@@ -35,8 +35,8 @@
 		</foreach>
 	</insert>
 
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from t_sys_role
 		where id
 		= #{id}

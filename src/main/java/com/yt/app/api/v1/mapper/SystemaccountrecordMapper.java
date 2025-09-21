@@ -57,7 +57,7 @@ public interface SystemaccountrecordMapper extends YtIBaseMapper<Systemaccountre
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Systemaccountrecord.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

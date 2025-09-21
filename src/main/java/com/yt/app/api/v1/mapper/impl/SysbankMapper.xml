@@ -27,8 +27,8 @@
 			(#{id},#{name},#{code},#{spname},#{create_by},#{create_time},#{update_by},#{update_time},#{status},#{remark},#{sort})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from sysbank
 		where id = #{id}
 	</delete>

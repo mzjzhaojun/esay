@@ -32,8 +32,8 @@
 			(#{id},#{mid},#{cid},#{chatid},#{mmanger},#{cmanger},#{mreplyid},#{creplyid},#{name},#{qrcode},#{exchange},#{amount},#{usd},#{status},#{optionname},#{confirmname},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from
 		tgmessagegrouprecord
 		where id = #{id}

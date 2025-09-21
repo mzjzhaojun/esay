@@ -58,7 +58,7 @@ public interface QrcodetransferrecordMapper extends YtIBaseMapper<Qrcodetransfer
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Qrcodetransferrecord.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

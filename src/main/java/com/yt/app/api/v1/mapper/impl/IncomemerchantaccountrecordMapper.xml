@@ -32,8 +32,8 @@
 			(#{id},#{tenant_id},#{userid},#{merchantname},#{ordernum},#{type},#{pretotalincome},#{pretoincomeamount},#{prewithdrawamount},#{pretowithdrawamount},#{posttotalincome},#{posttoincomeamount},#{postwithdrawamount},#{posttowithdrawamount},#{update_time},#{update_by},#{create_time},#{create_by},#{remark})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from
 		incomemerchantaccountrecord
 		where id = #{id}

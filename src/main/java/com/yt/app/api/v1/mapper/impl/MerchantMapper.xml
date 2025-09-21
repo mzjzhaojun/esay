@@ -27,8 +27,8 @@
 			(#{id},#{name},#{nikname},#{code},#{remark},#{balance},#{status},#{todaycost},#{todaycount},#{count},#{exchange},#{onecost},#{downpoint},#{agentid},#{agentname},#{create_by},#{create_time},#{update_by},#{update_time},#{backpay},#{clearingtype},#{ipaddress},#{tenant_id},#{userid})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from merchant
 		where id =
 		#{id}

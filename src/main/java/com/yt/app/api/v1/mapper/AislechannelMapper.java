@@ -61,7 +61,7 @@ public interface AislechannelMapper extends YtIBaseMapper<Aislechannel> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Aislechannel.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

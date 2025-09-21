@@ -26,8 +26,8 @@
 			(#{id},#{name},#{code},#{status},#{nikname},#{type},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{tenant_id})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from aisle
 		where id =
 		#{id}

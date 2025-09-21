@@ -61,7 +61,7 @@ public interface IncomeMapper extends YtIBaseMapper<Income> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Income.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

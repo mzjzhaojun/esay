@@ -57,7 +57,7 @@ public interface TgmerchantgrouplabelMapper extends YtIBaseMapper<Tgmerchantgrou
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Tgmerchantgrouplabel.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

@@ -57,7 +57,7 @@ public interface PostMapper extends YtIBaseMapper<Post> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Post.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

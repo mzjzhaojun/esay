@@ -27,13 +27,13 @@
 			(#{id},#{aisleid},#{merchantid},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from merchantaisle
 		where id = #{id}
 	</delete>
 	
-	<!-- deleteById -->
+	<!-- delById -->
 	<delete id="deleteByAisleid" parameterType="java.lang.Long">
 		delete from merchantaisle
 		where aisleid = #{id}

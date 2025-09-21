@@ -58,7 +58,7 @@ public interface PayoutmerchantstatisticalreportsMapper extends YtIBaseMapper<Pa
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Payoutmerchantstatisticalreports.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

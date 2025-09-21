@@ -58,7 +58,7 @@ public interface TronaddressMapper extends YtIBaseMapper<Tronaddress> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Tronaddress.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

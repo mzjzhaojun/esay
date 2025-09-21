@@ -59,7 +59,7 @@ public interface DeptMapper extends YtIBaseMapper<Dept> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Dept.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

@@ -61,7 +61,7 @@ public interface TgbotgrouprecordMapper extends YtIBaseMapper<Tgbotgrouprecord> 
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Tgbotgrouprecord.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * delete

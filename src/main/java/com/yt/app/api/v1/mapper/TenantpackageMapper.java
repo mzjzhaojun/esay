@@ -57,7 +57,7 @@ public interface TenantpackageMapper extends YtIBaseMapper<Tenantpackage> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Tenantpackage.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

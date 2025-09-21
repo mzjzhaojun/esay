@@ -58,7 +58,7 @@ public interface CrownagentMapper extends YtIBaseMapper<Crownagent> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Crownagent.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

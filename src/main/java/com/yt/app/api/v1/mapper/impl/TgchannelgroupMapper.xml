@@ -29,8 +29,8 @@
 			(#{id},#{tenant_id},#{channelid},#{channelname},#{channelnkname},#{status},#{tgid},#{tggroupname},#{create_by},#{create_time},#{update_by},#{update_time},#{adminmangers},#{customermangers},#{remark})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from tgchannelgroup
 		where id = #{id}
 	</delete>

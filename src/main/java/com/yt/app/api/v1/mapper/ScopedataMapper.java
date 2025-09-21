@@ -59,7 +59,7 @@ public interface ScopedataMapper extends YtIBaseMapper<Scopedata> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Scopedata.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

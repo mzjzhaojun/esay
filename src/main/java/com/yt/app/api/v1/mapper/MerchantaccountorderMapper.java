@@ -71,7 +71,7 @@ public interface MerchantaccountorderMapper extends YtIBaseMapper<Merchantaccoun
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Merchantaccountorder.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

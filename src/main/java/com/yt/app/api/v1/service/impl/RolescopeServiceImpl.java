@@ -111,7 +111,7 @@ public class RolescopeServiceImpl extends YtBaseServiceImpl<Rolescope, Long> imp
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void delByRoleId(Long roleId) {
-		this.sysRoleScopeMapper.delete(new LambdaQueryWrapper<Rolescope>().eq(Rolescope::getRole_id, roleId));
+		this.sysRoleScopeMapper.deleteById(new LambdaQueryWrapper<Rolescope>().eq(Rolescope::getRole_id, roleId));
 	}
 
 	@Override
@@ -126,7 +126,7 @@ public class RolescopeServiceImpl extends YtBaseServiceImpl<Rolescope, Long> imp
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void delByScopeIdList(List<Long> scopeIdList) {
-		this.sysRoleScopeMapper.delete(new LambdaQueryWrapper<Rolescope>().in(Rolescope::getScope_id, scopeIdList));
+		this.sysRoleScopeMapper.deleteById(new LambdaQueryWrapper<Rolescope>().in(Rolescope::getScope_id, scopeIdList));
 	}
 
 }

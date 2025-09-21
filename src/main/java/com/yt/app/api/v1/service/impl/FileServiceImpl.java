@@ -317,7 +317,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 			sb.append(appConfig.getFilePath()).append(fl.getRelative_path()).append(java.io.File.separator).append(fl.getFile_name()).toString();
 			java.io.File deletefile = new java.io.File(sb.toString());
 			deletefile.delete();
-			i = mapper.delete(id);
+			i = mapper.delById(id);
 		}
 		return i;
 	}
@@ -334,7 +334,7 @@ public class FileServiceImpl extends YtBaseServiceImpl<YtFile, Long> implements 
 				sb.append(appConfig.getFilePath()).append(fl.getRelative_path()).append(java.io.File.separator).append(fl.getFile_name()).toString();
 				java.io.File deletefile = new java.io.File(sb.toString());
 				deletefile.delete();
-				i = mapper.delete(Long.parseLong(id));
+				i = mapper.delById(Long.parseLong(id));
 			}
 		}
 		return i;

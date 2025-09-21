@@ -67,7 +67,7 @@ public interface QrcodpaymemberMapper extends YtIBaseMapper<Qrcodpaymember> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Qrcodpaymember.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

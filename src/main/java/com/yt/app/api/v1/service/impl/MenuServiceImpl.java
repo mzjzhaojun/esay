@@ -80,7 +80,7 @@ public class MenuServiceImpl extends YtBaseServiceImpl<Menu, Long> implements Me
 		List<SysMenuTreeVO> list = mapper.getByParentId(id);
 		Assert.isTrue(CollUtil.isEmpty(list), "请先删除子菜单后再删除当前菜单！");
 		tsysrolemenumapper.delByMenuId(id);
-		return mapper.delete(id);
+		return mapper.delById(id);
 	}
 
 	@Override

@@ -28,8 +28,8 @@
 			(#{id},#{tenant_id},#{channelname},#{userid},#{ordernum},#{type},#{pretotalincome},#{prewithdrawamount},#{pretowithdrawamount},#{pretoincomeamount},#{posttotalincome},#{postwithdrawamount},#{posttowithdrawamount},#{posttoincomeamount},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from channelaccountrecord
 		where id = #{id}
 	</delete>

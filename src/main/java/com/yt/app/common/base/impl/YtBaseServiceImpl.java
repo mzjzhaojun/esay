@@ -62,7 +62,7 @@ public abstract class YtBaseServiceImpl<T, ID extends Serializable> implements Y
 	@Transactional
 	@YtDataSourceAnnotation(datasource = YtDataSourceEnum.MASTER)
 	public Integer delete(Long id) {
-		Integer i = mapper.delete(id);
+		Integer i = mapper.delById(id);
 		Assert.equals(i, 1, ServiceConstant.DELETE_FAIL_MSG);
 		return i;
 	}

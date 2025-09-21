@@ -79,7 +79,7 @@ public interface YtIBaseMapper<T> extends BaseMapper<T> {
 	 * @param ids 指定的唯一标识符数组
 	 * @return 删除的对象数量
 	 */
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * 获取满足查询参数条件的数据总数

@@ -57,7 +57,7 @@ public interface ChannelMapper extends YtIBaseMapper<Channel> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Channel.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

@@ -62,7 +62,7 @@ public interface PayoutMapper extends YtIBaseMapper<Payout> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Payout.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

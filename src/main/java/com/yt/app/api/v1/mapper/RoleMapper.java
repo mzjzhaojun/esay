@@ -72,7 +72,7 @@ public interface RoleMapper extends YtIBaseMapper<Role> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Role.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

@@ -31,8 +31,8 @@
 			(#{id},#{tenant_id},#{tgid},#{tgname},#{gmanger},#{xmanger},#{tmexchange},#{exchange},#{cost},#{status},#{welcomemsg},#{checkmsg},#{startmsg},#{endmsg},#{type},#{customersvc},#{customersvccode},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from tgbotgroup
 		where id
 		= #{id}

@@ -57,7 +57,7 @@ public interface SysbankMapper extends YtIBaseMapper<Sysbank> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Sysbank.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

@@ -60,7 +60,7 @@ public interface MerchantaisleMapper extends YtIBaseMapper<Merchantaisle> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Merchantaisle.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

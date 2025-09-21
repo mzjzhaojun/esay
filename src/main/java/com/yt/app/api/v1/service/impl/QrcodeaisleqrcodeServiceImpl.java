@@ -55,7 +55,7 @@ public class QrcodeaisleqrcodeServiceImpl extends YtBaseServiceImpl<Qrcodeaisleq
 		Qrcodeaisle as = qrcodeaislemapper.get(t.getQrcodeaisleid());
 		as.setQrcodecount(as.getQrcodecount() - 1);
 		qrcodeaislemapper.put(as);
-		return mapper.delete(id);
+		return mapper.delById(id);
 	}
 
 	@Override

@@ -32,8 +32,8 @@
 			(#{id},#{tenant_id},#{userid},#{merchantid},#{todayincome},#{incomecount},#{balance},#{todayorder},#{successorder},#{todayorderamount},#{todaysuccessorderamount},#{dateval},#{create_by},#{create_time},#{update_by},#{update_time},#{remark})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from incomemerchantstatisticalreports
 		where id = #{id}
 	</delete>

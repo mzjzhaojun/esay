@@ -35,8 +35,8 @@
 			(#{id},#{username},#{tenant_id},#{password},#{nickname},#{sex},#{phone},#{email},#{avatar_url},#{dept_id},#{post_id_list},#{is_fixed},#{accounttype},#{create_by},#{create_time},#{update_by},#{update_time},#{is_deleted})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from t_sys_user
 		where id
 		= #{id}

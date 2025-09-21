@@ -58,7 +58,7 @@ public interface BlocklistMapper extends YtIBaseMapper<Blocklist> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Blocklist.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

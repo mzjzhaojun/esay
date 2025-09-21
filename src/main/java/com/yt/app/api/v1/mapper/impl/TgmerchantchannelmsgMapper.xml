@@ -32,8 +32,8 @@
 			(#{id},#{mid},#{cid},#{chatid},#{mmanger},#{cmanger},#{mreplyid},#{creplyid},#{ordernum},#{qrcode},#{amount},#{telegrameimgid},#{remark},#{create_by},#{create_time},#{update_by},#{update_time})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from
 		tgmerchantchannelmsg
 		where id = #{id}

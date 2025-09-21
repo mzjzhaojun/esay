@@ -61,7 +61,7 @@ public interface MerchantqrcodeaisleMapper extends YtIBaseMapper<Merchantqrcodea
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Merchantqrcodeaisle.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

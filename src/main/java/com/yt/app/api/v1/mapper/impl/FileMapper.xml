@@ -15,7 +15,7 @@
 		values
 		(#{id},#{root_path},#{relative_path},#{file_type},#{suffix},#{file_size},#{createtime},#{modifytime},#{file_name},#{url})
 	</insert>
-	<delete id="delete" parameterType="java.lang.Long">
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from t_sys_file
 		where id
 		= #{id}

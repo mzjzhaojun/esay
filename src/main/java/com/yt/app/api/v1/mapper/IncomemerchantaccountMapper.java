@@ -58,7 +58,7 @@ public interface IncomemerchantaccountMapper extends YtIBaseMapper<Incomemerchan
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Incomemerchantaccount.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * delete

@@ -26,8 +26,8 @@
 			(#{id},#{name},#{nkname},#{remark},#{balance},#{status},#{exchange},#{onecost},#{downpoint},#{create_by},#{create_time},#{update_by},#{update_time},#{ipaddress},#{tenant_id},#{version})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from agent
 		where id =
 		#{id}

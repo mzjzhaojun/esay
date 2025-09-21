@@ -58,7 +58,7 @@ public interface TgfootballgroupMapper extends YtIBaseMapper<Tgfootballgroup> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Tgfootballgroup.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

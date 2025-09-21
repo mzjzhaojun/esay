@@ -63,7 +63,7 @@ public class QrcodeaisleServiceImpl extends YtBaseServiceImpl<Qrcodeaisle, Long>
 	@Transactional
 	public Integer delete(Long id) {
 		// 删除关联表
-		Integer i = mapper.delete(id);
+		Integer i = mapper.delById(id);
 		Assert.equals(i, 1, ServiceConstant.DELETE_FAIL_MSG);
 		qrcodeaisleqrcodemapper.deleteByQrcodeaisleId(id);
 		merchantqrcodeaislemapper.deleteByQrcodeaisleId(id);

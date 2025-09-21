@@ -48,7 +48,7 @@ public interface FileMapper extends YtIBaseMapper<YtFile> {
 	 * @Ytreturn 删除的对象数量
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { YtFile.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * 获取满足查询参数条件的数据总数

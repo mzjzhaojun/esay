@@ -28,8 +28,8 @@
 			(#{id},#{tenant_id},#{userid},#{agentid},#{username},#{nkname},#{type},#{amount},#{accname},#{accnumber},#{exchange},#{agentexchange},#{amountreceived},#{status},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{ordernum},#{imgurl})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from agentaccountorder
 		where id = #{id}
 	</delete>

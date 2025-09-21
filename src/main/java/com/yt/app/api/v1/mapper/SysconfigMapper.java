@@ -58,7 +58,7 @@ public interface SysconfigMapper extends YtIBaseMapper<Sysconfig> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Sysconfig.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

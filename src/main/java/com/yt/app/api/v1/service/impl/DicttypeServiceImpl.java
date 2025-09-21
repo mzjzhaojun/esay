@@ -64,6 +64,6 @@ public class DicttypeServiceImpl extends YtBaseServiceImpl<Dicttype, Long> imple
 	@Transactional
 	public Integer delete(Long id) {
 		dictmapper.deletebytypid(id);
-		return mapper.delete(id);
+		return mapper.delById(id);
 	}
 }

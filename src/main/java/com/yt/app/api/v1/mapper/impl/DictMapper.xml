@@ -27,13 +27,13 @@
 			(#{id},#{dict_type_id},#{code},#{name},#{value},#{status},#{sort},#{remark},#{create_by},#{create_time},#{update_by},#{update_time},#{is_deleted})
 		</foreach>
 	</insert>
-	<!-- deleteById -->
-	<delete id="delete" parameterType="java.lang.Long">
+	<!-- delById -->
+	<delete id="delById" parameterType="java.lang.Long">
 		delete from t_sys_dict
 		where id
 		= #{id}
 	</delete>
-	<!-- deleteById -->
+	<!-- delById -->
 	<delete id="deletebytypid" parameterType="java.lang.Long">
 		delete from t_sys_dict
 		where dict_type_id = #{id}

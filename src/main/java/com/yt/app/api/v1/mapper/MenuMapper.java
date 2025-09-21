@@ -60,7 +60,7 @@ public interface MenuMapper extends YtIBaseMapper<Menu> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Menu.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount

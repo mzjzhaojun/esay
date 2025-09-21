@@ -67,7 +67,7 @@ public interface BettingMapper extends YtIBaseMapper<Betting> {
 	 * @return count
 	 */
 	@YtRedisCacheEvictAnnotation(classs = { Betting.class })
-	public Integer delete(Long id);
+	public Integer delById(Long id);
 
 	/**
 	 * listcount
