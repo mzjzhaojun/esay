@@ -9,10 +9,8 @@ import com.yt.app.api.v1.bo.SysScopeDataBO;
 import com.yt.app.api.v1.dbo.AuthLoginDTO;
 import com.yt.app.api.v1.dbo.SysUserPermDTO;
 import com.yt.app.api.v1.entity.Logs;
-import com.yt.app.api.v1.entity.Merchant;
 import com.yt.app.api.v1.entity.Systemaccount;
 import com.yt.app.api.v1.entity.User;
-import com.yt.app.api.v1.mapper.MerchantMapper;
 import com.yt.app.api.v1.mapper.SystemaccountMapper;
 import com.yt.app.api.v1.mapper.UserMapper;
 import com.yt.app.api.v1.service.AuthService;
@@ -26,9 +24,7 @@ import com.yt.app.common.annotation.YtDataSourceAnnotation;
 import com.yt.app.common.base.context.AuthContext;
 import com.yt.app.common.enums.AuthSourceEnum;
 import com.yt.app.common.enums.SysRoleCodeEnum;
-import com.yt.app.common.enums.YtCodeEnum;
 import com.yt.app.common.enums.YtDataSourceEnum;
-import com.yt.app.common.exption.YtException;
 import com.yt.app.common.resource.DictionaryResource;
 import com.yt.app.common.util.AuthUtil;
 import com.yt.app.common.util.GoogleAuthenticatorUtil;
@@ -40,7 +36,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,9 +71,6 @@ public class AuthServiceImpl implements AuthService {
 
 	@Autowired
 	private SystemaccountMapper systemaccountmapper;
-
-	@Autowired
-	private MerchantMapper merchantmapper;
 
 	@Override
 	public AuthLoginVO login(AuthLoginDTO params) {
@@ -171,21 +163,21 @@ public class AuthServiceImpl implements AuthService {
 	public String getPublicKey(HttpServletRequest request) {
 		String ip = AuthContext.getIp();
 		log.info(ip);
-		boolean isValid = false;
-		if (ip == null)
-			return RsaUtil.getPublicKey();
-		if (!AuthUtil.isMobileDevice(request.getHeader("User-Agent"))) {
-			// 判断ip 是否在配置内
-			List<Merchant> listm = merchantmapper.getListAll(new HashMap<String, Object>());
-			for (int i = 0; i < listm.size(); i++) {
-				if (listm.get(i).getIpaddress() != null && listm.get(i).getIpaddress().indexOf(ip) >= 0) {
-					isValid = true;
-					break;
-				}
-			}
-			if (!isValid)
-				throw new YtException(YtCodeEnum.YT402.getDesc(), YtCodeEnum.YT402);
-		}
+//		boolean isValid = false;
+//		if (ip == null)
+//			return RsaUtil.getPublicKey();
+//		if (!AuthUtil.isMobileDevice(request.getHeader("User-Agent"))) {
+//			// 判断ip 是否在配置内
+//			List<Merchant> listm = merchantmapper.getListAll(new HashMap<String, Object>());
+//			for (int i = 0; i < listm.size(); i++) {
+//				if (listm.get(i).getIpaddress() != null && listm.get(i).getIpaddress().indexOf(ip) >= 0) {
+//					isValid = true;
+//					break;
+//				}
+//			}
+//			if (!isValid)
+//				throw new YtException(YtCodeEnum.YT402.getDesc(), YtCodeEnum.YT402);
+//		}
 		return RsaUtil.getPublicKey();
 	}
 

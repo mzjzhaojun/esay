@@ -91,8 +91,14 @@ public class MessageBot extends TelegramLongPollingBot {
 				} else if (!flagec && update.getMessage().getCaption() != null && update.getMessage().getCaption().startsWith("+") && update.getMessage().getReplyToMessage() != null) {
 					SendMessage smg = m2cmessage.getReplyRecordSuccessUpdate(update, tmg);
 					execute(smg);
+				} else if (!flagec && msg != null && msg.startsWith("+") && update.getMessage().getReplyToMessage() != null) {
+					SendMessage smg = m2cmessage.getReplyRecordSuccessUpdate(update, tmg);
+					execute(smg);
 				} else if (!flagec && msg != null && msg.toLowerCase().startsWith("ss")) {
 					SendMessage smg = m2cmessage.getReplyRecordSuccessListUpdate(update, tmg);
+					execute(smg);
+				} else if (!flagec && msg != null && msg.toLowerCase().startsWith("add")) {
+					SendMessage smg = m2cmessage.getReplyRecordSuccessAddUpdate(update, tmg);
 					execute(smg);
 				} else if (msg != null && !flagec && msg.startsWith("设置操作人") && tmg.getAdminmangers().indexOf(username) != -1) {
 					String str = msg.substring(msg.indexOf("人") + 1);

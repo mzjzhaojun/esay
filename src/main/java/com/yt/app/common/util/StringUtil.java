@@ -516,5 +516,10 @@ public class StringUtil {
 		str = str.replaceAll("  ", " ");
 		System.out.println(str.split(" ")[0]);
 		System.out.println(str.split(" ")[1]);
+		String name = str.split(" ")[1];
+		if (name == null || name.equals("")) {
+			name = str.substring(str.indexOf(" "));
+		}
+		System.out.println(name.trim());
 	}
 }

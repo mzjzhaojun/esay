@@ -98,7 +98,11 @@ public class M2CMessage implements UpdateMessageService {
 			tmgr.setCid(tmg.getTgcid());
 			tmgr.setChatid(chatid);
 			tmgr.setMreplyid(update.getMessage().getReplyToMessage().getMessageId());
-			tmgr.setName(reecaption.split(" ")[1].trim());
+			String name = reecaption.split(" ")[1];
+			if (name == null || name.equals("")) {
+				name = reecaption.substring(reecaption.indexOf(" "));
+			}
+			tmgr.setName(name.trim());
 			tmgr.setAmount(Double.valueOf(reecaption.split(" ")[0]));
 			tmgr.setStatus(false);
 			tmgr.setOptionname(username);
@@ -143,7 +147,36 @@ public class M2CMessage implements UpdateMessageService {
 			}
 			sendmessage.setText(msg.toString());
 		} else {
-			sendmessage.setText("没有权限，或者没有找到记录！");
+			sendmessage.setText("没有权限");
+		}
+		return sendmessage;
+	}
+
+	public SendMessage getReplyRecordSuccessAddUpdate(Update update, Tgmessagegroup tmg) {
+		SendMessage sendmessage = new SendMessage();
+		Long chatid = update.getMessage().getChatId();
+		sendmessage.setChatId(chatid);
+		String username = update.getMessage().getFrom().getUserName();
+		if (tmg.getAdminmangers().indexOf(username) != -1 || tmg.getMangers().indexOf(username) != -1) {
+			String reecaption = update.getMessage().getText();
+			Tgmessagegrouprecord tmgr = new Tgmessagegrouprecord();
+			tmgr.setMid(tmg.getTgmid());
+			tmgr.setCid(tmg.getTgcid());
+			tmgr.setChatid(chatid);
+			String name = reecaption.split(" ")[2];
+			if (name == null || name.equals("")) {
+				name = reecaption.substring(reecaption.indexOf(" "));
+			}
+			tmgr.setName(name.trim());
+			tmgr.setAmount(Double.valueOf(reecaption.split(" ")[1]));
+			tmgr.setStatus(true);
+			tmgr.setOptionname(username);
+			tmgr.setConfirmname(username);
+			tmgr.setRemark(reecaption);
+			tgmessagegrouprecordmapper.post(tmgr);
+			sendmessage.setText(tmgr.getName() + " 添加成功!");
+		} else {
+			sendmessage.setText("没有权限");
 		}
 		return sendmessage;
 	}

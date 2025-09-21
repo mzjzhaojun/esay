@@ -35,8 +35,8 @@ public class NotifyFootballMessage implements UpdateMessageService {
 		Tgfootballgroup tcg = tgfootballgroupmapper.getByTgGroupId(ct.getChannelid());
 		if (tcg != null) {
 			sendMessage.setChatId(tcg.getTgid());
-			sendMessage.setText("代理:*" + ct.getName() + "*\r\n会员:*" + bt.getName() + "*\r\n联赛: *" + bt.getShowtextleague() + "*\r\n盘口: *" + bt.getOddftype() + "*\r\n体育: *" + bt.getGt() + "*\r\n类型: *" + bt.getWagerstype() + "*\r\n比分: *"
-					+ bt.getRemark() + "*\r\n规则: *" + bt.getOrdertype() + " " + bt.getOrdercon() + "*\r\n对阵: *" + bt.getTeamh() + " VS " + bt.getTeamc() + "*\r\n水位: *" + bt.getShowtextordertypeioratio() + "*\r\n注额: *" + bt.getGold() + "*\r\n日期: *"
+			sendMessage.setText("代理:*" + ct.getName() + "*\r\n会员:*" + bt.getName() + "*\r\n联赛: *" + bt.getShowtextleague() + "*\r\n盘口: *" + bt.getOddftype() + "*\r\n类型: *" + bt.getGt() + "*\r\n规则: *" + bt.getWagerstype() + "*\r\n比分: *"
+					+ bt.getRemark() + "*\r\n买盘: *" + bt.getOrdertype() + " " + bt.getOrdercon() + "*\r\n对阵: *" + bt.getTeamh().trim() + " VS " + bt.getTeamc().trim() + "*\r\n水位: *" + bt.getShowtextordertypeioratio() + "*\r\n注额: *" + bt.getGold() + "*\r\n日期: *"
 					+ bt.getTime() + " " + bt.getDate() + "*");
 			sendMessage.enableMarkdown(true);
 		} else {
